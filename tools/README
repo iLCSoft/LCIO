@@ -1,0 +1,10 @@
+#
+# tools needed to build LCIO
+#
+# 
+
+freehep-aid.jar containes a patch specific to LCIO, in
+
+ org/freehep/aid/AbstractCPPHeaderGenerator.java
+
+, std::exception ) is added to every throw clause in C++ 
