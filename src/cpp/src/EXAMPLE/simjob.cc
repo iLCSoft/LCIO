@@ -186,7 +186,7 @@ int main(int argc, char** argv ){
 	  
 	  float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
 	  
-	  hit->setCellID0( 1024 ) ;
+	  hit->setCellID0( j+65335 ) ;
 	  hit->setCellID1( 65535 ) ;
 
 	  hit->setPosition( pos ) ;

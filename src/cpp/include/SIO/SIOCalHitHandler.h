@@ -10,7 +10,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of CalorimeterHits.
    *
    * @author gaede
-   * @version Mar 6, 2003
+   * @version $Id: SIOCalHitHandler.h,v 1.6 2004-08-20 16:45:24 gaede Exp $
    */
   class SIOCalHitHandler : public SIOObjectHandler {
 	
@@ -19,15 +19,12 @@ namespace SIO {
     /** Reads lcio calorimeter hit objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,  
-			      unsigned int flag,
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
-    /** Writes lcio objects to an SIO stream.
+    /** Writes lcio calorimeter hit objects to an SIO stream.
      */
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 	
   }; // class
 }; // namespace

@@ -16,7 +16,7 @@ namespace SIO {
 /** Handler for LCRelation/LCRelationIOImpl objects for SIO.
  * 
  * @author gaede
- * @version May 2, 2004
+ * @version $Id: SIORelationHandler.h,v 1.2 2004-08-20 16:45:25 gaede Exp $
  */
 
   class SIORelationHandler : public SIO_block{

@@ -17,9 +17,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOClusterHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP ){
     unsigned int status ; 
 	
 
@@ -67,7 +65,7 @@ namespace SIO{
       SIO_PNTR( stream , &(cluster->_clusters[i] ) ) ;
     }
 
-    if( LCFlagImpl(flag).bitSet( LCIO::CLBIT_HITS ) ){ 
+    if( LCFlagImpl(_flag).bitSet( LCIO::CLBIT_HITS ) ){ 
 
       int nHits ;
       SIO_DATA( stream, &nHits , 1  ) ;
@@ -95,8 +93,7 @@ namespace SIO{
     
     
   unsigned int SIOClusterHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj ){
     
     unsigned int status ; 
     
@@ -140,7 +137,7 @@ namespace SIO{
       SIO_PNTR( stream , &(clusters[i]) ) ;
     }
 
-    if( LCFlagImpl(flag).bitSet( LCIO::CLBIT_HITS ) ){ 
+    if( LCFlagImpl(_flag).bitSet( LCIO::CLBIT_HITS ) ){ 
 
 
       const CalorimeterHitVec& hits = cluster->getCalorimeterHits() ;

@@ -13,6 +13,7 @@
 #include "SIO/SIOIntVecHandler.h" 
 #include "SIO/SIOReconstructedParticleHandler.h" 
 #include "SIO/SIOLCWgtRelationHandler.h" 
+#include "SIO/SIOLCGenericObjectHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -41,7 +42,7 @@ namespace SIO {
     _map[ LCIO::LCSTRVEC ] = new SIOStrVecHandler ;
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
-
+    _map[ LCIO::LCGENERICOBJECT ] = new SIOLCGenericObjectHandler ;
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

@@ -22,6 +22,8 @@
 #include "IMPL/LCWgtRelationImpl.h"
 #include "IMPL/LCRelationNavigatorImpl.h"
 
+#include "CalibrationConstant.h"
+
 // M_PI is non ansi ...
 #define M_PI 3.14159265358979323846
 
@@ -266,11 +268,11 @@ public:
 
 
 
-    //------  the following is some example code on how to access the relation: --------------
 
     if( evt->getEventNumber() == 0 && evt->getRunNumber() == 0 ) {
 
 
+      //------  the following is some example code on how to access the relation: --------------
       // create a navigation object from a collection
       LCRelationNavigatorImpl rel( scRel ) ; 
 
@@ -296,9 +298,26 @@ public:
 	}
 	std::cout << dec << std::endl ;
       }
-    }
-    // -------------------------------------------------------------------------------------
 
+
+      // -------------------------------------------------------------------------------------
+      
+      // add some calibration constants as generic user objects
+
+      LCCollectionVec* calVec = new LCCollectionVec( LCIO::LCGENERICOBJECT )  ;
+      for(int j=0;j<nCalHits;j++){
+	
+	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
+	
+	CalibrationConstant* cCon  = new CalibrationConstant( calHit->getCellID0() ,
+							     1.*j , 0.01*j );
+	calVec->addElement( cCon ) ;
+      }    
+      
+      evt->addCollection(  calVec , "Calibration" ) ;
+    }
+
+    // -------------------------------------------------------------------------------------
     
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl clusterFlag(0) ;

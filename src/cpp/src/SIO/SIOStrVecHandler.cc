@@ -16,9 +16,7 @@ using namespace EVENT ;
 namespace SIO{
     
   unsigned int SIOStrVecHandler::read(SIO_stream* stream,
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -41,8 +39,7 @@ namespace SIO{
     
     
   unsigned int SIOStrVecHandler::write(SIO_stream* stream,
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
 

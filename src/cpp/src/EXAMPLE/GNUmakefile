@@ -33,8 +33,8 @@ clean:
 	rm -f $(BINS)
 
 
-$(BINDIR)/minijob: minijob.cc $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/minijob $(CPPFLAGS) minijob.cc  $(LIBS) 
+#$(BINDIR)/minijob: minijob.cc $(INSTALL)/liblcio.a
+#	$(CXX) -o $(BINDIR)/minijob $(CPPFLAGS) minijob.cc  $(LIBS) 
 
 $(BINDIR)/dumpevent: dumpevent.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/dumpevent $(CPPFLAGS) dumpevent.cc  $(LIBS) 
@@ -51,6 +51,8 @@ $(BINDIR)/recjob: recjob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/anajob: anajob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/anajob $(CPPFLAGS) anajob.cc  $(LIBS) 
 
+$(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/readcalibration $(CPPFLAGS) readcalibration.cc  $(LIBS) 
 
 
 

@@ -18,7 +18,7 @@ namespace SIO {
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version Mar 6, 2003
+ * @version $Id: SIOReader.h,v 1.21 2004-08-20 16:45:24 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     

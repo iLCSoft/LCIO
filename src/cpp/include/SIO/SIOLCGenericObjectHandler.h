@@ -12,7 +12,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of LCGenericObjects.
    *
    * @author gaede
-   * @version $Id: SIOLCGenericObjectHandler.h,v 1.1 2004-08-16 09:42:07 gaede Exp $
+   * @version $Id: SIOLCGenericObjectHandler.h,v 1.2 2004-08-20 16:45:24 gaede Exp $
    */
   class SIOLCGenericObjectHandler : public SIOObjectHandler {
 
@@ -21,17 +21,23 @@ namespace SIO {
     /** Reads lcio LCGenericObject objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,
-			      unsigned int flag, 
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
     /** Writes lcio LCGenericObject objects to an SIO stream.
      */
 	
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 
+  virtual unsigned int  init( SIO_stream* stream, SIO_operation op,  
+			      EVENT::LCCollection* col  , unsigned int vers ) ; 
+
+
+  protected:
+    int _nInt ;
+    int _nFloat ;
+    int _nDouble ;
+    bool _isFixedSize ;
 
   }; // class
     

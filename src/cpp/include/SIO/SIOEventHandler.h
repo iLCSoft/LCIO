@@ -14,8 +14,7 @@ namespace SIO {
 /** Handler for LCEvent/LCEventIOImpl objects.
  * 
  * @author gaede
- * @version Mar 6, 2003
- * fg 20030609 using data interface for writing
+ * @version $Id: SIOEventHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
  */
   class SIOEventHandler : public SIO_block{
     

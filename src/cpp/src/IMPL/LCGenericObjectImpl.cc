@@ -5,6 +5,12 @@ using namespace EVENT ;
 
 namespace IMPL {
   
+
+  std::string  LCGenericObjectImpl::_typeName = "LCGenericObject" ;
+  std::string  LCGenericObjectImpl::_dataDescription = "" ;
+
+
+
   LCGenericObjectImpl::LCGenericObjectImpl():
   _isFixedSize( false ) {
     
@@ -60,6 +66,14 @@ namespace IMPL {
     if( _doubleVec.size() <= index && !_isFixedSize ) 
       _doubleVec.resize( index+1 ) ;
     _doubleVec[ index ] = value ;
+  }
+
+  const std::string & LCGenericObjectImpl::getTypeName() const {
+    return _typeName ;
+  }
+
+  const std::string & LCGenericObjectImpl::getDataDescription() const {
+    return _dataDescription ;
   }
 
 }

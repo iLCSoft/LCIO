@@ -12,7 +12,7 @@ namespace IMPL {
  * user data.
  * 
  * @author gaede 
- * @version $Id: LCGenericObjectImpl.h,v 1.1 2004-08-16 09:42:06 gaede Exp $
+ * @version $Id: LCGenericObjectImpl.h,v 1.2 2004-08-20 16:45:24 gaede Exp $
  */
 
 class LCGenericObjectImpl : public EVENT::LCGenericObject, public AccessChecked {
@@ -70,12 +70,21 @@ public:
    */
   virtual void setDoubleVal(unsigned index, double value) ;
 
-
   /** True if objects of the implementation class have a fixed size, i.e
    * getNInt, getNFloat and getNDouble will return values that are constant during 
    * the lifetime of the object.
    */
   virtual bool isFixedSize() const;
+
+  /** The type name of the user class (typically the class name)
+   */
+  virtual const std::string & getTypeName() const ;
+  
+  /** The description string. A comma separated list of pairs of
+   *  type identifier, one of 'i','f','d' followed by ':' 
+   *  and an attribute name, e.g. "i:cellId,f:offset,f:gain".
+   */
+  virtual const std::string & getDataDescription() const ;
 
 protected:
   
@@ -83,6 +92,9 @@ protected:
   std::vector<float> _floatVec ;
   std::vector<double> _doubleVec ;
   bool _isFixedSize ;
+
+  static std::string _typeName ;
+  static std::string _dataDescription ;
 
 }; // class
 } // namespace EVENT

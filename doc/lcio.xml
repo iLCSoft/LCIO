@@ -898,19 +898,15 @@
       <repeat count="nObject">
         <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
 	  <data type="int" name="nInt">number of ints for variable size objects</data>
+	  <data type="int" name="nFloat">number of floats for variable size objects</data>
+	  <data type="int" name="nDouble">number of doubles for variable size objects</data>
 	</if>
 	<repeat count="nInt">
 	  <data type="int" name="intValue">integer value</data>
 	</repeat>
-        <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
-	  <data type="int" name="nFloat">number of floats for variable size objects</data>
-	</if>
 	<repeat count="nFloat">
 	  <data type="float" name="floatValue">float value</data>
 	</repeat>
-        <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
-	  <data type="int" name="nDouble">number of doubles for variable size objects</data>
-	</if>
 	<repeat count="nDouble">
 	  <data type="double" name="doubleValue">double value</data>
 	</repeat>

@@ -3,7 +3,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.32 2004-08-16 09:42:06 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.33 2004-08-20 16:45:23 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -51,6 +51,9 @@ public interface LCIO{
     //    static const int LCREL_ONE2MANY = 31 ; // relation is one to many
     static const int LCREL_WEIGHTED = 31 ; // relations has weights
 
+
+    // LCGenericObject
+    static const int GOBIT_FIXED = 31 ; // is fixed size
 
     static const int READ_ONLY =  0 ;
     static const int UPDATE   =  1 ;
@@ -116,6 +119,9 @@ public interface LCIO{
     //  public static const int LCREL_ONE2MANY = 31 ; // relation is one to many
   public static const int LCREL_WEIGHTED = 31 ; // relations has weights
 
+
+  // LCGenericObject
+  public static const int GOBIT_FIXED = 31 ; // is fixed size
 
   public static const int READ_ONLY =  0 ;
   public static const int UPDATE   =  1 ;

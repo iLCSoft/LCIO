@@ -18,9 +18,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOTrackerHitHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -46,8 +44,7 @@ namespace SIO{
     
     
   unsigned int SIOTrackerHitHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
 

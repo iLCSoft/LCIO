@@ -2,6 +2,7 @@
 #define SIO_SIOOBJECTHANDLER_H 1
 
 #include "EVENT/LCObject.h"
+#include "EVENT/LCCollection.h"
 //#include "SIO_functions.h"
 #include "SIO_block.h"
 
@@ -15,7 +16,7 @@ namespace SIO{
  * for all event entities (hits, tracks, clusters,...).
  * 
  * @author gaede
- * @version Mar 6, 2003
+ * @version $Id: SIOObjectHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
  */
 class SIOObjectHandler {
   
@@ -24,34 +25,28 @@ public:
   /** Reads lcio objects from an SIO stream.
    */
   virtual unsigned int read(SIO_stream* stream, 
-			    EVENT::LCObject** objP,  
-			    unsigned int flag,
-			    unsigned int vers) =0 ;
+			    EVENT::LCObject** objP) =0 ;
   
   /** Writes lcio objects to an SIO stream.
    */
   virtual unsigned int write(SIO_stream* stream, 
-			     const EVENT::LCObject* obj,
-			     unsigned int flag) =0 ;
+			     const EVENT::LCObject* obj ) =0 ;
   
 
-
-  /**Initialize the handler based in the collection flag
+  /** Initialize the handler and/or the collection.
+   * Read/write the flag and the parameters.
+   * Overwrite for classes that need specific processing.
    */
-  virtual void init( unsigned int flag ) { /*no_op */ } 
+  virtual unsigned int init( SIO_stream* stream,
+			     SIO_operation op,
+			     EVENT::LCCollection* col,
+			     unsigned int vers ) ; 
+  
+ protected:
 
-//  protected:
-//   /**Helper method to compute the version number as float, i.e.
-//    *  v_f = major + minor/10.
-//    */
-//   inline float version2float( unsigned int vers) {
-// //     float major =  float(SIO_VERSION_MAJOR(vers)) ;
-// //     float minor = float(SIO_VERSION_MINOR(vers)) ;
-// //     return major + minor / 10. ;
-//     return float(SIO_VERSION_MAJOR(vers)) + 
-//       float(SIO_VERSION_MINOR(vers)) / 10. ; 
-//   }
-
+  unsigned int _flag ; 
+  unsigned int _vers ;
+  
 }; // class
 
 }; // namespace 

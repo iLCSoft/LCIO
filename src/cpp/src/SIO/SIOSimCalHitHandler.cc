@@ -20,9 +20,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOSimCalHitHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -32,16 +30,16 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
 
     // in v00-08 cellid1 has been stored by default
-    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) || 
+    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_ID1 ) || 
 
-	( SIO_VERSION_MAJOR(vers)==0 && SIO_VERSION_MINOR(vers)==8) ){
+	( SIO_VERSION_MAJOR(_vers)==0 && SIO_VERSION_MINOR(_vers)==8) ){
 
       SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
 
     }
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
 
-    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_LONG ) ){
       SIO_DATA( stream ,  hit->_position  , 3 ) ;
     }
 
@@ -55,7 +53,7 @@ namespace SIO{
       SIO_PNTR( stream , &(mcCon->Particle)  ) ;
       SIO_DATA( stream , &(mcCon->Energy) , 1 ) ;
       SIO_DATA( stream , &(mcCon->Time)   , 1 ) ;
-      if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_PDG ) )
+      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_PDG ) )
 	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
 
       hit->_vec.push_back(  mcCon  );
@@ -63,7 +61,7 @@ namespace SIO{
 
     // read a pointer tag for  reference to calorimeter hits
 
-    if( vers > SIO_VERSION_ENCODE( 1, 0) ){ 
+    if( _vers > SIO_VERSION_ENCODE( 1, 0) ){ 
       SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
     }
     
@@ -73,22 +71,21 @@ namespace SIO{
     
     
   unsigned int SIOSimCalHitHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
 	
     const SimCalorimeterHit* hit = dynamic_cast<const SimCalorimeterHit*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_ID1 ) ){
       LCSIO_WRITE( stream, hit->getCellID1()  ) ;
     }
     LCSIO_WRITE( stream, hit->getEnergy()  ) ;
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 
 
-    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_LONG ) ){
       float* pos = const_cast<float*> ( hit->getPosition() ) ; 
       SIO_DATA( stream,  pos , 3 ) ;
     }
@@ -103,7 +100,7 @@ namespace SIO{
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;
       LCSIO_WRITE( stream, hit->getTimeCont(i)  ) ;
-      if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_PDG ) )
+      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_PDG ) )
 	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
       
     }

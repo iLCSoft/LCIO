@@ -3,7 +3,7 @@
 #include "SIO/LCSIO.h"
 
 #include "EVENT/LCIO.h"
-#include "SIO/SIOLCParameters.h"
+// #include "SIO/SIOLCParameters.h"
 
 #include "IOIMPL/LCCollectionIOVec.h"
 
@@ -71,18 +71,14 @@ namespace SIO {
       }
       catch(DataNotAvailableException){   return LCIO::ERROR ; }
 
-      SIO_DATA( stream ,  &(ioCol->_flag) , 1  ) ;
+//       SIO_DATA( stream ,  &(ioCol->_flag) , 1  ) ;
       
-      // read parameters
-      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
-	SIOLCParameters::read( stream ,  ioCol->parameters() , versionID) ;
+//       // read parameters
+//       if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
+// 	SIOLCParameters::read( stream ,  ioCol->parameters() , versionID) ;
       
 
-      // LCGenericObjects are different in that they might have the fixed length
-      // of the attributes once in the block before the loop starts...
-      if( _myType == LCIO::LCGENERICOBJECT ){
-	//	SIOLCGenericObjectHandler.....( _ioCol->_flag ,
-      }
+      _myHandler->init( stream , SIO_OP_READ , ioCol , versionID ) ;
 
       int nObj ;
       SIO_DATA( stream ,  &nObj , 1  ) ;
@@ -92,7 +88,8 @@ namespace SIO {
 	
 	LCObject* obj ;
 	
-	status  = _myHandler->read( stream , &obj , ioCol->_flag , versionID ) ;
+	//	status  = _myHandler->read( stream , &obj , ioCol->_flag , versionID ) ;
+	status  = _myHandler->read( stream , &obj ) ;
 	if( !( status & 1 ) ) return status ;
 	
 	ioCol->push_back( obj ) ;
@@ -105,11 +102,11 @@ namespace SIO {
       
       if( _col  != 0 ){
 	
-	LCSIO_WRITE( stream, _col->getFlag()  ) ;
+// 	LCSIO_WRITE( stream, _col->getFlag()  ) ;
+// 	SIOLCParameters::write( stream ,  _col->getParameters() ) ;
 
-	// write parameters
-	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
-	  SIOLCParameters::write( stream ,  _col->getParameters() ) ;
+	_myHandler->init( stream , SIO_OP_WRITE , const_cast<LCCollection*>(_col) , version() ) ;
+
 
 	int nObj = _col->getNumberOfElements() ;
 
@@ -120,7 +117,8 @@ namespace SIO {
 	  
 	  const LCObject* obj = _col->getElementAt(i)  ;
 	  
-	  status  =  _myHandler->write( stream , obj , _col->getFlag() ) ; 
+// 	  status  =  _myHandler->write( stream , obj , _col->getFlag() ) ; 
+	  status  =  _myHandler->write( stream , obj  ) ; 
 	  if( !( status & 1 ) ) return status ;
 	  
 	}

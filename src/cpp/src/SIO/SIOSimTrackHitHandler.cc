@@ -18,9 +18,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOSimTrackHitHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -36,7 +34,7 @@ namespace SIO{
     SIO_PNTR( stream , &(hit->_particle)  ) ;
 
     // read the pointer tag in case we want to point to hits
-    if( vers > SIO_VERSION_ENCODE( 1, 0) ) {
+    if( _vers > SIO_VERSION_ENCODE( 1, 0) ) {
       SIO_PTAG( stream , dynamic_cast<const SimTrackerHit*>(hit) ) ;
     }
 	
@@ -46,8 +44,7 @@ namespace SIO{
     
     
   unsigned int SIOSimTrackHitHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
     // fg 20030609 changed to use SimTrackerHit

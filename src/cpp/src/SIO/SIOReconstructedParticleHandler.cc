@@ -20,9 +20,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOReconstructedParticleHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
 
@@ -129,8 +127,7 @@ namespace SIO{
     
     
   unsigned int SIOReconstructedParticleHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
     

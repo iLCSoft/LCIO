@@ -14,7 +14,7 @@ namespace SIO {
  * New types need to have their handler classes registered here. 
  *
  * @author gaede
- * @version Mar 6, 2003
+ * @version $Id: SIOHandlerMgr.h,v 1.4 2004-08-20 16:45:24 gaede Exp $
  */
   class SIOHandlerMgr {
     

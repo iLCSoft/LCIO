@@ -12,7 +12,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of MCParticles.
    *
    * @author gaede
-   * @version Mar 6, 2003
+   * @version $Id: SIOParticleHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
    */
   class SIOParticleHandler : public SIOObjectHandler {
 
@@ -21,16 +21,13 @@ namespace SIO {
     /** Reads lcio MCParticle objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,
-			      unsigned int flag, 
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
     /** Writes lcio MCParticle objects to an SIO stream.
      */
 	
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 
 
     static void restoreParentDaughterRelations( EVENT::LCEvent* evt) ;
@@ -40,9 +37,7 @@ namespace SIO {
     /** Reads lcio MCParticle objects from an SIO stream created with v00-08
      */
     virtual unsigned int readv00_08(SIO_stream* stream, 
-				    EVENT::LCObject** objP, 
-				    unsigned int flag,  
-				    unsigned int vers ) ;
+				    EVENT::LCObject** objP ) ;
 	
 
 

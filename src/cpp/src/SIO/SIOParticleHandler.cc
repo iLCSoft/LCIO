@@ -17,12 +17,10 @@ using namespace IOIMPL ;
 namespace SIO {
   
   unsigned int SIOParticleHandler::read(SIO_stream* stream, 
-					LCObject** objP, 
-					unsigned int flag,  
-					unsigned int vers ){
+					LCObject** objP){
 
-    if ( SIO_VERSION_MAJOR(vers)==0 && SIO_VERSION_MINOR(vers)==8)  
-      return readv00_08( stream, objP, flag, vers ) ;
+    if ( SIO_VERSION_MAJOR(_vers)==0 && SIO_VERSION_MINOR(_vers)==8)  
+      return readv00_08( stream, objP ) ;
     
     
     unsigned int status ; 
@@ -79,8 +77,7 @@ namespace SIO {
   }
   
   unsigned int SIOParticleHandler::write(SIO_stream* stream, 
-					 const LCObject* obj, 
-					 unsigned int flag ){
+					 const LCObject* obj){
 
     //fg 20030609 changed to use MCParticle    
     unsigned int status ; 
@@ -129,9 +126,7 @@ namespace SIO {
   }
 
   unsigned int SIOParticleHandler::readv00_08(SIO_stream* stream, 
-					LCObject** objP, 
-					unsigned int flag,  
-					unsigned int vers ){
+					      LCObject** objP){
     unsigned int status ; 
     
     // create a new object :

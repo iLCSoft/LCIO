@@ -10,7 +10,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of SimTrackerHits.
  *
  * @author gaede
- * @version Mar 12, 2003
+ * @version $Id: SIOSimTrackHitHandler.h,v 1.4 2004-08-20 16:45:25 gaede Exp $
  */
 
   class SIOSimTrackHitHandler : public SIOObjectHandler {
@@ -20,15 +20,12 @@ namespace SIO {
     /** Reads lcio tracker hit objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,  
-			      unsigned int flag,
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
     /** Writes lcio objects to an SIO stream.
      */
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 	
   }; // class
 }; // namespace

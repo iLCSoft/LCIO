@@ -10,7 +10,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of StrVecs.
  *
  * @author vogt
- * @version jun 18, 2004
+ * @version $Id: SIOStrVecHandler.h,v 1.2 2004-08-20 16:45:25 gaede Exp $
  */
   class SIOStrVecHandler : public SIOObjectHandler {
 	
@@ -19,15 +19,12 @@ namespace SIO {
     /** Reads objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,  
-			      unsigned int flag,
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
     /** Writes lcio objects to an SIO stream.
      */
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 	
   }; // class
 }; // namespace

@@ -19,9 +19,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOTPCHitHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -33,7 +31,7 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_charge) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
 
-    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_RAW ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_RAW ) ){
 
       SIO_DATA( stream ,  &(hit->_rawSize)  , 1 ) ;
 
@@ -44,8 +42,8 @@ namespace SIO{
     }
 
 //     // read a pointer tag for reference to TPC hits from generic hits
-    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_PTR )  &&
-	vers > SIO_VERSION_ENCODE( 1, 0) ) { 
+    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_PTR )  &&
+	_vers > SIO_VERSION_ENCODE( 1, 0) ) { 
       SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
     }
     
@@ -54,8 +52,7 @@ namespace SIO{
     
     
   unsigned int SIOTPCHitHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
 
@@ -66,7 +63,7 @@ namespace SIO{
     LCSIO_WRITE( stream, hit->getCharge()  ) ;
     LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
-    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_RAW ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_RAW ) ){
       
       LCSIO_WRITE( stream, hit->getNRawDataWords()  ) ;
 
@@ -76,7 +73,7 @@ namespace SIO{
     }
 
     //  add a pointer tag for reference to TPC hits from generic hits
-    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_PTR ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_PTR ) ){
       SIO_PTAG( stream , hit ) ;
     }
     

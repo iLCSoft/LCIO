@@ -11,7 +11,7 @@ namespace SIO {
 /** IO of LCParameters.
  *
  * @author gaede
- * @version Jun  24, 2004
+ * @version $Id: SIOLCParameters.h,v 1.3 2004-08-20 16:45:24 gaede Exp $
  */
   class SIOLCParameters : public IMPL::LCParametersImpl{
 	

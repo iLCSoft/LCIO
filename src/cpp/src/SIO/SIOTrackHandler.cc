@@ -18,9 +18,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOTrackHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
 
@@ -87,7 +85,7 @@ namespace SIO{
     }
 
 
-    if( LCFlagImpl(flag).bitSet( LCIO::TRBIT_HITS ) ){ 
+    if( LCFlagImpl(_flag).bitSet( LCIO::TRBIT_HITS ) ){ 
 
       int nHits ;
       SIO_DATA( stream, &nHits , 1  ) ;
@@ -135,8 +133,7 @@ namespace SIO{
     
     
   unsigned int SIOTrackHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
     
@@ -196,7 +193,7 @@ namespace SIO{
     }
 
 
-    if( LCFlagImpl(flag).bitSet( LCIO::TRBIT_HITS ) ){ 
+    if( LCFlagImpl(_flag).bitSet( LCIO::TRBIT_HITS ) ){ 
 
       const TrackerHitVec& hits = trk->getTrackerHits() ;
       int nHits=  hits.size() ;

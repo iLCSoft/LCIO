@@ -10,25 +10,22 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of ReconstructedParticles.
  *
  * @author gaede
- * @version Mar 31, 2004
+ * @version $Id: SIOReconstructedParticleHandler.h,v 1.3 2004-08-20 16:45:24 gaede Exp $
  */
 
   class SIOReconstructedParticleHandler : public SIOObjectHandler {
 	
   public:
 	
-    /** Reads lcio reconstructedParticleer hit objects from an SIO stream.
+    /** Reads lcio ReconstructedParticle objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,  
-			      unsigned int flag,
-			      unsigned int vers)  ;
+			      EVENT::LCObject** objP)  ;
 	
-    /** Writes lcio objects to an SIO stream.
+    /** Writes lcio ReconstructedParticle objects to an SIO stream.
      */
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
-			       unsigned int flag) ;
+			       const EVENT::LCObject* obj) ;
 	
   }; // class
 }; // namespace

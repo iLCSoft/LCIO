@@ -20,9 +20,7 @@ using namespace IOIMPL ;
 namespace SIO{
     
   unsigned int SIOLCWgtRelationHandler::read(SIO_stream* stream, 
-				      LCObject** objP,
-				      unsigned int flag,
-				      unsigned int vers ){
+				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
@@ -33,7 +31,7 @@ namespace SIO{
     SIO_PNTR( stream , &(rel->_from ) );
     SIO_PNTR( stream , &(rel->_to ) ) ;
     
-    if( LCFlagImpl(flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
       
       SIO_DATA( stream ,  &(rel->_weight) , 1  ) ;
       
@@ -43,8 +41,7 @@ namespace SIO{
   
     
   unsigned int SIOLCWgtRelationHandler::write(SIO_stream* stream, 
-				       const LCObject* obj,
-				       unsigned int flag ){
+				       const LCObject* obj){
     
     unsigned int status ; 
 
@@ -56,7 +53,7 @@ namespace SIO{
     LCObject* to = rel->getTo() ;
     SIO_PNTR( stream,  &to ) ;
 
-    if( LCFlagImpl(flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
+    if( LCFlagImpl(_flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
 
       LCSIO_WRITE( stream ,  rel->getWeight() ) ;
 
