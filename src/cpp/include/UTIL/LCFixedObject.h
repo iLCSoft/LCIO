@@ -20,7 +20,7 @@ namespace UTIL{
    *  and LCGenericObject::getDataDescription().
    * 
    * @author gaede
-   * @version $Id: LCFixedObject.h,v 1.1 2005-02-11 15:26:55 gaede Exp $
+   * @version $Id: LCFixedObject.h,v 1.2 2005-02-25 17:27:45 gaede Exp $
    */
 
   template <int NINT, int NFLOAT, int NDOUBLE>
@@ -46,6 +46,17 @@ namespace UTIL{
       
       _obj = dynamic_cast<LCGenericObjectImpl*>( obj )  ;
       
+      if( _obj==0 ){
+
+	// could be an instance of LCFixedObject !?
+	LCFixedObject<NINT,NFLOAT,NDOUBLE>* f = 
+	  dynamic_cast< LCFixedObject<NINT,NFLOAT,NDOUBLE>* >( obj ) ;
+
+	if( f != 0 )
+	  _obj = f->obj() ;
+
+      }
+
       // do some sanity checks ...
       if( _obj==0 ){
 	throw Exception("Cannot create LCFixedObject from sth."
