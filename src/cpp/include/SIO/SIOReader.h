@@ -32,6 +32,17 @@ namespace SIO {
     // Destructor
     virtual ~SIOReader() ;
     
+
+    /** Opens a list of files for reading (read-only). All subsequent
+     * read operations will operate on the list, i.e. if an EOF is encountered
+     * the next file in the list will be opened and read transparently to the
+     * user.
+     * @throws IOException
+     */
+    virtual void open(const std::vector<std::string>& filenames) 
+      throw (IO::IOException, std::exception) ;
+
+
     /** Opens a file for reading (read-only).
      * @throws IOException
      */
@@ -143,6 +154,9 @@ namespace SIO {
     std::set<IO::LCRunListener*> _runListeners ;
     std::set<IO::LCEventListener*> _evtListeners ;
     
+    const std::vector<std::string>* _myFilenames ;
+    unsigned int _currentFileIndex ;
+
   }; // class
 }; // namespace
 

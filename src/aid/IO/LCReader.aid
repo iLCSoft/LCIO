@@ -17,6 +17,17 @@ public interface LCReader {
      */
     public void open(const String& filename) throws IOException  ;
 
+
+    /** Opens a list of files for reading (read-only). All subsequent
+     * read operations will operate on the list, i.e. if an EOF is encountered
+     * the next file in the list will be opened and read transparently to the
+     * user.
+     *
+     * @throws IOException
+     */
+    public void open(const String[]& filenames) throws IOException  ;
+
+
     /** Reads the next run header from the file. Returns NULL if
      * 'EOF' read. 
      *

@@ -25,13 +25,16 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.9 2003-09-16 10:30:18 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.10 2004-02-17 15:09:28 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
    private List eventListeners = new ArrayList();
    private List runListeners = new ArrayList();
    private SIOReader reader;
+
+   private String[] _filenames ;
+   private int _currentIndex ;
 
    public void close() throws IOException
    {
@@ -42,6 +45,20 @@ class SIOLCReader implements LCReader
    {
       reader = new SIOReader(new FileInputStream(filename));
    }
+
+    /** Opens a list of files for reading (read-only). All subsequent
+     * read operations will operate on the list, i.e. if an EOF is encountered
+     * the next file in the list will be opened and read transparently to the
+     * user.
+     *
+     * @throws IOException
+     */
+    public void open(String[] filenames) throws IOException{
+	_filenames = filenames ;
+	_currentIndex=0 ;
+	open( _filenames[ _currentIndex ] );
+    }
+
 
    public LCEvent readEvent(int runNumber, int evtNumber) throws IOException
    {
@@ -64,7 +81,12 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-         return null;
+	if( _filenames != null  && ++_currentIndex < _filenames.length ){
+	    close() ;
+	    open( _filenames[ _currentIndex ] ) ;
+	    return readEvent( runNumber, evtNumber) ;
+	} 
+	return null;
       }
    }
 
@@ -86,6 +108,11 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
+	if( _filenames != null  && ++_currentIndex < _filenames.length ){
+	    close() ;
+	    open( _filenames[ _currentIndex ] ) ;
+	    return readNextEvent( accessMode ) ;
+	} 
          return null;
       }
    }
@@ -122,6 +149,11 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
+	if( _filenames != null  && ++_currentIndex < _filenames.length ){
+	    close() ;
+	    open( _filenames[ _currentIndex ] ) ;
+	    return readNextRunHeader( accessMode ) ;
+	} 
          return null;
       }
    }
@@ -173,9 +205,15 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-         if (maxRecords < 0)
+	if( _filenames != null  && ++_currentIndex < _filenames.length ){
+	    close() ;
+	    open( _filenames[ _currentIndex ] ) ;
+	    readStream( maxRecords ) ;
+	} 
+
+	if (maxRecords < 0)
             return;
-         else
+	else
             throw x;
       }
    }

@@ -24,7 +24,7 @@ public class AnalysisJob
          help();
 
       LCReader lcReader = LCFactory.getInstance().createLCReader();
-      lcReader.open(args[0]);
+      lcReader.open(args);
 
       for (;;)
       {
@@ -36,7 +36,7 @@ public class AnalysisJob
 
       // close and reopen the file
       lcReader.close();
-      lcReader.open(args[0]);
+      lcReader.open(args);
 
       // dump all events in the file
       int nEvents = 0;
@@ -58,13 +58,18 @@ public class AnalysisJob
          nEvents++;
       }
 
-      System.out.println("  " + nEvents + " events read from file : " + args[0]);
+      System.out.println("  " + nEvents + " events read from files : ") ; 
+      for(int i=0;i<args.length;i++){
+	  System.out.println("       " + args[i] ) ;
+      }
+
+
       lcReader.close();
    }
 
    private static void help()
    {
-      System.out.println("java " + AnalysisJob.class.getName() + " <input-file>");
+      System.out.println("java " + AnalysisJob.class.getName() + " <input-file1> [[input-file2],...]");
       System.exit(1);
    }
 }

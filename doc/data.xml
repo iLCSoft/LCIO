@@ -17,9 +17,10 @@
     <block name="OutputHeader" major="1" minor="0">
       <data type="int" name="isr flag"/>
       <data type="float" name="collider energy"/>
-      <data type="int" name="flag0">to be defined</data>
-      <data type="int" name="flag1">to be defined</data>
+      <data type="int" name="flag0">reserved for LCIO (to be defined)</data>
+      <data type="int" name="flag1">user defined</data>
       <data type="string" name="reconstruction program tag"/>
+      <!-- better have a tag per collection ? -->
       <data type="float" name="b-field"/>
     </block>
     
@@ -40,19 +41,27 @@
       <data type="int" name="nObject"/>
       <repeat count="nObject">
         <data type="int" name="primary">0: secondary, 1: primary</data>
-	<data type="int" name="ObjectType"> charged/ neutral particle </data>
-	<data type="float[4]" name="3-Vec"> 3-vector of object (px, py, pz)</data>
-	<data type="float[1]" name="energy"> energy of object (if measured independently)</data>
-	<data type="float" name="Charge"/>
+	<!-- definition needed -->
+	<data type="int" name="type">single particle, compound particle (V0,B), jet</data>
+        <data type="float[4]" name="4vec">4-vector of object (px, py, pz, E)</data>
 	<data type="float[10]" name="covariance">cov matrix for 4-Vec</data>
+	<data type="float" name="mass">mass of object used for 4vec</data>
+	<data type="float" name="charge"/>
+
 	<data type="float[3]" name="reference"> reference point for 4-vec</data>
 	<data type="float[5?]" name="PID_type"> particle type: e,g,pi,K,p,...?</data>
+
 	<data type="int" name="nmc"/>
 	<repeat count="nmc">
 	  <data type="pntr" name="MCParticle"/>
 	  <data type="float" name="weight"/>
 	</repeat>
 	<data type="int" name="ntrk"/>
+        <data type="int" name="nrecopart"/>
+        <repeat count="nrecopart">
+	  <data type="pntr" name="ReconstructedParticle"></data>
+	  <data type="float" name="weight">weight of contribution</data>
+        </repeat>
 	<repeat count="ntrk">
 	  <data type="pntr" name="Track"/>
 	  <data type="float" name="weight">TODO: to be defined </data>

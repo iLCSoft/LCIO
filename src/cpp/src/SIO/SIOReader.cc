@@ -1,5 +1,6 @@
 #include "SIO/SIOReader.h" 
 
+
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h"
@@ -45,13 +46,20 @@ namespace SIO {
 
   //#define DEBUG 1
 
-  SIOReader::SIOReader() {
-  
+  SIOReader::SIOReader() 
+//     :     
+//     _myFilenames(0), 
+//     _currentFileIndex(0) 
+  {
+    _myFilenames = 0 ;
+    _currentFileIndex = 0 ;
+
     _evtP = new LCEventIOImpl* ;
     *_evtP = 0 ;
 
     _runP = new LCRunHeaderIOImpl* ;
     *_runP = 0 ;
+
 
     // this is our default event 
     // collections are attached to this event when blocks are read
@@ -81,6 +89,14 @@ namespace SIO {
   }
 
 
+
+  void SIOReader::open(const std::vector<std::string>& filenames) 
+    throw( IOException , std::exception){
+    
+    _myFilenames = &filenames ;
+    _currentFileIndex = 0 ;
+    open( (*_myFilenames)[ _currentFileIndex ]  ) ;
+  }
 
   void SIOReader::open(const std::string& filename) throw( IOException , std::exception)  {
 
@@ -132,8 +148,20 @@ namespace SIO {
       unsigned int status =  _stream->read( &_dummyRecord ) ;
       if( ! (status & 1)  ){
 
-	if( status & SIO_STREAM_EOF )
+	if( status & SIO_STREAM_EOF ){
+
+	  // if we have a list of filenames open the next file
+	  if( _myFilenames != 0  && ++_currentFileIndex < _myFilenames->size()  ){
+	    close() ;
+
+	    open( (*_myFilenames)[ _currentFileIndex  ] ) ;
+
+	    readRecord() ;
+	    return ;
+	  }
+
 	  throw EndOfDataException("EOF") ;
+	}
 
 	throw IOException( std::string(" io error on stream: ") + *_stream->getName() ) ;
 

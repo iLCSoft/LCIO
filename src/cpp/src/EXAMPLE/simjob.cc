@@ -38,21 +38,21 @@ static string FILEN = "simjob.slcio" ;
 int main(int argc, char** argv ){
   
   try{
-    // create sio writer
-    LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
-    
-    if( argc > 1 ) { FILEN = argv[1] ; }
-    
-    try{  lcWrt->open( FILEN ) ;
-    }
-    catch( IOException& e ){    
-      cout << e.what() << endl ;
-      return 0 ;
-    }
     
     // loop over runs
     for(int rn=0;rn<NRUN;rn++){
       
+      // create sio writer
+      LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
+      
+      if( argc > 1 ) { FILEN = argv[1] ; }
+      
+      if( rn==0 )
+	lcWrt->open( FILEN , LCIO::WRITE_NEW )  ;
+      else
+	lcWrt->open( FILEN , LCIO::WRITE_APPEND )  ;
+
+
       LCRunHeaderImpl* runHdr = new LCRunHeaderImpl ; 
       runHdr->setRunNumber( rn ) ;
       
@@ -300,6 +300,9 @@ int main(int argc, char** argv ){
 
       delete runHdr ;
 
+      lcWrt->close() ;
+      delete lcWrt ;
+
     } // run loop
     
     cout << endl 
@@ -308,7 +311,6 @@ int main(int argc, char** argv ){
     
     
     
-    lcWrt->close() ;
   
   } catch( Exception& ex){
 
