@@ -224,8 +224,8 @@ int main(int argc, char** argv ){
 	evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
 	evt->addCollection( (LCCollection*) calVec , ecalName ) ;
 	evt->addCollection( (LCCollection*) trkVec , tpcName ) ;
-	evt->addCollection( (LCCollection*) extFVec , tpcName+"UserFloatExtensionTPC" ) ;
-	evt->addCollection( (LCCollection*) extIVec , tpcName+"UserIntExtensionTPC" ) ;
+	evt->addCollection( (LCCollection*) extFVec , tpcName+"UserFloatExtension" ) ;
+	evt->addCollection( (LCCollection*) extIVec , tpcName+"UserIntExtension" ) ;
 	
 	
 	
