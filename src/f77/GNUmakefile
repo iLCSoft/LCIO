@@ -46,3 +46,7 @@ $(BINDIR)/pysimjob_F: pysimjob.o $(INSTALL)/liblcio.a
 $(BINDIR)/test_F: test.o $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/test_F test.o  $(LIBS)
 
+$(BINDIR)/simjob_F: simjob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/simjob_F simjob.o  $(LIBS)
+
+
