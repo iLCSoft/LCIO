@@ -116,25 +116,25 @@ namespace IMPL{
     sort( _pid.begin() , _pid.end() , PIDSort()  ) ;
   }
 
-  void ReconstructedParticleImpl::addParticle( const ReconstructedParticle* particle , float weight = 1.0 ){
+  void ReconstructedParticleImpl::addParticle( const ReconstructedParticle* particle , float weight ){
     checkAccess("ReconstructedParticleImpl::addParticle" );
     _particles.push_back( particle ) ;
     _particleWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addCluster( const Cluster* cluster, float weight = 1.0 ){
+  void ReconstructedParticleImpl::addCluster( const Cluster* cluster, float weight ){
     checkAccess("ReconstructedParticleImpl::addCluster" );
     _clusters.push_back( cluster ) ;
     _clusterWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addTrack( const Track* track, float weight = 1.0 ){
+  void ReconstructedParticleImpl::addTrack( const Track* track, float weight ){
     checkAccess("ReconstructedParticleImpl::addTrack" );
     _tracks.push_back( track ) ;
     _trackWeights.push_back( weight ) ;
   }
   
-  void ReconstructedParticleImpl::addMCParticle( const MCParticle* mcParticle , float weight = 1.0 ){
+  void ReconstructedParticleImpl::addMCParticle( const MCParticle* mcParticle , float weight ){
     checkAccess("ReconstructedParticleImpl::addMCParticle" );
     _mcParticles.push_back( mcParticle ) ;
     _mcParticleWeights.push_back( weight ) ;

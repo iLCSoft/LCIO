@@ -11,7 +11,7 @@ namespace IMPL {
 
   /** Helper class to sort ParticleIDs wrt. their probability
    */
-  class PIDSort : public binary_function<EVENT::ParticleID*,EVENT::ParticleID*,bool>{
+  class PIDSort : public std::binary_function<EVENT::ParticleID*,EVENT::ParticleID*,bool>{
   public:
     bool operator()(const EVENT::ParticleID* p1, const EVENT::ParticleID* p2){
       return p1->getProbability() > p2->getProbability() ;
