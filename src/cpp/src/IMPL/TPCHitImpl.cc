@@ -65,5 +65,11 @@ namespace IMPL{
    memcpy( _rawDataArray,  rawData , size*sizeof(int) ) ;
   }
 
+  void TPCHitImpl::initRawDataArray(int size){
+    if( _rawDataArray  != 0 ) delete[] _rawDataArray ;
+    _rawDataArray = new int[size] ;
+    _rawDataSize = size ;
+  }
+
 
 }; // namespace IMPL

@@ -36,6 +36,9 @@ namespace SIO{
     if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_RAW ) ){
 
       SIO_DATA( stream ,  &(hit->_rawDataSize)  , 1 ) ;
+
+      hit->initRawDataArray( hit->_rawDataSize ) ; // reserve enough space for raw data
+
       SIO_DATA( stream ,  hit->_rawDataArray  , hit->_rawDataSize  ) ;
 
     }

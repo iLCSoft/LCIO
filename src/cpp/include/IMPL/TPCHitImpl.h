@@ -72,6 +72,11 @@ public:
   virtual void setRawData(const int* rawData, int size ) ;
 
 protected:
+  /** initialize the raw data array - for faster reading
+   */
+  virtual void initRawDataArray(int size) ;
+
+
   int _cellID ;
   float _time ;
   float _charge ;
