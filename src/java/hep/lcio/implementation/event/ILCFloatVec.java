@@ -6,9 +6,9 @@ import hep.lcio.data.LCFloatVec;
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCFloatVec.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: ILCFloatVec.java,v 1.7 2003-09-15 21:44:31 tonyj Exp $
  */
-public class ILCFloatVec implements LCFloatVec
+public class ILCFloatVec extends ILCObject implements LCFloatVec
 {
    protected float[] data;
    protected int size = 0;

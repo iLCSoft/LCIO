@@ -35,19 +35,19 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.11 2003-09-11 14:07:07 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.12 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
    private Map blockMap;
 
-   SIOEvent(SIORecord record) throws IOException
+   SIOEvent(SIORecord record, int accessMode) throws IOException
    {
+      setAccess(accessMode);
       SIOBlock block = record.getBlock();
 
-      //fg 20030509 versions older than v00-03 no longer supported
-      if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
-         throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
+      if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+         throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
       SIOInputStream in = block.getData();
       runNumber = in.readInt();
@@ -66,7 +66,14 @@ class SIOEvent extends ILCEvent
          blockMap.put(blockName, blockType);
       }
    }
-
+   void setReadOnly(boolean mode)
+   {
+      super.setAccess(mode ? LCIO.READ_ONLY : LCIO.UPDATE);
+   }
+   void checkSIOAccess()
+   {
+      super.checkAccess();
+   }
    void readData(SIORecord record) throws IOException
    {
       for (;;)
@@ -75,9 +82,8 @@ class SIOEvent extends ILCEvent
          if (block == null)
             break;
 
-         //fg 20030509 versions older than v00-03 no longer supported
-         if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
-            throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
+         if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+            throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
@@ -88,54 +94,70 @@ class SIOEvent extends ILCEvent
          {
             int flags = in.readInt();
             int nMC = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, nMC);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
             for (int i = 0; i < nMC; i++)
-               ilc.add(new SIOMCParticle(in));
+               ilc.add(new SIOMCParticle(in, this));
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.SIMTRACKERHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, n);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOSimTrackerHit(in));
+               ilc.add(new SIOSimTrackerHit(in, this));
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.TPCHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, n);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add (new SIOTPCHit(in,flags) );
+               ilc.add (new SIOTPCHit(in,flags, this) );
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.SIMCALORIMETERHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, n);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOSimCalorimeterHit(in, flags));
+               ilc.add(new SIOSimCalorimeterHit(in, flags, this));
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.CALORIMETERHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, n);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOCalorimeterHit(in, flags));
+               ilc.add(new SIOCalorimeterHit(in, flags, this));
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.LCFLOATVEC))
          {
             int flags = in.readInt();
             int n = in.readInt();
-            ILCCollection ilc = new ILCCollection(type, flags, n);
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOFloatVec(in));
+               ilc.add(new SIOFloatVec(in, this));
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.LCINTVEC))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOIntVec(in, this));
+            ilc.setOwner(this);
             addCollection(ilc, name);
          }
       }
@@ -143,8 +165,6 @@ class SIOEvent extends ILCEvent
 
    static void write(LCEventData event, SIOWriter writer, boolean headerOnly) throws IOException
    {
-      // fg20030513 - changed back to tony's original version
-      // we don't duplicate the event header in the C++ implementation any more ...
       if (headerOnly)
       {
          SIOOutputStream out = writer.createBlock(SIOFactory.eventHeaderBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);

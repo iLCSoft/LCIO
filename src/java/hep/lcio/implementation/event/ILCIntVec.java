@@ -6,9 +6,9 @@ import hep.lcio.data.LCIntVec;
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCIntVec.java,v 1.1 2003-09-06 01:04:45 tonyj Exp $
+ * @version $Id: ILCIntVec.java,v 1.2 2003-09-15 21:44:31 tonyj Exp $
  */
-public class ILCIntVec implements LCIntVec
+public class ILCIntVec extends ILCObject implements LCIntVec
 {
    protected int[] data;
    protected int size = 0;

@@ -13,7 +13,7 @@ import hep.lcio.exceptions.DataNotAvailableException;
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.7 2003-09-10 18:19:46 gaede Exp $
+ * @version $Id: ILCEvent.java,v 1.8 2003-09-15 21:44:31 tonyj Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -94,6 +94,7 @@ public class ILCEvent extends ILCObject implements LCEvent
 
    public void removeCollection(String name)
    {
+      checkAccess();
       collections.remove(name);
    }
 }

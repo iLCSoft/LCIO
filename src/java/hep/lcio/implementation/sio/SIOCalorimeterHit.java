@@ -17,12 +17,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.7 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
-   SIOCalorimeterHit(SIOInputStream in, int flags) throws IOException
+   SIOCalorimeterHit(SIOInputStream in, int flags, SIOEvent owner) throws IOException
    {
+      setParent(owner);
       cellId0 = in.readInt();
       cellId1 = in.readInt();
       energy = in.readFloat();

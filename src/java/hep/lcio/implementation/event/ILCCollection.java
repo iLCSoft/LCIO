@@ -14,12 +14,11 @@ import java.util.List;
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.5 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: ILCCollection.java,v 1.6 2003-09-15 21:44:31 tonyj Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {
    private String type;
-   private int accessFlag = LCIO.UPDATE;
    private int flag;
 
    public ILCCollection(String type)
@@ -61,6 +60,7 @@ public class ILCCollection extends ArrayList implements LCCollection
 
    public void add(LCObject object)
    {
+      checkAccess();
       super.add(object);
    }
 
@@ -78,7 +78,6 @@ public class ILCCollection extends ArrayList implements LCCollection
 
    protected void checkAccess()
    {
-      if (accessFlag != LCIO.UPDATE)
-         throw new ReadOnlyException();
+      
    }
 }

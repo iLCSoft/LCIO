@@ -16,12 +16,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.7 2003-09-08 23:10:20 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.8 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
-   SIOMCParticle(SIOInputStream in) throws IOException
-   {
+   SIOMCParticle(SIOInputStream in, SIOEvent owner) throws IOException
+   {      
+      setParent(owner);
       in.readPTag(this);
       parent = in.readPntr();
       secondParent = in.readPntr();

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.7 2003-09-08 17:20:42 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.8 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -45,24 +45,21 @@ class SIOLCReader implements LCReader
 
    public LCEvent readEvent(int runNumber, int evtNumber) throws IOException
    {
-      //FIXME: need implementation
-      return readNextEvent();
-   }
-
-   public LCEvent readNextEvent() throws IOException
-   {
       try
       {
          for (;;)
-         {
+         {            
             SIORecord record = reader.readRecord();
             String name = record.getRecordName();
-            if (!name.equals(SIOFactory.eventHeaderRecordName))
-               continue;
+            if (SIOFactory.eventHeaderRecordName.equals(name)) continue;
 
-            SIOEvent event = new SIOEvent(record);
-            event.readData(reader.readRecord());
-            return event;
+            SIOEvent event = new SIOEvent(record,LCIO.READ_ONLY);
+            if (event.getRunNumber() == runNumber && event.getEventNumber() == evtNumber)
+            {
+               event.readData(reader.readRecord());
+               return event;
+            }
+            else reader.readRecord();
          }
       }
       catch (EOFException x)
@@ -73,8 +70,29 @@ class SIOLCReader implements LCReader
 
    public LCEvent readNextEvent(int accessMode) throws IOException
    {
-      //FIXME: What to do with access mode
-      return readNextEvent();
+      try
+      {
+         for (;;)
+         {
+            SIORecord record = reader.readRecord();
+            String name = record.getRecordName();
+            if (!name.equals(SIOFactory.eventHeaderRecordName))
+               continue;
+
+            SIOEvent event = new SIOEvent(record,accessMode);
+            event.readData(reader.readRecord());
+            return event;
+         }
+      }
+      catch (EOFException x)
+      {
+         return null;
+      }
+   }
+
+   public LCEvent readNextEvent() throws IOException
+   {
+      return readNextEvent(LCIO.READ_ONLY);
    }
 
    public LCRunHeader readNextRunHeader() throws IOException
@@ -90,9 +108,8 @@ class SIOLCReader implements LCReader
 
             SIOBlock block = record.getBlock();
 
-            //fg 20030509 versions older than v00-03 no longer supported
-            if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
-               throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
+            if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+               throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
             return new SIORunHeader(block.getData());
          }
@@ -123,9 +140,8 @@ class SIOLCReader implements LCReader
                {
                   SIOBlock block = record.getBlock();
 
-                  //fg 20030509 versions older than v00-03 no longer supported
-                  if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
-                     throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
+                  if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+                     throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
                   SIORunHeader header = new SIORunHeader(block.getData());
                   for (int i = 0; i < l; i++){
@@ -140,13 +156,11 @@ class SIOLCReader implements LCReader
                int l = eventListeners.size();
                if (l > 0)
                {
-                  SIOEvent event = new SIOEvent(record);
+                  SIOEvent event = new SIOEvent(record,LCIO.READ_ONLY);
                   event.readData(reader.readRecord());
-		  // FIX ME: need to set access mode here....
-                  for (int i = 0; i < l; i++){
-                     ((LCEventListener) eventListeners.get(i)).processEvent(event);
-                     ((LCEventListener) eventListeners.get(i)).modifyEvent(event);
-		  }
+                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).processEvent(event); }
+                  event.setReadOnly(false);
+                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).modifyEvent(event); }
                }
             }
          }

@@ -20,7 +20,7 @@ import hep.lcio.exceptions.* ;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.8 2003-09-10 18:19:46 gaede Exp $
+ * @version $Id: SIOLCWriter.java,v 1.9 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -33,15 +33,14 @@ class SIOLCWriter implements LCWriter
 
    public void open(String filename) throws IOException
    {
-      // FIX ME - what is the default behavior 
-      // for existing files ?
-      writer = new SIOWriter(new FileOutputStream(filename));
+      open(filename,LCIO.WRITE_NEW);
    }
 
    public void open(String filename, int writeMode) throws IOException
    {
-      // FIX ME - need implementation for append mode
-      throw new IOException("append not yet supported");
+      boolean append = writeMode == LCIO.WRITE_APPEND;
+      if (!filename.endsWith(".slcio")) filename += ".slcio";
+      writer = new SIOWriter(new FileOutputStream(filename,append));
    }
 
    public void writeEvent(LCEventData evt) throws IOException

@@ -17,12 +17,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.6 2003-09-10 18:19:46 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.7 2003-09-15 21:44:33 tonyj Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
-   SIOSimTrackerHit(SIOInputStream in) throws IOException
+   SIOSimTrackerHit(SIOInputStream in, SIOEvent owner) throws IOException
    {
+      setParent(owner);
       cellID = in.readInt();
       position[0] = in.readDouble();
       position[1] = in.readDouble();

@@ -13,12 +13,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFloatVec.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOFloatVec.java,v 1.7 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOFloatVec extends ILCFloatVec
 {
-   SIOFloatVec(SIOInputStream in) throws IOException
+   SIOFloatVec(SIOInputStream in, SIOEvent owner) throws IOException
    {
+      setParent(owner);
       size = in.readInt();
       data = new float[size];
       for (int i = 0; i < size; i++)

@@ -19,12 +19,13 @@ import org.apache.xml.utils.RawCharacterHandler;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTPCHit.java,v 1.1 2003-09-11 14:07:07 gaede Exp $
+ * @version $Id: SIOTPCHit.java,v 1.2 2003-09-15 21:44:33 tonyj Exp $
  */
 class SIOTPCHit extends ITPCHit
 {
-   SIOTPCHit(SIOInputStream in, int flags) throws IOException
+   SIOTPCHit(SIOInputStream in, int flags, SIOEvent owner) throws IOException
    {
+      setParent(owner);
       cellID = in.readInt();
       time = in.readFloat();
       charge = in.readFloat();

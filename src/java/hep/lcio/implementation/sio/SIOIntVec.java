@@ -13,12 +13,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOIntVec.java,v 1.1 2003-09-06 01:04:45 tonyj Exp $
+ * @version $Id: SIOIntVec.java,v 1.2 2003-09-15 21:44:32 tonyj Exp $
  */
 class SIOIntVec extends ILCIntVec
 {
-   SIOIntVec(SIOInputStream in) throws IOException
+   SIOIntVec(SIOInputStream in, SIOEvent owner) throws IOException
    {
+      setParent(owner);
       size = in.readInt();
       data = new int[size];
       for (int i = 0; i < size; i++)
