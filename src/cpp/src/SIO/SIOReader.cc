@@ -406,7 +406,6 @@ namespace SIO {
 	
       try{ 
 	readRecord() ;
-	recordsRead++ ;
       }
       catch(EndOfDataException){
 	
@@ -418,13 +417,15 @@ namespace SIO {
 	  std::stringstream message ;
 	  message << "SIOReader::readStream(int maxRecord) : EOF before " 
 		  << maxRecord << " records read from file" << std::ends ;
-	  throw IOException( message.str())  ;
+	  throw EndOfDataException( message.str())  ;
 	}
       }
       
       // notify LCRunListeners 
       if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
 	
+	recordsRead++ ;
+
 	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
 	while( iter != _runListeners.end() ){
 
@@ -439,6 +440,8 @@ namespace SIO {
       // notify LCEventListeners 
       if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
 	
+	recordsRead++ ;
+
 	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
 	while( iter != _evtListeners.end() ){
 
