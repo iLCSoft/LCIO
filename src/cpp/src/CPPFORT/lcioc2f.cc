@@ -28,7 +28,7 @@ int lrdrOpen(PTRTYPE reader, const char* filename ){
   try{
     lcReader->open( filename ) ; 
     return LCIO::SUCCESS ;
-  }catch(Exception& e){
+  }catch(IOException& e){
     std::cerr << "Exception in lrdrOpen: " << e.what() << std::endl ;
     return LCIO::ERROR ;
   }
