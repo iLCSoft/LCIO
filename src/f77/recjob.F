@@ -18,8 +18,8 @@
 
 C----- some constants
 
-      fileiname = 'simjob.slcio'
-      fileoname = 'recjob_F.slcio'
+      fileiname = 'f_simjob.slcio'
+      fileoname = 'f_recjob.slcio'
 
       call srand ( 1234 )
 
