@@ -682,7 +682,7 @@ namespace UTIL {
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
 #endif
       cout << index << " [" ;
-      for(int k=0;k<part.lcObj()->getNumberOfParents();k++){
+      for(int k=0;k<part->getNumberOfParents();k++){
 	if(k>0) cout << "," ;
 	cout << p2i_map[ part->getParent(k) ]  ;
       }
