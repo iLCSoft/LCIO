@@ -73,7 +73,7 @@ namespace UTIL {
 	   << endl 
 	   << " parameters: " << endl ;
 
-      printParameters( col->getParameters() ) ;
+      //      printParameters( col->getParameters() ) ;
 
 
 
@@ -363,6 +363,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
 
@@ -461,6 +463,8 @@ namespace UTIL {
     
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+
+    printParameters( col->getParameters() ) ;
     
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
@@ -523,6 +527,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
     
@@ -583,6 +589,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::TPCBIT_RAW   : " << flag.bitSet( LCIO::TPCBIT_RAW ) << endl ;
     cout << "  -> LCIO::TPCBIT_NO_PTR   : " << flag.bitSet( LCIO::TPCBIT_NO_PTR ) << endl ;
@@ -650,6 +658,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
@@ -694,6 +704,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
@@ -737,6 +749,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
@@ -781,6 +795,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
     cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
@@ -871,6 +887,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
     cout << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
@@ -936,6 +954,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
 
     cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
@@ -988,6 +1008,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
     
@@ -1083,6 +1105,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
 //     LCFlagImpl flag( col->getFlag() ) ;
 //     cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
     
@@ -1208,8 +1232,9 @@ namespace UTIL {
     
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
-    
-    
+
+    printParameters( col->getParameters() ) ;
+
     int nLCGenericObjects =  col->getNumberOfElements() ;
     int nPrint = nLCGenericObjects > MAX_HITS ? MAX_HITS : nLCGenericObjects ;
     
@@ -1259,6 +1284,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     int nParticles =  col->getNumberOfElements() ;
 
 
@@ -1425,6 +1452,8 @@ namespace UTIL {
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
+    printParameters( col->getParameters() ) ;
+
     int nRel =  col->getNumberOfElements() ;
     
     cout << " fromType : " << col->getParameters().getStringVal("FromType")  << endl ;
