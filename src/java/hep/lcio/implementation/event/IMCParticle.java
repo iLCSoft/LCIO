@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.10 2004-08-25 09:45:39 gaede Exp $
+ * @version $Id: IMCParticle.java,v 1.11 2004-09-15 13:29:10 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -19,6 +19,7 @@ public class IMCParticle extends ILCObject implements MCParticle
    protected float[] momentum = new float[3];
    protected double[] vertex = new double[3];
    protected float charge;
+   protected float time ;
    protected float mass;
    protected int generatorStatus;
    protected int pdg;
@@ -266,6 +267,14 @@ public class IMCParticle extends ILCObject implements MCParticle
 
    public List getParents() {
 	  return parents;
+   }
+
+   public float getTime() {
+	  return time;
+   }
+
+   public void setTime(float f) {
+	  time = f;
    }
 
 }

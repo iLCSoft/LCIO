@@ -59,11 +59,11 @@ int lctrhgettype( PTRTYPE trhit )  {
   return trh->getType() ;
 }
 
-PTRTYPE lctrhgetrawdatahit( PTRTYPE trhit ) {
+PTRTYPE lctrhgetrawhits( PTRTYPE trhit ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-//  const TPCHit& hit = trh->getRawDataHit();
+//  const TPCHit& hit = trh->getRawHits();
 //  return reinterpret_cast<PTRTYPE>( &hit );
-  return reinterpret_cast<PTRTYPE>( trh->getRawDataHit() );
+  return reinterpret_cast<PTRTYPE>( &trh->getRawHits() );
 }
 
 

@@ -8,8 +8,7 @@ namespace IMPL {
   TrackerHitImpl::TrackerHitImpl() :
     _type(0),
     _dEdx(0),
-    _time(0),
-    _rawHit(0) {
+    _time(0) {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
@@ -33,8 +32,14 @@ namespace IMPL {
 
   float TrackerHitImpl::getTime() const { return _time ; }
 
-  LCObject * TrackerHitImpl::getRawDataHit() const {
-    return _rawHit ;
+
+  const EVENT::LCObjectVec & TrackerHitImpl::getRawHits() const {
+    return _rawHits ;
+  }
+
+  EVENT::LCObjectVec & TrackerHitImpl::rawHits() {
+    checkAccess("TrackerHitImpl::rawHits") ;
+    return _rawHits ;
   }
 
 //   const std::string & TrackerHitImpl::getType() const {
@@ -85,10 +90,6 @@ namespace IMPL {
     for(int i=0;i<TRKHITNCOVMATRIX;i++){
       _cov[i] = cov[i] ;
     }
-  }
-  void TrackerHitImpl::setRawHit( LCObject* hit){
-    checkAccess("TrackerHitImpl::setTime") ;
-    _rawHit = hit ;
   }
 
 

@@ -38,10 +38,21 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
 
-    SIO_PNTR( stream , &(hit->_rawHit)  ) ;
+
+    // rawHits
+    int numberOfRawHits = 1 ; 
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
+      SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
+    }
+
+    hit->_rawHits.resize( numberOfRawHits ) ;
+
+    for(int i=0;i<numberOfRawHits;i++){
+      SIO_PNTR( stream , &(hit->_rawHits[i] ) ) ;
+    }
 
     SIO_PTAG( stream , dynamic_cast<const TrackerHit*>(hit) ) ;
-	
+
     return ( SIO_BLOCK_SUCCESS ) ;
 	
   }
@@ -69,8 +80,14 @@ namespace SIO{
     LCSIO_WRITE( stream, hit->getdEdx()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;
     
-    const LCObject* raw = hit->getRawDataHit()  ;
-    SIO_PNTR( stream , &raw ) ;
+//     const LCObject* raw = hit->getRawDataHit()  ;
+//     SIO_PNTR( stream , &raw ) ;
+    
+    const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
+
+    for(unsigned int i=0; i < rawHits.size() ; i++){
+       SIO_PNTR( stream , &(rawHits[i]) ) ;
+    }
 
     // write a ptag in order to be able to point to tracker hits in the future
     SIO_PTAG( stream , hit ) ;

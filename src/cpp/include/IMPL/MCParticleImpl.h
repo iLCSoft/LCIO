@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.18 2004-08-25 09:45:38 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.19 2004-09-15 13:29:08 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -132,6 +132,12 @@ namespace IMPL {
      */
     virtual const double * getVertex() const ;
 
+    /** The creation time of the particle in [ns] wrt. the event,
+     *  e.g. for preassigned decays or decays in flight from 
+     *  the simulator.
+     */
+    virtual float getTime() const ;
+
     /** Returns the particle momentum at the production vertex.
      */
           
@@ -182,6 +188,10 @@ namespace IMPL {
      */
     void setVertex( double vtx[3] ) ;
     
+    /** Sets the createion time.
+     */
+    void setTime( float time) ;
+
      /** Sets the particle endpoint.
       *  
       */
@@ -231,6 +241,7 @@ namespace IMPL {
     float _p[3] ;
     float _mass ;
     float _charge ;
+    float _time ;
     EVENT::MCParticleVec _parents ;
     EVENT::MCParticleVec _daughters ;
     bool _endpointSet ;

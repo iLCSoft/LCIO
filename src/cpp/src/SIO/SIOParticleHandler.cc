@@ -43,9 +43,11 @@ namespace SIO {
     //     //    particle->prepareArrayOfParents( numberOfParents ) ;
     
     // ensure vector has correct number of elements
-    for(int i=0;i<numberOfParents;i++){
-      particle->_parents.push_back( 0 ) ;
-    }
+//     for(int i=0;i<numberOfParents;i++){
+//       particle->_parents.push_back( 0 ) ;
+//     }
+    particle->_parents.resize( numberOfParents ) ;
+
     for(int i=0;i<numberOfParents;i++){
       SIO_PNTR( stream , &(particle->_parents[i] ) ) ;
     }
@@ -66,6 +68,11 @@ namespace SIO {
     //    SIO_DATA( stream ,  &(particle->_simstatus) , 1  ) ;
 
     SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
+
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
+      SIO_DATA( stream ,  &(particle->_time)  , 1 ) ;
+    }
+    
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
     SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
@@ -112,6 +119,9 @@ namespace SIO {
 
 
     SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;
+
+    LCSIO_WRITE( stream, particle->getTime() ) ;
+
     SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
     LCSIO_WRITE( stream, particle->getMass() ) ;
     LCSIO_WRITE( stream, particle->getCharge() ) ;

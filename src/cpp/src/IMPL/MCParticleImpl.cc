@@ -17,6 +17,7 @@ namespace IMPL {
     _simstatus(0),
     _mass(0),
     _charge(0),
+    _time(0),
     _parents(0),
     _daughters(0)
   {
@@ -172,6 +173,7 @@ namespace IMPL {
 
 
   const double * MCParticleImpl::getVertex() const { return _vertex ;}
+  float MCParticleImpl::getTime() const { return _time ; }
   const float * MCParticleImpl::getMomentum() const { return _p ;}
   float MCParticleImpl::getMass() const { return _mass ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
@@ -229,6 +231,11 @@ namespace IMPL {
     _vertex[1] = vtx[1] ;
     _vertex[2] = vtx[2] ;
   }
+  void MCParticleImpl::setTime(float time ) { 
+    checkAccess("MCParticleImpl::setTime") ;
+    _time = time ; 
+  }
+  
   void MCParticleImpl::setMomentum( float p[3] ){
     checkAccess("MCParticleImpl::setMomentum") ;
     _p[0] = p[0] ;

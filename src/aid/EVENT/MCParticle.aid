@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.19 2004-09-09 15:57:50 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.20 2004-09-15 13:29:07 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
@@ -152,6 +152,12 @@ public interface MCParticle extends LCObject {
     public const double3V getVertex() const;
 
 
+    /** The creation time of the particle in [ns] wrt. the event,
+     *  e.g. for preassigned decays or decays in flight from 
+     *  the simulator.
+     */
+    public  float getTime() const ; 
+    
     /** Returns the endpoint of the particle in [mm] if
      *  the  endpoint has been set explicetly.
      *  If not, the vertex of the first daughter that 

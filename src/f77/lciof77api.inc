@@ -12,6 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
+*  $Id: lciof77api.inc,v 1.18 2004-09-15 13:29:09 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -78,7 +79,7 @@ c-----the MCParticle interface
       integer lcmcpgetpdg, lcmcpgetgeneratorstatus
       integer lcmcpgetsimulatorstatus
       integer lcmcpgetvertex, lcmcpgetmomentum
-      real    lcmcpgetmass, lcmcpgetcharge, lcmcpgetenergy
+      real    lcmcpgetmass, lcmcpgettime, lcmcpgetcharge, lcmcpgetenergy
       integer lcmcpaddparent, lcmcpadddaughter 
       integer lcmcpsetpdg, lcmcpsetgeneratorstatus
       integer lcmcpsetsimulatorstatus, lcmcpsetvertex 
@@ -161,7 +162,7 @@ c-----the ReconstructedParticle interface
       integer lcrcpaddparticle, lcrcpaddcluster, lcrcpaddtrack
 
 c-----the TrackerHit interface
-      PTRTYPE lctrhcreate, lctrhgetrawdatahit
+      PTRTYPE lctrhcreate, lctrhgetrawhits
       integer lctrhdelete, lctrhid, lctrhgetposition, lctrhgetcovmatrix
       real    lctrhgetdedx, lctrhgettime
       character*80 lctrhgettype

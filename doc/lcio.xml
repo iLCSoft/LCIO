@@ -147,13 +147,13 @@
                               =3   documentation line
 	    </data>
             <if condition="!(major==0&amp;&amp;minor&lt;9)">
-                <data type="int" name="simulatorStatus">
-                   to be defined. Bit 31 reserved for internal use - thus effectively unsigned.
-                </data>
+                <data type="int" name="simulatorStatus"></data>
             </if>
-
             <data type="double[3]" name="vertex">Production vertex</data>
-            <data type="float[3]" name="momentum">Momentum at production vertex</data>
+            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+                <data type="float" name="time">creation time of the particle in ns</data>
+            </if>
+	    <data type="float[3]" name="momentum">Momentum at production vertex</data>
             <data type="float" name="mass"></data>
             <data type="float" name="charge"></data>
 	    <if condition="major==0&amp;&amp;minor&lt;9"> 

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.15 2004-09-01 16:42:57 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.16 2004-09-15 13:29:10 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -59,6 +59,11 @@ class SIOMCParticle extends IMCParticle
       vertex[0] = in.readDouble();
       vertex[1] = in.readDouble();
       vertex[2] = in.readDouble();
+      
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2) ){
+         time = in.readFloat() ;
+      }
+
       momentum[0] = in.readFloat();
       momentum[1] = in.readFloat();
       momentum[2] = in.readFloat();
@@ -116,6 +121,8 @@ class SIOMCParticle extends IMCParticle
          out.writeDouble(vertex[0]);
          out.writeDouble(vertex[1]);
          out.writeDouble(vertex[2]);
+ 
+         out.writeFloat( hit.getTime() ) ;
 
          float[] momentum = hit.getMomentum();
          out.writeFloat(momentum[0]);
@@ -146,6 +153,9 @@ class SIOMCParticle extends IMCParticle
       out.writeDouble(vertex[0]);
       out.writeDouble(vertex[1]);
       out.writeDouble(vertex[2]);
+       
+      out.writeFloat( time ) ;
+      
       out.writeFloat(momentum[0]);
       out.writeFloat(momentum[1]);
       out.writeFloat(momentum[2]);

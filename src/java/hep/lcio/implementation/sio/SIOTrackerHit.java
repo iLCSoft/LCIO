@@ -10,11 +10,14 @@ import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrackerHit;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.6 2004-09-13 18:02:57 tonyj Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.7 2004-09-15 13:29:10 gaede Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
@@ -27,19 +30,31 @@ class SIOTrackerHit extends ITrackerHit
          covMatrix[i] = in.readFloat();
       dEdx = in.readFloat();
       time = in.readFloat();
-      rawDataHit = in.readPntr();
+      
+      int nRawHits = 1 ;
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2)){
+      	nRawHits = in.readInt() ;
+      }
+      //FIXME: [fg] I am not sure what type is expected to be in the List
+      // in C++ we have LCObjects != SIORefs  ??
+   
+      rawHits = new ArrayList( nRawHits ) ;
+      for (int i = 0; i < nRawHits ; i++) {
+		rawHits.add(  in.readPntr() ) ;	
+	  }
+      
       in.readPTag(this);
    }
 
-   public LCObject getRawDataHit()
-   {
-      if (rawDataHit instanceof SIORef)
-      {
-         rawDataHit = ((SIORef) rawDataHit).getObject();
-      }
-
-      return (LCObject) rawDataHit;
-   }
+//   public LCObject getRawDataHit()
+//   {
+//      if (rawDataHit instanceof SIORef)
+//      {
+//         rawDataHit = ((SIORef) rawDataHit).getObject();
+//      }
+//
+//      return (LCObject) rawDataHit;
+//   }
 
    static void write(TrackerHit hit, SIOOutputStream out) throws IOException
    {
@@ -58,7 +73,13 @@ class SIOTrackerHit extends ITrackerHit
             out.writeFloat(matrix[i]);
          out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
-         out.writePntr(hit.getRawDataHit());
+         
+         List rawHits = hit.getRawHits() ; 
+         out.writeInt( rawHits.size()) ;
+         for (int i = 0; i < rawHits.size() ; i++) {
+		    out.writePntr( rawHits.get(i) );
+         }
+         
          out.writePTag(hit);
       }
    }
@@ -71,7 +92,11 @@ class SIOTrackerHit extends ITrackerHit
          out.writeFloat(covMatrix[i]);
       out.writeFloat(dEdx);
       out.writeFloat(time);
-      out.writePntr(rawDataHit);
+
+   	  out.writeInt( rawHits.size()) ;
+      for (int i = 0; i < rawHits.size() ; i++) {
+        out.writePntr( rawHits.get(i) );
+      }
       out.writePTag(this);
    }
 }

@@ -1,11 +1,13 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.event.LCObject;
+import java.util.ArrayList;
+import java.util.List;
+
 import hep.lcio.event.TrackerHit;
 
 /**
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.6 2004-09-13 18:02:57 tonyj Exp $
+ * @version $Id: ITrackerHit.java,v 1.7 2004-09-15 13:29:10 gaede Exp $
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
@@ -14,7 +16,7 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    protected float dEdx;
    protected float time;
    protected int type;
-   protected Object rawDataHit;
+   protected List rawHits = new ArrayList() ;
    
    public double[] getPosition()
    {
@@ -44,7 +46,7 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    {
       return dEdx;
    }
-   public void setdEdx()
+   public void setdEdx(float dEdx)
    {
       checkAccess();
       this.dEdx = dEdx;
@@ -72,14 +74,9 @@ public class ITrackerHit extends ILCObject implements TrackerHit
       this.type = type;
    }
    
-   public LCObject getRawDataHit()
-   {
-      return (LCObject) rawDataHit;
+
+   public List getRawHits() {
+     return rawHits ;
    }
-   
-   public void setRawDataHit(LCObject hit)
-   {
-      checkAccess();
-      this.rawDataHit = hit;
-   }
+
 }
