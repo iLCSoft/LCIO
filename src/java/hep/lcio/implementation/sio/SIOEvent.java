@@ -1,30 +1,9 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOBlock;
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORecord;
-import hep.lcd.io.sio.SIOWriter;
-
-import hep.lcio.event.CalorimeterHit;
-import hep.lcio.event.LCCollection;
-import hep.lcio.event.LCEvent;
-import hep.lcio.event.LCIO;
-import hep.lcio.event.LCRelation;
-import hep.lcio.event.MCParticle;
-import hep.lcio.event.SimCalorimeterHit;
-import hep.lcio.event.SimTrackerHit;
-import hep.lcio.event.TPCHit;
-import hep.lcio.event.TrackerHit;
-import hep.lcio.implementation.event.ICluster;
+import hep.lcd.io.sio.*;
+import hep.lcio.event.*;
 
 import hep.lcio.implementation.event.ILCEvent;
-import hep.lcio.implementation.event.ILCParameters;
-import hep.lcio.implementation.event.ILCStrVec;
-import hep.lcio.implementation.event.ILCFloatVec;
-import hep.lcio.implementation.event.ILCIntVec;
-import hep.lcio.implementation.event.ILCRelation;
-import hep.lcio.implementation.event.ITrack;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,7 +13,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.26 2004-09-17 04:37:43 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.27 2004-09-17 06:30:38 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -99,7 +78,7 @@ class SIOEvent extends ILCEvent
          if (type == null) continue;
                  
          int flags = in.readInt();
-         ILCParameters colParameters = null ;
+         LCParameters colParameters = null ;
          if( (major<<16 | minor ) > (1<<16|1)  )
          {
             colParameters = new SIOLCParameters(in) ;
@@ -107,7 +86,6 @@ class SIOEvent extends ILCEvent
          
          if (type.equals(LCIO.MCPARTICLE))
          {
-            //int flags = in.readInt();
             int nMC = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
             ilc.setParameters( colParameters ) ;
@@ -120,7 +98,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.SIMTRACKERHIT))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -131,7 +108,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.TRACKERHIT))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -142,7 +118,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.TPCHIT))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -153,7 +128,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.SIMCALORIMETERHIT))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -164,7 +138,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.CALORIMETERHIT))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -175,7 +148,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCSTRVEC))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -186,7 +158,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCFLOATVEC))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -197,7 +168,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCINTVEC))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -208,7 +178,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.CLUSTER))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -219,7 +188,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.TRACK))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -230,7 +198,6 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.RECONSTRUCTEDPARTICLE))
          {
-            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
@@ -241,11 +208,12 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCRELATION))
          {
-            //  int flags = in.readInt();
-            String fromType = "from"; // FixMe:
-            String toType = "to"; // FixMe:
-            SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
-            addRelation(rel,name);
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIORelation(in,this, flags, major, minor));
+            ilc.setOwner(this);
          }
          else 
          {
@@ -342,49 +310,39 @@ class SIOEvent extends ILCEvent
             else if (type.equals(LCIO.LCSTRVEC))
             {
                for (int i = 0; i < n; i++)
-                  SIOStrVec.write((ILCStrVec) col.getElementAt(i), out);
+                  SIOStrVec.write((LCStrVec) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.LCFLOATVEC))
             {
                for (int i = 0; i < n; i++)
-                  SIOFloatVec.write((ILCFloatVec) col.getElementAt(i), out);
+                  SIOFloatVec.write((LCFloatVec) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.LCINTVEC))
             {
                for (int i = 0; i < n; i++)
-                  SIOIntVec.write((ILCIntVec) col.getElementAt(i), out);
+                  SIOIntVec.write((LCIntVec) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.CLUSTER))
             {
                for (int i=0; i < n; i++)
-                  SIOCluster.write((ICluster) col.getElementAt(i), out, flags);
+                  SIOCluster.write((Cluster) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.TRACK))
             {
                for (int i=0; i < n; i++)
-                  SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
+                  SIOTrack.write((Track) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.RECONSTRUCTEDPARTICLE))
             {
                for (int i=0; i < n; i++)
-                  SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
+                  SIOReconstructedParticle.write((ReconstructedParticle) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.LCRELATION))
+            {
+               for (int i=0; i < n; i++)
+                  SIORelation.write((LCRelation) col.getElementAt(i), out, flags);
             }
          }
-         //         String[] relNames = event.getRelationNames();
-         //         if (relNames != null)
-         //         {
-         //            for (int j = 0; j < relNames.length; j++)
-         //            {
-         //               String relName = blockNames[j];
-         //               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
-         //               LCRelation rel = event.getRelation(relName);
-         //               String fromType = rel.getFromType();
-         //               String toType = rel.getToType();
-         //               int flags = 0; // FixMe: rel.getFlag();
-         //               out.writeInt(flags);
-         //               SIORelation.write(rel,out,flags);
-         //            }
-         //         }
       }
    }
    

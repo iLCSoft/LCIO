@@ -3,6 +3,7 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
+import hep.lcio.event.LCObject;
 import hep.lcio.event.LCRelation;
 import hep.lcio.implementation.event.ILCRelation;
 import java.io.IOException;
@@ -10,31 +11,38 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORelation.java,v 1.2 2004-09-06 14:49:19 gaede Exp $
+ * @version $Id: SIORelation.java,v 1.3 2004-09-17 06:30:38 tonyj Exp $
  */
 class SIORelation extends ILCRelation
 {
-   SIORelation(SIOInputStream in, SIOEvent owner, String from, String to, int flag, int major, int minor) throws IOException
+   private SIORef f;
+   private SIORef t;
+   
+   SIORelation(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
-//      super(from,to);
-//      int n = in.readInt();
-//      for (int i=0; i<n; i++)
-//      {
-//         SIORef f = in.readPntr();
-//         SIORef t = in .readPntr();
-//         float weight = 1;
-//         if ((flag & 1<<31) != 0) weight = in.readFloat();
-//      }
+      super();
+      f = in.readPntr();
+      t = in .readPntr();
+      float weight = 1;
+      if ((flag & 1<<31) != 0) weight = in.readFloat();
    }
    static void write(LCRelation relation, SIOOutputStream out, int flag) throws IOException
-   { 
-//      int n = relation.numberOfRelations();
-//      out.writeInt(n);
-//      for (int i=0; i<n; i++)
-//      {
-//         out.writePntr(relation.getFrom(i));
-//         out.writePntr(relation.getTo(i));
-//         if ((flag & 1<<31) != 0) out.writeFloat(relation.getWeight(i));
-//      }
+   {
+      out.writePntr(relation.getFrom());
+      out.writePntr(relation.getTo());
+      if ((flag & 1<<31) != 0) out.writeFloat(relation.getWeight());
    }
+   
+   public LCObject getTo()
+   {
+      if (from == null) from = (LCObject) f.getObject();
+      return from;
+   }
+   
+   public LCObject getFrom()
+   {
+      if (to == null) to = (LCObject) t.getObject();
+      return to;
+   }
+   
 }

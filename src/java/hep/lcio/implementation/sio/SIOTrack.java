@@ -6,15 +6,15 @@ import hep.lcio.event.Track;
 import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
 import hep.lcio.implementation.event.ITrackerHit;
-
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.io.IOException;
+
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.7 2004-09-14 05:38:38 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.8 2004-09-17 06:30:38 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
@@ -63,7 +63,7 @@ class SIOTrack extends ITrack
       
       in.readPTag(this);
    }
-   static void write(ITrack track, SIOOutputStream out, int flag) throws IOException
+   static void write(Track track, SIOOutputStream out, int flag) throws IOException
    {
       if (track instanceof SIOTrack)
          ((SIOTrack) track).write(out,flag);

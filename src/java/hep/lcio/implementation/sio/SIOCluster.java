@@ -2,6 +2,7 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.implementation.event.ICluster;
 import java.io.IOException;
@@ -12,7 +13,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.11 2004-09-17 04:37:43 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.12 2004-09-17 06:30:38 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -89,7 +90,7 @@ class SIOCluster extends ICluster
       in.readPTag(this);
    }
    
-   static void write(ICluster cluster, SIOOutputStream out, int flag) throws IOException
+   static void write(Cluster cluster, SIOOutputStream out, int flag) throws IOException
    {
       if (cluster instanceof SIOCluster)
          ((SIOCluster) cluster).write(out,flag);
