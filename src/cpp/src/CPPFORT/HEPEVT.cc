@@ -13,10 +13,6 @@ namespace HEPEVTIMPL{
   void HEPEVT::fromHepEvt(LCEvent * evt){
 
       float* p = new float[3] ;
-      // set event number from stdhep COMMON
-      int* IEVENT  = &FTNhep.nevhep ;
-      LCEventImpl* evtimpl = reinterpret_cast<LCEventImpl*>( (evt) ) ;
-      evtimpl->setEventNumber( *IEVENT ) ;
 
       // create and add mc particles from stdhep COMMON
       LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
@@ -37,7 +33,6 @@ namespace HEPEVTIMPL{
         mcp->setVertex( FTNhep.vhep[j] ) ;
 
         // finally store pointer and set charge
-        FTNhep1.mcpointerv[j] = reinterpret_cast<PTRTYPE>( (mcp) ) ;
         mcp->setCharge( FTNhep1.mcchargev[j] ) ;
 
         mcVec->push_back( mcp ) ;
@@ -67,6 +62,16 @@ namespace HEPEVTIMPL{
 
       // add all collection to the event
       evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
+
+      // now fill pointers for MCParticle collection
+      LCEventImpl* evtimpl = reinterpret_cast<LCEventImpl*>(evt) ;
+      LCCollection* getmcVec = evtimpl->getCollection( "MCParticle" ) ;
+      int nelem = getmcVec->getNumberOfElements() ;
+      for(int j=0;j < nelem; j++)
+      {
+        FTNhep1.mcpointerv[j] = reinterpret_cast<PTRTYPE>( getmcVec->getElementAt( j ) ) ;
+      }
+
       delete p ;
   }  // end of fromHepEvt
 
