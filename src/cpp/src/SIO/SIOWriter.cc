@@ -46,6 +46,12 @@ namespace SIO {
 
   SIOWriter::~SIOWriter(){
 
+    typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
+    for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+      _evtRecord->disconnect( *ch );
+      delete *ch ;
+    }
+
     delete _hdrHandler ;
     delete _runHandler ;
     //delete evtP ;
@@ -117,7 +123,6 @@ namespace SIO {
       throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " 
 				      +  sioFilename ) ) ;
       
-  
     // tell SIO the record names if not yet known 
     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) != 0 )
       SIO_recordManager::remove( LCSIO::RUNRECORDNAME ) ;

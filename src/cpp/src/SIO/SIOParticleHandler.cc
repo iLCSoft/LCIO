@@ -44,14 +44,21 @@ namespace SIO {
     
     //     //    particle->prepareArrayOfParents( numberOfParents ) ;
     
+    // ensure vector has correct number of elements
     for(int i=0;i<numberOfParents;i++){
-      
-      // create a pointer to a pointer to a MCParticle 
-      // as SIO need the address of the pointer for pointer reallocation....
-      MCParticle** pD = new (MCParticle*) ;
-      SIO_PNTR( stream , pD ) ;
-      particle->_parentsP.push_back( pD ) ;
+      particle->_parentsP.push_back( 0 ) ;
     }
+    for(int i=0;i<numberOfParents;i++){
+      SIO_PNTR( stream , &(particle->_parentsP[i] ) ) ;
+    }
+//     for(int i=0;i<numberOfParents;i++){
+      
+//       // create a pointer to a pointer to a MCParticle 
+//       // as SIO need the address of the pointer for pointer reallocation....
+//       MCParticle** pD = new (MCParticle*) ;
+//       SIO_PNTR( stream , pD ) ;
+//       particle->_parentsP.push_back( pD ) ;
+//     }
     
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_genstatus) , 1  ) ;
@@ -145,14 +152,19 @@ namespace SIO {
 
     //    particle->prepareArrayOfDaughters( numberOfDaughters ) ;
 
-    for(int i=0;i<numberOfDaughters;i++){
 
-      // create a pointer to a pointer to a MCParticle 
-      // as SIO need the address of the pointer for pointer reallocation....
-      MCParticle** pD = new (MCParticle*) ;
-      SIO_PNTR( stream , pD ) ;
-      particle->_daughtersP.push_back( pD ) ;
+    for(int i=0;i<numberOfDaughters;i++){
     }
+    for(int i=0;i<numberOfDaughters;i++){
+      SIO_PNTR( stream , &(particle->_daughtersP[i] ) ) ;
+    }
+//     for(int i=0;i<numberOfDaughters;i++){
+//       // create a pointer to a pointer to a MCParticle 
+//       // as SIO need the address of the pointer for pointer reallocation....
+//       MCParticle** pD = new (MCParticle*) ;
+//       SIO_PNTR( stream , pD ) ;
+//       particle->_daughtersP.push_back( pD ) ;
+//     }
 
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_genstatus) , 1  ) ;
@@ -200,9 +212,10 @@ namespace SIO {
 	    for( int j=0; j<nDaughters; j++){
 	      MCParticleIOImpl* dgh = dynamic_cast<MCParticleIOImpl*>( mcp->getDaughter(j) ) ;
 	      
-	      MCParticle ** mcpP = new (MCParticle*) ;
-	      *mcpP = mcp ;
-	      dgh->_parentsP.push_back( mcpP ) ;
+// 	      MCParticle ** mcpP = new (MCParticle*) ;
+// 	      *mcpP = mcp ;
+// 	      dgh->_parentsP.push_back( mcpP ) ;
+	      dgh->_parentsP.push_back( mcp ) ;
 	    }
 	    
 	  } 
@@ -211,9 +224,10 @@ namespace SIO {
 	    int nParents = mcp->getNumberOfParents() ;
 	    for( int j=0; j<nParents; j++){
 	      MCParticleIOImpl* mom = dynamic_cast<MCParticleIOImpl*>( mcp->getParent(j) ) ;
-	      MCParticle ** mcpP = new (MCParticle*) ;
-	      *mcpP = mcp ;
-	      mom->_daughtersP.push_back( mcpP ) ;
+// 	      MCParticle ** mcpP = new (MCParticle*) ;
+// 	      *mcpP = mcp ;
+// 	      mom->_daughtersP.push_back( mcpP ) ;
+	      mom->_daughtersP.push_back( mcp ) ;
 	      
 	    }
 	  }

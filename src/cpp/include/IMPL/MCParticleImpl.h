@@ -1,3 +1,4 @@
+// -*- C++ -*-
 #ifndef IMPL_MCPARTICLEIMPL_H
 #define IMPL_MCPARTICLEIMPL_H 1
 #include <vector>
@@ -10,7 +11,8 @@
 
 namespace IMPL {
   
-  typedef std::vector<EVENT::MCParticle**> MCParticlePVec ;
+  // fg 01042004 : changed to use vector of pointers !
+  //   typedef std::vector<EVENT::MCParticle**> MCParticlePVec ;
   // use  pointers to pointer to MCParticle 
   // as SIO needs the address of the pointer for pointer reallocation....
 
@@ -173,8 +175,8 @@ namespace IMPL {
     float _p[3] ;
     float _mass ;
     float _charge ;
-    MCParticlePVec _parentsP ;
-    MCParticlePVec _daughtersP ;
+    EVENT::MCParticleVec _parentsP ;
+    EVENT::MCParticleVec _daughtersP ;
     bool _endpointSet ;
 
 }; // class

@@ -34,9 +34,9 @@ namespace IMPL {
   MCParticleImpl::~MCParticleImpl(){
     // no dynamic variables
     //    delete [] _readDaughters ;
-    for(MCParticlePVec::iterator iter = _daughtersP.begin();iter != _daughtersP.end() ;iter++){
-      delete (*iter) ;
-    }
+//     for(MCParticlePVec::iterator iter = _daughtersP.begin();iter != _daughtersP.end() ;iter++){
+//       delete (*iter) ;
+//     }
 
   }
   
@@ -57,7 +57,7 @@ namespace IMPL {
       //      return _parents.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
       
-      return *_parentsP[i] ;
+      return _parentsP[i] ;
     }catch( std::out_of_range ){
       throw Exception(std::string("MCParticleImpl::getParent(): out_of_range :" 
 				  + i ) );
@@ -66,7 +66,7 @@ namespace IMPL {
   }
   // unchecked access
   MCParticleData* MCParticleImpl::getParentData(int i) const {
-    return *_parentsP[i] ;
+    return _parentsP[i] ;
   }
 
 
@@ -78,7 +78,7 @@ namespace IMPL {
       //      return _daughters.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
       
-      return *_daughtersP[i] ;
+      return _daughtersP[i] ;
     }catch( std::out_of_range ){
       throw Exception(std::string("MCParticleImpl::getDaughter(): out_of_range :" 
 				  + i ) );
@@ -129,18 +129,18 @@ namespace IMPL {
     
     checkAccess("MCParticleImpl::addDaughter") ;
     
-    MCParticle** pD = new (MCParticle*)  ;
-    *pD = daughter ;
-    _daughtersP.push_back( pD ) ;
+//     MCParticle** pD = new (MCParticle*)  ;
+//     *pD = daughter ;
+    _daughtersP.push_back( daughter ) ;
   }
 
   void MCParticleImpl::addParent( MCParticle* parent) { 
 
     checkAccess("MCParticleImpl::addParent") ;
 
-    MCParticle** pD = new (MCParticle*)  ;
-    *pD = parent ;
-    _parentsP.push_back( pD ) ;
+//     MCParticle** pD = new (MCParticle*)  ;
+//     *pD = parent ;
+    _parentsP.push_back( parent ) ;
 
     MCParticleImpl* mom = dynamic_cast<MCParticleImpl*>( parent ) ;
     if( mom ) mom->addDaughter( this ) ;

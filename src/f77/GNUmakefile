@@ -27,7 +27,9 @@ BINDIR = $(LCIOBASE)/bin
 BINS := $(patsubst %.F,$(BINDIR)/%_F,$(wildcard *.F))
 
 INSTALL = $(LCIOBASE)/lib
-LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c
+#LIBG2CPATH = /products/gcc-2.95/lib/gcc-lib/i686-pc-linux-gnu/2.95.3
+LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -L$(LIBG2CPATH) -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c
+
 
 
 bin: $(BINS)
