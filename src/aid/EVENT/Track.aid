@@ -9,83 +9,29 @@ typedef std::vector<Track*> TrackVec ;
 /** The LCIO track.
  * 
  * @author gaede
- * @version $Id: Track.aid,v 1.10 2004-09-01 16:42:53 gaede Exp $
+ * @version $Id: Track.aid,v 1.11 2004-09-10 12:26:18 gaede Exp $
  */
 
 public interface Track extends LCObject {
     
 
-// @ifdef cpp
-// @cpp{
-//   public:
-//     static const int UNKNOWN =  0 ; 
-//     static const int VTX =  1 ; 
-//     static const int FTD =  2 ; 
-//     static const int SIT =  3 ; 
-//     static const int TPC =  4 ; 
-//     static const int MUON =  5 ; 
-//     static const int FULL =  6 ; 
-
-// }
-// @else
-//     public static const int UNKNOWN =  0 ; 
-//     public static const int VTX =  1 ; 
-//     public static const int FTD =  2 ; 
-//     public static const int SIT =  3 ; 
-//     public static const int TPC =  4 ; 
-//     public static const int MUON =  5 ; 
-//     public static const int FULL =  6 ; 
-// @endif
-
-
-//     /** Type of track, i.e. the subdetector(s) used to derive the track paramters, e.g. "TPC", "COMB", etc.
-//      *  In order to save disc space working groups should try and define three to four letter acronyms for
-//      *  their tracking detectors.
-//      */
-//     public const String&  getType() const ;	
-
     /** Flagword that defines the type of track. Bits 0-15 can be used to denote the subdetectors
-     *  that have contributed hits used in the track fit. The definition of the bits has to be done 
-     *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
+     *  that have contributed hits used in the track fit.  For the definition of the bits 
+     *  check/Set the collection variables TrackTypeBitNames and TrackTypeBitIndices.
+     *  </br>Bits 16-31 are used internally.
      */
     public  int  getType() const ;	
     
-
-//     /** Returns true if the corresponding bit in the type word is set.
-//      */
-//     public boolean testType(int bitIndex ) const ; 
-
-
-//     /** The magnitude of the track's momentum,
-//      *  signed by the charge.
-//      */
-//     public float getMomentum() const ;	
-//     /** Theta of the  track.
-//      */
-//     public float getTheta() const ;	
-//     /** Phi of the track.
-//      */
-//     public float getPhi() const ;	
-//     /** Impact paramter of the track
-//      *  in (r-phi).
-//      */
-//     public float getD0() const ;	
-//     /** Impact paramter of the track
-//      *  in (r-z).
-//      */
-//     public float getZ0() const ;	
-
- 
     /** Impact paramter of the track
      *  in (r-phi).
      */
     public float getD0() const ;	
-
+    
     /** Phi of the track at the reference point.
      * @see getReferencePoint
      */
     public float getPhi() const ;	
-
+    
     /** Omega is the signed curvature of the track in [1/mm].
      * The sign is that of the particle's charge.
      */
@@ -95,20 +41,20 @@ public interface Track extends LCObject {
      *  in (r-z).
      */
     public float getZ0() const ;	
-
+    
     /** Lambda is the dip angle of the track in r-z at the reference point. 
      * @see getReferencePoint
      */
     public float getTanLambda() const ;	
-
-
+    
+    
     /** Covariance matrix of the track parameters. Stored as lower triangle matrix where
      * the order of parameters is:   d0, phi, omega, z0, tan(lambda).
      * So we have cov(d0,d0), cov( phi, d0 ), cov( phi, phi), ...
      */
     public const FloatVec& getCovMatrix() const ;
-
-
+    
+    
     /** Reference point of the track parameters.
      *  The default for the reference point is the point of closest approach.
      *  @see isReferencPointPCA() 
@@ -149,7 +95,7 @@ public interface Track extends LCObject {
      *  The mapping of indices to subdetectors is implementation dependent.
      *  To be used as convenient information or if hits are not stored in 
      *  the data set, e.g. DST or FastMC. 
-     *  TODO:  Provide way to store mapping in event/run header.
+     *  Check/set collection variable TrackSubdetectorNames for decoding the indices.
      */
     public const IntVec& getSubdetectorHitNumbers() const ;
 

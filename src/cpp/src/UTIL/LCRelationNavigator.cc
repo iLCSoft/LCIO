@@ -15,8 +15,8 @@ namespace UTIL{
 
   LCRelationNavigator::LCRelationNavigator( const EVENT::LCCollection* col ) :
   
-    _from( col->getParameters().getStringVal("FromType") ) ,
-    _to( col->getParameters().getStringVal("ToType") ) { 
+    _from( col->getParameters().getStringVal("RelationFromType") ) ,
+    _to( col->getParameters().getStringVal("RelationToType") ) { 
     
     initialize(col) ; 
   }

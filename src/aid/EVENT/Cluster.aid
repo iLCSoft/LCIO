@@ -10,46 +10,20 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.8 2004-09-01 16:42:53 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.9 2004-09-10 12:26:18 gaede Exp $
  */
 
 
 public interface Cluster extends LCObject {
     
-// @ifdef cpp
-// @cpp{
-//      static const int UNKNOWN =  0 ; 
-//      static const int ECAL =  1 ; 
-//      static const int HCAL =  2 ; 
-//      static const int COMBINED =  3 ; 
-//      static const int LAT =  4 ; 
-//      static const int LCAL =  5 ;     
-//      static const int UNDEFINED =  0 ; 
-//      static const int NEUTRAL =  1 ; 
-//      static const int CHARGED =  2 ; 
-// }
-//  @else
-//      public static const int UNKNOWN =  0 ; 
-//      public const int ECAL =  1 ;     
-//      public const int HCAL =  2 ;     
-//      public const int COMBINED =  3 ; 
-//      public const int LAT =  4 ;      
-//      public const int LCAL =  5 ;     
-//      public static const int UNDEFINED =  0 ; 
-//      public static const int NEUTRAL =  1 ; 
-//      public static const int CHARGED =  2 ; 
-//  @endif 
 
 
     /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
-     *  that have contributed hits to the cluster. The definition of the bits has to be done 
-     *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
+     *  that have contributed hits to the cluster. For the definition of the bits 
+     *  check/Set the collection variables ClusterTypeBitNames and ClusterTypeBitIndices.
+     *  </br>Bits 16-31 are used internally.
      */
     public int  getType() const ;	
-    
-//     /** Returns true if the corresponding bit in the type word is set.
-//      */
-//     public boolean testType(int bitIndex ) const ; 
 
     /** Energy of the cluster.
      */
@@ -80,7 +54,7 @@ public interface Cluster extends LCObject {
 
 
     /** Shape parameters - check/set  collection parameter
-     *  ShapeParameters for size and names of parameters.
+     *  ClusterShapeParameters for size and names of parameters.
      */
     public const FloatVec& getShape() const ;
     
@@ -116,7 +90,8 @@ public interface Cluster extends LCObject {
      *  The mapping of indices to subdetectors is implementation dependent.
      *  To be used as convenient information or if hits are not stored in 
      *  the data set, e.g. DST or FastMC. 
-     *  TODO:  Provide way to store mapping in event/run header.
+     *  Check/set collection parameter ClusterSubdetectorNames for decoding the
+     *  indices of the array.
      */
     public const FloatVec& getSubdetectorEnergies() const ;
 

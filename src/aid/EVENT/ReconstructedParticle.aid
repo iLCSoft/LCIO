@@ -10,7 +10,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.9 2004-09-09 09:51:25 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.10 2004-09-10 12:26:18 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -34,7 +34,7 @@ public interface ReconstructedParticle extends LCObject {
 // @endif
 
     /** Type of reconstructed particle.
-     *  Check/set collection parameterrs ReconstructedParticleTypeNames and 
+     *  Check/set collection parameters ReconstructedParticleTypeNames and 
      *  ReconstructedParticleTypeValues.
      */
     public int getType() const ;	

@@ -9,25 +9,16 @@
 
 #define NERRPOS 6
 #define NERRDIR 3
-#define NSHAPE 6
+//#define NSHAPE 6
 
 namespace IMPL {
-
-
-//   /**Internal helper struct to store indices and weights in map
-//    */
-//   struct WeightedIndices {
-//     EVENT::IntVec* Indices ;
-//     EVENT::FloatVec* Weights ;
-//   } ;
-//   typedef std::map< std::string , WeightedIndices* > IndexMap ; 
 
 
 /** Implementation of Cluster.
  *
  * @see Cluster
  * @author gaede
- * @version $Id: ClusterImpl.h,v 1.9 2004-09-01 16:42:54 gaede Exp $
+ * @version $Id: ClusterImpl.h,v 1.10 2004-09-10 12:26:19 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
@@ -47,11 +38,6 @@ namespace IMPL {
      *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
      */
     virtual int getType() const ;
-
-//     /** Returns true if the corresponding bit in the type word is set.
-//      */
-//     virtual bool testType(int bitIndex) const ;
-
 
     /** Energy of the cluster.
      */
@@ -78,7 +64,7 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getDirectionError() const ;
 
     /** Shape parameters - check/set  collection parameter
-     *  ShapeParameters for size and names of parameters.
+     *  ClusterShapeParameters for size and names of parameters.
      */
     virtual const EVENT::FloatVec & getShape() const ;
 
@@ -108,6 +94,13 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getHitContributions() const ;
 
 
+    /** A vector that holds the energy observed in a particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     *  Check/set collection parameter ClusterSubdetectorNames for decoding the
+     *  indices of the array.
+     */
     virtual const EVENT::FloatVec & getSubdetectorEnergies() const ;
 
     //setters 
@@ -135,7 +128,9 @@ namespace IMPL {
 
     /** To be used for modifying the subdetector energies, e.g.<br>
      *  clu->subdetectorEnergies().resize(3) ;
-     *  clu->subdetectorEnergies()[2] = 1234.567 ;
+     *  clu->subdetectorEnergies()[0] = 123.4567 ;
+     *  clu->subdetectorEnergies()[1] = 12.34567 ;
+     *  clu->subdetectorEnergies()[2] = 1.234567 ;
      */
     EVENT::FloatVec& subdetectorEnergies() ;
 

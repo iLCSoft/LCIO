@@ -173,10 +173,6 @@ public:
     trkFlag.setBit( LCIO::TRBIT_HITS ) ;
     trkVec->setFlag( trkFlag.getFlag()  ) ;
     
-    const int NTRACKER = 3 ; 
-    const int VTXINDEX = 0 ;
-    const int SITINDEX = 1 ;
-    const int TPCINDEX = 2 ;
 
     int nTrk = 10 ;
     for( int i=0; i < nTrk ; i ++ ){
@@ -193,6 +189,19 @@ public:
 
       trk->setRadiusOfInnermostHit( 3.141592 ) ;
 
+      // set the hit numbers 
+      const int NTRACKER = 3 ; 
+      const int VTXINDEX = 0 ;
+      const int SITINDEX = 1 ;
+      const int TPCINDEX = 2 ;
+      StringVec trackerNames ;
+      trackerNames.resize(  NTRACKER ) ;
+      trackerNames[VTXINDEX] = "VTX" ;
+      trackerNames[SITINDEX] = "SIT" ;
+      trackerNames[TPCINDEX] = "TPC" ;
+
+      trkVec->parameters().setValues( "TrackSubdetectorNames" , trackerNames ) ;
+      
       trk->subdetectorHitNumbers().resize( NTRACKER ) ;
       trk->subdetectorHitNumbers()[ VTXINDEX ] = 12 ;
       trk->subdetectorHitNumbers()[ SITINDEX ] = 24 ;
@@ -249,8 +258,8 @@ public:
     
 
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCRELATION ) ;
-    scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;
-    scRel->parameters().setValue( "ToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
+    scRel->parameters().setValue( "RelationFromType" ,  LCIO::CALORIMETERHIT ) ;
+    scRel->parameters().setValue( "RelationToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
     
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
@@ -344,9 +353,6 @@ public:
       int nCluster = nHits / 10 ;
       
 
-      const int NCALORIMETER = 2 ;
-      const int ECALINDEX = 0 ;
-      const int HCALINDEX = 1 ;
       
 
       for( int i=0; i < nCluster ; i ++ ){
@@ -368,11 +374,22 @@ public:
 	float errdir[6] = { 1.,2.,3.} ;
 	cluster->setDirectionError( errdir ) ;
 
+	// set the cluster ashape variables
 	float shapeArray[6] = { 1.,2.,3.,3.,2.,1.} ;
 	FloatVec shape ;
 	copy( &shapeArray[0] , &shapeArray[5] , back_inserter( shape ) ) ;
+	StringVec shapeParams ;
+	shapeParams.push_back("Shape_trans") ;
+	shapeParams.push_back("Shape_long") ;
+	shapeParams.push_back("Shape_axis_x") ;
+	shapeParams.push_back("Shape_axis_y") ;
+	shapeParams.push_back("Shape_axis_z") ;
+	shapeParams.push_back("Shape_quality") ;
 
+	clusterVec->parameters().setValues( "ClusterShapeParameters" , shapeParams ) ;
  	cluster->setShape( shape ) ;
+
+
 // 	cluster->setEMWeight( .333)  ;
 // 	cluster->setHADWeight( .333)  ;
 // 	cluster->setMuonWeight( .333)  ;
@@ -393,6 +410,16 @@ public:
 	}      
 
 	// add some subdetector energies
+	const int NCALORIMETER = 2 ;
+	const int ECALINDEX = 0 ;
+	const int HCALINDEX = 1 ;
+	StringVec detNames ;
+	detNames.resize(  NCALORIMETER ) ;
+	detNames[ECALINDEX] = "Ecal" ;
+	detNames[HCALINDEX] = "Hcal" ;
+ 	clusterVec->parameters().setValues( "ClusterSubdetectorNames" , detNames ) ;
+	
+
 	cluster->subdetectorEnergies().resize( NCALORIMETER )  ;
 	cluster->subdetectorEnergies()[ ECALINDEX ] = 42.42 ;
 	cluster->subdetectorEnergies()[ HCALINDEX ] = 24.24 ;
