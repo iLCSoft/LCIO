@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTPCHit.java,v 1.4 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIOTPCHit.java,v 1.5 2004-04-15 14:11:16 gaede Exp $
  */
 class SIOTPCHit extends ITPCHit
 {
@@ -26,7 +26,7 @@ class SIOTPCHit extends ITPCHit
       charge = in.readFloat();
       quality = in.readInt();
       
-      if ((flags & (1 << LCIO.TPCBIT_RAW)) != 0)
+	if ((flags & (1 << LCIO.TPCBIT_RAW)) != 0)
       {
          int size = in.readInt() ;
          rawDataArray = new int[ size ] ;
@@ -35,6 +35,8 @@ class SIOTPCHit extends ITPCHit
             rawDataArray[i] = in.readInt() ;
          }
       }
+	if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+      in.readPTag(this) ;
    }
    
    static void write(TPCHit hit, SIOOutputStream out, int flags) throws IOException
@@ -56,6 +58,8 @@ class SIOTPCHit extends ITPCHit
                out.writeInt( hit.getRawDataWord(i) ) ;
             }
          }
+		if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+          out.writePTag(hit) ;
       }
    }
    
@@ -74,5 +78,7 @@ class SIOTPCHit extends ITPCHit
             out.writeInt( rawDataArray[i]);
          }
       }
+	 if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+	   out.writePTag(this) ;
    }
 }

@@ -41,6 +41,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~SimCalorimeterHitImpl() ;
     
+    virtual int id() { return simpleUID() ; }
+
     /** Create a deep copy of itself.
      * Overwrites return type in LCObject::clone().
      * Not yet - as AID genereates virtual inheritance and

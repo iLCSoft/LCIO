@@ -106,16 +106,23 @@ public:
 
 
     // create some tracks and add them to the event
-//     std::string simHitName( "TPC4711" ) ;
     std::string tpcHitName( "TPCRawFADC" ) ;
-
-//     LCCollection* simHits = evt->getCollection( simHitName ) ;
-    LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
-
+    
     // in order to be able to point back to hits, we need to create 
     // generic TrackerHits from the TPCHits first
+
+    LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
+
+    // here we set the pointer flag bit that is needed to be able to point from
+    // the generic TrckerHit to the raw data TPCHit
+    //-> this should be done automatically in a future release
+    LCFlagImpl tpcFlag( tpcHits->getFlag() ) ;
+    tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
+    tpcHits->setFlag( tpcFlag.getFlag()  ) ;
+
     LCCollectionVec* trkhitVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
     int nTPCHits = tpcHits->getNumberOfElements() ;
+
     for(int j=0;j<nTPCHits;j++){
       TrackerHitImpl* trkHit = new TrackerHitImpl ;
       TPCHit* tpcHit =  dynamic_cast<TPCHit*> ( tpcHits->getElementAt(j)  ) ;
@@ -124,6 +131,8 @@ public:
       int cellID = tpcHit->getCellID() ;
       double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
       trkHit->setPosition(  pos  ) ;
+
+      trkHit->setTPCHit( tpcHit ) ; // store the original raw data hit
 
       FloatVec cov ;
       cov.push_back( 1. ) ;
@@ -140,15 +149,12 @@ public:
 
 
     LCCollectionVec* trkVec = new LCCollectionVec( LCIO::TRACK )  ;
+
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl trkFlag(0) ;
     trkFlag.setBit( LCIO::TRBIT_HITS ) ;
     trkVec->setFlag( trkFlag.getFlag()  ) ;
     
-//     if( simHits ){
-
-//       int nSimHits = simHits->getNumberOfElements() ;
-//       int nTrk = nSimHits / 10 ;
     int nTrk = 10 ;
     for( int i=0; i < nTrk ; i ++ ){
       
@@ -166,20 +172,17 @@ public:
       trk->setCovMatrix( cov ) ;
       float ref[3] = { 12. ,123456789. , .0987654321 } ;
       trk->setReferencePoint( ref ) ;
-
+      
       // add some random hits 
       int iHit1 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
       int iHit2 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
       int iHit3 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
-
+      
       trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit1] ) ) ;
       trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit2] ) ) ;
       trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit3] ) ) ;
-
-//       for( int j=0; j < 10  ; j ++ ){
-// 	trk->addHitIndex( simHitName ,  i*10+j  ) ;   
-//       }
-
+      
+      
       // add tracks that where used to create this track
       if( trkVec->size() > 1 ){
 	trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
@@ -188,9 +191,9 @@ public:
       
       trkVec->addElement( trk ) ;
     }
-//   }
-
-//     if( tpcHits ){
+    //   }
+    
+    //     if( tpcHits ){
 
 //       int nTrk = nTPCHits / 10 ;
 
@@ -239,6 +242,14 @@ public:
     LCCollectionVec* calHits = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
     // in order to be able to point back to hits, we need to create 
     // generic CalorimeterHits from the SimCalorimeterHits first
+
+    // here we set the pointer flag bit that is needed to be able to point from
+    // the generic Clusters to the 'raw data' CalorimeterHits
+    //-> this should be done automatically in a future release
+    LCFlagImpl calFlag( calHits->getFlag() ) ;
+    calFlag.setBit( LCIO::RCHBIT_PTR ) ;
+    calHits->setFlag( calFlag.getFlag()  ) ;
+
 
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){

@@ -4,7 +4,7 @@
 #ifndef UTIL_LCFOURVECTOR_H
 #define UTIL_LCFOURVECTOR_H 1
 
-#include "DATA/LCObject.h"
+#include "EVENT/LCObject.h"
 #include "CLHEP/Vector/LorentzVector.h"
 
 
@@ -12,7 +12,13 @@ namespace UTIL {
   
   
   /** Four vector used in LCIO.
-   *  The cpp implementation is a CLHEP::HepLorentzVector
+   *  The cpp implementation is a CLHEP::HepLorentzVector.
+   *  Instances of this class can be used as CLHEP::HepLorentzVector
+   *  AND pointers to the corresponding LCIO class.
+   *
+   *  Currently available are:<br>
+   *  - LCFourVector<MCParticle>/MCParticle4V<br>
+   *  - LCFourVector<ReconstructedParticle>/ReconstructedParticle4V<br>
    * 
    * @author gaede 
    * @version Mar 12, 2004
@@ -26,7 +32,7 @@ namespace UTIL {
   public: 
     virtual ~LCFourVector() { /*no_op*/; } 
     
-    /** Constructor for templated type,e.g. LCFourVector<McParticle>( myMCParticle ).
+    /** Constructor for templated type,e.g. LCFourVector<MCParticle>( myMCParticle ).
      */
     LCFourVector( TT* lcObj) : _lcObj(lcObj) {
     }
@@ -34,9 +40,9 @@ namespace UTIL {
     
     /** Constructor for LCObject. 
      *  Can be used to save the dynamic_cast to the explicit type from an LCCollection element,
-     *  e.g. LCFourVector<McParticle>( col->getElement(i) ).
+     *  e.g. LCFourVector<MCParticle>( col->getElement(i) ).
      */
-    LCFourVector(DATA::LCObject* lcObj){
+    LCFourVector(EVENT::LCObject* lcObj){
       
       _lcObj = dynamic_cast< TT* >( lcObj ) ;
       
@@ -49,7 +55,7 @@ namespace UTIL {
      *  the '->' operator. Methods of the four vector implementation (HepLorentzvector)
      *  are accessed via the '.' operator.<br>
      *  For Example:<br>
-     *  LCFourVector<McParticle>  particle4V( col->getElementAt(i) ) <br>
+     *  LCFourVector<MCParticle>  particle4V( col->getElementAt(i) ) <br>
      *    particle4V->getMomentum()    //  LCIO object   <br>
      *    particle4V.m()               // mass from HepLorentzVector  <br>
      */

@@ -2,6 +2,7 @@
 
 #include "UTIL/LCFourVector.h"
 #include "IMPL/MCParticleImpl.h"
+#include "IMPL/ReconstructedParticleImpl.h"
 #include "Exceptions.h"
 
 
@@ -14,6 +15,8 @@ namespace UTIL{
   typedef LCFourVector<MCParticle> MCParticle4V ;
   typedef LCFourVector<MCParticleImpl> MCParticleI4V ;
   
+  typedef LCFourVector<ReconstructedParticle> ReconstructedParticle4V ;
+  typedef LCFourVector<ReconstructedParticleImpl> ReconstructedParticleI4V ;
 
 
   // specializations for the different LCObjects that have 4 vector information
@@ -24,12 +27,12 @@ namespace UTIL{
 		     mcPart->getEnergy() )  
   {
   }
-  LCFourVector<MCParticle>::LCFourVector<MCParticle>(DATA::LCObject* lcObj){
+  LCFourVector<MCParticle>::LCFourVector<MCParticle>(LCObject* lcObj){
     
     _lcObj = dynamic_cast<MCParticle* >( lcObj ) ;
 
     if( _lcObj == 0 )
-      throw EVENT::Exception("Dynamic cast failed for LCFourVector() !") ;
+      throw Exception("Dynamic cast failed for LCFourVector() !") ;
 
     const float* p =  _lcObj->getMomentum() ;
     setPx( p[0] ) ;
@@ -38,6 +41,27 @@ namespace UTIL{
     // use the mass to set the energy in order to avoid rounding problems
     setVectM( v() , _lcObj->getMass() ) ;
     //    setE( _lcObj->getEnergy() )  ;
+  }
+
+  LCFourVector<ReconstructedParticle>::LCFourVector<ReconstructedParticle>( ReconstructedParticle* part ) : 
+    HepLorentzVector(part->getMomentum()[0],
+		     part->getMomentum()[1],
+		     part->getMomentum()[2],
+		     part->getEnergy() )  
+  {
+  }
+  LCFourVector<ReconstructedParticle>::LCFourVector<ReconstructedParticle>(LCObject* lcObj){
+    
+    _lcObj = dynamic_cast<ReconstructedParticle* >( lcObj ) ;
+
+    if( _lcObj == 0 )
+      throw Exception("Dynamic cast failed for LCFourVector() !") ;
+
+    const float* p =  _lcObj->getMomentum() ;
+    setPx( p[0] ) ;
+    setPy( p[1] ) ;
+    setPz( p[2] ) ;
+    setE( _lcObj->getEnergy() )  ;
   }
   
 } ; // end namespace

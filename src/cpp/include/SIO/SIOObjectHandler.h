@@ -2,6 +2,8 @@
 #define SIO_SIOOBJECTHANDLER_H 1
 
 #include "EVENT/LCObject.h"
+//#include "SIO_functions.h"
+#include "SIO_block.h"
 
 class SIO_stream ;
 
@@ -32,6 +34,21 @@ public:
 			     const EVENT::LCObject* obj,
 			     unsigned int flag) =0 ;
   
+
+ protected:
+  
+  /**Helper method to compute the version number as float, i.e.
+   *  v_f = major + minor/10.
+   */
+  inline float version2float( unsigned int vers) {
+
+//     float major =  float(SIO_VERSION_MAJOR(vers)) ;
+//     float minor = float(SIO_VERSION_MINOR(vers)) ;
+//     return major + minor / 10. ;
+    return float(SIO_VERSION_MAJOR(vers)) + 
+      float(SIO_VERSION_MINOR(vers)) / 10. ; 
+  }
+
 }; // class
 
 }; // namespace 

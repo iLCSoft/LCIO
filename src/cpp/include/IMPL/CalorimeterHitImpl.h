@@ -31,6 +31,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~CalorimeterHitImpl() ;
     
+    virtual int id() { return simpleUID() ; }
+
     /**Returns the detector specific (geometrical) cell id.
      */
     virtual int getCellID0() const ;

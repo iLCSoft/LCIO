@@ -37,6 +37,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~ParticleIDImpl() ; 
 
+    virtual int id() { return simpleUID() ; }
+
     /** TypeID, if applicable this is the PDG code of the particle.
      */
     virtual int getTypeID() const ;

@@ -16,7 +16,10 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
 @endif
 
 /** The generic calorimeter hit for real data. 
- * 
+ * If Clusters from reconstruction want to point back to
+ * CalorimeterHit objects, these have to be stored in a collection
+ * with flag(LCIO::RCHBIT_PTR)==1.
+ *  
  * @author gaede
  * @version Aug 8, 2003
  */
@@ -39,7 +42,7 @@ public interface CalorimeterHit extends LCObject {
     public float getEnergy() const ;
     
     /** Returns the position of the hit in world coordinates.
-     *  NULL if information is not stored. 
+     *  NULL if information is not stored - check the flag word (bit CHBIT_LONG) 
      */
     public const float3V getPosition() const ;	
 

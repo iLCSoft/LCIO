@@ -77,6 +77,11 @@ namespace UTIL {
 	printTPCHits( col ) ;
 
       }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACKERHIT ){
+	  
+	printTrackerHits( col ) ;
+
+      }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::SIMCALORIMETERHIT ){
 	  
 	printSimCalorimeterHits( col ) ;
@@ -315,9 +320,9 @@ namespace UTIL {
     int nPrint = nTracks > MAX_HITS ? MAX_HITS : nTracks ;
     
     std::cout << endl
-	      << "type| p         | theta    | phi      | d0        | z0        |   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   "
+	      << " [   id   ] |type| p         | theta    | phi      | d0        | z0        |   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   "
 	      << endl 
-	      << "----|-----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
+	      << "------------|----|-----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -325,7 +330,8 @@ namespace UTIL {
       Track* trk = 
       	dynamic_cast<Track*>( col->getElementAt( i ) ) ;
       
-      printf(" %2d | %5.3e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n"
+      printf(" [%8.8x] | %2d | %5.3e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n"
+	     , trk->id()
 	     , trk->getType() 
 	     , trk->getMomentum() 
 	     , trk->getTheta() 
@@ -351,7 +357,7 @@ namespace UTIL {
       }
       cout << endl ;
       if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
-	cout << " hits ->" << hex;
+	cout << " hits ->" ;
 	// 	const StringVec& hitColNames = trk->getHitCollectionNames() ;
 	// 	for(unsigned int j=0;j<hitColNames.size();j++){
 	// 	  cout << " " << hitColNames[j] << ": " ;
@@ -362,9 +368,10 @@ namespace UTIL {
 	// 	}
 	const TrackerHitVec& hits= trk->getTrackerHits() ; 
 	for(unsigned int k=0;k<hits.size();k++){
-	  cout << "0x" << hits[k] <<", " ;
+	  printf("[%8.8x] ", hits[k]->id() ) ;
+	  //	  cout << "[" << hits[k]->id() <<"] " ;
 	}
-	cout << dec << endl  ;
+	cout << endl  ;
       }
 //       cout << trk->getType()     << " | "
 // 	   << trk->getMomentum() << " | "
@@ -403,7 +410,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " cellID(bytes)| position | dEdx | time (x,y,z) | PDG of MCParticle" 
+	      << " cellID(bytes)| position (x,y,z) | dEdx | time  | PDG of MCParticle" 
 	      << endl 
 	      << endl ;
     
@@ -440,6 +447,56 @@ namespace UTIL {
 	 << endl ;
     
   }
+
+  void LCTOOLS::printTrackerHits(const EVENT::LCCollection* col ){
+    
+    if( col->getTypeName() != LCIO::TRACKERHIT ){
+      
+      cout << " collection not of type " << LCIO::TRACKERHIT << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TRACKERHIT << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+    
+    
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " [   id   ] | position (x,y,z)                | dEdx      | time     | [rawhitid] |  type" 
+      //              << "  [508] | (1.800e+01,0.000e+00,0.000e+00) | 3.142e+00 | 1.235e-01"
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      TrackerHit* hit = 
+	dynamic_cast<TrackerHit*>( col->getElementAt( i ) ) ;
+      
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%8.8x] | %s\n" 
+	     , hit->id() 
+	     , hit->getPosition()[0] 
+	     , hit->getPosition()[1] 
+	     , hit->getPosition()[2] 
+	     , hit->getdEdx() 
+	     , hit->getTime() 
+	     , hit->getRawDataHit()->id() 
+	     , hit->getType().c_str() 
+	     ) ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+    
+  }
   
   void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {
     
@@ -458,12 +515,13 @@ namespace UTIL {
     
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::TPCBIT_RAW   : " << flag.bitSet( LCIO::TPCBIT_RAW ) << endl ;
+    cout << "  -> LCIO::TPCBIT_PTR   : " << flag.bitSet( LCIO::TPCBIT_PTR ) << endl ;
     
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " cellId0 | time | charge | quality " 
+	      << " [   id   ]  | cellId0 | time | charge | quality " 
 	      << endl << "  -> raw data (bytes) : "
 	      << endl 
 	      << endl ;
@@ -475,6 +533,7 @@ namespace UTIL {
       
       int id0 = hit->getCellID()  ;
       //      std::cout << hit->getCellID() << " | " 
+      printf( " [%8.8x] |", hit->id() ) ;
       std::cout	<< ((id0& 0xff000000)>>24) << "/" 
 		<< ((id0& 0x00ff0000)>>16) << "/" 
 		<< ((id0& 0x0000ff00)>> 8) << "/" 
@@ -708,7 +767,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
     std::cout << endl
-	      << " cellId0(bytes) | cellId1(bytes) | energy/amplitude | position (x,y,z) " 
+	      << " [   id   ] |  cellId0(bytes) | cellId1(bytes) | energy/amplitude | position (x,y,z) " 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -719,10 +778,10 @@ namespace UTIL {
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
       
-      cout << i << ": "
+      printf( " [%8.8x] | " , hit->id() ) ;
 	// 	   << hit->getCellID0() << " | "
 	// 	   << hit->getCellID1() << " | "
-	   << ((id0& 0xff000000)>>24) << "/" 
+	cout << ((id0& 0xff000000)>>24) << "/" 
 	   << ((id0& 0x00ff0000)>>16) << "/" 
 	   << ((id0& 0x0000ff00)>> 8) << "/" 
 	   << ((id0& 0x000000ff)>> 0) << " | "
@@ -768,9 +827,9 @@ namespace UTIL {
     int nPrint = nClusters > MAX_HITS ? MAX_HITS : nClusters ;
     
     std::cout << endl
-	      << "  type | energy    |      position ( x,y,z)          |  theta   |  phi     | EMweight |HADweight |MUweight"
+	      << " [   id   ] |  type | energy    |      position ( x,y,z)          |  theta   |  phi     | EMweight |HADweight |MUweight"
 	      << endl	      
-	      << "-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
+	      << "------------|-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -778,7 +837,8 @@ namespace UTIL {
       Cluster* clu = 
       	dynamic_cast<Cluster*>( col->getElementAt( i ) ) ;
       
-      printf("0x%5x| %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | %4.2e | %4.2e \n"
+      printf(" [%8.8x] |0x%5x| %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | %4.2e | %4.2e \n"
+	     , clu->id()
 	     , clu->getType() 
 	     , clu->getEnergy() 
 	     , clu->getPosition()[0]
@@ -823,7 +883,8 @@ namespace UTIL {
 	const CalorimeterHitVec& hits= clu->getCalorimeterHits() ; 
 	const FloatVec& contr = clu->getHitContributions() ; 
 	for(unsigned int k=0;k<hits.size();k++){
-	  cout << "0x" << hits[k]  << "(" << contr[k] << "), " ;
+	  printf( " [%8.8x] (%4.3e), " , hits[k]->id(), contr[k] ) ;
+	  // 	  cout << "0x" << hits[k]  << "(" << contr[k] << "), " ;
 	}
 	cout << dec << endl  ;
 
@@ -860,21 +921,27 @@ namespace UTIL {
     int nPrint = nReconstructedParticles > MAX_HITS ? MAX_HITS : nReconstructedParticles ;
     
     std::cout << endl
-	      << "  address |pri|type|     momentum( px,py,pz)         | energy   | mass     | charge    |      position ( x,y,z)  "
+	      << " [   id   ] |pri|type|     momentum( px,py,pz)         | energy   | mass     | charge    |      position ( x,y,z)  "
 	      << endl	      
 	      << "----------|---|----|---------------------------------|----------|----------|-----------|-------------------------"
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
       
+#ifdef CLHEP
+      ReconstructedParticle4V recP( col->getElementAt( i ) ) ;
+#else
       ReconstructedParticle* recP = 
       	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
+#endif
+
       
       int primary = recP->isPrimary() ;
       int type =  recP->getType() ;
 
-      printf(" %8.8x | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) \n"
-	     , reinterpret_cast<int> ( recP )
+      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) \n"
+	     //	     , reinterpret_cast<int> ( recP )
+	     , recP->id()
 	     , primary
 	     , type
 	     , recP->getMomentum()[0]
@@ -893,27 +960,27 @@ namespace UTIL {
       }
       cout << ")" << endl ;
 
-      cout << "    particles ( address [weight] ): " ;
+      cout << "    particles ( [   id   ] (weight) ): " ;
       for(unsigned int l=0;l<recP->getParticles().size();l++){
-	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getParticles()[l] ) , 
+	printf("[%8.8x] (%f), ", recP->getParticles()[l]->id() , 
 	       recP->getParticleWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    tracks ( address [weight] ): " ;
+      cout << "    tracks ( [   id   ] (weight) ): " ;
       for(unsigned int l=0;l<recP->getTracks().size();l++){
-	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getTracks()[l] ) , 
+	printf("[%8.8x] (%f), ",  recP->getTracks()[l]->id() ,
 	       recP->getTrackWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    clusters ( address [weight] ): " ;
+      cout << "    clusters ( [   id   ] (weight) ): " ;
       for(unsigned int l=0;l<recP->getClusters().size();l++){
-	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getClusters()[l] ) , 
+	printf("[%8.8x] (%f), ",  recP->getClusters()[l]->id() ,
 	       recP->getClusterWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    MCParticles ( address [weight] ): " ;
+      cout << "    MCParticles ( [   id   ] (weight) ): " ;
       for(unsigned int l=0;l<recP->getMCParticles().size();l++){
-	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getMCParticles()[l] ) , 
+	printf("[%8.8x] (%f), ",  recP->getMCParticles()[l]->id() ,
 	       recP->getMCParticleWeights()[l]  ) ; 
       }
       cout << endl ;
@@ -975,7 +1042,7 @@ namespace UTIL {
     }
 
     std::cout << endl
-	      << " index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" 
+	      << " [   id   ] | index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" 
 	      << " | mass | charge | energy"
 	      << endl 
 	      << endl ;
@@ -995,6 +1062,7 @@ namespace UTIL {
 #else
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
 #endif
+      printf(" [%8.8x] |", part->id() );
       cout << index << " [" ;
       for(int k=0;k<part->getNumberOfParents();k++){
 	if(k>0) cout << "," ;

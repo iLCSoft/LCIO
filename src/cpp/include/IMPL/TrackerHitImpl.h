@@ -27,6 +27,9 @@ namespace IMPL {
     /// Destructor.
     virtual ~TrackerHitImpl() ; 
 
+
+    virtual int id() { return simpleUID() ; }
+
     /** The hit  position in [mm].	
      */
     virtual const double* getPosition() const ;

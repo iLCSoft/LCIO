@@ -46,10 +46,14 @@ namespace SIO{
     }
 
 //     // read a pointer tag for future reference to calorimeter hits
-//     SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
-	
+    
+
+    if( LCFlagImpl(flag).bitSet( LCIO::RCHBIT_PTR ) && 
+	version2float( vers ) > 1.0 ) {
+      SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+    }
+
     return ( SIO_BLOCK_SUCCESS ) ;
-	
   }
     
     
@@ -74,11 +78,12 @@ namespace SIO{
       SIO_DATA( stream,  pos , 3 ) ;
     }
 
-//     // add a pointer tag for future reference to calorimeter hits
-//     SIO_PTAG( stream , hit ) ;
+
+    if( LCFlagImpl(flag).bitSet( LCIO::RCHBIT_PTR ) ){
+      SIO_PTAG( stream , hit  ) ;
+    }
 
     return ( SIO_BLOCK_SUCCESS ) ;
-    
   }
   
 }; // namespace

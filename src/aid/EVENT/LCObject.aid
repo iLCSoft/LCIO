@@ -10,10 +10,16 @@ package hep.lcio.event ;
  */
 public interface LCObject extends Cloneable {
     
+@ifdef cpp
+    /** Returns an object id for internal (debugging) use in LCIO.
+     */
+    public int id() ;
+@endif
 
 @cpp{
     /** Deep copy of the object. C++ implementations should return the 
-     *  concrete type (virtual constructor). 
+     *  concrete type (virtual constructor). No reasonable implementation yet.
+     *  Do not use this method.
      */
     public:
 	 virtual LCObject* clone() const {  return 0 ; } 

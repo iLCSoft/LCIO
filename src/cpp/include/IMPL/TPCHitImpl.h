@@ -23,6 +23,8 @@ public:
   /// Destructor.
   virtual ~TPCHitImpl() ;
   
+  virtual int id() { return simpleUID() ; }
+    
   /** Returns the detector specific cell id.
    */
   virtual int getCellID() const;

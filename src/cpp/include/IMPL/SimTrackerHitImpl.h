@@ -28,6 +28,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~SimTrackerHitImpl() ; 
     
+    virtual int id() { return simpleUID() ; }
+
     /**Returns the detector specific (geometrical) cell id.
      */
     virtual int getCellID() const ;

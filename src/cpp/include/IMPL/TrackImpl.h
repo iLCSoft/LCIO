@@ -31,6 +31,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~TrackImpl() ; 
     
+    virtual int id() { return simpleUID() ; }
+
     /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
      *  Track::UNKNOWN <br> 
      *  Track::VTX <br> 

@@ -32,6 +32,8 @@ namespace IMPL {
 
 
 
+    virtual int id() { return simpleUID() ; }
+
     /** Returns the i-th daughter of this particle.
      * Same as getDaughter() except for return type.
      *

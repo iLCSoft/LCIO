@@ -18,7 +18,7 @@ public interface LCIO{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 1 ; 
-    static const int MINORVERSION  = 0 ; 
+    static const int MINORVERSION  = 1 ; 
 
     // bits in flag words
     // SimCalorimeterHit (CH)
@@ -28,7 +28,10 @@ public interface LCIO{
     static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
 
     // (raw) calorimeter hit 
-    static const int RCHBIT_PTR = 31 ; // 1: pointer tag added (needed for TrackerHit) 
+    static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
+    static const int RCHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
+    static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
+    static const int RCHBIT_PTR = 28 ; // 1: pointer tag added (needed for TrackerHit) 
     
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
@@ -71,7 +74,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 0 ; 
+  public static const int MINORVERSION  = 1 ; 
 
   // bits in flag words
   // SimCalorimeterHit (CH)
@@ -81,7 +84,10 @@ public interface LCIO{
   public static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
 
     // (raw) calorimeter hit 
-  public static const int RCHBIT_PTR = 31 ; // 1: pointer tag added (needed for TrackerHit) 
+  public static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
+  public static const int RCHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
+  public static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
+  public static const int RCHBIT_PTR = 28 ; // 1: pointer tag added (needed for TrackerHit) 
 
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 

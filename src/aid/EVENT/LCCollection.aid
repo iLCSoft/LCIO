@@ -30,7 +30,7 @@ public interface LCCollection
 
     /** Returns flag word for collection. Bits 16-31 are reserved for LCIO
      *  Depending on the object type stored they have a special meaning, e.g. 
-     *  for CalorimeterHits: <br>
+     *  for SimCalorimeterHits: <br>
      *  CHBIT_LONG = 31   -  store position <br>
      *  CHBIT_BARREL = 30 -  endcap or barrel <br>
      *  CHBIT_ID1 = 29 -   cellid1 is sored <br>
@@ -54,5 +54,10 @@ public interface LCCollection
      */
     public void removeElementAt(int i) throws ReadOnlyException ;
     
+
+    /** Set the flag word. This is allowed in 'read only' mode.
+     */
+    public void setFlag(int flag)  ;
+
 }
 

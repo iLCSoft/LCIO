@@ -24,6 +24,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~LCRunHeaderImpl() ; 
 
+    virtual int id() { return simpleUID() ; }
+
     /** Returns the run number.
      */
     virtual int getRunNumber() const ;

@@ -21,6 +21,7 @@ namespace IMPL {
     
   public:
     AccessChecked() ;
+    virtual int simpleUID() { return _id ; }
 
   protected:
     virtual void setReadOnly( bool readOnly ) ;
@@ -29,7 +30,8 @@ namespace IMPL {
     void checkAccess(const char* what) throw ( EVENT::ReadOnlyException ) ;
 
   protected: 
-    bool readOnly ;
+    bool _readOnly ;
+    int _id ;
     
   };
 }; // namespace IMPL

@@ -35,8 +35,10 @@ namespace SIO{
 
     SIO_PNTR( stream , &(hit->_particle)  ) ;
 
-//     // read the pointer tag in case we want to point to hits in the future
-//     SIO_PTAG( stream , dynamic_cast<const SimTrackerHit*>(hit) ) ;
+    // read the pointer tag in case we want to point to hits
+    if( version2float( vers ) > 1.0 ) {
+      SIO_PTAG( stream , dynamic_cast<const SimTrackerHit*>(hit) ) ;
+    }
 	
     return ( SIO_BLOCK_SUCCESS ) ;
 	
@@ -66,8 +68,8 @@ namespace SIO{
     const MCParticle* part = hit->getMCParticle()  ;
     SIO_PNTR( stream , &part ) ;
 
-//     // write a ptag in order to be able to point to tracker hits in the future
-//     SIO_PTAG( stream , hit ) ;
+    // write a ptag in order to be able to point to tracker hits - from v1.1
+    SIO_PTAG( stream , hit ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     

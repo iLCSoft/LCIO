@@ -31,6 +31,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~ReconstructedParticleImpl() ; 
 
+    virtual int id() { return simpleUID() ; }
+
     /** Type of reconstructed particle, one of:<br>
      *  ReconstructedParticle::SINGLE,<br>  
      *  ReconstructedParticle::V0,<br>

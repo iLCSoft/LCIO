@@ -41,6 +41,8 @@ namespace IMPL {
     /// Destructor.
     virtual ~ClusterImpl() ; 
 
+    virtual int id() { return simpleUID() ; }
+
     /** Type of cluster:<br>
      *  ------------- detector:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
      *  Cluster::UNKNOWN <br> 

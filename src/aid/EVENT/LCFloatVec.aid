@@ -1,10 +1,13 @@
 package hep.lcio.event ;
 
+// @cpp{
+// #include <vector>
+// }
+// @cpp{
+// typedef std::vector<float> FloatVec ;
+// }
 @cpp{
-#include <vector>
-}
-@cpp{
-typedef std::vector<float> FloatVec ;
+ #include "IMPL/AccessChecked.h" // FIXME: EVENT shouldn't  depend on IMPL ...
 }
 
 /** Float vector used for user extensions.
@@ -13,13 +16,21 @@ typedef std::vector<float> FloatVec ;
  * @author gaede 
  * @version Mar 12, 2003
  * @see LCObject
- * fg 20030607 moved here from hep.lcio.event
  */
+
 public interface LCFloatVec extends LCObject 
 @ifdef cpp
 ,FloatVec
 @endif
 {
+
+@cpp{
+    public:
+    int id() { return _acc.simpleUID() ; } 
+    protected:
+      IMPL::AccessChecked _acc ;
+}
+
 
 @ifdef java
     public float[] toArray();

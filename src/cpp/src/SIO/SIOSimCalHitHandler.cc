@@ -61,9 +61,11 @@ namespace SIO{
       hit->_vec.push_back(  mcCon  );
     }
 
-//     // read a pointer tag for future reference to calorimeter hits
-//     SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
-	
+    // read a pointer tag for  reference to calorimeter hits
+    if( version2float( vers ) > 1.0 ) {
+      SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
+    }
+    
     return ( SIO_BLOCK_SUCCESS ) ;
 	
   }
@@ -75,11 +77,6 @@ namespace SIO{
     
     unsigned int status ; 
 	
-    // this is where we gave up type safety in order to
-    // simplify the API and the implementation
-    // by having a common collection of objects
-    
-    //fg 20030609 changed to use SimCalorimeterHit
     const SimCalorimeterHit* hit = dynamic_cast<const SimCalorimeterHit*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
@@ -110,8 +107,8 @@ namespace SIO{
       
     }
     
-//     // add a pointer tag for future reference to calorimeter hits
-//     SIO_PTAG( stream , hit ) ;
+    // add a pointer tag for reference to sim. calorimeter hits - added in v1.1
+    SIO_PTAG( stream , hit ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     
