@@ -6,7 +6,7 @@ import hep.lcio.event.TPCHit;
 /**
  * A default implementation of TPCHit
  * @author Frank Gaede
- * @version $Id: ITPCHit.java,v 1.1 2003-09-11 14:07:07 gaede Exp $
+ * @version $Id: ITPCHit.java,v 1.2 2003-09-17 00:14:25 tonyj Exp $
  */
 public class ITPCHit extends ILCObject implements TPCHit
 {
@@ -15,14 +15,14 @@ public class ITPCHit extends ILCObject implements TPCHit
    protected float charge;
    protected int quality;
    protected int[] rawDataArray ;
-
-    
+   
+   
    public void setCellID(int cellID)
    {
       checkAccess();
       this.cellID = cellID;
    }
-
+   
    public int getCellID()
    {
       return cellID;
@@ -32,7 +32,7 @@ public class ITPCHit extends ILCObject implements TPCHit
       checkAccess();
       this.time = time;
    }
-
+   
    public float getTime()
    {
       return time;
@@ -42,33 +42,36 @@ public class ITPCHit extends ILCObject implements TPCHit
       checkAccess();
       this.charge = charge;
    }
-
+   
    public float getCharge()
    {
       return charge;
    }
-
+   
    public void setQuality(int quality)
    {
       checkAccess();
       this.quality= quality;
    }
-
+   
    public int getQuality()
    {
       return quality;
    }
-
-    public int getNRawDataWords(){
-	  return rawDataArray.length ;    
-    }
-
-	public void setRawDataWords(int rawData[]){
+   
+   public int getNRawDataWords()
+   {
+      return rawDataArray.length ;
+   }
+   
+   public void setRawDataWords(int rawData[])
+   {
       checkAccess();
-	  this.rawDataArray = rawData ;	
-	}
-    public int getRawDataWord(int i){
-      return rawDataArray[ i ] ;     
-    }
-
+      this.rawDataArray = rawData ;
+   }
+   public int getRawDataWord(int i)
+   {
+      return rawDataArray[ i ] ;
+   }
+   
 }
