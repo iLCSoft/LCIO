@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.25 2004-09-22 20:56:12 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.26 2004-09-22 21:27:14 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -176,10 +176,10 @@ c-----the ParticleID interface
       integer lcpiddelete, lcpidid 
 
       integer lcpidgettype, lcpidgetpdg
-      real    lcpidgetloglikelihood
+      real    lcpidgetlikelihood
       integer lcpidgetparameters, lcpidgetalgorithmtype
 
-      integer lcpidsettype, lcpidsetpdg, lcpidsetloglikelihood
+      integer lcpidsettype, lcpidsetpdg, lcpidsetlikelihood
       integer lcpidsetalgorithmtype
       integer lcpidaddparameter
       integer unknownpdg
