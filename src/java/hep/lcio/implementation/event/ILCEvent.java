@@ -1,6 +1,7 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.data.LCCollectionData;
+
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
@@ -12,7 +13,7 @@ import java.util.Map;
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.5 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: ILCEvent.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -26,6 +27,7 @@ public class ILCEvent extends ILCObject implements LCEvent
    {
       return (LCCollection) collections.get(name);
    }
+
    public LCCollectionData getCollectionData(String name)
    {
       return (LCCollectionData) collections.get(name);

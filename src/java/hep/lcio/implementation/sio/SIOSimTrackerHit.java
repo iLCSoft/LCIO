@@ -5,8 +5,10 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
 import hep.lcio.data.SimTrackerHitData;
+
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
+
 import hep.lcio.exceptions.DataNotAvailableException;
 
 import hep.lcio.implementation.event.ISimTrackerHit;
@@ -17,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.3 2003-06-10 13:10:43 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -31,15 +33,15 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       time = in.readFloat();
       particle = in.readPntr();
       in.readPTag(this);
-   
    }
 
-   public MCParticle getMCParticle()  throws DataNotAvailableException
+   public MCParticle getMCParticle() throws DataNotAvailableException
    {
       if (particle instanceof SIORef)
          particle = ((SIORef) particle).getObject();
-     if( particle == null) throw new DataNotAvailableException() ;
-     return (MCParticle) particle;
+      if (particle == null)
+         throw new DataNotAvailableException();
+      return (MCParticle) particle;
    }
 
    static void write(SimTrackerHitData hit, SIOOutputStream out) throws IOException
@@ -58,7 +60,6 @@ public class SIOSimTrackerHit extends ISimTrackerHit
          out.writeFloat(hit.getTime());
          out.writePntr(hit.getMCParticleData());
          out.writePTag(hit);
-
       }
    }
 
@@ -72,6 +73,5 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       out.writeFloat(time);
       out.writePntr(particle);
       out.writePTag(this);
-
    }
 }

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.8 2003-09-04 01:16:40 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.9 2003-09-04 04:26:59 tonyj Exp $
  */
 public class SimJob
 {
@@ -31,12 +31,14 @@ public class SimJob
     */
    public static void main(String[] args) throws IOException
    {
-      if (args.length == 0) help();
+      if (args.length == 0)
+         help();
+
       // create sio writer
       Random random = new Random();
       LCWriter lcWrt = LCFactory.getInstance().createLCWriter();
 
-      lcWrt.open(args[0]) ; 
+      lcWrt.open(args[0]);
 
       // loop over runs
       for (int rn = 0; rn < NRUN; rn++)
@@ -69,16 +71,18 @@ public class SimJob
                IMCParticle mcp = new IMCParticle();
 
                mcp.setPDG(101 + (j * 100));
-               if (mom != null) {
-		   mcp.setParent(mom) ;
-		   MCParticle[] daughters = new MCParticle[1] ;
-		   daughters[0] = mcp ;
-		   mom.setDaughters( daughters ) ; 
-	       }
+               if (mom != null)
+               {
+                  mcp.setParent(mom);
+
+                  MCParticle[] daughters = new MCParticle[1];
+                  daughters[0] = mcp;
+                  mom.setDaughters(daughters);
+               }
 
                float[] p = { 2.f / 1024.f, 4.f / 1024.f, 8.f / 1024.f };
                mcp.setMomentum(p);
-	       mcp.setMass( (float) 3.01 ) ;
+               mcp.setMass((float) 3.01);
 
                mom = mcp; // one body decays :-)
                mcVec.add(mcp);
@@ -87,10 +91,10 @@ public class SimJob
             // now add some calorimeter hits
             ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
-     	    // set flag for long format - including position
-     	    int flag = 1 << LCIO.CHBIT_LONG  ; 
-	        flag = flag | ( 1<< LCIO.CHBIT_PDG )  ; // include pdg as well
-	        calVec.setFlag(  flag ) ;
+            // set flag for long format - including position
+            int flag = 1 << LCIO.CHBIT_LONG;
+            flag = flag | (1 << LCIO.CHBIT_PDG); // include pdg as well
+            calVec.setFlag(flag);
 
             for (int j = 0; j < NHITS; j++)
             {
@@ -160,18 +164,20 @@ public class SimJob
             LCTools.dumpEvent(evt);
 
             lcWrt.writeEvent(evt);
-        }
-          // evt loop
-      }
-       // run loop
+         }
 
+         // evt loop
+      }
+
+      // run loop
       System.out.println();
       System.out.println(" created  " + NRUN + " runs with  " + (NRUN * NEVENT) + " events");
       lcWrt.close();
    }
+
    private static void help()
    {
-      System.out.println("java "+SimJob.class.getName()+" <output-file>");
+      System.out.println("java " + SimJob.class.getName() + " <output-file>");
       System.exit(1);
    }
 }

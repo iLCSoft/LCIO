@@ -4,6 +4,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 
 import hep.lcio.data.LCRunHeaderData;
+
 import hep.lcio.event.LCRunHeader;
 
 import hep.lcio.implementation.event.ILCRunHeader;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.3 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: SIORunHeader.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {

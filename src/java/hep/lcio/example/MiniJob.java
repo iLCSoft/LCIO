@@ -14,14 +14,14 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: MiniJob.java,v 1.3 2003-06-10 10:02:06 gaede Exp $
+ * @version $Id: MiniJob.java,v 1.4 2003-09-04 04:26:59 tonyj Exp $
  */
 public class MiniJob
 {
    private final static int NRUN = 1;
    private final static int NEVENT = 1;
    private final static int NMCPART = 1; // mc particles per event
-   private final static int NHITS = 1 ; // calorimeter hits per event
+   private final static int NHITS = 1; // calorimeter hits per event
    private final static String detName = "MiniDet";
    private final static String ecalName = "ECALmini";
 
@@ -34,14 +34,15 @@ public class MiniJob
       Random random = new Random();
       LCWriter lcWrt = LCFactory.getInstance().createLCWriter();
 
-      try{ 
-      	lcWrt.open(args[0]) ;
+      try
+      {
+         lcWrt.open(args[0]);
       }
-      catch(IOException e){
-      	System.out.println( "cannot open file" +  args[0] 
-      	                    + e.getMessage() ) ;
-	    System.exit(1) ;
-      }	  
+      catch (IOException e)
+      {
+         System.out.println("cannot open file" + args[0] + e.getMessage());
+         System.exit(1);
+      }
 
       // loop over runs
       for (int rn = 0; rn < NRUN; rn++)
@@ -50,14 +51,17 @@ public class MiniJob
          runHdr.setRunNumber(rn);
          runHdr.setDetectorName(detName);
          runHdr.setDescription("minimal file");
-         runHdr.addActiveSubdetector( ecalName );
+         runHdr.addActiveSubdetector(ecalName);
 
-         try{
-         	lcWrt.writeRunHeader(runHdr);
+         try
+         {
+            lcWrt.writeRunHeader(runHdr);
          }
-         catch(IOException e){
-         	System.out.println("Couldn't write run header " + rn ) ;
+         catch (IOException e)
+         {
+            System.out.println("Couldn't write run header " + rn);
          }
+
          // EventLoop - create some events and write them to the file
          for (int i = 0; i < NEVENT; i++)
          {
@@ -66,8 +70,8 @@ public class MiniJob
 
             evt.setRunNumber(rn);
             evt.setEventNumber(i);
-            evt.setDetectorName( detName );
-	    
+            evt.setDetectorName(detName);
+
             // create and add some mc particles
             ILCCollection mcVec = new ILCCollection(LCIO.MCPARTICLE);
 
@@ -89,27 +93,24 @@ public class MiniJob
             // now add some calorimeter hits
             ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
-	    int flag = 1 << LCIO.CHBIT_LONG  ; //
-	    flag = flag | ( 1<< LCIO.CHBIT_PDG )  ;
-	    calVec.setFlag(  flag ) ;
+            int flag = 1 << LCIO.CHBIT_LONG; //
+            flag = flag | (1 << LCIO.CHBIT_PDG);
+            calVec.setFlag(flag);
 
             for (int j = 0; j < NHITS; j++)
             {
                ISimCalorimeterHit hit = new ISimCalorimeterHit();
-               hit.setEnergy( 3.1415f );
+               hit.setEnergy(3.1415f);
 
-               float[] pos = 
-               {
-		   1.f , 2.f , 4.f 
-               };
+               float[] pos = { 1.f, 2.f, 4.f };
 
                hit.setPosition(pos);
 
                calVec.add(hit);
 
-               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(0), 1.f, 2.f, 4 );
+               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(0), 1.f, 2.f, 4);
             }
-	    
+
             // add all collection to the event
             evt.addCollection(mcVec, "MCParticle");
             evt.addCollection(calVec, ecalName);
@@ -118,21 +119,26 @@ public class MiniJob
             LCTools.dumpEvent(evt);
 
             // write the event to the file
-         	try{
-         		lcWrt.writeEvent(evt);
-         	}
-         	catch(IOException e){
-         		System.out.println("Couldn't write event " + i ) ;
-         	}
+            try
+            {
+               lcWrt.writeEvent(evt);
+            }
+            catch (IOException e)
+            {
+               System.out.println("Couldn't write event " + i);
+            }
          }
-          // evt loop
-      }
-       // run loop
 
+         // evt loop
+      }
+
+      // run loop
       System.out.println();
       System.out.println(" created  " + NRUN + " runs with  " + (NRUN * NEVENT) + " events");
-      try {
-	  	lcWrt.close();	
-	  } catch (Exception e) {}
+      try
+      {
+         lcWrt.close();
+      }
+      catch (Exception e) {}
    }
 }

@@ -1,15 +1,16 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.data.MCParticleData;
-import hep.lcio.event.SimCalorimeterHit;
+
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
+import hep.lcio.event.SimCalorimeterHit;
 
 
 /**
  * A default implementation of SimCalorimeterHit
  * @author Tony Johnson
- * @version $Id: ISimCalorimeterHit.java,v 1.3 2003-09-04 01:16:40 tonyj Exp $
+ * @version $Id: ISimCalorimeterHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
  */
 public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 {
@@ -76,6 +77,7 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
    {
       return (MCParticle) particle[i];
    }
+
    public MCParticleData getParticleContData(int i)
    {
       return (MCParticleData) particle[i];

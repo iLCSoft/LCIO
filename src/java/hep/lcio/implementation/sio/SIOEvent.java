@@ -6,18 +6,19 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORecord;
 import hep.lcd.io.sio.SIOWriter;
 
+import hep.lcio.data.CalorimeterHitData;
 import hep.lcio.data.LCCollectionData;
 import hep.lcio.data.LCEventData;
 import hep.lcio.data.MCParticleData;
 import hep.lcio.data.SimCalorimeterHitData;
-import hep.lcio.data.CalorimeterHitData;
 import hep.lcio.data.SimTrackerHitData;
-import hep.lcio.event.SimCalorimeterHit;
+
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
 
 import hep.lcio.implementation.event.ILCCollection;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.8 2003-08-22 13:55:09 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.9 2003-09-04 04:27:00 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -40,12 +41,11 @@ class SIOEvent extends ILCEvent
 
    SIOEvent(SIORecord record) throws IOException
    {
-
       SIOBlock block = record.getBlock();
+
       //fg 20030509 versions older than v00-03 no longer supported
-      if( block.getMajorVersion() <1 && block.getMinorVersion() < 3)
-	  throw new IOException("Sorry: files created with versions older than v00-03"
-				+" are no longer supported !" ) ;
+      if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
+         throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
 
       SIOInputStream in = block.getData();
       runNumber = in.readInt();
@@ -58,10 +58,9 @@ class SIOEvent extends ILCEvent
       blockMap = new HashMap();
       for (int i = 0; i < nBlockNames; i++)
       {
-
-	  // fg20030508 from v00-03 on, we ommit the trailing '\0's for strings
-	  String blockName = in.readString() ;
-	  String blockType = in.readString() ;
+         // fg20030508 from v00-03 on, we ommit the trailing '\0's for strings
+         String blockName = in.readString();
+         String blockType = in.readString();
 
          blockMap.put(blockName, blockType);
       }
@@ -74,11 +73,10 @@ class SIOEvent extends ILCEvent
          SIOBlock block = record.getBlock();
          if (block == null)
             break;
-	 //fg 20030509 versions older than v00-03 no longer supported
-	 if( block.getMajorVersion() <1 && block.getMinorVersion() < 3)
-	     throw new IOException("Sorry: files created with versions older than v00-03"
-				   +" are no longer supported !" ) ;
 
+         //fg 20030509 versions older than v00-03 no longer supported
+         if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 3))
+            throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
 
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
@@ -135,23 +133,23 @@ class SIOEvent extends ILCEvent
 
    static void write(LCEventData event, SIOWriter writer, boolean headerOnly) throws IOException
    {
-       // fg20030513 - changed back to tony's original version
-       // we don't duplicate the event header in the C++ implementation any more ...
+      // fg20030513 - changed back to tony's original version
+      // we don't duplicate the event header in the C++ implementation any more ...
       if (headerOnly)
       {
          SIOOutputStream out = writer.createBlock(SIOFactory.eventHeaderBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
          out.writeInt(event.getRunNumber());
          out.writeInt(event.getEventNumber());
- 
-	 out.writeLong(event.getTimeStamp());
+
+         out.writeLong(event.getTimeStamp());
          out.writeString(event.getDetectorName());
- 
+
          String[] blockNames = event.getCollectionNames();
          out.writeInt(blockNames.length);
          for (int i = 0; i < blockNames.length; i++)
          {
             String blockName = blockNames[i];
-            out.writeString( blockName);
+            out.writeString(blockName);
             out.writeString(event.getCollectionData(blockName).getTypeName());
          }
       }
@@ -166,7 +164,7 @@ class SIOEvent extends ILCEvent
             String type = col.getTypeName();
             int flags = col.getFlag();
             out.writeInt(flags);
- 
+
             int n = col.getNumberOfElements();
             out.writeInt(n);
             if (type.equals(LCIO.MCPARTICLE))
@@ -202,12 +200,12 @@ class SIOEvent extends ILCEvent
    {
       writer.createRecord(SIOFactory.eventHeaderRecordName, SIOFactory.compressionMode);
       SIOEvent.write(event, writer, true);
-      writer.createRecord(SIOFactory.eventRecordName,SIOFactory.compressionMode);
+      writer.createRecord(SIOFactory.eventRecordName, SIOFactory.compressionMode);
       SIOEvent.write(event, writer, false);
    }
 
-    /**@obsolete - fg20030508     
-     */
+   /**@obsolete - fg20030508
+    */
    private static void hackString(SIOOutputStream out, String str) throws IOException
    {
       out.writeInt(str.length());
@@ -218,11 +216,8 @@ class SIOEvent extends ILCEvent
       out.pad();
    }
 
-
-     
-
-    /**@obsolete - fg20030508     
-     */
+   /**@obsolete - fg20030508
+    */
    private static String stringHack(SIOInputStream in) throws IOException
    {
       int l = in.readInt();

@@ -6,13 +6,15 @@
 package hep.lcio.example;
 
 import hep.lcio.data.LCFloatVec;
-import hep.lcio.event.SimCalorimeterHit;
+
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
+
 import hep.lcio.exceptions.DataNotAvailableException;
 
 
@@ -54,17 +56,15 @@ public class LCTools
 
                float[] x = hit.getPosition();
 
-               System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]) ;
+               System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
 
-	       // FIX ME sth. is wrong with accessing the mc particle contributions 
-	       	       if(hit.getNMCParticles()>0)
-	       	   System.out.print(" - mc: " + hit.getParticleCont(0).getPDG() ) ;
+               if (hit.getNMCParticles() > 0)
+                  System.out.print(" - mc: " + hit.getParticleCont(0).getPDG());
 
-	       System.out.println() ;
-		       
+               System.out.println();
             }
-
          }
+
          // print CalorimeterHit collections:
          else if (evt.getCollection(name).getTypeName().equals(LCIO.CALORIMETERHIT))
          {
@@ -81,10 +81,9 @@ public class LCTools
 
                float[] x = hit.getPosition();
 
-               System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]) ;
- 	           System.out.println() ;
-           }
-
+               System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
+               System.out.println();
+            }
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.SIMTRACKERHIT))
          {
@@ -100,17 +99,16 @@ public class LCTools
                SimTrackerHit hit = (SimTrackerHit) col.getElementAt(i);
 
                double[] x = hit.getPosition();
-            
-               
-               int pdg = -999 ;
-               try{ 
-               	 MCParticle part = hit.getMCParticle() ;
-               	 pdg =  part.getPDG() ;
-               } catch( DataNotAvailableException e){ //e.printStackTrace() ; 
-               }  
 
-      			System.out.print("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + pdg + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);	
-               
+               int pdg = -999;
+               try
+               {
+                  MCParticle part = hit.getMCParticle();
+                  pdg = part.getPDG();
+               }
+               catch (DataNotAvailableException e) {}
+
+               System.out.print("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + pdg + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
             }
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.LCFLOATVEC))
@@ -129,8 +127,8 @@ public class LCTools
                System.out.print(" values(" + i + "): ");
 
                float[] data = vec.toArray();
-               for(int k=0 ; k< data.length ; k++ )
-                  System.out.print( data[k]  + ", ") ;
+               for (int k = 0; k < data.length; k++)
+                  System.out.print(data[k] + ", ");
                System.out.println();
             }
          }

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.5 2003-09-04 01:16:40 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.6 2003-09-04 04:26:59 tonyj Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -34,7 +34,9 @@ public class RecJob implements LCRunListener, LCEventListener
     */
    public static void main(String[] args) throws IOException
    {
-      if (args.length < 2) help();
+      if (args.length < 2)
+         help();
+
       // create reader and writer for input and output streams 
       LCReader lcReader = LCFactory.getInstance().createLCReader();
       lcReader.open(args[0]);
@@ -58,7 +60,7 @@ public class RecJob implements LCRunListener, LCEventListener
       }
       catch (IOException x)
       {
-         throw new RuntimeException("Error writing event",x);
+         throw new RuntimeException("Error writing event", x);
       }
    }
 
@@ -124,7 +126,7 @@ public class RecJob implements LCRunListener, LCEventListener
       }
       catch (IOException x)
       {
-         throw new RuntimeException("Error writing event",x);
+         throw new RuntimeException("Error writing event", x);
       }
    }
 
@@ -133,9 +135,10 @@ public class RecJob implements LCRunListener, LCEventListener
       lcWrt.close();
       System.out.println("Analyzed " + nEvent + " events");
    }
+
    private static void help()
    {
-      System.out.println("java "+RecJob.class.getName()+" <input-file> <output-file>");
+      System.out.println("java " + RecJob.class.getName() + " <input-file> <output-file>");
       System.exit(1);
    }
 }

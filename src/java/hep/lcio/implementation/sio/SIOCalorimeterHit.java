@@ -5,6 +5,7 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
 import hep.lcio.data.CalorimeterHitData;
+
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCIO;
 
@@ -16,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.5 2003-08-22 13:55:09 gaede Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -26,16 +27,14 @@ class SIOCalorimeterHit extends ICalorimeterHit
       cellId1 = in.readInt();
       energy = in.readFloat();
 
-      if ((flags & (1<<LCIO.CHBIT_LONG)) != 0)
-	  {
-	      position[0] = in.readFloat();
-	      position[1] = in.readFloat();
-	      position[2] = in.readFloat();
-
-	  }
+      if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
+      {
+         position[0] = in.readFloat();
+         position[1] = in.readFloat();
+         position[2] = in.readFloat();
+      }
 
       in.readPTag(this);
-
    }
 
    static void write(CalorimeterHitData hit, SIOOutputStream out, int flags) throws IOException
@@ -48,18 +47,16 @@ class SIOCalorimeterHit extends ICalorimeterHit
          out.writeInt(hit.getCellID1());
          out.writeFloat(hit.getEnergy());
 
-	 if ((flags & (1<<LCIO.CHBIT_LONG) ) != 0)
-	     {
-		 float[] pos = hit.getPosition();
-		 out.writeFloat(pos[0]);
-		 out.writeFloat(pos[1]);
-		 out.writeFloat(pos[2]);
-
-	     }
+         if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
+         {
+            float[] pos = hit.getPosition();
+            out.writeFloat(pos[0]);
+            out.writeFloat(pos[1]);
+            out.writeFloat(pos[2]);
+         }
 
          out.writePTag(hit);
       }
-
    }
 
    private void write(SIOOutputStream out, int flags) throws IOException
@@ -68,14 +65,13 @@ class SIOCalorimeterHit extends ICalorimeterHit
       out.writeInt(cellId1);
       out.writeFloat(energy);
 
-      if ((flags & (1<<LCIO.CHBIT_LONG)) != 0)
-	  {
-	      out.writeFloat(position[0]);
-	      out.writeFloat(position[1]);
-	      out.writeFloat(position[2]);
-	  }
+      if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
+      {
+         out.writeFloat(position[0]);
+         out.writeFloat(position[1]);
+         out.writeFloat(position[2]);
+      }
 
       out.writePTag(this);
-
    }
 }
