@@ -11,8 +11,9 @@
 #include "DATA/LCIntVec.h"
 #include "IMPL/LCFlagImpl.h"
 #include "EVENT/Track.h"
-//#include "IMPL/TrackImpl.h"
 #include "EVENT/Cluster.h"
+#include "EVENT/ReconstructedParticle.h"
+
 
 #ifdef CLHEP
 #include "UTIL/LCFourVector.h"
@@ -105,6 +106,11 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::CLUSTER ){
 	  
 	printClusters( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::RECONSTRUCTEDPARTICLE ){
+	  
+	printReconstructedParticles( col ) ;
 
       }
 
@@ -822,7 +828,108 @@ namespace UTIL {
   }
 
 
+  void LCTOOLS::printReconstructedParticles( const EVENT::LCCollection* col ){
 
+    if( col->getTypeName() != LCIO::RECONSTRUCTEDPARTICLE ){
+      
+      cout << " collection not of type " << LCIO::RECONSTRUCTEDPARTICLE << endl ;
+      return ;
+    }
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::RECONSTRUCTEDPARTICLE << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+//     LCFlagImpl flag( col->getFlag() ) ;
+//     cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
+    
+    int nReconstructedParticles =  col->getNumberOfElements() ;
+    int nPrint = nReconstructedParticles > MAX_HITS ? MAX_HITS : nReconstructedParticles ;
+    
+    std::cout << endl
+	      << "  address |pri|type|     momentum( px,py,pz)         | energy   | mass     | charge    |      position ( x,y,z)  "
+	      << endl	      
+	      << "----------|---|----|---------------------------------|----------|----------|-----------|-------------------------"
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      ReconstructedParticle* recP = 
+      	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
+      
+      int primary = unsigned( recP->getTypeFlag() & ( 1 << 31 ) ) > 0 ;
+      int type =  ( recP->getTypeFlag() & 0x0000FFFF ) ;
+
+      printf(" %8.8x | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) \n"
+	     , reinterpret_cast<int> ( recP )
+	     , primary
+	     , type
+	     , recP->getMomentum()[0]
+	     , recP->getMomentum()[1]
+	     , recP->getMomentum()[2]
+	     , recP->getEnergy() 
+	     , recP->getMass() 
+	     , recP->getCharge()
+	     , recP->getReferencePoint()[0] 
+	     , recP->getReferencePoint()[1] 
+	     , recP->getReferencePoint()[2] 
+	     ) ;
+      cout << "    covariance( px,py,pz,E) : (" ;
+      for(int l=0;l<10;l++){
+ 	printf("%4.2e, ", recP->getCovMatrix()[l] ) ; 
+      }
+      cout << ")" << endl ;
+
+      cout << "    particles ( address [weight] ): " ;
+      for(unsigned int l=0;l<recP->getParticles().size();l++){
+	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getParticles()[l] ) , 
+	       recP->getParticleWeights()[l]  ) ; 
+      }
+      cout << endl ;
+      cout << "    tracks ( address [weight] ): " ;
+      for(unsigned int l=0;l<recP->getTracks().size();l++){
+	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getTracks()[l] ) , 
+	       recP->getTrackWeights()[l]  ) ; 
+      }
+      cout << endl ;
+      cout << "    clusters ( address [weight] ): " ;
+      for(unsigned int l=0;l<recP->getClusters().size();l++){
+	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getClusters()[l] ) , 
+	       recP->getClusterWeights()[l]  ) ; 
+      }
+      cout << endl ;
+      cout << "    MCParticles ( address [weight] ): " ;
+      for(unsigned int l=0;l<recP->getMCParticles().size();l++){
+	printf("%8.8x [%f], ",  reinterpret_cast<int>( recP->getMCParticles()[l] ) , 
+	       recP->getMCParticleWeights()[l]  ) ; 
+      }
+      cout << endl ;
+
+//       cout << endl ;
+//       if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
+// 	cout << " hits ->";
+// 	const StringVec& hitColNames = recP->getHitCollectionNames() ;
+// 	for(unsigned int j=0;j<hitColNames.size();j++){
+// 	  cout << " " << hitColNames[j] << ": " ;
+
+// 	  const IntVec& hits = recP->getHitIndicesForCollection( hitColNames[j] ) ;
+// 	  const FloatVec& wgts = recP->getHitContributionsForCollection( hitColNames[j] ) ;
+
+// 	  for(unsigned int k=0;k<hits.size();k++){
+// 	    cout << hits[k] <<" ["<< wgts[k] <<"], " ;
+// 	  }
+// 	}
+//       }
+      cout  << "----------|---|----|---------------------------------|----------|----------|-----------|-------------------------"
+	    << endl ;
+    }
+      cout << endl 
+	   << "-------------------------------------------------------------------------------- " 
+	   << endl ;
+    
+  }
 
   void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
     

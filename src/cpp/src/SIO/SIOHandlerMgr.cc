@@ -9,6 +9,7 @@
 #include "SIO/SIOParticleHandler.h" 
 #include "SIO/SIOFloatVecHandler.h" 
 #include "SIO/SIOIntVecHandler.h" 
+#include "SIO/SIOReconstructedParticleHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -30,10 +31,10 @@ namespace SIO {
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
+    _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;
     // generic arrays/vectors
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
-
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

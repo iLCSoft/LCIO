@@ -1,0 +1,40 @@
+package hep.lcio.data;
+@ifdef cpp
+@cpp{
+
+class ParticleIDData ;
+typedef std::vector< const ParticleIDData*> ParticleIDDataVec ;
+
+}
+@endif
+
+
+/** Persistent interface for LCIO ParticleIDs.
+ *  Used by ReconstructedParticle for different hypotheses on
+ * the particle type.
+ * 
+ * @author gaede
+ * @version Mar 20, 2004
+ */
+
+
+public interface ParticleIDData extends LCObject {
+    
+
+    /** TypeID, if applicable this is the PDG code of the particle.
+     */
+    public int getTypeID() const ;	
+    
+    /**The probability of this hypothesis (0.<=p<=1.). 
+     */
+    public float getProbability() const ;	
+    
+    /**Name of the algorithm/module that created this hypothesis.
+     */
+    public const String& getIdentifier() const ;	
+    
+    /**Parameters associated with this hypothesis.
+     */
+    public const FloatVec& getParameters() const ;
+    
+}

@@ -1,0 +1,141 @@
+package hep.lcio.event;
+@ifdef cpp
+@cpp{
+//namespace EVENT {
+class ReconstructedParticle ;
+typedef std::vector< const ReconstructedParticle*> ReconstructedParticleVec ;
+//};
+}
+@endif
+
+/** The LCIO reconstructedParticle.
+ * Adding some convenient methods to the pure data interface.
+ * 
+ * @author gaede
+ * @version Mar 30, 2004
+ */
+
+public interface ReconstructedParticle extends ReconstructedParticleData {
+    
+
+@ifdef cpp
+@cpp{
+  public:
+    static const int UNKNOWN  =  0 ; 
+    static const int SINGLE   =  1 ; 
+    static const int V0       =  2 ; 
+    static const int COMPOUND =  3 ; 
+    static const int JET      =  4 ; 
+}
+@else
+    public static const int UNKNOWN  =  0 ; 
+    public static const int SINGLE   =  1 ; 
+    public static const int V0       =  2 ; 
+    public static const int COMPOUND =  3 ; 
+    public static const int JET      =  4 ; 
+@endif
+
+    /** The particle Id's sorted by their probability.
+     * @see ParticleID
+     */
+    public const ParticleIDVec& getParticleIDs() const ;
+
+    /** The reconstructed particles that have been combined to this particle.
+     */
+    public const ReconstructedParticleVec& getParticles() const ; 
+    
+    /** The clusters that have been used for this particle.
+     */
+    public const ClusterVec& getClusters() const ; 
+    
+    /** The tracks that have been used for this particle.
+     */
+    public const TrackVec& getTracks() const ; 
+    
+    /** The MCParticle assigned to this reconstructed particle.
+     * @see MCParticle
+     */
+    public const MCParticleVec& getMCParticles() const ;
+
+
+@ifdef overwriteDataInterface
+    /** Flag word that decodes some particle type information<br>
+     *  bit 31, primary: 0 secondary, 1 primary <br>   
+     *  bits0-15: type: <br>
+     *  ReconstructedParticleData::SINGLE,<br>  
+     *  ReconstructedParticleData::V0,<br>
+     *  ReconstructedParticleData::COMPOUND,<br>
+     *  ReconstructedParticleData::JET<br>
+     */
+    public int getTypeFlag() const ;	
+    
+    /** The magnitude of the reconstructed particle's momentum,
+     */
+    public const float3V getMomentum() const ;	
+    
+    /** Energy of the  reconstructed particle.
+     */
+    public float getEnergy() const ;	
+    
+    /** Covariance matrix of the reconstructed particle's 4vector (10 parameters).
+     */
+    public const FloatVec& getCovMatrix() const ;
+    
+    /** Mass of the  reconstructed particle.
+     */
+    public float getMass() const ;	
+
+    /** Charge of the reconstructed particle.
+     */
+    public float getCharge() const ;	
+    
+    /** Reference point of the reconstructedParticle parameters.
+     */
+    public const float3V getReferencePoint() const;
+
+    /** The particle Id's sorted by their probability.
+     * @see ParticleIDData
+     */
+    public const ParticleIDDataVec& getParticleIDsData() const ;
+
+
+    /** The particles (as ReconstructedParticleData objects) that have
+     *  been combined to this particle.
+     */
+    public const ReconstructedParticleDataVec& getParticlesData() const ; 
+
+    /** The weights of the reconstructed particles combined to this particle
+     */
+    public const FloatVec& getParticleWeights() const ; 
+
+
+    /** The clusters (as ClusterData objects) that have been used for this particle.
+     */
+    public const ClusterDataVec& getClustersData() const ; 
+    
+    /** The weights of cluster contributions to this particle
+     */
+    public const FloatVec& getClusterWeights() const ; 
+    
+    /** The tracks (as TrackData objects) that have been used for this particle.
+     */
+    public const TrackDataVec& getTracksData() const ; 
+    
+
+    /** The weights of track contributions to this particle
+     */
+    public const FloatVec& getTrackWeights() const ; 
+    
+
+    /** The MCParticle assigned to this reconstructed particle.
+     * @see MCParticleData
+     */
+    public const MCParticleDataVec& getMCParticlesData() const ;
+
+    /** The weights of the MCParticle assignment.
+     */
+    public const FloatVec& getMCParticleWeights() const ;
+
+@endif
+
+}

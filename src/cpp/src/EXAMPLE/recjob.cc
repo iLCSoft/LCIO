@@ -13,6 +13,7 @@
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/TrackImpl.h" 
 #include "IMPL/ClusterImpl.h" 
+#include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
@@ -31,7 +32,7 @@ using namespace lcio ;
 static char* FILEN = "simjob.slcio" ;
 static char* OUTFILEN = "recjob.slcio" ;
 static const int NHITS = 50 ;  // calorimeter hits per event
-
+static const int nRecP = 10 ; // number of reconstructed particles
 
 /** Example of reading events from the file, add sth. to the event
  * and write it to a new file. This uses the listener mechanism to read 
@@ -40,7 +41,7 @@ static const int NHITS = 50 ;  // calorimeter hits per event
  *  The RunEventProcessor class is defined for processing run and event records.
  *  This is our analysis module.
  *  For simplicity it is defined in the same file - in a real world application 
- *  it should of course be defined in sepparate header and source files.
+ *  it should of course be defined in separate header and source files.
  *  
  */
 
@@ -248,6 +249,66 @@ public:
     evt->addCollection(  clusterVec , "SomeClusters" ) ;
 
     
+
+    // add some reconstructed particles
+    LCCollectionVec* particleVec = new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE )  ;
+    
+    for(int i=0;i<nRecP;i++){
+      ReconstructedParticleImpl* part = new ReconstructedParticleImpl ;
+      int typeFlag = ( 1 << 31 )  ;  // primary flag
+      part->setTypeFlag(  typeFlag |  ReconstructedParticle::SINGLE ) ;
+      float p[3] = { 1.1 , 2.2 , 3.3 } ;
+      part->setMomentum( p ) ;
+      part->setEnergy(  i*101.101 ) ;
+      float cov[10] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10. } ;
+      part->setCovMatrix( cov) ;
+      part->setMass( 0.511*i ) ;
+      part->setCharge( -2./3. ) ;
+      float x[3] = { 10.,20.,30. } ;
+      part->setReferencePoint( x )  ;
+      
+      // add some particle ids
+      int nPID = 5 ;
+      for(int j=0;j<nPID;j++){
+	ParticleIDImpl* pid = new ParticleIDImpl ;
+	pid->setProbability( (double) j / nPID ) ;
+	pid->setTypeID( -11 ) ;
+	pid->setIdentifier("recojob-RunEventProcessor") ;
+	for(int k=0;k<3;k++){
+	  pid->addParameter( k*.1 ) ;
+	}
+	part->addParticleID( pid ) ;
+      }      
+      // some other particles
+      if( i > 1  ){
+	ReconstructedParticle* p1 = 
+	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-1) ) ;
+	ReconstructedParticle* p2 = 
+	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-2) ) ;
+	part->addParticle( p1 , 0.1 ) ;
+	part->addParticle( p2 , 0.9 ) ;
+      }
+      //a track
+      int iTrk = (int) ( double (trkVec->size()) * rand() / RAND_MAX )    ;
+      Track* trk = dynamic_cast<Track*> ( trkVec->getElementAt( iTrk ) ) ;
+      part->addTrack( trk ) ;
+
+      // a cluster 
+      int iClu = (int) ( double (clusterVec->size()) *  rand() / RAND_MAX )  ;
+      Cluster* clu = dynamic_cast<Cluster*> ( clusterVec->getElementAt( iClu ) ) ;
+      part->addCluster( clu ) ;
+
+      // and finaly an MCParticle
+      LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+      int iMCP = (int) ( double (mcVec->getNumberOfElements()) *  rand() / RAND_MAX ) ;
+      MCParticle* mcp = dynamic_cast<MCParticle*>( mcVec->getElementAt( iMCP ) ) ;
+      part->addMCParticle( mcp , 0.5 ) ;
+
+      particleVec->addElement( part ) ;
+    }
+
+    evt->addCollection( particleVec, "ReconstructedParticle" )  ;
+
     nEvent ++ ;
 
   }
@@ -321,22 +382,6 @@ int main(int argc, char** argv ){
 
 //             lcReader->readStream( 5) ; // debugging: only read 4 events 
 //             lcReader->readStream( 10000 ) ; // debugging: provoke EndOfDataException
- 
-      // here we could in principle also catch the exceptions but for a small program there isn't really
-      // any use as we need to exit anyhow if the readStream() had a problem
-      // in a larger framework/application one might not want to abort the program but instead read the next 
-      // file from a list or so ...
-      //       try{ 
-      // 	lcReader->readStream() ;
-      //       }
-      //       catch(IOException &e){
-      // 	    cout<< " io error: " <<  e.what() << endl ;
-      //          // do sth. reasonable here to carry on with your application
-      //       }
-      //       catch(exception &e){
-      // 	    cout<< "    error: " <<  e.what() << endl ;
-      //          // do sth. reasonable here to carry on with your application
-      //       }
       
     } 
     

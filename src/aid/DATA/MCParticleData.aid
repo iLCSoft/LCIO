@@ -1,5 +1,20 @@
 package hep.lcio.data ;
 
+@ifdef cpp
+@cpp{
+#include <vector>
+}
+@endif
+
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
+@ifdef cpp
+@cpp{
+class MCParticleData ;
+typedef std::vector< const MCParticleData*> MCParticleDataVec ;
+}
+@endif
+
 /** Describes a Monte Carlo particle. Has to be implementet by user classes
  *  that are to be made persistent.
  * 

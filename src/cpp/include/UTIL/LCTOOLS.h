@@ -66,6 +66,11 @@ namespace UTIL{
      */
     static void printClusters( const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of all ReconstructedParticles in the collection
+     */
+    static void printReconstructedParticles( const EVENT::LCCollection* col ) ;
+
+
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 

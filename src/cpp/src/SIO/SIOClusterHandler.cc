@@ -53,7 +53,7 @@ namespace SIO{
     cluster->setHADWeight( pType[1] ) ;
     cluster->setMuonWeight( pType[2] ) ;
     
-    int nClusters=  cluster->_clusters.size() ;
+    int nClusters ; 
     SIO_DATA( stream, &nClusters , 1  ) ;
 
     // fill the vector to have correct size
