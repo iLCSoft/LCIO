@@ -15,6 +15,7 @@ import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
 import hep.lcio.event.TPCHit;
+import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ICluster;
 
 import hep.lcio.implementation.event.ILCEvent;
@@ -33,42 +34,43 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.24 2004-09-06 14:51:12 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.25 2004-09-13 18:15:03 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
    private Map blockMap;
-
+   
    SIOEvent(SIORecord record, int accessMode) throws IOException
    {
       setAccess(accessMode);
       SIOBlock block = record.getBlock();
-	  int major = block.getMajorVersion() ;
+      int major = block.getMajorVersion() ;
       int minor = block.getMinorVersion() ;
       if (( major < 1) && ( minor < 8))
          throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
-
+      
       SIOInputStream in = block.getData();
       runNumber = in.readInt();
       eventNumber = in.readInt();
-
+      
       timeStamp = in.readLong();
       detectorName = in.readString();
-
+      
       int nBlockNames = in.readInt();
       blockMap = new HashMap();
       for (int i = 0; i < nBlockNames; i++)
       {
          String blockName = in.readString();
          String blockType = in.readString();
-
+         
          blockMap.put(blockName, blockType);
       }
-
-	if( (major<<16 | minor ) > (1<<16|1)  ){
-		parameters = new SIOLCParameters(in) ;
-	} 
-
+      
+      if( (major<<16 | minor ) > (1<<16|1)  )
+      {
+         parameters = new SIOLCParameters(in) ;
+      }
+      
    }
    void setReadOnly(boolean mode)
    {
@@ -86,32 +88,32 @@ class SIOEvent extends ILCEvent
          if (block == null) break;
          int major = block.getMajorVersion();
          int minor = block.getMinorVersion();
-
+         
          if ((major < 1) && (minor < 8))
             throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
-
+         
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
          if (type == null) continue;
+                 
+         int flags = in.readInt();
+         ILCParameters colParameters = null ;
+         if( (major<<16 | minor ) > (1<<16|1)  )
+         {
+            colParameters = new SIOLCParameters(in) ;
+         }
          
-         
-		int flags = in.readInt();
-		ILCParameters colParameters = null ;
-		if( (major<<16 | minor ) > (1<<16|1)  ){
-			colParameters = new SIOLCParameters(in) ;
-		} 
-		
          if (type.equals(LCIO.MCPARTICLE))
          {
             //int flags = in.readInt();
             int nMC = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < nMC; i++)
                ilc.add(new SIOMCParticle(in, this, major, minor));
             for (int i = 0; i < nMC; i++)
-               ((SIOMCParticle) ilc.get(i)).resolve(major, minor); 
+               ((SIOMCParticle) ilc.get(i)).resolve(major, minor);
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -120,9 +122,20 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOSimTrackerHit(in, this,major,minor));
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.TRACKERHIT))
+         {
+            //int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOTrackerHit(in, this,major,minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -131,9 +144,9 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add (new SIOTPCHit(in,flags, this,major,minor) );
+               ilc.add(new SIOTPCHit(in,flags, this,major,minor) );
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -142,7 +155,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOSimCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
@@ -153,7 +166,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
@@ -164,7 +177,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOStrVec(in, this));
             ilc.setOwner(this);
@@ -175,7 +188,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOFloatVec(in, this));
             ilc.setOwner(this);
@@ -186,7 +199,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOIntVec(in, this));
             ilc.setOwner(this);
@@ -197,7 +210,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOCluster(in, this, flags, major, minor));
             ilc.setOwner(this);
@@ -208,7 +221,7 @@ class SIOEvent extends ILCEvent
             //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-			ilc.setParameters( colParameters ) ;
+            ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOTrack(in, this, flags, major, minor));
             ilc.setOwner(this);
@@ -216,19 +229,19 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCRELATION))
          {
-          //  int flags = in.readInt();            
+            //  int flags = in.readInt();
             String fromType = "from"; // FixMe:
             String toType = "to"; // FixMe:
             SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
             addRelation(rel,name);
          }
-//         else {
-//           System.out.println("UNKNOWN collection type: " + type) ;
-//         }
-      
-      }      
+         //         else {
+         //           System.out.println("UNKNOWN collection type: " + type) ;
+         //         }
+         
+      }
    }
-
+   
    static void writeData(LCEvent event, SIOWriter writer, boolean headerOnly) throws IOException
    {
       if (headerOnly)
@@ -236,32 +249,34 @@ class SIOEvent extends ILCEvent
          SIOOutputStream out = writer.createBlock(SIOFactory.eventHeaderBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
          out.writeInt(event.getRunNumber());
          out.writeInt(event.getEventNumber());
-
+         
          out.writeLong(event.getTimeStamp());
          out.writeString(event.getDetectorName());
-
+         
          String[] blockNames = event.getCollectionNames();
          
-         int nBlocks = blockNames.length ; 
-         for (int i = 0; i < blockNames.length; i++){
-   		 if( event.getCollection(blockNames[i]).isTransient() ) 
-           	nBlocks-- ;
+         int nBlocks = blockNames.length ;
+         for (int i = 0; i < blockNames.length; i++)
+         {
+            if( event.getCollection(blockNames[i]).isTransient() )
+               nBlocks-- ;
          }
          out.writeInt( nBlocks );
          
-		for (int i = 0; i < blockNames.length; i++)
+         for (int i = 0; i < blockNames.length; i++)
          {
-			if( ! event.getCollection(blockNames[i]).isTransient() ) {
-
-             String blockName = blockNames[i];
-             out.writeString(blockName);
-             out.writeString(event.getCollection(blockName).getTypeName());
-			}
+            if( ! event.getCollection(blockNames[i]).isTransient() )
+            {
+               
+               String blockName = blockNames[i];
+               out.writeString(blockName);
+               out.writeString(event.getCollection(blockName).getTypeName());
+            }
          }
-		//if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
-		 SIOLCParameters.write( event.getParameters() , out ) ;
-		//}
-
+         //if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+         SIOLCParameters.write( event.getParameters() , out ) ;
+         //}
+         
       }
       else
       {
@@ -274,12 +289,11 @@ class SIOEvent extends ILCEvent
             String type = col.getTypeName();
             int flags = col.getFlag();
             out.writeInt(flags);
-
-			//if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
-			 SIOLCParameters.write( col.getParameters() , out ) ;
-			//}
-
-
+            
+            //if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+            SIOLCParameters.write( col.getParameters() , out ) ;
+            //}
+              
             int n = col.getNumberOfElements();
             out.writeInt(n);
             if (type.equals(LCIO.MCPARTICLE))
@@ -292,6 +306,11 @@ class SIOEvent extends ILCEvent
                for (int i = 0; i < n; i++)
                   SIOSimTrackerHit.write((SimTrackerHit) col.getElementAt(i), out);
             }
+            else if (type.equals(LCIO.TRACKERHIT))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOTrackerHit.write((TrackerHit) col.getElementAt(i), out);
+            }            
             else if (type.equals(LCIO.TPCHIT))
             {
                for (int i = 0; i < n; i++)
@@ -333,24 +352,24 @@ class SIOEvent extends ILCEvent
                   SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
             }
          }
-//         String[] relNames = event.getRelationNames();
-//         if (relNames != null)
-//         {
-//            for (int j = 0; j < relNames.length; j++)
-//            {
-//               String relName = blockNames[j];
-//               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
-//               LCRelation rel = event.getRelation(relName);
-//               String fromType = rel.getFromType();
-//               String toType = rel.getToType();
-//               int flags = 0; // FixMe: rel.getFlag(); 
-//               out.writeInt(flags);
-//               SIORelation.write(rel,out,flags);
-//            }
-//         }
+         //         String[] relNames = event.getRelationNames();
+         //         if (relNames != null)
+         //         {
+         //            for (int j = 0; j < relNames.length; j++)
+         //            {
+         //               String relName = blockNames[j];
+         //               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
+         //               LCRelation rel = event.getRelation(relName);
+         //               String fromType = rel.getFromType();
+         //               String toType = rel.getToType();
+         //               int flags = 0; // FixMe: rel.getFlag();
+         //               out.writeInt(flags);
+         //               SIORelation.write(rel,out,flags);
+         //            }
+         //         }
       }
    }
-
+   
    static void write(LCEvent event, SIOWriter writer) throws IOException
    {
       writer.createRecord(SIOFactory.eventHeaderRecordName, SIOFactory.compressionMode);
