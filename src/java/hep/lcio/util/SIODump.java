@@ -16,7 +16,23 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
 /**
- *
+ * A utility for making ASCII dumps of LCIO files.
+ * This utility uses an XML file to describe the format of the LCIO file,
+ * and produces an ASCII dump of the LCIO file based on the information from
+ * the XML file. The level of detail can be set using the verbosity flag
+ * <ul>
+ * <li>0 - No output
+ * <li>1 - One line per record (default)
+ * <li>2 - Medium verbosity
+ * <li>3 - Complete dump of all contents
+ * </ul>
+ * This utility can also be used to check the consistency of an XML file with
+ * a given LCIO file.
+ * <p>
+ * Usage:
+ * <pre>
+ *   java hep.lcio.util.SIODump [-v n] <xml-file> <lcio-file>
+ * </pre>
  * @author tonyj
  */
 public class SIODump

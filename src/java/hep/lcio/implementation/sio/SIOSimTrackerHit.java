@@ -17,9 +17,9 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.8 2003-09-16 09:50:21 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.9 2004-02-03 00:01:39 tonyj Exp $
  */
-public class SIOSimTrackerHit extends ISimTrackerHit
+class SIOSimTrackerHit extends ISimTrackerHit
 {
    SIOSimTrackerHit(SIOInputStream in, SIOEvent owner) throws IOException
    {
