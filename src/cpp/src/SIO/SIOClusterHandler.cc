@@ -50,7 +50,7 @@ namespace SIO{
     if( _vers > SIO_VERSION_ENCODE(1,2) ) {
       SIO_DATA( stream , &nShape  , 1 ) ;
     } else {
-      nShape = NSHAPE ;
+      nShape = NSHAPE_OLD ;
     }
     
     cluster->_shape.resize( nShape )   ;

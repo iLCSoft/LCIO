@@ -9,7 +9,8 @@
 
 #define NERRPOS 6
 #define NERRDIR 3
-//#define NSHAPE 6
+
+#define NSHAPE_OLD 6
 
 namespace IMPL {
 
@@ -18,7 +19,7 @@ namespace IMPL {
  *
  * @see Cluster
  * @author gaede
- * @version $Id: ClusterImpl.h,v 1.10 2004-09-10 12:26:19 gaede Exp $
+ * @version $Id: ClusterImpl.h,v 1.11 2004-09-10 12:41:25 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
