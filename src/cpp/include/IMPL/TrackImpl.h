@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.10 2004-09-03 08:16:24 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.11 2004-12-23 13:24:08 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -60,7 +60,7 @@ namespace IMPL {
      */
     virtual float getD0() const ;
 
-    /** Phi of the track at reference point or PCA -- FIXME: is this at reference point or PCA ?
+    /** Phi of the track at reference point.
      */
     virtual float getPhi() const ;
 
@@ -74,7 +74,7 @@ namespace IMPL {
      */
     virtual float getZ0() const ;
 
-    /** Lambda is the dip angle of the track in r-z --- FIXME: at reference point ??? . 
+    /** Lambda is the dip angle of the track in r-z at the reference point.
      */
     virtual float getTanLambda() const ;
 

@@ -20,6 +20,7 @@ namespace SIO {
   class SIOCollectionHandler ;
 
   class SIOReader ;
+  class SIOUnpack ;
 
 /** Concrete implementation of LCWriter using SIO.
  * Use LCFactory to instantiate.
@@ -32,6 +33,7 @@ namespace SIO {
 
 
     friend class SIOReader ; // SIO Reader uses SAME SIO records !!
+    friend class SIOUnpack ;
 
   public:
 

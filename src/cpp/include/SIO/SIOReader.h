@@ -13,12 +13,16 @@
 class SIO_record ;
 class SIO_stream ;    
 
+
 namespace SIO {
+
+class SIORunHeaderHandler ;
+class SIOEventHandler ;
   
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version $Id: SIOReader.h,v 1.21 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: SIOReader.h,v 1.22 2004-12-23 13:24:09 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     
@@ -147,7 +151,10 @@ namespace SIO {
 //     SIO_record *_runRecord ;
     SIO_record *_dummyRecord ;  // used for reading arbitrary records
     SIO_stream *_stream ;
-    
+
+    SIORunHeaderHandler* _runHandler ;
+    SIOEventHandler* _evtHandler ;
+
   private:
     
     IOIMPL::LCEventIOImpl *_defaultEvt ; // used to add collections when reading 
@@ -159,6 +166,7 @@ namespace SIO {
     
     const std::vector<std::string>* _myFilenames ;
     unsigned int _currentFileIndex ;
+
 
   }; // class
 }; // namespace

@@ -801,12 +801,13 @@ write code like the following:
 
   for( int i=0 ; i< nHits ; i++ ){
 
-    SimCalorimeterHit* hit = 
-      dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+    TPCHit* hit = 
+      dynamic_cast<TPCHit*>( col->getElementAt( i ) ) ;
 
-      cout << "    hit " << i << " - energy: "  
-           << hit->getEnergy() ;
-
+      cout << "    hit " << i 
+           << " - charge: "  << hit->getCharge() 
+           << " - time:   "  << hit->getTime()
+           << endl ; 
     ...
   }
 \end{verbatim}

@@ -51,6 +51,8 @@ namespace SIO {
 //     SIO_blockManager::setVerbosity(  SIO_ERRORS ) ;
 
 
+    _runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+    _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
   
     //    evtP = new LCEvent* ;
 
@@ -59,20 +61,20 @@ namespace SIO {
   }
 
   SIOWriter::~SIOWriter(){
-
-//     // delete and disconnect all existing handlers (SIO_blocks)
-//     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-//     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
-//       _evtRecord->disconnect( *ch );
-//       delete *ch ;
-//     }
-//     _runRecord->disconnect( _runHandler ) ;
-//     _hdrRecord->disconnect( _hdrHandler ) ;
-//     delete _hdrHandler ;
-//     delete _runHandler ;
-//     //delete evtP ;
+    
+    // delete and disconnect all existing handlers (SIO_blocks)
+    //     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
+    //     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
+    //       _evtRecord->disconnect( *ch );
+    //       delete *ch ;
+    //     }
+    //     _runRecord->disconnect( _runHandler ) ;
+    //     _hdrRecord->disconnect( _hdrHandler ) ;
+    //     //delete evtP ;
+    delete _hdrHandler ;
+    delete _runHandler ;
     SIO_blockManager::clear();
-
+    
   }
 
 
@@ -162,15 +164,19 @@ namespace SIO {
 
     // create a new handler for every new run 
     
-    if( !_runHandler){
-      _runHandler = dynamic_cast<SIORunHeaderHandler*> 
-	( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
+//     if( !_runHandler){
+//       _runHandler = dynamic_cast<SIORunHeaderHandler*> 
+// 	( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
       
-      if( _runHandler == 0 ) 
-	_runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+//       if( _runHandler == 0 ) 
+// 	_runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
       
-      _runRecord->connect( _runHandler );
-    }
+    _runRecord->disconnect(LCSIO::RUNBLOCKNAME ) ;
+    _runRecord->connect( _runHandler );
+//     }
+
+
+
     _runHandler->setRunHeader(  hdr ) ;
     
     if( _stream->getState()== SIO_STATE_OPEN ){
@@ -199,25 +205,28 @@ namespace SIO {
     // connect handlers to the record
     // create them if needed, i.e. they are not already in SIO_blockManager !
     
-    if( ! _hdrHandler ){
-      _hdrHandler = dynamic_cast<SIOEventHandler*> 
-	( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
-      
-      if( ! _hdrHandler )
-	_hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
-      
-      _hdrRecord->connect( _hdrHandler ) ;
-    } 
-
-    // disconnect old handlers from last event first 
-    typedef std::vector< SIO_block* >::iterator CHI ;
-    for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
-
-      _evtRecord->disconnect( *ch );
-
-    }
-    _connectedBlocks.clear() ;
+    //if( ! _hdrHandler ){
+    // should this go ? - create your own handler ....
+    //       _hdrHandler = dynamic_cast<SIOEventHandler*> 
+    // 	( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
+    //       if( ! _hdrHandler )
+    // 	_hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
+    //      _hdrRecord->connect( _hdrHandler ) ;
+    //} 
     
+    _hdrRecord->disconnect( LCSIO::HEADERBLOCKNAME ) ;
+    _hdrRecord->connect( _hdrHandler ) ;
+    
+    
+    //     // disconnect old handlers from last event first 
+    //     typedef std::vector< SIO_block* >::iterator CHI ;
+    //     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
+    //       _evtRecord->disconnect( *ch );
+    //     }
+    //     _connectedBlocks.clear() ;
+    
+    // need to disconnect all blocks for multiple I/O streams
+    _evtRecord->disconnectAll() ;
     
     const std::vector<std::string>* strVec = evt->getCollectionNames() ;
     
@@ -237,7 +246,7 @@ namespace SIO {
 	    ch =  new SIOCollectionHandler( *name, col->getTypeName())  ;
 	  }
 	  _evtRecord->connect( ch ) ;
-	  _connectedBlocks.push_back( ch ) ;  
+// 	  _connectedBlocks.push_back( ch ) ;  
 	  ch->setCollection( col ) ; 
 	  
 	} 

@@ -3,6 +3,12 @@
 ---------------------------------------------------------------
 
 ======================
+  v01-03-01
+=======================
+  bug fix release
+  no changes in file format and API
+
+======================
   v01-03
 =======================
   - added support for reading stdhep binary files  

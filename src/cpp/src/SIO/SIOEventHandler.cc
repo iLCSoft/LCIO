@@ -11,6 +11,7 @@
 
 #include "SIO_functions.h"
 #include <sstream> 
+#include <iostream>
 
 
 using namespace EVENT ;
@@ -33,7 +34,7 @@ namespace SIO  {
 
 
   SIOEventHandler::~SIOEventHandler(){
-//     if (*_evtP )  delete *_evtP ; 
+    //     if (*_evtP )  delete *_evtP ; 
   }
 
   
@@ -57,8 +58,12 @@ namespace SIO  {
 
       // delete the old event object 
       // -> for every handler there will only be one event object at any given time      
-       if (*_evtP )  delete *_evtP ;
+      if (*_evtP ) {
+// 	std::cout << " ---------- deleting " << *_evtP << "  at " << _evtP << std::endl ;
+	 delete *_evtP ;
+      }
        *_evtP = new LCEventIOImpl ;
+//        std::cout << " ---------- created  " << *_evtP << "  at " << _evtP << std::endl ;
       
       SIO_DATA( stream ,  &(*_evtP)->_runNumber  , 1  ) ;
       SIO_DATA( stream ,  &(*_evtP)->_eventNumber  , 1  ) ;
@@ -80,8 +85,7 @@ namespace SIO  {
 	char* type ;
 	// read type 
 	LCSIO_READ( stream,  &type ) ; 
-	 ;
-
+	
 	//  we have to attach a new collection or relation object to the event for every type in the header
 // 	 std::string typeStr( type ) ;
 // 	 if( typeStr.find( LCIO::LCRELATION) == 0  ){ // typeStr starts with LCRelation
@@ -90,10 +94,13 @@ namespace SIO  {
 // 	   catch( EventException ){  return LCIO::ERROR ; }
 // 	 }else{
 
-	   try{ (*_evtP)->addCollection( new LCCollectionIOVec( type ) , colName) ; 
-	   }
-	   catch( EventException ){  return LCIO::ERROR ; }
-// 	 }
+	try { 
+	  
+	  (*_evtP)->addCollection( new LCCollectionIOVec( type ) , colName) ; 
+	  
+	}
+	catch( EventException ){  return LCIO::ERROR ; }
+
       }
 
       // read parameters

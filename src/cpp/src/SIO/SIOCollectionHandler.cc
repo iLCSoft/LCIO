@@ -12,7 +12,7 @@
 
 #include "SIO_functions.h"
 
-//#include <iostream>
+#include <iostream>
 
 using namespace EVENT ;
 using namespace IOIMPL ;
@@ -64,19 +64,24 @@ namespace SIO {
       
       LCCollectionIOVec* ioCol ;
 
+//       bool colIsInEvent = true ;
 
       // get the collection from event that has been attached by SIOEventHandler
       try{   // can safely cast - we know we have an LCEventImpl that has LCCollectionIOVecs
 	ioCol = dynamic_cast<LCCollectionIOVec*>( (*_evtP)->getCollection( getName()->c_str() )) ;
       }
-      catch(DataNotAvailableException){   return LCIO::ERROR ; }
+      catch(DataNotAvailableException& e ){  
 
-//       SIO_DATA( stream ,  &(ioCol->_flag) , 1  ) ;
-      
-//       // read parameters
-//       if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
-// 	SIOLCParameters::read( stream ,  ioCol->parameters() , versionID) ;
-      
+	std::string  mess( e.what() ) ;
+	mess += "\n The LCIO file seems to have a corrupted EventHeader that doesn't list"
+	  " all the collections in the event properly" ;
+	throw Exception( mess ) ;
+                // return LCIO::ERROR ; 
+		// this would handle corrupted header files - do we need this ?
+		// 	colIsInEvent = false ;
+		// 	ioCol = new LCCollectionIOVec ;
+      }
+
 
       _myHandler->init( stream , SIO_OP_READ , ioCol , versionID ) ;
 
@@ -94,7 +99,12 @@ namespace SIO {
 	
 	ioCol->push_back( obj ) ;
       }
-      
+
+//       // if the collection is not specified in the header we delete it right away...
+//       if( ! colIsInEvent ){  
+// 	delete ioCol ;// causes segfault
+//       }
+
 
     } else if( op == SIO_OP_WRITE ){ 
       

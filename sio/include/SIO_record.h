@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.h,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_record.h,v 1.2 2004-12-23 13:24:07 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for an SIO record.                                
 // ----------------------------------------------------------------------------
@@ -36,6 +36,11 @@ public:
     unsigned int              connect( SIO_block*  );
     unsigned int           disconnect( const char* );
     unsigned int           disconnect( SIO_block*  );
+
+  //fg20041222 -- added for multiple write streams
+    unsigned int           disconnectAll() ;
+
+
     SIO_block*             getConnect( const char* );
     bool                   getCompress();
     std::string*           getName();

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.cc,v 1.2 2003-03-11 18:07:52 gaede Exp $
+// CVS $Id: SIO_record.cc,v 1.3 2004-12-23 13:24:07 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO record.                          
 // ----------------------------------------------------------------------------
@@ -150,7 +150,7 @@ std::pair< std::string const, SIO_block* >
 status = connectMap.insert( entry );
 if( status.second )
 {
-    if( verbosity >= SIO_ALL )
+  if( verbosity >= SIO_ALL )
     {
         std::cout << "SIO: [/"  << name << "/" << entry.first << "] "
                   << "Connected" 
@@ -174,6 +174,27 @@ else
 return( SIO_RECORD_SUCCESS );
 }
 
+
+// ----------------------------------------------------------------------------
+// fg: Disconnect all blocks from  record 
+// ----------------------------------------------------------------------------
+unsigned int SIO_record::disconnectAll() {
+
+  connectMap_i iter;
+  
+  for( iter =  connectMap.begin() ; iter != connectMap.end() ; iter++) {
+    
+    connectMap.erase( iter );
+    
+    if( verbosity >= SIO_ALL ) {
+    std::cout << "SIO: [/"  << name << "/" << iter->first << "]  "
+	      << *(iter->second->getName()) 
+	      << "  Disconnected" 
+	      << std::endl;
+    }
+  }
+  return( SIO_RECORD_SUCCESS );
+}
 // ----------------------------------------------------------------------------
 // Disconnect a block from a record (by name).
 // ----------------------------------------------------------------------------

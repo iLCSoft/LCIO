@@ -40,7 +40,7 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
 
     AccessChecked::setReadOnly(readOnly ) ;
 
-    LCObjectVec::const_iterator iter = begin() ;
+    LCObjectVec::iterator iter = begin() ;
     while( iter != end() ){
       AccessChecked* element = dynamic_cast<AccessChecked*>(*iter++) ;
       if(element){

@@ -287,8 +287,10 @@ int main(int argc, char** argv ){
 	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
 
 	//---- test new relation navigator object
-	LCRelationNavigator* relNav = 
-	  new LCRelationNavigator( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
+// 	LCRelationNavigator* relNav = 
+// 	  new LCRelationNavigator( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
+
+	LCRelationNavigator relNav( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
 
 	bool storeRawData = true ;
 
@@ -302,7 +304,7 @@ int main(int argc, char** argv ){
 	  TPCHitImpl* tpcHit = new TPCHitImpl ;
 	  
 	  //---- test new relation navigator object
-	  relNav->addRelation( tpcHit , trkVec->getElementAt(j) , 0.95  ) ;
+	  relNav.addRelation( tpcHit , trkVec->getElementAt(j) , 0.95  ) ;
 	  
 	  tpcHit->setCellID( j ) ;
 	  tpcHit->setTime( 0.1234567 ) ;
@@ -323,8 +325,9 @@ int main(int argc, char** argv ){
 	  TPCVec->push_back( tpcHit ) ;
 	}	
 	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
-	evt->addCollection( relNav->createLCCollection() , "TPCRawFADCMCTruth" ) ;
+	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
 
+// 	delete relNav ;
 	//--------------  all for TPC --------------------
 
 

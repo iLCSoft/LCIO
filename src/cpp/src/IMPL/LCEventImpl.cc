@@ -228,7 +228,7 @@ void LCEventImpl::setAccessMode( int accessMode ) {
 
   setReadOnly( readOnly ) ;
 
-  typedef LCCollectionMap::const_iterator LCI ;
+  typedef LCCollectionMap::iterator LCI ;
   
   for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
 
