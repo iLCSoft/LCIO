@@ -11,7 +11,7 @@ class LCIOFrameSteer{
  public:
   
   // base file name - used for LCIO input and root outputfile
-  static string baseFileName ;
+  static std::string baseFileName ;
 
 }; 
 

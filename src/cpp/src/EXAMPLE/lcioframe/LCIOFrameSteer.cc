@@ -2,4 +2,4 @@
 
 
 
-string LCIOFrameSteer::baseFileName ;
+std::string LCIOFrameSteer::baseFileName ;
