@@ -19,7 +19,7 @@
 
 c----- the LCReader interface
       PTRTYPE lcrdrcreate
-      integer lcrdrdelete, lcrdropen, lcrdrclose
+      integer lcrdrdelete, lcrdropen, lcrdrclose, lcrdrreadstream
       PTRTYPE lcrdrreadnextrunheader
       PTRTYPE lcrdrreadnextevent
       PTRTYPE lcrdrreadevent
@@ -41,16 +41,18 @@ c-----the LCRunHeader interface
 c-----the LCStrVec,LCIntVec,LCFloatVec interface
       integer lcsvcgetlength,lcivcgetlength,lcfvcgetlength
       character*80 lcsvcgetstringat
-      integer lcsvcgetintat
-      real    lcsvcgetfloatat
+      integer lcivcgetintat, lcivcsetlength, lcivcsetintat
+      real    lcfvcgetfloatat
 
 c-----the LCEvent interface
       PTRTYPE lcevtcreate, lcevtgetcollection, lcevtgetcollectionnames
+      PTRTYPE lcevtgettrelationnames, lcevtgetrelation
       integer lcevtdelete
       integer lcevtgetrunnumber, lcevtgeteventnumber
       character*80 lcevtgetdetectorname
       integer*8 lcevtgettimestamp
       integer lcevtaddcollection, lcevtremovecollection
+      integer lcevtaddrelation, lcevtremoverelation
       integer lcevtsetrunnumber, lcevtseteventnumber
       integer lcevtsetdetectorname, lcevtsettimestamp
 
@@ -60,6 +62,12 @@ c-----the LCCollection interface
       character*80 lccolgettypename
       integer lccolgetflag, lccolsetflag, lccoladdelement
       integer lccolremoveelementat
+
+c-----the LCRelation interface
+      PTRTYPE lcrelcreate, lcrelgetrelation
+      integer lcreldelete, lcrelnumberofrelations
+      integer lcreladdrelation, lcrelusecaching, lcrelsettypes
+      real    lcrelgetweight
 
 c-----the MCParticle interface
       PTRTYPE lcmcpcreate

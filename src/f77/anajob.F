@@ -71,7 +71,7 @@ c---- loop over all run headers
          
       detname = lcrhdgetdetectorname( runHdr )
       descr   = lcrhdgetdescription( runHdr )
-      write(*,'(a,i2,4a)') '  Run : ', lcrhdgetrunnumber( runHdr ),
+      write(*,'(a,i2,4a)') '  Run :', lcrhdgetrunnumber( runHdr ),
      &                     ' - ', detname(1:lnblnk(detname)),
      &                     ':  ', descr(1:lnblnk(descr))
          
