@@ -71,6 +71,17 @@ namespace IMPL{
   }
   
   int SimCalorimeterHitImpl::getNMCParticles() const {
+    static bool first = true ;
+    if( first ){
+      std::cout << " WARNING >>>>>>>  SimCalorimeterHitImpl::getNMCParticles() is deprecated "
+                << " - please use  SimCalorimeterHitImpl::getNMCContributions() ! " << std::endl ;
+      first = false ;
+    }
+
+    return getNMCContributions() ;
+  }
+
+  int SimCalorimeterHitImpl::getNMCContributions() const {
     return _vec.size() ;
   }
   

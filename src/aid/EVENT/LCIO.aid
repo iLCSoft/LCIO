@@ -11,7 +11,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.36 2004-09-09 09:51:25 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.37 2004-09-09 15:57:50 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -33,7 +33,7 @@ public interface LCIO{
     static const int CHBIT_LONG   = 31; // long(1) - short(0), (position)
     static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
     static const int CHBIT_ID1    = 29 ;  // cellid1 stored
-    static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+    static const int CHBIT_PDG    = 28 ;   // PDG(1) - no PDG(0) detailed shower contributions 
 
     // (raw) calorimeter hit 
     static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
@@ -103,7 +103,7 @@ public interface LCIO{
   public static const int CHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
   public static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
   public static const int CHBIT_ID1    = 29 ;  // cellid1 stored
-  public static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+  public static const int CHBIT_PDG    = 28 ;  // PDG(1) - no PDG(0) detailed shower contributions 
 
     // (raw) calorimeter hit 
   public static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position

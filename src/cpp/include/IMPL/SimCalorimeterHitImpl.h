@@ -73,36 +73,44 @@ namespace IMPL {
     
     virtual const float * getPosition() const ;
     
-    /** Returns the number of MC particles that caused the hit - 0 if 
-     * information is not stored. Be aware of double counting if PDG
-     * for secondaries is stored.
-     * @see SimCalorimeterHit.getPDGCont
+    /** Returns the number of MC contributions to the hit. 0 if 
+     * information is not stored. Renamed to getNMCContributions.
+     * @deprecated
+     * @see getNMCContributions()
      */
     virtual int getNMCParticles() const ;
     
-    /** Returns the i-th particle that contributed to the hit.
-     *
-     * @see MCParticle
-     * @see getNMCParticles()
+    /** Returns the number of MC contributions to the hit. 0 if 
+     * information is not stored. There are two levels of detail: if 
+     * collection flag bit LCIO.CHBIT_PDG==1 then all simulator steps' 
+     * contributions to the hit are stored, otherwise there is only one 
+     * contribution for every particle entering the calorimeter.
      */
-    virtual EVENT::MCParticle * getParticleCont(int i) const ;
+    virtual int getNMCContributions() const ;
 
-    /** Returns the energy of the i-th particle that contributed to the hit.
+    /** Returns the energy in [GeV] of the i-th contribution to the hit.
+     * @see getNMCContributions()
      */ 
     virtual float getEnergyCont(int i) const ;
-    
-    /** Returns the time information of the i-th particle that contributed to the hit.
-     *  TODO : definition of time. 
+
+    /** Returns the time of the i-th in [ns]  contribution to the hit.
+     * @see getNMCContributions()
      */ 
     virtual float getTimeCont(int i) const ;
-    
-    /** Returns the PDG code of the secondary type of the i-th particle that 
-     * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
-     * wether this information is available. If so, every primary will show up in 
-     * the list of contributions once for every type of secondaries.  If not the 
-     * value returned is undefined. 
+
+    /** Returns the PDG code of the shower particle that caused this contribution.
+     *  Check the flag word bit LCIO.CHBIT_PDG of the collection whether this information 
+     *  is available. 
+     * @see getNMCContributions()
      */ 
     virtual int getPDGCont(int i) const ;
+
+    /** Returns the MCParticle that caused the shower responsible for this contribution to the hit.
+     *  This is the particle that flew into the calorimeter and not the shower particle that made the 
+     *  energy deposition.
+     * @see getNMCContributions()
+     */
+    virtual EVENT::MCParticle * getParticleCont(int i) const ;
 
     // setters
     /** Sets the first cell id;

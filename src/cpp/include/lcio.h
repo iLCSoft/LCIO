@@ -7,7 +7,7 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version Mar 10, 2003
+ * @version $Id: lcio.h,v 1.15 2004-09-09 15:57:50 gaede Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"

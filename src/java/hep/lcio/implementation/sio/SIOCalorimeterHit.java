@@ -10,11 +10,12 @@ import hep.lcio.implementation.event.ICalorimeterHit;
 
 import java.io.IOException;
 
+// FIXME: need to add time word !
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.14 2004-08-25 08:54:00 gaede Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.15 2004-09-09 15:57:51 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {

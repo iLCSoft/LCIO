@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.18 2004-09-09 09:51:25 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.19 2004-09-09 15:57:50 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
@@ -56,7 +56,7 @@ public interface MCParticle extends LCObject {
      */
     public int getPDG() const;
     
-    /** Returns the status for particles from the generator
+    /** Returns the status for particles as defined by  the generator, typically
      * <br> 0  empty line
      * <br> 1  undecayed particle, stable in the generator
      * <br> 2  particle decayed in the generator
@@ -123,7 +123,8 @@ public interface MCParticle extends LCObject {
      */
     public boolean isDecayedInTracker() const ; 
 
-    /** True if the particle decayed or interacted in non-tracking region.
+    /** True if the particle decayed or interacted (non-continuous interaction, particle terminated) 
+     * in non-tracking region.
      */
     public boolean isDecayedInCalorimeter() const ; 
 

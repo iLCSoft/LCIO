@@ -3,6 +3,11 @@
 ---------------------------------------------------------------
 
 
+  - usage/logic of SimCalorimeterHit MCParticle contributions has changed
+    now the detailed mode has one entry per simulator step that contributed to the hit 
+
+  - > getNMCParticles renamed to getNMCContributions
+
 
   - added LCRelation
 

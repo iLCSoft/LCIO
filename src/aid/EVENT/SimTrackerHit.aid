@@ -3,7 +3,7 @@ package hep.lcio.event;
 /** A generic simulated tracker hit. 
  * 
  * @author gaede
- * @version Mar 6, 2003
+ * @version $Id: SimTrackerHit.aid,v 1.5 2004-09-09 15:57:50 gaede Exp $
  */
 
 public interface SimTrackerHit extends LCObject {
@@ -16,7 +16,7 @@ public interface SimTrackerHit extends LCObject {
      */
     public const double3V getPosition() const ;
 
-    /** Returns  the dE/dx of the hit in [GeV/mm].
+    /** Returns  the dE/dx of the hit in [GeV].
      */ 	
     public float getdEdx() const ;
     
