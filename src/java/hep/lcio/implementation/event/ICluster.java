@@ -1,6 +1,7 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.Cluster;
+import java.util.List;
 
 /**
  *
@@ -19,12 +20,12 @@ public class ICluster extends ILCObject implements Cluster
    protected float[] shape;
    protected float[] positionError;
    
-   public java.util.Vector getCalorimeterHits()
+   public List getCalorimeterHits()
    {
       return null;
    }
    
-   public java.util.Vector getClusters()
+   public List getClusters()
    {
       return null;
    }
@@ -79,12 +80,12 @@ public class ICluster extends ILCObject implements Cluster
       return type;
    }
    
-   public void setCalorimeterHits(java.util.Vector calorimeterHits)
+   public void setCalorimeterHits(List calorimeterHits)
    {
       // FIXME:
    }
    
-   public void setClusters(java.util.Vector clusters)
+   public void setClusters(List clusters)
    {
       // FIXME:
    }
