@@ -93,7 +93,7 @@ class LCEventImpl : public EVENT::LCEvent {
   protected:  
     int _runNumber ;
     int _eventNumber ;
-    long _timeStamp ;
+    long long _timeStamp ;
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
