@@ -40,7 +40,7 @@ int lctphgetnrawdatawords( PTRTYPE hit ) {
 }
 int lctphgetrawdataword( PTRTYPE hit, int i) {
   TPCHitImpl* tph = f2c_pointer<TPCHitImpl,LCObject>( hit ) ;
-  return tph->getRawDataWord( i ) ;
+  return tph->getRawDataWord( i-1 ) ;
 }
 
 

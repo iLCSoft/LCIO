@@ -38,7 +38,7 @@ PTRTYPE lcmcpgetparent( PTRTYPE mcparticle, int i ) {
 // }
 PTRTYPE lcmcpgetdaughter( PTRTYPE mcparticle, int i ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return C2F_POINTER(LCObject*,  mcp->getDaughter( i )  ) ;  
+  return C2F_POINTER(LCObject*,  mcp->getDaughter( i-1 )  ) ;
 }
 int lcmcpgetendpoint(  PTRTYPE mcparticle, double* ep) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;

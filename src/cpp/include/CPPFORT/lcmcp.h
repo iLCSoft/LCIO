@@ -66,6 +66,7 @@ FCALLSCFUN2(INT, lcmcpsetpdg,LCMCPSETPDG,lcmcpsetpdg, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lcmcpsetgeneratorstatus,LCMCPSETGENERATORSTATUS,lcmcpsetgeneratorstatus, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lcmcpsetsimulatorstatus,LCMCPSETSIMULATORSTATUS,lcmcpsetsimulatorstatus, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lcmcpsetvertex,LCMCPSETVERTEX,lcmcpsetvertex, CFORTRANPNTR, DOUBLEV ) ;
+FCALLSCFUN2(INT, lcmcpsetendpoint,LCMCPSETENDPOINT,lcmcpsetendpoint, CFORTRANPNTR, DOUBLEV ) ;
 FCALLSCFUN2(INT, lcmcpsetmomentum,LCMCPSETMOMENTUM,lcmcpsetmomentum, CFORTRANPNTR, FLOATV ) ;
 FCALLSCFUN2(INT, lcmcpsetmass,LCMCPSETMASS,lcmcpsetmass, CFORTRANPNTR, FLOAT ) ;
 FCALLSCFUN2(INT, lcmcpsetcharge, LCMCPSETCHARGE, lcmcpsetcharge, CFORTRANPNTR, FLOAT ) ;

@@ -42,19 +42,19 @@ int lcschgetnmcparticles( PTRTYPE simcalhit )  {
 
 PTRTYPE lcschgetparticlecont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
-  return C2F_POINTER( LCObject*, hit->getParticleCont( i ) ) ;
+  return C2F_POINTER( LCObject*, hit->getParticleCont( i-1 ) ) ;
 }
 float lcschgetenergycont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
-  return hit->getEnergyCont( i ) ;
+  return hit->getEnergyCont( i-1 ) ;
 }
 float lcschgettimecont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
-  return hit->getTimeCont( i ) ;
+  return hit->getTimeCont( i-1 ) ;
 }
 int lcschgetpdgcont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
-  return hit->getPDGCont( i ) ;
+  return hit->getPDGCont( i-1 ) ;
 }
 
 int lcschsetcellid0( PTRTYPE simcalhit, int id0) {
