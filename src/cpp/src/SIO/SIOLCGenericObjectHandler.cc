@@ -52,26 +52,28 @@ namespace SIO{
       // need to check whether we have fixed size objects only
       unsigned int nObj = col->getNumberOfElements() ;
       for( unsigned int i=0 ; i < nObj ; i++ ){
-	LCGenericObject* gObj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( i ) ) ; 
-	if( !  gObj->isFixedSize() ){ 
+	LCGenericObject* obj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( i ) ) ; 
+	if( !  obj->isFixedSize() ){ 
 	  _isFixedSize = false ;
 	  break ;
 	}
       }
       LCFlagImpl flag( col->getFlag() ) ;
       
-      LCGenericObject* gObj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( 0 ) ) ; 
+      LCGenericObject* gObj  =  0 ;
+      if( col->getNumberOfElements() > 0 ) 
+	  gObj = dynamic_cast< LCGenericObject* >( col->getElementAt( 0 ) ) ; 
 
       // if the collection doesn't have the TypeName/DataDescription parameters set,
       //  we use the ones from the first object
-      if(  col->parameters().getStringVal( "TypeName" ).size() ==  0 )
+      if(  col->parameters().getStringVal( "TypeName" ).size() ==  0 && gObj != 0 )
 	col->parameters().setValue( "TypeName", gObj->getTypeName() ) ;
       
       if( _isFixedSize ) {
 	
 	flag.setBit( LCIO::GOBIT_FIXED ) ;
 	
-	if(  col->parameters().getStringVal( "DataDescription" ).size() ==  0 )
+	if(  col->parameters().getStringVal( "DataDescription" ).size() ==  0 && gObj != 0 )
 	  col->parameters().setValue( "DataDescription", gObj->getDataDescription() ) ;
       }
       
@@ -83,17 +85,21 @@ namespace SIO{
       SIOLCParameters::write( stream , col->getParameters() ) ;
       
       if( _isFixedSize ) { // need to write the size variables once
-	
-	LCGenericObject* gObj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( 0 ) ) ; 
-	_nInt = gObj->getNInt() ;
-	_nFloat = gObj->getNFloat() ;
-	_nDouble = gObj->getNDouble() ;
-	
-	
-	SIO_DATA( stream , &_nInt  , 1  ) ;
-	SIO_DATA( stream , &_nFloat  , 1  ) ;
-	SIO_DATA( stream , &_nDouble  , 1  ) ;
 
+	  if( gObj != 0 ){
+	      _nInt = gObj->getNInt() ;
+	      _nFloat = gObj->getNFloat() ;
+	      _nDouble = gObj->getNDouble() ;
+	  } else {
+	      _nInt = 0 ;
+	      _nFloat = 0 ;
+	      _nDouble = 0 ;
+	  }
+
+	  SIO_DATA( stream , &_nInt  , 1  ) ;
+	  SIO_DATA( stream , &_nFloat  , 1  ) ;
+	  SIO_DATA( stream , &_nDouble  , 1  ) ;
+	  
 	// 	cout << " >>>>>>>  written nInt, nFloat, nDouble : " << _nInt << ", " << _nFloat << ", " << _nDouble  
 	// << " for type " << col->getTypeName() << endl ;
       }

@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.33 2005-03-04 15:24:56 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.34 2005-03-05 12:22:11 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -355,18 +355,22 @@ class SIOEvent extends ILCEvent
                 // set the proper flag bit for isFixedSize
                 if( isFixedSize) 
                     flags |= (1 << LCIO.GOBIT_FIXED) ;
-                  else
-                  	flags &= ~(1 << LCIO.GOBIT_FIXED) ;
+		else
+		    flags &= ~(1 << LCIO.GOBIT_FIXED) ;
                 
                 // if the collection doesn't have the TypeName/DataDescription parameters set,
                 //  we use the ones from the first object
-                LCGenericObject gObj = (LCGenericObject) col.getElementAt(0) ; 
-                if(  col.getParameters().getStringVal("TypeName").length() == 0 )
-          	       col.getParameters().setValue( "TypeName", gObj.getTypeName() ) ;
-                if(isFixedSize ) {
-          	      if(  col.getParameters().getStringVal( "DataDescription" ).length() ==  0 )
-          	        col.getParameters().setValue( "DataDescription", gObj.getDataDescription() ) ;
-                }
+
+		if( col.getNumberOfElements() > 0 ){
+		    LCGenericObject gObj = (LCGenericObject) col.getElementAt(0) ; 
+		    
+		    if(  col.getParameters().getStringVal("TypeName").length() == 0 )
+			col.getParameters().setValue( "TypeName", gObj.getTypeName() ) ;
+		    if(isFixedSize ) {
+			if(  col.getParameters().getStringVal( "DataDescription" ).length() ==  0 )
+			    col.getParameters().setValue( "DataDescription", gObj.getDataDescription() ) ;
+		    }
+		}
             }
             out.writeInt(flags);
             
@@ -377,10 +381,19 @@ class SIOEvent extends ILCEvent
             if (!isSubset && type.equals(LCIO.LCGENERICOBJECT))
             {
                if( isFixedSize){ // write the array length once for the collection
-                  LCGenericObject obj = (LCGenericObject) col.getElementAt(0) ;
-				  out.writeInt( obj.getNInt() ) ;	
-				  out.writeInt( obj.getNFloat() ) ;	
-				  out.writeInt( obj.getNDouble() ) ;	
+
+		   if( col.getNumberOfElements() > 0 ){
+		       LCGenericObject obj =  (LCGenericObject) col.getElementAt(0) ;
+		 
+		       out.writeInt( obj.getNInt() ) ;	
+		       out.writeInt( obj.getNFloat() ) ;	
+		       out.writeInt( obj.getNDouble() ) ;	
+		   }else{
+		       out.writeInt(0) ;
+		       out.writeInt(0) ;
+		       out.writeInt(0) ;
+		   }
+
                }
                out.writeInt(n);
                for (int i = 0; i < n; i++){
