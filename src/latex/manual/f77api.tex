@@ -1,7 +1,7 @@
 %-----------------------------------------
 %  LCIO fotran wrapper manual 
 %
-%  $Id: f77api.tex,v 1.12 2004-09-09 15:57:59 gaede Exp $  $Name: not supported by cvs2svn $
+%  $Id: f77api.tex,v 1.13 2004-09-22 20:33:07 hvogt Exp $  $Name: not supported by cvs2svn $
 %
 %-----------------------------------------
 \subsection{The Fortran Interface} \label{f77api}
@@ -49,20 +49,33 @@ same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles define
 
 \end{itemize}
 
-Two additional methods are defined for each case to handle string, int and float vectors in Fortran:\\
+Additional methods to handle string, int and float vectors from Fortran are provided\\
 
+for the user extension classes (LCIntVec, LCFloatVec, LCStringVec):\\
 {\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
 {\bf lcfvcgetlength()}, {\bf lcfvcgetfloatat()} \\
 {\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
 
+and for the stl vector class:\\
+{\bf intvectorgetlength()}, {\bf intvectorgetelement()}  \\
+{\bf floatvectorgetlength()}, {\bf floatvectorgetelement()}  \\
+{\bf stringvectorgetlength()}, {\bf stringvectorgetelement()} . \\
+
 For strings the Fortran CHARACTER* declaration has to be large enough, otherwise the original
 string is truncated.\\
 
-To create the vector containers the corresponding methods of the extended Fortran API can be used: \\
+Methods of the extended Fortran API can be used\\
 
+to create the vectors for the user extension classes (LCIntVec, LCFloatVec, LCStringVec)\\
  {\bf lcintvectorcreate()} \\
  {\bf lcfloatvectorcreate()} \\
  {\bf lcstringvectorcreate()} \\
+
+to create the stl vectors having int, float, and string datamembers
+(e.g needed for the setShape method in the ClusterImpl Class)\\
+ {\bf intvectorcreate()} \\
+ {\bf floatvectorcreate()} \\
+ {\bf stringvectorcreate()} \\
 
 A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
 
@@ -77,12 +90,15 @@ A Summary of all functions in the basic Fortran API is given in the first part o
  ClusterImpl                & clu \\ \hline
  LCCollectionVec            & col \\ \hline
  LCEventImpl                & evt \\ \hline
+ LCGenericObjectImpl        & gob \\ \hline
  MCParticleImpl             & mcp \\ \hline
+ LCObject (Vector)          & obv \\ \hline
  ParticleIDImpl             & pid \\ \hline
- LCRelationImpl             & rel \\ \hline
  ReconstructedParticleImpl  & rcp \\ \hline
  LCReader                   & rdr \\ \hline
+ LCRelationImpl             & rel \\ \hline
  LCRunHeaderImpl            & rhd \\ \hline
+ LCRelationNavigator        & rnv \\ \hline
  SimCalorimeterHitImpl      & sch \\ \hline
  SimTrackerHitImpl          & sth \\ \hline
  TPCHitImpl                 & tph \\ \hline
@@ -127,7 +143,7 @@ These examples correspond to that provided in \verb#$LCIO/src/cpp/src/EXAMPLE# f
                                                                                        
 The complete interface is declared in the include file \verb#$LCIO/src/f77/lciof77api.inc#. 
 %$
-A simple example for reading an LCIO file with Fortran:
+A simple example for reading an LCIO file with Fortran is:
 
 \begin{verbatim}
  ...
@@ -159,7 +175,7 @@ to this particluar object.
 All functions that do not return a pointer to an object do return a status word instead that can be 
 compared to \verb$LCIO_ERROR$ (\verb$LCIO_SUCCESS$).
 
-And accordingly writing an LCIO file from Fortran:
+An example how to write a LCIO file from Fortran is:
 
 \begin{verbatim}
  ...
@@ -227,7 +243,8 @@ is provided which has to be called as:
 ...
       subroutine processrunheader ( pheader )
       PTRTYPE pheader
-***      some code if wanted
+***      some code if wanted, e.g.
+      status = lcdumprunheader ( pheader )
       end
 
       subroutine modifyrunheader ( pheader )
@@ -257,5 +274,6 @@ is provided which has to be called as:
 
 The 4 subroutines {\bf processrunheader, modifyrunheader, processevent, and modifyevent} must be provided if
 the wrapper function {\bf lcrdreventprocessor} is used. They are called via the LCRunListener, LCEventListener classes.
-As an expample the code in \verb#$LCIO/src/f77/recjob.F# may be looked at.
+As an expample the code in \verb#$LCIO/src/f77/recjob.F# may be looked at. 
+The function \verb$lcdumprunheader(pheader)$ is part of the extended interface described in \ref{f77ext}.
 

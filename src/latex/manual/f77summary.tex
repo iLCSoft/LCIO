@@ -8,7 +8,9 @@
 The return value of the functions and the meaning of arguments are either: \\
 $*$ pointers denoted by a name beginning with the {\bf letter p} \\
 $*$ character strings denoted by {\bf ...name} or {\bf string} \\
+$*$ logicals  denoted by {\bf bool} \\
 $*$ integers  denoted by {\bf status} or a variable name starting with {\bf i} or {\bf n}\\
+$*$ long integers (INTEGER*8) denoted by {\bf ilong}\\
 $*$ double precision variables name starting with {\bf d} \\
 $*$ reals {\bf else}
 $*$ arrays are denoted by a name ending with {\bf v} \\
@@ -51,7 +53,7 @@ addActiveSubdetector   -> status  = lcrhdaddactivesubdetector( pheader , sdname 
 
 getRunNumber           -> irun    = lcrhgetrunnumber( pheader )
 getDetectorName        -> detname = lcrhdgetdetectorname( pheader )
-getDescription         -> descr   = lcrhdgetdescription( pheader )
+getDescription         -> string  = lcrhdgetdescription( pheader )
 
 getActiveSubdetectors by:
 getActiveSubdetectors  -> psdvec  = lcrhdgetactivesubdetectors( pheader )
@@ -66,16 +68,14 @@ delete                 -> status  = lcevtdelete( pevent )
 setRunNumber           -> status  = lcevtsetrunnumber( pevent , irun)
 setEventNumber         -> status  = lcevtseteventnumber( pevent , ievt)
 setDetectorName        -> status  = lcevtsetdetectorname( pevent , detname)
-setTimeStamp           -> status  = lcevtsettimestamp( pevent , itim)
+setTimeStamp           -> status  = lcevtsettimestamp( pevent , ilong)
 addCollection          -> status  = lcevtaddcollection( pevent , pcol , colname)
 removeCollection       -> status  = lcevtremovecollection( pevent , colname)
-addRelation            -> status  = lcevtaddrelation( pevent , prelation, name)
-removeRelation         -> status  = lcevtremovecollection( pevent , name)
 
 getRunNumber           -> irun    = lcevtgetrunnumber( pevent )
 getEventNumber         -> ievt    = lcevtgeteventnumber( pevent )
 getDetectorName        -> detname = lcevtgetdetectorname( pevent )
-getTimeStamp           -> itim    = lcevtgettimestamp( pevent )
+getTimeStamp           -> ilong   = lcevtgettimestamp( pevent )
 getCollection          -> pcol    = lcevtgetcollection( pevent , colname)
 
 getCollectionNames by:
@@ -91,24 +91,72 @@ delete                 -> status  = lccoldelete( pcol )
 addElement             -> status  = lccoladdelement( pcol , pobject)
 removeElementAt        -> status  = lccolremoveelementat ( pcol , i )
 setFlag                -> status  = lccolsetflag( pcol , iflag )
+setTransient           -> status  = lccolsettransient( pcol , bool ) (bool=true,false)
 
 getTypeName            -> name    = lccolgettypename( pcol )
 getNumberOfElements    -> number  = lccolgetnumberofelements( pcol )
 getElementAt           -> pobject = lccolgetelementat( pcol , i )  (i=1,...,number)
 getFlag                -> iflag   = lccolgetflag( pcol )
+isTransient            -> bool    = lccolistransient( pcol )
 
 
-class LCRelation:
+class LCRelation, LCObject:
 
-create                 -> prel    = lcrelcreate( fromtypename , totypename )
+create (defaults)      -> prel    = lcrelcreate0()
+create                 -> prel    = lcrelcreate( pobjectfrom , pobjectto, weight )
 delete                 -> status  = lcreldelete( prel )
-numberOfRelations      -> nrel    = lcrelnumberofrelations( prel, pobject )
-getRelation            -> pgetrel = lcrelgetrelation( prel, pobject, i ) (i=1,...,nrel)
-getWeight              -> weight  = lcrelgetweight( prel, pobject, i ) (i=1,...,nrel)
+setFrom                -> status  = lcrelsetfrom( prel, pobjectfrom )
+setTo                  -> status  = lcrelsetto( prel, pobjectto )
+setWeight              -> status  = lcrelsetweight( prel, weight )
 
-addRelation            -> status  = lcreladdrelation( prel, pobjectfrom, pobjectto, weight )
-useCaching             -> status  = lcrelusecaching( prel, lval ) (lval = type logical)
-setTypes               -> status  = lcrelsettypes( prel, fromtypename , totypename )
+id                     -> id      = lcrelid( prel )
+getFrom                -> pfrom   = lcrelgetfrom( prel )
+getTo                  -> pto     = lcrelgetto( prel )
+getWeight              -> weight  = lcrelgetweight( prel )
+
+getLength              -> nelem   = lcobvgetlength( pobjv )        (pobjv = pfrom, pto)
+getObjectID            -> id      = lcobvgetobjectid( pobjv , i )  (i=1,...,nelem)
+getWeight              -> weight  = lcobvgetweight( pobjv , i )    (i=1,...,nelem)
+
+
+class LCRelationNavigator:
+
+create                 -> prnv    = lcrnvcreate( fromname, toname )
+create (from col)      -> prnv    = lcrnvcreatefromcollection( pcol )
+delete                 -> status  = lcrnvdelete()
+addRelation            -> status  = lcrnvgaddrelation( prel, pobjectfrom , pobjectto, weight )
+removeRelation         -> status  = lcrnvgremoverelation( prel, pobjectfrom , pobjectto )
+createLCCollection     -> pcol    = lcrnvcreatecollection( prel )
+
+getFromType            -> namefr  = lcrnvgetfromtype( prnv )
+getToType              -> nameto  = lcrnvgettotype( prnv )
+getRelatedToObjects    -> pobjvto = lcrnvgetrelatedtoobjects( prnv, pobj )
+getRelatedFromObjects  -> pobjvfr = lcrnvgetrelatedfromobjects( prnv, pobj )
+getRelatedToWeights    -> pweightv= lcrnvgetrelatedtoweights( prnv, pobj )
+getRelatedFromWeights  -> pweightv= lcrnvgetrelatedfromweights( prnv, pobj )
+
+
+
+class LCGenericObject:
+
+create                 -> pgob    = lcgobcreate()
+create (dimensions)    -> pgob    = lcgobcreatefixed( nint, nfloat, ndouble )
+delete                 -> status  = lcgobdelete( pgob )
+setIntVal              -> status  = lcgobsetintval( pgob, i, ival )
+setFloatVal            -> status  = lcgobsetfloatval( pgob, i, fval )
+setDoubleVal           -> status  = lcgobsetdoubleval( pgob, i, dval )
+
+id                     -> id      = lcgobid( pgob )
+getNInt                -> nint    = lcgobgetnint( pgob )
+getNFloat              -> nfloat  = lcgobgetnfloat( pgob )
+getNDouble             -> ndouble = lcgobgetdoubleval( pgob )
+getIntVal              -> ival    = lcgobgetintval( pgob , i )      (i=1,...,nint)
+getFloatVal            -> fval    = lcgobgetfloatval( pgob , i )    (i=1,...,nfloat)
+getDoubleVal           -> dval    = lcgobsetdoubleval( pgob , i )   (i=1,...,ndouble)
+isFixedSize            -> bool    = lcgobisfixedsize( pgob )
+getTypeName            -> name    = lcgobgettypename( pgob )
+getDataDescription     -> string  = lcgobgetdatadescription( pgob )
+
 
 class SimTrackerHit:
 
@@ -156,11 +204,14 @@ setCellID0             -> status  = lccahsetcellid0( pchit , icellid0 )
 setCellID1             -> status  = lccahsetcellid1( pchit , icellid1 )
 setEnergy              -> status  = lccahsetenergy( pchit , energy )
 setPosition            -> status  = lccahsetposition( pchit , posv )
+setTime                -> status  = lccahsettime( pchit , time )
 
+id                     -> id      = lccahid( pchit )
 getCellID0             -> icellid0= lccahgetcellid0( pchit )
 getCellID1             -> icellid1= lccahgetcellid1( pchit )
 getEnergy              -> energy  = lccahgetenergy( pchit )
 getPosition            -> status  = lccahgetposition( pchit , posv )
+getTime                -> time    = lccahgettime( pchit )
 
 
 class TPCHit:
@@ -171,17 +222,15 @@ setCellID              -> status  = lctphsetcellid( pthit , icellid )
 setTime                -> status  = lctphsettime( pthit , time )
 setCharge              -> status  = lctphsetcharge( pthit , charge )
 setQuality             -> status  = lctphsetquality( pthit , iquality )
-setRawDataWords        -> status  = lctphsetrawdata( pthit , irawv, nraw )
+setRawData             -> status  = lctphsetrawdata( pthit , irawv, nraw )
 
+id                     -> id      = lctphid( pthit )
 getCellID              -> icellid = lctphgetcellid( pthit )
 getTime                -> time    = lctphgettime( pthit )
 getCharge              -> charge  = lctphgcharge( pthit )
 getQuality             -> iquality= lctphgetquality( pthit )
-getRawDataWords        -> nraw    = lctphgetnrawdatawords( pthit )
-% we should use the standard Fortran convention for indicees i.e. (i=1,...,nraw)
-%                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=1,...,nraw)
-%FIXME: we need to hava consistent indices - either 0,n-1 as in C++ or 1,n !
-                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=0,...,nraw-1)
+getNRawDataWords       -> nraw    = lctphgetnrawdatawords( pthit )
+getRawDataWord         -> iword   = lctphgetrawdataword( pthit, i )  (i=1,...,nraw)
 
 
 class TrackerHit:
@@ -192,15 +241,16 @@ setPosition            -> status  = lctrhsetposition( ptrhit, dposv )
 setCovMatrix           -> status  = lctrhsetcovmatrix( ptrhit, covmxv )
 setdEdx                -> status  = lctrhsetdedx( ptrhit, dedx )
 setTime                -> status  = lctrhsettime( ptrhit, time )
-setTPCHit              -> status  = lctrhsettpchit( ptrhit, pthit )
+setType                -> status  = lctrhsettype( ptrhit, itype )
+addRawHit              -> status  = lctrhaddrawhit( ptrhit, prawh )
 
 id                     -> id      = lctrhid( ptrhit )
 getPosition            -> status  = lctrhgetposition( ptrhit, dposv )
 getCovMatrix           -> status  = lctrhsetcovmatrix( ptrhit, covmxv )
 getdEdx                -> dedx    = lctrhgetdedx( ptrhit )
 getTime                -> time    = lctrhgettime( ptrhit )
-getType                -> string  = lctrhgettype( ptrhit )
-getRawDataHit          -> prawdh  = lctrhgetrawdatahit( ptrhit )
+getType                -> itype   = lctrhgettype( ptrhit )
+getRawHits             -> prawhv  = lctrhgetrawhits( ptrhit )
 
 
 class Track:
@@ -223,11 +273,10 @@ setdEdxError           -> status  = lctrksetdedxerror( ptrk, dedxerr )
 setRadiusOfInnermostHit-> status  = lctrksetradiusofinnermosthit( ptrk, radius)
 addTrack               -> status  = lctrkaddtrack( ptrk, ptrack )
 addHit                 -> status  = lctrkaddhit( ptrk, phit )
-subdetectorHitNumbers  -> status  = lctrksetsubdetectorhitnumbers( ptrk, intv, nintv)
+subdetectorHitNumbers  -> status  = lctrksetsubdetectorhitnumbers( ptrk, intv, nintv)   (not in C++ API)
 
 id                     -> id      = lctrkid( ptrk )
 getType                -> itype   = lctrkgettype( ptrk )
-testType               -> ittype  = lctrktesttype( ptrk, ibit )
 getOmega               -> omega   = lctrkgetomega( ptrk )
 getTanLambda           -> tanlam  = lctrkgettanlambda( ptrk )
 getPhi                 -> phi     = lctrkgetphi( ptrk )
@@ -254,31 +303,29 @@ setTypeBit             -> status  = lcclusettypebit( pclu, ibit, ival)
 setEnergy              -> status  = lcclusetenergy( pclu, energy )
 setPosition            -> status  = lcclusetposition( pclu, posv )
 setPositionError       -> status  = lcclusetpositionerror( pclu, poserrv )
-setTheta               -> status  = lcclusettheta( pclu, theta )
-setPhi                 -> status  = lcclusetphi( pclu, phi )
+setITheta              -> status  = lcclusetitheta( pclu, theta )
+setIPhi                -> status  = lcclusetiphi( pclu, phi )
 setDirectionError      -> status  = lcclusetdirectionerror( pclu, direrrv )
-setShape               -> status  = lcclusetshape( pclu, shapev )
-setEMWeight            -> status  = lcclusetemweight( pclu, emweight )
-setHADWeight           -> status  = lcclusethadweight( pclu, hadweight )
-setMuonWeight          -> status  = lcclusetmuonweight( pclu, muonweight )
+setShape               -> status  = lcclusetshape( pclu, pshapev )
+addParticleID          -> status  = lccluaddparticleid( pclu, ppid )
 addCluster             -> status  = lccluaddcluster( pclu, pcluadd )
 addHit                 -> status  = lccluaddhit( pclu, pcalhit, weight )
+setsubdetectorEnergies -> status  = lcclusetsubdetectorenergies( pclu, energiesv, nenergies)  (not in C++ API)
 
 id                     -> id      = lccluid( pclu )
 getType                -> itype   = lcclugettype( pclu )
-testType               -> itype   = lcclutesttype( pclu )
 getEnergy              -> energy  = lcclugetenergy( pclu )
 getPosition            -> status  = lcclugetposition( pclu, posv )
 getPositionError       -> status  = lcclugetpositionerror( pclu, poserrv )
-getTheta               -> status  = lcclugettheta( pclu, theta )
-getPhi                 -> theta   = lcclugetphi( pclu, phi )
-getDirectionError      -> phi     = lcclugetdirectionerror( pclu, direrr )
-getShape               -> status  = lcclugetshape( pclu, shapev )
-getParticleType        -> status  = lcclugetparticletype( pclu, weightsv) (weightsv(1,2,3))
-getHitContributions    -> status  = lcclugethitcontributions( pclu, energiesv, nenergies)
-getSubdetectorEnergies -> pfloatv = lcclugetsubdetectorenergies( pclu )
-getCalorimeterHits     -> pcalhv  = lcclugetcalorimeterhits( pclu )
+getITheta              -> theta   = lcclugetitheta( pclu, theta )
+getIPhi                -> phi     = lcclugetiphi( pclu, phi )
+getDirectionError      -> status  = lcclugetdirectionerror( pclu, direrr )
+getShape               -> pshapev = lcclugetshape( pclu )
+getParticleIDs         -> ppidvec = lcclugetparticleids( pclu )
 getClusters            -> pcluget = lcclugetclusters( pclu )
+getCalorimeterHits     -> pcalhv  = lcclugetcalorimeterhits( pclu )
+getSubdetectorEnergies -> pfloatv = lcclugetsubdetectorenergies( pclu )
+getHitContributions    -> status  = lcclugethitcontributions( pclu, energiesv, nenergies)   (not in C++ API)
 
 
 
@@ -287,19 +334,19 @@ class ReconstructedParticle:
 create                 -> prcp    = lcrcpcreate()
 delete                 -> status  = lcrcpdelete( prcp )
 setType                -> status  = lcrcpsettype( prcp, itype )
-setPrimary             -> status  = lcrcpsetprimary( prcp, lprimary )  (lprimary = type logical)
 setMomentum            -> status  = lcrcpsetmomentum( prcp, xmomv )
 setEnergy              -> status  = lcrcpsetenergy( prcp, energy )
 setCovMatrix           -> status  = lcrcpsetcovmatrix( prcp, covmxv )
 setMass                -> status  = lcrcpsetmass( prcp, xmass )
 setCharge              -> status  = lcrcpsetcharge( prcp, charge ) ;
 setReferencePoint      -> status  = lcrcpsetreferencepoint( prcp, refpointv ) ;
+setGoodnessOfPID       -> status    lcrcpsetgoodnessofpid( prcp, goodns ) ;
 addParticleID          -> status  = lcrcpaddparticleid( prcp, pid ) ;
 addParticle            -> status  = lcrcpaddparticle( prcp, pparticle, weigth ) ;
 addCluster             -> status  = lcrcpaddcluster( prcp, pclus, weigth ) ;
 addTrack               -> status  = lcrcpaddtrack( prcp, ptrack, weigth ) ;
-addMCParticle          -> status  = lcrcpaddmcparticle( prcp, pmcp, weigth ) ;
 
+id                     -> id      = lcrcpid( prcp )
 getType                -> itype   = lcrcpgettype( prcp )
 isPrimary              -> lprim   = lcrcpisprimary( prcp ) (lprim = type logical)
 getMomentum            -> status  = lcrcpgetmomentum( prcp, xmomv )
@@ -308,30 +355,28 @@ getCovMatrix           -> status  = lctrkgetcovmatrix( prcp, covmxv )
 getMass                -> xmass   = lcrcpgetmass( prcp )
 getCharge              -> charge  = lcrcpgetcharge( prcp )
 getReferencePoint      -> status  = lcrcpgetreferencepoint( prcp, refpointv )
+getGoodnessOfPID       -> goodns  = lcrcpgetgoodnessofpid( prcp )
 getParticleIDs         -> pids    = lcrcpgetparticleids( prcp )
 getParticles           -> ppartv  = lcrcpgetparticles( prcp )
-getParticleWeights     -> status  = lcrcpgetparticleweights( prcp, weightsv, nweights )
 getClusters            -> pclusv  = lcrcpgetclusters( prcp )
-getClusterWeights      -> status  = lcrcpgetparticleweights( prcp, weightsv, nweights )
 getTracks              -> ptrkv   = lcrcpgettracks( prcp )
-getTrackWeights        -> status  = lcrcpgettrackweights( prcp, weightsv, nweights )
-getMCParticles         -> pmcpv   = lcrcpgetmcparticles( prcp )
-getMCParticleWeights   -> status  = lcrcpgetmcparticleweights( prcp, weightsv, nweights )
 
 
 class ParticleID:
 
 create                 -> ppid    = lcpidcreate()
 delete                 -> status  = lcpiddelete( ppid )
-setTypeID              -> status  = lcpidsettypeid( ppid, idtype )
-setProbability         -> status  = lcpidsetprobability( ppid, prob )
-setIdentifier          -> status  = lcpidsetidentifier( ppid, idname )
+setType                -> status  = lcpidsettype( ppid, idtype )
+setPDG                 -> status  = lcpidsetpdg( ppid, ipdg )
+setLoglikelihood       -> status  = lcpidsetloglikelihood( ppid, xlogl )
+setAlgorithmType       -> status  = lcpidsetalgorithmtype( ppid, itype )
 addParameter           -> status  = lcpidaddparameter( ppid, param )
 
 id                     -> id      = lcpidid( ppid )
-getTypeID              -> idtype  = lcpidgettypeid( ppid )
-getProbability         -> prob    = lcpidgetprobability( ppid )
-getIdentifier          -> idname  = lcpidgetidentifier( ppid )
+getType                -> idtype  = lcpidgettype( ppid )
+getPDG                 -> ipdg    = lcpidgetpdg( ppid )
+getLoglikelihood       -> xlogl   = lcpidgetloglikelihood( ppid )
+getAlgorithmType       -> itype   = lcpidgetalgorithmtype( ppid )
 getParameters          -> status  = lcpidgetparameters( ppid, paramv, nparam)
 
 
@@ -364,14 +409,25 @@ getMass                -> mass    = lcmcpgetmass( pmcp )
 getCharge              -> charge  = lcmcpgetcharge( pmcp )
 
 
-utility (stl vector Interface):
+utility: 
+
+LCIntVec, LCFloatVec, LCStrVec classes:
 
 getLengthofIntVector   -> nelem   = lcivcgetlength( pintvec )
-getIntAt               -> status  = lcivcgetintat( pintvec , i ) (i=1,...,nelem)
+getIntAt               -> int     = lcivcgetintat( pintvec , i ) (i=1,...,nelem)
 getLengthofFloatVector -> nelem   = lcfvcgetlength( pfloatvec )
 getFloatAt             -> float   = lcfvcgetfloatat( pfloatvec , i ) (i=1,...,nelem)
 getLengthofStringVector-> nelem   = lcsvcgetlength( pstrvec )
 getStringAt            -> string  = lcsvcgetstringat( pstrvec , i ) (i=1,...,nelem)
+
+stl vector class (int, float, string):
+
+IntVectorGetLength     -> nelem   =  intvectorgetlength( pintvec )
+IntVectorGetElement    -> int     =  intvectorgetelement( pintvec , i ) (i=1,...,nelem)
+FloatVectorGetLength   -> nelem   =  floatvectorgetlength( pfloatvec )
+FloatVectorGetElement  -> float   =  floatvectorgetelement( pfloatvec , i ) (i=1,...,nelem)
+StringVectorGetLength  -> nelem   =  stringvectorgetlength( pstrvec )
+StringVectorGetElement -> string  =  stringvectorgetelement( pstrvec , i ) (i=1,...,nelem)
 
 \end{verbatim}
 
@@ -438,7 +494,7 @@ for class HEPEVT (Fortran interface  to COMMON /HEPEVT/ ):
 toHepEvt               -> status  = lcio2hepevt( pevent )
 fromHepEvt             -> status  = hepevt2lcio( pevent )
 
-for stl vector Interface:
+for the user extension classes (LCIntVec, LCFloatVec, LCStringVec):
 
 createIntVector        -> pvec    = lcintvectorcreate( intv, nint )
 createFloatVector      -> pvec    = lcfloatvectorcreate( floatv, nfloat )
@@ -447,6 +503,12 @@ createStringVector     -> pvec    = lcstringvectorcreate( stringsv, nstrings, le
 getIntVector           -> status  = lcgetintvector( pvec , intv, nintv )
 getFloatVector         -> status  = lcgetfloatvector( pvec , floatv , nfloatv )
 getStringVector        -> status  = lcgetstringvector( pvec , stringv , nstringv, len(stringv(1)) )
+
+for the stl vector class (int, float ,string):
+
+IntVectorCreate        -> pveci   = intvectorcreate( intv, nintv )
+FloatVectorCreate      -> pvecf   = floatvectorcreate( floatv , nfloatv )
+StringVectorCreate     -> pvecs   = stringvectorcreate( stringsv, nstrings, len(stringsv(1)) )
 
 \end{verbatim}
 
