@@ -31,7 +31,7 @@ v00-04  (fg 20030514)
       LCEvent: the data (collections)
 
  - compression of files now controled by constants 
-   (SLCIO::compression,SIOFactory.compression) - set to tru for C++ and Java
+   (SLCIO::compression, SIOFactory.compression) - set to true for C++ and Java
   
  - the ant target cpp needs aid.generate as a prerequisite (not automatically 
    included any more)

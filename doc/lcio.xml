@@ -42,17 +42,6 @@
      </block>
   </record>  
   <record name="LCEvent" major="1" minor="0">
-      <block name="Event" major="1" minor="0">
-         <data type="int" name="runNumber"></data>
-         <data type="int" name="eventNumber"></data>
-         <data type="long" name="timeStamp">TODO: format</data>
-         <data type="string" name="detectorName"></data>
-         <data type="int" name="nBlockNames"></data>
-         <repeat count="nBlockNames">
-            <data type="string" name="blockName"></data>
-	    <data type="string" name="blockType">e.g. CalorimeterHit, TrackerHit</data>
-         </repeat>
-      </block>
       <block name="MCParticle" major="1" minor="0">
          <data type="int" name="flags"> not yet used </data>
 	 <data type="int" name="nMC"></data>
