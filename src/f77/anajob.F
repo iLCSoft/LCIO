@@ -19,7 +19,7 @@
       integer i, k, ii, nactdet, ncolname
       character*80 detname
 
-      character*10 colname, colnamev(20)
+      character*40 colname, colnamev(20)
       character*40 colname1, colname2
       integer nintv, nfloatv, nelem, ncolnames
       integer intv(10)
@@ -32,6 +32,7 @@ c      write(*,*) " created reader at " , reader
       
       if( status.eq.LCIO_ERROR) then
          write(*,*) " could not open file simjob.slcio "
+         write(*,*) " first one has to run simjob (c++ executable) "
          goto 99
       else
          write(*,*) " opened file simjob.slcio "
