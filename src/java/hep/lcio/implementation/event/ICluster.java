@@ -159,7 +159,7 @@ public class ICluster extends ILCObject implements Cluster
    public void setTypeBit(int bit, boolean val)
    {
       checkAccess();
-      bitSet(type,bit,val);
+      type = bitSet(type,bit,val);
    }
    
    public float[] getSubdetectorEnergies()

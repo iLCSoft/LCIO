@@ -10,9 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author  Tony Johnson
- * fg20040602 changed to new parameters d0,phi,omega,z0,tanLambda
- * added Ndf and changed type to bitset.
+ * @author Tony Johnson
  */
 public class ITrack extends ILCObject implements Track
 {
@@ -144,16 +142,6 @@ public class ITrack extends ILCObject implements Track
       this.type = type;
    }
    
-   public void setTypeBit(int bit)
-   {
-      setTypeBit(bit,true) ;
-   }
-   public void setTypeBit(int bit, boolean val)
-   {
-      checkAccess();
-      bitSet(type,bit,val);
-   }
-   
    public void setZ0(float z0)
    {
       checkAccess();
@@ -199,9 +187,17 @@ public class ITrack extends ILCObject implements Track
    
    public void setReferencePointPCA(boolean b)
    {
-      bitSet(type,BITISREFERENCEPOINTPCA, b);
+      type = bitSet(type,BITISREFERENCEPOINTPCA, b);
    }
-   
+   public void setTypeBit(int bit)
+   {
+      setTypeBit(bit,true) ;
+   }
+   public void setTypeBit(int bit, boolean val)
+   {
+      checkAccess();
+      type = bitSet(type,bit,val);
+   }  
    public void addTrack(Track track)
    {
       tracks.add(track);

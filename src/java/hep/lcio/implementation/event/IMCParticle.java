@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.11 2004-09-15 13:29:10 gaede Exp $
+ * @version $Id: IMCParticle.java,v 1.12 2004-09-24 10:39:29 tonyj Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -186,95 +186,98 @@ public class IMCParticle extends ILCObject implements MCParticle
    
    public boolean hasLeftDetector()
    {
-      return (simulatorStatus & 1 << BITLeftDetector) != 0;
+      return bitTest(simulatorStatus,BITLeftDetector);
    }
    
    public boolean isBackscatter()
    {
-      return (simulatorStatus & 1 << BITBackscatter) != 0;
+      return bitTest(simulatorStatus,BITBackscatter);
    }
    
    public boolean isCreatedInSimulation()
    {
-      return (simulatorStatus & 1 << BITCreatedInSimulation) != 0;
+      return bitTest(simulatorStatus,BITCreatedInSimulation);
    }
    
    public boolean isDecayedInCalorimeter()
    {
-      return (simulatorStatus & 1 << BITDecayedInCalorimeter) != 0;
+      return bitTest(simulatorStatus,BITDecayedInCalorimeter);
    }
    
    public boolean isDecayedInTracker()
    {
-      return (simulatorStatus & 1 << BITDecayedInTracker) != 0;
+      return bitTest(simulatorStatus,BITDecayedInTracker);
    }
    
    public boolean isStopped()
    {
-      return (simulatorStatus & 1 << BITStopped) != 0;
+      return bitTest(simulatorStatus,BITStopped);
       
    }
-   private void setBit(int pattern, boolean value)
+   private void setBit(int bit, boolean value)
    {
       checkAccess();
-      if (value) simulatorStatus |= pattern;
-      else simulatorStatus &= ~pattern;
+      simulatorStatus = bitSet(simulatorStatus,bit,value);
    }
-   //FixMe: Should these really be in the interface
    public void setBackscatter(boolean val)
    {
-      setBit(1<<BITBackscatter,val);
+      setBit(BITBackscatter,val);
    }
    
    public void setCreatedInSimulation(boolean val)
    {
-      setBit(1<<BITCreatedInSimulation,val);
+      setBit(BITCreatedInSimulation,val);
    }
    
    public void setDecayedInCalorimeter(boolean val)
    {
-      setBit(1<<BITDecayedInCalorimeter,val);
+      setBit(BITDecayedInCalorimeter,val);
    }
    
    public void setDecayedInTracker(boolean val)
    {
-      setBit(1<<BITDecayedInTracker,val);
+      setBit(BITDecayedInTracker,val);
    }
    
    public void setHasLeftDetector(boolean val)
    {
-      setBit(1<<BITLeftDetector,val);
+      setBit(BITLeftDetector,val);
    }
    
    public void setStopped(boolean val)
    {
-      setBit(1<<BITStopped,val);
+      setBit(BITStopped,val);
    }
    
    public void setVertexIsNotEndpointOfParent(boolean val)
    {
-      setBit(1<<BITVertexIsNotEndpointOfParent,val);
+      setBit(BITVertexIsNotEndpointOfParent,val);
    }
    
    public boolean vertexIsNotEndpointOfParent()
    {
-      return (simulatorStatus & 1 << BITVertexIsNotEndpointOfParent) != 0;
+      return bitTest(simulatorStatus,BITVertexIsNotEndpointOfParent);
    }
    
-   public List getDaughters() {
-	  return daughters;
+   public List getDaughters()
+   {
+      return daughters;
    }
-
-   public List getParents() {
-	  return parents;
+   
+   public List getParents()
+   {
+      return parents;
    }
-
-   public float getTime() {
-	  return time;
+   
+   public float getTime()
+   {
+      return time;
    }
-
-   public void setTime(float f) {
-	  time = f;
+   
+   public void setTime(float f)
+   {
+      checkAccess();
+      time = f;
    }
-
+   
 }

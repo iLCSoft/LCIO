@@ -6,18 +6,16 @@ import hep.lcio.event.LCFloatVec;
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCFloatVec.java,v 1.8 2004-04-08 09:57:59 gaede Exp $
+ * @version $Id: ILCFloatVec.java,v 1.9 2004-09-24 10:39:29 tonyj Exp $
  */
 public class ILCFloatVec extends ILCObject implements LCFloatVec
 {
-   protected float[] data;
+   protected float[] data = new float[10];
    protected int size = 0;
 
    public void add(float f)
    {
-      if (data == null)
-         data = new float[10];
-      else if (size == data.length)
+      if (size == data.length)
       {
          float[] newData = new float[data.length * 2];
          System.arraycopy(data, 0, newData, 0, size);

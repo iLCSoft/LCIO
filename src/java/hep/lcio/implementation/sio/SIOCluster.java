@@ -13,7 +13,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.12 2004-09-17 06:30:38 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.13 2004-09-24 10:39:32 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -102,8 +102,8 @@ class SIOCluster extends ICluster
          for (int i=0; i<3; i++) out.writeFloat(p[i]);
          p = cluster.getPositionError();
          for (int i=0; i<6; i++) out.writeFloat(p[i]);
-         out.writeFloat(cluster.getIPhi());
          out.writeFloat(cluster.getITheta());
+         out.writeFloat(cluster.getIPhi());
          p = cluster.getDirectionError();
          for (int i=0; i<3; i++) out.writeFloat(p[i]);
          

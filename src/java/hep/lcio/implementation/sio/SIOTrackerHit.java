@@ -4,23 +4,23 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
-import hep.lcio.event.LCObject;
 import hep.lcio.event.TrackerHit;
 
 import hep.lcio.implementation.event.ITrackerHit;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.8 2004-09-17 04:37:43 tonyj Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.9 2004-09-24 10:39:32 tonyj Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
+   private List tempHits;
    SIOTrackerHit(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
@@ -37,27 +37,30 @@ class SIOTrackerHit extends ITrackerHit
       {
          nRawHits = in.readInt() ;
       }
-      //FIXME: [fg] I am not sure what type is expected to be in the List
-      // in C++ we have LCObjects != SIORefs  ??
       
-      rawHits = new ArrayList( nRawHits ) ;
+      tempHits = new ArrayList( nRawHits ) ;
       for (int i = 0; i < nRawHits ; i++)
       {
-         rawHits.add(  in.readPntr() ) ;
+         tempHits.add(in.readPntr());
       }
+      rawHits = null;
       
       in.readPTag(this);
    }
-   
-   //   public LCObject getRawDataHit()
-   //   {
-   //      if (rawDataHit instanceof SIORef)
-   //      {
-   //         rawDataHit = ((SIORef) rawDataHit).getObject();
-   //      }
-   //
-   //      return (LCObject) rawDataHit;
-   //   }
+   public List getRawHits()
+   {
+      if (rawHits == null && tempHits != null)
+      {
+         for (ListIterator i = tempHits.listIterator(); i.hasNext(); )
+         {
+            SIORef ref = (SIORef) i.next();
+            i.set(ref.getObject());
+         }
+         rawHits = tempHits;
+         tempHits = null;
+      }
+      return super.getRawHits();
+   }   
    
    static void write(TrackerHit hit, SIOOutputStream out) throws IOException
    {
@@ -105,5 +108,5 @@ class SIOTrackerHit extends ITrackerHit
          out.writePntr( rawHits.get(i) );
       }
       out.writePTag(this);
-   }
+   }   
 }

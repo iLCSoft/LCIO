@@ -4,6 +4,7 @@ import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+import java.util.Collections;
 
 import java.util.List;
 
@@ -58,12 +59,12 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    
    public List getClusters()
    {
-      return clusters;
+      return clusters == null ? Collections.EMPTY_LIST : clusters;
    }
    
    public boolean isCompound()
    {
-      return !particles.isEmpty();
+      return particles != null && !particles.isEmpty();
    }
    
    public void setCovMatrix(float[] cov)
@@ -118,12 +119,12 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    
    public List getParticleIDs()
    {
-      return particleIDs;
+      return particleIDs == null ? Collections.EMPTY_LIST : particleIDs;
    }
    
    public List getParticles()
    {
-      return particles;
+      return particles == null ? Collections.EMPTY_LIST : particles;
    }
    
    public void setReferencePoint(float[] fs)
@@ -140,7 +141,7 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    
    public List getTracks()
    {
-      return tracks;
+      return tracks == null ? Collections.EMPTY_LIST : tracks;
    }
    
    public void setType(int type)

@@ -6,25 +6,32 @@ import hep.lcio.event.LCStrVec;
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCStrVec.java,v 1.1 2004-07-02 08:46:45 hvogt Exp $
+ * @version $Id: ILCStrVec.java,v 1.2 2004-09-24 10:39:29 tonyj Exp $
  */
 public class ILCStrVec extends ILCObject implements LCStrVec
 {
-   protected String[] data = new String[0];
+   protected String[] data = new String[10];
    protected int size = 0;
 
    public void add(String str)
    {
-      size = data.length;
-      String[] newData = new String[size + 1];
-      System.arraycopy(data, 0, newData, 0, size);
-      newData[size] = str;
-      data = newData;
+      if (size == data.length)
+      {
+         String[] newData = new String[size * 2];
+         System.arraycopy(data, 0, newData, 0, size);
+         data = newData;
+      }
       data[size++] = str;
    }
 
    public String[] toArray()
    {
-      return data;
+      if (size != data.length)
+      {
+         String[] result = new String[size];
+         System.arraycopy(data, 0, result, 0, size);
+         data = result;
+      }
+      return data;   
    }
 }

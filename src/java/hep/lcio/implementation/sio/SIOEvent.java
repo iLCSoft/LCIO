@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.29 2004-09-23 13:49:53 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.30 2004-09-24 10:39:32 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -145,6 +144,16 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
+         else if (type.equals(LCIO.RAWCALORIMETERHIT))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIORawCalorimeterHit(in, flags, this, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }         
          else if (type.equals(LCIO.LCSTRVEC))
          {
             int n = in.readInt();
@@ -305,6 +314,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOCalorimeterHit.write((CalorimeterHit) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.RAWCALORIMETERHIT))
+            {
+               for (int i = 0; i < n; i++)
+                  SIORawCalorimeterHit.write((RawCalorimeterHit) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.LCSTRVEC))
             {
