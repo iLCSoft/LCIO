@@ -6,6 +6,7 @@
 package hep.lcio.example;
 
 import hep.lcio.data.LCFloatVec;
+import hep.lcio.data.LCIntVec;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
@@ -106,9 +107,16 @@ public class LCTools
 
                System.out.print("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + pdg + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
             }
+            System.out.println();
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.TPCHIT))
          {
+         // check whether we are dealing with raw data
+            int flag = col.getFlag();
+            int mask = 1<<LCIO.TPCBIT_RAW;
+            boolean raw = (flag & mask) == mask;
+
+             
             int nHits = col.getNumberOfElements();
             System.out.print(nHits + " hits : ");
 
@@ -119,10 +127,22 @@ public class LCTools
             for (int i = 0; i < nPrint; i++)
             {
                TPCHit hit = (TPCHit) col.getElementAt(i);
-
+            if(raw)
+            {
+            int nRawWords = hit.getNRawDataWords();
+            System.out.println( nRawWords +" raw data words:");
+            for(int rawWord = 0; rawWord< nRawWords; ++rawWord)
+            {
+            System.out.println( "                         "+hit.getRawDataWord(rawWord) );
+            }
+            }
+            else
+            {
                System.out.print("    hit -  id: " + hit.getCellID() + " time: " + hit.getTime()
                 + "  charge: " + hit.getCharge() + ", quality: " + hit.getQuality() );
+                }
             }
+             
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.LCFLOATVEC))
          {
@@ -145,6 +165,27 @@ public class LCTools
                System.out.println();
             }
          }
+         else if (evt.getCollection(name).getTypeName().equals(LCIO.LCINTVEC))
+         {
+            int nHits = col.getNumberOfElements();
+            System.out.print(nHits + " vectors: ");
+
+            int nPrint = (nHits > 0) ? 1 : 0;
+
+            if (nPrint == 0)
+               System.out.println();
+            for (int i = 0; i < nPrint; i++)
+            {
+               LCIntVec vec = (LCIntVec) col.getElementAt(i);
+
+               System.out.print(" values(" + i + "): ");
+
+               int[] data = vec.toArray();
+               for (int k = 0; k < data.length; k++)
+                  System.out.print(data[k] + ", ");
+               System.out.println();
+            }            
+         }         
          else if (evt.getCollection(name).getTypeName().equals(LCIO.MCPARTICLE))
          {
             int nHits = col.getNumberOfElements();

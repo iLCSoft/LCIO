@@ -1,0 +1,4 @@
+#!/bin/sh
+
+ANT_HOME=$LCIO/tools
+java -cp "$ANT_HOME/freehep-buildtools.jar;$ANT_HOME/ant.jar;$ANT_HOME/ant-optional.jar;$ANT_HOME/jaxp.jar;$ANT_HOME/parser.jar;$JDK_HOME/lib/tools.jar;$AIDA" -Dant.home=$ANT_HOME $ANT_OPTS org.apache.tools.ant.Main $@

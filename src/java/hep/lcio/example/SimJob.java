@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.10 2003-09-09 12:37:37 gaede Exp $
+ * @version $Id: SimJob.java,v 1.11 2003-09-15 21:49:52 tonyj Exp $
  */
 public class SimJob
 {
@@ -123,12 +123,14 @@ public class SimJob
             // with some user extensions (4 floats) per track:
             // we just create a parallel collection of float vectors
             ILCCollection trkVec = new ILCCollection(LCIO.SIMTRACKERHIT);
-            ILCCollection extVec = new ILCCollection(LCIO.LCFLOATVEC);
+            ILCCollection extFVec = new ILCCollection(LCIO.LCFLOATVEC);
+            ILCCollection extIVec = new ILCCollection(LCIO.LCINTVEC);
 
             for (int j = 0; j < NHITS; j++)
             {
                ISimTrackerHit hit = new ISimTrackerHit();
-               ILCFloatVec ext = new ILCFloatVec();
+               ILCFloatVec   extF = new ILCFloatVec();
+               ILCIntVec     extI = new ILCIntVec();
 
                hit.setdEdx(30e-9f);
 
@@ -137,12 +139,6 @@ public class SimJob
                   1.1 * random.nextDouble(), 2.2 * random.nextDouble(),
                   3.3 * random.nextDouble()
                };
-
-               // fill the extension vector
-               ext.add(3.14159f);
-               for (int k = 0; k < 3; k++)
-                  ext.add((float) pos[k] * 0.1f);
-
                hit.setPosition(pos);
 
                // assign the hits randomly to MC particles
@@ -150,20 +146,86 @@ public class SimJob
 
                hit.setMCParticle((MCParticle) mcVec.getElementAt(mcIndx));
 
+               // fill the extension vectors (4 floats, 2 ints)
+               extF.add(3.14159f);
+               for (int k = 0; k < 3; k++)
+                  extF.add((float) pos[k] * 0.1f);
+               
+               extI.add( 123456789 );
+               extI.add( mcIndx );
+               
+               // add the hit and the extensions to their corresponding collections
                trkVec.add(hit);
-               extVec.add(ext);
+               extFVec.add(extF);
+               extIVec.add(extI);
             }
 
             // add all collection to the event
+             
             evt.addCollection(mcVec, "MCParticle");
             evt.addCollection(calVec, ecalName);
             evt.addCollection(trkVec, tpcName);
-            evt.addCollection(extVec, tpcName + "UserExtension");
+            evt.addCollection(extFVec, tpcName + "UserFloatExtension");
+            evt.addCollection(extIVec, tpcName + "UserIntExtension");
+
+
+    // test: add a collection for one event only:
+    if( rn == NRUN-1 && i == 0 ) { // first event o last run
+      ILCCollection addExtVec = new ILCCollection( LCIO.LCFLOATVEC )  ;
+      ILCFloatVec addExt = new ILCFloatVec() ;
+      addExt.add( 1.f );
+      addExt.add( 2.f );
+      addExt.add( 3.f );
+      addExt.add( 4.f );
+      addExtVec.add( addExt ) ;
+      evt.addCollection( addExtVec , "AdditionalExtension" ) ;
+    }
+    
+//cng    
+    // even though this is a simjob we can store 'real data' objects :)
+    // --- for example we can store TPC hits ------------
+
+    ILCCollection TPCVec = new ILCCollection( LCIO.TPCHIT )  ;
+
+    boolean storeRawData = true ;
+
+    int tpcFlag = 0 ;
+     if(  storeRawData )  // if we want to store the raw data we need to set the flag
+      tpcFlag = 1 << LCIO.TPCBIT_RAW ;
+    TPCVec.setFlag( tpcFlag  ) ;
+    
+    for(int j=0;j<NHITS;j++){
+      
+      ITPCHit tpcHit = new ITPCHit();
+      
+      tpcHit.setCellID( j ) ;
+      tpcHit.setTime( 0.1234567f ) ;
+      tpcHit.setCharge( 3.14159f ) ;
+      tpcHit.setQuality(  0xbad ) ;
+
+      if(  storeRawData ) {
+        // generate a random number of datawords less than 10
+        int size = random.nextInt(10);
+        int[] rawData = new int[size] ;
+        // fill some random numbers into the array;   
+        for(int k=0;k<size;k++){
+          rawData[k] = random.nextInt() ;   
+        }
+        // set the raw data
+        tpcHit.setRawDataWords( rawData ) ;
+      }
+
+      TPCVec.add( tpcHit ) ;
+    }   
+    evt.addCollection( TPCVec , "TPCRawFADC" ) ;
+    
+    //--------------  all for TPC --------------------    
+//cng
+            // write the event to the file
+            lcWrt.writeEvent(evt);
 
             // dump the event to the screen
             LCTools.dumpEvent(evt);
-
-            lcWrt.writeEvent(evt);
          }
 
          // evt loop
