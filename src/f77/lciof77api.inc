@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.28 2004-09-23 14:06:53 gaede Exp $
+*  $Id: lciof77api.inc,v 1.29 2004-09-23 17:11:54 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -152,9 +152,9 @@ c-----the CalorimeterHit interface
       PTRTYPE lccahcreate
       integer lccahid, lccahdelete, lccahgetcellid0, lccahgetcellid1
       real    lccahgetenergy, lccahgettime
-      integer lccahgetposition
+      integer lccahgetposition,lccahgettype,lccahgetrawhit
       integer lccahsetcellid0, lccahsetcellid1, lccahsetenergy
-      integer lccahsetposition, lccahsettime
+      integer lccahsetposition, lccahsettime,lccahsettype,lccahsetrawhit
 
 c-----the Cluster interface
       PTRTYPE lcclucreate

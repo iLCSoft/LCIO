@@ -207,6 +207,8 @@ setCellID1             -> status  = lccahsetcellid1( pchit , icellid1 )
 setEnergy              -> status  = lccahsetenergy( pchit , energy )
 setPosition            -> status  = lccahsetposition( pchit , posv )
 setTime                -> status  = lccahsettime( pchit , time )
+setType                -> status  = lccahsettype( pchit , itype )
+setRawHit              -> status  = lccahsetrawhit( pchit , praw )
 
 id                     -> id      = lccahid( pchit )
 getCellID0             -> icellid0= lccahgetcellid0( pchit )
@@ -214,6 +216,8 @@ getCellID1             -> icellid1= lccahgetcellid1( pchit )
 getEnergy              -> energy  = lccahgetenergy( pchit )
 getPosition            -> status  = lccahgetposition( pchit , posv )
 getTime                -> time    = lccahgettime( pchit )
+getType                -> itype   = lccahgettype( pchit )
+getRawHit              -> prawhit = lccahsetrawhit( pchit )
 
 
 class TPCHit:
