@@ -18,8 +18,13 @@ CLHEP_INCLUDE := $(CLHEP)/include
 LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include -I $(CLHEP_INCLUDE)
 export LCIOINCLUDE
 
-LCIOCPPFLAGS = -O3 -Wall -ansi 
-#LCIOCPPFLAGS = -g -Wall -ansi 
+ifdef LCIODEBUG
+ LCIOCPPFLAGS = -g -pg -Wall -ansi 
+else
+ LCIOCPPFLAGS = -O3 -Wall -ansi 
+endif
+
+
 #-pedantic
 export LCIOCPPFLAGS
 

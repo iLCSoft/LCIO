@@ -19,8 +19,11 @@ AR = ar
 
 INCLUDE = ../include
 
-#CPPFLAGS = -O4 -I $(INCLUDE) 
-CPPFLAGS = -g -I $(INCLUDE) 
+ifdef LCIODEBUG
+ CPPFLAGS = -g -pg -I $(INCLUDE)
+else
+ CPPFLAGS = -O3 -I $(INCLUDE)
+endif
 
 
 objects := $(patsubst %.cc,%.o,$(wildcard *.cc))
