@@ -16,11 +16,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.11 2004-04-15 14:11:16 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.12 2004-04-15 14:52:55 gaede Exp $
  */
 class SIOSimTrackerHit extends ISimTrackerHit
 {
-   SIOSimTrackerHit(SIOInputStream in, SIOEvent owner) throws IOException
+   SIOSimTrackerHit(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
       cellID = in.readInt();
@@ -30,7 +30,9 @@ class SIOSimTrackerHit extends ISimTrackerHit
       dEdx = in.readFloat();
       time = in.readFloat();
       particle = in.readPntr();
-      in.readPTag(this);
+      double version  = (double) major + ( (double) minor ) /  10. ;
+      if( version > 1.0 )
+        in.readPTag(this);
    }
 
    public MCParticle getMCParticle()

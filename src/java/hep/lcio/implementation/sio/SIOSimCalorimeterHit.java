@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.11 2004-04-15 14:11:16 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.12 2004-04-15 14:52:55 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -52,7 +52,9 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             pdg[i] = in.readInt();
       }
-	  in.readPTag(this);
+	  double version  = (double) major + ( (double) minor ) /  10. ;
+	  if( version > 1.0 )
+	    in.readPTag(this);
    }
 
    public MCParticle getParticleCont(int i)

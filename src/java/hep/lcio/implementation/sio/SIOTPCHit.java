@@ -14,11 +14,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTPCHit.java,v 1.5 2004-04-15 14:11:16 gaede Exp $
+ * @version $Id: SIOTPCHit.java,v 1.6 2004-04-15 14:52:55 gaede Exp $
  */
 class SIOTPCHit extends ITPCHit
 {
-   SIOTPCHit(SIOInputStream in, int flags, SIOEvent owner) throws IOException
+   SIOTPCHit(SIOInputStream in, int flags, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
       cellID = in.readInt();
@@ -35,7 +35,9 @@ class SIOTPCHit extends ITPCHit
             rawDataArray[i] = in.readInt() ;
          }
       }
-	if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+	double version  = (double) major + ( (double) minor ) /  10. ;
+
+	if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0  && version > 1.0 )
       in.readPTag(this) ;
    }
    

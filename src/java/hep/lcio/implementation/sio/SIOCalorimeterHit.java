@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.12 2004-04-15 14:11:15 gaede Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.13 2004-04-15 14:52:55 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -32,7 +32,9 @@ class SIOCalorimeterHit extends ICalorimeterHit
          position[1] = in.readFloat();
          position[2] = in.readFloat();
       }
-	  if ((flags & (1 << LCIO.RCHBIT_PTR)) != 0)
+	 double version  = (double) major + ( (double) minor ) /  10. ;
+	
+	 if ((flags & (1 << LCIO.RCHBIT_PTR)) != 0  && version > 1.0 )
    	    in.readPTag(this) ;
    }
 
