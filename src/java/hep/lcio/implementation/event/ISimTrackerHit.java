@@ -3,13 +3,13 @@ package hep.lcio.implementation.event;
 import hep.lcio.data.MCParticleData;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
-//import hep.lcio.exceptions.* ;
+import hep.lcio.exceptions.DataNotAvailableException;
 
 
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.3 2003-06-10 13:10:43 gaede Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -36,8 +36,9 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       particle = mc;
    }
 
-   public MCParticle getMCParticle()
+   public MCParticle getMCParticle() throws DataNotAvailableException
    {
+      if( particle == null) throw new DataNotAvailableException() ;
       return (MCParticle) particle;
    }
    public MCParticleData getMCParticleData()

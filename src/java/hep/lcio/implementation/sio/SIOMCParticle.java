@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.3 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.4 2003-06-10 13:10:43 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -108,10 +108,10 @@ class SIOMCParticle extends IMCParticle
 
 		// write endpoints only if particle has no daughters
 		if( nDaughters == 0 ){
-         double[] endpoind = hit.getEndpoint();
-         out.writeDouble(endpoind[0]);
-         out.writeDouble(endpoind[1]);
-         out.writeDouble(endpoind[2]);
+         double[] endpoint = hit.getEndpoint();
+           out.writeDouble(endpoint[0]);
+           out.writeDouble(endpoint[1]);
+           out.writeDouble(endpoint[2]);
 		}
 
       }
@@ -135,5 +135,12 @@ class SIOMCParticle extends IMCParticle
       out.writeFloat(momentum[2]);
       out.writeFloat(energy);
       out.writeFloat(charge);
+		// write endpoints only if particle has no daughters
+		if( daughters.length == 0 ){
+           out.writeDouble(endpoint[0]);
+           out.writeDouble(endpoint[1]);
+           out.writeDouble(endpoint[2]);
+		}
+
    }
 }

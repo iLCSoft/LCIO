@@ -12,6 +12,7 @@ import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
+import hep.lcio.exceptions.DataNotAvailableException;
 
 
 /**
@@ -70,7 +71,17 @@ public class LCTools
                SimTrackerHit hit = (SimTrackerHit) col.getElementAt(i);
 
                double[] x = hit.getPosition();
-               System.out.println("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + hit.getMCParticle().getPDG() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
+            
+               
+               int pdg = -999 ;
+               try{ 
+               	 MCParticle part = hit.getMCParticle() ;
+               	 pdg =  part.getPDG() ;
+               } catch( DataNotAvailableException e){ //e.printStackTrace() ; 
+               }  
+
+      			System.out.print("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + pdg + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);	
+               
             }
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.LCFLOATVEC))
