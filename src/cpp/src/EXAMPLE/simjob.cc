@@ -138,10 +138,11 @@ int main(int argc, char** argv ){
 	LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
       
 	// set flag for long format (including position )
-	// and PDG 
+	// and PDG and cellid1
 	LCFlagImpl chFlag(0) ;
 	chFlag.setBit( LCIO::CHBIT_LONG ) ;
 	chFlag.setBit( LCIO::CHBIT_PDG ) ;
+	chFlag.setBit( LCIO::CHBIT_ID1 ) ;
 	calVec->setFlag( chFlag.getFlag()  ) ;
 	
 	
@@ -153,6 +154,9 @@ int main(int argc, char** argv ){
 	  
 	  float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
 	  
+	  hit->setCellID0( 1024 ) ;
+	  hit->setCellID1( 65535 ) ;
+
 	  hit->setPosition( pos ) ;
 	  
 	  calVec->push_back( hit ) ;

@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.8 2003-11-08 03:08:51 tonyj Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.9 2003-11-11 18:28:08 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -26,7 +26,9 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
    {
       setParent(owner);
       cellId0 = in.readInt();
-      if ((flags & LCIO.CHBIT_ID1) != 0 || minor == 8)  cellId1 = in.readInt();
+
+
+      if ((flags & (1 << LCIO.CHBIT_ID1)) != 0 || ( major == 0 && minor == 8) )  cellId1 = in.readInt();
       else cellId1 = 0;
       energy = in.readFloat();
 
@@ -68,7 +70,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       else
       {
          out.writeInt(hit.getCellID0());
-         if ((flags & LCIO.CHBIT_ID1) != 0) out.writeInt(hit.getCellID1());
+         if ((flags & (1 << LCIO.CHBIT_ID1)) != 0) out.writeInt(hit.getCellID1());
          out.writeFloat(hit.getEnergy());
 
          if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
@@ -96,7 +98,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
    private void write(SIOOutputStream out, int flags) throws IOException
    {
       out.writeInt(cellId0);
-      if ((flags & LCIO.CHBIT_ID1) != 0) out.writeInt(cellId1);
+      if ((flags & (1 << LCIO.CHBIT_ID1)) != 0) out.writeInt(cellId1);
       out.writeFloat(energy);
 
       if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
