@@ -7,7 +7,7 @@ import hep.lcio.event.Track;
 import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
 import hep.lcio.implementation.event.ITrackerHit;
-import hep.lcio.test.LCIO;
+import hep.lcio.event.LCIO;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.9 2004-09-24 13:21:23 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.10 2004-09-24 13:54:49 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
