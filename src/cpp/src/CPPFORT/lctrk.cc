@@ -117,12 +117,20 @@ float lctrkgetradiusofinnermosthit( PTRTYPE track ) {
   return trk->getRadiusOfInnermostHit() ;
 }
 
-
-
-PTRTYPE lctrkgetsubdetectorhitnumbers( PTRTYPE track ) {
+int     lctrkgetsubdetectorhitnumbers( PTRTYPE track, int* intv, int* nintv ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  const IntVec& nums = trk->getSubdetectorHitNumbers();
-  return reinterpret_cast<PTRTYPE>( &nums );
+  IntVec& intVec =  trk->subdetectorHitNumbers() ;
+  int n = intVec.size() ;
+  if (n > *nintv) {
+    std::cerr << "Warning in lctrkgetsubdetectorhitnumbers: vector size " <<  n
+              << " larger then target array size " << *nintv << std::endl ;
+      n = *nintv ;
+  }
+  for(int j=0;j<n;j++) {
+    intv[j] = intVec[j] ;
+  }
+  *nintv = n ;
+  return LCIO::SUCCESS ;
 }
 
 PTRTYPE lctrkgettracks( PTRTYPE track ) {
