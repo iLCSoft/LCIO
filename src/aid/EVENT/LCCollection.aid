@@ -3,10 +3,10 @@ package hep.lcio.event ;
 @java{
 import hep.lcio.exceptions.* ;
 }
-/** The generic collection used in LCIO. Holds objects of type LCObject.
+/** The generic collection used in LCIO. Holds arbitrary objects of type LCObject.
  * 
  * @author gaede 
- * @version $Id: LCCollection.aid,v 1.7 2004-07-14 15:50:40 gaede Exp $
+ * @version $Id: LCCollection.aid,v 1.8 2004-08-03 13:14:15 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -35,9 +35,26 @@ public interface LCCollection
      *  CHBIT_BARREL = 30 -  endcap or barrel <br>
      *  CHBIT_ID1 = 29 -   cellid1 is sored <br>
      *  CHBIT_PDG = 28 - store pdg of secondaries <br>
+     *  &nbsp;<br>
+     *  Bit 16 is used to flag collection as transient <br>
      *  Bits 0-15 are subdetector/user specific.
+     * @see isTransient()
      */
     public int getFlag() const ;
+
+    /**Transient bit in flag word.
+     */
+@ifdef cpp
+@cpp{
+    static const int BITTransient = 16 ;
+}@else
+    public static const int BITTransient = 16 ;
+@endif
+
+    /** True if collection is transient, i.e. will not be written to any LCIO file.
+     *  Convenient method that checks bit 16 of the flag word.
+     */
+    public boolean isTransient() const ;
 
     /** Adds the given element to (end of) the collection. Throws an exception 
      * if the collection (event) is 'read only'.

@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version Jun 6, 2003
+ * @version $Id: MCParticle.aid,v 1.16 2004-08-03 13:14:15 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     

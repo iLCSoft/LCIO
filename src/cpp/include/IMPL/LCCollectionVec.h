@@ -19,7 +19,7 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version Mar 4, 2003
+   * @version $Id: LCCollectionVec.h,v 1.8 2004-08-03 13:14:16 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
@@ -58,11 +58,31 @@ namespace IMPL {
      */
     virtual EVENT::LCObject * getElementAt(int index) const ;
     
-    /** Returns flag word for collection. 
-     * @see EVENT::LCCollection::getFlag() 
+    /** Returns flag word for collection. Bits 16-31 are reserved for LCIO
+     *  Depending on the object type stored they have a special meaning, e.g. 
+     *  for SimCalorimeterHits: <br>
+     *  CHBIT_LONG = 31   -  store position <br>
+     *  CHBIT_BARREL = 30 -  endcap or barrel <br>
+     *  CHBIT_ID1 = 29 -   cellid1 is sored <br>
+     *  CHBIT_PDG = 28 - store pdg of secondaries <br>
+     *  &nbsp;<br>
+     *  Bit 16 is used to flag collection as transient <br>
+     *  Bits 0-15 are subdetector/user specific.
+     * @see isTransient()
      */
     virtual int getFlag() const ;
+
+
+    /** True if collection is transient, i.e. will not be written to any LCIO file.
+     *  Convenient method that checks bit 16 of the flag word.
+     */
+    virtual bool isTransient() const  ;
     
+
+    /** Sets the transient flag for this collection. Transient collections are not written
+     * to LCIO files.
+     */
+    void setTransient(bool val=true) ;
 
     /** Sets the flag word for this collection.
      */

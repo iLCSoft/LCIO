@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.22 2004-07-15 15:49:30 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.23 2004-08-03 13:14:18 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -241,12 +241,22 @@ class SIOEvent extends ILCEvent
          out.writeString(event.getDetectorName());
 
          String[] blockNames = event.getCollectionNames();
-         out.writeInt(blockNames.length);
-         for (int i = 0; i < blockNames.length; i++)
+         
+         int nBlocks = blockNames.length ; 
+         for (int i = 0; i < blockNames.length; i++){
+   		 if( event.getCollection(blockNames[i]).isTransient() ) 
+           	nBlocks-- ;
+         }
+         out.writeInt( nBlocks );
+         
+		for (int i = 0; i < blockNames.length; i++)
          {
-            String blockName = blockNames[i];
-            out.writeString(blockName);
-            out.writeString(event.getCollection(blockName).getTypeName());
+			if( ! event.getCollection(blockNames[i]).isTransient() ) {
+
+             String blockName = blockNames[i];
+             out.writeString(blockName);
+             out.writeString(event.getCollection(blockName).getTypeName());
+			}
          }
 		//if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
 		 SIOLCParameters.write( event.getParameters() , out ) ;

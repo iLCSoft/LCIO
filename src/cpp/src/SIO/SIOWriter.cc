@@ -229,12 +229,16 @@ namespace SIO {
       
       LCCollection* col = evt->getCollection( *name ) ;
       
-      if( ch == 0 ) {
-	ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
+      if(! col->isTransient() ){ // if a collection is transient we simply ignore it
+
+	if( ch == 0 ) {
+	  ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
+	}
+	_evtRecord->connect( ch ) ;
+	_connectedBlocks.push_back( ch ) ;  
+	ch->setCollection( col ) ; 
       }
-      _evtRecord->connect( ch ) ;
-      _connectedBlocks.push_back( ch ) ;  
-      ch->setCollection( col ) ; 
+      
     } 
 
     //--- fg20040504 added relation handlers

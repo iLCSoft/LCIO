@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.15 2004-07-14 15:50:44 gaede Exp $
+ * @version $Id: SimJob.java,v 1.16 2004-08-03 13:14:17 gaede Exp $
  */
 public class SimJob
 {
@@ -68,6 +68,10 @@ public class SimJob
 
             // create and add some mc particles
             ILCCollection mcVec = new ILCCollection(LCIO.MCPARTICLE);
+  
+            // debug: don't write MCParticle collection
+            // mcVec.setTransient() ;
+
 
             IMCParticle mom = null;
             for (int j = 0; j < NMCPART; j++)

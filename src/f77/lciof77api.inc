@@ -60,6 +60,7 @@ c-----the LCCollection interface
       PTRTYPE lccolcreate, lccolgetelementat
       integer lccoldelete, lccolgetnumberofelements
       character*80 lccolgettypename
+      integer lccolistransient, lccolsettransient
       integer lccolgetflag, lccolsetflag, lccoladdelement
       integer lccolremoveelementat
 

@@ -103,6 +103,9 @@ int main(int argc, char** argv ){
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	
+	// debug only - don't write MCParticles to output file:
+	// mcVec->setTransient() ;
+
 	// debug only - add the same particle to more than one collection
 	//LCCollectionVec* mcVec2 = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 

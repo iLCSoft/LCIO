@@ -50,6 +50,17 @@ int lccolgetflag(PTRTYPE collection){
   return col->getFlag() ;
 }
 
+int lccolistransient(PTRTYPE collection){
+  LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
+  return col->isTransient() ;
+}
+
+int lccolsettransient(PTRTYPE collection, int value){
+  LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
+  col->setTransient( value) ;
+  return LCIO::SUCCESS ;
+}
+ 
 int lccolsetflag(PTRTYPE collection, int flag){
   LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
   col->setFlag( flag) ;

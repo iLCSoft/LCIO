@@ -95,6 +95,9 @@ c--------   we need to use the implementation classes here
 c--------   create and add some mc particles
             mcpcol = lccolcreate( LCIO_MCPARTICLE )
 
+c--------   debug only - don't write MCParticles to LCIO file
+c-----      status = lccolsettransient( mcpcol , 1 ) 
+
 c--------   debug only - add the same particle to more than one collection
 c--------   LCCollectionVec* mcVec2 = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 

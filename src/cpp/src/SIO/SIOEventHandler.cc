@@ -140,14 +140,19 @@ namespace SIO  {
 	
 	int nCol = colNames->size()  + relNames->size()  ;
 
+	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
+	  if( _evt->getCollection( (*colNames)[i] )->isTransient() ) nCol-- ;
+	}
+
 	SIO_DATA( stream, &nCol, 1 ) ;
       
 	//	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
 	  const LCCollection* col = _evt->getCollection( (*colNames)[i] ) ;
-	  LCSIO_WRITE( stream, (*colNames)[i] ) ;
-	  LCSIO_WRITE( stream, col->getTypeName() ) ;
-		
+	  if( ! col->isTransient() ){
+	    LCSIO_WRITE( stream, (*colNames)[i] ) ;
+	    LCSIO_WRITE( stream, col->getTypeName() ) ;
+	  }
 	} 
 	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   
 	  const LCRelation* rel = _evt->getRelation( (*relNames)[i] ) ;
