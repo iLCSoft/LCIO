@@ -88,59 +88,53 @@ namespace SIO {
       int nObj ;
       SIO_DATA( stream ,  &nObj , 1  ) ;
 
-      // now read all the objects :
+//     // now read all the objects :
+//      for( int i=0 ; i< nObj ; i ++ ){
+// 	  LCObject* obj ;
+//  	  status  = _myHandler->read( stream , &obj ) ;
+// 	  if( !( status & 1 ) ) return status ;
+// 	  ioCol->push_back( obj ) ;
+//      }
+
+
+      // reserve the space for the pointers to all objects
+      ioCol->resize( nObj ) ;
+
       for( int i=0 ; i< nObj ; i ++ ){
 	
-	LCObject* obj ;
-	
-	//	status  = _myHandler->read( stream , &obj , ioCol->_flag , versionID ) ;
-	status  = _myHandler->read( stream , &obj ) ;
-	if( !( status & 1 ) ) return status ;
-	
-	ioCol->push_back( obj ) ;
-      }
+ 	status  = _myHandler->readBase( stream , & (ioCol->operator[](i) )  ) ;
 
-//       // if the collection is not specified in the header we delete it right away...
-//       if( ! colIsInEvent ){  
-// 	delete ioCol ;// causes segfault
-//       }
+	if( !( status & 1 ) ) return status ;
+      }
 
 
     } else if( op == SIO_OP_WRITE ){ 
       
-//       const LCCollection* vec = _col ;
-      
       if( _col  != 0 ){
 	
-// 	LCSIO_WRITE( stream, _col->getFlag()  ) ;
-// 	SIOLCParameters::write( stream ,  _col->getParameters() ) ;
-
 	_myHandler->init( stream , SIO_OP_WRITE , const_cast<LCCollection*>(_col) , version() ) ;
 
 
 	int nObj = _col->getNumberOfElements() ;
 
 	SIO_DATA( stream,  &nObj , 1  ) ;
-// 	cout << " >>>>>>>  written nObj : " << nObj << " for type " << _col->getTypeName() << endl ;
 
 	//  now write all the objects :
 	for( int i=0 ; i< nObj ; i ++ ){
 	  
 	  const LCObject* obj = _col->getElementAt(i)  ;
 	  
-// 	  status  =  _myHandler->write( stream , obj , _col->getFlag() ) ; 
-	  status  =  _myHandler->write( stream , obj  ) ; 
-	  if( !( status & 1 ) ) return status ;
+//  	  status  =  _myHandler->write( stream , obj  ) ; 
+	  status  =  _myHandler->writeBase( stream , obj  ) ; 
 	  
+	  if( !( status & 1 ) ) return status ;
 	}
-	
 	
       }else{ 
 	return 0 ;
       }
     }
 
-    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   

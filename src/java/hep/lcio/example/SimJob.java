@@ -8,13 +8,14 @@ import hep.lcio.implementation.io.LCFactory;
 import hep.lcio.io.*;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Random;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.16 2004-08-03 13:14:17 gaede Exp $
+ * @version $Id: SimJob.java,v 1.17 2005-03-02 16:22:59 gaede Exp $
  */
 public class SimJob
 {
@@ -228,7 +229,17 @@ public class SimJob
     }   
     evt.addCollection( TPCVec , "TPCRawFADC" ) ;
     
-    //--------------  all for TPC --------------------    
+    //-------------- write example for subset collection --------------------    
+    ILCCollection mcSubVec = new ILCCollection(LCIO.MCPARTICLE);
+    mcSubVec.setSubset(true) ;
+    for (Iterator iter = mcVec.iterator(); iter.hasNext();) {
+      MCParticle p = (MCParticle) iter.next();
+      if( p.getDaughters().size() == 0)
+         mcSubVec.addElement(p) ;
+    }
+    evt.addCollection(mcSubVec, "FinalMCParticles" ) ;
+    // ------- end subset -------------------------------------------
+    
 //cng
             // write the event to the file
             lcWrt.writeEvent(evt);

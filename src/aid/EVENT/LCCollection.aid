@@ -6,7 +6,7 @@ import hep.lcio.exceptions.* ;
 /** The generic collection used in LCIO. Holds arbitrary objects of type LCObject.
  * 
  * @author gaede 
- * @version $Id: LCCollection.aid,v 1.10 2004-09-23 14:03:42 gaede Exp $
+ * @version $Id: LCCollection.aid,v 1.11 2005-03-02 16:22:58 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -39,6 +39,7 @@ public interface LCCollection
      *  &nbsp;<br>
      *  Bit 16 is used to flag collection as transient <br>
      *  Bit 17 is used to flag collection as default <br>
+     *  Bit 18 is used to flag collection as subset <br>
      *  Bits 0-15 are subdetector/user specific.
      * @see isTransient()
      */
@@ -49,10 +50,12 @@ public interface LCCollection
 @ifdef cpp
 @cpp{
     static const int BITTransient = 16 ;
-    static const int BITDefault = 17 ;
+    static const int BITDefault   = 17 ;
+    static const int BITSubset    = 18 ;
 }@else
     public static const int BITTransient = 16 ;
-    public static const int BITDefault = 17 ;
+    public static const int BITDefault   = 17 ;
+    public static const int BITSubset    = 18 ;
 @endif
 
     /** True if collection is transient, i.e. will not be written to any LCIO file.
@@ -65,6 +68,14 @@ public interface LCCollection
      *  Convenient method that checks bit BITDefault of the flag word.
      */
     public boolean isDefault() const ;
+
+
+    /** True if the collection holds a subset of objects from other collections. 
+     *  If the collection is not transient only the pointers/references to the original
+     *  objects will be stored.
+     *  Convenient method that checks bit BITSubset of the flag word.
+     */
+    public boolean isSubset() const ;
 
 
     /** Adds the given element to (end of) the collection. Throws an exception 

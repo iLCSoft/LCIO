@@ -376,8 +376,22 @@ namespace SIO {
 	return 0 ;
       }
       
+//       //---debug------------------------
+//       LCEventIOImpl* evt = *_evtP ; 
+//       const StringVec* colNames = evt->getCollectionNames() ;
+//       for( StringVec::const_iterator it = colNames->begin() ;
+//       it != colNames->end() ; it++) {
+// 	LCCollection* col = evt->getCollection( *it ) ; 
+// 	if( col->getTypeName() == LCIO::MCPARTICLE ) {
+// 	  for(int i=0;i < col->getNumberOfElements() ; i++){
+// 	    std::cout <<  " -- " << i << ": " << col->getElementAt(i) << std::endl ;
+// 	  }
+// 	}
+//       }
+//       //---debug------------------------
+
       // set the proper acces mode before returning the event
-      (*_evtP)->setAccessMode( accessMode ) ;
+       (*_evtP)->setAccessMode( accessMode ) ;
       
 //       // restore the daughter relations from the parent relations
 //       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;

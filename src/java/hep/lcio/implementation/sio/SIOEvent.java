@@ -6,13 +6,16 @@ import hep.lcio.event.*;
 import hep.lcio.implementation.event.ILCEvent;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.31 2005-02-28 14:49:52 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.32 2005-03-02 16:23:00 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -60,6 +63,9 @@ class SIOEvent extends ILCEvent
    }
    void readData(SIORecord record) throws IOException
    {
+      
+      List subsets = new ArrayList( ) ;
+      
       for (;;)
       {
          SIOBlock block = record.getBlock();
@@ -81,8 +87,21 @@ class SIOEvent extends ILCEvent
          {
             colParameters = new SIOLCParameters(in) ;
          }
+//fg20050302 add suport for subset collections
+         if( (flags & ( 1<< LCCollection.BITSubset )) != 0 )
+         {
+            int nObj = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, nObj );
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < nObj; i++){
+               ilc.addPointer( in.readPntr() );
+            }
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+            subsets.add( ilc ) ;            
+         } 
          
-         if (type.equals(LCIO.MCPARTICLE))
+         else if (type.equals(LCIO.MCPARTICLE))
          {
             int nMC = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
@@ -251,6 +270,11 @@ class SIOEvent extends ILCEvent
          }
          
       }
+      
+      // restore the objects in subsets
+      for (Iterator iter = subsets.iterator(); iter.hasNext();) {
+         ( (SIOLCCollection) iter.next() ).resolve() ;         
+      }
    }
    
    static void writeData(LCEvent event, SIOWriter writer, boolean headerOnly) throws IOException
@@ -329,22 +353,34 @@ class SIOEvent extends ILCEvent
             
             SIOLCParameters.write( col.getParameters() , out ) ;
               
-            if (type.equals(LCIO.LCGENERICOBJECT)){
-                if( isFixedSize){ // write the array length once for the collection
-                   LCGenericObject obj = (LCGenericObject) col.getElementAt(0) ;
-				   out.writeInt( obj.getNInt() ) ;	
-				   out.writeInt( obj.getNFloat() ) ;	
-				   out.writeInt( obj.getNDouble() ) ;	
-                }
-            	out.writeInt(n);
+//          fg20050302 add suport for subset collections
+            boolean isSubset = ( (flags & ( 1<< LCCollection.BITSubset )) != 0 ) ;
+           
+            if (!isSubset && type.equals(LCIO.LCGENERICOBJECT))
+            {
+               if( isFixedSize){ // write the array length once for the collection
+                  LCGenericObject obj = (LCGenericObject) col.getElementAt(0) ;
+				  out.writeInt( obj.getNInt() ) ;	
+				  out.writeInt( obj.getNFloat() ) ;	
+				  out.writeInt( obj.getNDouble() ) ;	
+               }
+               out.writeInt(n);
                for (int i = 0; i < n; i++){
                	SIOLCGenericObject.write((LCGenericObject) col.getElementAt(i), out, flags);
                }
             }
-            else        
+            else
                out.writeInt(n);
             
-            if (type.equals(LCIO.MCPARTICLE))
+            
+            if( isSubset ) // only write pointers
+            {
+               for (int i = 0; i < n; i++)
+                  out.writePntr( col.getElementAt(i) ) ;
+               
+            }
+                        
+            else if (type.equals(LCIO.MCPARTICLE))
             {
                for (int i = 0; i < n; i++)
                   SIOMCParticle.write((MCParticle) col.getElementAt(i), out);

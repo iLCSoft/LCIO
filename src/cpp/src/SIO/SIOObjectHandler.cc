@@ -48,4 +48,39 @@ namespace SIO{
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
+  unsigned int SIOObjectHandler::readBase( SIO_stream* stream, EVENT::LCObject** objP ) {
+
+    if( _flag & ( 1 << LCCollection::BITSubset ) ){
+
+      int status ;
+      // we only read the pointer 
+      SIO_PNTR( stream , objP  ) ;
+      
+      return status ;
+
+    } else {
+
+      return  read( stream, objP ) ;
+    }
+
+  }
+  
+  unsigned int SIOObjectHandler::writeBase(SIO_stream* stream, const EVENT::LCObject* obj ) {
+
+    if( _flag & ( 1 << LCCollection::BITSubset ) ){
+  
+      int status ;
+
+      // we only write the pointer
+      const EVENT::LCObject* objLocal = obj ; 
+
+      SIO_PNTR( stream , &objLocal ) ;
+      return status ;
+ 
+    } else {
+
+      return  write( stream, obj ) ;
+    }
+  }
+  
 };

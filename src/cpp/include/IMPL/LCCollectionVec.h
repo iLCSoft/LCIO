@@ -19,7 +19,7 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version $Id: LCCollectionVec.h,v 1.9 2004-09-23 14:03:42 gaede Exp $
+   * @version $Id: LCCollectionVec.h,v 1.10 2005-03-02 16:22:58 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
@@ -67,6 +67,8 @@ namespace IMPL {
      *  CHBIT_PDG = 28 - store pdg of secondaries <br>
      *  &nbsp;<br>
      *  Bit 16 is used to flag collection as transient <br>
+     *  Bit 17 is used to flag collection as default <br>
+     *  Bit 18 is used to flag collection as subset <br>
      *  Bits 0-15 are subdetector/user specific.
      * @see isTransient()
      */
@@ -94,6 +96,23 @@ namespace IMPL {
      * flag is unique for a type.
      */
     void setDefault(bool val=true) ;
+
+
+    /** True if the collection holds a subset of objects from other collections. 
+     *  If the collection is not transient only the pointers/references to the original
+     *  objects will be stored.
+     *  Convenient method that checks bit BITSubset of the flag word.
+     */
+    virtual bool isSubset() const ;
+
+    /** Sets the subset flag for this collection. Collections of subsets are only 
+     *  written as pointers to LCIO files, i.e. the objects have to exist in 
+     *  another non-transient collections.<br>
+     *  NB: Do not add any 'real' objects to a collection flagged as subset, as 
+     *  this will lead to memory leaks !
+     */
+    void setSubset(bool val=true) ;
+
 
     /** Sets the flag word for this collection.
      */

@@ -1,4 +1,3 @@
-
 #include "lcio.h"
 
 #include "IO/LCWriter.h"
@@ -118,6 +117,9 @@ int main(int argc, char** argv ){
 	mom->setMomentum( p0 ) ;
 	mom->setMass( 3.01 ) ;
 
+	// FIXME: debug
+	LCRelationNavigator mcNav( LCIO::MCPARTICLE, LCIO::MCPARTICLE ) ;
+
 	for(int j=0;j<NMCPART;j++){
 
 	  MCParticleImpl* mcp = new MCParticleImpl ;
@@ -156,19 +158,25 @@ int main(int argc, char** argv ){
 
 	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;
+	      mcNav.addRelation( d2, d2 ) ;
 
 	      // debug only - add the same particle to more than one collection
 	      //mcVec2->push_back( d2 ) ;
 	    }
 	    d1->addParent( mcp );
 	    mcVec->push_back( d1 ) ;
+	    mcNav.addRelation( d1, d1 ) ;
 	  }
 	  
 	  mcp->addParent( mom );
 	  mcVec->push_back( mcp ) ;
+	  mcNav.addRelation( mcp, mcp ) ;
 	}
 	mcVec->push_back( mom ) ;
-	
+
+	mcNav.addRelation( mom, mom ) ;
+	evt->addCollection( mcNav.createLCCollection() , "MCParticleRelation" ) ;
+
 	// now add some calorimeter hits
 	LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
       
@@ -290,9 +298,6 @@ int main(int argc, char** argv ){
 	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
 
 	//---- test new relation navigator object
-// 	LCRelationNavigator* relNav = 
-// 	  new LCRelationNavigator( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
-
 	LCRelationNavigator relNav( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
 
 	bool storeRawData = true ;
@@ -330,8 +335,20 @@ int main(int argc, char** argv ){
 	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
 	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
 
-// 	delete relNav ;
-	//--------------  all for TPC --------------------
+
+	
+ 	//---- write a subset of MCParticle to the event ------
+ 	LCCollectionVec* mcSubVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
+ 	mcSubVec->setSubset(true) ;
+	
+ 	for(int j=0;j< mcVec->getNumberOfElements() ; j++ ){
+	  
+ 	  MCParticle* p = dynamic_cast< MCParticle*>( mcVec->getElementAt(j) )  ;
+	  if( p->getDaughters().size() == 0 )
+	    mcSubVec->addElement( p ) ;
+ 	}
+ 	evt->addCollection( mcSubVec , "FinalMCParticles" ) ;
+ 	//-----------------------------------------------------
 
 
 	// write the event to the file

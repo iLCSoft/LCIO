@@ -125,6 +125,9 @@
 	<!-- end of named parameters -->
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="ptag" name="this"></data>
             <if condition="1000*major+minor&lt;9">
                 <data type="pntr" name="parent"></data>
@@ -165,6 +168,7 @@
                   <data type="double[3]" name="endpoint"/>
                </if>               
             </if>
+	 </if>   
          </repeat>
       </block>
       <block name="SimTrackerHit" major="1" minor="3">
@@ -199,6 +203,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="int" name="cellID">Detector specific</data>
             <data type="double[3]" name="position"></data>
             <data type="float" name="dedx"></data>
@@ -207,6 +214,7 @@
            <if condition="1000*major+minor&gt;1000">
             <data type="ptag" name="this"></data>
            </if>
+         </if>  
          </repeat>
       </block>
       <block name="SimCalorimeterHit" major="1" minor="3">
@@ -242,6 +250,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
 	    <if condition="1000*major+minor&lt;9||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
@@ -262,6 +273,7 @@
            <if condition="1000*major+minor&gt;1000">
              <data type="ptag" name="this"></data>
            </if>
+         </if>
          </repeat>
       </block>
       <block name="LCFloatVec" major="1" minor="3">
@@ -296,6 +308,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nVectors"></data>
          <repeat count="nVectors">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
 	    <data type="int" name="nElements"></data>
             <repeat count="nElements">
 	       <data type="float" name="value"></data>
@@ -303,6 +318,7 @@
            <if condition="1000*major+minor&gt;1002">
              <data type="ptag" name="this"></data>
            </if>
+         </if>
          </repeat>
       </block>
       <block name="LCIntVec" major="1" minor="3">
@@ -337,6 +353,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nVectors"></data>
          <repeat count="nVectors">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
 	    <data type="int" name="nElements"></data>
             <repeat count="nElements">
 	       <data type="int" name="value"></data>
@@ -344,6 +363,7 @@
            <if condition="1000*major+minor&gt;1002">
              <data type="ptag" name="this"></data>
            </if>
+         </if>
          </repeat>
       </block>
       <block name="LCStrVec" major="1" minor="3">
@@ -378,6 +398,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nVectors"></data>
          <repeat count="nVectors">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
 	    <data type="int" name="nElements"></data>
             <repeat count="nElements">
 	       <data type="string" name="value"></data>
@@ -385,6 +408,7 @@
            <if condition="1000*major+minor&gt;1002">
              <data type="ptag" name="this"></data>
            </if>
+         </if>
          </repeat>
       </block>
       <block name="RawCalorimeterHit" major="1" minor="3">
@@ -421,6 +445,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
 	    <if condition="1000*major+minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
@@ -432,6 +459,7 @@
 	    <if condition="(flags&amp;(1&lt;&lt;28)) == 0">
               <data type="ptag" name="this"></data>
 	    </if>
+         </if>
          </repeat>
       </block>
       <block name="CalorimeterHit" major="1" minor="3">
@@ -468,6 +496,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
 	    <if condition="1000*major+minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
@@ -490,6 +521,7 @@
                 <data type="ptag" name="this"></data>
 	      </if>
             </if>
+         </if>
          </repeat>
       </block>
       <block name="TrackerHit" major="1" minor="3">
@@ -524,6 +556,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <if condition="1000*major+minor&gt;1002">
 	      <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
 	      TrackerHitTypeValue</data>
@@ -541,6 +576,7 @@
               <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
             </if>
             <data type="ptag" name="this"></data>
+         </if>
          </repeat>
       </block>
       <block name="TPCHit" major="1" minor="3">
@@ -575,6 +611,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
             <data type="int" name="cellID">Detector specific</data>
             <data type="float" name="time"></data>
             <data type="float" name="charge"></data>
@@ -594,71 +633,75 @@
                 <data type="ptag" name="this"></data>
 	      </if>
             </if>
+         </if>
          </repeat>
       </block>
 
-    <block name="Track" major="1" minor="3">
-      <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
-	<!-- start of named parameters -->
-        <if condition="1000*major+minor&gt;1001">
-          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
-          <repeat count="nIntParameters">
-             <data type="string" name="key">key (name) of parameter</data>
-             <data type="int" name="nVals">number of values for this parameter</data>
-             <repeat count="nVals">
-	       <data type="int" name="value"></data>
-             </repeat>
-          </repeat>
-          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
-          <repeat count="nFloatParameters">
-             <data type="string" name="key">key (name) of parameter</data>
-             <data type="int" name="nVals">number of values for this parameter</data>
-             <repeat count="nVals">
-	       <data type="float" name="value"></data>
-             </repeat>
-          </repeat>
-          <data type="int" name="nStringParameters">number of named string parameter entries</data>
-          <repeat count="nStringParameters">
-             <data type="string" name="key">key (name) of parameter</data>
-             <data type="int" name="nVals">number of values for this parameter</data>
-             <repeat count="nVals">
-	       <data type="string" name="value"></data>
-             </repeat>
-          </repeat>
-        </if>
-	<!-- end of named parameters -->
-      <data type="int" name="nTrack"/>
-      <repeat count="nTrack">
-	<data type="int" name="type">Type of Track, e.g. TPC, VTX, SIT</data>
-	<data type="float" name="d0">Impact Parameter in r-phi</data>
-	<data type="float" name="phi">Phi of track in r-phi</data>
-	<data type="float" name="omega">curvature signed with charge</data>
-	<data type="float" name="z0">Impact Parameter in r-z</data>
-	<data type="float" name="tanLambda">tangent of dip angle in r-z</data>
-
-	<data type="float[15]" name="covMatrix"> Covariance matrix</data>
-	<data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
-	<data type="float" name="chi2">chi**2 of fit</data>
-	<data type="int" name="ndf">ndf of fit</data>
-	<data type="float" name="dEdx">dEdx</data>
-	<data type="float" name="dEdxError">Error of dEdx</data>
-	<data type="float" name="radiusOfInnermostHit">radius of innermost hit used in track fit</data>
-	<data type="int" name="nHitNumbers"></data>
-	<repeat count="nHitNumbers">
-	  <data type="int" name="subdetectorHitNumbers">number of hits in particular subdetectors. TODO need way to define mapping in run/event header</data>
-	</repeat>
-	<data type="int" name="nTracks"></data>
-	<repeat count="nTracks">
-	  <data type="pntr" name="Track">tracks that have been combined to this track</data>
-	</repeat>
-	<if condition="(flag&amp;(1&lt;&lt;31)) !=0">
-	  <data type="int" name="n"/>
-	  <repeat count="n">
+      <block name="Track" major="1" minor="3">
+         <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
+         <!-- start of named parameters -->
+         <if condition="1000*major+minor&gt;1001">
+           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+            <repeat count="nIntParameters">
+               <data type="string" name="key">key (name) of parameter</data>
+               <data type="int" name="nVals">number of values for this parameter</data>
+               <repeat count="nVals">
+	         <data type="int" name="value"></data>
+               </repeat>
+            </repeat>
+            <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+            <repeat count="nFloatParameters">
+               <data type="string" name="key">key (name) of parameter</data>
+               <data type="int" name="nVals">number of values for this parameter</data>
+               <repeat count="nVals">
+	         <data type="float" name="value"></data>
+               </repeat>
+            </repeat>
+            <data type="int" name="nStringParameters">number of named string parameter entries</data>
+            <repeat count="nStringParameters">
+               <data type="string" name="key">key (name) of parameter</data>
+               <data type="int" name="nVals">number of values for this parameter</data>
+               <repeat count="nVals">
+	         <data type="string" name="value"></data>
+               </repeat>
+            </repeat>
+          </if>
+	  <!-- end of named parameters -->
+          <data type="int" name="nTrack"/>
+         <repeat count="nTrack">
+	 <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+            <data type="pntr" name="originalObject"></data>
+	 <else/>
+	   <data type="int" name="type">Type of Track, e.g. TPC, VTX, SIT</data>
+	   <data type="float" name="d0">Impact Parameter in r-phi</data>
+	   <data type="float" name="phi">Phi of track in r-phi</data>
+	   <data type="float" name="omega">curvature signed with charge</data>
+	   <data type="float" name="z0">Impact Parameter in r-z</data>
+	   <data type="float" name="tanLambda">tangent of dip angle in r-z</data>
+	   <data type="float[15]" name="covMatrix"> Covariance matrix</data>
+	   <data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
+	   <data type="float" name="chi2">chi**2 of fit</data>
+	   <data type="int" name="ndf">ndf of fit</data>
+	   <data type="float" name="dEdx">dEdx</data>
+	   <data type="float" name="dEdxError">Error of dEdx</data>
+	   <data type="float" name="radiusOfInnermostHit">radius of innermost hit used in track fit</data>
+	   <data type="int" name="nHitNumbers"></data>
+	   <repeat count="nHitNumbers">
+	     <data type="int" name="subdetectorHitNumbers">number of hits in particular subdetectors. TODO need way to define mapping in run/event header</data>
+	   </repeat>
+	   <data type="int" name="nTracks"></data>
+	   <repeat count="nTracks">
+	     <data type="pntr" name="Track">tracks that have been combined to this track</data>
+	   </repeat>
+	   <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+	     <data type="int" name="n"/>
+	       <repeat count="n">
 	    <data type="pntr" name="TrackerHit"/>
-	  </repeat>
-	</if>
-      <data type="ptag" name="this"></data>
-      </repeat>
+	    </repeat>
+	   </if>
+           <data type="ptag" name="this"></data>
+         </if>
+         </repeat>
     </block>
     <block name="Cluster" major="1" minor="3">
       <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
@@ -692,6 +735,9 @@
 	<!-- end of named parameters -->
       <data type="int" name="nCluster"/>
       <repeat count="nCluster">
+      <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+        <data type="pntr" name="originalObject"></data>
+      <else/>
 	<data type="int" name="type"> Type of cluster:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
 	(bits15-0): NEUTRAL, CHARGED ,UNDEFINED</data>
 	<!--data type="int" name="linktype"> NEUTRAL, CHARGED ,UNDEFINED</data-->
@@ -739,6 +785,7 @@
 	  <data type="float" name="subdetectorEnergy">energy observed in a particular subdetector</data>
 	</repeat>
         <data type="ptag" name="this"></data>
+      </if>
       </repeat>
     </block>
     <block name="ReconstructedParticle" major="1" minor="3">
@@ -773,6 +820,9 @@
 	<!-- end of named parameters -->
       <data type="int" name="nObject"/>
       <repeat count="nObject">
+      <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+        <data type="pntr" name="originalObject"></data>
+      <else/>
         <data type="int" name="typeFlag">particle type - see  collection parameters 
               ReconstructedParticleTypeNames and ReconstructedParticleTypeValues</data>
 	<!--data type="int" name="type">single particle, compound particle (V0,B), jet</data-->
@@ -838,6 +888,7 @@
 	  </repeat>
         </if>
         <data type="ptag" name="this"></data>
+      </if>
       </repeat>
     </block>
     <block name="LCGenericObject" major="1" minor="3">
@@ -870,6 +921,12 @@
           </repeat>
         </if>
 	<!-- end of named parameters -->
+      <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+        <data type="int" name="nObject"/>
+        <repeat count="nObject">
+          <data type="pntr" name="originalObject"></data>
+        </repeat>
+      <else/>
         <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
 	  <data type="int" name="nInt">number of ints for fixed size objects</data>
 	  <data type="int" name="nFloat">number of floats for fixed size objects</data>
@@ -892,6 +949,7 @@
 	  <data type="double" name="doubleValue">double value</data>
 	</repeat>
         <data type="ptag" name="this"></data>
+      </if>
       </repeat>
     </block>
     <block name="LCRelation" major="1" minor="3">
@@ -926,11 +984,15 @@
 	<!-- end of named parameters -->
        <data type="int" name="nRelations"/>
        <repeat count="nRelations">
+       <if condition="(flags&amp;(1&lt;&lt;18)) != 0"> <!-- subset -->
+         <data type="pntr" name="originalObject"></data>
+       <else/>
           <data type="pntr" name="LCObjectFrom">the 'from' side of the relation</data>
 	  <data type="pntr" name="LCObjectTo">the 'pointed to' side of the relation</data>
 	  <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
 	    <data type="float" name="weight">weight of the relation</data>
 	  </if>
+       </if>
        </repeat>
     </block>
   </record>

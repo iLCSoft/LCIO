@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.11 2004-09-24 10:39:29 tonyj Exp $
+ * @version $Id: ILCCollection.java,v 1.12 2005-03-02 16:23:00 gaede Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {
@@ -121,4 +121,21 @@ public class ILCCollection extends ArrayList implements LCCollection
       //	checkAccess();
       flag = ILCObject.bitSet(flag,BITDefault,val);
    }
+
+   public boolean isSubset()
+   {
+      return ILCObject.bitTest(flag,BITSubset);
+   }
+   
+   public void setSubset()
+   {
+      setSubset(true) ;
+   }
+
+   public void setSubset(boolean val)
+   {
+      //	checkAccess();
+      flag = ILCObject.bitSet(flag,BITSubset,val);
+   }
+
 }

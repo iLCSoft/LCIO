@@ -16,7 +16,7 @@ namespace SIO{
  * for all event entities (hits, tracks, clusters,...).
  * 
  * @author gaede
- * @version $Id: SIOObjectHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: SIOObjectHandler.h,v 1.8 2005-03-02 16:22:58 gaede Exp $
  */
 class SIOObjectHandler {
   
@@ -42,7 +42,18 @@ public:
 			     EVENT::LCCollection* col,
 			     unsigned int vers ) ; 
   
+
+  /** Calls read() if the collection is not a subset otherwise only reads the pointers.*/
+  virtual unsigned int readBase(SIO_stream* stream, 
+			    EVENT::LCObject** objP)  ;
+  
+
+  /** Calls write() if the collection is not a subset otherwise only writes the pointers.*/
+  virtual unsigned int writeBase(SIO_stream* stream, 
+			     const EVENT::LCObject* obj ) ;
+
  protected:
+
 
   unsigned int _flag ; 
   unsigned int _vers ;

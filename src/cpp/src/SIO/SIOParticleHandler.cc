@@ -202,7 +202,8 @@ namespace SIO {
     for( name = strVec->begin() ; name != strVec->end() ; name++){
     
       LCCollection* col ;
-      if( (col = evt->getCollection( *name ))->getTypeName() == LCIO::MCPARTICLE ){
+      if( (col = evt->getCollection( *name ))->getTypeName() == LCIO::MCPARTICLE 
+	  &&  ! ( col->getFlag() & ( 1 << LCCollection::BITSubset) ) ) {
 	
 	int nDaughtersTotal = 0 ;
 	int nParentsTotal = 0 ; 

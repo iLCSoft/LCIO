@@ -53,16 +53,17 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
 
 LCCollectionVec::~LCCollectionVec() {
 
-  // delete all elements
-  LCObjectVec::const_iterator iter = begin() ;
-//    std::cout << "deleting collection " 
-//  	    << std::endl ;
-//    UTIL::LCTOOLS::printParameters( parameters() )  ;
-
-  while( iter != end() ){
-    delete *iter++ ;
+  if( ! isSubset() ){
+    // delete all elements
+    LCObjectVec::const_iterator iter = begin() ;
+    //    std::cout << "deleting collection " 
+    //  	    << std::endl ;
+    //    UTIL::LCTOOLS::printParameters( parameters() )  ;
+    
+    while( iter != end() ){
+      delete *iter++ ;
+    }
   }
-
 }
 
 
@@ -98,6 +99,15 @@ bool LCCollectionVec::isDefault() const {
 void LCCollectionVec::setDefault(bool val) {
   if(val) _flag |= (1<<BITDefault) ;
   else _flag &= ~(1<<BITDefault) ;
+}
+
+bool LCCollectionVec::isSubset() const { 
+  return (_flag & (1<<BITSubset) ) ; 
+}
+
+void LCCollectionVec::setSubset(bool val) {
+  if(val) _flag |= (1<<BITSubset) ;
+  else _flag &= ~(1<<BITSubset) ;
 }
 
 
