@@ -42,7 +42,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException, IO::EndOfDataException) ;  
+    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException/*, IO::EndOfDataException*/) ;  
 
 
     /** Reads the next event from the file. 
@@ -50,7 +50,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException, IO::EndOfDataException) ;
+    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException/*, IO::EndOfDataException*/) ;
     
 
     /** Same as readNextRunHeader() but allows to set the access mode 
@@ -59,7 +59,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException, IO::EndOfDataException) ;
+    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException/*, IO::EndOfDataException*/) ;
     
 
     /** Reads the specified event from file. 
@@ -102,7 +102,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual void readStream() throw (IO::IOException, IO::EndOfDataException) ;
+    virtual void readStream() throw (IO::IOException/*, IO::EndOfDataException*/) ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
@@ -111,7 +111,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual void readStream(int maxRecord) throw (IO::IOException, IO::EndOfDataException) ;
+    virtual void readStream(int maxRecord) throw (IO::IOException/*, IO::EndOfDataException*/) ;
 
 
 
@@ -119,7 +119,7 @@ namespace SIO {
   protected:
 
     void setUpHandlers() ;
-    void readRecord() ;
+    void readRecord() throw (IO::IOException , IO::EndOfDataException ) ;
 
   protected:
     

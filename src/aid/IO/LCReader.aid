@@ -22,24 +22,21 @@ public interface LCReader {
     /** Reads the next run header from the file. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
-    public LCRunHeader* readNextRunHeader() throws IOException, EndOfDataException ;
+    public LCRunHeader* readNextRunHeader() throws IOException ;
     
     /** Reads the next event from the file. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
-    public LCEvent* readNextEvent() throws IOException, EndOfDataException  ;
+    public LCEvent* readNextEvent() throws IOException ;
     
     /** Same as readNextRunHeader() but allows to set the access mode 
      *  LCIO::READ_ONLY (default) or LCIO::Update
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
-    public LCEvent* readNextEvent(int accessMode) throws IOException, EndOfDataException  ;
+    public LCEvent* readNextEvent(int accessMode) throws IOException ;
 
     /** Reads the specified event from file. 
      *  To be used with care: events have to be read in sequential 
@@ -78,18 +75,15 @@ public interface LCReader {
      * found in the stream. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
-    public void readStream() throws IOException, EndOfDataException ;
+    public void readStream() throws IOException ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
-     * Throws EndOfDataException if less than maxRecord records are found in the stream. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
-    public void readStream(int maxRecord) throws IOException, EndOfDataException ;
+    public void readStream(int maxRecord) throws IOException ;
 
 @else
     // no exceptions yet

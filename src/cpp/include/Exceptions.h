@@ -99,6 +99,7 @@ namespace IO {
     }
   }; 
 
+  // --- used only internally - switched back to null pointer at EOF ------
   /**EndOfDataException for signaling the end of a data stream.
    * @author gaede
    * @version Jun 5, 2003

@@ -36,27 +36,26 @@ int main(int argc, char** argv ){
     
     // loop over all run headers
     
-    try{  
+    // try{  
+    //   while(1) {     // exit through (EndOfData)Exception ?
+    //      runHdr = lcReader->readNextRunHeader() ;
+	
+    //   old version without EndOfDataException:
+    while( ( runHdr = lcReader->readNextRunHeader() ) != 0 ){
       
-      while(1) {     // exit through (EndOfData)Exception ?
-	
-   //   old version without EndOfDataException:
-   // while( ( runHdr = lcReader->readNextRunHeader() ) != 0 ){
-
-	runHdr = lcReader->readNextRunHeader() ;
-	
-	cout << "  Run : " << runHdr->getRunNumber() 
-	     << " - "      << runHdr->getDetectorName() 
-	     << ":  "      << runHdr->getDescription()  << endl ;
-      }
-
-    }      
-    catch( EndOfDataException ){
-    } // do we realy want to handle EOF as an exception ?
+      
+      cout << "  Run : " << runHdr->getRunNumber() 
+	   << " - "      << runHdr->getDetectorName() 
+	   << ":  "      << runHdr->getDescription()  << endl ;
+    }
+    
+    //    }      
+    //     catch( EndOfDataException ){
+    //     } // do we realy want to handle EOF as an exception ?
     
     cout << endl ;
     
-
+    
     lcReader->close() ;
   }
   catch(IOException& e){
@@ -76,28 +75,29 @@ int main(int argc, char** argv ){
     // dump all events in the file
     int nEvents = 0 ;
     
-    try{
-      while(1){
+    //     try{
+    //       while(1){
+    
+    while( (evt = lcReader->readNextEvent()) != 0 ) {
       
-	evt = lcReader->readNextEvent() ;
-	
-	// the following code will fail at runtime - event is read only !
-	// if we use " (const LCEvent*) evt " it won't even compile 
-	// so we have a twofold protection against data corruption
-	// int status = evt->addCollection( new LCCollectionVec(LCIO::SIMCALORIMETERHIT ),"NewCol" ) ; 
-	//  if( status != LCIO::SUCCESS ){
-	//    cout << " error - couldn't add new collection to the event ! " << endl ;
-	//    exit(1) ;
-	//  }
-	
-	LCTOOLS::dumpEvent( evt ) ;
+      // the following code will fail at runtime - event is read only !
+      // if we use " (const LCEvent*) evt " it won't even compile 
+      // so we have a twofold protection against data corruption
+      // int status = evt->addCollection( new LCCollectionVec(LCIO::SIMCALORIMETERHIT ),"NewCol" ) ; 
+      //  if( status != LCIO::SUCCESS ){
+      //    cout << " error - couldn't add new collection to the event ! " << endl ;
+      //    exit(1) ;
+      //  }
       
-	nEvents ++ ;
+      LCTOOLS::dumpEvent( evt ) ;
       
-      } // end while
-    }      
-    catch( EndOfDataException){
-    }
+      nEvents ++ ;
+      
+    } // end while
+
+    //     }      
+    //     catch( EndOfDataException){
+    //     }
     
     cout << endl <<  "  " <<  nEvents << " events read from file : " << FILEN << endl << endl ;
     

@@ -193,22 +193,22 @@ int main(int argc, char** argv ){
       try{ 
 	lcReader->readStream() ;
       }
-      catch(EndOfDataException){
-      }
+      //       catch(EndOfDataException){
+      //       }
       catch(IOException &e){
 	cout<< " io error: " <<  e.what() << endl ;
       }
-
+      
     } 
     
     lcReader->close() ;
-
+    
   }
 
   catch(exception& ex){
     cout << "something went wrong:  " << ex.what() << endl ; 
   }
-
+  
   return 0 ;
   
 }

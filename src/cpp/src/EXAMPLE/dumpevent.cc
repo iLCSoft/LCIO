@@ -34,26 +34,37 @@ int main(int argc, char** argv ){
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
    LCEvent* evt(0) ;
    try{
-    
-    lcReader->open( FILEN ) ;
-
-    evt = lcReader->readEvent(runNumber,  evtNumber) ; 
-
-  } catch( EndOfDataException& e) {
-    cout << " couldn't fine event " << evtNumber << " - run " << runNumber 
-	 << " in file " << FILEN << endl ;    
-    exit(1) ;
-  }
-  catch( Exception& e) {
-    cout << e.what() << endl ;
-    exit(1) ;
-  }
+     
+     lcReader->open( FILEN ) ;
+     
+     evt = lcReader->readEvent(runNumber,  evtNumber) ; 
+     
+     //   } catch( EndOfDataException& e) {
+     //     cout << " couldn't find event " << evtNumber << " - run " << runNumber 
+     // 	 << " in file " << FILEN << endl ;    
+     //     exit(1) ;
    
-  LCTOOLS::dumpEventDetailed( evt ) ;
+     if(!evt){
+         cout << " couldn't find event " << evtNumber << " - run " << runNumber 
+     	 << " in file " << FILEN << endl ;    
+         exit(1) ;
+     } 
 
+     LCTOOLS::dumpEventDetailed( evt ) ;
+     
+     
+     lcReader->close() ;
+     
+   }
+   catch( IOException& e) {
+     cout << e.what() << endl ;
+     exit(1) ;
+   }
 
-  lcReader->close() ;
-  
-  return 0 ;
+   catch( Exception& e) {
+     cout << e.what() << endl ;
+     exit(1) ;
+   }
+   return 0 ;
 }
 

@@ -17,6 +17,7 @@
 #include "SIO_record.h" 
 
 #include <iostream>
+#include <sstream>
 //#include <limits>
 
 using namespace EVENT ;
@@ -123,18 +124,10 @@ namespace SIO {
   }
 
 
-  void SIOReader::readRecord(){
+  void SIOReader::readRecord() throw (IOException , EndOfDataException ) {
     // read the next record from the stream
     if( _stream->getState()== SIO_STATE_OPEN ){
       
-      // what's this ??
-      //      if( SIO_blockManager::get( LCSIO::RUNBLOCKNAME ) == 0 ){ 
-      //	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << std::endl ;
-      //
-      //	throw IOException( std::string(" io error on stream: ") + _stream->getName() ) ;
-      //	return LCIO::ERROR ; 
-      //}
-
       unsigned int status =  _stream->read( &_dummyRecord ) ;
       if( ! (status & 1)  ){
 
@@ -159,14 +152,19 @@ namespace SIO {
   }
   
 
-  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException, EndOfDataException) {
+  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException /*, EndOfDataException*/ ) {
 
     // set the _runRecord to unpack for this scope
     SIORecordUnpack runUnp( _runRecord ) ;
     
     // this might throw the exceptions
-    readRecord() ;
-
+    try{ 
+      readRecord() ;
+    }
+    catch(EndOfDataException){
+      return 0 ;
+    }
+    
     return *_runP ;
   }
   
@@ -216,13 +214,13 @@ namespace SIO {
   }
 
 
-  LCEvent* SIOReader::readNextEvent() throw (IOException, EndOfDataException) {
+  LCEvent* SIOReader::readNextEvent() throw (IOException /*, EndOfDataException*/) {
 
     return readNextEvent( LCIO::READ_ONLY ) ;
 
   }
 
-  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException, EndOfDataException) {
+  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException/*, EndOfDataException*/) {
     
 
     // first, we need to read the event header 
@@ -230,26 +228,33 @@ namespace SIO {
     { // -- scope for unpacking evt header --------
       
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
-
-      readRecord() ;
-      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      
+      try{ 
+	readRecord() ;
+      }
+      catch(EndOfDataException){
+	return 0 ;
+      }
       
     }// -- end of scope for unpacking evt header --
     
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;
       
-      readRecord() ;
-      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      try{ 
+	readRecord() ;
+      }
+      catch(EndOfDataException){
+	return 0 ;
+      }
       
-      // set the proper acces mode before returnning the event
+      // set the proper acces mode before returning the event
       (*_evtP)->setAccessMode( accessMode ) ;
       
       return *_evtP ;      
     }
-
   }
-
+  
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
     throw (IOException, DataNotAvailableException) {
@@ -265,15 +270,21 @@ namespace SIO {
       if( readNextRunHeader() == 0 ) break ; 
       runFound = ( (*_runP)->getRunNumber() == runNumber ) ;
     }
-    if( !runFound )
-      throw DataNotAvailableException( std::string(" run not found: " + runNumber ) ) ;
-    
+    if( !runFound ){
+      std::stringstream message ;
+      message << " run not found: " << runNumber << std::ends ;
+      throw DataNotAvailableException( message.str()  ) ;
+    }
     { // -- scope for unpacking evt header --------
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
       while( !evtFound ){
 
+      try{ 
 	readRecord() ;
-	//if( readRecord() != LCIO::SUCCESS ) return 0 ;
+      }
+      catch(EndOfDataException){
+	return 0 ;
+      }
 
 	evtFound = ( (*_evtP)->getEventNumber() == evtNumber ) ;
       }
@@ -284,8 +295,12 @@ namespace SIO {
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;
       
-      readRecord() ;
-      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      try{ 
+	readRecord() ;
+      }
+      catch(EndOfDataException){
+	return 0 ;
+      }
       
       // set the proper acces mode before returning the event
       // FIXME : check access mode ...
@@ -324,12 +339,12 @@ namespace SIO {
     _runListeners.erase( _runListeners.find( ls ) );
  }
 
-  void SIOReader::readStream() throw (IO::IOException, IO::EndOfDataException){
+  void SIOReader::readStream() throw (IO::IOException/*, IO::EndOfDataException*/){
 
     int maxInt = INT_MAX ; // numeric_limits<int>::max() ;
     readStream( maxInt ) ;
   }
-  void SIOReader::readStream(int maxRecord) throw (IOException, EndOfDataException ){
+  void SIOReader::readStream(int maxRecord) throw (IOException/*, EndOfDataException */){
     
     int recordsRead = 0 ;
     // here we need to read all the records on the stream
@@ -348,7 +363,8 @@ namespace SIO {
 	readRecord() ;
 
 	if( recordsRead >= maxRecord )
-	  throw( EndOfDataException("max. number of records read") ) ;
+	  throw( IOException("max. number of records read") ) ;
+	  //	  throw( EndOfDataException("max. number of records read") ) ;
 
 	// notify LCRunListeners 
 	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
