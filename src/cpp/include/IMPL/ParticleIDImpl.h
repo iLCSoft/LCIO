@@ -9,12 +9,12 @@
 namespace IMPL {
 
 
-  /** Helper class to sort ParticleIDs wrt. their probability
+  /** Helper class to sort ParticleIDs wrt. their loglikelihood.
    */
   class PIDSort : public std::binary_function<EVENT::ParticleID*,EVENT::ParticleID*,bool>{
   public:
     bool operator()(const EVENT::ParticleID* p1, const EVENT::ParticleID* p2){
-      return p1->getProbability() > p2->getProbability() ;
+      return p1->getLoglikelihood() > p2->getLoglikelihood() ;
     }
   };
 
@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version Mar 30, 2003
+ * @version $Id: ParticleIDImpl.h,v 1.5 2004-08-31 14:48:17 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -39,13 +39,21 @@ namespace IMPL {
 
     virtual int id() { return simpleUID() ; }
 
-    /** TypeID, if applicable this is the PDG code of the particle.
+    /** Type - userdefined.
      */
-    virtual int getTypeID() const ;
+    virtual int getType() const ;
 
-    /**The probability of this hypothesis (0.<=p<=1.). 
+    /** The PDG code of this id - UnknownPDG ( 999999 ) if unknown.
      */
-    virtual float getProbability() const ;
+    virtual int getPDG() const ;
+
+    /**The log likelihood  of this hypothesis
+     */
+    virtual float getLoglikelihood() const ;
+
+    /** The overall goodness of the PID on a scale of [0;1].
+     */
+    virtual float getGoodnessOfPID() const ;
 
     /**Name of the algorithm/module that created this hypothesis.
      */
@@ -56,14 +64,18 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getParameters() const ;
 
     // setters
-    void setTypeID( int typeID ) ;
-    void setProbability( float probability ) ;
+    void setType( int type ) ;
+    void setPDG( int pdg ) ;
+    void setLoglikelihood( float logL ) ;
+    void setGoodnessOfPID( float goodness ) ;
     void setIdentifier(std::string identifier ) ;
     void addParameter( float p ) ;
     
   protected:
-    int _typeID ;
-    float _probability ;
+    int _type ;
+    int _pdg ;
+    float _goodness ;
+    float _loglikelihood ;
     std::string _identifier ;
     EVENT::FloatVec _parameters ;
 

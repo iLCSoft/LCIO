@@ -432,8 +432,10 @@ public:
       int nPID = 5 ;
       for(int j=0;j<nPID;j++){
 	ParticleIDImpl* pid = new ParticleIDImpl ;
-	pid->setProbability( (double) j / nPID ) ;
-	pid->setTypeID( -11 ) ;
+	pid->setLoglikelihood( (double) j / nPID ) ;
+	pid->setType( j ) ;
+	pid->setPDG( -11 ) ;
+	pid->setGoodnessOfPID( 0.7 ) ;
 	pid->setIdentifier("recojob-RunEventProcessor") ;
 	for(int k=0;k<3;k++){
 	  pid->addParameter( k*.1 ) ;

@@ -7,30 +7,42 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
 }
 @endif
 
-/** The LCIO particleID.
- * 
- * @author gaede
- * @version Mar 30, 2004
- */
-
 /** Persistent interface for LCIO ParticleIDs.
- *  Used by ReconstructedParticle for different hypotheses on
- *  the particle type.
+ *  Used by ReconstructedParticle and Cluster  
+ *  for different hypotheses on the particle type.
  * 
  * @author gaede
- * @version Mar 20, 2004
+ * @version $Id: ParticleID.aid,v 1.5 2004-08-31 14:48:17 gaede Exp $
  * @see ReconstructedParticle.getParticleIDs()
+ * @see Cluster.getParticleIDs()
  */
 public interface ParticleID extends  LCObject {
 
-    /** TypeID, if applicable this is the PDG code of the particle.
+    /** Type - userdefined.
      */
-    public int getTypeID() const ;	
+    public int getType() const ;	
     
-    /**The probability of this hypothesis (0.<=p<=1.). 
+    /** The PDG code of this id - UnknownPDG ( 999999 ) if unknown.
      */
-    public float getProbability() const ;	
+    public int getPDG() const ;
+
+    /** Constant to be used if the PDG code is not known or undefined.
+     */
+@ifdef cpp
+@cpp{
+    static const int UnknownPDG = 999999 ;
+}@else
+    public static const int UnknownPDG = 999999 ;
+@endif
+
+    /**The log likelihood  of this hypothesis
+     */
+    public float getLoglikelihood() const ;	
     
+    /** The overall goodness of the PID on a scale of [0;1].
+     */
+    public float getGoodnessOfPID()  const ;
+
     /**Name of the algorithm/module that created this hypothesis.
      */
     public const String& getIdentifier() const ;	

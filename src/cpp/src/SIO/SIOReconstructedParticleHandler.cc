@@ -51,8 +51,17 @@ namespace SIO{
     for(int i=0;i<nPid;i++){
       // create new Pid objects
       ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
-      SIO_DATA( stream ,  &(pid->_probability) , 1  ) ;
-      SIO_DATA( stream ,  &(pid->_typeID) , 1  ) ;
+
+      if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
+	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
+      }else{ 
+	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
+      }
+
       char* dummy ; 
       LCSIO_READ( stream,  &dummy ) ; 
       pid->setIdentifier( dummy ) ;
@@ -164,8 +173,10 @@ namespace SIO{
 
     for(int i=0;i<nPid;i++){
       const ParticleID* pid = recP->getParticleIDs()[i]  ;
-      LCSIO_WRITE( stream, pid->getProbability()  ) ;
-      LCSIO_WRITE( stream, pid->getTypeID()  ) ;
+      LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
+      LCSIO_WRITE( stream, pid->getType()  ) ;
+      LCSIO_WRITE( stream, pid->getPDG()  ) ;
+      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
       LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
       int nPara = pid->getParameters().size() ;
       SIO_DATA( stream ,  &nPara  , 1 ) ;

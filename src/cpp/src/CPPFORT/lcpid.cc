@@ -28,14 +28,24 @@ int lcpidid( PTRTYPE pidit )  {
   return pid->id() ;
 }
 
-int lcpidgettypeid( PTRTYPE pidit )  {
+int lcpidgettype( PTRTYPE pidit )  {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  return pid->getTypeID() ;
+  return pid->getType() ;
 }
 
-float lcpidgetprobability( PTRTYPE pidit ) {
+int lcpidgetpdg( PTRTYPE pidit )  {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  return pid->getProbability() ;
+  return pid->getPDG() ;
+}
+
+float lcpidgetloglikelihood( PTRTYPE pidit ) {
+  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
+  return pid->getLoglikelihood() ;
+}
+
+float lcpidgetgoodnessofpid( PTRTYPE pidit ) {
+  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
+  return pid->getGoodnessOfPID() ;
 }
 
 char* lcpidgetidentifier( PTRTYPE pidit )  {
@@ -61,15 +71,27 @@ int lcpidgetparameters( PTRTYPE pidit, float* vec, int* nvec ) {
 
 // set,add Methods
 
-int lcpidsettypeid( PTRTYPE pidit, int type ) {
+int lcpidsettype( PTRTYPE pidit, int type ) {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  pid->setTypeID( type ) ;
+  pid->setType( type ) ;
   return LCIO::SUCCESS ;
 }
 
-int lcpidsetprobability( PTRTYPE pidit, float prob) {
+int lcpidsetpdg( PTRTYPE pidit, int pdg ) {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  pid->setProbability( prob ) ;
+  pid->setPDG( pdg ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcpidsetloglikelihood( PTRTYPE pidit, float logl) {
+  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
+  pid->setLoglikelihood( logl ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcpidsetgoodnessofpid( PTRTYPE pidit, float good) {
+  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
+  pid->setGoodnessOfPID( good ) ;
   return LCIO::SUCCESS ;
 }
 

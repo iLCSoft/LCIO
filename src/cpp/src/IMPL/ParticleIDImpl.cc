@@ -2,15 +2,27 @@
 
 namespace IMPL{
 
-   ParticleIDImpl::ParticleIDImpl(){
+  ParticleIDImpl::ParticleIDImpl() :
+    _type(0) ,
+    _pdg(0) ,
+    _goodness(0) ,
+    _loglikelihood(0) {
   }
+
   ParticleIDImpl::~ParticleIDImpl(){
   }
-   int ParticleIDImpl::getTypeID() const{
-    return _typeID ; 
+
+  int ParticleIDImpl::getType() const{
+    return _type ; 
   }
-  float ParticleIDImpl::getProbability() const{
-    return _probability ;
+  int ParticleIDImpl::getPDG() const{
+    return _pdg ; 
+  }
+  float ParticleIDImpl::getLoglikelihood() const{
+    return _loglikelihood ;
+  }
+  float ParticleIDImpl::getGoodnessOfPID() const{
+    return _goodness ;
   }
   const std::string& ParticleIDImpl::getIdentifier() const{
     return _identifier ;
@@ -19,14 +31,23 @@ namespace IMPL{
     return _parameters ;
   }
 
-  void ParticleIDImpl::setTypeID( int typeID ){
-    checkAccess("ParticleIDImpl::setTypeID") ;
-    _typeID = typeID ;
+  void ParticleIDImpl::setType( int type ){
+    checkAccess("ParticleIDImpl::setType") ;
+    _type = type ;
   }
-  
-  void ParticleIDImpl::setProbability( float probability ){
-    checkAccess("ParticleIDImpl::setProbability") ;
-    _probability = probability ; 
+  void ParticleIDImpl::setPDG( int pdg ){
+    checkAccess("ParticleIDImpl::setPDG") ;
+    _pdg = pdg ;
+  }
+
+  void ParticleIDImpl::setGoodnessOfPID( float goodness ){
+    checkAccess("ParticleIDImpl::setGoodnessOfPID") ;
+    _goodness = goodness ;
+  }
+
+  void ParticleIDImpl::setLoglikelihood( float logL ){
+    checkAccess("ParticleIDImpl::setLoglikelihood") ;
+    _loglikelihood = logL ; 
   }
   
   void ParticleIDImpl::setIdentifier(std::string identifier ) {
