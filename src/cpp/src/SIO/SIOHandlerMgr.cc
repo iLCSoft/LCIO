@@ -5,6 +5,7 @@
 #include "SIO/SIOSimTrackHitHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
 #include "SIO/SIOFloatVecHandler.h" 
+#include "SIO/SIOIntVecHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -25,6 +26,7 @@ namespace SIO {
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     // generic arrays/vectors
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
+    _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
 
   } 
   

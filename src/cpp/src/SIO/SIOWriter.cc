@@ -94,7 +94,7 @@ namespace SIO {
     _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
     
     if( _stream == 0 )
-      throw IOException( std::string( "[SIOReader::open()] Bad stream name: " 
+      throw IOException( std::string( "[SIOWriter::open()] Bad stream name: " 
 				      + std::string(stream_name)  )) ;
     delete stream_name ;
     
@@ -111,7 +111,7 @@ namespace SIO {
       }
 
     if( !(status &1) )
-      throw IOException( std::string( "[SIOReader::open()] Couldn't open file: " 
+      throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " 
 				      +  sioFilename ) ) ;
       
   
@@ -148,11 +148,11 @@ namespace SIO {
       unsigned int status =  _stream->write( LCSIO::RUNRECORDNAME    ) ;
    
       if( !(status & 1)  )
-	throw IOException( std::string( "[SIOReader::writeRunHeader] couldn't write run header to stream: "
+	throw IOException( std::string( "[SIOWriter::writeRunHeader] couldn't write run header to stream: "
 					+  *_stream->getName() ) ) ;
     } else {
       
-      throw IOException( std::string( "[SIOReader::writeRunHeader] stream not opened: "
+      throw IOException( std::string( "[SIOWriter::writeRunHeader] stream not opened: "
 				      +  *_stream->getName() ) ) ;
       
     }
@@ -208,7 +208,7 @@ namespace SIO {
     try{   setUpHandlers( evt) ;
     
     }catch(...){
-      throw IOException(  "[SIOReader::writeEvent] could not set up handlers " ) ;
+      throw IOException(  "[SIOWriter::writeEvent] could not set up handlers " ) ;
     }
 
     if( _stream->getState()== SIO_STATE_OPEN ){
@@ -222,7 +222,7 @@ namespace SIO {
       status =  _stream->write( LCSIO::HEADERRECORDNAME    ) ;
 
       if( ! (status & 1) )
-	throw IOException(  std::string("[SIOReader::writeEvent] couldn't write event header to stream: "
+	throw IOException(  std::string("[SIOWriter::writeEvent] couldn't write event header to stream: "
 					+  *_stream->getName() )) ;
       
       
@@ -230,12 +230,12 @@ namespace SIO {
       status =  _stream->write( LCSIO::EVENTRECORDNAME    ) ;
 
       if( ! (status & 1) )
-	throw IOException(  std::string("[SIOReader::writeEvent] couldn't write event header to stream: "
+	throw IOException(  std::string("[SIOWriter::writeEvent] couldn't write event header to stream: "
 					+  *_stream->getName() )) ;
     }
     else      
 
-      throw IOException(  std::string("[SIOReader::writeEvent] stream not opened : "
+      throw IOException(  std::string("[SIOWriter::writeEvent] stream not opened : "
 				      +  *_stream->getName()  )) ;
     
   }
@@ -248,7 +248,7 @@ namespace SIO {
     int status  =  SIO_streamManager::remove( _stream ) ;
     
     if(! (status &1) ) 
-      throw IOException(  std::string("[SIOReader::close] couldn't close stream  : "
+      throw IOException(  std::string("[SIOWriter::close] couldn't close stream  : "
 				      + *streamName  )) ;
 
   }

@@ -4,6 +4,7 @@
 #include "IO/LCWriter.h"
 #include "EVENT/LCIO.h"
 #include "DATA/LCFloatVec.h"
+#include "DATA/LCIntVec.h"
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 
@@ -179,9 +180,6 @@ int main(int argc, char** argv ){
 						  0.1, 0. ) ;
 	}
 
-
-
-
 	// and finally some tracker hits
 	// with some user extensions (4 floats and 2 ints) per track:
 	// we just create parallel collections of float and int vectors
@@ -195,9 +193,8 @@ int main(int argc, char** argv ){
 	  LCFloatVec* extF = new LCFloatVec ;
 	  LCIntVec*   extI = new LCIntVec ;
 	  
-	  
 	  hit->setdEdx( 30e-9 ) ; 
-	  
+
 	  double pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
 	  
 	  hit->setPosition( pos ) ; 
@@ -227,7 +224,8 @@ int main(int argc, char** argv ){
 	evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
 	evt->addCollection( (LCCollection*) calVec , ecalName ) ;
 	evt->addCollection( (LCCollection*) trkVec , tpcName ) ;
-	evt->addCollection( (LCCollection*) extVec , tpcName+"UserExtension" ) ;
+	evt->addCollection( (LCCollection*) extFVec , tpcName+"UserFloatExtensionTPC" ) ;
+	evt->addCollection( (LCCollection*) extIVec , tpcName+"UserIntExtensionTPC" ) ;
 	
 	
 	

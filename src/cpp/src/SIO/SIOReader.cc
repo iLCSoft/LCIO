@@ -347,7 +347,10 @@ namespace SIO {
   }
   void SIOReader::readStream(int maxRecord) throw (IOException/*, EndOfDataException */){
     
-    int recordsRead = 0 ;
+
+    bool readUntilEOF = false ;
+    if( maxRecord == INT_MAX ) readUntilEOF = true ;
+    
     // here we need to read all the records on the stream
     // and then notify the listeners depending on the type ....
     
@@ -355,50 +358,58 @@ namespace SIO {
     SIORecordUnpack runUnp( _runRecord ) ;
     SIORecordUnpack hdrUnp( _hdrRecord ) ;
     SIORecordUnpack evtUnp( _evtRecord ) ;
-
+    
     //    while( readRecord() == LCIO::SUCCESS  ){
-
     //try{
-      while( ++recordsRead ){ // exit through exception !?
+
+    int recordsRead = 0 ;
+    while( recordsRead < maxRecord ){ 
 	
+      try{ 
 	readRecord() ;
-
-	if( recordsRead >= maxRecord )
-	  throw( IOException("max. number of records read") ) ;
-	  //	  throw( EndOfDataException("max. number of records read") ) ;
-
-	// notify LCRunListeners 
-	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
-	  
-	  std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-	  while( iter != _runListeners.end() ){
-	    (*iter)->analyze( *_runP ) ;
-	    (*iter)->update( *_runP ) ;
-	    iter++ ;
-	  }
+      }
+      catch(EndOfDataException){
+	
+	// only throw exception if a 'finite' number of records was 
+	// specified that couldn't be read from the file
+	if( readUntilEOF ){  
+	  return ;
+	}else{
+	  stringstream message ;
+	  message << "EOF before " << maxRecord << "s read from file" << ends ;
+	  throw( IOException( message.str()) ) ;
 	}
-	// notify LCEventListeners 
-	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
-	  
-	  std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-	  while( iter != _evtListeners.end() ){
-	    // set the proper acces mode for the event
-	    (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
-	    (*iter)->analyze( *_evtP ) ;
-	    
-	    (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	    (*iter)->update( *_evtP ) ;
-	    iter++ ;
-	    
-	  }
+      }
+      
+      // notify LCRunListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+	
+	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+	while( iter != _runListeners.end() ){
+	  (*iter)->analyze( *_runP ) ;
+	  (*iter)->update( *_runP ) ;
+	  iter++ ;
 	}
-      } 
-
-      //    return LCIO::SUCCESS ;
-
- }
-
-
-
+      }
+      // notify LCEventListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+	
+	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+	while( iter != _evtListeners.end() ){
+	  // set the proper acces mode for the event
+	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
+	  (*iter)->analyze( *_evtP ) ;
+	  
+	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->update( *_evtP ) ;
+	  iter++ ;
+	  
+	}
+      }
+    } 
+    
+    //    return LCIO::SUCCESS ;
+    
+  }
 
 }; // namespace

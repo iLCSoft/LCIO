@@ -81,7 +81,8 @@ public interface LCReader {
     public void readStream() throws IOException ;
 
     /** Reads maxRecord from the input stream and notifies registered 
-     * listeners according to the object type found in the stream. 
+     * listeners according to the object type found in the stream.
+     * An exception is thrown if less than maxRecord where read from the file.
      *
      * @throws IOException
      */

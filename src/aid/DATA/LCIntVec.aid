@@ -1,0 +1,27 @@
+package hep.lcio.data ;
+
+@cpp{
+#include <vector>
+}
+@cpp{
+typedef std::vector<int> IntVec ;
+}
+
+/** Int vector used for user extensions.
+ * The cpp implementation is a std::vector<int>
+ * 
+ * @author gaede 
+ * @version Aug 8, 2003
+ * @see LCObject
+ */
+public interface LCIntVec extends LCObject 
+@ifdef cpp
+,IntVec
+@endif
+{
+
+@ifdef java
+    public int[] toArray();
+@endif
+}
+
