@@ -74,7 +74,7 @@ namespace HEPEVTIMPL{
 
   void HEPEVT::toHepEvt(const LCEvent* evt){
 
-      int* kmax = new int ;
+      int* kmax      = new int ;
       double* maxxyz = new double;
 
 
@@ -97,8 +97,11 @@ namespace HEPEVTIMPL{
         FTNhep.isthep[j] = mcp->getGeneratorStatus() ;
 
         // store mother indices
+        FTNhep.jmohep[j][0] = 0 ;
+        FTNhep.jmohep[j][1] = 0 ;
         const MCParticle* mcpp  = 0 ;
-	if(  mcp->getNumberOfParents() > 0 ) mcpp = mcp->getParent(0) ;
+        int nparents = mcp->getNumberOfParents() ;
+	if(  nparents > 0 ) mcpp = mcp->getParent(0) ;
 	
         try{
           for(int jjm=0;jjm < *NMCPART;jjm++)
@@ -109,22 +112,20 @@ namespace HEPEVTIMPL{
 	      }
 	    }
         }catch(exception& e){
-          FTNhep.jmohep[j][0] = 0 ;
-          FTNhep.jmohep[j][1] = 0 ;
         }
         if (  FTNhep.jmohep[j][0] > 0 )
         {
           try{
 	    const MCParticle* mcpsp  = 0 ;
-	    if(  mcp->getNumberOfParents() > 1 ) mcpsp = mcp->getParent(1) ;
+	    if(  mcp->getNumberOfParents() > 1 ) mcpsp = mcp->getParent( nparents-1 ) ;
 
             for(int jjj=0;jjj < *NMCPART;jjj++)
             {
+                 
               if (mcpsp  == dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjj )) ){
                 FTNhep.jmohep[j][1] = jjj + 1 ;
                 break ;
               }
-              break ;
             }
           }catch(exception& e){
             FTNhep.jmohep[j][1] = 0 ;
@@ -135,21 +136,25 @@ namespace HEPEVTIMPL{
         // store daugther indices
         FTNhep.jdahep[j][0] = 0 ;
         FTNhep.jdahep[j][1] = 0 ;
-        int ndaugthers = mcp->getNumberOfDaughters() ;
-
-        if (ndaugthers > 0)
+        // for the StdHep convention particles with GeneratorStatus = 3 have no daughters
+        if ( FTNhep.isthep[j] != 3 )
         {
-           const MCParticle* mcpd = mcp->getDaughter( 0 ) ;
-           for (int jjj=0; jjj < *NMCPART; jjj++)
-           {
-             const MCParticle* mcpdtest = dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjj )) ;
-             if ( mcpd == mcpdtest ) 
+          int ndaugthers = mcp->getNumberOfDaughters() ;
+
+          if (ndaugthers > 0)
+          {
+             const MCParticle* mcpd = mcp->getDaughter( 0 ) ;
+             for (int jjj=0; jjj < *NMCPART; jjj++)
              {
-               FTNhep.jdahep[j][0] = jjj + 1 ;
-               FTNhep.jdahep[j][1] = FTNhep.jdahep[j][0] + ndaugthers -1 ;
-               break ;
+               const MCParticle* mcpdtest = dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjj )) ;
+               if ( mcpd == mcpdtest )
+               {
+                 FTNhep.jdahep[j][0] = jjj + 1 ;
+                 FTNhep.jdahep[j][1] = FTNhep.jdahep[j][0] + ndaugthers -1 ;
+                 break ;
+               }
              }
-           }
+          }
         }
 
         // now momentum, energy, and mass
@@ -158,7 +163,7 @@ namespace HEPEVTIMPL{
         FTNhep.phep[j][4] = (double)mcp->getMass() ;
 
         // get vertex and production time
-        *kmax = 0 ;
+        *kmax   = 0 ;
         *maxxyz = 0. ;
         for(int k=0;k<3;k++){
           FTNhep.vhep[j][k] = mcp->getVertex()[k] ;
@@ -169,9 +174,10 @@ namespace HEPEVTIMPL{
         }
         if ( mcpp != 0 && *maxxyz > 0. )
         {
-          FTNhep.vhep[j][3] = (mcp->getVertex()[*kmax] - mcpp->getVertex()[*kmax]) *
-                              (mcpp->getEnergy() / mcpp->getMomentum()[*kmax]) ;
-        } 
+          FTNhep.vhep[j][3] = FTNhep.vhep[FTNhep.jmohep[j][0]-1][3]
+                              + (mcp->getVertex()[*kmax] - mcpp->getVertex()[*kmax]) * mcpp->getEnergy()
+                              / mcpp->getMomentum()[*kmax] ;
+        }
         else
         {
           FTNhep.vhep[j][3] = 0. ;  // no production time for MCParticle
