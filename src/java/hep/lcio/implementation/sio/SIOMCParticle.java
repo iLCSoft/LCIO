@@ -18,7 +18,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.12 2004-01-14 20:19:43 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.13 2004-02-17 09:52:53 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -139,7 +139,7 @@ class SIOMCParticle extends IMCParticle
       out.writePTag(this);
       out.writeInt(parents.size());
       for (int i = 0; i < parents.size(); i++)
-         out.writePntr(getDaughter(i));
+         out.writePntr(getParent(i));
       out.writeInt(pdg);
       out.writeInt(generatorStatus);
       out.writeInt(simulatorStatus);
