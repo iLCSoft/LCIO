@@ -4,7 +4,7 @@ This directory contains additional examples for the Fortran interface to LCIO
 Pythia is required to build and run these examples.
 
 pysimjob.F:
-a probram to handle input written by lcwrite which writes the content
+a program to handle input written by lcwrite which writes the content
 of the HEPEVT common to an output file.
 The file is read into the HEPEVT common and its content is written
 to a LCIO output file 'pysimjob.slcio' .
@@ -12,7 +12,7 @@ The file is closed an read again using the utility 'levtdumpevent'
 (in $LCIO/src/cpp/src/IMPL/LCTOOLS.cc) to dump the LCIO content.
 
 pyanajob.F
-a probram which analyzes the LCIO output file of pysimjob.F
+a program which analyzes the LCIO output file of pysimjob.F
 assuming that the LCIO file 'pysimjob.slcio' exists.
 
 There are also 2 scripts to support the programs
