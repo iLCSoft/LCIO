@@ -73,6 +73,7 @@ namespace IMPL {
   } 
   
   void  TrackImpl::setTypeBit( int  index){  
+    checkAccess("TrackImpl::setTypeBit") ;
     _type.set( index )  ;
   }
 

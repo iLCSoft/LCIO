@@ -24,7 +24,12 @@ namespace IMPL{
 //     }
   }
  
-  int ClusterImpl::getType() const{ return _type ; }
+  int ClusterImpl::getType() const{  return _type.to_ulong() ; //return _type ; 
+  }
+  bool ClusterImpl::testType(int bitIndex) const {
+    return _type.test( bitIndex ) ;
+  }
+  
   float ClusterImpl::getEnergy() const{ return _energy;  }
   const float* ClusterImpl::getPosition() const{ return _position ; }
   const FloatVec & ClusterImpl::getPositionError() const{ return  _errpos ;  }
@@ -34,20 +39,6 @@ namespace IMPL{
   const FloatVec & ClusterImpl::getShape() const{ return _shape ;  }
   const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
 
-//   const StringVec & ClusterImpl::getHitCollectionNames() const{ 
-//     _hitCollectionNames.clear() ;
-    
-//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-//       _hitCollectionNames.push_back ( iter->first ) ;
-//     }
-//     return _hitCollectionNames ;
-//   }
-//   const IntVec & ClusterImpl::getHitIndicesForCollection(const std::string & colName) const{
-//     return *_indexMap[ colName ]->Indices ;
-//   }
-//   const FloatVec & ClusterImpl::getHitContributionsForCollection(const std::string & colName) const{
-//     return *_indexMap[ colName ]->Weights ;
-//   }
   const ClusterVec & ClusterImpl::getClusters() const{
     return _clusters ;
   }
@@ -56,6 +47,9 @@ namespace IMPL{
   }
   const EVENT::FloatVec & ClusterImpl::getHitContributions() const {
     return _weights ;
+  }
+  const  EVENT::FloatVec& ClusterImpl::getSubdetectorEnergies() const {
+    return _subdetectorEnergies ;
   }
 
 
@@ -127,21 +121,14 @@ namespace IMPL{
     _weights.push_back( contribution ) ;
   }
   
-//   void  ClusterImpl::addHitIndex( const std::string& colName, int index , float contribution){
-     
-//     checkAccess("ClusterImpl::addHitIndex") ;
+  void  ClusterImpl::setTypeBit( int  index){  
+    checkAccess("ClusterImpl::setTypeBit") ;
+    _type.set( index )  ;
+  }
 
-//     WeightedIndices*  wi = _indexMap[ colName ] ; 
-    
-//     if( wi == 0 ) {
-//       wi = new WeightedIndices ;
-//       wi->Indices  = new IntVec ;
-//       wi->Weights = new FloatVec ;
-//       _indexMap[ colName ] = wi ;
-//     }
-//     wi->Indices->push_back( index )  ;
-//     wi->Weights->push_back( contribution )  ;
-//   }    
-  
+  EVENT::FloatVec& ClusterImpl::subdetectorEnergies(){
+    checkAccess("ClusterImpl::subdetectorEnergies") ;
+    return _subdetectorEnergies ;
+  }
 
 }; // end namespace

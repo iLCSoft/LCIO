@@ -275,12 +275,20 @@ public:
       int nHits = calHits->getNumberOfElements() ;
       int nCluster = nHits / 10 ;
       
+
+      const int NCALORIMETER = 2 ;
+      const int ECALINDEX = 0 ;
+      const int HCALINDEX = 1 ;
+      
+
       for( int i=0; i < nCluster ; i ++ ){
 	
 	ClusterImpl* cluster = new ClusterImpl ;
 
-	int type = ( Cluster::COMBINED << 16 | Cluster::CHARGED  ) ;
-	cluster->setType( type ) ;
+// 	int type = ( Cluster::COMBINED << 16 | Cluster::CHARGED  ) ;
+	cluster->setTypeBit( 1 ) ;
+	cluster->setTypeBit( 7 ) ;
+	cluster->setTypeBit( 11 ) ;
 
 	cluster->setEnergy(  (i+1)*1.1 ) ;
 	float pos[3] = { 12. ,123456789. , .0987654321 } ;
@@ -299,10 +307,11 @@ public:
 	cluster->setHADWeight( .333)  ;
 	cluster->setMuonWeight( .333)  ;
 
-	// add the hits used to create this cluster
-// 	for( int j=0; j < 10  ; j ++ ){
-// 	  cluster->addHitIndex( calHitName ,  i*10+j ,  1. ) ;   
-// 	}
+	// add some subdetector energies
+	cluster->subdetectorEnergies().resize( NCALORIMETER )  ;
+	cluster->subdetectorEnergies()[ ECALINDEX ] = 42.42 ;
+	cluster->subdetectorEnergies()[ HCALINDEX ] = 24.24 ;
+
 	// add some random hits 
 	int iHit1 = (int) ( double (calHits->size()) * rand() / RAND_MAX )    ;
 	int iHit2 = (int) ( double (calHits->size()) * rand() / RAND_MAX )    ;

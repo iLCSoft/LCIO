@@ -16,46 +16,42 @@ typedef std::vector<Cluster*> ClusterVec ;
 
 public interface Cluster extends LCObject {
     
-@ifdef cpp
-@cpp{
-     static const int UNKNOWN =  0 ; 
-     static const int ECAL =  1 ; 
-     static const int HCAL =  2 ; 
-     static const int COMBINED =  3 ; 
-     static const int LAT =  4 ; 
-     static const int LCAL =  5 ;     
-     static const int UNDEFINED =  0 ; 
-     static const int NEUTRAL =  1 ; 
-     static const int CHARGED =  2 ; 
-}
- @else
-     public static const int UNKNOWN =  0 ; 
-     public const int ECAL =  1 ;     
-     public const int HCAL =  2 ;     
-     public const int COMBINED =  3 ; 
-     public const int LAT =  4 ;      
-     public const int LCAL =  5 ;     
-     public static const int UNDEFINED =  0 ; 
-     public static const int NEUTRAL =  1 ; 
-     public static const int CHARGED =  2 ; 
- @endif 
+// @ifdef cpp
+// @cpp{
+//      static const int UNKNOWN =  0 ; 
+//      static const int ECAL =  1 ; 
+//      static const int HCAL =  2 ; 
+//      static const int COMBINED =  3 ; 
+//      static const int LAT =  4 ; 
+//      static const int LCAL =  5 ;     
+//      static const int UNDEFINED =  0 ; 
+//      static const int NEUTRAL =  1 ; 
+//      static const int CHARGED =  2 ; 
+// }
+//  @else
+//      public static const int UNKNOWN =  0 ; 
+//      public const int ECAL =  1 ;     
+//      public const int HCAL =  2 ;     
+//      public const int COMBINED =  3 ; 
+//      public const int LAT =  4 ;      
+//      public const int LCAL =  5 ;     
+//      public static const int UNDEFINED =  0 ; 
+//      public static const int NEUTRAL =  1 ; 
+//      public static const int CHARGED =  2 ; 
+//  @endif 
 
 
-    /** Type of cluster:<br>
-     *  ------------- detector:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
-     *  Cluster::UNKNOWN <br> 
-     *  Cluster::ECAL <br> 
-     *  Cluster::HCAL <br> 
-     *  Cluster::COMBINED <br> 
-     *  Cluster::LAT <br> 
-     *  Cluster::LCAL <br> 
-     *	--------- track cluster link (bits15-0):
-     *  Cluster::NEUTRAL <br> 
-     *  Cluster::CHARGED <br> 
-     *  Cluster::UNDEFINED <br> 
+    /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
+     *  that have contributed hits to the cluster. The definition of the bits has to be done 
+     *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
+     *  @see testType()
      */
-    public int getType() const ;	
+    public int  getType() const ;	
     
+    /** Returns true if the corresponding bit in the type word is set.
+     */
+    public boolean testType(int bitIndex ) const ; 
+
     /** Energy of the cluster.
      */
     public float getEnergy() const ;	
@@ -106,20 +102,13 @@ public interface Cluster extends LCObject {
     public const FloatVec& getHitContributions() const ;
 
 
-//     /** Returns the names of the hit collections that have been
-//      *  used to create the cluster.
-//      */
-//     public const StringVec&  getHitCollectionNames() const ;
-    
-//     /** Returns the hit indices for the given collection name.
-//      */
-//     public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
-
-//     /** Returns the energy contribution from the hits in the given collection.
-//      * Runs parallel to the IntVec from getHitIndicesForCollection()
-//      */
-//     public const FloatVec& getHitContributionsForCollection(const String& colName ) const ;
-
+    /** A vector that holds the energy observed in a particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     *  TODO:  Provide way to store mapping in event/run header.
+     */
+    public const FloatVec& getSubdetectorEnergies() const ;
 
 
 }

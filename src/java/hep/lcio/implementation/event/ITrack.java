@@ -130,7 +130,10 @@ public class ITrack extends ILCObject implements Track {
 
 		// this.type = type;
 	}
-
+	public void setTypeBit(int bit) {
+		type.set(bit) ;
+	}
+	
 	public void setZ0(float z0) {
 		this.z0 = z0;
 	}

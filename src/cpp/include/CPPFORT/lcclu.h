@@ -26,7 +26,8 @@ PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
 int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
 
-int     lcclusettype( PTRTYPE clu, int type ) ;
+//int     lcclusettype( PTRTYPE clu, int type ) ;
+int     lcclusettypebit( PTRTYPE clu, int bit ) ;
 int     lcclusetenergy( PTRTYPE clu, float energy ) ;
 int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
 int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
@@ -60,7 +61,8 @@ FCALLSCFUN1(CFORTRANPNTR, lcclugetclusters, LCCLUGETCLUSTERS, lcclugetclusters, 
 FCALLSCFUN1(CFORTRANPNTR, lcclugetcalorimeterhits, LCCLUGETCALORIMETERHITS, lcclugetcalorimeterhits, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lcclugethitcontributions, LCCLUGETHITCONTRIBUTIONS, lcclugethitcontributions, CFORTRANPNTR, FLOATV, INTV) ;
 
-FCALLSCFUN2(INT, lcclusettype, LCCLUSETTYPE, lcclusettype, CFORTRANPNTR, INT) ;
+  //FCALLSCFUN2(INT, lcclusettype, LCCLUSETTYPE, lcclusettype, CFORTRANPNTR, INT) ;
+FCALLSCFUN2(INT, lcclusettypebit, LCCLUSETTYPEBIT, lcclusettypebit, CFORTRANPNTR, INT) ;
 FCALLSCFUN2(INT, lcclusetenergy, LCCLUSETENERGY, lcclusetenergy, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetposition, LCCLUSETPOSITION, lcclusetposition, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN2(INT, lcclusetpositionerror, LCCLUSETPOSITIONERROR, lcclusetpositionerror, CFORTRANPNTR, FLOATV) ;

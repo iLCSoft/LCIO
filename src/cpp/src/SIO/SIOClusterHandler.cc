@@ -27,7 +27,11 @@ namespace SIO{
     ClusterIOImpl* cluster  = new ClusterIOImpl ;
     *objP = cluster ;
 	
-    SIO_DATA( stream ,  &(cluster->_type) , 1  ) ;
+    //SIO_DATA( stream ,  &(cluster->_type) , 1  ) ;
+    int type ;
+    SIO_DATA( stream ,  &type  , 1 ) ;
+    cluster->setType( type ) ;  // type is bitset<32> - can't be set directly
+
     SIO_DATA( stream ,  &(cluster->_energy)  , 1 ) ;
     SIO_DATA( stream ,  cluster->_position  , 3 ) ;
 
@@ -57,9 +61,8 @@ namespace SIO{
 
     // fill the vector to have correct size
     // as we are using the addresses of the elements henceforth
-    for(int i=0;i<nClusters;i++){
-      cluster->_clusters.push_back( 0 ) ;
-    }
+
+    cluster->_clusters.resize( nClusters ) ;
     for(int i=0;i<nClusters;i++){
       SIO_PNTR( stream , &(cluster->_clusters[i] ) ) ;
     }
@@ -68,46 +71,21 @@ namespace SIO{
 
       int nHits ;
       SIO_DATA( stream, &nHits , 1  ) ;
-      for(int i=0;i<nHits;i++){
-	cluster->_hits.push_back( 0 ) ;
-	cluster->_weights.push_back( 0 ) ;
-      }
+
+      cluster->_hits.resize( nHits ) ;
+      cluster->_weights.resize( nHits ) ;
+
       for(int i=0;i<nHits;i++){
 	SIO_PNTR( stream , &(cluster->_hits[i] ) ) ;
 	SIO_PNTR( stream , &(cluster->_weights[i] ) ) ;
       }
       
-
-//       // hit collections
-//       int nHitCol ;
-//       SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-//       for(int i=0 ; i< nHitCol ;i++){
-	
-// 	char* dummy ; 
-// 	LCSIO_READ( stream,  &dummy ) ; 
-// 	WeightedIndices* wi = new WeightedIndices ;
-// 	cluster->_indexMap[ dummy ] = wi ;
-// 	wi->Indices = new IntVec ;
-// 	wi->Weights = new FloatVec ;
-	
-// 	int nHits ;
-// 	SIO_DATA( stream, &nHits , 1  ) ;
-	
-// 	int* hitsArray = new int[ nHits ] ;
-// 	SIO_DATA( stream, hitsArray ,  nHits ) ;
-
-// 	float* wgtsArray = new float[ nHits ] ;
-// 	SIO_DATA( stream, wgtsArray ,  nHits ) ;
-	
-// 	for( int j=0 ; j< nHits ; j++ ){
-// 	  wi->Indices->push_back(  hitsArray[ j ] ) ;
-// 	  wi->Weights->push_back(  wgtsArray[ j ] ) ;
-// 	}
-	
-// 	delete[] hitsArray ;
-// 	delete[] wgtsArray ;
-//       }
+    }
+    int nEnergies ;
+    SIO_DATA( stream, &nEnergies , 1  ) ;
+    cluster->_subdetectorEnergies.resize( nEnergies ) ;
+    for(int i=0;i<nEnergies;i++){
+      SIO_DATA( stream, &(cluster->_subdetectorEnergies[i] )  , 1  ) ;
     }
 
     // read the pointer tag 
@@ -175,27 +153,14 @@ namespace SIO{
 	SIO_PNTR( stream , &(weights[i]) ) ;
       }
 
-//       const StringVec colNames = cluster->getHitCollectionNames() ;
-//       int nHitCol =  colNames.size() ;
-//       SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-//       for(unsigned int i=0;i<colNames.size();i++){
-	
-// 	LCSIO_WRITE( stream, colNames[i]  ) ;
-	
-// 	const IntVec& vec = cluster->getHitIndicesForCollection( colNames[i]  ) ;
-// 	const FloatVec& wgt = cluster->getHitContributionsForCollection( colNames[i]  ) ;
-// 	int nHits =  vec.size() ;
-	
-// 	SIO_DATA( stream, &nHits, 1 ) ;
-	
-// 	for( int j=0 ; j<nHits  ; j++ ){
-// 	  LCSIO_WRITE( stream, vec[j]  ) ;
-// 	}
-// 	for( int j=0 ; j<nHits  ; j++ ){
-// 	  LCSIO_WRITE( stream, wgt[j]  ) ;
-// 	}
-//       }
+    }
+
+    const FloatVec& subdetectorEnergies = cluster->getSubdetectorEnergies() ;
+    int nEnergies = subdetectorEnergies.size() ;
+
+    LCSIO_WRITE( stream, nEnergies  ) ;
+    for(int i=0;i<nEnergies;i++){
+      LCSIO_WRITE( stream, subdetectorEnergies[i] ) ;
     }
     // write a ptag in order to be able to point to clusters
     SIO_PTAG( stream , cluster ) ;

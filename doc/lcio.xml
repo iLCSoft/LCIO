@@ -253,6 +253,10 @@
 	    <data type="float" name="Contribution">Energy fraction of the hit that contributed to this cluster</data> 
 	  </repeat>
 	</if>
+        <data type="int" name="nEnergies"></data>
+	<repeat count="nEnergies">
+	  <data type="float" name="subdetectorEnergy">energy observed in a particular subdetector</data>
+	</repeat>
         <data type="ptag" name="this"></data>
       </repeat>
     </block>

@@ -399,7 +399,7 @@ namespace UTIL {
       }
       cout << " radius of innermost hit " << trk->getRadiusOfInnermostHit() << " / mm , "   
 	<< " subdetector Hit numbers : " ;
-      for( int i=0 ; i< trk->getSubdetectorHitNumbers().size() ; i++) {
+      for( unsigned int i=0 ; i< trk->getSubdetectorHitNumbers().size() ; i++) {
 	cout << trk->getSubdetectorHitNumbers()[i] << ", " ;
       }
       cout << endl ;

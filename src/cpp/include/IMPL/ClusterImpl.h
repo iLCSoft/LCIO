@@ -6,7 +6,7 @@
 //#include "EVENT/CalorimeterHit.h"
 #include "AccessChecked.h"
 #include <map>
-
+#include <bitset>
 
 #define NERRPOS 6
 #define NERRDIR 3
@@ -43,20 +43,17 @@ namespace IMPL {
 
     virtual int id() { return simpleUID() ; }
 
-    /** Type of cluster:<br>
-     *  ------------- detector:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
-     *  Cluster::UNKNOWN <br> 
-     *  Cluster::ECAL <br> 
-     *  Cluster::HCAL <br> 
-     *  Cluster::COMBINED <br> 
-     *  Cluster::LAT <br> 
-     *  Cluster::LCAL <br> 
-     *	--------- track cluster link (bits15-0):
-     *  Cluster::NEUTRAL <br> 
-     *  Cluster::CHARGED <br> 
-     *  Cluster::UNDEFINED <br> 
+    /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
+     *  that have contributed hits to the cluster. The definition of the bits has to be done 
+     *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
+     *  @see testType()
      */
     virtual int getType() const ;
+
+    /** Returns true if the corresponding bit in the type word is set.
+     */
+    virtual bool testType(int bitIndex) const ;
+
 
     /** Energy of the cluster.
      */
@@ -119,8 +116,11 @@ namespace IMPL {
      */
     virtual const EVENT::FloatVec & getHitContributions() const ;
 
+
+    virtual const EVENT::FloatVec & getSubdetectorEnergies() const ;
+
     //setters 
-    void setType(int type ) ; 
+    void setTypeBit( int index ) ;
     void setEnergy(float energy ) ;
     void setPosition(float* position) ;
     void setPositionError(const EVENT::FloatVec &errpos) ;
@@ -141,9 +141,18 @@ namespace IMPL {
 
     //    void  addHitIndex( const std::string& colName, int index , float contribution) ;
 
+    /** To be used for modifying the subdetector energies, e.g.<br>
+     *  clu->subdetectorEnergies().resize(3) ;
+     *  clu->subdetectorEnergies()[2] = 1234.567 ;
+     */
+    EVENT::FloatVec& subdetectorEnergies() ;
 
   protected:
-    int _type ;
+    void setType(int type ) ; 
+
+    //    int _type ;
+    //    std::string _type ;
+    std::bitset<32> _type ;
     float _energy ;
     float _position[3] ;
     EVENT::FloatVec _errpos ;
@@ -152,11 +161,10 @@ namespace IMPL {
     EVENT::FloatVec _errdir ;
     EVENT::FloatVec _shape ;
     EVENT::FloatVec _particletype;
-//     mutable  EVENT::StringVec _hitCollectionNames ;
-//     mutable IndexMap _indexMap ;
     EVENT::ClusterVec _clusters ;
     EVENT::CalorimeterHitVec _hits ;
     EVENT::FloatVec _weights ;
+    EVENT::FloatVec _subdetectorEnergies ;
 
 }; // class
 

@@ -8,13 +8,17 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.3 2004-05-24 03:37:40 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.4 2004-06-07 08:50:23 gaede Exp $
  */
 class SIOCluster extends ICluster
 {
    SIOCluster(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
-      type = in.readInt();
+      //type = in.readInt();
+	  int typeWord ;
+	  typeWord = in.readInt();
+  	  setType( typeWord) ;
+
       energy = in.readFloat();
       position = new float[3];
       position[0] = in.readFloat();
@@ -55,6 +59,11 @@ class SIOCluster extends ICluster
             in.readFloat(); // Fixme:
          }
       }
+      int nEnergies = in.readInt() ;
+      subdetectorEnergies = new float[ nEnergies] ;
+      for (int i = 0; i < nEnergies; i++) {
+		subdetectorEnergies[i] = in.readFloat() ;
+	  }
       in.readPTag(this);
    }
 
@@ -105,12 +114,17 @@ class SIOCluster extends ICluster
                out.writeFloat(0);
             }
          }
+         out.writeInt( cluster.getSubdetectorEnergies().length ) ;
+         for (int i = 0; i < cluster.getSubdetectorEnergies().length; i++){
+			out.writeFloatArray( cluster.getSubdetectorEnergies() ) ;
+ 		 }
+         
          out.writePTag(cluster);
       }
    }
    private void write(SIOOutputStream out, int flag) throws IOException
    {
-      out.writeInt(type);
+      out.writeInt(getType());
       out.writeFloat(energy);
       out.writeFloat(position[0]);
       out.writeFloat(position[1]);
@@ -146,6 +160,10 @@ class SIOCluster extends ICluster
             out.writeFloat(0);
          }
       }
+	  out.writeInt( subdetectorEnergies.length ) ;
+	  for (int i = 0; i < subdetectorEnergies.length; i++){
+	     out.writeFloatArray( subdetectorEnergies ) ;
+	  }
       out.writePTag(this);
    }
 }

@@ -118,7 +118,7 @@ c-----the Cluster interface
       integer lcclugetshape, lcclugetparticletype
       integer lcclugethitcontributions
       real    lcclugetenergy, lcclugettheta, lcclugetphi
-      integer lcclusettype, lcclusetenergy, lcclusetposition
+      integer lcclusettypebit, lcclusetenergy, lcclusetposition
       integer lcclusetpositionerror,lcclusettheta, lcclusetphi
       integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
       integer lcclusethadweight, lcclusetmuonweight, lccluaddcluster
