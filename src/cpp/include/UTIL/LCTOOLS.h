@@ -62,8 +62,11 @@ namespace UTIL{
      */
     static void printTracks( const EVENT::LCCollection* col ) ;
 
-    /** Prints daughter particles recursively.
+    /** Complete printout of all Clusters in the collection
      */
+    static void printClusters( const EVENT::LCCollection* col ) ;
+
+
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 
 

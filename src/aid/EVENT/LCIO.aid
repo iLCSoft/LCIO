@@ -46,6 +46,9 @@ public interface LCIO{
     // Tracks
     static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
 
+    // Cluster
+    static const int CLBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
+
     // TPCHit
     static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
 
@@ -90,6 +93,9 @@ public interface LCIO{
   // Tracks
   public static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
     
+  // Cluster
+  public   static const int CLBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
+
   // TPCHit
   public static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
 

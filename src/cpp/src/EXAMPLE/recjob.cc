@@ -12,6 +12,7 @@
 #include "IMPL/SimCalorimeterHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/TrackImpl.h" 
+#include "IMPL/ClusterImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
@@ -72,7 +73,7 @@ public:
     lcWrt->close()  ;
 
     cout << endl 
-	 << " added collection HCALReco with " << NHITS << " hits" 
+	 << " added collection: 'SomeClusters' and 'SomeTracks'" 
 	 << " to   " << nEvent <<" events"  
 	 << " and added one extra MCParticle to each event."
 	 << endl << endl ;
@@ -100,7 +101,7 @@ public:
     
 
 
-    // create some tracks from dummy track hits:
+    // create some tracks and add them to the event
     std::string simHitName( "TPC4711" ) ;
     std::string tpcHitName( "TPCRawFADC" ) ;
 
@@ -183,6 +184,68 @@ public:
     evt->addCollection(  trkVec , "SomeTracks" ) ;
 
 
+
+    // create some clusters and add them to the event
+    std::string simcalHitName( "ECAL007" ) ;
+
+    LCCollection* simcalHits = evt->getCollection( simcalHitName ) ;
+
+
+    LCCollectionVec* clusterVec = new LCCollectionVec( LCIO::CLUSTER )  ;
+
+    // if we want to point back to the hits we need to set the flag
+    LCFlagImpl clusterFlag(0) ;
+    clusterFlag.setBit( LCIO::CLBIT_HITS ) ;
+    clusterVec->setFlag( clusterFlag.getFlag()  ) ;
+    
+    if( simcalHits ){
+      
+      int nSimHits = simcalHits->getNumberOfElements() ;
+      int nCluster = nSimHits / 10 ;
+      
+      for( int i=0; i < nCluster ; i ++ ){
+	
+	ClusterImpl* cluster = new ClusterImpl ;
+
+	int type = ( Cluster::COMBINED << 16 | Cluster::CHARGED  ) ;
+	cluster->setType( type ) ;
+
+	cluster->setEnergy(  (i+1)*1.1 ) ;
+	float pos[3] = { 12. ,123456789. , .0987654321 } ;
+	cluster->setPosition( pos ) ;
+	float errpos[6] = { 1.,2.,3.,4.,5.,6.} ; 
+	cluster->setPositionError( errpos ) ;
+	cluster->setTheta( (i+1)* M_PI / 10. ) ;
+	cluster->setPhi( (i+1)* M_PI / 5. ) ;
+	float errdir[6] = { 1.,2.,3.} ;
+	cluster->setDirectionError( errdir ) ;
+
+	float shape[6] = { 1.,2.,3.,3.,2.,1.} ;
+	cluster->setShape( shape ) ;
+
+	cluster->setEMWeight( .333)  ;
+	cluster->setHADWeight( .333)  ;
+	cluster->setMuonWeight( .333)  ;
+
+	// add the hits used to create this cluster
+	for( int j=0; j < 10  ; j ++ ){
+	  cluster->addHitIndex( simcalHitName ,  i*10+j ,  1. ) ;   
+	}
+
+	// add clusters that where used to create this cluster
+	if( clusterVec->size() > 1 ){
+	  cluster->addCluster( dynamic_cast<ClusterImpl*> 
+			       ( (*clusterVec)[ clusterVec->size() - 1 ] ) ) ;
+	  cluster->addCluster( dynamic_cast<ClusterImpl*> 
+			       ( (*clusterVec)[ clusterVec->size() - 2 ] ) ) ;
+	}
+	
+
+	clusterVec->addElement( cluster ) ;
+      }
+    }
+
+    evt->addCollection(  clusterVec , "SomeClusters" ) ;
 
     
     nEvent ++ ;

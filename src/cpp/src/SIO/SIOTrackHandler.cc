@@ -35,6 +35,7 @@ namespace SIO{
     SIO_DATA( stream ,  &(trk->_d0)  , 1 ) ;
     SIO_DATA( stream ,  &(trk->_z0)  , 1 ) ;
 
+
     float cov[NCOVMATRIX] ;
     SIO_DATA( stream ,  cov  ,  NCOVMATRIX ) ;
     trk->setCovMatrix( cov ) ;

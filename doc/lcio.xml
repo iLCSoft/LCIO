@@ -204,6 +204,49 @@
       <data type="ptag" name="this"></data>
       </repeat>
     </block>
+    <block name="Cluster" major="1" minor="0">
+      <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
+      <data type="int" name="nCluster"/>
+      <repeat count="nCluster">
+	<data type="int" name="type"> Type of cluster:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
+	(bits15-0): NEUTRAL, CHARGED ,UNDEFINED</data>
+	<!--data type="int" name="linktype"> NEUTRAL, CHARGED ,UNDEFINED</data-->
+	<data type="float" name="energy">Energy of the cluster </data>
+	<data type="float[3]" name="position">Center of cluster (x,y,z): to be defined</data>
+	<data type="float[6]" name="errpos">cov matrix of position</data>
+	<data type="float" name="theta">intrinsic direction: theta at position</data>
+	<data type="float" name="phi">intrinsic direction: phi at position</data>
+	<data type="float[3]" name="errdir">cov matrix of direction</data>
+	<data type="float[6]" name="shape"> Shape parameters, TO BE DEFINED</data>
+	<data type="float[3]" name="particletype">weight to be compatible with EM, HAD, muon cluster</data>
+
+        <data type="int" name="nClusters"></data>
+	<repeat count="nClusters">
+	  <data type="pntr" name="Clusters">clusters that have been combined to this cluster</data>
+	</repeat>
+	<if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+          <data type="int" name="nColNames"></data>
+          <repeat count="nColNames">
+            <data type="string" name="collectionName">name of hit collection</data>
+	    <data type="int" name="nHit"/>
+	    <repeat count="nHit">
+	      <data type="int" name="hitIndex">index in corresponding hit collection</data>
+	    </repeat>
+	    <repeat count="nHit">
+	      <data type="float" name="contribution">Energy fraction of the hit that contributed to this cluster</data> 
+	    </repeat>
+          </repeat>
+	</if>
+	<!--<if condition="(flag&amp;(1>>31)) !=0">
+	  <data type="int" name="n"/>
+	  <repeat count="n">
+	    <data type="pntr" name="CalorimeterHit"/>
+	    <data type="float" name="contribution">Energy fraction of the hit that contributed to this cluster</data> 
+	  </repeat>
+	</if>-->
+      <data type="ptag" name="this"></data>
+      </repeat>
+    </block>
   </record>
 </sio>
 

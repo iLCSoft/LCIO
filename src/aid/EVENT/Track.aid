@@ -1,12 +1,4 @@
 package hep.lcio.event;
-
-/** The LCIO track.
- * Adding some convenient methods to the pure data interface.
- * 
- * @author gaede
- * @version Mar 15, 2004
- */
-
 @ifdef cpp
 @cpp{
 //namespace EVENT {
@@ -16,6 +8,13 @@ typedef std::vector< const Track*> TrackVec ;
 }
 @endif
 
+/** The LCIO track.
+ * Adding some convenient methods to the pure data interface.
+ * 
+ * @author gaede
+ * @version Mar 15, 2004
+ */
+
 public interface Track extends TrackData {
     
 
@@ -24,7 +23,6 @@ public interface Track extends TrackData {
      */
     public const TrackVec& getTracks() const ; 
     
-@ifdef overwriteDataInterface
 
 @ifdef cpp
 @cpp{
@@ -48,6 +46,7 @@ public interface Track extends TrackData {
     public static const int FULL =  6 ; 
 @endif
 
+@ifdef overwriteDataInterface
 
     /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
      *  TrackData::UNKNOWN <br> 

@@ -11,7 +11,8 @@
 #include "DATA/LCIntVec.h"
 #include "IMPL/LCFlagImpl.h"
 #include "EVENT/Track.h"
-#include "IMPL/TrackImpl.h"
+//#include "IMPL/TrackImpl.h"
+#include "EVENT/Cluster.h"
 
 #ifdef CLHEP
 #include "UTIL/LCFourVector.h"
@@ -99,6 +100,11 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACK ){
 	  
 	printTracks( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::CLUSTER ){
+	  
+	printClusters( col ) ;
 
       }
 
@@ -335,12 +341,8 @@ namespace UTIL {
       cout << endl << " tracks(p): " ;
       const TrackVec& tracks = trk->getTracks() ;
 
-//       cout << hex << "[ " <<  trk << ", " << dynamic_cast<TrackData*>( trk ) << ", " 
-// 	   << dynamic_cast<TrackImpl*>( trk )  << "] " << dec ;
       for(unsigned int l=0;l<tracks.size();l++){
 		printf("%4.2e, ",  tracks[l]->getMomentum() ) ; 
-		//		printf("%4.2e, ", reinterpret_cast<const Track*>( tracks[l] ) ->getMomentum() ) ; 
-	//		printf("%x, ", tracks[l]  ) ; 
       }
       cout << endl ;
       if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
@@ -737,6 +739,89 @@ namespace UTIL {
 	 << "-------------------------------------------------------------------------------- " 
 	 << endl ;
   }
+
+  void LCTOOLS::printClusters(const EVENT::LCCollection* col ){
+    if( col->getTypeName() != LCIO::CLUSTER ){
+      
+      cout << " collection not of type " << LCIO::CLUSTER << endl ;
+      return ;
+    }
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::CLUSTER << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
+    
+    int nClusters =  col->getNumberOfElements() ;
+    int nPrint = nClusters > MAX_HITS ? MAX_HITS : nClusters ;
+    
+    std::cout << endl
+	      << "  type | energy    |      position ( x,y,z)          |  theta   |  phi     | EMweight |HADweight |MUweight"
+	      << endl	      
+	      << "-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      Cluster* clu = 
+      	dynamic_cast<Cluster*>( col->getElementAt( i ) ) ;
+      
+      printf("0x%5x| %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | %4.2e | %4.2e \n"
+	     , clu->getType() 
+	     , clu->getEnergy() 
+	     , clu->getPosition()[0]
+	     , clu->getPosition()[1]
+	     , clu->getPosition()[2]
+	     , clu->getTheta() 
+	     , clu->getPhi()
+	     , clu->getParticleType()[0] 
+	     , clu->getParticleType()[1] 
+	     , clu->getParticleType()[2] 
+	     ) ;
+      cout << " errors (6 pos)/( 3 dir): (" ;
+      for(int l=0;l<6;l++){
+	printf("%4.2e, ", clu->getPositionError()[l] ) ; 
+      }
+      cout << ")/("  ;
+      for(int l=0;l<3;l++){
+	printf("%4.2e, ", clu->getDirectionError()[l] ) ; 
+      }
+      cout << ")" << endl ;
+      cout << " clusters(e): " ;
+      const ClusterVec& clusters = clu->getClusters() ;
+
+      for(unsigned int l=0;l<clusters.size();l++){
+		printf("%4.2e, ",  clusters[l]->getEnergy() ) ; 
+      }
+      cout << endl ;
+      if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
+	cout << " hits ->";
+	const StringVec& hitColNames = clu->getHitCollectionNames() ;
+	for(unsigned int j=0;j<hitColNames.size();j++){
+	  cout << " " << hitColNames[j] << ": " ;
+
+	  const IntVec& hits = clu->getHitIndicesForCollection( hitColNames[j] ) ;
+	  const FloatVec& wgts = clu->getHitContributionsForCollection( hitColNames[j] ) ;
+
+	  for(unsigned int k=0;k<hits.size();k++){
+	    cout << hits[k] <<" ["<< wgts[k] <<"], " ;
+	  }
+	}
+      }
+      cout << endl 
+	   << "-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
+	   << endl ;
+    }
+      cout << endl 
+	   << "-------------------------------------------------------------------------------- " 
+	   << endl ;
+  }
+
+
 
 
   void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
