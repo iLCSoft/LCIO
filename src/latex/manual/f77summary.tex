@@ -1,0 +1,272 @@
+
+{\large\bf The basic Fortran API to LCIO} \\
+
+\begin{scriptsize}
+
+{\bf Remarks:} \\
+
+The return value of the functions and the meaning of arguments are either: \\
+$*$ pointers denoted by a name beginning with the {\bf letter p} \\
+$*$ character strings denoted by {\bf ...name} or {\bf string} \\
+$*$ integers  denoted by {\bf status} or a variable name starting with {\bf i} \\
+$*$ double precision variables name starting with {\bf d} \\
+$*$ reals {\bf else}
+$*$ arrays are denoted by a name ending with {\bf v} \\
+
+
+\begin{verbatim}
+
+class LCReader:
+
+createLCReader         -> preader = lcrdrcreate()
+open                   -> status  = lcrdropen( preader, filename )
+close                  -> status  = lcrdrclose( preader )
+delete                 -> status  = lcrdrdelete( preader )
+readNextRunHeader      -> pheader = lcreadnextrunheader( preader, iaccessmode )
+readNextEvent          -> pevent  = lcrdrreadnextevent( preader, iaccessmode )
+readEvent              -> pevent  = lcrdrreadevent( preader, irun, ievt )
+
+class LCWriter:
+
+createLCWriter         -> pwriter = lcwrtcreate()
+open                   -> status  = lcwrtopen( pwriter, filename )
+close                  -> status  = lcwrtclose( pwriter )
+delete                 -> status  = lcwrtdelete( pwriter )
+writeRunHeader         -> status  = lcwrtwriterunheader( pwriter, pheader )
+writeEvent             -> status  = lcwrtwriteevent( pwriter, pevent )
+
+
+class LCRunHeader:
+
+create                 -> pheader = lcrhdcreate()
+delete                 -> status  = lcrhddelete( pheader )
+setRunNumber           -> status  = lcrhdsetrunnumber( pheader )
+setDetectorName        -> status  = lcrhdsetdetectorname( pheader , detname)
+setDescription         -> status  = lcrhdsetdescription( pheader , descr )
+addActiveSubdetector   -> status  = lcrhdaddactivesubdetector( pheader , sdname )
+
+getRunNumber           -> irun    = lcrhgetrunnumber( pheader )
+getDetectorName        -> detname = lcrhdgetdetectorname( pheader )
+getDescription         -> descr   = lcrhdgetdescription( pheader )
+getActiveSubdetectors by:
+getActiveSubdetectors  -> psdvec  = lcrhdgetactivesubdetectors( pheader )
+getNumberOfElements    -> nelem   = lcsvcgetlength( psdvec )                         (stl vector Interface)
+getElementAt           -> sdname  = lcsvcgetstringat( psdvec , i ) (i=1,...,nelem)   (stl vector Interface)
+
+
+class LCEvent:      
+
+create                 -> pevent  = lcevtcreate()
+delete                 -> status  = lcevtdelete( pevent )
+setRunNumber           -> status  = lcevtsetrunnumber( pevent , irun)
+setEventNumber         -> status  = lcevtseteventnumber( pevent , ievt)
+setDetectorName        -> status  = lcevtsetdetectorname( pevent , detname)
+setTimeStamp           -> status  = lcevtsettimestamp( pevent , itim)
+addCollection          -> status  = lcevtaddcollection( pevent , pcol , colname)
+removeCollection       -> status  = lcevtremovecollection( pevent , colname)
+
+getRunNumber           -> irun    = lcevtgetrunnumber( pevent )
+getEventNumber         -> ievt    = lcevtgeteventnumber( pevent )
+getDetectorName        -> detname = lcevtgetdetectorname( pevent )
+getTimeStamp           -> itim    = lcevtgettimestamp( pevent )
+getCollection          -> pcol    = lcevtgetcollection( pevent , colname)
+getCollectionNames by:
+getCollectionNames     -> pstv    = lcevtgetcollectionnames( pevent )
+getNumberOfElements    -> nelem   = lcsvcgetlength( pstv )                            (stl vector Interface)
+getElementAt           -> colname = lcsvcgetstringat( pstv , i ) (i=1,...,nelem)      (stl vector Interface)
+
+class LCCollection:
+
+create                 -> pcol    = lccolcreate()
+delete                 -> status  = lccoldelete( pcol )
+addElement             -> status  = lccoladdelement( pcol , pobject)
+removeElementAt        -> status  = lccolremoveelementat ( pcol , i )
+setFlag                -> status  = lccolsetflag( pcol , iflag )
+
+getTypeName            -> name    = lccolgettypename( pcol )
+getNumberOfElements    -> number  = lccolgetnumberofelements( pcol )
+getElementAt           -> pobject = lccolgetelementat( pcol , i )  (i=1,...,number)
+getFlag                -> iflag   = lccolgetflag( pcol )
+
+class SimTrackerHit:
+
+create                 -> pthit   = lcsthcreate()
+delete                 -> status  = lcsthdelete( pthit )
+setCellID              -> status  = lcsthsetcellid( pthit , icellid )
+setPosition            -> status  = lcsthsetposition( pthit , dposv )
+setdEdx                -> status  = lcsthsetdedx( pthit , fdedx )
+setTime                -> status  = lcsthsettime( pthit , ftime )
+setMCParticle          -> status  = lcsthsetmcparticle( pthit , pmcp )
+
+getCellID              -> icellid = lcsthgetcellid( pthit )
+getPosition            -> dposv(i)= lcsthgetposition( pthit , i ) (i=1,2,3)
+getdEdx                -> fdedx   = lcsthgetdedx( pthit )
+getTime                -> ftime   = lcsthgettime( pthit )
+getMCParticle          -> pmcp    = lcsthgetmcparticle( pthit )
+
+class SimCalorimeterHit:
+
+create                 -> pchit   = lcschcreate()
+delete                 -> status  = lcschdelete( pchit )
+setCellID0             -> status  = lcschsetcellid0( pchit , icellid0 )
+setCellID1             -> status  = lcschsetcellid1( pchit , icellid1 )
+setEnergy              -> status  = lcschsetenergy( pchit , energy )
+setPosition            -> status  = lcschsetposition( pchit , posv )
+addMCParticleContr..   -> status  = lcschaddmcparticlecontribution( pchit , pmcp , energy , time , ipdg )
+
+getCellID0             -> icellid0= lcschgetcellid0( pchit )
+getCellID1             -> icellid1= lcschgetcellid1( pchit )
+getEnergy              -> energy  = lcschgetenergy( pchit )
+getPosition            -> status  = lcschgetposition( pchit , posv )
+getNMCParticles        -> number  = lcschgetnmcparticles( pchit )
+getParticleCont        -> pmcp    = lcschgetparticlecont( pchit , i ) (i=1,...,number)
+getEnergyCont          -> energy  = lcschgetenergycont( pchit , i )   (i=1,...,number)
+getTimeCont            -> time    = lcschgettimecont( pchit , i )     (i=1,...,number)
+getPDGCont             -> ipdg    = lcschgetpdgcont( pchit , i )      (i=1,...,number)
+
+class CalorimeterHit:
+
+create                 -> pchit   = lccahcreate()
+delete                 -> status  = lccahdelete( pchit )
+setCellID0             -> status  = lccahsetcellid0( pchit , icellid0 )
+setCellID1             -> status  = lccahsetcellid1( pchit , icellid1 )
+setEnergy              -> status  = lccahsetenergy( pchit , energy )
+setPosition            -> status  = lccahsetposition( pchit , posv )
+
+getCellID0             -> icellid0= lccahgetcellid0( pchit )
+getCellID1             -> icellid1= lccahgetcellid1( pchit )
+getEnergy              -> energy  = lccahgetenergy( pchit )
+getPosition            -> status  = lccahgetposition( pchit , posv )
+
+
+class TPCHit:
+
+create                 -> pthit   = lctphcreate()
+delete                 -> status  = lctphdelete( pthit )
+setCellID              -> status  = lctphsetcellid( pthit , icellid )
+setTime                -> status  = lctphsettime( pthit , time )
+setCharge              -> status  = lctphsetcharge( pthit , charge )
+setQuality             -> status  = lctphsetquality( pthit , iquality )
+setRawDataWords        -> status  = lctphsetrawdata( pthit , irawv, nraw )
+
+getCellID              -> icellid = lccahgetcellid( pthit )
+getTime                -> time    = lctphgettime( pthit )
+getCharge              -> charge  = lctphgcharge( pthit )
+getQuality             -> iquality= lctphgetquality( pthit )
+getRawDataWords        -> nraw    = lctphgetnrawdatawords( pthit )
+                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=1,...,nraw)
+
+class MCParticle:
+
+create                 -> pmcp    = lcmcpcreate()
+delete                 -> status  = lcmcpdelete( pmcp )
+addParent              -> status  = lcmcpaddparent( pmcp , pmcpp )
+% setSecondParent        -> status  = lcmcpsetsecondparent( pmcp , pmcpp )
+% addDaughters           -> status  = lcmcpadddaughter( pmcp , pmcpd )
+setPDG                 -> status  = lcmcpsetpdg( pmcp , ipdg )
+% setHepEvtStatus        -> status  = lcmcpsetvertex( pmcp , istatus )
+setGeneratorStatus     -> status  = lcmcpsetgeneratorstatus( pmcp , istatus )
+setSimulatorStatus     -> status  = lcmcpsetsimulatorstatus( pmcp , istatus )
+setVertex              -> status  = lcmcpsetvertex( pmcp , dvtxv )
+setEndpoint            -> status  = lcmcpsetendpoint( pmcp , dvtxv )
+setMomentum            -> status  = lcmcpsetmomentum( pmcp , momv )
+setMass                -> status  = lcmcpsetmass( pmcp , mass )
+setCharge              -> status  = lcmcpsetcharge( pmcp , charge )
+
+getNumberOfParents     -> number  = lcmcpgetnumberofparents( pmcp )
+% getParent              -> pmcpp   = lcmcpgetparent( pmcp )
+getParent              -> pmcpp   = lcmcpgetparent( pmcp , i )
+% getSecondParent        -> pmcpp   = lcmcpgetsecondparent( pmcp )
+getNumberOfDaughters   -> number  = lcmcpgetnumberofdaughters( pmcp )
+getDaughter            -> pmcpd   = lcmcpgetdaughter( pmcp , i )  (i=1,...,number)
+getPDG                 -> status  = lcmcpgetpdg( pmcp , ipdg )
+% getHepEvtStatus        -> istat   = lcmcpgethepevtstatus( pmcp )
+getGeneratorStatus     -> istatg  = lcmcpgetgeneratorstatus( pmcp )
+getSimulatorStatus     -> istats  = lcmcpgetsimulatorstatus( pmcp )
+getVertex              -> status  = lcmcpgetvertex( pmcp , dvtxv )
+getEndpoint            -> status  = lcmcpgetendpoint( pmcp , dvtxv )
+getMomentum            -> status  = lcmcpgetmomentum( pmcp , momv )
+getEnergy              -> energy  = lcmcpgetenergy( pmcp )
+getMass                -> mass    = lcmcpgetmass( pmcp )
+getCharge              -> charge  = lcmcpgetcharge( pmcp )
+
+
+utility (stl vector Interface):
+
+getLengthofIntVector   -> nelem   = lcivcgetlength( pintvec )
+getIntAt               -> int     = lcivcgetintat( pintvec , i ) (i=1,...,nelem)
+getLengthofFloatVector -> nelem   = lcfvcgetlength( pfloatvec )
+getFloatAt             -> float   = lcfvcgetfloatat( pfloatvec , i ) (i=1,...,nelem)
+getLengthofStringVector-> nelem   = lcsvcgetlength( pstrvec )
+getStringAt            -> string  = lcsvcgetstringat( pstrvec , i ) (i=1,...,nelem)
+
+\end{verbatim}
+
+\end{scriptsize}
+
+
+
+
+{\large\bf The extended Fortran API to LCIO} \\
+
+\begin{scriptsize}
+
+{\bf Remarks:} \\
+
+The return value of the functions and the meaning of arguments are either: \\
+$*$ pointers denoted by a name beginning with the {\bf letter p} \\
+$*$ character strings denoted by {\bf ...name} or {\bf string} \\
+$*$ integers  denoted by {\bf status} or a variable name starting with {\bf i} \\
+$*$ double precision variables denoted by a name starting with {\bf d} \\
+$*$ arrays denoted by a name ending with {\bf v} \\
+$*$ reals {\bf else} \\
+If arguments of the type {\bf array of character strings} are used the last
+argument has to be the length of a character string in the array.
+
+
+\begin{verbatim}
+
+for class LCRunHeader:
+
+writeRunHeader         -> status  = lcwriterunheader( pwriter, irun, detname, descrname, sdnamev, nsubd, len(sdnamev(1)) )
+readNextRunHeader      -> pheader = lcreadnextrunheader( preader, irun, detname, descrname, sdnamev, nsubd, len(sdnamev(1)) )
+
+for class LCEvent:
+
+setEventHeader         -> status  = lcseteventheader ( pevent, irun, ievt, itim, detname )
+getEventHeader         -> status  = lcgeteventheader ( pevent, irun, ievt, itim, detname )
+dumpEvent              -> status  = lcdumpevent ( pevent )
+dumpEventDetailed      -> status  = lcdumpeventdetailed ( pevent )
+
+for class SimTrackerHit:
+
+addSimTrackerHit       -> status  = lcaddsimtrackerhit( pcolhitt, icellid, dposv, fdedx, ftime, pmcp )
+getSimTrackerHit       -> status  = lcgetsimtrackerhit( pcolhitt, i, icellid, dposv, fdedx, ftime, pmcp )
+
+for class SimCalorimeterHit:
+
+addSimCaloHit          -> phit    = lcaddsimcalohit( icellid0, icellid1, energy, posv )
+addSimCaloHitMCont     -> status  = lcschaddmcparticlecontribution( phit, pmcp, energy, time, ipdg )  (from basic f77 API)
+getSimCaloHit          -> phit    = lcgetsimcalohit( pcol, i, icellid0, icellid1, energy, posv )
+getSimCaloHitMCont     -> status  = lcgetsimcalohitmccont( phit, i, pmcp, energy, time, ipdg )
+
+for class MCParticle:
+
+getMCParticleData      -> status  = lcgetmcparticledata ( ipdg, ihepevtst, dvtxv, momv, mass, charge, ndaughters )
+
+for class HEPEVT (Fortran interface  to COMMON /HEPEVT/ ):
+
+toHepEvt               -> status  = lcio2hepevt( pevent )
+fromHepEvt             -> status  = hepevt2lcio( pevent )
+
+%for stl vector Interface:
+
+%getIntVector           -> status  = lcgetintvector( pvec , intv, nintv )
+%getFloatVector         -> status  = lcgetfloatvector( pvec , floatv , nfloatv )
+%getStringVector        -> status  = lcgetstringvector( pvec , stringv , nstringv, len(stringv(1)) )
+
+\end{verbatim}
+
+\end{scriptsize}
+
+
