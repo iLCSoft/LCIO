@@ -15,7 +15,7 @@
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 #include "IMPL/TPCHitImpl.h"
-#include "IMPL/LCRelationNavigatorImpl.h"
+#include "UTIL/LCRelationNavigator.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -287,8 +287,8 @@ int main(int argc, char** argv ){
 	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
 
 	//---- test new relation navigator object
-	LCRelationNavigatorImpl* relNav = 
-	  new LCRelationNavigatorImpl( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
+	LCRelationNavigator* relNav = 
+	  new LCRelationNavigator( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
 
 	bool storeRawData = true ;
 

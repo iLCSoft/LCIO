@@ -10,16 +10,16 @@ namespace SIO{
 
 namespace IOIMPL {
   
-/** Adding stuff needed for io (friend declarations, etc.)
- * 
- * @author gaede
- * @version Apr 28, 2004
- */
-
+  /** Adding stuff needed for io (friend declarations, etc.)
+   * 
+   * @author gaede
+   * @version $Id: LCRelationIOImpl.h,v 1.3 2004-09-06 14:35:51 gaede Exp $
+   */
+  
   class LCRelationIOImpl  : public IMPL::LCRelationImpl {
     
     friend class SIO::SIOLCRelationHandler ;
-
+    
   public:
     LCRelationIOImpl() { }
     LCRelationIOImpl( EVENT::LCObject* from, EVENT::LCObject* to , float weight=1.0f ) 

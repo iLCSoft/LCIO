@@ -15,7 +15,6 @@
 #include "EVENT/ReconstructedParticle.h"
 
 #include "EVENT/LCRelation.h"
-#include "EVENT/LCWgtRelation.h"
 #include "LCIOSTLTypes.h"
 
 #ifdef CLHEP
@@ -133,7 +132,7 @@ namespace UTIL {
 
       }
       // relations in ordinary LCCollections
-      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCWGTRELATION ){
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCRELATION ){
 	  
 	printRelation( col ) ;
 
@@ -1275,13 +1274,13 @@ namespace UTIL {
 
   void LCTOOLS::printRelation( const EVENT::LCCollection* col ) {
     
-    if( col->getTypeName() != LCIO::LCWGTRELATION ){
-      cout << " collection not of type " << LCIO::LCWGTRELATION << endl ;
+    if( col->getTypeName() != LCIO::LCRELATION ){
+      cout << " collection not of type " << LCIO::LCRELATION << endl ;
       return ;
     }
     
     cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::LCWGTRELATION << " collection "
+	 << "--------------- " << "print out of "  << LCIO::LCRELATION << " collection "
 	 << "--------------- " << endl ;
     
     cout << endl 
@@ -1297,7 +1296,7 @@ namespace UTIL {
 
     for( int i=0; i < nRel ; i++ ){
 	
-      LCWgtRelation* rel = dynamic_cast<LCWgtRelation*>( col->getElementAt(i) ) ;
+      LCRelation* rel = dynamic_cast<LCRelation*>( col->getElementAt(i) ) ;
       printf(" | [%8.8x] |  [[%8.8x]   | %5.3e \n" 
 	     , rel->getFrom()->id() 
 	     , rel->getTo()->id() 

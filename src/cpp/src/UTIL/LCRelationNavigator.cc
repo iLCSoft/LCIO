@@ -1,15 +1,16 @@
-#include "IMPL/LCRelationNavigator.h"
+#include "UTIL/LCRelationNavigator.h"
 
 #include <algorithm>
 #include <cassert>
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"
-#include "IMPL/LCWgtRelationImpl.h"
+#include "IMPL/LCRelationImpl.h"
 #include "EVENT/LCIO.h"
 
 using namespace EVENT ;
+using namespace IMPL ;
 
-namespace IMPL{
+namespace UTIL{
 
 
   LCRelationNavigator::LCRelationNavigator( const EVENT::LCCollection* col ) :
@@ -23,7 +24,7 @@ namespace IMPL{
   void LCRelationNavigator::initialize( const LCCollection* col ) {
 
 
-    if( col->getTypeName() != LCIO::LCWGTRELATION ) {
+    if( col->getTypeName() != LCIO::LCRELATION ) {
       return ;
     }
     
@@ -31,7 +32,7 @@ namespace IMPL{
     
     for(int i=0; i < n; i++){
       
-      LCWgtRelation* rel = dynamic_cast<LCWgtRelation*>( col->getElementAt(i) )  ;
+      LCRelation* rel = dynamic_cast<LCRelation*>( col->getElementAt(i) )  ;
       
       addRelation( rel->getFrom() , rel->getTo() , rel->getWeight()  ) ; 
       
@@ -137,7 +138,7 @@ namespace IMPL{
 
   EVENT::LCCollection * LCRelationNavigator::createLCCollection() {
     
-    LCCollectionVec* col = new LCCollectionVec( LCIO::LCWGTRELATION ) ;
+    LCCollectionVec* col = new LCCollectionVec( LCIO::LCRELATION ) ;
     
     
     col->parameters().setValue( "FromType" , getFromType() ) ;
@@ -157,7 +158,7 @@ namespace IMPL{
 
       for( unsigned int i=0 ; i<n ; i++ ){
 
-	col->addElement( new LCWgtRelationImpl( from , vTo[i] , vWgt[i] )    ) ;
+	col->addElement( new LCRelationImpl( from , vTo[i] , vWgt[i] )    ) ;
 	if( vWgt[i] != 1.0f ) storeWeights = true ;
       }
     }

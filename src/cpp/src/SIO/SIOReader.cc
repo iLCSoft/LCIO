@@ -4,7 +4,7 @@
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h"
-#include "SIO/SIORelationHandler.h"
+//#include "SIO/SIOLCRelationHandler.h"
 #include "SIO/SIORunHeaderHandler.h"
 #include "SIO/SIOParticleHandler.h"
 
@@ -248,35 +248,35 @@ namespace SIO {
     }
 
 
-    //---- fg 20040504 add block handlers for the relations in the event
-    const StringVec* relNames =  (*_evtP)->getRelationNames() ;
-    for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++ ) {
+//     //---- fg 20040504 add block handlers for the relations in the event
+//     const StringVec* relNames =  (*_evtP)->getRelationNames() ;
+//     for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++ ) {
 
-      //      const LCRelation rel = (*_evtP)->getRelation( *relName )  ;
+//       //      const LCRelation rel = (*_evtP)->getRelation( *relName )  ;
 
-      // check if block handler exists in manager
-      SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
-	( SIO_blockManager::get( relName->c_str() )  ) ;
+//       // check if block handler exists in manager
+//       SIOLCRelationHandler* rh = dynamic_cast<SIORelationHandler*> 
+// 	( SIO_blockManager::get( relName->c_str() )  ) ;
       
-      // if not, create a new block handler
-      if( rh == 0 ) {
+//       // if not, create a new block handler
+//       if( rh == 0 ) {
 	
-	// create collection handler for event
-	try{
-	  rh =  new SIORelationHandler( *relName , _evtP )  ;
-	  // calls   SIO_blockManager::add( rh )  in the c'tor !
-	}
-	catch(Exception& ex){   // unsuported type !
-	  delete rh ;
-	  rh =  0 ;
-	}
+// 	// create collection handler for event
+// 	try{
+// 	  rh =  new SIOLCRelationHandler( *relName , _evtP )  ;
+// 	  // calls   SIO_blockManager::add( rh )  in the c'tor !
+// 	}
+// 	catch(Exception& ex){   // unsuported type !
+// 	  delete rh ;
+// 	  rh =  0 ;
+// 	}
 
-      } else { // handler already exists
-	if( rh != 0 )
-	  rh->setEvent( _evtP ) ; 
-      }
-    }
-    // ---- fg 20040504 ----------
+//       } else { // handler already exists
+// 	if( rh != 0 )
+// 	  rh->setEvent( _evtP ) ; 
+//       }
+//     }
+//     // ---- fg 20040504 ----------
 
   }
 
@@ -498,8 +498,8 @@ namespace SIO {
   void  SIOReader::postProcessEvent() {
     // restore the daughter relations from the parent relations
     SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
-    // fill the relation map from intermediate vector
-    SIORelationHandler::fillRelationMap(  *_evtP ) ;
+//     // fill the relation map from intermediate vector
+//     SIOLCRelationHandler::fillRelationMap(  *_evtP ) ;
   }
 
 }; // namespace

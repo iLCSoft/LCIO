@@ -5,22 +5,22 @@
 #include <vector>
 #include <map>
 #include "EVENT/LCObject.h"
+#include "EVENT/LCCollection.h"
+#include "LCIOSTLTypes.h"
 
 
-#include "EVENT/LCRelationNavigator.h"
+namespace UTIL {
 
-
-namespace IMPL {
-
-  /** Implementation of LCRelationNavigator that treats the relationships symmetrical, i.e. 
-   *  lookup of relations is equally efficient and fast for either direction (from-to and to-from)
+  /** The LCRelationNavigator makes repeated lookup of relations more conveneient and efficient.
+   * The relations are treated symmetrical, i.e. lookup of relations is equally efficient and 
+   * fast for either direction (from-to and to-from)
    *  at the price of a slower (by a factor of ~2) modification speed.
    * 
    * @author gaede 
-   * @version $Id: LCRelationNavigator.h,v 1.1 2004-09-06 14:05:06 gaede Exp $
+   * @version $Id: LCRelationNavigator.h,v 1.2 2004-09-06 14:35:51 gaede Exp $
    */
 
-  class LCRelationNavigator : public EVENT::LCRelationNavigator {
+  class LCRelationNavigator {
     
     typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::FloatVec > > RelMap ; 
 

@@ -8,7 +8,7 @@
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h" 
-#include "SIO/SIORelationHandler.h" 
+//#include "SIO/SIOLCRelationHandler.h" 
 #include "SIO/SIORunHeaderHandler.h" 
 
 #include "LCIOSTLTypes.h"
@@ -241,29 +241,29 @@ namespace SIO {
       
     } 
 
-    //--- fg20040504 added relation handlers
-    const StringVec* relNames = evt->getRelationNames() ;
+//     //--- fg20040504 added relation handlers
+//     const StringVec* relNames = evt->getRelationNames() ;
     
-    for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++){
+//     for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++){
       
       
-      //      std::cout << " relation name:  " << *relName << std::endl ;
+//       //      std::cout << " relation name:  " << *relName << std::endl ;
 
-      SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
-	( SIO_blockManager::get( relName->c_str() )  ) ;
+//       SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
+// 	( SIO_blockManager::get( relName->c_str() )  ) ;
       
-      LCRelation* rel = evt->getRelation( *relName ) ;
-      //      LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ; 
-      //      std::cout << " relation " << *relName << " casted  to LCRelationImpl  : " <<  relImpl << std::endl ;
+//       LCRelation* rel = evt->getRelation( *relName ) ;
+//       //      LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ; 
+//       //      std::cout << " relation " << *relName << " casted  to LCRelationImpl  : " <<  relImpl << std::endl ;
 
-      if( rh == 0 ) {
-	rh = new SIORelationHandler( *relName ) ;
-      }
-      _evtRecord->connect( rh ) ;
-      _connectedBlocks.push_back( rh ) ;  
-      rh->setRelation( rel ) ; 
-    } 
-    //--- fg20040504 ------
+//       if( rh == 0 ) {
+// 	rh = new SIORelationHandler( *relName ) ;
+//       }
+//       _evtRecord->connect( rh ) ;
+//       _connectedBlocks.push_back( rh ) ;  
+//       rh->setRelation( rel ) ; 
+//     } 
+//     //--- fg20040504 ------
     
   }
 

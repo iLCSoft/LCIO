@@ -20,8 +20,8 @@
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
 #include "IMPL/LCRelationImpl.h"
-#include "IMPL/LCWgtRelationImpl.h"
-#include "IMPL/LCRelationNavigatorImpl.h"
+
+#include "UTIL/LCRelationNavigator.h"
 
 #include "CalibrationConstant.h"
 
@@ -248,7 +248,7 @@ public:
     //     calHits->setFlag( calFlag.getFlag()  ) ;
     
 
-    LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
+    LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCRELATION ) ;
     scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;
     scRel->parameters().setValue( "ToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
     
@@ -266,9 +266,9 @@ public:
 
 //       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
 //       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
-      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
-      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
+      scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
+      scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
+      scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       calHits->addElement( calHit ) ;
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
@@ -288,7 +288,7 @@ public:
 
       //------  the following is some example code on how to access the relation: --------------
       // create a navigation object from a collection
-      LCRelationNavigatorImpl rel( scRel ) ; 
+      LCRelationNavigator rel( scRel ) ; 
 
       std::cout << "Relation example for first event: " 
 		<< " [" << rel.getFromType() << " - "  << rel.getToType()  << "] " 
