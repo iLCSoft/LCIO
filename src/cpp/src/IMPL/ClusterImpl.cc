@@ -24,7 +24,10 @@ namespace IMPL{
   }
 
   ClusterImpl::~ClusterImpl(){
-
+    // delete the pids owned by this particle
+    for(  ParticleIDVec::iterator iter = _pid.begin() ; iter != _pid.end() ; iter++){
+      delete *iter ;
+    }
   }
  
   int ClusterImpl::getType() const{  return _type.to_ulong() ; //return _type ; 
