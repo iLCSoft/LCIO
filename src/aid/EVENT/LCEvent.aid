@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version $Id: LCEvent.aid,v 1.8 2005-02-02 14:16:27 gaede Exp $
+ * @version $Id: LCEvent.aid,v 1.9 2005-02-03 14:10:59 gaede Exp $
  * @see LCCollection
  */
 
@@ -27,8 +27,10 @@ public interface LCEvent {
     public const String& getDetectorName() const ;
     
     /** Returns the time stamp of the event.
+     *  Timestamp is a unique 64 bit integer.<br>
+     *  Preliminary definition: ns since January 1, 1970, 00:00:00 GMT
      */
-     public long getTimeStamp() const ;
+     public long64 getTimeStamp() const ;
     
     /** Returns the names of the collections in the  event.
      */

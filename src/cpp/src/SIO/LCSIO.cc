@@ -5,6 +5,8 @@
 #include <cctype>
 #include "Exceptions.h"
 
+using namespace EVENT ;
+
 namespace SIO {
 
   int LCSIO::dummy_size = LCSIO::dummy_initial_size ;
@@ -106,9 +108,9 @@ unsigned int LCSIO::write( SIO_stream* stream , size_t i){
 }
 #endif
 
-unsigned int LCSIO::write( SIO_stream* stream , long long i){
+unsigned int LCSIO::write( SIO_stream* stream , long64 i){
 
-  long long local = i ;
+  long64 local = i ;
   return  SIO_functions::data( stream ,  &local , 1  ) ;
  
 }

@@ -72,7 +72,7 @@ const std::string & LCEventImpl::getDetectorName() const {
 }
 
     
-long long LCEventImpl::getTimeStamp() const {
+long64 LCEventImpl::getTimeStamp() const {
   return _timeStamp ;
 }
 
@@ -220,7 +220,7 @@ void LCEventImpl::setDetectorName(const std::string& dn ) {
 }
 
     
-void LCEventImpl::setTimeStamp(long long ts) {
+void LCEventImpl::setTimeStamp(long64 ts) {
   checkAccess("LCEventImpl::setTimeStamp") ;
   _timeStamp =  ts ;
 }

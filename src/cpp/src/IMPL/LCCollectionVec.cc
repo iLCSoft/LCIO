@@ -55,9 +55,9 @@ LCCollectionVec::~LCCollectionVec() {
 
   // delete all elements
   LCObjectVec::const_iterator iter = begin() ;
-//   std::cout << "deleting collection " 
-// 	    << std::endl ;
-//   UTIL::LCTOOLS::printParameters( parameters() )  ;
+//    std::cout << "deleting collection " 
+//  	    << std::endl ;
+//    UTIL::LCTOOLS::printParameters( parameters() )  ;
 
   while( iter != end() ){
     delete *iter++ ;

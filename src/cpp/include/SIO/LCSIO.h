@@ -1,6 +1,7 @@
 #ifndef SIO_LCSIO_H
 #define SIO_LCSIO_H 1
 
+#include "LCIOTypes.h"
 
 class SIO_stream ;
 
@@ -68,9 +69,9 @@ namespace SIO {
     static unsigned int write( SIO_stream* stream , size_t i) ;
 #endif
 
-    /** Write a long to the stream (in fact written as a 64-bit long long). 
+    /** Write a 64bit integer to the stream 
      */
-    static unsigned int write( SIO_stream* stream , long long i) ;
+    static unsigned int write( SIO_stream* stream , EVENT::long64 i) ;
 
     /** Write a float  to the stream.
      */

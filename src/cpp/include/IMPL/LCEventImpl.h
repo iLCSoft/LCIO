@@ -7,6 +7,7 @@
 #include "EVENT/LCCollection.h"
 // #include "EVENT/LCRelation.h"
 #include "EVENT/LCIO.h"
+#include "LCIOTypes.h"
 #include "AccessChecked.h"
 #include "LCParametersImpl.h"
 
@@ -52,7 +53,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
     /** Returns the time stamp of the event.
      */
-    virtual long long getTimeStamp() const ;
+    virtual EVENT::long64 getTimeStamp() const ;
     
     /** Returns the names of the collections in the  event.
      */
@@ -137,7 +138,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
     /** Sets the event time stamp.
      */
-    void setTimeStamp(long long ts) ;
+    void setTimeStamp(EVENT::long64 ts) ;
        
      
   protected:
@@ -150,7 +151,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
   protected:  
     int _runNumber ;
     int _eventNumber ;
-    long long _timeStamp ;
+    EVENT::long64 _timeStamp ;
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...

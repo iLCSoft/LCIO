@@ -1,5 +1,5 @@
-#ifndef LCIO_OBJECTHANDLE_H
-#define LCIO_OBJECTHANDLE_H 1
+#ifndef UTIL_LCOBJECTHANDLE_H
+#define UTIL_LCOBJECTHANDLE_H 1
 
 #include "EVENT/LCObject.h"
 #include "Exceptions.h"
@@ -9,7 +9,7 @@ namespace UTIL{
 
   /**Template handle class for LCObjects 
    * @author gaede
-   * @version Sep 24, 2003
+   * @version $Id: LCObjectHandle.h,v 1.4 2005-02-03 14:11:00 gaede Exp $
    */
 
   template<class T> class LCObjectHandle{
