@@ -44,7 +44,7 @@ int lcschgetposition( PTRTYPE simcalhit, float *pos)  {
 }
 int lcschgetnmcparticles( PTRTYPE simcalhit )  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
-  return hit->getNMCParticles() ;
+  return hit->getNMCContributions() ;
 }
 
 int lcschgetnmccontributions( PTRTYPE simcalhit )  {

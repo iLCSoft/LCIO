@@ -26,11 +26,11 @@ int lcmcpdelete( PTRTYPE mcparticle ){
 }
 int lcmcpgetnumberofparents( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return mcp->getNumberOfParents() ;  
+  return mcp->getParents().size() ;
 }
 PTRTYPE lcmcpgetparent( PTRTYPE mcparticle, int i ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return C2F_POINTER(LCObject*,  mcp->getParent(i)  ) ;  
+  return C2F_POINTER(LCObject*,  mcp->getParents()[i] ) ;
 }
 // PTRTYPE lcmcpgetsecondparent( PTRTYPE mcparticle ) {
 //   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
@@ -38,7 +38,7 @@ PTRTYPE lcmcpgetparent( PTRTYPE mcparticle, int i ) {
 // }
 PTRTYPE lcmcpgetdaughter( PTRTYPE mcparticle, int i ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return C2F_POINTER(LCObject*,  mcp->getDaughter( i-1 )  ) ;
+  return C2F_POINTER(LCObject*,  mcp->getDaughters()[i-1] ) ;
 }
 int lcmcpgetendpoint(  PTRTYPE mcparticle, double* ep) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
@@ -47,7 +47,7 @@ int lcmcpgetendpoint(  PTRTYPE mcparticle, double* ep) {
 }
 int lcmcpgetnumberofdaughters( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return mcp->getNumberOfDaughters() ;  
+  return mcp->getDaughters().size() ;
 }
 int lcmcpgetpdg( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
