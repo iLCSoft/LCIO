@@ -390,10 +390,10 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
               shape(j) = 7 - j
             end if
           end do
-          status  = lcclusetshape ( clusp, shape )
-          status  = lcclusetemweight ( clusp, .333)
-          status  = lcclusethadweight ( clusp, .333)
-          status  = lcclusetmuonweight ( clusp, .333)
+c          status  = lcclusetshape ( clusp, shape )
+c          status  = lcclusetemweight ( clusp, .333)
+c          status  = lcclusethadweight ( clusp, .333)
+c          status  = lcclusetmuonweight ( clusp, .333)
 
 
 ***       add some random hits
@@ -453,7 +453,7 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
       recopcol = lccolcreate (  LCIO_RECONSTRUCTEDPARTICLE )
       do  i = 1, nreccp
         recopp   =  lcrcpcreate ()
-        status   =  lcrcpsetprimary ( recopp, .true. )
+c        status   =  lcrcpsetprimary ( recopp, .true. )
         status   =  lcrcpsettype ( recopp, SINGLE )
         mom(1)   =  1.1
         mom(2)   =  2.2
@@ -515,7 +515,7 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
         imcp    = dble ( lccolgetnumberofelements ( mcpcol ) )*
      &                   irand( 0 )/RAND_MAX
         mcpp    = lccolgetelementat ( mcpcol, imcp + 1 )
-        status  = lcrcpaddmcparticle ( recopp , mcpp, 0.5 )
+c        status  = lcrcpaddmcparticle ( recopp , mcpp, 0.5 )
 
 
 ***     add this reconstructed particle to collection

@@ -27,7 +27,7 @@ int     lcclugetdirectionerror( PTRTYPE clu, float* direrr ) ;
 // int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
 
 PTRTYPE lcclugetshape( PTRTYPE clu ) ;
-PTRTYPE lcrcpgetparticleids( PTRTYPE clu ) ;
+PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
 
 PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
@@ -42,7 +42,8 @@ int     lcclusetitheta( PTRTYPE clu, float theta ) ;
 int     lcclusetiphi( PTRTYPE clu, float phi ) ;
 int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
 
-int     lcclusetshape( PTRTYPE clu, float* shape ) ;
+// FIXME:  need to implement a new version of setshape (arbitrary length array)
+//int     lcclusetshape( PTRTYPE clu, float* shape ) ;
 
 int     lcclusetemweight(  PTRTYPE clu, float weight ) ;
 int     lcclusethadweight(PTRTYPE clu, float weight ) ;
@@ -70,7 +71,7 @@ FCALLSCFUN1(FLOAT, lcclugetitheta, LCCLUGETITHETA, lcclugetitheta, CFORTRANPNTR)
 FCALLSCFUN1(FLOAT, lcclugetiphi, LCCLUGETIPHI, lcclugetiphi, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lcclugetdirectionerror, LCCLUGETDIRECTIONERROR, lcclugetdirectionerror, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetshape, LCCLUGETSHAPE, lcclugetshape, CFORTRANPNTR ) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticleids, LCRCPGETPARTICLEIDS, lcrcpgetparticleids, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lcclugetparticleids, LCCLUGETPARTICLEIDS, lcclugetparticleids, CFORTRANPNTR ) ;
 
 FCALLSCFUN1(CFORTRANPNTR, lcclugetclusters, LCCLUGETCLUSTERS, lcclugetclusters, CFORTRANPNTR) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetcalorimeterhits, LCCLUGETCALORIMETERHITS, lcclugetcalorimeterhits, CFORTRANPNTR) ;

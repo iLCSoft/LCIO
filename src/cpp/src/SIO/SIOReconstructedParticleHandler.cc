@@ -28,107 +28,178 @@ namespace SIO{
     ReconstructedParticleIOImpl* recP  = new ReconstructedParticleIOImpl ;
     *objP = recP ;
 	
-    int typeFlag ;
-    SIO_DATA( stream ,  &typeFlag , 1  ) ;
-    recP->setType( 0x0000ffff & typeFlag ) ;
-    recP->setPrimary( (1<<31) &  typeFlag ) ;
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
+      
 
-    SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
-    SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
-
-    float errpos[ NCOVARIANCE ] ;
-    SIO_DATA( stream , errpos   , NCOVARIANCE ) ;
-    recP->setCovMatrix( errpos ) ;
-    
-    SIO_DATA( stream ,  &(recP->_mass)  , 1 ) ;
-    SIO_DATA( stream ,  &(recP->_charge)  , 1 ) ;
-    
-    SIO_DATA( stream ,  recP->_reference  , 3 ) ;
-
-    // read PIDs
-    int nPid ;
-    SIO_DATA( stream ,  &nPid  , 1 ) ;
-    for(int i=0;i<nPid;i++){
-      // create new Pid objects
-      ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
-
-      if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
+      SIO_DATA( stream ,  &(recP->_type)  , 1 ) ;
+      
+      SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
+      SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
+      
+      float errpos[ NCOVARIANCE ] ;
+      SIO_DATA( stream , errpos   , NCOVARIANCE ) ;
+      recP->setCovMatrix( errpos ) ;
+      
+      SIO_DATA( stream ,  &(recP->_mass)  , 1 ) ;
+      SIO_DATA( stream ,  &(recP->_charge)  , 1 ) ;
+      
+      SIO_DATA( stream ,  recP->_reference  , 3 ) ;
+      
+      // read PIDs
+      int nPid ;
+      
+      SIO_DATA( stream ,  &nPid  , 1 ) ;
+      for(int i=0;i<nPid;i++){
+	// create new Pid objects
+	ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
+	
 	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
-      }else{ 
+
+
+	char* dummy ; 
+	LCSIO_READ( stream,  &dummy ) ; 
+	pid->setIdentifier( dummy ) ;
+	int nPara  ;
+	SIO_DATA( stream ,  &nPara  , 1 ) ;
+	float aParameter ;
+	for(int j=0;j<nPara;j++){
+	  SIO_DATA( stream ,  &aParameter  , 1 ) ;
+	  pid->addParameter( aParameter ) ;
+	}
+	SIO_PTAG( stream , pid  ) ;
+
+	recP->addParticleID( pid) ;
+      }
+      
+      SIO_PNTR( stream ,   &(recP->_pidUsed) ) ;
+
+      // read reconstructed particles
+      int nRecP ;
+      SIO_DATA( stream, &nRecP , 1  ) ;
+
+      recP->_particles.resize( nRecP ) ;
+      for(int i=0;i<nRecP;i++){
+	SIO_PNTR( stream , &(recP->_particles[i] ) ) ;
+      }
+      
+      // read tracks
+      int nTrk ;
+      SIO_DATA( stream, &nTrk , 1  ) ;
+
+      recP->_tracks.resize( nTrk ) ;
+      for(int i=0;i<nTrk;i++){
+	SIO_PNTR( stream , &(recP->_tracks[i] ) ) ;
+      }
+      
+      // read clusters
+      int nClu ;
+      SIO_DATA( stream, &nClu , 1  ) ;
+
+      recP->_clusters.resize( nClu ) ;
+      for(int i=0;i<nClu;i++){
+	SIO_PNTR( stream , &(recP->_clusters[i] ) ) ;
+      }
+      
+    } else {   // old version (1.0-1.2 keep for a while - no official release !! )
+
+      int typeFlag ;
+      SIO_DATA( stream ,  &typeFlag , 1  ) ;
+      recP->setType( 0x0000ffff & typeFlag ) ;
+//       recP->setPrimary( (1<<31) &  typeFlag ) ;
+      
+      SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
+      SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
+      
+      float errpos[ NCOVARIANCE ] ;
+      SIO_DATA( stream , errpos   , NCOVARIANCE ) ;
+      recP->setCovMatrix( errpos ) ;
+      
+      SIO_DATA( stream ,  &(recP->_mass)  , 1 ) ;
+      SIO_DATA( stream ,  &(recP->_charge)  , 1 ) ;
+      
+      SIO_DATA( stream ,  recP->_reference  , 3 ) ;
+      
+      // read PIDs
+      int nPid ;
+      SIO_DATA( stream ,  &nPid  , 1 ) ;
+      for(int i=0;i<nPid;i++){
+	// create new Pid objects
+	ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
+	
 	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
+	
+	char* dummy ; 
+	LCSIO_READ( stream,  &dummy ) ; 
+	pid->setIdentifier( dummy ) ;
+	int nPara  ;
+	SIO_DATA( stream ,  &nPara  , 1 ) ;
+	float aParameter ;
+	for(int j=0;j<nPara;j++){
+	  SIO_DATA( stream ,  &aParameter  , 1 ) ;
+	  pid->addParameter( aParameter ) ;
+	}
+	recP->addParticleID( pid) ;
       }
-
-      char* dummy ; 
-      LCSIO_READ( stream,  &dummy ) ; 
-      pid->setIdentifier( dummy ) ;
-      int nPara  ;
-      SIO_DATA( stream ,  &nPara  , 1 ) ;
-      float aParameter ;
-      for(int j=0;j<nPara;j++){
-	SIO_DATA( stream ,  &aParameter  , 1 ) ;
-	pid->addParameter( aParameter ) ;
+      
+      // read reconstructed particles
+      int nRecP ;
+      SIO_DATA( stream, &nRecP , 1  ) ;
+      
+      for(int i=0;i<nRecP;i++){
+	recP->_particles.push_back( 0 ) ;
       }
-      recP->addParticleID( pid) ;
-    }
+      float dummyWeights ;
+      for(int i=0;i<nRecP;i++){
+	SIO_PNTR( stream , &(recP->_particles[i] ) ) ;
+	SIO_DATA( stream ,  &dummyWeights  , 1 ) ;
+      }
+      
+      // read tracks
+      int nTrk ;
+      SIO_DATA( stream, &nTrk , 1  ) ;
+      
+      for(int i=0;i<nTrk;i++){
+	recP->_tracks.push_back( 0 ) ;
+      }
+      for(int i=0;i<nTrk;i++){
+	SIO_PNTR( stream , &(recP->_tracks[i] ) ) ;
+	SIO_DATA( stream ,  &dummyWeights  , 1 ) ;
+      }
+      
+      // read clusters
+      int nClu ;
+      SIO_DATA( stream, &nClu , 1  ) ;
+      
+      for(int i=0;i<nClu;i++){
+	recP->_clusters.push_back( 0 ) ;
+      }
+      for(int i=0;i<nClu;i++){
+	SIO_PNTR( stream , &(recP->_clusters[i] ) ) ;
+	SIO_DATA( stream ,  &dummyWeights  , 1 ) ;
+      }
+      
+      // read MCParticles
+      int nMCP ;
+      SIO_DATA( stream, &nMCP , 1  ) ;
 
-    // read reconstructed particles
-    int nRecP ;
-    SIO_DATA( stream, &nRecP , 1  ) ;
-
-    for(int i=0;i<nRecP;i++){
-      recP->_particles.push_back( 0 ) ;
-      recP->_particleWeights.push_back( 0 ) ;
-    }
-    for(int i=0;i<nRecP;i++){
-      SIO_PNTR( stream , &(recP->_particles[i] ) ) ;
-      SIO_PNTR( stream , &(recP->_particleWeights[i] ) ) ;
-    }
-
-    // read tracks
-    int nTrk ;
-    SIO_DATA( stream, &nTrk , 1  ) ;
-
-    for(int i=0;i<nTrk;i++){
-      recP->_tracks.push_back( 0 ) ;
-      recP->_trackWeights.push_back( 0 ) ;
-    }
-    for(int i=0;i<nTrk;i++){
-      SIO_PNTR( stream , &(recP->_tracks[i] ) ) ;
-      SIO_PNTR( stream , &(recP->_trackWeights[i] ) ) ;
-    }
-
-    // read clusters
-    int nClu ;
-    SIO_DATA( stream, &nClu , 1  ) ;
-
-    for(int i=0;i<nClu;i++){
-      recP->_clusters.push_back( 0 ) ;
-      recP->_clusterWeights.push_back( 0 ) ;
-    }
-    for(int i=0;i<nClu;i++){
-      SIO_PNTR( stream , &(recP->_clusters[i] ) ) ;
-      SIO_PNTR( stream , &(recP->_clusterWeights[i] ) ) ;
-    }
-
-    // read MCParticles
-    int nMCP ;
-    SIO_DATA( stream, &nMCP , 1  ) ;
-
-    for(int i=0;i<nMCP;i++){
-      recP->_mcParticles.push_back( 0 ) ;
-      recP->_mcParticleWeights.push_back( 0 ) ;
-    }
-    for(int i=0;i<nMCP;i++){
-      SIO_PNTR( stream , &(recP->_mcParticles[i] ) ) ;
-      SIO_PNTR( stream , &(recP->_mcParticleWeights[i] ) ) ;
-    }
-
-
-
+      SIO_DATA( stream ,  &dummyWeights  , nMCP ) ;
+      SIO_DATA( stream ,  &dummyWeights  , nMCP ) ;
+      
+//       for(int i=0;i<nMCP;i++){
+// 	recP->_mcParticles.push_back( 0 ) ;
+// 	recP->_mcParticleWeights.push_back( 0 ) ;
+//       }
+//       for(int i=0;i<nMCP;i++){
+// 	SIO_PNTR( stream , &(recP->_mcParticles[i] ) ) ;
+// 	SIO_PNTR( stream , &(recP->_mcParticleWeights[i] ) ) ;
+//       }
+      
+    } // --- end old version 1.0-1.2
+      
     // read the pointer tag 
     SIO_PTAG( stream , dynamic_cast<const ReconstructedParticle*>(recP) ) ;
     return ( SIO_BLOCK_SUCCESS ) ;
@@ -146,11 +217,14 @@ namespace SIO{
     const ReconstructedParticle* recP = dynamic_cast<const ReconstructedParticle*>(obj)  ;
 
 
-    // bit 31 is primary flag 
-    // lower 16 bits are type 
-    std::bitset<32> typeFlag =   recP->getType() ; 
-    if( recP->isPrimary() ) typeFlag[31] = 1 ;
-    LCSIO_WRITE( stream, (int) typeFlag.to_ulong()  ) ;
+//     // bit 31 is primary flag 
+//     // lower 16 bits are type 
+//     std::bitset<32> typeFlag =   recP->getType() ; 
+//     if( recP->isPrimary() ) typeFlag[31] = 1 ;
+//     LCSIO_WRITE( stream, (int) typeFlag.to_ulong()  ) ;
+
+
+    LCSIO_WRITE( stream, recP->getType()  ) ;
 
     float* mom = const_cast<float*> ( recP->getMomentum() ) ; 
     SIO_DATA( stream,  mom , 3 ) ;
@@ -183,15 +257,19 @@ namespace SIO{
       for(int j=0;j<nPara;j++){
 	LCSIO_WRITE( stream, pid->getParameters()[j]  ) ;
       }
+      SIO_PTAG( stream ,  pid  ) ;
     }
 
+    EVENT::ParticleID* pidUsed = recP->getParticleIDUsed() ;
+    SIO_PNTR( stream , &pidUsed  ) ;
+      
     // write reconstructed particles
     int nReconstructedParticles=  recP->getParticles().size() ;
     SIO_DATA( stream, &nReconstructedParticles , 1  ) ;
     
     for(int i=0;i<nReconstructedParticles;i++){
       SIO_PNTR( stream , &(recP->getParticles()[i]) ) ;
-      LCSIO_WRITE( stream, recP->getParticleWeights()[i]  ) ;
+//       LCSIO_WRITE( stream, recP->getParticleWeights()[i]  ) ;
     }
     
     // write tracks
@@ -200,7 +278,7 @@ namespace SIO{
 
     for(int i=0;i<nTrk;i++){
       SIO_PNTR( stream , &(recP->getTracks()[i]) ) ;
-      LCSIO_WRITE( stream, recP->getTrackWeights()[i]  ) ;
+//       LCSIO_WRITE( stream, recP->getTrackWeights()[i]  ) ;
     }
 
     // write clusters
@@ -209,17 +287,17 @@ namespace SIO{
 
     for(int i=0;i<nClu;i++){
       SIO_PNTR( stream , &(recP->getClusters()[i]) ) ;
-      LCSIO_WRITE( stream, recP->getClusterWeights()[i]  ) ;
+//       LCSIO_WRITE( stream, recP->getClusterWeights()[i]  ) ;
     }
 
-    // write MCParticles
-    int nMCP = recP->getMCParticles().size() ;
-    SIO_DATA( stream, &nMCP , 1  ) ;
+//     // write MCParticles
+//     int nMCP = recP->getMCParticles().size() ;
+//     SIO_DATA( stream, &nMCP , 1  ) ;
 
-    for(int i=0;i<nMCP;i++){
-      SIO_PNTR( stream , &(recP->getMCParticles()[i]) ) ;
-      LCSIO_WRITE( stream, recP->getMCParticleWeights()[i]  ) ;
-    }
+//     for(int i=0;i<nMCP;i++){
+//       SIO_PNTR( stream , &(recP->getMCParticles()[i]) ) ;
+//       LCSIO_WRITE( stream, recP->getMCParticleWeights()[i]  ) ;
+//     }
 
     // write a ptag in order to be able to point to recPs
     SIO_PTAG( stream , recP ) ;

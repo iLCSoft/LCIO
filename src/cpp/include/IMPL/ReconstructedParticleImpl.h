@@ -32,19 +32,16 @@ namespace IMPL {
 
     virtual int id() { return simpleUID() ; }
 
-    /** Type of reconstructed particle, one of:<br>
-     *  ReconstructedParticle::SINGLE,<br>  
-     *  ReconstructedParticle::V0,<br>
-     *  ReconstructedParticle::COMPOUND,<br>
-     *  ReconstructedParticle::JET<br>
+
+    /** Type of reconstructed particle.
+     *  Check/set collection parameterrs ReconstructedParticleTypeNames and 
+     *  ReconstructedParticleTypeValues.
      */
     virtual int getType() const ;
 
-    /** Return particles primary flag. All particles in the ReconstructedParticle
-     *  collection should by definition return true. Compound partciles will return false.
+    /** Convenient method - same as (getParticles().size() > 0 ).
      */
-    virtual bool isPrimary() const ;
-
+    virtual bool isCompound() const { return getParticles().size() > 0 ; }
 
     /** The magnitude of the reconstructed particle's momentum,
      */
@@ -58,7 +55,7 @@ namespace IMPL {
      */
     virtual const EVENT::FloatVec & getCovMatrix() const ;
 
-    /** Mass of the  reconstructed particle.
+    /** Mass of the  reconstructed particle, set independently from four vector quantities.
      */
     virtual float getMass() const ;
 
@@ -70,47 +67,34 @@ namespace IMPL {
      */
     virtual const float* getReferencePoint() const ;
 
-    /** The particle Id's sorted by their probability.
+    /** The particle Id's sorted by their loglikelihood.
      * @see ParticleID
      */
     virtual const EVENT::ParticleIDVec & getParticleIDs() const ;
 
+    /** The particle Id used for the kinematics of this particle.
+     * @see ParticleID
+     */
+    virtual  EVENT::ParticleID * getParticleIDUsed() const ;
+
+
     /** The reconstructed particles that have been combined to this particle.
      */
-    virtual const EVENT::ReconstructedParticleVec& getParticles() const ; 
-
-    /** The weights of the reconstructed particles combined to this particle
-     */
-    virtual const EVENT::FloatVec & getParticleWeights() const ;
+    virtual const EVENT::ReconstructedParticleVec & getParticles() const ;
 
     /** The clusters that have been used for this particle.
      */
-    virtual const EVENT::ClusterVec& getClusters() const ; 
-    
-    /** The weights of cluster contributions to this particle
-     */
-    virtual const EVENT::FloatVec & getClusterWeights() const ;
+    virtual const EVENT::ClusterVec & getClusters() const ;
+
 
     /** The tracks that have been used for this particle.
      */
-    virtual const EVENT::TrackVec& getTracks() const ; 
-    
-    /** The weights of track contributions to this particle
-     */
-    virtual const EVENT::FloatVec & getTrackWeights() const ;
+    virtual const EVENT::TrackVec & getTracks() const ;
 
-    /** The MCParticle assigned to this reconstructed particle.
-     * @see MCParticle
-     */
-    virtual const EVENT::MCParticleVec& getMCParticles() const ;
-
-    /** The weights of the MCParticle assignment.
-     */
-    virtual const EVENT::FloatVec & getMCParticleWeights() const ;
 
     // setters
     void setType(int type) ;
-    void setPrimary(bool primary) ;
+    //     void setPrimary(bool primary) ;
     //    void setTypeFlag( int typeFlag)  ;
     void setMomentum( const float* momentum ) ;
     void setEnergy( float energy) ;
@@ -120,22 +104,14 @@ namespace IMPL {
     void setCharge( float charge ) ;
     void setReferencePoint( const float* reference ) ;
     void addParticleID( EVENT::ParticleID*  pid ) ;
-    void addParticle( EVENT::ReconstructedParticle* particle , float weight = 1.0 ) ;
-    void addCluster( EVENT::Cluster* cluster, float weight = 1.0 ) ;
-    void addTrack( EVENT::Track* track, float weight = 1.0 ) ;
-    void addMCParticle( EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
+    void setParticleIDUsed( EVENT::ParticleID*  pid ) ;
+    void addParticle( EVENT::ReconstructedParticle* particle ) ;
+    void addCluster( EVENT::Cluster* cluster) ;
+    void addTrack( EVENT::Track* track) ;
+//     void addMCParticle( EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
 
   protected:
-    /** Flag word that decodes some particle type information<br>
-     *  bit 31, primary: 0 secondary, 1 primary <br>   
-     *  bits0-15: type: <br>
-     *  ReconstructedParticle::SINGLE,<br>  
-     *  ReconstructedParticle::V0,<br>
-     *  ReconstructedParticle::COMPOUND,<br>
-     *  ReconstructedParticle::JET<br>
-     */
 
-    bool _primary ;
     int _type ;
     float _momentum[3] ;
     float _energy ;
@@ -143,15 +119,16 @@ namespace IMPL {
     float _mass ;
     float _charge ;
     float _reference[3] ;
+    EVENT::ParticleID* _pidUsed ;
     EVENT::ParticleIDVec _pid ;
     EVENT::ReconstructedParticleVec _particles ;
-    EVENT::FloatVec _particleWeights ;
+//     EVENT::FloatVec _particleWeights ;
     EVENT::ClusterVec _clusters ;
-    EVENT::FloatVec _clusterWeights ;
+//     EVENT::FloatVec _clusterWeights ;
     EVENT::TrackVec _tracks ;
-    EVENT::FloatVec _trackWeights ;
-    EVENT::MCParticleVec _mcParticles ;
-    EVENT::FloatVec _mcParticleWeights ;
+//     EVENT::FloatVec _trackWeights ;
+//     EVENT::MCParticleVec _mcParticles ;
+//     EVENT::FloatVec _mcParticleWeights ;
     
 }; // class
 

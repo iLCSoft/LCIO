@@ -130,8 +130,9 @@ c-----the Cluster interface
       real    lcclugetenergy, lcclugetitheta, lcclugetiphi
       integer lcclusettypebit, lcclusetenergy, lcclusetposition
       integer lcclusetpositionerror,lcclusetitheta, lcclusetiphi
-      integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
-      integer lcclusethadweight, lcclusetmuonweight
+      integer lcclusetdirectionerror
+c      integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
+c      integer lcclusethadweight, lcclusetmuonweight
       integer lcclusetsubdetectorenergies
       integer lccluaddcluster, lccluaddhit
 
@@ -149,18 +150,15 @@ c-----the ParticleID interface
 
 c-----the ReconstructedParticle interface
       PTRTYPE lcrcpcreate, lcrcpgetparticleids, lcrcpgetparticles
-      PTRTYPE lcrcpgetclusters, lcrcpgettracks, lcrcpgetmcparticles
+      PTRTYPE lcrcpgetclusters, lcrcpgettracks
       integer lcrcpgettype, lcrcpgetmomentum, lcrcpgetcovmatrix
-      integer lcrcpgetreferencepoint, lcrcpgetparticleweights
-      integer lcrcpgetclusterweights, lcrcpgettrackweights
-      integer lcrcpgetmcparticleweights
+      integer lcrcpgetreferencepoint
       real    lcrcpgetenergy, lcrcpgetmass, lcrcpgetcharge
-      logical lcrcpisprimary
-      integer lcrcpsettype, lcrcpsetprimary, lcrcpsetmomentum
+      logical lcrcpiscomound
+      integer lcrcpsettype, lcrcpsetmomentum
       integer lcrcpsetenergy, lcrcpsetcovmatrix, lcrcpsetmass
       integer lcrcpsetcharge, lcrcpsetreferencepoint, lcrcpaddparticleid
       integer lcrcpaddparticle, lcrcpaddcluster, lcrcpaddtrack
-      integer lcrcpaddmcparticle
 
 c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawdatahit

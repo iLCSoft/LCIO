@@ -21,66 +21,67 @@ public class IReconstructedParticle implements ReconstructedParticle
    }
    public void addParticle(ReconstructedParticle particle)
    {
-      addParticle( particle , (float) 1.0 ) ;
+      addParticle( particle ) ;
       
    }
-   public void addParticle(ReconstructedParticle particle, float weight)
-   {
-      particles.add( particle ) ;
-      //TODO: particleWeights.add( new Float(weight) ) ;
-   }
+//   public void addParticle(ReconstructedParticle particle, float weight)
+//   {
+//      particles.add( particle ) ;
+//      //TODO: particleWeights.add( new Float(weight) ) ;
+//   }
 
    public void addCluster(Cluster cluster)
    {
-      addCluster( cluster , (float) 1. ) ;
+      addCluster( cluster  ) ;
    }
 
-   public void addCluster(Cluster cluster, float weight)
-   {
-      clusters.add( cluster  ) ;
-      //TODO: clusterWeights.add( new Float(weight)) ;
-      
-   }
+//   public void addCluster(Cluster cluster, float weight)
+//   {
+//      clusters.add( cluster  ) ;
+//      //TODO: clusterWeights.add( new Float(weight)) ;
+//      
+//   }
    
    public void addTrack(Track track)
    {
-      addTrack( track, (float) 1. ) ;
+      addTrack( track ) ;
    }
    
-   public void addTrack(Track track, float weight)
-   {
-      tracks.add( track ) ;
-      //TODO: trackWeights.add( new Float( weight) ) ;
-      
-   }
+//   public void addTrack(Track track, float weight)
+//   {
+//      tracks.add( track ) ;
+//      //TODO: trackWeights.add( new Float( weight) ) ;
+//      
+//   }
 
-   public void addMCParticle(MCParticle mcParticle)
-   {
-      addMCParticle( mcParticle, (float) 1. ) ;
-   }
-   
-   public void addMCParticle(MCParticle mcParticle, float weight)
-   {
-      mCParticles.add(mcParticle) ;
-      
-   }
+//   public void addMCParticle(MCParticle mcParticle)
+//   {
+//      addMCParticle( mcParticle, (float) 1. ) ;
+//   }
+//   
+//   public void addMCParticle(MCParticle mcParticle, float weight)
+//   {
+//      mCParticles.add(mcParticle) ;
+//      
+//   }
    
    protected int type ;
-   protected boolean primary ;
+//   protected boolean primary ;
    protected float[] momentum = new float[3] ;
    protected float[] referencePoint = new float[3] ;
    protected float mass ;
    protected float energy ;
    protected float charge ;
    protected Vector particleIDs ;
-   protected Vector mCParticles ;
-   protected float[] mCParticleWeights ;
+   protected ParticleID particleIDUsed ;  // Fixme: need IParticleID
+//   protected Vector mCParticles ;
+//   protected float[] mCParticleWeights ;
    protected Vector particles ;
-   protected float[] particleWeights ;
+//   protected float[] particleWeights ;
    protected Vector tracks ;
-   protected float[] trackWeights ;
+//   protected float[] trackWeights ;
    protected Vector clusters;
-   protected float[] clusterWeights ;
+//   protected float[] clusterWeights ;
    protected float[] covMatrix ;
    
    public float[] getMomentum()
@@ -88,10 +89,10 @@ public class IReconstructedParticle implements ReconstructedParticle
       return momentum;
    }
    
-   public boolean isPrimary()
-   {
-      return primary;
-   }
+//   public boolean isPrimary()
+//  {
+//      return primary;
+//   }
    
    public int getType()
    {
@@ -103,30 +104,30 @@ public class IReconstructedParticle implements ReconstructedParticle
       momentum = fs;
    }
    
-   public void setPrimary(boolean b)
-   {
-      primary = b;
-   }
+//   public void setPrimary(boolean b)
+//   {
+//      primary = b;
+//   }
    
    public void setType(int i)
    {
       type = i;
    }
    
-   public List getMCParticles()
-   {
-      return mCParticles;
-   }
+//   public List getMCParticles()
+//   {
+//      return mCParticles;
+//   }
    
    public List getClusters()
    {
       return clusters;
    }
    
-   public float[] getClusterWeights()
-   {
-      return clusterWeights;
-   }
+//   public float[] getClusterWeights()
+//   {
+//      return clusterWeights;
+//   }
    
    public float getEnergy()
    {
@@ -138,30 +139,30 @@ public class IReconstructedParticle implements ReconstructedParticle
       return mass;
    }
    
-   public float[] getMCParticleWeights()
-   {
-      return mCParticleWeights;
-   }
+//   public float[] getMCParticleWeights()
+//   {
+//      return mCParticleWeights;
+//   }
    
    public List getParticles()
    {
       return particles;
    }
    
-   public float[] getParticleWeights()
-   {
-      return particleWeights;
-   }
+//   public float[] getParticleWeights()
+//   {
+//      return particleWeights;
+//   }
    
    public List getTracks()
    {
       return tracks;
    }
    
-   public float[] getTrackWeights()
-   {
-      return trackWeights;
-   }
+//   public float[] getTrackWeights()
+//   {
+//      return trackWeights;
+//   }
    
    public void setClusters(Vector vector)
    {
@@ -213,4 +214,12 @@ public class IReconstructedParticle implements ReconstructedParticle
       covMatrix = cov;
    }
    
+	public ParticleID getParticleIDUsed() {
+		return particleIDUsed ;
+	}
+
+	public boolean isCompound() {
+		return particles.size() > 0 ;
+	}
+
 }

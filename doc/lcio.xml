@@ -757,8 +757,8 @@
 	<!-- end of named parameters -->
       <data type="int" name="nObject"/>
       <repeat count="nObject">
-        <data type="int" name="typeFlag">flag - bit31= 0: secondary, 1: primary 
-                                         bits0-15: type: SINGLE, V0, COMPOUND, JET</data>
+        <data type="int" name="typeFlag">particle type - see  collection parameters 
+              ReconstructedParticleTypeNames and ReconstructedParticleTypeValues</data>
 	<!--data type="int" name="type">single particle, compound particle (V0,B), jet</data-->
         <data type="float[3]" name="momentum">(px, py, pz)</data>
         <data type="float" name="energy">E</data>
@@ -778,6 +778,7 @@
 	    <repeat count="npar">
 	       <data type="float" name="parameter"/>
             </repeat>
+            <data type="ptag" name="pid"></data>
 	  <else/>
 	    <data type="float" name="probability"/>
 	    <data type="int" name="typeID"/>
@@ -788,26 +789,35 @@
             </repeat>
 	  </if>
 	</repeat>
+        <data type="pntr" name="ParticleIDUsed"></data>
         <data type="int" name="nrecopart"/>
         <repeat count="nrecopart">
 	  <data type="pntr" name="ReconstructedParticle"></data>
-	  <data type="float" name="weight">weight of contribution</data>
+          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+	    <data type="float" name="weight">weight of contribution</data>
+          </if>
         </repeat>
 	<data type="int" name="ntrk"/>
 	<repeat count="ntrk">
 	  <data type="pntr" name="Track"/>
-	  <data type="float" name="weight">TODO: to be defined </data>
+          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+	    <data type="float" name="weight">TODO: to be defined </data>
+          </if>
 	</repeat>
 	<data type="int" name="ncal"/>
 	<repeat count="ncal">
 	  <data type="pntr" name="Cluster"/>
-	  <data type="float" name="weight">TODO: to be defined </data>
+          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+	    <data type="float" name="weight">TODO: to be defined </data>
+          </if>
 	</repeat>
-	<data type="int" name="nmc"/>
-	<repeat count="nmc">
-	  <data type="pntr" name="MCParticle"/>
-	  <data type="float" name="weight">weight of assignment</data>
-	</repeat>
+        <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+	  <data type="int" name="nmc"/>
+	  <repeat count="nmc">
+	    <data type="pntr" name="MCParticle"/>
+	    <data type="float" name="weight">weight of assignment</data>
+	  </repeat>
+        </if>
         <data type="ptag" name="this"></data>
       </repeat>
     </block>

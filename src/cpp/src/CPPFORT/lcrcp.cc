@@ -27,9 +27,9 @@ int lcrcpgettype( PTRTYPE recopart )  {
   return rcp->getType() ;
 }
 
-bool lcrcpisprimary ( PTRTYPE recopart ) {
+bool lcrcpiscompound ( PTRTYPE recopart ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  return rcp->isPrimary() ;
+  return rcp->isCompound() ;
 }
 
 int lcrcpgetmomentum( PTRTYPE recopart, float* p )  {
@@ -78,20 +78,20 @@ PTRTYPE lcrcpgetparticles( PTRTYPE recopart ) {
 }
 
 
-int lcrcpgetparticleweights( PTRTYPE recopart, float* weights, int* nweights ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  int ntot = *nweights - 1 ;
-  for(unsigned int l=0;l<rcp->getParticles().size();l++){
-    if ( l > (unsigned)ntot ) {
-      std::cout << "LCReconstructedParticle: in getParticleWeights more than " 
-                << ntot << "weights to store" << std::endl ;
-      return LCIO::ERROR ;
-    }
-    *weights++ = rcp->getParticleWeights()[l] ;
-  }
-  *nweights = (int)(rcp->getParticles().size() + 1);
-  return LCIO::SUCCESS ;
-}
+// int lcrcpgetparticleweights( PTRTYPE recopart, float* weights, int* nweights ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   int ntot = *nweights - 1 ;
+//   for(unsigned int l=0;l<rcp->getParticles().size();l++){
+//     if ( l > (unsigned)ntot ) {
+//       std::cout << "LCReconstructedParticle: in getParticleWeights more than " 
+//                 << ntot << "weights to store" << std::endl ;
+//       return LCIO::ERROR ;
+//     }
+//     *weights++ = rcp->getParticleWeights()[l] ;
+//   }
+//   *nweights = (int)(rcp->getParticles().size() + 1);
+//   return LCIO::SUCCESS ;
+// }
 
 PTRTYPE lcrcpgetclusters( PTRTYPE recopart ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
@@ -100,20 +100,20 @@ PTRTYPE lcrcpgetclusters( PTRTYPE recopart ) {
 }
 
 
-int lcrcpgetclusterweights( PTRTYPE recopart, float* weights, int* nweights ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  int ntot = *nweights - 1;
-  for(unsigned int l=0;l<rcp->getClusters().size();l++){
-    if ( l > (unsigned)ntot ) {
-      std::cout << "LCReconstructedParticle: in getClusterWeights more than " 
-                << ntot << "weights to store" << std::endl ;
-      return LCIO::ERROR ;
-    }
-    *weights++ = rcp->getClusterWeights()[l] ;
-  }
-  *nweights = (int)(rcp->getClusters().size() + 1) ;
-  return LCIO::SUCCESS ;
-}
+// int lcrcpgetclusterweights( PTRTYPE recopart, float* weights, int* nweights ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   int ntot = *nweights - 1;
+//   for(unsigned int l=0;l<rcp->getClusters().size();l++){
+//     if ( l > (unsigned)ntot ) {
+//       std::cout << "LCReconstructedParticle: in getClusterWeights more than " 
+//                 << ntot << "weights to store" << std::endl ;
+//       return LCIO::ERROR ;
+//     }
+//     *weights++ = rcp->getClusterWeights()[l] ;
+//   }
+//   *nweights = (int)(rcp->getClusters().size() + 1) ;
+//   return LCIO::SUCCESS ;
+// }
 
 PTRTYPE lcrcpgettracks( PTRTYPE recopart ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
@@ -121,41 +121,41 @@ PTRTYPE lcrcpgettracks( PTRTYPE recopart ) {
   return reinterpret_cast<PTRTYPE>( &idvect );
 }
 
-int lcrcpgettrackweights( PTRTYPE recopart, float* weights, int* nweights ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  int ntot = *nweights - 1;
-  for(unsigned int l=0;l<rcp->getTracks().size();l++){
-    if ( l > (unsigned)ntot ) {
-      std::cout << "LCReconstructedParticle: in getTrackWeights more than "
-                << ntot << "weights to store" << std::endl ;
-      return LCIO::ERROR ;
-    }
-    *weights++ = rcp->getTrackWeights()[l] ;
-  }
-  *nweights = (int)(rcp->getTracks().size() + 1) ;
-  return LCIO::SUCCESS ;
-}
+// int lcrcpgettrackweights( PTRTYPE recopart, float* weights, int* nweights ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   int ntot = *nweights - 1;
+//   for(unsigned int l=0;l<rcp->getTracks().size();l++){
+//     if ( l > (unsigned)ntot ) {
+//       std::cout << "LCReconstructedParticle: in getTrackWeights more than "
+//                 << ntot << "weights to store" << std::endl ;
+//       return LCIO::ERROR ;
+//     }
+//     *weights++ = rcp->getTrackWeights()[l] ;
+//   }
+//   *nweights = (int)(rcp->getTracks().size() + 1) ;
+//   return LCIO::SUCCESS ;
+// }
 
-PTRTYPE lcrcpgetmcparticles( PTRTYPE recopart ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  const MCParticleVec& idvect = rcp->getMCParticles();
-  return reinterpret_cast<PTRTYPE>( &idvect );
-}
+// PTRTYPE lcrcpgetmcparticles( PTRTYPE recopart ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   const MCParticleVec& idvect = rcp->getMCParticles();
+//   return reinterpret_cast<PTRTYPE>( &idvect );
+// }
 
-int lcrcpgetmcparticleweights( PTRTYPE recopart, float* weights, int* nweights ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  int ntot = *nweights - 1 ;
-  for(unsigned int l=0;l<rcp->getMCParticles().size();l++){
-    if ( l > (unsigned)ntot ) {
-      std::cout << "LCReconstructedParticle: in getMCParticleWeights more than " 
-                << ntot << "weights to store" << std::endl ;
-      return LCIO::ERROR ;
-    }
-    *weights++ = rcp->getMCParticleWeights()[l] ;
-  }
-  *nweights = (int)(rcp->getMCParticles().size() + 1);
-  return LCIO::SUCCESS ;
-}
+// int lcrcpgetmcparticleweights( PTRTYPE recopart, float* weights, int* nweights ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   int ntot = *nweights - 1 ;
+//   for(unsigned int l=0;l<rcp->getMCParticles().size();l++){
+//     if ( l > (unsigned)ntot ) {
+//       std::cout << "LCReconstructedParticle: in getMCParticleWeights more than " 
+//                 << ntot << "weights to store" << std::endl ;
+//       return LCIO::ERROR ;
+//     }
+//     *weights++ = rcp->getMCParticleWeights()[l] ;
+//   }
+//   *nweights = (int)(rcp->getMCParticles().size() + 1);
+//   return LCIO::SUCCESS ;
+// }
 
 
 // set,add Methods
@@ -166,11 +166,11 @@ int lcrcpsettype( PTRTYPE recopart, int type ) {
   return LCIO::SUCCESS ;
 }
 
-int lcrcpsetprimary( PTRTYPE recopart, bool lprimary ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  rcp->setPrimary( lprimary ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcrcpsetcompound( PTRTYPE recopart, bool lcompound ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   rcp->setCompound( lcompound ) ;
+//   return LCIO::SUCCESS ;
+// }
 
 int lcrcpsetmomentum( PTRTYPE recopart, float p[3] ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
@@ -215,33 +215,33 @@ int lcrcpaddparticleid( PTRTYPE recopart, PTRTYPE pid ) {
   return LCIO::SUCCESS ;
 }
 
-int lcrcpaddparticle( PTRTYPE recopart, PTRTYPE particle, float weight ) {
+int lcrcpaddparticle( PTRTYPE recopart, PTRTYPE particle ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   ReconstructedParticle* rparticle = f2c_pointer<ReconstructedParticle,LCObject>( particle ) ;
-  rcp->addParticle( rparticle, weight ) ;
+  rcp->addParticle( rparticle ) ;
   return LCIO::SUCCESS ;
 }
 
-int lcrcpaddcluster( PTRTYPE recopart, PTRTYPE clus, float weight ) {
+int lcrcpaddcluster( PTRTYPE recopart, PTRTYPE clus ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   Cluster* cclus = f2c_pointer<Cluster,LCObject>( clus ) ;
-  rcp->addCluster( cclus, weight ) ;
+  rcp->addCluster( cclus ) ;
   return LCIO::SUCCESS ;
 }
 
-int lcrcpaddtrack( PTRTYPE recopart, PTRTYPE track, float weight ) {
+int lcrcpaddtrack( PTRTYPE recopart, PTRTYPE track ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   Track* ctrack = f2c_pointer<Track,LCObject>( track ) ;
-  rcp->addTrack( ctrack, weight ) ;
+  rcp->addTrack( ctrack ) ;
   return LCIO::SUCCESS ;
 }
 
-int lcrcpaddmcparticle( PTRTYPE recopart, PTRTYPE particle, float weight ) {
-  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  MCParticle* mmcp = f2c_pointer<MCParticle,LCObject>( particle ) ;
-  rcp->addMCParticle( mmcp, weight ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcrcpaddmcparticle( PTRTYPE recopart, PTRTYPE particle ) {
+//   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+//   MCParticle* mmcp = f2c_pointer<MCParticle,LCObject>( particle ) ;
+//   rcp->addMCParticle( mmcp ) ;
+//   return LCIO::SUCCESS ;
+// }
 
 
 

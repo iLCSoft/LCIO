@@ -1010,9 +1010,9 @@ namespace UTIL {
     int nPrint = nReconstructedParticles > MAX_HITS ? MAX_HITS : nReconstructedParticles ;
     
     std::cout << endl
-	      << " [   id   ] |pri|type|     momentum( px,py,pz)         | energy   | mass     | charge    |      position ( x,y,z)  "
+	      << " [   id   ] |com|type|     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed]"
 	      << endl	      
-	      << "----------|---|----|---------------------------------|----------|----------|-----------|-------------------------"
+	      << "  ----------|---|----|---------------------------------|----------|----------|-----------|----------------------------------|----------"
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -1025,13 +1025,13 @@ namespace UTIL {
 #endif
 
       
-      int primary = recP->isPrimary() ;
+      int compound = recP->isCompound() ;
       int type =  recP->getType() ;
 
-      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) \n"
+      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x] \n"
 	     //	     , reinterpret_cast<int> ( recP )
 	     , recP->id()
-	     , primary
+	     , compound
 	     , type
 	     , recP->getMomentum()[0]
 	     , recP->getMomentum()[1]
@@ -1042,6 +1042,7 @@ namespace UTIL {
 	     , recP->getReferencePoint()[0] 
 	     , recP->getReferencePoint()[1] 
 	     , recP->getReferencePoint()[2] 
+	     , recP->getParticleIDUsed()->id() 
 	     ) ;
       cout << "    covariance( px,py,pz,E) : (" ;
       for(int l=0;l<10;l++){
@@ -1049,29 +1050,36 @@ namespace UTIL {
       }
       cout << ")" << endl ;
 
-      cout << "    particles ( [   id   ] (weight) ): " ;
+      cout << "    particles ( [   id   ] ):" ;
       for(unsigned int l=0;l<recP->getParticles().size();l++){
-	printf("[%8.8x] (%f), ", recP->getParticles()[l]->id() , 
-	       recP->getParticleWeights()[l]  ) ; 
+	printf("[%8.8x], ", recP->getParticles()[l]->id() ) ;
+	//,  recP->getParticleWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    tracks ( [   id   ] (weight) ): " ;
+      cout << "    tracks ( [   id   ] ): " ;
       for(unsigned int l=0;l<recP->getTracks().size();l++){
-	printf("[%8.8x] (%f), ",  recP->getTracks()[l]->id() ,
-	       recP->getTrackWeights()[l]  ) ; 
+	printf("[%8.8x], ",  recP->getTracks()[l]->id() );
+	//,	       recP->getTrackWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    clusters ( [   id   ] (weight) ): " ;
+      cout << "    clusters ( [   id   ] ): " ;
       for(unsigned int l=0;l<recP->getClusters().size();l++){
-	printf("[%8.8x] (%f), ",  recP->getClusters()[l]->id() ,
-	       recP->getClusterWeights()[l]  ) ; 
+	printf("[%8.8x], ",  recP->getClusters()[l]->id() );
+	//,       recP->getClusterWeights()[l]  ) ; 
       }
       cout << endl ;
-      cout << "    MCParticles ( [   id   ] (weight) ): " ;
-      for(unsigned int l=0;l<recP->getMCParticles().size();l++){
-	printf("[%8.8x] (%f), ",  recP->getMCParticles()[l]->id() ,
-	       recP->getMCParticleWeights()[l]  ) ; 
+      cout << "    particle ids ( [id], PDG, (type)): " ;
+      for(unsigned int l=0;l<recP->getParticleIDs().size();l++){
+	ParticleID* pid = recP->getParticleIDs()[l] ;
+	printf("[%8.8x], %6.6d, (%6.6d)  ",  pid->id() , pid->getPDG() , pid->getType() ) ;
       }
+      cout << endl ;
+
+//       cout << "    MCParticles ( [   id   ] (weight) ): " ;
+//       for(unsigned int l=0;l<recP->getMCParticles().size();l++){
+// 	printf("[%8.8x] (%f), ",  recP->getMCParticles()[l]->id() ,
+// 	       recP->getMCParticleWeights()[l]  ) ; 
+//       }
       cout << endl ;
 
 //       cout << endl ;
@@ -1089,7 +1097,7 @@ namespace UTIL {
 // 	  }
 // 	}
 //       }
-      cout  << "----------|---|----|---------------------------------|----------|----------|-----------|-------------------------"
+      cout  << "------------|---|----|---------------------------------|----------|----------|-----------|---------------------------------|-----------|"
 	    << endl ;
     }
       cout << endl 

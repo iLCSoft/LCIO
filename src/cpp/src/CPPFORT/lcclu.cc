@@ -82,7 +82,7 @@ int lcclugetdirectionerror( PTRTYPE cluster, float direrr[3] )  {
 //   return LCIO::SUCCESS ;
 // }
 
-PTRTYPE lcrcpgetparticleids( PTRTYPE cluster ) {
+PTRTYPE lcclugetparticleids( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   const ParticleIDVec& idvect = clu->getParticleIDs();
   return reinterpret_cast<PTRTYPE>( &idvect );

@@ -8,9 +8,23 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ReconstructedParticleImpl::ReconstructedParticleImpl(){
-    for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
+  ReconstructedParticleImpl::ReconstructedParticleImpl() :
+    _type(0) ,
+    _energy(0) ,
+    _mass(0) ,
+    _charge(0),
+    _pidUsed(0) 
+  {
+    _cov.resize( NCOVARIANCE ) ;
+    //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
+    _momentum[0] = 0. ;
+    _momentum[1] = 0. ;
+    _momentum[2] = 0. ;
+    _reference[0] = 0. ;
+    _reference[1] = 0. ;
+    _reference[2] = 0. ;    
   }
+
   ReconstructedParticleImpl::~ReconstructedParticleImpl(){
     // delete the pids owned by this particle
     for(  ParticleIDVec::iterator iter = _pid.begin() ; iter != _pid.end() ; iter++){
@@ -19,7 +33,7 @@ namespace IMPL{
   }
  
   int ReconstructedParticleImpl::getType() const { return _type ; }
-  bool ReconstructedParticleImpl::isPrimary() const { return _primary ;}
+//   bool ReconstructedParticleImpl::isPrimary() const { return _primary ;}
 
   const float* ReconstructedParticleImpl::getMomentum() const { return  _momentum ; }
   float ReconstructedParticleImpl::getEnergy() const { return  _energy ; }
@@ -28,29 +42,32 @@ namespace IMPL{
   float ReconstructedParticleImpl::getCharge() const { return  _charge ; }
   const float* ReconstructedParticleImpl::getReferencePoint() const { return  _reference ; }
 
+
+  EVENT::ParticleID * ReconstructedParticleImpl::getParticleIDUsed() const { return  _pidUsed ; }
+  
   const EVENT::ParticleIDVec & ReconstructedParticleImpl::getParticleIDs() const { return  _pid ; }
 
   const EVENT::ReconstructedParticleVec& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
-  const EVENT::FloatVec & ReconstructedParticleImpl::getParticleWeights() const { return  _particleWeights ; }
+//   const EVENT::FloatVec & ReconstructedParticleImpl::getParticleWeights() const { return  _particleWeights ; }
 
   const EVENT::ClusterVec& ReconstructedParticleImpl::getClusters() const { return _clusters  ; } 
-  const EVENT::FloatVec & ReconstructedParticleImpl::getClusterWeights() const { return _clusterWeights  ; }
+//   const EVENT::FloatVec & ReconstructedParticleImpl::getClusterWeights() const { return _clusterWeights  ; }
 
   const EVENT::TrackVec& ReconstructedParticleImpl::getTracks() const { return _tracks  ; } 
-  const EVENT::FloatVec & ReconstructedParticleImpl::getTrackWeights() const { return  _trackWeights ; }
+//   const EVENT::FloatVec & ReconstructedParticleImpl::getTrackWeights() const { return  _trackWeights ; }
 
-  const EVENT::MCParticleVec& ReconstructedParticleImpl::getMCParticles() const { return _mcParticles  ; }
-  const EVENT::FloatVec & ReconstructedParticleImpl::getMCParticleWeights() const { return  _mcParticleWeights ; }
+//   const EVENT::MCParticleVec& ReconstructedParticleImpl::getMCParticles() const { return _mcParticles  ; }
+//   const EVENT::FloatVec & ReconstructedParticleImpl::getMCParticleWeights() const { return  _mcParticleWeights ; }
   
 
   void ReconstructedParticleImpl::setType(int type){
     checkAccess("ReconstructedParticleImpl::setType" );
     _type = type ;
   }
-  void ReconstructedParticleImpl::setPrimary(bool primary){
-    checkAccess("ReconstructedParticleImpl::setPrimary" );
-    _primary = primary ;
-  }
+//   void ReconstructedParticleImpl::setPrimary(bool primary){
+//     checkAccess("ReconstructedParticleImpl::setPrimary" );
+//     _primary = primary ;
+//   }
 
 //   void ReconstructedParticleImpl::setTypeFlag( int typeFlag){
 //     checkAccess("ReconstructedParticleImpl::setTypeFlag" );
@@ -96,6 +113,11 @@ namespace IMPL{
     _reference[2]  = reference[2] ;
   }
 
+  void ReconstructedParticleImpl::setParticleIDUsed( ParticleID* pidUsed ){
+    checkAccess("ReconstructedParticleImpl::setParticleIDUsed" );
+    _pidUsed = pidUsed ;
+  }
+
   void ReconstructedParticleImpl::addParticleID( ParticleID* pid ){
     checkAccess("ReconstructedParticleImpl::addParticleID" );
     _pid.push_back( pid ) ;
@@ -103,29 +125,29 @@ namespace IMPL{
     sort( _pid.begin() , _pid.end() , PIDSort()  ) ;
   }
 
-  void ReconstructedParticleImpl::addParticle( ReconstructedParticle* particle , float weight ){
+  void ReconstructedParticleImpl::addParticle( ReconstructedParticle* particle ){
     checkAccess("ReconstructedParticleImpl::addParticle" );
     _particles.push_back( particle ) ;
-    _particleWeights.push_back( weight ) ;
+//     _particleWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addCluster( Cluster* cluster, float weight ){
+  void ReconstructedParticleImpl::addCluster( Cluster* cluster ){
     checkAccess("ReconstructedParticleImpl::addCluster" );
     _clusters.push_back( cluster ) ;
-    _clusterWeights.push_back( weight ) ;
+//     _clusterWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addTrack( Track* track, float weight ){
+  void ReconstructedParticleImpl::addTrack( Track* track ){
     checkAccess("ReconstructedParticleImpl::addTrack" );
     _tracks.push_back( track ) ;
-    _trackWeights.push_back( weight ) ;
+//     _trackWeights.push_back( weight ) ;
   }
   
-  void ReconstructedParticleImpl::addMCParticle(  MCParticle* mcParticle , float weight ){
-    checkAccess("ReconstructedParticleImpl::addMCParticle" );
-    _mcParticles.push_back( mcParticle ) ;
-    _mcParticleWeights.push_back( weight ) ;
-  }
+//   void ReconstructedParticleImpl::addMCParticle(  MCParticle* mcParticle , float weight ){
+//     checkAccess("ReconstructedParticleImpl::addMCParticle" );
+//     _mcParticles.push_back( mcParticle ) ;
+//     _mcParticleWeights.push_back( weight ) ;
+//   }
 
 
 }; // end namespace

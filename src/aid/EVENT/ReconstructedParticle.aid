@@ -10,41 +10,43 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.7 2004-09-01 16:42:53 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.8 2004-09-06 10:28:21 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
     
 
-@ifdef cpp
-@cpp{
-  public:
-    static const int UNKNOWN  =  0 ; 
-    static const int SINGLE   =  1 ; 
-    static const int V0       =  2 ; 
-    static const int COMPOUND =  3 ; 
-    static const int JET      =  4 ; 
-}
-@else
-    public static const int UNKNOWN  =  0 ; 
-    public static const int SINGLE   =  1 ; 
-    public static const int V0       =  2 ; 
-    public static const int COMPOUND =  3 ; 
-    public static const int JET      =  4 ; 
-@endif
+// @ifdef cpp
+// @cpp{
+//   public:
+//     static const int UNKNOWN  =  0 ; 
+//     static const int SINGLE   =  1 ; 
+//     static const int V0       =  2 ; 
+//     static const int COMPOUND =  3 ; 
+//     static const int JET      =  4 ; 
+// }
+// @else
+//     public static const int UNKNOWN  =  0 ; 
+//     public static const int SINGLE   =  1 ; 
+//     public static const int V0       =  2 ; 
+//     public static const int COMPOUND =  3 ; 
+//     public static const int JET      =  4 ; 
+// @endif
 
-    /** Type of reconstructed particle, one of:<br>
-     *  ReconstructedParticle::SINGLE,<br>  
-     *  ReconstructedParticle::V0,<br>
-     *  ReconstructedParticle::COMPOUND,<br>
-     *  ReconstructedParticle::JET<br>
+    /** Type of reconstructed particle.
+     *  Check/set collection parameterrs ReconstructedParticleTypeNames and 
+     *  ReconstructedParticleTypeValues.
      */
     public int getType() const ;	
     
-    /** Return particles primary flag. All particles in the ReconstructedParticle
-     *  collection should by definition return true. Compound partciles will return false.
+//     /** Return particles primary flag. All particles in the ReconstructedParticle
+//      *  collection should by definition return true. Compound partciles will return false.
+//      */
+//     public boolean isPrimary() const ;
+
+    /** Convenient method - same as (getParticles().size() > 0 ).
      */
-    public boolean isPrimary() const ;
+    public boolean isCompound() const ;
 
     /** The magnitude of the reconstructed particle's momentum,
      */
@@ -77,86 +79,91 @@ public interface ReconstructedParticle extends LCObject {
     public const ParticleIDVec& getParticleIDs() const ;
 
 
+    /** The particle Id used for the kinematics of this particle.
+     * @see ParticleID
+     */
+    public  ParticleID* getParticleIDUsed() const ;
+
     /** The reconstructed particles that have been combined to this particle.
      */
     public const ReconstructedParticleVec& getParticles() const ; 
     
-    /** The weights of the reconstructed particles combined to this particle
-     */
-    public const FloatVec& getParticleWeights() const ; 
+//     /** The weights of the reconstructed particles combined to this particle
+//      */
+//     public const FloatVec& getParticleWeights() const ; 
 
     /** The clusters that have been used for this particle.
      */
     public const ClusterVec& getClusters() const ; 
     
-    /** The weights of cluster contributions to this particle
-     */
-    public const FloatVec& getClusterWeights() const ; 
+//     /** The weights of cluster contributions to this particle
+//      */
+//     public const FloatVec& getClusterWeights() const ; 
     
 
     /** The tracks that have been used for this particle.
      */
     public const TrackVec& getTracks() const ; 
     
-    /** The weights of track contributions to this particle
-     */
-    public const FloatVec& getTrackWeights() const ; 
+//     /** The weights of track contributions to this particle
+//      */
+//     public const FloatVec& getTrackWeights() const ; 
     
 
-    /** The MCParticle assigned to this reconstructed particle.
-     * @see MCParticle
-     */
-    public const MCParticleVec& getMCParticles() const ;
+//     /** The MCParticle assigned to this reconstructed particle.
+//      * @see MCParticle
+//      */
+//     public const MCParticleVec& getMCParticles() const ;
 
 
-    /** The weights of the MCParticle assignment.
-     */
-    public const FloatVec& getMCParticleWeights() const ;
+//     /** The weights of the MCParticle assignment.
+//      */
+//     public const FloatVec& getMCParticleWeights() const ;
 
 
     // set methods
 
-    /** Set the type of reconstructed particle, one of:<br>
-     *  ReconstructedParticle::SINGLE,<br>  
-     *  ReconstructedParticle::V0,<br>
-     *  ReconstructedParticle::COMPOUND,<br>
-     *  ReconstructedParticle::JET<br>
-     */
-    public void setType( int type)  ;
+//     /** Set the type of reconstructed particle, one of:<br>
+//      *  ReconstructedParticle::SINGLE,<br>  
+//      *  ReconstructedParticle::V0,<br>
+//      *  ReconstructedParticle::COMPOUND,<br>
+//      *  ReconstructedParticle::JET<br>
+//      */
+//     public void setType( int type)  ;
 
-    /**Set primary flag.
-     */
-    public void setPrimary( boolean primary ) ;
+//     /**Set primary flag.
+//      */
+//     public void setPrimary( boolean primary ) ;
 
-    /** Set particle momentum (px,py,pz).
-     */
-    public void setMomentum( const float3V momentum ) ;
+//     /** Set particle momentum (px,py,pz).
+//      */
+//     public void setMomentum( const float3V momentum ) ;
 
-    /**Set energy.
-     */
-    public void setEnergy( float energy) ;
+//     /**Set energy.
+//      */
+//     public void setEnergy( float energy) ;
 
-    /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
-     */
-    public void setCovMatrix( const float3V cov ) ; 
+//     /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
+//      */
+//     public void setCovMatrix( const float3V cov ) ; 
     
-@ifdef cpp   
-   /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
-     */
-    public void setCovMatrix( const FloatVec& cov ) ;
-@endif
+// @ifdef cpp   
+//    /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
+//      */
+//     public void setCovMatrix( const FloatVec& cov ) ;
+// @endif
 
-    /**Set mass - independently from four vector. 
-     */
-    public void setMass( float mass ) ;
+//     /**Set mass - independently from four vector. 
+//      */
+//     public void setMass( float mass ) ;
 
-    /** Set the charge. 
-     */
-    public void setCharge( float charge ) ;
+//     /** Set the charge. 
+//      */
+//     public void setCharge( float charge ) ;
 
-    /**Set the reference point, i.e. the point where the four vector is defined.
-     */
-    public void setReferencePoint( const float3V reference ) ;
+//     /**Set the reference point, i.e. the point where the four vector is defined.
+//      */
+//     public void setReferencePoint( const float3V reference ) ;
 
     /**Add a ParticleID object.
      * @see ParticleID
@@ -165,18 +172,18 @@ public interface ReconstructedParticle extends LCObject {
 
     /**Add a particle that has been used to create this particle.
      */
-    public void addParticle( ReconstructedParticle* particle , float weight = 1.0 ) ;
+    public void addParticle( ReconstructedParticle* particle ) ;
 
     /**Add a cluster that has been used to create this particle.
      */
-    public void addCluster( Cluster* cluster, float weight = 1.0 ) ;
+    public void addCluster( Cluster* cluster ) ;
 
     /**Add a track that has been used to create this particle.
      */
-    public void addTrack( Track* track, float weight = 1.0 ) ;
+    public void addTrack( Track* track ) ;
 
-    /**Add a hypothesis for the MCParticle that this reconstructed particle corresponds to.
-     */
-    public void addMCParticle( MCParticle* mcParticle , float weight = 1.0 ) ;
+//     /**Add a hypothesis for the MCParticle that this reconstructed particle corresponds to.
+//      */
+//     public void addMCParticle( MCParticle* mcParticle , float weight = 1.0 ) ;
 }
 

@@ -97,8 +97,9 @@ namespace UTIL{
      */
     static void printParameters( const EVENT::LCParameters& params );
 
-    static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 
+
+    static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 
   }; // class
 

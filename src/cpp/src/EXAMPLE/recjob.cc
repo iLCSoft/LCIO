@@ -427,10 +427,9 @@ public:
     LCCollectionVec* particleVec = new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE )  ;
     
     for(int i=0;i<nRecP;i++){
-      ReconstructedParticle * part = new ReconstructedParticleImpl ;
-      part->setPrimary( true )  ;
-      part->setType(  ReconstructedParticle::SINGLE ) ;
-
+      ReconstructedParticleImpl * part = new ReconstructedParticleImpl ;
+      part->setType( 42 ) ;
+      
       float p[3] = { 1.1 , 2.2 , 3.3 } ;
       part->setMomentum( p ) ;
       part->setEnergy(  i*101.101 ) ;
@@ -459,6 +458,8 @@ public:
 	  pid->addParameter( k*.1 ) ;
 	}
 	part->addParticleID( pid ) ;
+	if( j == 2 ) 
+	  part->setParticleIDUsed( pid ) ;
       }      
       // some other particles
       if( i > 1  ){
@@ -466,8 +467,8 @@ public:
 	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-1) ) ;
 	ReconstructedParticle* p2 = 
 	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-2) ) ;
-	part->addParticle( p1 , 0.1 ) ;
-	part->addParticle( p2 , 0.9 ) ;
+	part->addParticle( p1 ) ;
+	part->addParticle( p2 ) ;
       }
       //a track
       int iTrk = (int) ( double (trkVec->size()) * rand() / RAND_MAX )    ;
@@ -479,11 +480,11 @@ public:
       Cluster* clu = dynamic_cast<Cluster*> ( clusterVec->getElementAt( iClu ) ) ;
       part->addCluster( clu ) ;
 
-      // and finaly an MCParticle
-      LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
-      int iMCP = (int) ( double (mcVec->getNumberOfElements()) *  rand() / RAND_MAX ) ;
-      MCParticle* mcp = dynamic_cast<MCParticle*>( mcVec->getElementAt( iMCP ) ) ;
-      part->addMCParticle( mcp , 0.5 ) ;
+//       // and finaly an MCParticle
+//       LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+//       int iMCP = (int) ( double (mcVec->getNumberOfElements()) *  rand() / RAND_MAX ) ;
+//       MCParticle* mcp = dynamic_cast<MCParticle*>( mcVec->getElementAt( iMCP ) ) ;
+//       part->addMCParticle( mcp , 0.5 ) ;
 
       particleVec->addElement( part ) ;
     }
