@@ -41,6 +41,15 @@ int lccahgetposition( PTRTYPE simcalhit, float *pos)  {
   for(int i=0;i<3; *pos++ = hit->getPosition()[i++] ) ;
   return LCIO::SUCCESS ;
 }
+int lccahgettype( PTRTYPE simcalhit )  {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return hit->getType() ;
+}
+
+PTRTYPE lccahgetrawhit( PTRTYPE simcalhit )  {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return C2F_POINTER( LCObject*, hit->getRawHit() ) ;
+}
 
 int lccahsetcellid0( PTRTYPE simcalhit, int id0) {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
@@ -66,5 +75,15 @@ int lccahsetposition( PTRTYPE simcalhit, float pos[3])  {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
   hit->setPosition( pos ) ;
   return  LCIO::SUCCESS ;
+}
+int lccahsettype( PTRTYPE simcalhit, int type) {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  hit->setType( type ) ;
+  return LCIO::SUCCESS ;
+}
+int lccahsetrawhit(PTRTYPE simcalhit, PTRTYPE rawHit) {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  hit->setRawHit( f2c_pointer<LCObject,LCObject>( rawHit ) ) ; 
+  return LCIO::SUCCESS ;
 }
 

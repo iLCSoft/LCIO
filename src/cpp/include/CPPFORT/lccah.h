@@ -19,13 +19,16 @@ int lccahgetcellid1( PTRTYPE simcalhit )  ;
 float lccahgetenergy( PTRTYPE simcalhit )  ;
 float lccahgettime( PTRTYPE simcalhit )  ;
 int lccahgetposition( PTRTYPE simcalhit, float * )  ;
+int   lccahgettype( PTRTYPE simcalhit ) ;
+PTRTYPE lccahgetrawhit( PTRTYPE simcalhit ) ;
 
 int lccahsetcellid0( PTRTYPE simcalhit, int id0) ;
 int lccahsetcellid1( PTRTYPE simcalhit, int id1) ;
 int lccahsetenergy( PTRTYPE simcalhit, float en) ;
 int lccahsettime( PTRTYPE simcalhit, float time) ;
 int lccahsetposition( PTRTYPE simcalhit, float pos[3])  ;
-
+int lccahsettype( PTRTYPE simcalhit, int type ) ;
+int lccahsetrawhit( PTRTYPE simcalhit, PTRTYPE rawHit ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
@@ -38,11 +41,16 @@ FCALLSCFUN1(INT, lccahgetcellid1, LCCAHGETCELLID1, lccahgetcellid1, CFORTRANPNTR
 FCALLSCFUN1(FLOAT, lccahgetenergy, LCCAHGETENERGY, lccahgetenergy, CFORTRANPNTR ) ;
 FCALLSCFUN1(FLOAT, lccahgettime, LCCAHGETTIME, lccahgettime, CFORTRANPNTR ) ;
 FCALLSCFUN2(INT, lccahgetposition,LCCAHGETPOSITION,lccahgetposition, CFORTRANPNTR, FLOATV ) ;
+FCALLSCFUN1(INT, lccahgettype, LCCAHGETTYPE, lccahgettype, CFORTRANPNTR ) ;
+
+FCALLSCFUN1(CFORTRANPNTR, lccahgetrawhit, LCCAHGETRAWHIT, lccahgetrawhit, CFORTRANPNTR ) ;
 
 FCALLSCFUN2(INT, lccahsetcellid0,LCCAHSETCELLID0,lccahsetcellid0, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lccahsetcellid1,LCCAHSETCELLID1,lccahsetcellid1, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lccahsetenergy,LCCAHSETENERGY,lccahsetenergy, CFORTRANPNTR, FLOAT ) ;
 FCALLSCFUN2(INT, lccahsettime,LCCAHSETTIME,lccahsettime, CFORTRANPNTR, FLOAT ) ;
 FCALLSCFUN2(INT, lccahsetposition,LCCAHSETPOSITION,lccahsetposition, CFORTRANPNTR, FLOATV ) ;
+FCALLSCFUN2(INT, lccahsettype, LCCAHSETTYPE, lccahsettype, CFORTRANPNTR, INT ) ;
+FCALLSCFUN2(INT, lccahsetrawhit, LCCAHSETRAWHIT, lccahsetrawhit, CFORTRANPNTR, INT ) ;
 }
 

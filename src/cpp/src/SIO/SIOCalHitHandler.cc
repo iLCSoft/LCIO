@@ -51,6 +51,11 @@ namespace SIO{
       SIO_DATA( stream ,  hit->_position  , 3 ) ;
     }
 
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
+      SIO_DATA( stream ,  &(hit->_type) , 1  ) ;
+      SIO_PNTR( stream , &(hit->_rawHit)  ) ;
+  }
+  
     // read a pointer tag for future reference to calorimeter hits
     
     if( _vers > SIO_VERSION_ENCODE( 1, 2) ){    // the logic of the pointer bit has been inverted in v1.3
@@ -97,6 +102,11 @@ namespace SIO{
     }
 
 
+    LCSIO_WRITE( stream ,  hit->getType() ) ;
+
+    EVENT::LCObject *rawHit = hit->getRawHit() ;
+    SIO_PNTR( stream , &rawHit ) ;
+    
     if( !lcFlag.bitSet( LCIO::RCHBIT_NO_PTR ) ){
       SIO_PTAG( stream , hit  ) ;
     }

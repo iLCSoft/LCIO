@@ -2,9 +2,11 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcd.io.sio.SIORef;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCIO;
+import hep.lcio.event.LCObject;
 
 import hep.lcio.implementation.event.ICalorimeterHit;
 
@@ -15,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.15 2004-09-09 15:57:51 gaede Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.16 2004-09-23 17:07:40 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -33,9 +35,13 @@ class SIOCalorimeterHit extends ICalorimeterHit
          position[1] = in.readFloat();
          position[2] = in.readFloat();
       }
-	 double version  = (double) major + ( (double) minor ) /  10. ;
-	
-	 if( version > 1.2 ) { // the logic has been reverted in v1.3 !
+	 
+	 
+	 if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2)){
+       type = in.readInt() ;
+       rawHit =  (LCObject) ((SIORef) in.readPntr()).getObject() ;
+  	 
+	 	// the logic has been reverted in v1.3 !
 	     if ( (flags & (1 << LCIO.RCHBIT_NO_PTR)) == 0 )  in.readPTag(this) ;
 	 } else {
 	     if ( (flags & (1 << LCIO.RCHBIT_NO_PTR)) != 0 )  in.readPTag(this) ;
@@ -61,6 +67,10 @@ class SIOCalorimeterHit extends ICalorimeterHit
             out.writeFloat(pos[1]);
             out.writeFloat(pos[2]);
          }
+	 
+	     out.writeInt( hit.getType() ) ;
+	     out.writePntr( hit.getRawHit()) ;
+	     
 	 if ((flags & (1 << LCIO.RCHBIT_NO_PTR)) == 0)
 	     out.writePTag(hit) ;
       }
@@ -78,6 +88,9 @@ class SIOCalorimeterHit extends ICalorimeterHit
          out.writeFloat(position[1]);
          out.writeFloat(position[2]);
       }
+      out.write(type);
+      out.writePntr( rawHit ) ;
+      
       if ((flags & (1 << LCIO.RCHBIT_NO_PTR)) == 0)
 	  out.writePTag(this) ;
    }

@@ -23,7 +23,7 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
  *  flag(LCIO::RCHBIT_NO_PTR)==1. 
  *  
  * @author gaede
- * @version $Id: CalorimeterHit.aid,v 1.12 2004-09-16 07:15:30 gaede Exp $
+ * @version $Id: CalorimeterHit.aid,v 1.13 2004-09-23 17:07:38 gaede Exp $
  */
 
 public interface CalorimeterHit extends LCObject {
@@ -53,10 +53,16 @@ public interface CalorimeterHit extends LCObject {
     public const float3V getPosition() const ;	
 
 
-//     /** The RawCalorimeterHit. As in the future there might be other types of 
-//      *  raw calorimeter hits the return type is LCObject.
-//      *  FIXME: do we need this or should we better use LCRelation or parallel 
-//      *  collections ??
-//      */
-//     LCObject* getRawHit() const ;
+    /** Type of hit. Mapping of integer types to type names
+     * through collection parameters "CalorimeterHitTypeNames"
+     * and "CalorimeterHitTypeValues".
+     */
+    public int getType() const ;
+
+
+    /** The RawCalorimeterHit. As in the future there might be other types of 
+     *  raw calorimeter hits the return type is LCObject.
+     */
+    LCObject* getRawHit() const ;
+
 }

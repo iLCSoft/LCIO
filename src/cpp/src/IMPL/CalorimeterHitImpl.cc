@@ -6,13 +6,15 @@ namespace IMPL{
     _cellID0(0),
     _cellID1(0),
     _energy(0.),
-    _time(0.){
+    _time(0.),
+    _type(0),
+    _rawHit(0) {
     _position[0] = 0. ;
     _position[1] = 0. ;
     _position[2] = 0. ; 
   }
-
-
+  
+  
   CalorimeterHitImpl::~CalorimeterHitImpl(){
   }
   
@@ -27,13 +29,20 @@ namespace IMPL{
   float CalorimeterHitImpl::getEnergy() const {
     return _energy ;
   }
-
+  
   float CalorimeterHitImpl::getTime() const {
     return _time ;
   }
   
   const float* CalorimeterHitImpl::getPosition() const {
     return _position ;
+  }
+  
+  int CalorimeterHitImpl::getType() const {
+    return _type ;
+  }
+  EVENT::LCObject * CalorimeterHitImpl::getRawHit() const {
+    return _rawHit ;
   }
   
   void CalorimeterHitImpl::setCellID0(int id0){
@@ -64,4 +73,14 @@ namespace IMPL{
   }
   
  
+  void CalorimeterHitImpl::setType(int type) {
+    checkAccess("CalorimeterHitImpl::setType") ;
+    _type = type ;
+  }
+  
+  void CalorimeterHitImpl::setRawHit(EVENT::LCObject* rawHit ){
+    checkAccess("CalorimeterHitImpl::setRawHit") ;
+    _rawHit = rawHit ;
+  }
+  
 }; // namespace IMPL

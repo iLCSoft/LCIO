@@ -1,11 +1,12 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.CalorimeterHit;
+import hep.lcio.event.LCObject;
 
 /**
  * A default implementation of CalorimeterHit
  * @author Tony Johnson
- * @version $Id: ICalorimeterHit.java,v 1.7 2004-08-25 08:54:00 gaede Exp $
+ * @version $Id: ICalorimeterHit.java,v 1.8 2004-09-23 17:07:39 gaede Exp $
  */
 public class ICalorimeterHit extends ILCObject implements CalorimeterHit
 {
@@ -14,7 +15,10 @@ public class ICalorimeterHit extends ILCObject implements CalorimeterHit
    protected float energy;
    protected int cellId0;
    protected int cellId1;
-
+   protected int type ;
+   protected  LCObject rawHit ;
+   
+   
    public void setCellID0(int cellID)
    {
       checkAccess();
@@ -72,6 +76,34 @@ public float getTime() {
  */
 public void setTime(float f) {
 	time = f;
+}
+
+/**
+ * @return
+ */
+public LCObject getRawHit() {
+	return rawHit;
+}
+
+/**
+ * @return
+ */
+public int getType() {
+	return type;
+}
+
+/**
+ * @param object
+ */
+public void setRawHit(LCObject object) {
+	rawHit = object;
+}
+
+/**
+ * @param i
+ */
+public void setType(int i) {
+	type = i;
 }
 
 }

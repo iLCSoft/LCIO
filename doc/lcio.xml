@@ -473,9 +473,10 @@
 	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
 	       <data type="float[3]" name="position"></data>
 	    </if>
-	    <!--<if condition="1000*major+minor&gt;1002">
+	    <if condition="1000*major+minor&gt;1002">
+	       <data type="int" name="type"></data>
 	       <data type="pntr" name="rawHit"></data>
-	    </if>-->
+	    </if>
             <if condition="1000*major+minor&gt;1002">
               <data type="ptag" name="this"></data>
 	    <else/>

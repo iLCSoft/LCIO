@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
- * @version $Id: CalorimeterHitImpl.h,v 1.12 2004-08-25 08:20:29 gaede Exp $
+ * @version $Id: CalorimeterHitImpl.h,v 1.13 2004-09-23 17:07:38 gaede Exp $
  */
 
   class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
@@ -59,7 +59,19 @@ namespace IMPL {
     
     virtual const float * getPosition() const ;
 
+    /** Type of hit. Mapping of integer types to type names
+     * through collection parameters "CalorimeterHitTypeNames"
+     * and "CalorimeterHitTypeValues".
+     */
+    virtual int getType() const ;
+
+    /** The RawCalorimeterHit. As in the future there might be other types of 
+     *  raw calorimeter hits the return type is LCObject.
+     */
+    virtual EVENT::LCObject * getRawHit() const ;
+
     // setters
+
     /** Sets the first cell id;
      */
     void setCellID0(int id0) ;
@@ -82,6 +94,9 @@ namespace IMPL {
      */
     void setPosition(const float pos[3])  ;
     
+    void setType(int type) ;
+
+    void setRawHit(EVENT::LCObject* rawHit ) ;
 
   protected:
 
@@ -90,7 +105,9 @@ namespace IMPL {
     float _energy ;
     float _time ;
     float _position[3] ;
-    
+    int _type ;
+
+    EVENT::LCObject* _rawHit ;
     
   }; // class
 }; // namespace IMPL
