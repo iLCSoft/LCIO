@@ -42,7 +42,7 @@ c-----the LCStrVec,LCIntVec,LCFloatVec interface
       integer lcsvcgetlength,lcivcgetlength,lcfvcgetlength
       character*80 lcsvcgetstringat
       integer lcsvcgetintat
-      real    lcsvcgetfloatgat
+      real    lcsvcgetfloatat
 
 c-----the LCEvent interface
       PTRTYPE lcevtcreate, lcevtgetcollection, lcevtgetcollectionnames
