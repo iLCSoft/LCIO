@@ -13,6 +13,7 @@
 #include <sstream> 
 #include <iostream>
 
+#define SUBSETPOSTFIX "_References"
 
 using namespace EVENT ;
 using namespace IOIMPL ;
@@ -94,9 +95,15 @@ namespace SIO  {
 // 	   catch( EventException ){  return LCIO::ERROR ; }
 // 	 }else{
 
+	std::string colType( type ) ;
+	unsigned  idx ;
+	if( ( idx = colType.rfind( SUBSETPOSTFIX ) ) != std::string::npos ){
+	  colType = std::string( colType , 0 , idx ) ;
+	}
+
 	try { 
 	  
-	  (*_evtP)->addCollection( new LCCollectionIOVec( type ) , colName) ; 
+	  (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
 	  
 	}
 	catch( EventException ){  return LCIO::ERROR ; }
@@ -147,7 +154,13 @@ namespace SIO  {
 	  const LCCollection* col = _evt->getCollection( (*colNames)[i] ) ;
 	  if( ! col->isTransient() ){
 	    LCSIO_WRITE( stream, (*colNames)[i] ) ;
-	    LCSIO_WRITE( stream, col->getTypeName() ) ;
+
+	    std::string colType( col->getTypeName() ) ;
+
+	    if( col->isSubset() ) 
+	      colType += SUBSETPOSTFIX ;
+
+	    LCSIO_WRITE( stream,  colType ) ;
 	  }
 	} 
 // 	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   

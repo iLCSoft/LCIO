@@ -127,7 +127,11 @@ public class SIODump
          // LCIO Special
          Object blockType = blockMap.get(blockName);
          if (blockType == null) blockType = blockName;
-         
+	 //fg -- allow one generic bloc for references         
+	 if( blockType.toString().endsWith("_References") ) 
+	     blockType = "References" ;
+	     
+
          Element blockElement = (Element) XPath.selectSingleNode(root,"block[@name=\""+blockType+"\"]");
          if (blockElement == null)
          {

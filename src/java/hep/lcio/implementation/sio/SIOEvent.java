@@ -15,11 +15,13 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.32 2005-03-02 16:23:00 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.33 2005-03-04 15:24:56 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
    private Map blockMap;
+   
+   static final String SUBSETPOSTFIX = "_References" ;
    
    SIOEvent(SIORecord record, int accessMode) throws IOException
    {
@@ -80,6 +82,11 @@ class SIOEvent extends ILCEvent
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
          if (type == null) continue;
+    	 //fg20050304 remove postfix _References for subset collections
+         if( type.endsWith( SUBSETPOSTFIX ) ) {
+    	   type = type.substring( 0 , type.indexOf( SUBSETPOSTFIX ) ) ;
+    	 }
+
                  
          int flags = in.readInt();
          LCParameters colParameters = null ;
@@ -305,7 +312,16 @@ class SIOEvent extends ILCEvent
                
                String blockName = blockNames[i];
                out.writeString(blockName);
-               out.writeString(event.getCollection(blockName).getTypeName());
+               
+             // fg20050304 append _References to subset collection's type names
+               LCCollection col  = event.getCollection(blockName) ; 
+               boolean isSubset = ( (col.getFlag() & ( 1<< LCCollection.BITSubset )) != 0 ) ;
+               String typeName = col.getTypeName() ;
+               if( isSubset ){
+                  typeName += SUBSETPOSTFIX ;   
+               }
+               
+               out.writeString(  typeName );
             }
          }
          //if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
@@ -323,6 +339,9 @@ class SIOEvent extends ILCEvent
             LCCollection col = event.getCollection(blockName);
             String type = col.getTypeName();
             int flags = col.getFlag();
+
+            boolean isSubset = ( (flags & ( 1<< LCCollection.BITSubset )) != 0 ) ;
+
             int n = col.getNumberOfElements();
             
             boolean isFixedSize = true ;
@@ -354,7 +373,6 @@ class SIOEvent extends ILCEvent
             SIOLCParameters.write( col.getParameters() , out ) ;
               
 //          fg20050302 add suport for subset collections
-            boolean isSubset = ( (flags & ( 1<< LCCollection.BITSubset )) != 0 ) ;
            
             if (!isSubset && type.equals(LCIO.LCGENERICOBJECT))
             {
