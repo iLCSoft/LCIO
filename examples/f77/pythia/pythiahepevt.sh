@@ -82,7 +82,9 @@ C *** Loop over events to be generated.
 
 C ***   Generate one pythia event
         CALL PYEVNT
-ccc      CALL PYLIST (2)
+
+C ***   Debugging option (activate statement below)
+ccc        CALL PYLIST (2)
 
 C ***   Fill hepevt common with pythia output, set event number
         CALL PYHEPC ( 1 )
@@ -199,9 +201,9 @@ c M.Dobbs 04.2000 NMXHEP = 2000 for compatibility with PYTHIA 5.7
      &       '     I sts   pID 1st_m 2nd_m',
      &       ' 1st_d lst_d        Px        Py        Pz',
      &       '         E      mass',
-     &       '        Vx        Vy        Vz      time')
+     &       '         Vx         Vy         Vz       time')
 
- 12   FORMAT(1X,I5,I4,I6,4I6,5F10.3,4E10.2)
+ 12   FORMAT(1X,I5,I4,I6,4I6,5F10.3,4E11.3)
       RETURN
 
  999  WRITE(6,*) 'LCLIST: Error writing to file on unit ',LUN
@@ -316,17 +318,18 @@ EOF
 #------- modify as needed: ------
 
 #----- DESY Hamburg -----
-g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
--L${CERN_ROOT}/lib -lpythia6125 -lpdflib -lpacklib -lmathlib -lkernlib \
--lg2c -lz -lc -lm
+#g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
+#-L${CERN_ROOT}/lib -lpythia6125 -lpdflib -lpacklib -lmathlib -lkernlib \
+#-lg2c -lz -lc -lm
 
 #----- DESY Zeuthen -----
-#g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
-#-L${CERN_ROOT}/lib -lpythia6205 -lpdflib804 -lpacklib -lmathlib -lkernlib \
-#-lg2c -lz -lc -lm
+g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
+-L${CERN_ROOT}/lib -lpythia6205 -lpdflib804 -lpacklib -lmathlib -lkernlib \
+-lg2c -lz -lc -lm
 
 # and run
 rm -f pythia.data pythiahepevt.log pyhepevt.log
-/tmp/pyhepevt.bin > /tmp/pyhepevt.log
-rm /tmp/pyhepevt.log
+/tmp/pyhepevt.bin > pyhepevt.log
+# if logging is not wanted for this task activate next line
+#rm pythiahepevt.log pyhepevt.log
 

@@ -261,9 +261,9 @@ c     ---- end run loop ------
      &       '     I sts   pID 1st_m 2nd_m',
      &       ' 1st_d lst_d        Px        Py        Pz',
      &       '         E      mass',
-     &       '        Vx        Vy        Vz      time')
+     &       '         Vx         Vy         Vz       time')
 
- 12   FORMAT(1X,I5,I4,I6,4I6,5F10.3,4E10.2)
+ 12   FORMAT(1X,I5,I4,I6,4I6,5F10.3,4E11.3)
       RETURN
 
  999  WRITE(6,*) 'LCLIST: Error writing to file on unit ',LUN
