@@ -154,8 +154,8 @@ namespace SIO{
     LCSIO_WRITE( stream, trk->getD0()  ) ;
     LCSIO_WRITE( stream, trk->getPhi()  ) ;
     LCSIO_WRITE( stream, trk->getOmega()  ) ;
-    LCSIO_WRITE( stream, trk->getTanLambda()  ) ;
     LCSIO_WRITE( stream, trk->getZ0()  ) ;
+    LCSIO_WRITE( stream, trk->getTanLambda()  ) ;
 
     const FloatVec& cov = trk->getCovMatrix() ;
     for(unsigned int i=0;i<cov.size();i++){
