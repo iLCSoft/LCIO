@@ -70,7 +70,7 @@ namespace SIO {
 
     /** Write a long to the stream (in fact written as a 64-bit long long). 
      */
-    static unsigned int write( SIO_stream* stream , long i) ;
+    static unsigned int write( SIO_stream* stream , long long i) ;
 
     /** Write a float  to the stream.
      */

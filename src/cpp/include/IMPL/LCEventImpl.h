@@ -52,7 +52,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
     /** Returns the time stamp of the event.
      */
-    virtual long getTimeStamp() const ;
+    virtual long long getTimeStamp() const ;
     
     /** Returns the names of the collections in the  event.
      */
@@ -137,7 +137,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
     /** Sets the event time stamp.
      */
-    void setTimeStamp(long ts) ;
+    void setTimeStamp(long long ts) ;
        
      
   protected:

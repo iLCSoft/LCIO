@@ -98,6 +98,7 @@ int main(int argc, char** argv ){
 	
 	evt->setRunNumber(  rn   ) ;
 	evt->setEventNumber( i ) ;
+	evt->setTimeStamp( 9223372036854775807LL ) ;
 	evt->setDetectorName( detName ) ;
 	
 	// create and add some mc particles 

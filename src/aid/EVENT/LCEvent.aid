@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version $Id: LCEvent.aid,v 1.7 2004-09-10 12:52:53 gaede Exp $
+ * @version $Id: LCEvent.aid,v 1.8 2005-02-02 14:16:27 gaede Exp $
  * @see LCCollection
  */
 
@@ -28,7 +28,7 @@ public interface LCEvent {
     
     /** Returns the time stamp of the event.
      */
-    public long getTimeStamp() const ;
+     public long getTimeStamp() const ;
     
     /** Returns the names of the collections in the  event.
      */

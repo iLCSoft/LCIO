@@ -106,7 +106,7 @@ unsigned int LCSIO::write( SIO_stream* stream , size_t i){
 }
 #endif
 
-unsigned int LCSIO::write( SIO_stream* stream , long i){
+unsigned int LCSIO::write( SIO_stream* stream , long long i){
 
   long long local = i ;
   return  SIO_functions::data( stream ,  &local , 1  ) ;
