@@ -2,6 +2,17 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+
+======================
+  v01-04
+=======================
+
+ - added flag isSubset to LCCollection to allow to have collections in the event that 
+   are subsets of other collections in the event. In case the collection is not transient
+   only references/pointers are stored in the output file.
+
+ - added implementation of LCGenericObjects in Java
+
  - API change:  Changed the return value of LCGenericObject::getTypeName() and 
    LCGenericObject::getDataDescription() from const std::string& to 
    const std::string to  make the implementation easier
@@ -19,11 +30,12 @@
 
  - added support for multiple events in C++
 
- - bug fixes:
+ - bug fixes (C++):
      + dump only five elements of LCInt/Float/StringVecs in LCTOOLS
      + don't allow to add NULL collections to the event
      + changed LCEvent::getTimestamp() to long long (64bit) 
-
+     + fixed bug when writing empty collection of LCGenericObjects
+ 
 ======================
   v01-03-01
 =======================

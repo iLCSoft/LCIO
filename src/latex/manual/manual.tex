@@ -49,8 +49,8 @@
 \begin{document}
 \pdfgraphics
 
-%\title{LCIO [v01-03] -  Users manual}
-\title{{\Huge\bf LCIO  -  Users manual} \\ v01-03}
+%\title{LCIO [v01-04] -  Users manual}
+\title{{\Huge\bf LCIO  -  Users manual} \\ v01-04}
 
 %\author{F. Gaede \\  DESY IT}
 %\author{F. Gaede, H. Vogt \\  DESY IT, DESY Zeuthen}
@@ -95,7 +95,7 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 \begin{verbatim}
   mkdir lcio 
   cd lcio
-  cvs co -d v01-03 -r v01-03 lcio
+  cvs co -d v01-04 -r v01-04 lcio
 \end{verbatim}
 
 \subsection{Requirements}
@@ -116,7 +116,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
 \item{ {\bf Linux (and bash):} 
 \begin{verbatim} 
-  export LCIO=/lcio/v01-03                <-- modify as appropriate
+  export LCIO=/lcio/v01-04                <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
 
   export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
@@ -127,7 +127,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{verbatim}
   set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
 
-  set LCIO=c:/lcio/devel/v01-03            <-- modify as appropriate
+  set LCIO=c:/lcio/devel/v01-04            <-- modify as appropriate
   set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
 
   set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
@@ -136,7 +136,7 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 }
 \item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
 \begin{verbatim}
-  export LCIO=/cygdrive/c/lcio/devel/v01-03   <-- modify as appropriate
+  export LCIO=/cygdrive/c/lcio/devel/v01-04   <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
   export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01  <-- modify as appropriate
 \end{verbatim} %$
@@ -163,7 +163,7 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 %\end{verbatim}
 %or using {\it bash}:
 %\begin{verbatim}
-%  cd v01-03
+%  cd v01-04
 %  export LCIO=$PWD
 %  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
 %  export PATH=$LCIO/tools:$PATH
@@ -567,6 +567,9 @@ concrete class. In order to write data, simply create instances of this class an
 that in turn is added to the LCEvent. When reading back this information users are free to instantiate 
 objects of the user class' type via copy constructor or simply access the information through the
 LCGenericObject interface.
+
+For C++ a template for LCGenericObjects with fixed size: \verb$LCFixedObject<int nint,int nfloat, int ndouble>$ 
+is provided in the UTIL namespace. Users have to provide minimal code by inheriting from this class.
 
 \subsubsection{LCIntVec, LCFloatVec and LCStringVec}
 Simple user extension data can be stored in LCCollections of vectors of type of {\em float, int} and {\em string}. 
@@ -991,9 +994,47 @@ block.
 \appendix {\bf \Large Appendix}    % FIX Me need a way to have latex print 'Appendix A'
 \end{latexonly}
 
-\section{Changes wrt. v1.0}
-There have been a number of changes in LCIO wrt. to the last public release v01-00, the more important 
-of which are:
+\section{ChangeLog}
+\subsection{Changes from v1.3 to v1.4}
+There have been a number of changes in LCIO wrt. to the last public release v01-03:
+\begin{itemize}
+\item{{\bf LCGenericObjects in Java} \\
+Support for user defined objects that have an arbitrary number of attributes of type {\em int, float}
+and {\it double} now also in Java.
+}
+\item{{\bf Support for subset collections} \\
+Added flag isSubset to LCCollection that allows to have collections that are subsets of existing collections
+in the event. In case the collection is not transient only references/pointers are written to the output file.
+}
+\item{{\bf Small API change in LCGenericObject (C++)} \\
+ Changed the return value of \verb$LCGenericObject::getTypeName()$ and 
+ \verb$LCGenericObject::getDataDescription()$ from \verb$const std::string&$ to 
+ \verb$const std::string$ to  make the implementation easier.
+}
+\item{{\bf UTIL::LCFixedObject template} \\
+ Added convenience template \verb$UTIL::LCFixedObject$  for user defined subclasses of LCGenericObjects
+ with fixed size.
+ See: \verb$src/cpp/src/EXAMPLE/CalibrationConstant.h$ for example on how to use it.
+}
+\item{{\bf Definition of LCEvent::getTimeStamp()} \\
+ The 64bit event timestamp is defined to be {\bf ns since 1.1.1970 00:00:00 UTC.}
+ Changed C++ API to use long long (64 bit).
+}
+\item{{\bf UTIL::LCTime (C++)} \\
+ Helper class to convert between time stamps and calendar time.
+}
+\item{{\bf Multiple I/O streams in C+} \\
+ Support for multiple instances of LCReader and LCWriter objects (files) added.
+}
+\item{{\bf LCIODEBUG flag in C++} \\
+ Added LCIODEBUG environment variable to control compilation.
+}
+
+}
+
+\end{itemize}
+
+\subsection{Changes from v1.0 to v1.3}
 \begin{itemize}
 \item{{\bf Tracks, Cluster and ReconstructedParticles added} \\
 These are the main classes for reconstruction output.

@@ -343,9 +343,9 @@ public:
       evt->addCollection(  calVec , "Calibration" ) ;
     }
 
-    // debug test: add empty collection of LCGenericObjects
-    LCCollectionVec* emtpyCol = new LCCollectionVec( LCIO::LCGENERICOBJECT )  ;
-    evt->addCollection(  emtpyCol , "EmptyLCGenericObject" ) ;
+     // debug test: add empty collection of LCGenericObjects
+     LCCollectionVec* emtpyCol = new LCCollectionVec( LCIO::LCGENERICOBJECT )  ;
+     evt->addCollection(  emtpyCol , "EmptyLCGenericObject" ) ;
 
     // -------------------------------------------------------------------------------------
     
