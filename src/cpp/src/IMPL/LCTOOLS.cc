@@ -171,11 +171,18 @@ namespace IMPL {
 	for( int i=0 ; i< nPrint ; i++ ){
 	  SimTrackerHit* hit = 
 	    dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
+// 
+// Since hit may not have MCParticle, need to check that it exists
+//
+	  int pdgid = 0;
+	  if(hit->getMCParticle() > 0)pdgid = 
+		 hit->getMCParticle()->getPDG();
+      
 	
 	  const double* x =  hit->getPosition() ;
 	  cout << "    hit -  dEdx: " 
 	       << hit->getdEdx() 
-	       << "  mc: " << hit->getMCParticle()->getPDG() 
+	       << "  mc: " << pdgid 
 	       << "  pos: " 
 	       << x[0] << ", " << x[1] << ", " << x[2] 
 	       << endl ;   
@@ -276,6 +283,12 @@ namespace IMPL {
 	dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
       
       int id0 = hit->getCellID() ;
+// 
+// Since hit may not have MCParticle, need to check that it exists
+//
+	  int pdgid = 0;
+	  if(hit->getMCParticle() > 0)pdgid = 
+		 hit->getMCParticle()->getPDG();
       
       cout << i << ": "
 	// 	   << hit->getCellID() << " | "
@@ -288,7 +301,7 @@ namespace IMPL {
 	   << hit->getPosition()[2] << ") | " 
 	   << hit->getdEdx () << " | "
 	   << hit->getTime () << " | "
-  	   << hit->getMCParticle()->getPDG()  
+  	   << pdgid  
 	   << endl ;
       
     }
