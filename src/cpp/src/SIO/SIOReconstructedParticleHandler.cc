@@ -56,8 +56,6 @@ namespace SIO{
 	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
-	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
-
 
 	char* dummy ; 
 	LCSIO_READ( stream,  &dummy ) ; 
@@ -75,6 +73,7 @@ namespace SIO{
       }
       
       SIO_PNTR( stream ,   &(recP->_pidUsed) ) ;
+      SIO_DATA( stream ,  &(recP->_goodnessOfPID) , 1  ) ;
 
       // read reconstructed particles
       int nRecP ;
@@ -252,7 +251,6 @@ namespace SIO{
       LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
       LCSIO_WRITE( stream, pid->getType()  ) ;
       LCSIO_WRITE( stream, pid->getPDG()  ) ;
-      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
       LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
       int nPara = pid->getParameters().size() ;
       SIO_DATA( stream ,  &nPara  , 1 ) ;
@@ -264,7 +262,8 @@ namespace SIO{
 
     EVENT::ParticleID* pidUsed = recP->getParticleIDUsed() ;
     SIO_PNTR( stream , &pidUsed  ) ;
-      
+    LCSIO_WRITE( stream, recP->getGoodnessOfPID()  ) ;
+    
     // write reconstructed particles
     int nReconstructedParticles=  recP->getParticles().size() ;
     SIO_DATA( stream, &nReconstructedParticles , 1  ) ;

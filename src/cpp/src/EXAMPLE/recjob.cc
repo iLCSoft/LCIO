@@ -404,7 +404,6 @@ public:
 	  pid->setLoglikelihood( (double) j / nPID ) ;
 	  pid->setType( j ) ;
 	  pid->setPDG( -11 ) ;
-	  pid->setGoodnessOfPID( 0.7 ) ;
 	  pid->setIdentifier("recojob-RunEventProcessor") ;
 	  for(int k=0;k<3;k++){
 	    pid->addParameter( k*.1 ) ;
@@ -482,7 +481,6 @@ public:
 	pid->setLoglikelihood( (double) j / nPID ) ;
 	pid->setType( j ) ;
 	pid->setPDG( -11 ) ;
-	pid->setGoodnessOfPID( 0.7 ) ;
 	pid->setIdentifier("recojob-RunEventProcessor") ;
 	for(int k=0;k<3;k++){
 	  pid->addParameter( k*.1 ) ;
@@ -491,6 +489,9 @@ public:
 	if( j == 2 ) 
 	  part->setParticleIDUsed( pid ) ;
       }      
+
+      part->setGoodnessOfPID( 0.7 ) ;
+
       // some other particles
       if( i > 1  ){
 	ReconstructedParticle* p1 = 

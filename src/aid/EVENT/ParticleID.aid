@@ -12,7 +12,7 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  *  for different hypotheses on the particle type.
  * 
  * @author gaede
- * @version $Id: ParticleID.aid,v 1.5 2004-08-31 14:48:17 gaede Exp $
+ * @version $Id: ParticleID.aid,v 1.6 2004-09-16 07:15:30 gaede Exp $
  * @see ReconstructedParticle.getParticleIDs()
  * @see Cluster.getParticleIDs()
  */
@@ -39,10 +39,6 @@ public interface ParticleID extends  LCObject {
      */
     public float getLoglikelihood() const ;	
     
-    /** The overall goodness of the PID on a scale of [0;1].
-     */
-    public float getGoodnessOfPID()  const ;
-
     /**Name of the algorithm/module that created this hypothesis.
      */
     public const String& getIdentifier() const ;	

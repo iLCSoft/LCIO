@@ -10,7 +10,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.10 2004-09-10 12:26:18 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.11 2004-09-16 07:15:30 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -85,6 +85,10 @@ public interface ReconstructedParticle extends LCObject {
      * @see ParticleID
      */
     public  ParticleID* getParticleIDUsed() const ;
+
+    /** The overall goodness of the PID on a scale of [0;1].
+     */
+    public float getGoodnessOfPID()  const ;
 
     /** The reconstructed particles that have been combined to this particle.
      */

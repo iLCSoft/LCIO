@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.18 2004-09-15 13:29:09 gaede Exp $
+*  $Id: lciof77api.inc,v 1.19 2004-09-16 07:15:33 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -141,10 +141,10 @@ c-----the ParticleID interface
       PTRTYPE lcpidcreate
       integer lcpiddelete, lcpidid, lcpidgettype, lcpidgetpdg
       integer lcpidgetparameters
-      real    lcpidgetloglikelihood, lcpidgetgoodnessofpid
+      real    lcpidgetloglikelihood
       character*80 lcpidgetidentifier
       integer lcpidsettype, lcpidsetpdg, lcpidsetloglikelihood
-      integer lcpidsetidentifier, lcpidsetgoodnessofpid
+      integer lcpidsetidentifier
       integer lcpidaddparameter
       integer unknownpdg
       parameter (unknownpdg=999999)
@@ -153,10 +153,10 @@ c-----the ReconstructedParticle interface
       PTRTYPE lcrcpcreate, lcrcpgetparticleids, lcrcpgetparticles
       PTRTYPE lcrcpgetclusters, lcrcpgettracks
       integer lcrcpgettype, lcrcpgetmomentum, lcrcpgetcovmatrix
-      integer lcrcpgetreferencepoint
+      integer lcrcpgetreferencepoint, lcrcpgetgoodnessofpid
       real    lcrcpgetenergy, lcrcpgetmass, lcrcpgetcharge
       logical lcrcpiscomound
-      integer lcrcpsettype, lcrcpsetmomentum
+      integer lcrcpsettype, lcrcpsetmomentum, lcrcpsetgoodnessofpid
       integer lcrcpsetenergy, lcrcpsetcovmatrix, lcrcpsetmass
       integer lcrcpsetcharge, lcrcpsetreferencepoint, lcrcpaddparticleid
       integer lcrcpaddparticle, lcrcpaddcluster, lcrcpaddtrack

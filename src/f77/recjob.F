@@ -482,7 +482,6 @@ c        status   =  lcrcpsetprimary ( recopp, .true. )
           status   = lcpidsetloglikelihood (pidp, prob )
           status   = lcpidsettype ( pidp, j )
           status   = lcpidsetpdg ( pidp, -11 )
-          status   = lcpidsetgoodnessofpid ( pidp, 0.7 )
 
           ident    = 'recojob-RunEventProcessor'
           status   = lcpidsetidentifier ( pidp, ident )
@@ -491,6 +490,7 @@ c        status   =  lcrcpsetprimary ( recopp, .true. )
           end do
           status   = lcrcpaddparticleid ( recopp, pidp )
         end do
+        status   = lcrcpsetgoodnessofpid ( recopp, 0.7 )
 
 ***     some other particles
         if ( i .gt. 2 )  then

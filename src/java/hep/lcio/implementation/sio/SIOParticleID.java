@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOParticleID.java,v 1.1 2004-09-13 22:43:09 tonyj Exp $
+ * @version $Id: SIOParticleID.java,v 1.2 2004-09-16 07:15:34 gaede Exp $
  */
 class SIOParticleID extends IParticleID
 {
@@ -21,7 +21,6 @@ class SIOParticleID extends IParticleID
       logLikelihood = in.readFloat();
       type = in.readInt();
       pdg = in.readInt();
-      goodnessOfPID = in.readFloat();
       identifier = in.readString();
       int n = in.readInt();
       parameters = new float[n];
@@ -40,7 +39,6 @@ class SIOParticleID extends IParticleID
          out.writeFloat(id.getPDG());
          out.writeInt(id.getType());
          out.writeInt(id.getPDG());
-         out.writeFloat(id.getGoodnessOfPID());
          out.writeString(id.getIdentifier());
          float[] pars = id.getParameters();
          for (int i=0; i<pars.length; i++) out.writeFloat(pars[i]);
@@ -53,7 +51,6 @@ class SIOParticleID extends IParticleID
       out.writeFloat(logLikelihood);
       out.writeInt(type);
       out.writeInt(pdg);
-      out.writeFloat(goodnessOfPID);
       out.writeString(identifier);
       for (int i=0; i<parameters.length; i++) out.writeFloat(parameters[i]);
       out.writePTag(this);

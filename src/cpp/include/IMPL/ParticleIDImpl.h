@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version $Id: ParticleIDImpl.h,v 1.5 2004-08-31 14:48:17 gaede Exp $
+ * @version $Id: ParticleIDImpl.h,v 1.6 2004-09-16 07:15:31 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -51,10 +51,6 @@ namespace IMPL {
      */
     virtual float getLoglikelihood() const ;
 
-    /** The overall goodness of the PID on a scale of [0;1].
-     */
-    virtual float getGoodnessOfPID() const ;
-
     /**Name of the algorithm/module that created this hypothesis.
      */
     virtual const std::string& getIdentifier() const ;
@@ -67,14 +63,12 @@ namespace IMPL {
     void setType( int type ) ;
     void setPDG( int pdg ) ;
     void setLoglikelihood( float logL ) ;
-    void setGoodnessOfPID( float goodness ) ;
     void setIdentifier(std::string identifier ) ;
     void addParameter( float p ) ;
     
   protected:
     int _type ;
     int _pdg ;
-    float _goodness ;
     float _loglikelihood ;
     std::string _identifier ;
     EVENT::FloatVec _parameters ;

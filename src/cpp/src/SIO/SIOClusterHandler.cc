@@ -71,7 +71,7 @@ namespace SIO{
 	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
-	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
+	//	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
 	
 	char* dummy ; 
 	LCSIO_READ( stream,  &dummy ) ; 
@@ -184,7 +184,7 @@ namespace SIO{
       LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
       LCSIO_WRITE( stream, pid->getType()  ) ;
       LCSIO_WRITE( stream, pid->getPDG()  ) ;
-      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
+      //      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
       LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
       int nPara = pid->getParameters().size() ;
       SIO_DATA( stream ,  &nPara  , 1 ) ;

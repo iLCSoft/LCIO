@@ -5,7 +5,6 @@ namespace IMPL{
   ParticleIDImpl::ParticleIDImpl() :
     _type(0) ,
     _pdg(0) ,
-    _goodness(0) ,
     _loglikelihood(0) {
   }
 
@@ -21,9 +20,6 @@ namespace IMPL{
   float ParticleIDImpl::getLoglikelihood() const{
     return _loglikelihood ;
   }
-  float ParticleIDImpl::getGoodnessOfPID() const{
-    return _goodness ;
-  }
   const std::string& ParticleIDImpl::getIdentifier() const{
     return _identifier ;
   }
@@ -38,11 +34,6 @@ namespace IMPL{
   void ParticleIDImpl::setPDG( int pdg ){
     checkAccess("ParticleIDImpl::setPDG") ;
     _pdg = pdg ;
-  }
-
-  void ParticleIDImpl::setGoodnessOfPID( float goodness ){
-    checkAccess("ParticleIDImpl::setGoodnessOfPID") ;
-    _goodness = goodness ;
   }
 
   void ParticleIDImpl::setLoglikelihood( float logL ){

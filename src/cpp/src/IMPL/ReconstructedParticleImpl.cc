@@ -13,7 +13,8 @@ namespace IMPL{
     _energy(0) ,
     _mass(0) ,
     _charge(0),
-    _pidUsed(0) 
+    _pidUsed(0),
+    _goodnessOfPID(0) 
   {
     _cov.resize( NCOVARIANCE ) ;
     //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
@@ -45,6 +46,9 @@ namespace IMPL{
 
   EVENT::ParticleID * ReconstructedParticleImpl::getParticleIDUsed() const { return  _pidUsed ; }
   
+  float ReconstructedParticleImpl::getGoodnessOfPID() const{
+    return _goodnessOfPID ;
+  }
   const EVENT::ParticleIDVec & ReconstructedParticleImpl::getParticleIDs() const { return  _pid ; }
 
   const EVENT::ReconstructedParticleVec& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
@@ -116,6 +120,11 @@ namespace IMPL{
   void ReconstructedParticleImpl::setParticleIDUsed( ParticleID* pidUsed ){
     checkAccess("ReconstructedParticleImpl::setParticleIDUsed" );
     _pidUsed = pidUsed ;
+  }
+
+  void ReconstructedParticleImpl::setGoodnessOfPID( float goodness ){
+    checkAccess("ReconstructedParticleImpl::setGoodnessOfPID") ;
+    _goodnessOfPID = goodness ;
   }
 
   void ReconstructedParticleImpl::addParticleID( ParticleID* pid ){

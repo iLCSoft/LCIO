@@ -5,21 +5,16 @@ import hep.lcio.event.ParticleID;
 
 /**
  * @author Tony Johnson
- * @version $Id: IParticleID.java,v 1.1 2004-09-13 22:43:08 tonyj Exp $
+ * @version $Id: IParticleID.java,v 1.2 2004-09-16 07:15:33 gaede Exp $
  */
 public class IParticleID extends ILCObject implements ParticleID
 {
-   protected float goodnessOfPID;
    protected String identifier;
    protected float logLikelihood;
    protected int pdg;
    protected float[] parameters;
    protected int type;
    
-   public float getGoodnessOfPID()
-   {
-      return goodnessOfPID;
-   }   
    
    public String getIdentifier()
    {
@@ -50,12 +45,6 @@ public class IParticleID extends ILCObject implements ParticleID
    {
       checkAccess();
       this.pdg = PDG;
-   }
-   
-   public void setGoodnessOfPID(float goodnessOfPID)
-   {
-      checkAccess();
-      this.goodnessOfPID = goodnessOfPID;
    }
    
    public void setIdentifier(String identifier)

@@ -43,11 +43,6 @@ float lcpidgetloglikelihood( PTRTYPE pidit ) {
   return pid->getLoglikelihood() ;
 }
 
-float lcpidgetgoodnessofpid( PTRTYPE pidit ) {
-  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  return pid->getGoodnessOfPID() ;
-}
-
 char* lcpidgetidentifier( PTRTYPE pidit )  {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
   return const_cast<char*>( pid->getIdentifier().c_str() ) ;
@@ -86,12 +81,6 @@ int lcpidsetpdg( PTRTYPE pidit, int pdg ) {
 int lcpidsetloglikelihood( PTRTYPE pidit, float logl) {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
   pid->setLoglikelihood( logl ) ;
-  return LCIO::SUCCESS ;
-}
-
-int lcpidsetgoodnessofpid( PTRTYPE pidit, float good) {
-  ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  pid->setGoodnessOfPID( good ) ;
   return LCIO::SUCCESS ;
 }
 

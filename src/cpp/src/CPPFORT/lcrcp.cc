@@ -71,6 +71,11 @@ PTRTYPE lcrcpgetparticleids( PTRTYPE recopart ) {
   return reinterpret_cast<PTRTYPE>( &idvect );
 }
 
+float lcrcpgetgoodnessofpid( PTRTYPE recopart ) {
+  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>(recopart ) ;
+  return rcp->getGoodnessOfPID() ;
+}
+
 PTRTYPE lcrcpgetparticles( PTRTYPE recopart ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   const ReconstructedParticleVec& idvect = rcp->getParticles();
@@ -212,6 +217,12 @@ int lcrcpaddparticleid( PTRTYPE recopart, PTRTYPE pid ) {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   ParticleID* ppid = f2c_pointer<ParticleID,LCObject>( pid ) ;
   rcp->addParticleID( ppid ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcrcpsetgoodnessofpid( PTRTYPE recopart, float good) {
+  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+  rcp->setGoodnessOfPID( good ) ;
   return LCIO::SUCCESS ;
 }
 

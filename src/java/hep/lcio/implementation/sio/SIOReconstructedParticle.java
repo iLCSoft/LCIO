@@ -3,7 +3,6 @@ package hep.lcio.implementation.sio;
 import hep.lcio.event.ParticleID;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.implementation.event.IReconstructedParticle;
 import java.io.IOException;
@@ -14,7 +13,7 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.1 2004-09-13 22:43:09 tonyj Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.2 2004-09-16 07:15:34 gaede Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {
@@ -39,6 +38,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
          particleIDs.add(id);
       }
       this.particleIDUsed = (ParticleID) in.readPntr();
+	  goodnessOfPID = in.readFloat();
       int nReco = in.readInt();
       this.particles = new ArrayList(nReco);
       for (int i=0; i<nReco; i++)
@@ -79,6 +79,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
          out.writeInt(ids.size());
          for (Iterator i = ids.iterator(); i.hasNext(); ) SIOParticleID.write((ParticleID) i.next(),out);
          out.writePntr(particle.getParticleIDUsed());
+ 		 out.writeFloat(particle.getGoodnessOfPID());
          List particles = particle.getParticles();
          out.writeInt(particles.size());
          for (Iterator i = particles.iterator(); i.hasNext(); ) out.writePntr(i.next());
@@ -103,6 +104,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
       out.writeInt(particleIDs.size());
       for (Iterator i = particleIDs.iterator(); i.hasNext(); ) SIOParticleID.write((ParticleID) i.next(),out);
       out.writePntr(particleIDUsed);
+      out.writeFloat(goodnessOfPID);
       out.writeInt(particles.size());
       for (Iterator i = particles.iterator(); i.hasNext(); ) out.writePntr(i.next());
       out.writeInt(tracks.size());

@@ -25,8 +25,20 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    protected float charge;
    protected float energy;
    protected float mass;
+   protected float goodnessOfPID;
    protected int type;
 
+   public float getGoodnessOfPID()
+   {
+	  return goodnessOfPID;
+   }   
+
+   public void setGoodnessOfPID(float goodnessOfPID)
+   {
+	  checkAccess();
+	  this.goodnessOfPID = goodnessOfPID;
+   }
+   
    public void setCharge(float charge)
    {
       checkAccess();

@@ -16,7 +16,6 @@ int     lcpidid( PTRTYPE pid ) ;
 int     lcpidgettype( PTRTYPE pid ) ;
 int     lcpidgetpdg( PTRTYPE pid ) ;
 float   lcpidgetloglikelihood( PTRTYPE pid ) ;
-float   lcpidgetgoodnessofpid( PTRTYPE pid ) ;
 
 char*   lcpidgetidentifier( PTRTYPE pid ) ;
 int     lcpidgetparameters( PTRTYPE pid, float* vec, int* nvec ) ;
@@ -24,7 +23,6 @@ int     lcpidgetparameters( PTRTYPE pid, float* vec, int* nvec ) ;
 int     lcpidsettype( PTRTYPE pid, int type ) ;
 int     lcpidsetpdg( PTRTYPE pid, int pdg ) ;
 int     lcpidsetloglikelihood( PTRTYPE pid, float logl ) ;
-int     lcpidsetgoodnessofpid( PTRTYPE pid, float good ) ;
 
 int     lcpidsetidentifier( PTRTYPE pid, char* ident ) ;
 int     lcpidaddparameter( PTRTYPE pid, float param ) ;
@@ -42,7 +40,6 @@ FCALLSCFUN1(INT, lcpidgetpdg, LCPIDGETPDG, lcpidgetpdg, CFORTRANPNTR) ;
 
 FCALLSCFUN1(FLOAT, lcpidgetloglikelihood, LCPIDGETLOGLIKELIHOOD, lcpidgetloglikelihood, CFORTRANPNTR) ;
 
-FCALLSCFUN1(FLOAT, lcpidgetgoodnessofpid, LCPIDGETGOODNESSOFPID, lcpidgetgoodnessofpid, CFORTRANPNTR) ;
 
 FCALLSCFUN1(STRING, lcpidgetidentifier, LCPIDGETIDENTIFIER, lcpidgetidentifier, CFORTRANPNTR ) ;
 FCALLSCFUN3(INT, lcpidgetparameters, LCPIDGETPARAMETERS, lcpidgetparameters, CFORTRANPNTR, FLOATV, INTV) ;
@@ -51,8 +48,6 @@ FCALLSCFUN2(INT, lcpidsettype, LCPIDSETTYPE, lcpidsettype, CFORTRANPNTR, INT) ;
 FCALLSCFUN2(INT, lcpidsetpdg, LCPIDSETPDG, lcpidsetpdg, CFORTRANPNTR, INT) ;
 
 FCALLSCFUN2(INT, lcpidsetloglikelihood, LCPIDSETLOGLIKELIHOOD, lcpidsetloglikelihood, CFORTRANPNTR, FLOAT) ;
-
-FCALLSCFUN2(INT, lcpidsetgoodnessofpid, LCPIDSETGOODNESSOFPID, lcpidsetgoodnessofpid, CFORTRANPNTR, FLOAT) ;
 
 FCALLSCFUN2(INT, lcpidsetidentifier, LCPIDSETIDENTIFIER, lcpidsetidentifier, CFORTRANPNTR, STRING) ;
 FCALLSCFUN2(INT, lcpidaddparameter, LCPIDADDPARAMETER, lcpidaddparameter, CFORTRANPNTR, FLOAT) ;

@@ -78,6 +78,10 @@ namespace IMPL {
     virtual  EVENT::ParticleID * getParticleIDUsed() const ;
 
 
+    /** The overall goodness of the PID on a scale of [0;1].
+     */
+    virtual float getGoodnessOfPID() const ;
+
     /** The reconstructed particles that have been combined to this particle.
      */
     virtual const EVENT::ReconstructedParticleVec & getParticles() const ;
@@ -105,6 +109,7 @@ namespace IMPL {
     void setReferencePoint( const float* reference ) ;
     void addParticleID( EVENT::ParticleID*  pid ) ;
     void setParticleIDUsed( EVENT::ParticleID*  pid ) ;
+    void setGoodnessOfPID( float goodness ) ;
     void addParticle( EVENT::ReconstructedParticle* particle ) ;
     void addCluster( EVENT::Cluster* cluster) ;
     void addTrack( EVENT::Track* track) ;
@@ -120,6 +125,7 @@ namespace IMPL {
     float _charge ;
     float _reference[3] ;
     EVENT::ParticleID* _pidUsed ;
+    float _goodnessOfPID ;
     EVENT::ParticleIDVec _pid ;
     EVENT::ReconstructedParticleVec _particles ;
 //     EVENT::FloatVec _particleWeights ;
