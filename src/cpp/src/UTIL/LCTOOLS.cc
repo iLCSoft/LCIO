@@ -109,12 +109,12 @@ namespace UTIL {
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
 	  
-	printLCIntVecs( col ) ;                                  \
+	printLCIntVecs( col ) ;                               
 
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCSTRVEC ){
 	  
-	printLCStrVecs( col ) ;                                  \
+	printLCStrVecs( col ) ;                                 
 
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACK ){

@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTPCHit.java,v 1.6 2004-04-15 14:52:55 gaede Exp $
+ * @version $Id: SIOTPCHit.java,v 1.7 2004-08-25 08:54:00 gaede Exp $
  */
 class SIOTPCHit extends ITPCHit
 {
@@ -37,8 +37,15 @@ class SIOTPCHit extends ITPCHit
       }
 	double version  = (double) major + ( (double) minor ) /  10. ;
 
-	if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0  && version > 1.0 )
-      in.readPTag(this) ;
+// 	if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0  && version > 1.0 )
+//       in.readPTag(this) ;
+
+	if( version > 1.2 ) { // the logic has been reverted in v1.3 !
+	    if ( (flags & (1 << LCIO.TPCBIT_NO_PTR)) == 0 )  in.readPTag(this) ;
+	} else {
+	    if ( (flags & (1 << LCIO.TPCBIT_NO_PTR)) != 0 )  in.readPTag(this) ;
+	}
+	
    }
    
    static void write(TPCHit hit, SIOOutputStream out, int flags) throws IOException
@@ -60,7 +67,7 @@ class SIOTPCHit extends ITPCHit
                out.writeInt( hit.getRawDataWord(i) ) ;
             }
          }
-		if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+		if ((flags & (1 << LCIO.TPCBIT_NO_PTR)) == 0)
           out.writePTag(hit) ;
       }
    }
@@ -80,7 +87,7 @@ class SIOTPCHit extends ITPCHit
             out.writeInt( rawDataArray[i]);
          }
       }
-	 if ((flags & (1 << LCIO.TPCBIT_PTR)) != 0)
+	 if ((flags & (1 << LCIO.TPCBIT_NO_PTR)) == 0)
 	   out.writePTag(this) ;
    }
 }

@@ -4,6 +4,18 @@
 
 
 
+  - added LCRelation
+
+  - replaced LCIO::TPCBIT_PTR by LCIO::TPCBIT_NO_PTR and 
+    LCIO::RCHBIT_PTR by LCIO::RCHBIT_NO_PTR and inverted logic  <<<<<< user action !
+ 
+  - introduced RawCalorimeterHit with int amplitude and time
+
+======================
+  v01-02 beta
+=======================
+
+   - new classes Track, Cluster, ReconstructedParticle 
 
    - new package UTIL for C++
       -> LCTOOLS moved to UTIL
@@ -17,7 +29,7 @@
   v01-00
 ============================
 
-   first public releas
+   first public release
 
 ============================
   v00-08  ( fg20030911 ) 
