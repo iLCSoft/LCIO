@@ -34,21 +34,25 @@ void CalorimeterHitHistograms::processEvent(  LCEvent * evt ) {
   // thus we loop over all collections and create subfolder with collection names
   
   typedef const std::vector< std::string > StringVec ;
+  typedef  std::vector< const std::string* > StringPVec ;
   StringVec* strVec = evt->getCollectionNames() ;
-  
-  for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
-    LCCollection* col = evt->getCollection( *name ) ;
-    
-    if(  col->getTypeName() == LCIO::SIMCALORIMETERHIT || 
-	 col->getTypeName() == LCIO::CALORIMETERHIT  ){
-      
-      if(firstEventInRun){
+  StringPVec calCols ;
 
+  if(firstEventInRun){
+    
+    for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+      
+      LCCollection* col = evt->getCollection( *name ) ;
+      
+      if(  col->getTypeName() == LCIO::SIMCALORIMETERHIT || 
+	   col->getTypeName() == LCIO::CALORIMETERHIT  ){
+	
+	calCols.push_back( name ) ; 
+	
 	// make a subfolder and create histograms for every collection 
 	runDir->mkdir( name->c_str() ) ;
 	runDir->cd(  name->c_str()  ) ;
-
+	
 	hEhit =  new TH1F("hEhit"," hit energy",500,0.,.001);  
 	hEhit->SetBit(TH1::kCanRebin) ;
 	
@@ -57,48 +61,55 @@ void CalorimeterHitHistograms::processEvent(  LCEvent * evt ) {
 	
 	hEradial =  new TH1F("hEradial"," hit energy radial",50,0.,10);  
 	hEradial->SetBit(TH1::kCanRebin) ;
-
-	firstEventInRun = false  ;
+	
       }
-
-      int nHits =  col->getNumberOfElements() ;
-
-      if(  col->getTypeName() == LCIO::SIMCALORIMETERHIT ){
-	for( int i=0 ; i< nHits ; i++ ){
-	  
-	  SimCalorimeterHit* hit = dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
-	  hEhit->Fill(  hit->getEnergy() ) ;
-	  
-	  LCFlagImpl flag( col->getFlag() ) ;
-	  if( flag.bitSet( LCIO::CHBIT_LONG )){  // postion stored
-	    
-	    hElong->Fill( hit->getPosition()[2] ,  hit->getEnergy() ) ;
-	    float radius = sqrt( hit->getPosition()[0]*hit->getPosition()[0]
-				 +hit->getPosition()[1]*hit->getPosition()[1] ) ;
-	    hEradial->Fill( radius ,  hit->getEnergy() ) ;
-	    
-	  }
-	}
-
-      }else{ // real data calorimeter hit
-
-	for( int i=0 ; i< nHits ; i++ ){
-	  CalorimeterHit* hit = dynamic_cast<CalorimeterHit*>( col->getElementAt( i ) ) ;
-	  hEhit->Fill(  hit->getEnergy() ) ;
-	  
-	  LCFlagImpl flag( col->getFlag() ) ;
-	  if( flag.bitSet( LCIO::CHBIT_LONG )){  // postion stored
-	    
-	    hElong->Fill( hit->getPosition()[2] ,  hit->getEnergy() ) ;
-	    float radius = sqrt( hit->getPosition()[0]*hit->getPosition()[0]
-				 +hit->getPosition()[1]*hit->getPosition()[1] ) ;
-	    hEradial->Fill( radius ,  hit->getEnergy() ) ;
-	  }
-	}
-      } // if/else simulated or real data calorimeter hit
     }
-  } // loop over collections
-}
+    firstEventInRun = false  ;
+  }
+  // now loop over cal collections
+
+  for( StringPVec::const_iterator name = calCols.begin() ; name != calCols.end() ; name++){
+      
+    LCCollection* col = evt->getCollection( **name ) ;
+
+    int nHits =  col->getNumberOfElements() ;
+
+    if(  col->getTypeName() == LCIO::SIMCALORIMETERHIT ){
+      for( int i=0 ; i< nHits ; i++ ){
+	
+	SimCalorimeterHit* hit = dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+	hEhit->Fill(  hit->getEnergy() ) ;
+	
+	LCFlagImpl flag( col->getFlag() ) ;
+	if( flag.bitSet( LCIO::CHBIT_LONG )){  // postion stored
+	  
+	  hElong->Fill( hit->getPosition()[2] ,  hit->getEnergy() ) ;
+	  float radius = sqrt( hit->getPosition()[0]*hit->getPosition()[0]
+			       +hit->getPosition()[1]*hit->getPosition()[1] ) ;
+	  hEradial->Fill( radius ,  hit->getEnergy() ) ;
+	  
+	}
+      }
+      
+    }else{ // real data calorimeter hit
+      
+      for( int i=0 ; i< nHits ; i++ ){
+	CalorimeterHit* hit = dynamic_cast<CalorimeterHit*>( col->getElementAt( i ) ) ;
+	hEhit->Fill(  hit->getEnergy() ) ;
+	
+	LCFlagImpl flag( col->getFlag() ) ;
+	if( flag.bitSet( LCIO::CHBIT_LONG )){  // postion stored
+	  
+	  hElong->Fill( hit->getPosition()[2] ,  hit->getEnergy() ) ;
+	  float radius = sqrt( hit->getPosition()[0]*hit->getPosition()[0]
+			       +hit->getPosition()[1]*hit->getPosition()[1] ) ;
+	  hEradial->Fill( radius ,  hit->getEnergy() ) ;
+	}
+      }
+    }
+  } // cal collections
+} 
+
 
 void CalorimeterHitHistograms::processRunHeader( LCRunHeader* run) {
 

@@ -72,7 +72,7 @@ void MCParticleHistograms::processEvent(  LCEvent * evt ) {
 	  
 	MCParticle* particle = dynamic_cast<MCParticle*>( col->getElementAt( i ) ) ;
 
-	if( particle->getParent() == 0 ){  // mother
+	if( particle->getNumberOfParents() == 0 ){  // mother
 	  hEMother->Fill(  particle->getEnergy() ) ;
 	  hTypeMother->Fill(  particle->getPDG() ) ;
 	}
