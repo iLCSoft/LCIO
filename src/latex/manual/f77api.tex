@@ -45,12 +45,20 @@ same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles define
 
 Two additional methods are defined for each case to handle string, int and float vectors in Fortran:\\
 
-{\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
 {\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
-{\bf lcfvcgetlength()} and {\bf lcfvcgetfloatat()} \\
+{\bf lcfvcgetlength()}, {\bf lcfvcgetfloatat()} \\
+{\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
 
 For strings the Fortran CHARACTER* declaration has to be large enough, otherwise the original
-string is truncated.
+string is truncated.\\
+
+To create the vector containers the corresponding methods of the extended Fortran API can be used: \\
+
+ {\bf lcintvectorcreate()} \\
+ {\bf lcfloatvectorcreate()} \\
+ {\bf lcstringvectorcreate()} \\
+
+A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
 
 
 \begin{table}
@@ -59,19 +67,21 @@ string is truncated.
 \hline
 \rule[-5mm]{0mm}{10mm} C++ class  &  f77 acronym   \\ \hline \hline
 
- LCRunHeaderImpl       & rhd \\ \hline
- LCEventImpl           & evt \\ \hline
- LCCollectionVec       & col \\ \hline
- MCParticleImpl        & mcp \\ \hline
- SimTrackerHitImpl     & sth \\ \hline
- SimCalorimeterHitImpl & sch \\ \hline
- CalorimeterHitImpl    & cah \\ \hline
- TPCHitImpl            & tph \\ \hline
- TrackImpl             & trk \\ \hline
- ClusterImpl           & clu \\ \hline
- ReconstrcutedParticleImpl & rcp \\ \hline
- LCReader              & rdr \\ \hline
- LCWriter              & wrt \\ \hline
+ CalorimeterHitImpl         & cah \\ \hline
+ ClusterImpl                & clu \\ \hline
+ LCCollectionVec            & col \\ \hline
+ LCEventImpl                & evt \\ \hline
+ MCParticleImpl             & mcp \\ \hline
+ ParticleIDImpl             & pid \\ \hline
+ ReconstructedParticleImpl  & rcp \\ \hline
+ LCReader                   & rdr \\ \hline
+ LCRunHeaderImpl            & rhd \\ \hline
+ SimCalorimeterHitImpl      & sch \\ \hline
+ SimTrackerHitImpl          & sth \\ \hline
+ TPCHitImpl                 & tph \\ \hline
+ TrackerHitImpl             & trh \\ \hline
+ TrackImpl                  & trk \\ \hline
+ LCWriter                   & wrt \\ \hline
 
 \end{tabular}
 \end{center}
@@ -80,7 +90,20 @@ string is truncated.
 \end{table}
 
 
+\subsubsection{Extension of the Base Fortran API} \label{f77ext}
+
+An additional set of Fortran functions is provided for user convenience. These are higher level functions
+that usually allow to access several attributes of data objects with one function call.
+These functions are declared in \verb#$LCIO/src/f77/lciof77apiext.inc#,
+%$
+and are summarized in the second part of {\bf Appendix~\ref{ftn_summary} }.
+
+Most Fortran programs for simulation use the \verb$hepevt$ common block. 
+Conversion functions from the LCIO MCParticle collection to the \verb$hepevt$ common block and vice versa 
+are also provided in the extended interface. See the example in \ref{rwpythia}.
+
 \subsubsection{Reading and writing LCIO files}
+
 Examples for reading and writing LCIO files can be found in:
 \begin{verbatim}
   src/f77
@@ -166,17 +189,3 @@ c------- need to delete the event as we created it
 \end{verbatim}
 
 Note that as in the C++ case we have to delete the event if we created it as described in \ref{cppmem}. \\
-A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
-
-
-
-\subsubsection{Extension of the Base Fortran API} \label{f77ext}
-An additional set of Fortran functions is provided for user convenience. These are higher level functions
-that usually allow to access several attributes of data objects with one function call.
-These functions are declared in \verb#$LCIO/src/f77/lciof77apiext.inc#,
-%$
-and are listed in the second part of {\bf Appendix~\ref{ftn_summary} }.
-
-Most Fortran programs for simulation use the \verb$hepevt$ common block. 
-Conversion functions from the LCIO MCParticle collection to the \verb$hepevt$ common block and vice versa 
-are also provided in the extended interface. See the example in \ref{rwpythia}.
