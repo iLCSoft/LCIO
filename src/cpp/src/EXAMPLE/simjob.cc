@@ -168,6 +168,20 @@ int main(int argc, char** argv ){
 	  
 	}
 	
+	// we can modify hits that already exist in a collection, e.g. in a simulation step function ...
+	// we need a non const pointer to the hit and use the std::vector::operator[]() instead of the 
+	// LCCollection::getElementAt(i)
+	for(int j=0;j<NHITS;j++){
+	  SimCalorimeterHitImpl* existingHit = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;
+
+	  existingHit->addMCParticleContribution( dynamic_cast<const MCParticle*>
+						  (mcVec->getElementAt(0)), 
+						  0.1, 0. ) ;
+	}
+
+
+
+
 	// and finally some tracker hits
 	// with some user extensions (4 floats) per track:
 	// we just create a parallel collection of float vectors
