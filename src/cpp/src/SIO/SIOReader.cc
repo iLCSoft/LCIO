@@ -366,7 +366,7 @@ namespace SIO {
     if( !evtFound ) return 0 ;
 
     { // now read the event record
-      SIORecordUnpack evtUnp( SIOWriter::SIOWriter::_evtRecord ) ;
+      SIORecordUnpack evtUnp( SIOWriter::_evtRecord ) ;
       
       try{ 
 	readRecord() ;
