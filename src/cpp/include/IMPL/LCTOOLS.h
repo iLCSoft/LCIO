@@ -10,10 +10,6 @@
 #include <iostream>
 
 #include "EVENT/LCEvent.h" 
-#include "EVENT/LCCollection.h"
-#include "EVENT/CalorimeterHit.h"
-#include "EVENT/LCIO.h"
-#include "EVENT/MCParticle.h"
 
 
 namespace IMPL{

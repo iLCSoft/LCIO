@@ -18,6 +18,7 @@
 #include <iostream>
 
 //#define DEBUG 1
+#include "IMPL/LCTOOLS.h"
 
 using namespace EVENT ;
 
@@ -140,8 +141,9 @@ namespace SIO {
   
     if( _stream->getState()== SIO_STATE_OPEN ){
     
+     //      IMPL::LCTOOLS::dumpEvent( evt ) ;
+
       // need to set the event in event (header) handlers
-    
       _evtHandler->setEvent( evt ) ;
       _hdrHandler->setEvent( evt ) ;
 

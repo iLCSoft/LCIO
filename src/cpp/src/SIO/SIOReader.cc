@@ -21,8 +21,26 @@
 using namespace EVENT ;
 using namespace IO ;
 using namespace IOIMPL ;
+using namespace IMPL ;
 
 namespace SIO {
+
+  // small helper class to activate the unpack mode of the
+  // the SIO record for lifetime of this object (the current scope)
+  class SIORecordUnpack{
+  protected:
+    SIORecordUnpack() ;
+    SIO_record* _rec ;
+  public:
+    SIORecordUnpack(SIO_record* rec):_rec(rec){
+      _rec->setUnpack( true ) ;
+    }
+    ~SIORecordUnpack(){
+      _rec->setUnpack( false ) ;
+    }
+  };
+  
+
 
   //#define DEBUG 1
 
@@ -31,9 +49,12 @@ namespace SIO {
     _evtP = new LCEventIOImpl* ;
     *_evtP = 0 ;
 
-    _runP = new IMPL::LCRunHeaderImpl* ;
+    _runP = new LCRunHeaderImpl* ;
     *_runP = 0 ;
 
+    // this is our default event 
+    // collections are attached to this event when blocks are read
+    _defaultEvt = new LCEventIOImpl ;
 
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
@@ -81,41 +102,87 @@ namespace SIO {
 
   }
 
-  LCRunHeader * SIOReader::readNextRunHeader(){
-    
-    _runRecord->setUnpack( true ) ;  
 
+  int SIOReader::readRecord(){
+    // read the next record from the stream
     if( _stream->getState()== SIO_STATE_OPEN ){
       
-      if (*_runP != 0 )  delete *_runP ;
-      *_runP = new IMPL::LCRunHeaderImpl  ;
-      
-      // read header record
-      unsigned int status =  _stream->read( &_dummy ) ;
+      unsigned int status =  _stream->read( &_dummyRecord ) ;
       if( ! (status & 1)  ){
-	delete *_runP ;
-	_runRecord->setUnpack( false ) ;  
-	return 0 ;
+	return LCIO::ERROR ;
       }
-      _runRecord->setUnpack( false ) ;  
-      return *_runP ;
-    }
-    _runRecord->setUnpack( false ) ;  
-    return 0 ;
-  }
 
+      // if the record was an event header, we need to set up the collection handlers
+      // for the next event record.
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::HEADERRECORDNAME )){
+	setUpHandlers() ;
+      }
+
+      // if the record was an LCEvent record, we need to move the collections
+      // from the default event to the current event
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+
+	for ( LCCollectionMap::const_iterator iter= _defaultEvt->_map.begin() ; 
+	      iter != _defaultEvt->_map.end() ; iter++ ){
+	  (*_evtP)->_map[ iter->first ] = iter->second ;  
+	  _defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
+	}
+
+      }
+      return LCIO::SUCCESS ;
+
+    }    
+    return LCIO::ERROR ;
+  }
+  
+
+  LCRunHeader* SIOReader::readNextRunHeader(){
+
+    // _runRecord->setUnpack( true ) ;  
+    // this sets the _runRecord to unpack for this scope
+    SIORecordUnpack runUnp( _runRecord ) ;
+    
+    if( readRecord() != LCIO::SUCCESS )   return 0 ;
+    
+    return *_runP ;
+    
+    //     if( _stream->getState()== SIO_STATE_OPEN ){
+    // //       if (*_runP != 0 )  delete *_runP ;
+    // //       *_runP = new LCRunHeaderImpl ;
+    //       // read header record
+    //       unsigned int status =  _stream->read( &_dummyRecord ) ;
+    //       if( ! (status & 1)  ){
+    // 	delete *_runP ;
+    // 	//	_runRecord->setUnpack( false ) ;  
+    // 	return 0 ;
+    //       }
+    //       //      _runRecord->setUnpack( false ) ;  
+    //       return *_runP ;
+    //     }
+    //     //    _runRecord->setUnpack( false ) ;  
+    //     return 0 ;
+  }
+  
   void SIOReader::setUpHandlers(){
 
     // use event *_evtP to setup the block readers from header information ....
     const StringVec* strVec = (*_evtP)->getCollectionNames() ;
     for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
-      // remove an old handler of the same name   ??? 
-      //   SIO_blockManager::remove( name->c_str()  ) ;
+      
+      // remove any old handler of the same name  
+      // these handlers are static - so if we write at the same tim (e.g. in a recojob)
+      // we remove the hanlders neede there ....
+      // this needs more thought 
+      //SIO_blockManager::remove( name->c_str()  ) ;
 
       const LCCollection* col = (*_evtP)->getCollection( *name ) ;
 
-      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP   )  ;
+      // create a collection handler, using the default event to attach the data
+      // as the real event might not exist at the time the corresponding block is read
+      // (order of blocks in the SIO record is undefined) 
+      // collections have to be moved from the default event to the current event 
+      // after the LCEvent record has been read in total (see readRecord() )
+      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_defaultEvt   )  ;
       SIO_blockManager::add( ch  )  ; 
 
     }
@@ -131,58 +198,92 @@ namespace SIO {
   LCEvent* SIOReader::readNextEvent(int accessMode) {
     
 
-    if( _stream->getState()== SIO_STATE_OPEN ){
-    
-      _hdrRecord->setUnpack( true ) ;
-      // create new event with pointer at the known address **_evtP
-      // delete the old event first
-      // event will be created read only
-      if (*_evtP != 0 )  
-	delete *_evtP ;
-      *_evtP = new LCEventIOImpl()  ;
-    
-      // read header record first 
-      unsigned int status =  _stream->read( &_dummy ) ;
-      if( ! (status & 1)  ){
-	delete *_evtP ;
-	_hdrRecord->setUnpack( false ) ;
-	return 0 ;
-      }
-    
-      if( strcmp( _dummy->getName()->c_str() , LCSIO::HEADERRECORDNAME )  ){
-	std::cout << " wrong event header record : " <<  *_dummy->getName() << std::endl ;
-	_hdrRecord->setUnpack( false ) ;
-	return 0 ;
-      }
-    
-      _hdrRecord->setUnpack( false ) ;
-      setUpHandlers() ;
-
-      _evtRecord->setUnpack( true ) ;
-      delete *_evtP ;
-      *_evtP = new LCEventIOImpl()  ;
+    // first, we need to read the event header 
+    // to know what collections are in the event
+    { // -- scope for unpacking run header --------
       
-      status =  _stream->read( &_dummy ) ;
-      if( ! (status & 1)  ){
-	delete *_evtP ;
-	_evtRecord->setUnpack( false ) ;
-	return 0 ;
-      }
+      SIORecordUnpack hdrUnp( _hdrRecord ) ;
+      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      
+    }// -- end of scope for unpacking run header --
     
-      if( strcmp( _dummy->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
-	std::cout << " wrong event record : "
-		  <<  *_dummy->getName() 
-		  << std::endl ;
-	_evtRecord->setUnpack( false ) ;
-	return 0 ;
-      }
+    setUpHandlers() ;
+    
+    { // now read the event record
+      SIORecordUnpack evtUnp( _evtRecord ) ;
+      
+      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      
       // set the proper acces mode before returnning the event
-      dynamic_cast<LCEventIOImpl*>(*_evtP)->setAccessMode( accessMode ) ;
+      (*_evtP)->setAccessMode( accessMode ) ;
+      
+      return *_evtP ;      
+    }
 
-      _evtRecord->setUnpack( false ) ;
-      return *_evtP ;
-    } 
-    return  0 ;
+
+//     if( _stream->getState()== SIO_STATE_OPEN ){
+//       _hdrRecord->setUnpack( true ) ;
+//       // create new event with pointer at the known address **_evtP
+//       // delete the old event first
+//       // event will be created read only
+// //        if (*_evtP != 0 )  
+// //  	delete *_evtP ;
+// //        *_evtP = new LCEventIOImpl()  ;
+    
+//       // read header record first 
+//       unsigned int status =  _stream->read( &_dummyRecord ) ;
+//       if( ! (status & 1)  ){
+// 	delete *_evtP ;
+// 	_hdrRecord->setUnpack( false ) ;
+// 	return 0 ;
+//       }
+      
+//       if( strcmp( _dummyRecord->getName()->c_str() , LCSIO::HEADERRECORDNAME )  ){
+// 	std::cout << " wrong event header record : " <<  *_dummyRecord->getName() << std::endl ;
+// 	_hdrRecord->setUnpack( false ) ;
+// 	return 0 ;
+//       }
+//       _hdrRecord->setUnpack( false ) ;
+
+//       setUpHandlers() ;
+
+//       _evtRecord->setUnpack( true ) ;
+// //        delete *_evtP ;
+// //        *_evtP = new LCEventIOImpl()  ;
+      
+//       status =  _stream->read( &_dummyRecord ) ;
+//       if( ! (status & 1)  ){
+// 	delete *_evtP ;
+// 	_evtRecord->setUnpack( false ) ;
+// 	return 0 ;
+//       }
+    
+//       if( strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+// 	std::cout << " wrong event record : "
+// 		  <<  *_dummyRecord->getName() 
+// 		  << std::endl ;
+// 	_evtRecord->setUnpack( false ) ;
+// 	return 0 ;
+//       }
+//       // set the proper acces mode before returnning the event
+//       dynamic_cast<LCEventIOImpl*>(*_evtP)->setAccessMode( accessMode ) ;
+
+
+//       // move the collections from the default event to our current event
+//       typedef LCCollectionMap::const_iterator LCI ;
+//       for ( LCI iter= _defaultEvt->_map.begin() ; iter != _defaultEvt->_map.end() ; iter++ ){
+
+// 	(*_evtP)->_map[ iter->first ] = iter->second ;  
+
+// 	_defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
+//       }
+
+      
+
+//       _evtRecord->setUnpack( false ) ;
+//       return *_evtP ;
+//     } 
+//     return  0 ;
   }
 
 
@@ -214,12 +315,44 @@ namespace SIO {
  }
 
   int SIOReader::readStream() {
-
+    
     // here we need to read all the records on the stream
     // and then notify the listeners depending on the type ....
-
-    // .... 
     
+    // set all known records to unpack 
+    SIORecordUnpack runUnp( _runRecord ) ;
+    SIORecordUnpack hdrUnp( _hdrRecord ) ;
+    SIORecordUnpack evtUnp( _evtRecord ) ;
+
+    while( readRecord() == LCIO::SUCCESS  ){
+
+      // notify LCRunListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+	
+	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+	while( iter != _runListeners.end() ){
+	  (*iter)->analyze( *_runP ) ;
+	  (*iter)->update( *_runP ) ;
+	  iter++ ;
+	}
+      }
+      // notify LCEventListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+
+	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+	while( iter != _evtListeners.end() ){
+	  // set the proper acces mode for the event
+	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
+	  (*iter)->analyze( *_evtP ) ;
+
+	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->update( *_evtP ) ;
+	  iter++ ;
+
+	}
+      }
+    } 
+
     return LCIO::SUCCESS ;
 
  }

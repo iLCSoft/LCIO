@@ -23,6 +23,8 @@ namespace EVENT{
     class MCParticle ;
     typedef std::vector<std::string> StringVec ;
     typedef std::vector<const MCParticle*> MCParticleVec ;
+    typedef std::vector<float> FloatVec ;
+    typedef std::vector<int> IntegerVec ;
 } ;
 }
 
@@ -60,6 +62,8 @@ public interface LCIO{
     static char* const MCPARTICLE = "MCParticle" ;
     static char* const CALORIMETERHIT = "CalorimeterHit" ;
     static char* const TRACKERHIT = "TrackerHit" ;
+    static char* const LCFLOATVEC = "LCFloatVec" ;
+    static char* const LCINTEGERVEC = "LCIntegerVec" ;
 }
 @else
     // current version number of lcio
@@ -80,10 +84,13 @@ public interface LCIO{
   public static const int ERROR   =  0 ;
   public static const int SUCCESS =  1 ;
 
+    // type names:
   public static const String LCEVENT = "LCEvent" ;
   public static const String LCRUNHEADER = "LCRunHeader" ;
   public static const String MCPARTICLE = "MCParticle" ;
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String TRACKERHIT = "TrackerHit" ;
+  public static const String LCFLOATVEC = "LCFloatVec" ;
+  public static const String LCINTEGERVEC = "LCIntegerVec" ;
 @endif
 }

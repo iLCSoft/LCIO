@@ -1,0 +1,24 @@
+package hep.lcio.event ;
+
+/** Float vector used for user extensions.
+ * The cpp implementation is a std::vector<float>
+ * 
+ * @author gaede 
+ * @version Mar 12, 2003
+ * @see LCObject
+ */
+
+public interface LCFloatVec extends LCObject 
+@ifdef cpp
+,FloatVec 
+@endif
+{
+
+@ifdef cpp
+    //    public void bla() ; 
+@endif
+
+
+    // here we need sth. reasonable for java ... FLoat[] ?
+}
+

@@ -23,6 +23,8 @@ namespace SIO  {
   SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name, IMPL::LCRunHeaderImpl** aRhP) : 
     SIO_block( name.c_str() ),
     _rhP( aRhP ) {
+    
+    *_rhP = 0 ;
   }
 
 
@@ -41,6 +43,13 @@ namespace SIO  {
     unsigned int status ; // needed by the SIO_DATA macro
   
     if( op == SIO_OP_READ ){ 
+
+      if(!_rhP) return LCIO::ERROR ;  // in read mode we need an address for the pointer
+
+      // delete the old run header object 
+      // -> for every handler there will only be one RunHeader object at any given time
+      if (*_rhP != 0 )  delete *_rhP ;
+      *_rhP = new IMPL::LCRunHeaderImpl ;
 
       // for the run header we read all the data into temporary variables
       // as the data is mostly strings that needd temporaries anyhow ...

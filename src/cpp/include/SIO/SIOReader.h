@@ -90,17 +90,20 @@ namespace SIO {
   protected:
 
     void setUpHandlers() ;
-    
+    int readRecord() ;
+
   protected:
     
+    // we need an SIO record for every type
     SIO_record *_evtRecord ;
     SIO_record *_hdrRecord ;
     SIO_record *_runRecord ;
-    SIO_record *_dummy ;
+    SIO_record *_dummyRecord ;  // used for reading arbitrary records
     SIO_stream *_stream ;
     
   private:
     
+    IOIMPL::LCEventIOImpl *_defaultEvt ; // used to add collections when reading 
     IOIMPL::LCEventIOImpl **_evtP ;
     IMPL::LCRunHeaderImpl **_runP ;
 

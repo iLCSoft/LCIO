@@ -1,7 +1,9 @@
 #include "SIO/SIOHandlerMgr.h"
 
 #include "SIO/SIOCalHitHandler.h" 
+#include "SIO/SIOTrackHitHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
+#include "SIO/SIOFloatVecHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -18,7 +20,10 @@ namespace SIO {
     
     _map[ LCIO::MCPARTICLE     ] = new SIOParticleHandler ;
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
-    
+    _map[ LCIO::TRACKERHIT ] = new SIOTrackHitHandler ;
+    // generic arrays/vectors
+    _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
+
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

@@ -17,9 +17,9 @@ namespace IMPL{
   const StringVec * LCRunHeaderImpl::getActiveSubdetectors() const { return &_activeSubdetectors ;}
 
   void LCRunHeaderImpl::setRunNumber( int rn) {  _runNumber  = rn  ; }
-  void LCRunHeaderImpl::setDetectorName(const string& dn) { _detectorName = dn ; }
-  void LCRunHeaderImpl::setDescription(const string& dsc) { _description = dsc ;}
-  void LCRunHeaderImpl::addActiveSubdetector(const string&  adn) { 
+  void LCRunHeaderImpl::setDetectorName(const std::string& dn) { _detectorName = dn ; }
+  void LCRunHeaderImpl::setDescription(const std::string& dsc) { _description = dsc ;}
+  void LCRunHeaderImpl::addActiveSubdetector(const std::string&  adn) { 
     _activeSubdetectors.push_back( adn ) ;
   }
 

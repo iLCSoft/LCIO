@@ -24,7 +24,11 @@ namespace SIO {
 
   public:
     
+    /** C'tor for writing
+     */
     SIORunHeaderHandler(const std::string& name) ;
+    /** C'tor for reading.
+     */
     SIORunHeaderHandler(const std::string& name, IMPL::LCRunHeaderImpl** rhP) ;
     ~SIORunHeaderHandler() ;
     

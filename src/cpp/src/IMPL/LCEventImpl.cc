@@ -12,6 +12,8 @@ LCEventImpl::LCEventImpl() :
   _detectorName("unknown"),
   _access( LCIO::UPDATE ) {
   
+  //  std::cout << " LCEventImpl() : " << this << std::endl ;
+
 }
   
 // LCEventImpl::LCEventImpl(const LCEvent& evt) : 
@@ -35,6 +37,7 @@ LCEventImpl::LCEventImpl() :
 // }
 
 LCEventImpl::~LCEventImpl() {
+  //  std::cout << " ~LCEventImpl() : " << this << std::endl ;
 
   // here we need to delete all collections in the event
   typedef LCCollectionMap::const_iterator LCI ;

@@ -3,11 +3,13 @@
 
 #include "IO/LCWriter.h"
 #include "EVENT/LCIO.h"
+#include "EVENT/LCFloatVec.h"
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/CalorimeterHitImpl.h"
+#include "IMPL/TrackerHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
@@ -55,6 +57,9 @@ int main(int argc, char** argv ){
     
     string ecalName("ECAL007") ;
     runHdr->addActiveSubdetector( ecalName ) ;
+
+    string tpcName("TPC4711") ;
+    runHdr->addActiveSubdetector( tpcName ) ;
     
     lcWrt->writeRunHeader( runHdr ) ;
 
@@ -112,9 +117,46 @@ int main(int argc, char** argv ){
 	
       }
       
-      
+      // and finally some tracker hits
+      // with some user extensions (4 floats) per track:
+      // we just create a parallel collection of float vectors
+      LCCollectionVec* trkVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
+      LCCollectionVec* extVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
+
+      for(int j=0;j<NHITS;j++){
+    
+	TrackerHitImpl* hit = new TrackerHitImpl ;
+	LCFloatVec* ext = new LCFloatVec ;
+
+
+	hit->setdEdx( 30e-9 ) ; 
+
+	double pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
+
+	// fill the extension vector
+	ext->push_back( 3.14159 ) ; 
+	for(int k=0;k<3;k++) ext->push_back(  pos[k] * 0.1  ) ;
+
+	hit->setPosition( pos ) ; 
+
+	// assign the hits randomly to MC particles
+	float rn =  .99999*rand()/RAND_MAX ;
+	int mcIndx = static_cast<int>( NMCPART * rn ) ;
+
+	hit->setMCParticle( dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
+			    
+ 
+	trkVec->push_back( hit ) ;
+	extVec->push_back( ext ) ;
+      }
+
+
+      // add all collection to the event
       evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
       evt->addCollection( (LCCollection*) calVec , ecalName ) ;
+      evt->addCollection( (LCCollection*) trkVec , tpcName ) ;
+      evt->addCollection( (LCCollection*) extVec , tpcName+"UserExtension" ) ;
+
       
       // dump the event to the screen 
       LCTOOLS::dumpEvent( evt ) ;

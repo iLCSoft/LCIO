@@ -1,4 +1,10 @@
 #include "IMPL/LCTOOLS.h"
+#include "EVENT/LCCollection.h"
+#include "EVENT/CalorimeterHit.h"
+#include "EVENT/TrackerHit.h"
+#include "EVENT/LCIO.h"
+#include "EVENT/MCParticle.h"
+#include "EVENT/LCFloatVec.h"
 
 using namespace std ;
 using namespace EVENT ;
@@ -50,6 +56,43 @@ namespace IMPL {
 	}
       
 	// print the MCParticle collection
+      } else if(evt->getCollection( *name )->getTypeName() == LCIO::TRACKERHIT ){
+      
+	int nHits =  col->getNumberOfElements() ;
+	cout << nHits << " hits : " ;
+	int nPrint = nHits>0 ? 1 : 0 ;
+
+	if(!nPrint ) cout << endl ;
+	for( int i=0 ; i< nPrint ; i++ ){
+	  const TrackerHit* hit = 
+	    dynamic_cast<const TrackerHit*>( col->getElementAt( i ) ) ;
+	
+	  const double* x =  hit->getPosition() ;
+	  cout << "    hit -  dEdx: " 
+	       << hit->getdEdx() 
+	       << "  mc: " << hit->getMCParticle()->getPDG() 
+	       << "  pos: " 
+	       << x[0] << ", " << x[1] << ", " << x[2] 
+	       << endl ;   
+
+	}
+      } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
+	
+	int nHits =  col->getNumberOfElements() ;
+	cout << nHits << " vectors: " ;
+	int nPrint = nHits>0 ? 1 : 0 ;
+	
+	if(!nPrint ) cout << endl ;
+	for( int i=0 ; i< nPrint ; i++ ){
+	  const LCFloatVec* vec = 
+	    dynamic_cast<const LCFloatVec*>( col->getElementAt( i ) ) ;
+	  
+	  cout << " values(" << i << "): " ;
+	  for( int k=0 ; k< vec->size() ; k++ )
+	    cout <<  (*vec)[k]  << ", " ;
+	  cout << endl ;   
+
+	}
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::MCPARTICLE ){
       
       

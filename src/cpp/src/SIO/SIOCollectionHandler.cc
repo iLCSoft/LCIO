@@ -12,6 +12,8 @@
 
 #include "SIO_functions.h"
 
+#include <iostream>
+
 using namespace IOIMPL ;
 using namespace EVENT ;
 
@@ -27,6 +29,9 @@ namespace SIO {
     
     // here we need to get the handler for our type
     _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
+    if( ! _myHandler ){
+      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " << _myType << std::endl ;
+    }
     
   }
 
@@ -41,7 +46,11 @@ namespace SIO {
   unsigned int SIOCollectionHandler::xfer( SIO_stream* stream, SIO_operation op, 
 					   unsigned int versionID){
     
-    
+    // if we don't have a handler we can't do anything ...
+    if( !_myHandler) {
+      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " << _myType << std::endl ;
+      return 1 ;
+    }
     
     unsigned int status ; // needed by the SIO_DATA macro
     
@@ -66,7 +75,7 @@ namespace SIO {
 	ioCol->push_back( obj ) ;
       }
       
-      // attach to the event ...? 
+      // attach collection to the event  
       (*_evtP)->addCollection( ioCol , getName()->c_str()  ) ;
       
       

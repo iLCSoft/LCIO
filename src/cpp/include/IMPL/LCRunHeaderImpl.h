@@ -49,22 +49,22 @@ namespace IMPL {
 
     /** Sets the detector name.
      */
-    void setDetectorName(const string& dn) ;
+    void setDetectorName(const std::string& dn) ;
 
     /** Sets the description of the run.
      */
-    void setDescription(const string& dsc) ;
+    void setDescription(const std::string& dsc) ;
 
     /** Adds an active sub detector name.
      */
-    void addActiveSubdetector(const string&  adn) ;
+    void addActiveSubdetector(const std::string&  adn) ;
 
 
   protected:
     
     int _runNumber ;
-    string _detectorName ;
-    string _description ;
+    std::string _detectorName ;
+    std::string _description ;
     EVENT::StringVec _activeSubdetectors ;
 
   }; // class

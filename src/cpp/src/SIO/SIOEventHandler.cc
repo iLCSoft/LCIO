@@ -22,7 +22,9 @@ namespace SIO  {
   SIOEventHandler::SIOEventHandler(const std::string& name, LCEventIOImpl** anEvtP) : 
     SIO_block( name.c_str() ),
     _evtP( anEvtP ) {
-  }
+ 
+    *_evtP = 0 ;
+ }
 
 
   SIOEventHandler::~SIOEventHandler(){
@@ -42,6 +44,13 @@ namespace SIO  {
 
     if( op == SIO_OP_READ ){ 
 
+//      if(!_evtP) return LCIO::ERROR ;  // in read mode we need an address for the pointer
+
+      // delete the old event object 
+      // -> for every handler there will only be one event object at any given time      
+       if (*_evtP )  delete *_evtP ;
+       *_evtP = new LCEventIOImpl ;
+      
       SIO_DATA( stream ,  &(*_evtP)->_runNumber  , 1  ) ;
       SIO_DATA( stream ,  &(*_evtP)->_eventNumber  , 1  ) ;
       SIO_DATA( stream ,  &(*_evtP)->_timeStamp  , 1  ) ;
@@ -65,7 +74,7 @@ namespace SIO  {
 	
 	// if we are reading the header, we attach a new collection to the event
 	// if we are reading the event this is done by the collection handler
-
+	
 	if( ! strcmp( getName()->c_str(), LCSIO::HEADERBLOCKNAME)  ){
 	  (*_evtP)->addCollection( new LCCollectionIOVec( dummy ) , colName) ;
 	}
