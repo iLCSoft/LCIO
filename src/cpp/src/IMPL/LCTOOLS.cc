@@ -230,9 +230,15 @@ namespace IMPL {
       const SimCalorimeterHit* hit = 
 	dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
       
+      int id0 = hit->getCellID0() ;
+      int id1 = hit->getCellID1() ;
 	    
       cout << i << ": "
-	   << hit->getCellID0() << " | "
+// 	   << hit->getCellID0() << " | "
+// 	   << hit->getCellID1() << " | "
+	   << ((id0& 0xff0000)>>16) << "/" 
+	   << ((id0& 0x00ff00)>> 8) << "/" 
+	   << ((id0& 0x0000ff)>> 0) << " | "
 	   << hit->getCellID1() << " | "
 	
 	   << hit->getEnergy() << " | (" ;

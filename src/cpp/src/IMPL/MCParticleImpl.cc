@@ -110,13 +110,11 @@ namespace IMPL {
   void MCParticleImpl::setEnergy( float en ) { _energy = en ; } 
   void MCParticleImpl::setCharge( float c ) { _charge = c ;  } 
 
-  
-  //  void MCParticleImpl::prepareArrayOfDaughters(int i){
-
-    //    _readDaughters = new MCParticle* [i] ;
-  //  }
-
-
+  void MCParticleImpl::setEndpoint( double endpoint[3] ){
+    _endpoint[0] = endpoint[0] ;
+    _endpoint[1] = endpoint[1] ;
+    _endpoint[2] = endpoint[2] ;
+  }
 
 
 } ; /// namespace IMPl
