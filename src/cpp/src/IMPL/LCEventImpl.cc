@@ -2,9 +2,7 @@
 
 #include "EVENT/LCIO.h"
 
-
 using namespace EVENT ;
-
 
 namespace IMPL {
   
@@ -17,25 +15,25 @@ LCEventImpl::LCEventImpl() :
   
 }
   
-LCEventImpl::LCEventImpl(const LCEvent& evt) : 
-  _runNumber( evt.getRunNumber() ),
-  _eventNumber( evt.getEventNumber() ),
-  _timeStamp( evt.getTimeStamp() ),
-  _detectorName( evt.getDetectorName().c_str() ),
-  _access( LCIO::UPDATE ) { // copy will be updateable
+// LCEventImpl::LCEventImpl(const LCEvent& evt) : 
+//   _runNumber( evt.getRunNumber() ),
+//   _eventNumber( evt.getEventNumber() ),
+//   _timeStamp( evt.getTimeStamp() ),
+//   _detectorName( evt.getDetectorName().c_str() ),
+//   _access( LCIO::UPDATE ) { // copy will be updateable
   
-  StringVec* strVec = evt.getCollectionNames() ;
-  int nCol = strVec->size() ;
+//   StringVec* strVec = evt.getCollectionNames() ;
+//   int nCol = strVec->size() ;
   
-  for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
+//   for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
-    const LCCollection* col = evt.getCollection( *name ) ;
-    col->getTypeName() ;
+//     const LCCollection* col = evt.getCollection( *name ) ;
+//     col->getTypeName() ;
     
-    // to be done - need to create new LCCollectionVec and add to the event ...
-  }
+//     // to be done - need to create new LCCollectionVec and add to the event ...
+//   }
 
-}
+// }
 
 LCEventImpl::~LCEventImpl() {
 

@@ -28,6 +28,8 @@ namespace IMPL {
     
   public: 
     
+    /** Default constructor, initializes values to 0.
+     */
     CalorimeterHitImpl() ;
 
     /** Copy constructor. Not yet - needs pointer chasing ... 

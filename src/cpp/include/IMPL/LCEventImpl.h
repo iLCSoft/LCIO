@@ -24,8 +24,9 @@ class LCEventImpl : public EVENT::LCEvent {
   public: 
     LCEventImpl() ;
     /** Copy contructor, creates a deep copy of the event.
+     * Not yet - needs pointer chasing ...
      */
-    LCEventImpl(const EVENT::LCEvent& evt) ;  // copy c'tor
+    //    LCEventImpl(const EVENT::LCEvent& evt) ;  // copy c'tor
     
     /// Destructor.
     virtual ~LCEventImpl() ; 

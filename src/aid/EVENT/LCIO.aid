@@ -15,8 +15,15 @@ package hep.lcio.event ;
 // }
 //}
 
-@cpp{ // some convenient typedefs
-   typedef std::vector<std::string> StringVec ;
+@cpp{ 
+// some convenient typedefs
+#include <string>
+#include <vector>
+namespace EVENT{
+    class MCParticle ;
+    typedef std::vector<std::string> StringVec ;
+    typedef std::vector<const MCParticle*> MCParticleVec ;
+} ;
 }
 
 public interface LCIO{
@@ -44,9 +51,9 @@ public interface LCIO{
     static const int SUCCESS =  1 ;
 
     // type names:
-    public static char* const MCPARTICLE = "MCParticle" ;
-    public static char* const CALORIMETERHIT = "CalorimeterHit" ;
-    public static char* const TRACKERHIT = "TrackerHit" ;
+    static char* const MCPARTICLE = "MCParticle" ;
+    static char* const CALORIMETERHIT = "CalorimeterHit" ;
+    static char* const TRACKERHIT = "TrackerHit" ;
 }
 @else
   // bits in flag words

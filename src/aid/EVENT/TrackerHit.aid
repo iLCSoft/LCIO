@@ -1,0 +1,36 @@
+package hep.lcio.event;
+
+/** Describes a generic tracker hit. Has to be implementet by user classes
+ *  that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Mar 6, 2003
+ */
+
+public interface TrackerHit {
+    
+    /**Returns the detector specific (geometrical) cell id.
+     */
+    public int getCellID() const ;
+    
+    /** Returns the hit  position.	
+     */
+@ifdef cpp
+    public const double* getPosition() const ;
+@else
+    public const double[] getPosition() const ;	
+@endif    
+    
+    /** Returns  the dE/dx of the hit.
+     */ 	
+    public float getdEdx() const ;
+    
+    /** Returns the  time of the hit. TO DO needs definition.
+     */
+    public float getTime() const ;	
+    
+    /** Returns the MC particle that caused the hit.
+     */
+    public const MCParticle* getMCParticle() const ;
+    
+}
