@@ -5,7 +5,9 @@
 # @author Frank Gaede
 # @date   Feb 11,2003
 # @mod    Sep  4,2003  (Harald Vogt)
+# @mod    Feb 24,2004  (Harald Vogt) CygWin included
 ######################################################
+
 
 
 LCIOBASE = $(LCIO)
@@ -14,11 +16,11 @@ SIOINSTALL = $(LCIOBASE)/sio
 INCLUDEDIR = $(LCIOBASE)/src/f77
 
 # check the gcc compiler version if libfrtbegin.a has to be included
-COMPILER_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 )
-COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c3 )
+COMPILER_VERSION := $(shell gcc -v 2>&1 | grep "gcc version" | cut -d' ' -f3 | cut -c1 )
+COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep "gcc version" | cut -d' ' -f3 | cut -c3 )
 ifeq ($(COMPILER_VERSION),3)
  ifneq ($(COMPILER_MINOR_VERSION),0)
-  FTN_START_LIB = -lfrtbegin
+  FTN_START_LIB = -lfrtbegin -lg2c
  endif
 endif
 

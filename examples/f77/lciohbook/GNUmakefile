@@ -11,8 +11,8 @@
 target_name = lciohbook
 
 # path to cern lib - modify as needed
-HBKLIBS = -L /cern/pro/lib -lpacklib -lnsl -lcrypt -ldl
-
+# HBKLIBS = -L /cern/pro/lib -lpacklib -lnsl -lcrypt -ldl
+HBKLIBS = `cernlib packlib`
 
 
 LCIOBASE = $(LCIO)
@@ -21,11 +21,11 @@ SIOINSTALL = $(LCIOBASE)/sio
 INCLUDEDIR = $(LCIOBASE)/src/f77
 
 # check the gcc compiler version if libfrtbegin.a has to be included
-COMPILER_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 )
-COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c3 )
+COMPILER_VERSION := $(shell gcc -v 2>&1 | grep "gcc version" | cut -d' ' -f3 | cut -c1 )
+COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep "gcc version" | cut -d' ' -f3 | cut -c3 )
 ifeq ($(COMPILER_VERSION),3)
  ifneq ($(COMPILER_MINOR_VERSION),0)
-  FTN_START_LIB = -lfrtbegin
+  FTN_START_LIB = -lfrtbegin -lg2c
  endif
 endif
 
