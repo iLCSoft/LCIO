@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.17 2004-08-25 09:45:38 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.18 2004-09-09 09:51:25 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
@@ -106,27 +106,32 @@ public interface MCParticle extends LCObject {
      */
     public boolean isCreatedInSimulation() const ; 
 
-    /** True if the particle is the result of a backscatter from a calorimeter shower.
+    /** True if the particle was created by the simulator as a result of an interaction or decay in 
+     * non-tracking region, e.g. a calorimeter. By convention, such particles are not saved. However, 
+     * if this particle creates a tracker hit, the particle is added to the MCParticle list with 
+     * this flag set, and the parent set to the particle that initially decayed or interacted in 
+     * a non-tracking region.
      */
     public boolean isBackscatter() const ; 
     
-    /** True if the particle's vertex is not the endpoint of the  parent particle.
+    /** True if the particle was created as a result of a continuous process where the parent 
+     *  particle continues, i.e. hard ionization, Bremsstrahlung, elastic interactions, etc. 
      */
     public boolean vertexIsNotEndpointOfParent() const ; 
     
-    /** True if the particle has interacted in a tracking region.
+    /** True if the particle decayed or interacted in a tracking region.
      */
     public boolean isDecayedInTracker() const ; 
 
-    /** True if the particle has interacted in a calorimeter region.
+    /** True if the particle decayed or interacted in non-tracking region.
      */
     public boolean isDecayedInCalorimeter() const ; 
 
-    /** True if the particle has left the world volume undecayed.
+    /** True if the particle left the world volume undecayed.
      */
     public boolean hasLeftDetector() const ; 
 
-    /** True if the particle has been stopped by the simulation program.
+    /** True if the particle lost all kinetic energy inside the world volume and did not decay
      */
     public boolean isStopped() const ; 
 

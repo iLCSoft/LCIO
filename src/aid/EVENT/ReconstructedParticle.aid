@@ -10,7 +10,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.8 2004-09-06 10:28:21 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.9 2004-09-09 09:51:25 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -57,6 +57,8 @@ public interface ReconstructedParticle extends LCObject {
     public float getEnergy() const ;	
     
     /** Covariance matrix of the reconstructed particle's 4vector (10 parameters).
+     *  Stored as lower triangle matrix of the four momentum (px,py,pz,E), i.e.
+     *  cov(px,px), cov(py,px), cov( py,py ) , ....
      */
     public const FloatVec& getCovMatrix() const ;
     
