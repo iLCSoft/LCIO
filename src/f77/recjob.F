@@ -209,8 +209,9 @@ ccc      status     = lccolsetflag ( tpchitcol, tpcflag )
         dpos(3) = ishft ( iand ( cellid, 'ff0000'x ) , -16 )
         status  = lctrhsetposition ( trhitp, dpos )
 
-*----- FIXME:  need way to set raw hits in f77
-*        status  = lctrhsetrawhit ( trhitp, tpchit )
+        status  = lctrhaddrawhit ( trhitp, tpchit )  ! store the original raw data hit
+        status  = lctrhaddrawhit ( trhitp, tpchit )  ! for testing add the same raw hit twice
+
         do j = 1, 6
           cov(j)  = i
         end do

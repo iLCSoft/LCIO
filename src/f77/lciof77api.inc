@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.21 2004-09-21 15:44:50 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.22 2004-09-21 16:30:39 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -191,7 +191,7 @@ c-----the TrackerHit interface
       real    lctrhgetdedx, lctrhgettime
       character*80 lctrhgettype
       integer lctrhsetposition, lctrhsetcovmatrix, lctrhsetdedx
-      integer lctrhsettime, lctrhsetrawhit
+      integer lctrhsettime, lctrhaddrawhit
 
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits
