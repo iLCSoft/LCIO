@@ -149,6 +149,24 @@ c ---------------  convenient methods for the vector interface
 
       PTRTYPE lcstringvectorcreate
 
+*     Get the complete LC vector of Integers
+*     
+*     int lcgetintvector( PTRTYPE vector, int* intv, int* nintv )
+
+      integer lcgetintvector
+
+*     Get the complete LC vector of Floats
+*     
+*     int lcgetfloatvector( PTRTYPE vector, float* floatv , int* nfloatv )
+
+      integer lcgetfloatvector
+
+*     Get the complete LC vector of Strings
+*     
+*     int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
+
+      integer lcgetstringvector
+
 
 *     Create a complete vector of Integers
 *
@@ -168,24 +186,24 @@ c ---------------  convenient methods for the vector interface
 
       PTRTYPE stringvectorcreate
 
-
-*     Get the complete LC vector of Integers
+*     Get the complete vector of Integers
 *     
-*     int lcgetintvector( PTRTYPE vector, int* intv, int* nintv )
+*     int getintvector( PTRTYPE vector, int* intv, int* nintv )
 
-      integer lcgetintvector
+      integer getintvector
 
-*     Get the complete LC vector of Floats
+*     Get the complete vector of Floats
 *     
-*     int lcgetfloatvector( PTRTYPE vector, float* floatv , int* nfloatv )
+*     int getfloatvector( PTRTYPE vector, float* floatv , int* nfloatv )
 
-      integer lcgetfloatvector
+      integer getfloatvector
 
-*     Get the complete LC vector of Strings
+*     Get the complete vector of Strings
 *     
-*     int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
+*     int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
 
-      integer lcgetstringvector
+      integer getstringvector
+
 
 *     Set methods for LCParameters
 *

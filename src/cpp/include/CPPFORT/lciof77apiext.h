@@ -123,7 +123,19 @@ PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ) ;
 */
 PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
 
+/**Return the content of a LC int vector
+*/
+int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
 
+/**Return the content of a LC float vector
+*/
+int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
+
+/**Return the content of a LC string vector
+*/
+int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+
+                  
 /**Create an int vector
 */
 PTRTYPE intvectorcreate( int* intv, const int nintv ) ;
@@ -136,19 +148,18 @@ PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ) ;
 */
 PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
 
-
 /**Return the content of an int vector
 */
-int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
-
+int getintvector( PTRTYPE vector, int* intv, int* nintv ) ;
 
 /**Return the content of a float vector
 */
-int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
+int getfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 
 /**Return the content of a string vector
 */
-int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+
 
 
 //---------------  convenient methods for the interface nterface to store generic named parameters 
@@ -224,6 +235,15 @@ FCALLSCFUN2(CFORTRANPNTR, lcfloatvectorcreate, LCFLOATVECTORCREATE , lcfloatvect
 FCALLSCFUN3(CFORTRANPNTR, lcstringvectorcreate, LCSTRINGVECTORCREATE , lcstringvectorcreate,
             PSTRINGV, INT, INT ) ;
 
+FCALLSCFUN3(INT, lcgetintvector, LCGETINTVECTOR , lcgetintvector,
+            CFORTRANPNTR , INTV, INTV ) ;
+FCALLSCFUN3(INT, lcgetfloatvector, LCGETFLOATVECTOR , lcgetfloatvector,
+            CFORTRANPNTR , FLOATV, INTV ) ;
+#define lcgetstringvector_STRV_A2 NUM_ELEM_ARG(3)
+FCALLSCFUN4(INT, lcgetstringvector, LCGETSTRINGVECTOR , lcgetstringvector,
+            CFORTRANPNTR , PSTRINGV, INTV, INT ) ;
+
+
 FCALLSCFUN2(CFORTRANPNTR, intvectorcreate, INTVECTORCREATE , intvectorcreate,
             INTV, INT ) ;
 FCALLSCFUN2(CFORTRANPNTR, floatvectorcreate, FLOATVECTORCREATE , floatvectorcreate,
@@ -232,13 +252,12 @@ FCALLSCFUN2(CFORTRANPNTR, floatvectorcreate, FLOATVECTORCREATE , floatvectorcrea
 FCALLSCFUN3(CFORTRANPNTR, stringvectorcreate, STRINGVECTORCREATE , stringvectorcreate,
             PSTRINGV, INT, INT ) ;
 
-
-FCALLSCFUN3(INT, lcgetintvector, LCGETINTVECTOR , lcgetintvector,
+FCALLSCFUN3(INT, getintvector, GETINTVECTOR , getintvector,
             CFORTRANPNTR , INTV, INTV ) ;
-FCALLSCFUN3(INT, lcgetfloatvector, LCGETFLOATVECTOR , lcgetfloatvector,
+FCALLSCFUN3(INT, getfloatvector, GETFLOATVECTOR , getfloatvector,
             CFORTRANPNTR , FLOATV, INTV ) ;
-#define lcgetstringvector_STRV_A2 NUM_ELEM_ARG(3)
-FCALLSCFUN4(INT, lcgetstringvector, LCGETSTRINGVECTOR , lcgetstringvector,
+#define getstringvector_STRV_A2 NUM_ELEM_ARG(3)
+FCALLSCFUN4(INT, getstringvector, GETSTRINGVECTOR , getstringvector,
             CFORTRANPNTR , PSTRINGV, INTV, INT ) ;
 
 
