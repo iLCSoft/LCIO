@@ -1,0 +1,52 @@
+package hep.lcio.event ;
+
+@java{
+import hep.lcio.exceptions.* ;
+}
+
+/** Interface for relationships between LCObjects. 
+ *  Each relationship consists of a "from" a "to" and a "weight" (may be 1).
+ *  The list can be searched for all relationships involving a certain "from"
+ *  object, or all relationships involving a certain "to" relationship. 
+ *  New relationships can be added or removed, but doing so invalidates any
+ *  previously returned list of relationships. 
+ * EXPERIMENTAL code !!
+ * 
+ * @author gaede 
+ * @version Apr 15, 2004
+ * @see LCObject
+ */
+
+public interface LCRelation /* extends LCCollection?? */
+{
+
+    /**The type of the 'from' objects in this relation.
+     */
+    public const String& getFromType() const ;
+
+    /**The type of the 'to' objects in this relation.
+     */
+    public const String& getToType() const ;
+
+    /** The total number of stored relations. 
+     */
+    public int numberOfRelations() ; 
+
+    public const LCRelationship& getRelationship(int index) const;
+
+    /** Get the list of objects involving the given "from" object
+     */
+    public List getRelationsFrom(LCObject* from) const;
+
+    /** Get the list of objects involving the given "to" object
+     */
+    public List getRelationsTo(LCObject* to) const;
+
+    /** Add a new relation. 
+     */
+    public void addRelation(LCObject* from, LCObject* to, float weight=1.0) ;
+    
+    /** Remove a given relation.
+     */
+    public void removeRelation(LCRelationship* relationship);
+}
