@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.23 2004-08-03 13:14:18 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.24 2004-09-06 14:51:12 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -333,21 +333,21 @@ class SIOEvent extends ILCEvent
                   SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
             }
          }
-         String[] relNames = event.getRelationNames();
-         if (relNames != null)
-         {
-            for (int j = 0; j < relNames.length; j++)
-            {
-               String relName = blockNames[j];
-               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
-               LCRelation rel = event.getRelation(relName);
-               String fromType = rel.getFromType();
-               String toType = rel.getToType();
-               int flags = 0; // FixMe: rel.getFlag(); 
-               out.writeInt(flags);
-               SIORelation.write(rel,out,flags);
-            }
-         }
+//         String[] relNames = event.getRelationNames();
+//         if (relNames != null)
+//         {
+//            for (int j = 0; j < relNames.length; j++)
+//            {
+//               String relName = blockNames[j];
+//               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
+//               LCRelation rel = event.getRelation(relName);
+//               String fromType = rel.getFromType();
+//               String toType = rel.getToType();
+//               int flags = 0; // FixMe: rel.getFlag(); 
+//               out.writeInt(flags);
+//               SIORelation.write(rel,out,flags);
+//            }
+//         }
       }
    }
 
