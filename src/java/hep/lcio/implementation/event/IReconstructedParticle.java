@@ -5,6 +5,7 @@ import hep.lcio.event.MCParticle;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+import java.util.List;
 
 import java.util.Vector;
 
@@ -112,12 +113,12 @@ public class IReconstructedParticle implements ReconstructedParticle
       type = i;
    }
    
-   public Vector getMCParticles()
+   public List getMCParticles()
    {
       return mCParticles;
    }
    
-   public Vector getClusters()
+   public List getClusters()
    {
       return clusters;
    }
@@ -142,7 +143,7 @@ public class IReconstructedParticle implements ReconstructedParticle
       return mCParticleWeights;
    }
    
-   public Vector getParticles()
+   public List getParticles()
    {
       return particles;
    }
@@ -152,7 +153,7 @@ public class IReconstructedParticle implements ReconstructedParticle
       return particleWeights;
    }
    
-   public Vector getTracks()
+   public List getTracks()
    {
       return tracks;
    }
@@ -202,7 +203,7 @@ public class IReconstructedParticle implements ReconstructedParticle
       charge = f;
    }
    
-   public Vector getParticleIDs()
+   public List getParticleIDs()
    {
       return particleIDs;
    }
