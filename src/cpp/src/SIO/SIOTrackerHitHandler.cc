@@ -85,6 +85,8 @@ namespace SIO{
     
     const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
 
+    
+    LCSIO_WRITE( stream, rawHits.size()  ) ;
     for(unsigned int i=0; i < rawHits.size() ; i++){
        SIO_PNTR( stream , &(rawHits[i]) ) ;
     }

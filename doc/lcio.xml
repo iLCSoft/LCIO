@@ -522,8 +522,15 @@
             <data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data>
             <data type="float" name="dedx"></data>
             <data type="float" name="time"></data>
-            <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
-              <data type="ptag" name="this"></data>
+            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+              <data type="int" name="nRawHits">number of raw hits</data>
+              <repeat count="nRawHits">
+	        <data type="pntr" name="rawHit"></data>
+              </repeat>
+            <else/> 
+              <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
+            </if>
+            <data type="ptag" name="this"></data>
          </repeat>
       </block>
       <block name="TPCHit" major="1" minor="3">
@@ -789,7 +796,10 @@
             </repeat>
 	  </if>
 	</repeat>
-        <data type="pntr" name="ParticleIDUsed"></data>
+
+        <if condition="major>1||(major==1&amp;&amp;minor>2)">
+          <data type="pntr" name="ParticleIDUsed"></data>
+        </if>
         <data type="int" name="nrecopart"/>
         <repeat count="nrecopart">
 	  <data type="pntr" name="ReconstructedParticle"></data>
