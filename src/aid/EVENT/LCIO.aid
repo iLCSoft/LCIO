@@ -58,6 +58,7 @@ public interface LCIO{
     static const char* LCRUNHEADER ;
     static const char* MCPARTICLE ; 
     static const char* SIMCALORIMETERHIT ;
+    static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTEGERVEC ; 
@@ -91,6 +92,7 @@ public interface LCIO{
   public static const String LCRUNHEADER = "LCRunHeader" ;
   public static const String MCPARTICLE = "MCParticle" ;
   public static const String SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+  public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTEGERVEC = "LCIntegerVec" ;

@@ -12,6 +12,8 @@
 namespace IMPL {
   
   typedef std::vector<const EVENT::MCParticle**> MCParticlePVec ;
+  // use  pointers to pointer to MCParticle 
+  // as SIO needs the address of the pointer for pointer reallocation....
 
   /** Implementation of MCParticle.
    * 

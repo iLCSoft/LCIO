@@ -1,0 +1,38 @@
+package hep.lcio.event ;
+
+@java{
+import hep.lcio.exceptions.* ;
+}
+/** The generic calorimeter hit for real data. 
+ * Adding some convenient methods to the pure data interface.
+ * 
+ * @author gaede
+ * @version Aug 8, 2003
+ */
+
+public interface CalorimeterHit extends CalorimeterHitData {
+    
+@ifdef overwriteDataInterface
+    /**Returns the detector specific (geometrical) cell id.
+     */
+    public int getCellID0() const ;
+    
+    /**Returns the second detector specific (geometrical) cell id.
+     */
+    public int getCellID1() const ;
+    
+    /** Returns the energy (amplitude) of the hit on a detector (and calibration) 
+     * depending scale.
+     */
+    public float getEnergy() const ;
+    
+    /** Returns the position of the hit in world coordinates.
+     *  NULL if information is not stored. 
+     */
+    public const float3V getPosition() const ;	
+
+    
+    
+@endif
+
+}

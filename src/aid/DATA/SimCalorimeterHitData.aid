@@ -1,6 +1,6 @@
 package hep.lcio.data ;
 
-/** Describes a generic calorimeter hit. Has to be implemented by user 
+/** Describes a generic calorimeter hit from simulation. Has to be implemented by user 
  *  classes that are to be made persistent.
  * 
  * @author gaede

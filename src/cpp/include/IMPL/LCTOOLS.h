@@ -42,6 +42,10 @@ namespace IMPL{
      */
     static void printSimCalorimeterHits(const EVENT::LCCollection* col ) ;
 
+    /** Completely prints all CalorimeterHits in the collection.
+     */
+    static void printCalorimeterHits(const EVENT::LCCollection* col ) ;
+
 
     /** Print LCFloatVec user extension vectors  in the  collection
      */

@@ -1,0 +1,30 @@
+package hep.lcio.data ;
+
+/** Describes a generic calorimeter hit with real data (no MCParticle contribution). 
+ * Has to be implemented by user classes that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Aug 08, 2003
+ */
+
+public interface CalorimeterHitData extends LCObject {
+    
+    /**Returns the detector specific (geometrical) cell id.
+     */
+    public int getCellID0() const ;
+    
+    /**Returns the second detector specific (geometrical) cell id.
+     */
+    public int getCellID1() const ;
+    
+    /** Returns the energy (amplitude) of the hit on a detector (and calibration) 
+     * depending scale.
+     */
+    public float getEnergy() const ;
+    
+    /** Returns the position of the hit in world coordinates.
+     *  NULL if information is not stored. 
+     */
+    public const float3V getPosition() const ;	
+
+}

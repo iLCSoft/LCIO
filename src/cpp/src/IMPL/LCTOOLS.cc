@@ -1,6 +1,7 @@
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
+#include "EVENT/CalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
@@ -60,6 +61,11 @@ namespace IMPL {
 	printSimCalorimeterHits( col ) ;
 
       }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::CALORIMETERHIT ){
+	  
+	printCalorimeterHits( col ) ;
+
+      }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
 	  
 	printLCFloatVecs( col ) ;
@@ -117,8 +123,32 @@ namespace IMPL {
 	    cout << "  short hits: position not available! " << hex << flag << dec << endl ;
 	  }
 	}
-      
-	// print the MCParticle collection
+      }
+      else if(evt->getCollection( *name )->getTypeName() == LCIO::CALORIMETERHIT ){
+	
+	int nHits =  col->getNumberOfElements() ;
+	cout << nHits << " hits - first hit: " ;
+	int nPrint = nHits>0 ? 1 : 0 ;
+	int flag = col->getFlag() ;
+	
+	if(!nPrint ) cout << endl ;
+	for( int i=0 ; i< nPrint ; i++ ){
+	  
+	  const CalorimeterHit* hit = 
+	    dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
+	  
+	  cout << "    hit -  e: "  << hit->getEnergy() ;
+
+	  if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+	    
+	    const float* x =  hit->getPosition() ;
+	    cout << "  pos: " << x[0] << ", " << x[1] << ", " << x[2] << endl ;   
+	    
+	  } else{
+	    cout << "  short hits: position not available! " << hex << flag << dec << endl ;
+	  }
+	}
+	
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::SIMTRACKERHIT ){
       
 	int nHits =  col->getNumberOfElements() ;
@@ -274,6 +304,68 @@ namespace IMPL {
 
       }
 
+
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+  }
+
+  void LCTOOLS::printCalorimeterHits(const EVENT::LCCollection* col ){
+
+    if( col->getTypeName() != LCIO::CALORIMETERHIT ){
+
+      cout << " collection not of type " << LCIO::CALORIMETERHIT << endl ;
+      return ;
+    }
+
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::CALORIMETERHIT << " collection "
+	 << "--------------- " << endl ;
+
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
+    cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+    cout << "     LCIO::CHBIT_POSZ   : " << flag.bitSet( LCIO::CHBIT_POSZ ) << endl ;
+    cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
+
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " cellId0 | cellId1 | energy/amplitude | position (x,y,z) " 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      const CalorimeterHit* hit = 
+	dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
+      
+      int id0 = hit->getCellID0() ;
+      int id1 = hit->getCellID1() ;
+      
+      cout << i << ": "
+	// 	   << hit->getCellID0() << " | "
+	// 	   << hit->getCellID1() << " | "
+	   << ((id0& 0xff0000)>>16) << "/" 
+	   << ((id0& 0x00ff00)>> 8) << "/" 
+	   << ((id0& 0x0000ff)>> 0) << " | "
+	   << hit->getCellID1() << " | "
+	
+	   << hit->getEnergy() << " | (" ;
+      
+      if( flag.bitSet( LCIO::CHBIT_LONG ) ){
+	
+	cout << hit->getPosition()[0] << ", "
+	     << hit->getPosition()[1]<< ", "
+	     << hit->getPosition()[2] << ") | " ;
+      }else{
+	cout << "   no position avaliable  ) | " ;
+      }
+      cout << endl ;
 
     }
     cout << endl 

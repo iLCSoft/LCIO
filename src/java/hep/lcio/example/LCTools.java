@@ -7,6 +7,7 @@ package hep.lcio.example;
 
 import hep.lcio.data.LCFloatVec;
 import hep.lcio.event.SimCalorimeterHit;
+import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
@@ -56,14 +57,34 @@ public class LCTools
                System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]) ;
 
 	       // FIX ME sth. is wrong with accessing the mc particle contributions 
-	       //  if(hit.getNMCParticles()>0)
-	       //  System.out.print(" - mc: " + hit.getParticleCont(0).getPDG() ) ;
+	       //	       if(hit.getNMCParticles()>0)
+	       //	   System.out.print(" - mc: " + hit.getParticleCont(0).getPDG() ) ;
 
 	       System.out.println() ;
 		       
             }
 
-            // print the MCParticle collection
+         }
+         // print CalorimeterHit collections:
+         else if (evt.getCollection(name).getTypeName().equals(LCIO.CALORIMETERHIT))
+         {
+            int nHits = col.getNumberOfElements();
+            System.out.print(nHits + " hits - first hit: ");
+
+            int nPrint = (nHits > 0) ? 1 : 0;
+
+            if (nPrint == 0)
+               System.out.println();
+            for (int i = 0; i < nPrint; i++)
+            {
+               CalorimeterHit hit = (CalorimeterHit) col.getElementAt(i);
+
+               float[] x = hit.getPosition();
+
+               System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]) ;
+ 	           System.out.println() ;
+           }
+
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.SIMTRACKERHIT))
          {

@@ -1,5 +1,5 @@
-#ifndef SIO_SIOSIMCALHITHANDLER_H
-#define SIO_SIOSIMCALHITHANDLER_H 1
+#ifndef SIO_SIOCALHITHANDLER_H
+#define SIO_SIOCALHITHANDLER_H 1
 
 #include "SIO/SIOObjectHandler.h"
 
@@ -7,12 +7,12 @@
 namespace SIO {
     
     
-  /** Implementation of SIOObjectHandler to handle IO of SimCalorimeterHits.
+  /** Implementation of SIOObjectHandler to handle IO of CalorimeterHits.
    *
    * @author gaede
    * @version Mar 6, 2003
    */
-  class SIOSimCalHitHandler : public SIOObjectHandler {
+  class SIOCalHitHandler : public SIOObjectHandler {
 	
   public:
 	

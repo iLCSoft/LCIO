@@ -10,8 +10,10 @@ import hep.lcio.data.LCCollectionData;
 import hep.lcio.data.LCEventData;
 import hep.lcio.data.MCParticleData;
 import hep.lcio.data.SimCalorimeterHitData;
+import hep.lcio.data.CalorimeterHitData;
 import hep.lcio.data.SimTrackerHitData;
 import hep.lcio.event.SimCalorimeterHit;
+import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
@@ -30,7 +32,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.7 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.8 2003-08-22 13:55:09 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -110,6 +112,15 @@ class SIOEvent extends ILCEvent
                ilc.add(new SIOSimCalorimeterHit(in, flags));
             addCollection(ilc, name);
          }
+         else if (type.equals(LCIO.CALORIMETERHIT))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            ILCCollection ilc = new ILCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOCalorimeterHit(in, flags));
+            addCollection(ilc, name);
+         }
          else if (type.equals(LCIO.LCFLOATVEC))
          {
             int flags = in.readInt();
@@ -172,6 +183,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOSimCalorimeterHit.write((SimCalorimeterHitData) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.CALORIMETERHIT))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOCalorimeterHit.write((CalorimeterHitData) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.LCFLOATVEC))
             {
