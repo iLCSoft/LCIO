@@ -18,11 +18,9 @@
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
-#include "IMPL/LCRelationImpl.h"
+//#include "IMPL/LCRelationImpl.h"
 
-//#include <math.h>
-//#include <cmath>
-//#include <cstdlib>
+
 // M_PI is non ansi ...
 #define M_PI 3.14159265358979323846
 
@@ -252,7 +250,7 @@ public:
     calHits->setFlag( calFlag.getFlag()  ) ;
 
 
-    LCRelation* scRel = new LCRelationImpl ;
+    //    LCRelation* scRel = new LCRelationImpl ; // still experimental code ...
 
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
@@ -264,8 +262,8 @@ public:
       calHit->setCellID0(  simcalHit->getCellID0() ) ;
       calHit->setPosition( simcalHit->getPosition()) ;
 
-      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
       
       calHits->addElement( calHit ) ;
     }
@@ -283,7 +281,7 @@ public:
 //       }
 //       std::cout << dec << std::endl ;
 //      }
-    delete scRel ;
+//     delete scRel ;
     // -----------
     
     // if we want to point back to the hits we need to set the flag

@@ -13,7 +13,7 @@
 
 namespace IMPL {
   
-  typedef std::multimap<EVENT::LCObject*,pair<EVENT::LCObject*,float> > LCWgtMultiMap ;
+  typedef std::multimap<EVENT::LCObject*,std::pair<EVENT::LCObject*,float> > LCWgtMultiMap ;
   typedef LCWgtMultiMap::iterator LCRelationIter ;
 
   /** Implementation of the LCRelation.
@@ -58,7 +58,7 @@ namespace IMPL {
   protected:
 
     bool _useCaching ;
-    mutable pair<LCRelationIter,LCRelationIter> _last ;
+    mutable std::pair<LCRelationIter,LCRelationIter> _last ;
 
 }; // class
 }; // namespace IMPL

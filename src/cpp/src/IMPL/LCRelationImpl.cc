@@ -70,7 +70,7 @@ namespace IMPL{
 
   void LCRelationImpl::addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight){
 
-    insert( make_pair( from , make_pair( to, weight ) ) ) ;
+    insert( std::make_pair( from , std::make_pair( to, weight ) ) ) ;
 
   }
 
