@@ -13,10 +13,11 @@
 #include "CPPFORT/HEPEVT.h"
 #include "EVENT/LCIntVec.h"
 #include "EVENT/LCFloatVec.h"
-#include "EVENT/LCStrVec.h"
 
 #include <string>
 #include <vector>
+
+typedef std::vector<std::string> LCStrVec ;
 
 #include <iostream>
 
