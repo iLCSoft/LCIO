@@ -13,7 +13,7 @@
 -->
 
 <sio>
-  <record name="LCEvent" major = "1" minor = "0">
+  <record name="LCEvent">
     <block name="OutputHeader" major="1" minor="0">
       <data type="int" name="isr flag"/>
       <data type="float" name="collider energy"/>

@@ -17,8 +17,8 @@
 -->
 
 <sio>
-  <record name="LCRunHeader" major="1" minor="0">
-     <block name="RunHeader" major="1" minor="0">
+  <record name="LCRunHeader">
+     <block name="RunHeader" major="0" minor="7">
         <data type="int" name="runNumber"></data>
         <data type="string" name="detectorName"></data>
         <data type="string" name="description"></data>
@@ -28,8 +28,8 @@
         </repeat>
      </block>
   </record>  
-  <record name="LCEventHeader" major="1" minor="0">
-     <block name="EventHeader" major="1" minor="0">
+  <record name="LCEventHeader">
+     <block name="EventHeader" major="0" minor="7">
         <data type="int" name="runNumber"></data>
         <data type="int" name="eventNumber"></data>
         <data type="long" name="timeStamp">TODO: format</data>
@@ -41,8 +41,8 @@
         </repeat>
      </block>
   </record>  
-  <record name="LCEvent" major="1" minor="0">
-      <block name="MCParticle" major="1" minor="0">
+  <record name="LCEvent">
+      <block name="MCParticle" major="0" minor="7">
          <data type="int" name="flags"> not yet used </data>
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
@@ -64,11 +64,14 @@
 	    </data>
             <data type="double[3]" name="vertex">Production vertex</data>
             <data type="float[3]" name="momentum">Momentum at production vertex</data>
-            <data type="float" name="energy"></data>
+            <data type="float" name="mass"></data>
             <data type="float" name="charge"></data>
+            <if condition="nDaughter==0">
+               <data type="double[3]" name="endpoint"/>
+            </if>
          </repeat>
       </block>
-      <block name="TrackerHit-BlockName" major="1" minor="0">
+      <block name="SimTrackerHit" major="0" minor="7">
          <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, rest is detector specific</data>
          <data type="int" name="n"></data>
          <repeat count="n">
@@ -77,9 +80,10 @@
             <data type="float" name="dedx"></data>
             <data type="float" name="time">TODO: Definition Needed (units absolute/relative?)</data>
             <data type="pntr" name="MCParticle"></data>
+            <data type="ptag" name="hit">TODO: Was this really agreed?</data>
          </repeat>
       </block>
-      <block name="CalorimeterHit-BlockName" major="1" minor="0">
+      <block name="SimCalorimeterHit" major="0" minor="7">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; Bit 29 +z = 1, -z = 0; Bit 28 PDG = 1, no PDG =0, rest is detector specific</data>
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
@@ -98,15 +102,26 @@
 		   <data type="int" name="PDG"></data>
 		</if>
             </repeat>
+            <data type="ptag" name="hit">TODO: Was this really agreed?</data> 
          </repeat>
       </block>
-      <block name="LCFloatVec-ExtensionName" major="1" minor="0">
+      <block name="LCFloatVec" major="0" minor="7">
          <data type="int" name="flags">not yet used</data>
          <data type="int" name="nVectors"></data>
          <repeat count="nVectors">
 	    <data type="int" name="nElements"></data>
             <repeat count="nElements">
 	       <data type="float" name="value"></data>
+            </repeat>
+         </repeat>
+      </block>
+      <block name="LCIntVec" major="0" minor="7">
+         <data type="int" name="flags">not yet used</data>
+         <data type="int" name="nVectors"></data>
+         <repeat count="nVectors">
+	    <data type="int" name="nElements"></data>
+            <repeat count="nElements">
+	       <data type="int" name="value"></data>
             </repeat>
          </repeat>
       </block>
