@@ -16,6 +16,7 @@
 #include "IMPL/LCTOOLS.h"
 #include "IMPL/TPCHitImpl.h"
 #include "UTIL/LCRelationNavigator.h"
+#include "UTIL/LCTime.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -98,7 +99,8 @@ int main(int argc, char** argv ){
 	
 	evt->setRunNumber(  rn   ) ;
 	evt->setEventNumber( i ) ;
-	evt->setTimeStamp( 9223372036854775807LL ) ;
+	LCTime now ;
+	evt->setTimeStamp( now.timeStamp()  ) ;
 	evt->setDetectorName( detName ) ;
 	
 	// create and add some mc particles 
