@@ -10,31 +10,31 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORelation.java,v 1.1 2004-07-07 05:32:09 tonyj Exp $
+ * @version $Id: SIORelation.java,v 1.2 2004-09-06 14:49:19 gaede Exp $
  */
 class SIORelation extends ILCRelation
 {
    SIORelation(SIOInputStream in, SIOEvent owner, String from, String to, int flag, int major, int minor) throws IOException
    {
-      super(from,to);
-      int n = in.readInt();
-      for (int i=0; i<n; i++)
-      {
-         SIORef f = in.readPntr();
-         SIORef t = in .readPntr();
-         float weight = 1;
-         if ((flag & 1<<31) != 0) weight = in.readFloat();
-      }
+//      super(from,to);
+//      int n = in.readInt();
+//      for (int i=0; i<n; i++)
+//      {
+//         SIORef f = in.readPntr();
+//         SIORef t = in .readPntr();
+//         float weight = 1;
+//         if ((flag & 1<<31) != 0) weight = in.readFloat();
+//      }
    }
    static void write(LCRelation relation, SIOOutputStream out, int flag) throws IOException
    { 
-      int n = relation.numberOfRelations();
-      out.writeInt(n);
-      for (int i=0; i<n; i++)
-      {
-         out.writePntr(relation.getFrom(i));
-         out.writePntr(relation.getTo(i));
-         if ((flag & 1<<31) != 0) out.writeFloat(relation.getWeight(i));
-      }
+//      int n = relation.numberOfRelations();
+//      out.writeInt(n);
+//      for (int i=0; i<n; i++)
+//      {
+//         out.writePntr(relation.getFrom(i));
+//         out.writePntr(relation.getTo(i));
+//         if ((flag & 1<<31) != 0) out.writeFloat(relation.getWeight(i));
+//      }
    }
 }
