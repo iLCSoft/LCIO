@@ -13,17 +13,19 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOIntVec.java,v 1.3 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIOIntVec.java,v 1.4 2004-09-23 13:49:53 gaede Exp $
  */
 class SIOIntVec extends ILCIntVec
 {
-   SIOIntVec(SIOInputStream in, SIOEvent owner) throws IOException
+   SIOIntVec(SIOInputStream in, SIOEvent owner,int major,int minor) throws IOException
    {
       setParent(owner);
       size = in.readInt();
       data = new int[size];
       for (int i = 0; i < size; i++)
          data[i] = in.readInt();
+   	  if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) ;
+	    in.readPTag(this);
    }
 
    static void write(LCIntVec vec, SIOOutputStream out) throws IOException
@@ -36,6 +38,7 @@ class SIOIntVec extends ILCIntVec
          out.writeInt(data.length);
          for (int i = 0; i < data.length; i++)
             out.writeInt(data[i]);
+         out.writePTag(vec);
       }
    }
 
@@ -44,5 +47,6 @@ class SIOIntVec extends ILCIntVec
       out.writeInt(size);
       for (int i = 0; i < size; i++)
          out.writeInt(data[i]);
+      out.writePTag(this) ;
    }
 }

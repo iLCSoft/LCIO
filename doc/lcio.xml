@@ -300,6 +300,7 @@
             <repeat count="nElements">
 	       <data type="float" name="value"></data>
             </repeat>
+            <data type="ptag" name="this"></data>
          </repeat>
       </block>
       <block name="LCIntVec" major="1" minor="3">
@@ -338,6 +339,7 @@
             <repeat count="nElements">
 	       <data type="int" name="value"></data>
             </repeat>
+            <data type="ptag" name="this"></data>
          </repeat>
       </block>
       <block name="LCStrVec" major="1" minor="3">
@@ -367,6 +369,7 @@
              <repeat count="nVals">
 	       <data type="string" name="value"></data>
              </repeat>
+            <data type="ptag" name="this"></data>
           </repeat>
         </if>
 	<!-- end of named parameters -->

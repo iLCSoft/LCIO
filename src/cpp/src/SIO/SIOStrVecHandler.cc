@@ -33,6 +33,9 @@ namespace SIO{
       vec->push_back( x ) ;
     }
 
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
+      SIO_PTAG( stream , vec ) ;
+    }
     return ( SIO_BLOCK_SUCCESS ) ;
 	
   }
@@ -56,6 +59,9 @@ namespace SIO{
     }    
 //      std::cout << std::endl ;
 
+
+    SIO_PTAG( stream , vec ) ;
+    
     return ( SIO_BLOCK_SUCCESS ) ;
     
   }

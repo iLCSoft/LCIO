@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.28 2004-09-22 16:12:39 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.29 2004-09-23 13:49:53 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -151,7 +151,7 @@ class SIOEvent extends ILCEvent
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOStrVec(in, this));
+               ilc.add(new SIOStrVec(in, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -161,7 +161,7 @@ class SIOEvent extends ILCEvent
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOFloatVec(in, this));
+               ilc.add(new SIOFloatVec(in, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -171,7 +171,7 @@ class SIOEvent extends ILCEvent
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOIntVec(in, this));
+               ilc.add(new SIOIntVec(in, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
