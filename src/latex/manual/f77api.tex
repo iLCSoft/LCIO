@@ -1,7 +1,7 @@
 %-----------------------------------------
 %  LCIO fotran wrapper manual 
 %
-%  $Id: f77api.tex,v 1.15 2004-09-23 10:59:26 hvogt Exp $  $Name: not supported by cvs2svn $
+%  $Id: f77api.tex,v 1.16 2004-09-24 11:50:55 hvogt Exp $  $Name: not supported by cvs2svn $
 %
 %-----------------------------------------
 \subsection{The Fortran Interface} \label{f77api}
@@ -43,8 +43,8 @@ C++ implementation of LCIO:
 \item{all function names start with {\bf lc}}
 
 \item{{\bf lc} is followed by a three letter acronym that uniquley identifies the 
-corresponding C++ class, e.g. {\bf evt} for LCEvent.} See table \ref{tab_f77} for a complete 
-listing.
+corresponding C++ class, e.g. {\bf evt} for LCEvent.} See table \ref{tab_f77} for a complete listing
+(for the classes 'LCVec, STL vector' see in the {\bf first part of Appendix~\ref{ftn_summary} under utility})
 
 \item{the function name ends on the full lowercased name of the class method, e.g. \\
  \verb$LCEventImpl::getRunNumber()$ becomes  {\bf lcevtgetrunnumber() } }
@@ -83,7 +83,9 @@ same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles define
  TPCHitImpl                 & tph \\ \hline
  TrackerHitImpl             & trh \\ \hline
  TrackImpl                  & trk \\ \hline
- LCWriter                   & wrt \\ \hline
+ LCWriter                   & wrt \\ \hline \hline
+
+ LCVec, STL vector          & ??? \\ \hline
 
 \end{tabular}
 \end{center}

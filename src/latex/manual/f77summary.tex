@@ -415,6 +415,7 @@ getMass                -> mass    = lcmcpgetmass( pmcp )
 getCharge              -> charge  = lcmcpgetcharge( pmcp )
 
 
+
 utility: 
 
 LCIntVec, LCFloatVec, LCStrVec classes:
@@ -426,7 +427,7 @@ getFloatAt             -> float   = lcfvcgetfloatat( pfloatvec , i ) (i=1,...,ne
 getLengthofStringVector-> nelem   = lcsvcgetlength( pstrvec )
 getStringAt            -> string  = lcsvcgetstringat( pstrvec , i ) (i=1,...,nelem)
 
-stl vector class (int, float, string):
+stl vector class (int, float, string, pointer):
 
 IntVectorGetLength     -> nelem   =  intvectorgetlength( pintvec )
 IntVectorGetElement    -> int     =  intvectorgetelement( pintvec , i ) (i=1,...,nelem)
@@ -434,6 +435,8 @@ FloatVectorGetLength   -> nelem   =  floatvectorgetlength( pfloatvec )
 FloatVectorGetElement  -> float   =  floatvectorgetelement( pfloatvec , i ) (i=1,...,nelem)
 StringVectorGetLength  -> nelem   =  stringvectorgetlength( pstrvec )
 StringVectorGetElement -> string  =  stringvectorgetelement( pstrvec , i ) (i=1,...,nelem)
+PointerVectorGetLength -> nelem   =  pointervectorgetlength( ppointervec )
+PointerVectorGetElement-> pointer =  pointervectorgetelement( ppointervec , i ) (i=1,...,nelem)
 
 \end{verbatim}
 
