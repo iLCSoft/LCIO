@@ -30,7 +30,7 @@ int     lctrkgetndf( PTRTYPE trk ) ;
 float   lctrkgetdedx( PTRTYPE trk ) ;
 float   lctrkgetdedxerror( PTRTYPE trk ) ;
 float   lctrkgetradiusofinnermosthit(  PTRTYPE trk ) ;
-PTRTYPE lctrkgetsubdetectorhitnumbers( PTRTYPE trk ) ;
+int     lctrkgetsubdetectorhitnumbers( PTRTYPE trk, int* intv, int* nintv) ;
 PTRTYPE lctrkgettracks( PTRTYPE trk ) ;
 PTRTYPE lctrkgettrackerhits( PTRTYPE trk ) ;
 
@@ -78,7 +78,7 @@ FCALLSCFUN1(INT, lctrkgetndf, LCTRKGETNDF, lctrkgetndf, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctrkgetdedx, LCTRKGETDEDX, lctrkgetdedx, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctrkgetdedxerror, LCTRKGETDEDXERROR, lctrkgetdedxerror, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctrkgetradiusofinnermosthit, LCTRKGETRADIUSOFINNERMOSTHIT, lctrkgetradiusofinnermosthit, CFORTRANPNTR) ;
-FCALLSCFUN1(CFORTRANPNTR, lctrkgetsubdetectorhitnumbers,  LCTRKGETSUBDETECTORHITNUMBERS, lctrkgetsubdetectorhitnumbers, CFORTRANPNTR) ;
+FCALLSCFUN3(INT, lctrkgetsubdetectorhitnumbers,  LCTRKGETSUBDETECTORHITNUMBERS, lctrkgetsubdetectorhitnumbers, CFORTRANPNTR, INTV, INTV) ;
 FCALLSCFUN1(CFORTRANPNTR, lctrkgettracks,  LCTRKGETTRACKS, lctrkgettracks, CFORTRANPNTR) ;
 FCALLSCFUN1(CFORTRANPNTR, lctrkgettrackerhits,  LCTRKGETTRACKERHITS, lctrkgettrackerhits, CFORTRANPNTR) ;
 
