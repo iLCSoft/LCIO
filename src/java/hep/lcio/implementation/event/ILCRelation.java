@@ -4,25 +4,24 @@ import hep.lcio.event.LCObject;
 import hep.lcio.event.LCRelation;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Represents a set of relationships
  * @author Tony Johnson
- * @version $Id: ILCRelation.java,v 1.1 2004-05-24 03:33:02 tonyj Exp $
+ * @version $Id: ILCRelation.java,v 1.2 2004-07-07 05:32:09 tonyj Exp $
  */
 public class ILCRelation implements LCRelation
 {
-   // FixMe: Is relationship reversible - I guess not, but should it be?
-   // FixMe: Should this be class instead of String?
-   
    private String from;
    private String to;
    // Entry maps from "from" to relationship. If there is only one relationship
    // for this "from" it will be the map entry, otherwise the map entry will be
    // a list of all the relationships involving this "from"
-   private Map entryMap = new HashMap();
+   private Map fromMap = null;
+   private Map toMap = null;
    private List entries = new ArrayList();
    private static class Relationship
    {
@@ -36,13 +35,23 @@ public class ILCRelation implements LCRelation
       private LCObject to;
       private float weight;
    }
-   private Relationship findRelationship(Object from, int index)
+   private static class Value
    {
-      Object result = entryMap.get(from);
-      if (result == null) throw new ArrayIndexOutOfBoundsException();
-      if (result instanceof List) return (Relationship) ((List)result).get(index);
-      if (index != 0) throw new ArrayIndexOutOfBoundsException();
-      return (Relationship) result;
+      private int val;
+      private int[] array;
+      Value(int val)
+      {
+         this.val = val;
+      }
+      void createArray()
+      {
+         array = new int[val];
+      }
+      void push(int n)
+      {
+         array[array.length-val] = n;
+         val--;
+      }
    }
    
    protected ILCRelation(String from, String to)
@@ -51,85 +60,119 @@ public class ILCRelation implements LCRelation
       this.to = to;
    }
    
-   public void addRelation(LCObject from, LCObject to)
-   {
-      addRelation(from,to,1);
-   }
-   
-   public void addRelation(LCObject from, LCObject to, float weight)
-   {
-      Relationship r = new Relationship(from,to,weight);
-      entries.add(r);
-      addMap(from,r);
-   }
-   private void addMap(LCObject object, Relationship r)
-   {
-      Object x = entryMap.get(object);
-      if (x == null) entryMap.put(object,r);
-      else if (x instanceof List) ((List)x).add(r);
-      else
-      {
-         List l = new ArrayList();
-         l.add(x);
-         l.add(r);
-         entryMap.put(object,l);
-      }
-   }
    public String getFromType()
    {
       return from;
-   }
-      
+   }  
    public String getToType()
    {
       return to;
    }
-   public LCObject getRelation(LCObject from)
-   {
-      return getRelation(from,0);
-   }
-   public float getWeight(LCObject from)
-   {
-      return getWeight(from,0);
-   }  
-   // FixMe: This should have a better name getFromObject(int index)?
-   public LCObject getRelation(int index)
+   public LCObject getFrom(int index)
    {
       return ((Relationship) entries.get(index)).from;
    }
-   
-   public LCObject getRelation(LCObject from, int index)
+   public LCObject getTo(int index)
    {
-      Relationship r = findRelationship(from,index);
-      return r.to;
+      return ((Relationship) entries.get(index)).to;
    }
-   
-   public float getWeight(LCObject from, int index)
+   public float getWeight(int index)
    {
-      Relationship r = findRelationship(from,index);
-      return r.weight;      
+      return ((Relationship) entries.get(index)).weight;
    }
-   
    public int numberOfRelations()
    {
-      //FixMe: Is this the number of froms? or the total number of relationships?
       return entries.size();
    }
-   
-   public int numberOfRelations(LCObject from)
+   public void removeRelation(int index)
    {
-      if (from == null) return entries.size();
-      else 
+      entries.remove(index);
+      fromMap = toMap = null;
+   }  
+   public void addRelation(LCObject from, LCObject to)
+   {
+      addRelation(from,to,1.0f);
+   }
+   public void addRelation(LCObject from, LCObject to, float weight)
+   {
+      Relationship r = new Relationship(from,to,weight);
+      entries.add(r);
+      fromMap = toMap = null;
+   }
+   public int[] getRelationsFrom(LCObject from)
+   {
+      if (fromMap == null) buildFromMap();
+      return (int[]) fromMap.get(from);
+   }
+   public int[] getRelationsTo(LCObject to)
+   {
+      if (toMap == null) buildToMap();
+      return (int[]) toMap.get(to);
+   }
+   private void buildFromMap()
+   {
+      fromMap = new HashMap();
+      for (Iterator i = entries.iterator(); i.hasNext(); )
       {
-         Object x = entryMap.get(from);
-         if (x == null) return 0;
-         if (x instanceof List) return ((List)x).size();
-         return 1;
+         Relationship rel = (Relationship) i.next();
+         Value v = (Value) fromMap.get(rel.from);
+         if (v == null)
+         {
+            v = new Value(1);
+            fromMap.put(rel.from,v);
+         }
+         else v.val++;
+      }
+      for (Iterator i = fromMap.values().iterator(); i.hasNext(); )
+      {
+         Value v = (Value) i.next();
+         v.createArray();
+      }
+      int n = 0;
+      for (Iterator i = entries.iterator(); i.hasNext(); n++)
+      {
+         Relationship rel = (Relationship) i.next();
+         Value v = (Value) fromMap.get(rel.from);
+         v.push(n);
+      }
+      for (Iterator i = fromMap.entrySet().iterator(); i.hasNext();)
+      {
+         Map.Entry entry = (Map.Entry) i.next();
+         Value v = (Value) entry.getValue();
+         entry.setValue(v.array);
       }
    }
-   
-   public void useCaching(boolean val)
+   private void buildToMap()
    {
-      // FixMe: Not needed
+      toMap = new HashMap();
+      for (Iterator i = entries.iterator(); i.hasNext(); )
+      {
+         Relationship rel = (Relationship) i.next();
+         Value v = (Value) toMap.get(rel.to);
+         if (v == null)
+         {
+            v = new Value(1);
+            toMap.put(rel.from,v);
+         }
+         else v.val++;
+      }
+      for (Iterator i = toMap.values().iterator(); i.hasNext(); )
+      {
+         Value v = (Value) i.next();
+         v.createArray();
+      }
+      int n = 0;
+      for (Iterator i = entries.iterator(); i.hasNext(); n++)
+      {
+         Relationship rel = (Relationship) i.next();
+         Value v = (Value) toMap.get(rel.to);
+         v.push(n);
+      }
+      for (Iterator i = toMap.entrySet().iterator(); i.hasNext();)
+      {
+         Map.Entry entry = (Map.Entry) i.next();
+         Value v = (Value) entry.getValue();
+         entry.setValue(v.array);
+      }
    }
 }

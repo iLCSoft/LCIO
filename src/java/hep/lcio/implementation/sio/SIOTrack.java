@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.3 2004-06-04 12:20:17 gaede Exp $
+ * @version $Id: SIOTrack.java,v 1.4 2004-07-07 05:32:09 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
@@ -25,8 +25,8 @@ class SIOTrack extends ITrack
       typeWord = in.readInt();
       setType( typeWord) ;
       
- 	  d0 = in.readFloat();
-	  phi = in.readFloat();
+      d0 = in.readFloat();
+      phi = in.readFloat();
       omega = in.readFloat();
       z0 = in.readFloat();
       tanLambda = in.readFloat();
@@ -42,20 +42,21 @@ class SIOTrack extends ITrack
       dEdxError = in.readFloat();
       radiusOfInnermostHit = in.readFloat() ;
       int nHitNumbers = in.readInt() ;
-	  int[] hitNumbers = new int[nHitNumbers] ;
-	  for (int i = 0; i < nHitNumbers; i++) {
-        hitNumbers[i] = in.readInt() ;		
-	  }      
-      setSubdetectorHitNumbers(hitNumbers) ;      
+      int[] hitNumbers = new int[nHitNumbers] ;
+      for (int i = 0; i < nHitNumbers; i++)
+      {
+         hitNumbers[i] = in.readInt() ;
+      }
+      setSubdetectorHitNumbers(hitNumbers) ;
       int nTracks = in.readInt();
       for (int i=0; i<nTracks; i++)
       {
-         addTrack( (ITrack) in.readPntr().getObject() ) ; 
-      }  
+         addTrack( (ITrack) in.readPntr().getObject() ) ;
+      }
       if ((flag & 1<<31) != 0)
       {
-        int nHits = in.readInt();
-        addHit( (ITrackerHit) in.readPntr().getObject() ) ; 
+         int nHits = in.readInt();
+         addHit( (ITrackerHit) in.readPntr().getObject() ) ;
       }
       
       in.readPTag(this);
@@ -67,11 +68,11 @@ class SIOTrack extends ITrack
       else
       {
          out.writeInt(track.getType());
-		 out.writeFloat(track.getD0());
-		 out.writeFloat(track.getPhi());
+         out.writeFloat(track.getD0());
+         out.writeFloat(track.getPhi());
          out.writeFloat(track.getOmega());
          out.writeFloat(track.getZ0());
-		 out.writeFloat(track.getTanLambda());
+         out.writeFloat(track.getTanLambda());
          float[] covMatrix = track.getCovMatrix();
          for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
          float[] referencePoint = track.getReferencePoint();
@@ -79,25 +80,29 @@ class SIOTrack extends ITrack
          out.writeFloat(referencePoint[1] );
          out.writeFloat(referencePoint[2]);
          out.writeFloat(track.getChi2());
-		 out.writeInt(track.getNdf());
+         out.writeInt(track.getNdf());
          out.writeFloat(track.getdEdx());
          out.writeFloat(track.getdEdxError());
          out.writeFloat(track.getRadiusOfInnermostHit()) ;
          int[] hitNumbers = track.getSubdetectorHitNumbers();
          out.writeInt( hitNumbers.length ) ;
-         for (int i = 0; i < hitNumbers.length; i++) {
-		   out.writeInt( hitNumbers[i] ) ;	
-		 }         
-         List tracks = track.getTracks() ;
-		 out.writeInt( tracks.size()  ) ;
-         for (Iterator iter = tracks.iterator(); iter.hasNext();) {
-			out.writePntr( (Track) iter.next() );
+         for (int i = 0; i < hitNumbers.length; i++)
+         {
+            out.writeInt( hitNumbers[i] ) ;
          }
-         if( (flag & 1<<31) != 0 ){
-           List hits = track.getTrackerHits() ;
-           for (Iterator iter = hits.iterator(); iter.hasNext();) {
-			out.writePntr( (TrackerHit) iter.next() ) ;
-		   }
+         List tracks = track.getTracks() ;
+         out.writeInt( tracks.size()  ) ;
+         for (Iterator iter = tracks.iterator(); iter.hasNext();)
+         {
+            out.writePntr( (Track) iter.next() );
+         }
+         if( (flag & 1<<31) != 0 )
+         {
+            List hits = track.getTrackerHits() ;
+            for (Iterator iter = hits.iterator(); iter.hasNext();)
+            {
+               out.writePntr( (TrackerHit) iter.next() ) ;
+            }
          }
          out.writePTag(track);
       }
@@ -115,23 +120,27 @@ class SIOTrack extends ITrack
       out.writeFloat(referencePoint[1] );
       out.writeFloat(referencePoint[2]);
       out.writeFloat(chi2);
-   	  out.writeFloat(ndf);
+      out.writeFloat(ndf);
       out.writeFloat(dEdx);
       out.writeFloat(dEdxError);
-	  out.writeFloat(radiusOfInnermostHit) ;
-	  out.writeInt( subdetectorHitNumbers.length ) ;
-	  for (int i = 0; i < subdetectorHitNumbers.length; i++) {
-	    out.writeInt( subdetectorHitNumbers[i] ) ;	
-	  }         
-	  out.writeInt( tracks.size()  ) ;
-	  for (Iterator iter = tracks.iterator(); iter.hasNext();) {
-	   out.writePntr( (Track) iter.next() );
-	  }
-	  if( (flag & 1<<31) != 0 ){
-	  for (Iterator iter = hits.iterator(); iter.hasNext();) {
-	   out.writePntr( (TrackerHit) iter.next() ) ;
-	  }
-	}
-    out.writePTag(this);
+      out.writeFloat(radiusOfInnermostHit) ;
+      out.writeInt( subdetectorHitNumbers.length ) ;
+      for (int i = 0; i < subdetectorHitNumbers.length; i++)
+      {
+         out.writeInt( subdetectorHitNumbers[i] ) ;
+      }
+      out.writeInt( tracks.size()  ) ;
+      for (Iterator iter = tracks.iterator(); iter.hasNext();)
+      {
+         out.writePntr( (Track) iter.next() );
+      }
+      if( (flag & 1<<31) != 0 )
+      {
+         for (Iterator iter = hits.iterator(); iter.hasNext();)
+         {
+            out.writePntr( (TrackerHit) iter.next() ) ;
+         }
+      }
+      out.writePTag(this);
    }
 }

@@ -8,17 +8,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.4 2004-06-07 08:50:23 gaede Exp $
+ * @version $Id: SIOCluster.java,v 1.5 2004-07-07 05:32:09 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
    SIOCluster(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
-      //type = in.readInt();
-	  int typeWord ;
-	  typeWord = in.readInt();
-  	  setType( typeWord) ;
-
+      type = in.readInt();
       energy = in.readFloat();
       position = new float[3];
       position[0] = in.readFloat();

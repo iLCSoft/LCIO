@@ -10,6 +10,7 @@ import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
+import hep.lcio.event.LCRelation;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
@@ -20,6 +21,7 @@ import hep.lcio.implementation.event.ILCEvent;
 import hep.lcio.implementation.event.ILCStrVec;
 import hep.lcio.implementation.event.ILCFloatVec;
 import hep.lcio.implementation.event.ILCIntVec;
+import hep.lcio.implementation.event.ILCRelation;
 import hep.lcio.implementation.event.ITrack;
 
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.19 2004-07-02 08:46:45 hvogt Exp $
+ * @version $Id: SIOEvent.java,v 1.20 2004-07-07 05:32:09 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -84,8 +86,7 @@ class SIOEvent extends ILCEvent
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
-         if (type == null)
-            continue;
+         if (type == null) continue;
          if (type.equals(LCIO.MCPARTICLE))
          {
             int flags = in.readInt();
@@ -188,6 +189,14 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc,name);
          }
+         else if (type.equals(LCIO.LCRELATION))
+         {
+            int flags = in.readInt();            
+            String fromType = "from"; // FixMe:
+            String toType = "to"; // FixMe:
+            SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
+            addRelation(rel,name);
+         }
       }
    }
 
@@ -274,6 +283,21 @@ class SIOEvent extends ILCEvent
             {
                for (int i=0; i < n; i++)
                   SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
+            }
+         }
+         String[] relNames = event.getRelationNames();
+         if (relNames != null)
+         {
+            for (int j = 0; j < relNames.length; j++)
+            {
+               String relName = blockNames[j];
+               SIOOutputStream out = writer.createBlock(relName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
+               LCRelation rel = event.getRelation(relName);
+               String fromType = rel.getFromType();
+               String toType = rel.getToType();
+               int flags = 0; // FixMe: rel.getFlag(); 
+               out.writeInt(flags);
+               SIORelation.write(rel,out,flags);
             }
          }
       }

@@ -14,11 +14,14 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.9 2003-11-08 03:08:50 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.10 2004-07-07 05:32:08 tonyj Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
    private final static int NHITS = 50;
+   private final static int NCLUSTERS = 50;
+   private final static int NTRACKS = 50;
+
    private LCWriter lcWrt;
    private Random random = new Random();
    private int nEvent;
@@ -119,6 +122,30 @@ public class RecJob implements LCRunListener, LCEventListener
 
       LCTools.dumpEvent(evt);
 
+      // ****NEW*** Add some clusters 
+      
+      ILCCollection clusterVec = new ILCCollection(LCIO.CLUSTER);
+      for (int j = 0; j < NCLUSTERS; j++)
+      {
+         ICluster cluster = new ICluster();
+         cluster.setEnergy(j);
+         cluster.setPhi(j);
+         cluster.setTheta(j);        
+         clusterVec.add(cluster);
+      }
+      evt.addCollection(clusterVec, "Clusters");      
+
+      ILCCollection trackVec = new ILCCollection(LCIO.TRACK);
+      for (int j = 0; j < NTRACKS; j++)
+      {
+         ITrack track = new ITrack();
+         track.setDEdx(j);
+         track.setPhi(j);
+         track.setTanLambda(j);        
+         trackVec.add(track);
+      }
+      evt.addCollection(trackVec, "Tracks");   
+      
       try
       {
          lcWrt.writeEvent(evt);
