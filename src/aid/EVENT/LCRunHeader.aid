@@ -16,7 +16,7 @@ public interface LCRunHeader {
      */
     public const String& getDetectorName() const ;
     
-    /** Description of the simulation conditions, e.g. physics channels.
+    /** Description of the simulation, physics channels etc.
      */		 
     public const String& getDescription() const ;
     

@@ -1,7 +1,6 @@
 package hep.lcio.event ;
 
-/** The generic object that is held in an LCCollection - 
- *  only method is clone() which is needed for deep copy of events. 
+/** The generic object that is held in an LCCollection. 
  *  Every object stored in an LCCollection, i.e. in an LCEvent has to 
  *  implement this interface.
  * 

@@ -26,7 +26,7 @@ namespace SIO {
     
     SIOEventHandler(const std::string& name) ;
     SIOEventHandler(const std::string& name, IOIMPL::LCEventIOImpl** evtP) ;
-    ~SIOEventHandler() ;
+    virtual ~SIOEventHandler() ;
     
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;

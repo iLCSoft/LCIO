@@ -26,8 +26,6 @@ namespace SIO{
     TrackerHitIOImpl* hit  = new TrackerHitIOImpl ;
     *objP = hit ;
 	
-    const EVENT::MCParticle* _particle ;
-
     SIO_DATA( stream ,  &(hit->_cellID) , 1  ) ;
     SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 

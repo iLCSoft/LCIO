@@ -26,12 +26,12 @@ namespace SIO {
   public :
   
     // define some names of records and blocks
-    static char* const RUNRECORDNAME = "LCRunHeader" ;
-    static char* const RUNBLOCKNAME = "RunHeader" ;
-    static char* const EVENTRECORDNAME = "LCEvent"  ;
-    static char* const EVENTBLOCKNAME="Event" ;
-    static char* const HEADERRECORDNAME = "LCEventHeader"  ;
-    static char* const HEADERBLOCKNAME="EventHeader" ;
+    static const char* RUNRECORDNAME ; 
+    static const char* RUNBLOCKNAME ; 
+    static const char* EVENTRECORDNAME ; 
+    static const char* EVENTBLOCKNAME;
+    static const char* HEADERRECORDNAME ; 
+    static const char* HEADERBLOCKNAME;
 
 
     /** Read a string from the stream into a dummy buffer. 
@@ -49,7 +49,7 @@ namespace SIO {
     static unsigned int write( SIO_stream* stream , unsigned int i) ;
   
 
-    /** Write an long to the stream (in fact written as a 64-bit long long). 
+    /** Write a long to the stream (in fact written as a 64-bit long long). 
      */
     static unsigned int write( SIO_stream* stream , long i) ;
 

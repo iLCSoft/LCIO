@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.4 2003-03-13 15:03:10 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.5 2003-03-17 12:54:57 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -693,7 +693,7 @@
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init" description="&lt;    target&gt; cleans up the jar and class files">
+  <target name="clean" depends="init, cpp.clean" description="&lt;    target&gt; cleans up the jar and class files">
     <freehep.defined property="jar" target="clean.jar"/>
     <freehep.not.defined property="jar" target="clean.all"/>
   </target>

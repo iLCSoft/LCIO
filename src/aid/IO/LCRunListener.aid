@@ -1,6 +1,6 @@
 package hep.lcio.io ;
 
-/** Listener for the occurence of LCRunHeader (e.g. when reading a stream).
+/** Listener for the occurence of LCRunHeader when reading a stream.
  * User classes should implement this interface for their analysis code 
  * and then register the listener with LCReader.
  * 

@@ -24,8 +24,7 @@ namespace IMPL {
 	 << endl ;
     
     const StringVec* strVec = evt->getCollectionNames() ;
-    int nCol = strVec->size() ;
-    
+
     // loop over collections:
     for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
@@ -88,7 +87,7 @@ namespace IMPL {
 	    dynamic_cast<const LCFloatVec*>( col->getElementAt( i ) ) ;
 	  
 	  cout << " values(" << i << "): " ;
-	  for( int k=0 ; k< vec->size() ; k++ )
+	  for(unsigned int k=0 ; k< vec->size() ; k++ )
 	    cout <<  (*vec)[k]  << ", " ;
 	  cout << endl ;   
 

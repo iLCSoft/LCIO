@@ -12,8 +12,6 @@ namespace IMPL {
   }
 
   TrackerHitImpl::~TrackerHitImpl(){  
-
-    TrackerHitImpl* ti = new TrackerHitImpl ;
   } 
 
   int TrackerHitImpl::getCellID() const {  return _cellID ;}

@@ -93,11 +93,13 @@ namespace SIO {
 	std::cout << "ERROR: couldn't write run header to stream : " 
 		  << _stream->getName()  
 		  <<  "  status  : " << status << std::endl ;
+	return LCIO::ERROR ;
       }
     }
 
     _runRecord->disconnect( runHandler );
     delete runHandler ;
+    return LCIO::SUCCESS ;
   }
 
 

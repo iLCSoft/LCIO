@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.h,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_functions.h,v 1.2 2003-03-17 12:54:57 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Primitive functions for reading/writing SIO streams         
 // ----------------------------------------------------------------------------
@@ -38,7 +38,10 @@
 // Windows/NT    PPC           _M_PPC        VC  compiler  __int64
 // ----------------------------------------------------------------------------
 #if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__)
+// fg: gcc complains about long long - what to do about it ?
+// warning: ANSI C++ does not support `long long'
  #define SIO_64BITINT   long long
+// #define SIO_64BITINT   long
 #endif
 
 #if defined(_M_ALPHA)  || defined(_M_IX86)   || defined(_M_PPC)

@@ -30,7 +30,7 @@ namespace SIO {
     /** C'tor for reading.
      */
     SIORunHeaderHandler(const std::string& name, IMPL::LCRunHeaderImpl** rhP) ;
-    ~SIORunHeaderHandler() ;
+    virtual ~SIORunHeaderHandler() ;
     
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;

@@ -7,13 +7,6 @@ package hep.lcio.event ;
  * @see LCObject
  * @see LCIO
  */
-//@cpp{
-// // define global namespace lcio
-// namespace lcio{
-//    using namespace EVENT ;
-//    using namespace IO ;
-// }
-//}
 
 @cpp{ 
 // some convenient typedefs
@@ -57,13 +50,13 @@ public interface LCIO{
     static const int SUCCESS =  1 ;
 
     // type names:
-    static char* const LCEVENT = "LCEvent" ;
-    static char* const LCRUNHEADER = "LCRunHeader" ;
-    static char* const MCPARTICLE = "MCParticle" ;
-    static char* const CALORIMETERHIT = "CalorimeterHit" ;
-    static char* const TRACKERHIT = "TrackerHit" ;
-    static char* const LCFLOATVEC = "LCFloatVec" ;
-    static char* const LCINTEGERVEC = "LCIntegerVec" ;
+    static const char* LCEVENT ;
+    static const char* LCRUNHEADER ;
+    static const char* MCPARTICLE ; 
+    static const char* CALORIMETERHIT ;
+    static const char* TRACKERHIT ; 
+    static const char* LCFLOATVEC ; 
+    static const char* LCINTEGERVEC ; 
 }
 @else
     // current version number of lcio
@@ -94,3 +87,16 @@ public interface LCIO{
   public static const String LCINTEGERVEC = "LCIntegerVec" ;
 @endif
 }
+
+// @cpp{
+// namespace EVENT{
+// // ANSI-C++ requires initialization outside the class definition
+// char* const LCIO::LCEVENT = "LCEvent" ;
+// char* const LCIO::LCRUNHEADER = "LCRunHeader" ;
+// char* const LCIO::MCPARTICLE = "MCParticle" ;
+// char* const LCIO::CALORIMETERHIT = "CalorimeterHit" ;
+// char* const LCIO::TRACKERHIT = "TrackerHit" ;
+// char* const LCIO::LCFLOATVEC = "LCFloatVec" ;
+// char* const LCIO::LCINTEGERVEC = "LCIntegerVec" ;
+// };
+// }

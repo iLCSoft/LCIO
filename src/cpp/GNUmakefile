@@ -7,13 +7,14 @@
 ######################################################
 
 
-LCIOBASE := $(shell pwd)/../..
+LCIOBASE := $(LCIO)
 export LCIOBASE 
 
 LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include
 export LCIOINCLUDE
 
-LCIOCPPFLAGS = -g -D NO_DEBUG
+LCIOCPPFLAGS = -g -D NO_DEBUG -Wall -ansi 
+#-pedantic
 export LCIOCPPFLAGS
 
 

@@ -32,7 +32,7 @@ namespace SIO {
 			 const std::string& type, 
 			 IOIMPL::LCEventIOImpl**  anEvtP=0 ) ;
 
-    ~SIOCollectionHandler() ;
+    virtual ~SIOCollectionHandler() ;
     
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;

@@ -51,23 +51,23 @@ namespace IMPL {
     // ---------- setters ------------------------
     /** Sets the cell id.
      */
-    void TrackerHitImpl::setCellID( int id) ;
+    void setCellID( int id) ;
 
     /** Sets the position.
      */
-    void TrackerHitImpl::setPosition( double pos[3])  ;
+    void setPosition( double pos[3])  ;
 
     /** Sets dE/dx.
      */
-    void TrackerHitImpl::setdEdx( float dEdX )  ;
+    void setdEdx( float dEdX )  ;
 
     /** Sets the time.
      */
-    void TrackerHitImpl::setTime( float t )  ;
+    void setTime( float t )  ;
 
     /** Sets the MCParticle that caused the hit.
      */
-    void TrackerHitImpl::setMCParticle( const EVENT::MCParticle* particle)  ;
+    void setMCParticle( const EVENT::MCParticle* particle)  ;
 
 
   protected:

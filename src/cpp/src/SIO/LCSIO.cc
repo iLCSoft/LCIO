@@ -7,6 +7,14 @@ namespace SIO {
 int LCSIO::dummy_size = LCSIO::dummy_initial_size ;
 char* LCSIO::dummy = new char[ LCSIO::dummy_initial_size ]   ;
 
+const char* LCSIO::RUNRECORDNAME = "LCRunHeader" ;
+const char* LCSIO::RUNBLOCKNAME = "RunHeader" ;
+const char* LCSIO::EVENTRECORDNAME = "LCEvent"  ;
+const char* LCSIO::EVENTBLOCKNAME="Event" ;
+const char* LCSIO::HEADERRECORDNAME = "LCEventHeader"  ;
+const char* LCSIO::HEADERBLOCKNAME="EventHeader" ;
+
+
 
 unsigned int LCSIO::read( SIO_stream* stream ,char** c){
   
