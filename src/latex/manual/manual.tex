@@ -46,8 +46,8 @@
 \begin{document}
 \pdfgraphics
 
-%\title{LCIO [v00-08] -  Users manual}
-\title{{\Huge\bf LCIO  -  Users manual} \\ Version 00-08}
+%\title{LCIO [v00-09] -  Users manual}
+\title{{\Huge\bf LCIO  -  Users manual} \\ Version 00-09}
 
 %\author{F. Gaede \\  DESY IT}
 %\author{F. Gaede, H. Vogt \\  DESY IT, DESY Zeuthen}
@@ -90,7 +90,7 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 \begin{verbatim}
   mkdir lcio 
   cd lcio
-  cvs co -d v00-08 -r v00-08 lcio
+  cvs co -d v00-09 -r v00-09 lcio
 \end{verbatim}
 
 \subsection{Requirements}
@@ -111,7 +111,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
 \item{ {\bf Linux (and bash):} 
 \begin{verbatim} 
-  export LCIO=/lcio/v00-08                <-- modify as appropriate
+  export LCIO=/lcio/v00-09                <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
 
   export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
@@ -122,7 +122,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{verbatim}
   set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
 
-  set LCIO=c:/lcio/devel/v00-08            <-- modify as appropriate
+  set LCIO=c:/lcio/devel/v00-09            <-- modify as appropriate
   set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
 
   set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
@@ -131,9 +131,9 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 }
 \item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
 \begin{verbatim}
-  export LCIO=c:/lcio/devel/v00-08
-  export PATH=/cygdrive/c/lcio/devel/v00-08/tools:\
-              /cygdrive/c/lcio/devel/v00-08/bin:$PATH
+  export LCIO=c:/lcio/devel/v00-09
+  export PATH=/cygdrive/c/lcio/devel/v00-09/tools:\
+              /cygdrive/c/lcio/devel/v00-09/bin:$PATH
   export JDK_HOME=c:/j2sdk1.4.1_01
 \end{verbatim} %$
 }
@@ -159,7 +159,7 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 %\end{verbatim}
 %or using {\it bash}:
 %\begin{verbatim}
-%  cd v00-08
+%  cd v00-09
 %  export LCIO=$PWD
 %  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
 %  export PATH=$LCIO/tools:$PATH
@@ -174,6 +174,7 @@ call the Windows version of ant with its full name, i.e. {\em ant.bat cpp}.}:
   ant aid.generate     <-- generates common API
   ant cpp              <-- creates C++
   ant aid              <-- creates Java  
+  ant f77              <-- creates f77 examples
 \end{verbatim}
 
 This will create the following libraries and executables:
@@ -192,6 +193,10 @@ This will create the following libraries and executables:
       minijob
       recjob
       simjob
+ ./bin               <-- f77 examples
+      anajob_F
+      simjob_F
+      
 \end{verbatim}
 
 To check whether the (C++) installation was successful run the {\it simjob} program:
@@ -350,9 +355,16 @@ See  appendix~\ref{app_lcio} for details of how the data is stored in the files.
 
 
 Event data is stored in 'untyped' collections of LCObject subclasses. At the (full) simulation
-output level the most important entities are the two generic hit classes {\em SimTrackerHit} and 
+output level important entities are the two generic hit classes {\em SimTrackerHit} and 
 {\em SimCalorimeterHit}. Both classes have links to the generated particle ({\em MCParticle}) that 
-contributed to the hit.
+contributed to the hit. \\
+For the {\em MCParticle} we store only parent relationships. When reading the data back from the 
+file the daughter relationships are reconstructed from the parents. This is to ensure consistency.
+Care has to be taken when analysing the particle 'tree'. Because a particle can have more than one 
+parent the particle list in fact does not consist of a set of trees (one for each mother particle) 
+but  forms a 'directed acyclic graph'. Thus the user has to avoid double counting in his code.
+Of course this only matters at the parton level, as real 
+particles have exactly one or no parent. \\
 Users are free to store collections of {\em float} and {\em int} vectors/arrays of arbitrary size
 as 'extensions' to the data model, see the example code listed in~\ref{examples}.
 
@@ -726,6 +738,13 @@ runtime.
 The example modules create a root~\cite{ref_root} file with some histograms. 
 You can use the provided main program with your own analysis modules (and tools). 
 
+\subsection{aida (JAVA, AIDA)} \label{rwaida}
+
+This Java example creates an AIDA file from an LCIO file with some histograms
+and an Ntuple. You can use any AIDA~\cite{ref_aida} compliant analysis tools for 
+viewing the histograms, e.g. JAS3~\cite{ref_jas}.
+
+
 \subsection{pythia (Fortran, Pythia)} \label{rwpythia}
 
 An ASCII file of generator output can be produced by the script \verb$pythiahepevt.sh$.
@@ -791,6 +810,12 @@ Pythia Homepage: \\
 \bibitem{ref_cernlib}
 cernlib Homepage: \\
 \Href{http://cernlib.web.cern.ch/cernlib}
+\bibitem{ref_aida}
+AIDA Homepage: \\
+\Href{http://aida.freehep.org}
+\bibitem{ref_jas}
+JAS3 Homepage: \\
+\Href{http://jas.freehep.org/jas3/index.html}
 \end{thebibliography}
 
 

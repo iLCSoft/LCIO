@@ -16,7 +16,11 @@
 
  run:
 
- ./lciohbook
+ ./lciohbook_F
 
- If lciohbook is not running please check it and modify it.
+
+or use the the script ./lciohbook to build, run and view the plots with paw.
+
+
+If lciohbook is not running please check it and modify it.
 

@@ -1,5 +1,4 @@
 
-
 To change the version of LCIO the following file have to be modified:
 
 
@@ -26,6 +25,7 @@ doc/lcio.xml
   <block name="...." major="0" minor="9">
   <block name="...." major="0" minor="9">
 
-
-
-
+src/latex/manual/manual.tex
+    \title{{\Huge\bf LCIO  -  Users manual} \\ Version 00-09}
+    ....
+     use search and replace !
