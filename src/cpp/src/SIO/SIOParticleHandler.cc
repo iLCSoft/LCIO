@@ -62,13 +62,17 @@ namespace SIO {
     
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_genstatus) , 1  ) ;
-    SIO_DATA( stream ,  &(particle->_simstatus) , 1  ) ;
+    int simstatus ;
+    SIO_DATA( stream ,  &simstatus , 1  ) ;
+    particle->_simstatus = simstatus ;
+    //    SIO_DATA( stream ,  &(particle->_simstatus) , 1  ) ;
+
     SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
     SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
     
-    if( particle->_simstatus & 0x80000000 )  // bit 31
+    if( particle->_simstatus.test( MCParticle::BITEndpoint ) )  // bit 31
       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
     return ( SIO_BLOCK_SUCCESS ) ;

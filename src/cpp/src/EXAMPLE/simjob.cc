@@ -125,7 +125,13 @@ int main(int argc, char** argv ){
 	      
 	      double ep[3] = { 1.111111 , 2.2222222, 3.3333333 } ;
 	      d2->setEndpoint( ep ) ;
-	      d2->setSimulatorStatus( 1234 ) ;
+	      //	      d2->setSimulatorStatus( 1234 ) ;
+	      d2->setCreatedInSimulation(true) ;
+	      d2->setBackscatter(true)         ;
+	      d2->setDecayedInTracker(true)    ;
+	      d2->setDecayedInCalorimeter(false);
+	      d2->setHasLeftDetector(false)     ;
+	      d2->setStopped(true)             ;
 
 	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;

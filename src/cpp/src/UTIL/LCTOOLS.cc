@@ -14,6 +14,8 @@
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
 
+#include "EVENT/LCRelation.h"
+#include "LCIOSTLTypes.h"
 
 #ifdef CLHEP
 #include "UTIL/LCFourVector.h"
@@ -119,6 +121,23 @@ namespace UTIL {
       }
 
 
+
+    }
+
+    // now dump the relations in the event
+
+    const StringVec* relVec = evt->getRelationNames() ;
+    
+
+    for(StringVec::const_iterator name = relVec->begin() ; name != relVec->end() ; name++){
+    
+      LCRelation* rel = evt->getRelation( *name ) ;
+      
+      cout << endl 
+	   << " relation name : " << *name 
+	   << endl ;
+      
+      printRelation( rel ) ;
     }
 
   }
@@ -1079,7 +1098,7 @@ namespace UTIL {
 	   <<  part->getMomentum()[1]  << ", "
 	   <<  part->getMomentum()[2]  << ") | "
 	   <<  part->getGeneratorStatus() << " | "
-	   <<  part->getSimulatorStatus() << " | ("
+	   <<  hex << part->getSimulatorStatus() << dec << " | ("
 	   <<  part->getVertex()[0]    << ", "
 	   <<  part->getVertex()[1]    << ", "
 	   <<  part->getVertex()[2]    << ") | (" ;
@@ -1175,6 +1194,39 @@ namespace UTIL {
 // 	 << endl ;
 //   }
 
+
+  void LCTOOLS::printRelation( const EVENT::LCRelation* rel_const ) {
+
+    LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; // FIXME: the relation interface needs to properly support const
+    
+    cout << " relation from " << rel->getFromType() << " to " << rel->getToType() << endl ; 
+    
+    int nRel = rel->numberOfRelations() ;
+    
+    cout <<  " |  [from_id]  |  [to_id]   | weight "  << endl ;
+    
+    // need to get a set of from objects first
+    set<LCObject*> objs ;
+    for( int i=0; i<nRel ; i++ ) {
+      objs.insert( rel->getRelation( i )  ) ;
+    } 
+
+    for( std::set< LCObject* >::const_iterator iter = objs.begin() ; iter != objs.end() ; iter++ ){
+
+      LCObject* from = *iter ;
+      
+      for( int j=0; j < rel->numberOfRelations( from ) ; j++ ){
+	
+	printf(" | [%8.8x] |  [[%8.8x]   | %5.3e \n" 
+	       , from->id() 
+	       , rel->getRelation( from, j )->id()  
+	       , rel->getWeight(  from, j )
+	       );
+	
+      }
+      
+    }
+  }
 
   int LCTOOLS::printDaughterParticles(const MCParticle* part, int index){
 

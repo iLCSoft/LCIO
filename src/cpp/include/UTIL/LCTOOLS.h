@@ -74,6 +74,9 @@ namespace UTIL{
      */
     static void printReconstructedParticles( const EVENT::LCCollection* col ) ;
 
+    /** Print the relation.
+     */
+    static void printRelation( const EVENT::LCRelation* rel ) ;
 
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;

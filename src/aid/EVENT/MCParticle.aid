@@ -54,20 +54,91 @@ public interface MCParticle extends LCObject {
     public int getGeneratorStatus() const ;
 
     /** Returns the status for particles from the simulation, e.g.
-     * decayed in flight. Bit 31 ise reserved for internal use thus the
-     * status cannot be negative.
-     * FIXME: Needs to be defined.
+     * decayed in flight. Bits 31-16 are used to decode the information.
+     * Use  the followng boolean functions to determine the 
+     * proper simulator status:<br>
+     * @see isCreatedInSimulation() 
+     * @see isBackscatter() 
+     * @see vertexIsEndpointOfParent() 
+     * @see isDecayedInTracker() 
+     * @see isDecayedInCalorimeter() 
+     * @see hasLeftDetector() 
+     * @see isStopped() 
      */
     public int getSimulatorStatus() const ;
+
+    // define the bit positions for the simulation flag
+@ifdef cpp
+@cpp{
+    static const int BITEndpoint = 31 ;
+    static const int BITCreatedInSimulation = 30 ;
+    static const int BITBackscatter = 29 ;
+    static const int BITDecayedInTracker = 28 ;
+    static const int BITDecayedInCalorimeter = 27 ;
+    static const int BITLeftDetector = 26 ;
+    static const int BITStopped = 25 ;
+
+}@else
+    public static const int BITEndpoint = 31 ;
+    public static const int BITCreatedInSimulation = 30 ;
+    public static const int BITBackscatter = 29 ;
+    public static const int BITDecayedInTracker = 28 ;
+    public static const int BITDecayedInCalorimeter = 27 ;
+    public static const int BITLeftDetector = 26 ;
+    public static const int BITStopped = 25 ;
+@endif
+
+
+    /** True if the particle has been created by the simulation program (rather than the generator).
+     */
+    public boolean isCreatedInSimulation() const ; 
+
+    /** True if the particle is the result of a backscatter from a calorimeter shower.
+     */
+    public boolean isBackscatter() const ; 
+    
+    /** True if the particle's endpoint is the vertex of the daughters, i.e. the endpoint of the particle has been
+     *  set explicitly.
+     * @see getEndpoint()
+     */
+    public boolean isEndpointVertexOfDaughter() const ; 
+    
+    /** True if the particle has interacted in a tracking region.
+     */
+    public boolean isDecayedInTracker() const ; 
+
+    /** True if the particle has interacted in a calorimeter region.
+     */
+    public boolean isDecayedInCalorimeter() const ; 
+
+    /** True if the particle has left the world volume undecayed.
+     */
+    public boolean hasLeftDetector() const ; 
+
+    /** True if the particle has been stopped by the simulation program.
+     */
+    public boolean isStopped() const ; 
+
+
+    // corresponding setters
+    public void setCreatedInSimulation(boolean val)   ; 
+    public void setBackscatter(boolean val)   ; 
+    //    public void setEndpointVertexOfDaughter(boolean val)   ; 
+    public void setDecayedInTracker(boolean val)   ; 
+    public void setDecayedInCalorimeter(boolean val)   ; 
+    public void setHasLeftDetector(boolean val)   ; 
+    public void setStopped(boolean val)   ; 
+
+    
 
     /** Returns the production vertex of the particle in [mm].
      */
     public const double3V getVertex() const;
 
-    /** Returns the endpoint of the particle in [mm] - returns NULL if
-     *  undefined (not set). 
-     *  Definition of the enpoint depends on the application that created 
-     *  the particle, e.g. the start point of the shower in a calorimeter.
+
+    /** Returns the endpoint of the particle in [mm] - returns the vertex of the first daughter
+     *  if endpoint hasn't been set explicetly. 
+     *  @see  isEndpointVertexOfDaughter()
      */
     public const double3V getEndpoint() const;
 

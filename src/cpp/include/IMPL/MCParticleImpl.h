@@ -7,7 +7,7 @@
 #include "AccessChecked.h"
 
 #include "EVENT/MCParticle.h"
-
+#include <bitset>
 
 namespace IMPL {
   
@@ -83,15 +83,50 @@ namespace IMPL {
     virtual int getGeneratorStatus() const ;
 
     /** Returns the status for particles from the simulation, e.g.
-     * decayed in flight.
-     * FIXME: Needs to be defined.
+     * decayed in flight. Bits 31-16 are used to decode the information.
+     * Use  the followng boolean functions to determine the 
+     * proper simulator status:<br>
+     * @see isCreatedInSimulation() 
+     * @see isBackscatter() 
+     * @see vertexIsEndpointOfParent() 
+     * @see isDecayedInTracker() 
+     * @see isDecayedInCalorimeter() 
+     * @see hasLeftDetector() 
+     * @see isStopped() 
      */
     virtual int getSimulatorStatus() const ;
+
+    /** True if the particle has been created by the simulation program (rather than the generator).
+     */
+    virtual bool isCreatedInSimulation() const ;
+
+    /** True if the particle is the result of a backscatter from a calorimeter shower.
+     */
+    virtual bool isBackscatter() const ;
+
+    /** True if the particle's endpoint is the vertex of the daughters.
+     */
+    virtual bool isEndpointVertexOfDaughter() const ;
+
+    /** True if the particle has interacted in a tracking region.
+     */
+    virtual bool isDecayedInTracker() const ;
+
+    /** True if the particle has interacted in a calorimeter region.
+     */
+    virtual bool isDecayedInCalorimeter() const ;
+
+    /** True if the particle has left the world volume undecayed.
+     */
+    virtual bool hasLeftDetector() const ;
+
+    /** True if the particle has been stopped by the simulation program.
+     */
+    virtual bool isStopped() const ;
 
 
     /** Returns the production vertex of the particle.
      */
-          
     virtual const double * getVertex() const ;
 
     /** Returns the particle momentum at the production vertex.
@@ -145,7 +180,7 @@ namespace IMPL {
     void setVertex( double vtx[3] ) ;
     
      /** Sets the particle endpoint.
-      *  Will be ignored for particles that have daughters.
+      *  
       */
     void setEndpoint( double pnt[3] ) ;
     
@@ -161,6 +196,18 @@ namespace IMPL {
      */
     void setCharge( float c ) ;
 
+    // setters for simulator status
+    virtual void setCreatedInSimulation(bool val) ;
+
+    virtual void setBackscatter(bool val) ;
+
+    virtual void setDecayedInTracker(bool val) ;
+
+    virtual void setDecayedInCalorimeter(bool val) ;
+
+    virtual void setHasLeftDetector(bool val) ;
+
+    virtual void setStopped(bool val) ;
 
   protected:
 
@@ -172,7 +219,8 @@ namespace IMPL {
 //     EVENT::MCParticle* _mother1 ;
     int _pdg ;
     int _genstatus ;
-    int _simstatus ;
+    //    int _simstatus ;
+    std::bitset<32> _simstatus ;
     double _vertex[3] ;
     double _endpoint[3] ;
     float _p[3] ;

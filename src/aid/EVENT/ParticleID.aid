@@ -19,6 +19,7 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  * 
  * @author gaede
  * @version Mar 20, 2004
+ * @see ReconstructedParticle.getParticleIDs()
  */
 public interface ParticleID extends  LCObject {
 

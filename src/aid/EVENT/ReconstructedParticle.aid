@@ -72,7 +72,7 @@ public interface ReconstructedParticle extends LCObject {
 
 
     /** The particle Id's sorted by their probability.
-     * @see ParticleIDData
+     * @see ParticleID
      */
     public const ParticleIDVec& getParticleIDs() const ;
 
