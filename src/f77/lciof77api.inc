@@ -122,8 +122,9 @@ c-----the Cluster interface
       integer lcclusettypebit, lcclusetenergy, lcclusetposition
       integer lcclusetpositionerror,lcclusettheta, lcclusetphi
       integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
-      integer lcclusethadweight, lcclusetmuonweight, lccluaddcluster
-      integer lccluaddhit, lctrksetsubdetectorenergies
+      integer lcclusethadweight, lcclusetmuonweight
+      integer lcclusetsubdetectorenergies
+      integer lccluaddcluster, lccluaddhit
 
 c-----the ParticleID interface
       PTRTYPE lcpidcreate
@@ -159,8 +160,8 @@ c-----the TrackerHit interface
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits
       PTRTYPE lctrkgetsubdetectorhitnumbers
-      integer lctrkdelete, lctrkid, lctrkgettype, lctrkgetcovmatrix
-      integer lctrktesttype
+      integer lctrkdelete, lctrkid, lctrktesttype
+      integer lctrkgettype, lctrkgetcovmatrix
       integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
       real    lctrkgetomega, lctrkgetanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
@@ -196,7 +197,7 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_WRITE_APPEND
 
       parameter (LCIO_CHBIT_LONG=31, LCIO_CHBIT_BARREL=30,
-     &           LCIO_CHBIT_PDG=28)
+     &           LCIO_CHBIT_PDG=28, LCIO_CHBIT_ID1=29)
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
      &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_PTR=28)
       parameter (LCIO_THBIT_BARREL=31)
@@ -217,6 +218,7 @@ c---- constants as defined in EVENT::LCIO
       character*32 LCIO_TRACKERHIT
       character*32 LCIO_LCFLOATVEC  
       character*32 LCIO_LCINTVEC  
+      character*32 LCIO_LCSTRVEC
       character*32 LCIO_TRACK
       character*32 LCIO_CLUSTER
       character*32 LCIO_RECONSTRUCTEDPARTICLE
@@ -231,8 +233,22 @@ c---- constants as defined in EVENT::LCIO
       data LCIO_TRACKERHIT /'TrackerHit'/
       data LCIO_LCFLOATVEC /'LCFloatVec'/ 
       data LCIO_LCINTVEC /'LCIntVec'/ 
+      data LCIO_LCSTRVEC /'LCStrVec'/
       data LCIO_TRACK /'Track'/
       data LCIO_CLUSTER /'Cluster'/
       data LCIO_RECONSTRUCTEDPARTICLE /'ReconstructedParticle'/
 
+c---- bit positions for the simulation flag
+
+      integer   BITEndpoint, BITCreatedInSimulation, BITBackscatter,
+     &          BITVertexIsNotEndpointOfParent, BITDecayedInTracker,
+     &          BITDecayedInCalorimeter, BITLeftDetector, BITStopped
+      parameter (BITEndpoint = 31, 
+     &           BITCreatedInSimulation = 30,
+     &           BITBackscatter = 29,
+     &           BITVertexIsNotEndpointOfParent = 28,
+     &           BITDecayedInTracker = 27,
+     &           BITDecayedInCalorimeter = 26,
+     &           BITLeftDetector = 25,
+     &           BITStopped = 24)
 
