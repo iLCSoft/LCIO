@@ -3,9 +3,9 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
-===================
-v00-05 ...
-===================
+============================
+ v00-05beta10  (fg 20030610)
+============================
 
   - new package hep.lcio.data / namespace DATA
     defines pure data contents - this is now the interface that has to implemented
@@ -13,10 +13,8 @@ v00-05 ...
        -> LCWriter uses only those interfaces
 
   - added pointer tag to track and calorimeter hits for future reference to those
-     C++ only ... 
 
   - added enpoint to MCParticle
-      C++ only
 
   - new methods in LCCollection addElement(), removeElement(int i)
  
@@ -24,42 +22,37 @@ v00-05 ...
      replacing getDaughters() and  getEndPoint()
  
   - sio-file extension '.slcio' not required by LCReader any more 
-    C++ only
+    [C++ only]
   
   - LCWriter::open() if no mode specified an exception is thrown
     if the file already exists
-    C++ only
+    [C++ only]
 
   - TrackerHit and CalorimeterHit renamed to SimTrackerHit and SimCalorimeterHit
-    C++ and Java
 
   - New Exception hierarchy  for C++ according to exceptions used in Java 
  
+  - Added some Exceptions to hep.lcio.exceptions (Java)
+
   - Exceptions in LCWriter interface
-    C++ only
-
- +++++++++
- to do
- +++++++++
-
-  - remove old java files:
-    hep/lcio/event/TrackerHit.java
-    hep/lcio/event/CalorimeterHit.java
-    hep/lcio/event/LCObject.java
-    hep/lcio/event/LCFloatVec.java
    
+  - Added new default units GeV, mm, ns to comments/documentation
 
-  - Exceptions in API (LCReader and LCWriter, LCEvent,...)
+ 
+--------------------
+  to do for release:
+--------------------
 
-  - integer extensions in C++ (Java?)
+
+  - Exceptions in LCReader 
+
+  - integer extensions in C++ and Java
     
   - remove const from C++ methods ?
 
-  - read-only mode with Exceptions
+  - read-only mode with Exceptions ?
 
-  - new default units GeV, mm, ns
-
-  - check API doc/comments 
+  - check API doc/comments for doxygen
 
   - general documentation
 
