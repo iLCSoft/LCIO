@@ -26,6 +26,6 @@ template<class T, class O> T* f2c_pointer(PTRTYPE ptr){
   return dynamic_cast<T*>( o_ptr ) ; 
 }
 
-#define C2F_POINTER(T,ptr) reinterpret_cast<int>( dynamic_cast<T>( (ptr) ) ) ;
+#define C2F_POINTER(T,ptr) reinterpret_cast<int>( dynamic_cast<T>( (ptr) ) ) 
 
 #endif
