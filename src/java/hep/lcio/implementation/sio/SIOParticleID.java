@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOParticleID.java,v 1.5 2004-09-22 16:18:34 gaede Exp $
+ * @version $Id: SIOParticleID.java,v 1.6 2004-11-03 16:30:24 tonyj Exp $
  */
 class SIOParticleID extends IParticleID
 {
@@ -35,12 +35,14 @@ class SIOParticleID extends IParticleID
       }
       else
       {
-         out.writeFloat(id.getPDG());
+         out.writeFloat(id.getLikelihood());
          out.writeInt(id.getType());
          out.writeInt(id.getPDG());
          out.writeInt(id.getAlgorithmType());
          float[] pars = id.getParameters();
-         for (int i=0; i<pars.length; i++) out.writeFloat(pars[i]);
+         int n = pars == null ? 0 : pars.length;
+         out.writeInt(n);
+         for (int i=0; i<n; i++) out.writeFloat(pars[i]);
       }
    }
 
@@ -50,6 +52,8 @@ class SIOParticleID extends IParticleID
       out.writeInt(type);
       out.writeInt(pdg);
       out.writeInt(algorithmType);
-      for (int i=0; i<parameters.length; i++) out.writeFloat(parameters[i]);
+      int n = parameters == null ? 0 : parameters.length;
+      out.writeInt(n);
+      for (int i=0; i<n; i++) out.writeFloat(parameters[i]);
    }
 }

@@ -18,8 +18,10 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -34,7 +36,7 @@ public class RandomEvent extends ILCEvent
    {
       randomize(this);
       addCollection(LCIO.TRACK,ITrack.class,1<<LCIO.TRBIT_HITS);
-      addCollection(LCIO.CLUSTER,ICluster.class);
+      addCollection(LCIO.CLUSTER,ICluster.class,1<<LCIO.CLBIT_HITS);
       addCollection(LCIO.RECONSTRUCTEDPARTICLE,IReconstructedParticle.class);
       addCollection(LCIO.CALORIMETERHIT,ICalorimeterHit.class,1<<LCIO.RCHBIT_ID1 | 1<<LCIO.RCHBIT_LONG | 1<<LCIO.RCHBIT_TIME);
       addCollection(LCIO.LCFLOATVEC,ILCFloatVec.class);
@@ -54,8 +56,9 @@ public class RandomEvent extends ILCEvent
       LCCollection target = this.getCollection(LCIO.TPCHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
       {
-         List l = new ArrayList();
-         for (int ii=0; ii<5; ii++)
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         for (int ii=0; ii<size; ii++)
          {
             l.add(target.get(r.nextInt(target.size())));
          }
@@ -75,8 +78,9 @@ public class RandomEvent extends ILCEvent
       target = this.getCollection(LCIO.TRACKERHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
       {
-         List l = new ArrayList();
-         for (int ii=0; ii<5; ii++)
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         for (int ii=0; ii<size; ii++)
          {
             l.add(target.get(r.nextInt(target.size())));
          }
@@ -88,13 +92,56 @@ public class RandomEvent extends ILCEvent
       target = this.getCollection(LCIO.CALORIMETERHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
       {
-         List l = new ArrayList();
-         for (int ii=0; ii<5; ii++)
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         float[] weights = new float[size];
+         for (int ii=0; ii<size; ii++)
+         {
+            l.add(target.get(r.nextInt(target.size())));
+            weights[ii] = r.nextFloat();
+         }
+         ICluster cluster = (ICluster) i.next();
+         cluster.setCalorimeterHits(l,weights);
+      }
+      collection = this.getCollection(LCIO.RECONSTRUCTEDPARTICLE);
+      target = this.getCollection(LCIO.CLUSTER);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         for (int ii=0; ii<size; ii++)
          {
             l.add(target.get(r.nextInt(target.size())));
          }
-         ICluster cluster = (ICluster) i.next();
-         cluster.setCalorimeterHits(l);
+         IReconstructedParticle particle = (IReconstructedParticle) i.next();
+         particle.setClusters(l);
+      }
+      collection = this.getCollection(LCIO.RECONSTRUCTEDPARTICLE);
+      target = this.getCollection(LCIO.TRACK);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         for (int ii=0; ii<size; ii++)
+         {
+            l.add(target.get(r.nextInt(target.size())));
+         }
+         IReconstructedParticle particle = (IReconstructedParticle) i.next();
+         particle.setTracks(l);
+      }
+      collection = this.getCollection(LCIO.RECONSTRUCTEDPARTICLE);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         int size = r.nextInt(10);
+         List l = new ArrayList(size);
+         for (int ii=0; ii<size; ii++)
+         {
+            IParticleID pid = new IParticleID();
+            randomize(pid);
+            l.add(pid);
+         }
+         IReconstructedParticle particle = (IReconstructedParticle) i.next();
+         particle.setParticleIDs(l);
       }
    }
    private void addCollection(String type, Class klass)
@@ -151,6 +198,12 @@ public class RandomEvent extends ILCEvent
    }
    private static void checkEqual(Object o1, Object o2)
    {
+      checkEqual(o1,o2,new HashMap());
+   }
+   private static void checkEqual(Object o1,Object o2,Map alreadyChecked)
+   {
+      if (alreadyChecked.get(o1) == o2) return;
+      alreadyChecked.put(o1,o2);
       try
       {
          if (o1 == null && o2 == null) return;
@@ -168,7 +221,7 @@ public class RandomEvent extends ILCEvent
             {
                Object v1 = Array.get(o1, i);
                Object v2 = Array.get(o2, i);
-               checkEqual(v1,v2);
+               checkEqual(v1,v2,alreadyChecked);
             }
             return;
          }
@@ -183,7 +236,7 @@ public class RandomEvent extends ILCEvent
             {
                Object v1 = i1.next();
                Object v2 = i2.next();
-               checkEqual(v1,v2);
+               checkEqual(v1,v2,alreadyChecked);
             }
             return;
          }
@@ -197,7 +250,7 @@ public class RandomEvent extends ILCEvent
             {
                Object v1 = m.invoke(o1,null);
                Object v2 = m.invoke(o2,null);
-               checkEqual(v1,v2);
+               checkEqual(v1,v2,alreadyChecked);
             }
          }
          
@@ -214,7 +267,7 @@ public class RandomEvent extends ILCEvent
                {
                   Object v1 = i1.next();
                   Object v2 = i2.next();
-                  checkEqual(v1,v2);
+                  checkEqual(v1,v2,alreadyChecked);
                }
             }
          }

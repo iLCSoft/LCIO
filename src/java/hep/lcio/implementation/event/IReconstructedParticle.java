@@ -4,6 +4,7 @@ import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import java.util.List;
@@ -116,12 +117,21 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    {
       return particleIDUsed;
    }
+   public void setParticleIDs(List ids)
+   {
+      checkAccess();
+      this.particleIDs = ids;
+   }
    
    public List getParticleIDs()
    {
       return particleIDs == null ? Collections.EMPTY_LIST : particleIDs;
    }
-   
+   public void setParticles(List particles)
+   {
+      checkAccess();
+      this.particles = particles;
+   }   
    public List getParticles()
    {
       return particles == null ? Collections.EMPTY_LIST : particles;
@@ -139,6 +149,11 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       return referencePoint;
    }
    
+   public void setTracks(List tracks)
+   {
+      checkAccess();
+      this.tracks = tracks;
+   }
    public List getTracks()
    {
       return tracks == null ? Collections.EMPTY_LIST : tracks;
@@ -157,21 +172,24 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    
    public void addCluster(Cluster cluster)
    {
-      addCluster(cluster);
+      if (clusters == null) clusters = new ArrayList();
+      clusters.add(cluster);
    }
-   
+   public void addTrack(Track track)
+   {
+      if (tracks == null) tracks = new ArrayList();
+      tracks.add(track);
+   }  
    public void addParticle(ReconstructedParticle particle)
    {
-      addParticle(particle);
+      if (particles == null) particles = new ArrayList();
+      particles.add(particle);
    }
    
    public void addParticleID(ParticleID pid)
    {
+      if (particleIDs ==  null) particles = new ArrayList();
       particleIDs.add(pid);
    }
    
-   public void addTrack(Track track)
-   {
-      addTrack(track);
-   }
 }

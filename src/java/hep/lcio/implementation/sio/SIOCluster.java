@@ -4,6 +4,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 import hep.lcio.event.Cluster;
+import hep.lcio.event.LCIO;
 import hep.lcio.event.ParticleID;
 import hep.lcio.implementation.event.ICluster;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.14 2004-09-24 13:21:23 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.15 2004-11-03 16:30:24 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -170,7 +171,7 @@ class SIOCluster extends ICluster
          out.writePntr(i.next());
       }
       
-      if ((flag & (1<<31)) != 0)
+      if (bitTest(flag,LCIO.CLBIT_HITS))
       {
          out.writeInt(calorimeterHits.size());
          int ii = 0;

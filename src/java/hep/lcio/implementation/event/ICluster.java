@@ -11,6 +11,7 @@ import java.util.List;
  */
 public class ICluster extends ILCObject implements Cluster
 {
+   private static final float[] null0 = new float[0];
    private static final float[] null3 = new float[3];
    private static final float[] null6 = new float[6];
    
@@ -19,14 +20,14 @@ public class ICluster extends ILCObject implements Cluster
    protected float theta;
    protected int type;
    protected float[] directionError = null3;
-   protected float[] hitContributions = null3;
+   protected float[] hitContributions = null0;
    protected float[] position = null3;
-   protected float[] shape = new float[0];
+   protected float[] shape = null0;
    protected List particleIDs = new ArrayList();
    protected List calorimeterHits = new ArrayList();
    protected List clusters = new ArrayList();
    protected float[] positionError = null6;
-   protected float[] subdetectorEnergies = new float[0];
+   protected float[] subdetectorEnergies = null0;
    
    public List getCalorimeterHits()
    {
@@ -83,10 +84,17 @@ public class ICluster extends ILCObject implements Cluster
       return type;
    }
    
-   public void setCalorimeterHits(List calorimeterHits)
+   public void setCalorimeterHits(List calorimeterHits,float[] hitContributions)
    {
+      if (calorimeterHits == null)
+      {
+         if (hitContributions == null) hitContributions = null0;
+         if (hitContributions.length != 0) throw new IllegalArgumentException();
+      }
+      else if (calorimeterHits.size() != hitContributions.length) throw new IllegalArgumentException();
       checkAccess();
       this.calorimeterHits = calorimeterHits;
+      this.hitContributions = hitContributions;
    }
    
    public void setClusters(List clusters)
@@ -106,12 +114,6 @@ public class ICluster extends ILCObject implements Cluster
    {
       checkAccess();
       this.energy = energy;
-   }
-   
-   public void setHitContributions(float[] hitContributions)
-   {
-      checkAccess();
-      this.hitContributions = hitContributions;
    }
    
    public void setIPhi(float phi)
