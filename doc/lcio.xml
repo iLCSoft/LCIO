@@ -7,13 +7,7 @@
     Created on : December 12, 2002, 5:06 PM
     Author     : Frank Gaede, Ties Behnke, Norm Graf, Tony Johnson
     Description:
-        Description of proposed LCIO format.
-
-   fg: added charge to MCparticle and PDG to CalorimeterHit
-   fg: added names and types of blocks to LCRunHeader and small modifications in flag of CalorimeterHit
-   tb: some changes in the MC block
-   fg: new record for event header, additional word for calorimeter cell id
-   fg: added LCFloatVec block and made changes according to first release of LCIO
+        Description of LCIO format in sio files.
 -->
 
 <sio>
@@ -84,7 +78,8 @@
          </repeat>
       </block>
       <block name="SimCalorimeterHit" major="0" minor="7">
-         <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; Bit 29 +z = 1, -z = 0; Bit 28 PDG = 1, no PDG =0, rest is detector specific</data>
+         <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
+              Bit 29 +z = 1, -z = 0; Bit 28 PDG = 1, no PDG =0, rest is detector specific</data>
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>

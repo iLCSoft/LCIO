@@ -1,6 +1,7 @@
 \documentclass[twoside]{article}
 \usepackage{graphicx}
 \usepackage{fancyhdr}
+\usepackage{verbatim}
 \pagestyle{fancy}
 \fancyhead{} % clear all fields
 \fancyhead[C]{\it {LCIO - Users manual}}
@@ -9,6 +10,7 @@
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
 \renewcommand{\sfdefault}{phv}
+\renewcommand{\appendixname}{Appendix}
 
 %\setlength{\textheight}{235mm}
 %\setlength{\textwidth}{145mm}
@@ -28,7 +30,7 @@
 
 \begin{document}
 
-\title{LCIO [v00-07] -  Users manual}
+\title{LCIO [v00-08] -  Users manual}
 
 
 \author{F. Gaede \\  DESY IT} 
@@ -44,15 +46,6 @@ simulation studies. It defines a data model, a user interface (API) and a file f
 It provides a C++ and a Java version with a common interface - a Fortran version is under 
 development.
 
-%(fig.~\ref{fig_motivation}).
-%\begin{figure}
-%\includegraphics[width=80mm]{motivation1.eps}
-%\caption{Schematic overview of the simulation software chain. 
-%LCIO defines a persistency framework for the simulation and reconstruction stages. 
-%It is suited to replace the  plethora of different data and file formats currently 
-%being used in linear collider simulation studies (denoted by the small arrows).
-%\label{fig_motivation}}
-%\end{figure}
 This manual is intended for application developers that want to incorporate LCIO in their 
 programs. This includes e.g. simulation developers as well as  physicists that want to 
 read LCIO files for their analysis. It focuses on the practical aspects of using LCIO. A more 
@@ -74,7 +67,7 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 \begin{verbatim}
   mkdir lcio 
   cd lcio
-  cvs co -d v00-07 -r v00-07 lcio
+  cvs co -d v00-08 -r v00-08 lcio
 \end{verbatim}
 
 \subsection{Requirements}
@@ -103,11 +96,12 @@ or using {\it bash}:
 \end{verbatim}
 %$ <- fixes syntax highlighting
 
-To build the Java and C++ version simply type:
-\begin{verbatim}
-  ant
-\end{verbatim}
- Or to do it step by step:
+%\begin{verbatim}
+%  ant
+%\end{verbatim}
+% Or to do it step by step:
+
+To build the Java and C++ versions a few simple steps are needed
 \begin{verbatim}
   ant aid.generate     <-- generates common API
   ant cpp              <-- creates C++
@@ -146,14 +140,33 @@ The same for the Java version:
  ./bin/runAnalysisJob.sh simsob.sclio
 \end{verbatim}
 
+\subsection {Building the documentation} \label{build_doc}
 
+A few targets are defined to build the documentation that is also available from the 
+LCIO homepage~\cite{lcio_home}, see (\ref{sec_api}).
+
+You can create the documentation of the Java API with {\em javadoc}~\cite{ref_javadoc}:
+\begin{verbatim}
+  ant doc 
+\end{verbatim}
+and then open the file \verb|${LCIO}/doc/api/index.html| with your Browser. %$
+
+\vspace{\baselineskip}
+On Linux you can create the C++ API documentation (provided you have {\em doxygen}~\cite{ref_doxygen} 
+installed and in your \verb|$PATH|) %$
+with:
+\begin{verbatim}
+  ant cpp.doc      
+\end{verbatim}
+This creates the file \verb|${LCIO}/doc/doxygen_api/html/index.html|   %$
+
+\newpage
 \section{Using LCIO}
-
 
 \subsection{Java and C++ API} \label{sec_api}
 Detailed documentation of the API is provided both for Java and C++, e.g. on the 
 LCIO homepage~\cite{lcio_home} generated directly  from documentation in the source code using 
-{\em javadoc} and {\em doxygen} respectively. 
+{\em javadoc} and {\em doxygen} respectively.   
 If you are experienced in either Java or C++ you will probably 
 find all you need to use LCIO in the corresponding version of the API documentation.
 A few words on the design of LCIO might be helpful\ to browse the documentation.
@@ -200,6 +213,46 @@ to all data entities (classes). This class hierarchy also reflects the package h
 \label{fig_cpp_api}}
 \end{figure}
 
+\subsubsection{Exceptions} \label{exceptions}
+Both the Java and C++ versions of LCIO make use of the exception mechanism. Exceptions are 
+implemented differently in Java and C++\footnote{The Java Exception mechanism is more powerful 
+in that it offers compile time check of correct {\em try-catch} blocks or {\em throw} clauses 
+and the notion of {\em unchecked} and {\em checked} exceptions.}. 
+For LCIO we adopted a scheme of using exceptions that 
+hides these differences as much as possible. All Exceptions except \verb$IOException$ in Java inherit 
+from \verb$RunTimeException$, i.e. are {\em unchecked} exceptions. Thus the compiler will in general 
+not complain about missing catch blocks or throw declarations. The same holds true for the C++ compiler 
+anyhow.
+
+In the API you will find {\em throw} clauses/declarations at certain methods. These are meant as a hint
+to the user of what could go wrong in the method at hand - do not try to catch all exceptions with a 
+dedicated {\em try-catch} block around every function call. Most exceptions will be due to 
+{\em programming errors} and will cause an abort of the program which is usually what you want.
+There are exceptions to this rule however. In particular the \verb$DataNotAvailableException$ will be
+thrown by methods accessing event data that is not available, e.g. \verb$MCParticle::getParent()$ will 
+throw this exception when applied to a mother particle (no parent available). Clearly you want to catch 
+this exception when searching for the mother particles in the event\footnote{Or use the 
+{\tt MCParticle::getParentData()} method that returns {\tt NULL} for a mother, see  the API 
+documentation}.
+The same exception will be thrown, if you are trying to get a named collection from the event that 
+is not available. Now it depends on your application whether you want to continue or not - if the 
+computation is vital for the rest of the program you'll probably want to abort - if the code just
+produces some check plots for a particular subdetector you might as well carry on with other 
+modules.\\
+In case an exception is thrown at run time that is not caught the program will abort and you will get 
+some printout as to what caused the exception - 
+in Java this done by the VM in C++ we print the type of the exception with some information on the 
+problem (usually the class and function name).
+
+\vspace{\baselineskip}
+{\it {\bf Note to C++ programmers:} We included \verb$std::exception$ in all {\em throw} clauses in 
+C++. This way we ensure a behavior similar to Java, i.e. despite a {\em throw}
+clause basically all exceptions can be thrown by the function, as all std-Exceptions 
+as well as all LCIO-Exceptions inherit from the base \verb$std::exception$. So the user can decide to
+catch {\em run time} exceptions for parts of the code without causing an abort. 
+}
+
+
 
 \subsection{Fortran API}
 There will be a one to one mapping of the Fortran interface to the C++ API. For every class member 
@@ -218,22 +271,23 @@ Figure~\ref{fig_datamodel} shows the data entities that are currently defined by
 \caption{Overview of the data model defined by LCIO (all classes in namespace DATA). 
 The boxes correspond to separate
 data entities (classes) and the arrows denote relationships between these entities.
-The event data is stored in 'untyped' collections of LCObject subclasses. Every get-method
-corresponds to a persistent attribute. 
+The event data is stored in 'untyped' collections of LCObject subclasses.
 Only the shown interface is used to write data, thus existing user classes can be made persistent 
-by implementing this interface. 
-\label{fig_datamodel}}
+by implementing this interface.  Every get-method
+corresponds to a persistent attribute. 
+See details of the file layout in appendix~\ref{app_lcio}.\label{fig_datamodel}}
+
 \end{figure}
 Event data is stored in 'untyped' collections of LCObject subclasses. At the (full) simulation
 output level the most important entities are the two generic hit classes {\em SimTrackerHit} and 
 {\em SimCalorimeterHit}. Both classes have links to the generated particle ({\em MCParticle}) that 
 contributed to the hit.
 Users are free to store collections of {\em float} and {\em int} vectors/arrays of arbitrary size
-as 'extensions' to the data model, see \ref{examples}.
+as 'extensions' to the data model, see the example code listed in~\ref{examples}.
 
 \subsection{Data format \label{sec_sio}}
 
-As a first concrete data format for LCIO we chose to use SIO (Serial Input Output).
+As a first concrete data format for LCIO we chose to use SIO (Serial Input Output)~\cite{sio_doc}.
 SIO has been developed at SLAC and has been used successfully in the {\em hep.lcd}
 framework. It is a serial data format that is based on XDR and thus machine 
 independent. While being a sequential format it still offers some OO-features, in 
@@ -241,12 +295,13 @@ particular it allows to store and retrieve references and pointers within one re
 In addition SIO includes on the fly data compression using zlib.
 LCIO files that use SIO, i.e. all current ones, have the extension {\em .slcio}.
 
+A detailed description of the data layout in the SIO files is given in appendix~\ref{app_lcio}
 
 %\subsection{Examples} \label{examples} 
 %There are a number of examples in the {\em src} directory of LCIO that demonstrate
 %the usage of LCIO. Here we give a step to step introduction to the most important features.
 
-\subsection{How to read LCIO files}
+\subsection{How to read LCIO files} \label{examples} 
 There are a number of examples in the {\em src} directory -- 
 some examples for reading and accessing data can be found in:
 \begin{verbatim}
@@ -263,8 +318,6 @@ some examples for reading and accessing data can be found in:
     LCTools.java
 \end{verbatim}
 
-%\vspace{\baselineskip}
-%{\bf File handling}\\
 \subsubsection{File handling} 
 Before you can read from an LCIO file you have to create an instance of LCReader using LCFactory:
 
@@ -278,48 +331,56 @@ or in Java:
 
 The factory pattern is used to hide  the concrete implementation of the data 
 format~(see \ref{sec_sio}) from user code.
+Now opening and closing a file is as simple as:
+\begin{verbatim}
 
-In LCIO we use the exception mechanism for error handling. Thus opening and closing a file
-has to be done in a {\em try-catch} block:
+  lcReader->open( "my_data.slcio" ) ;
+    
+  // ... here we can read sth. from the file 
+
+  lcReader->close() ;
+
+\end{verbatim}
+As described in the section on exceptions (\ref{exceptions}) you could enclose the above code or parts 
+of it in a {\em try-catch} block, e.g.
+
 \begin{verbatim}
   try{
     
     lcReader->open( "my_data.slcio" ) ;
     
-    // .... here we can read sth. from the file 
+    // ...
 
     lcReader->close() ;
   }
   catch(IOException& e){
-    cout << " io error : " << e.what() << endl ;
+
+    cout << " Unable to read and analyze the LCIO file - " << e.what() << endl ;
   }
 \end{verbatim}
-and again the same in Java:
+if you want to do anything else in your application after what would have been done in 
+"\verb$ //... $" failed.
+
+
+Here is the corresponding Java code:
 \begin{verbatim}
-  try{
 
-    lcReader.open( "my_data.slcio" ) ;
+  lcReader.open( "my_data.slcio" ) ;
 
-    // ... do sth. ....
+  // ... do sth. ....
 
-    lcReader.close() ;
-  }
-  catch(IOException e){
-    System.out.println(" io error : " +  e.getMessage() ) ;
-  }
+  lcReader.close() ;
 
 \end{verbatim}
-It is obviously straight forward to get the Java version of the code from the C++ one
+It is obviously straightforward to get the Java version of the code from the C++ one
 %\footnote{Replacing every \verb$'->'$ and \verb$'::'$ with \verb$'.'$ and removing all 
 %\verb$'*'$ and '\&' does most of what is needed. }, 
 so we only give example code in C++ from now on.
 
-%\vspace{\baselineskip}
-%{\bf Reading from the file}\\
 \subsubsection{Reading from the file}
 There are two different ways of reading data from an LCIO file. One is via 
 'readNext{\em Something}()' methods, where {\em Something} is either the next RunHeader or the next 
-Event. This way the user has control over what is beeing read from the file. On the other hand you 
+Event. This way the user has control over what is being read from the file. On the other hand you 
 can only read one type of {\em records } at a time as you don't know the exact number of events for 
 each run. A simple event loop looks like this: 
 
@@ -355,43 +416,63 @@ public:
    MyAnalysis() ;
   ~MyAnalysis() ;
  
-  void analyze( const LCEvent * evt )  ;
-  void analyze(const LCRunHeader* run) ;
+  void processEvent( const LCEvent * evt )  ;
+  void processRunHeader(const LCRunHeader* run) ;
  
-  void update( LCEvent * evt ) { /* not needed */ ;}
-  void update(LCRunHeader* run){ /* not needed */ ;}
+  void modifyEvent( LCEvent * evt ) { /* not needed */ ;}
+  void modifyRunHeader(LCRunHeader* run){ /* not needed */ ;}
   //...
 };
 \end{verbatim}
 
-Here the {\em analyze} methods are used, as they provide {\em read only} access to the data. In a 
-reconstruction job you would probably use the {\em update} methods.
-One could for example create histograms for every run in \verb$analyze(const LCRunHeader* run)$
-and then fill the histograms in \verb$analyze( const LCEvent * evt )$.
+Here the {\em processEvent/RunHeader} methods are used, as they provide {\em read only} access to the 
+data. The only modification of the data allowed in {\em read only} mode is the addition of new 
+collections to the event (as this doesn't alter existing information). This will probably suffice for 
+most analysis and reconstruction applications.
+So unless you need to do any of the following:
+\begin{itemize}
+\item remove collections from the event
+\item change elements in the collections, i.e. fix bugs
+\item add data to existing collections, e.g. background hits
+\end{itemize}
+you should use the {\em read only} mode in the {\em processRunHeader/Event} methods 
+which is also default for the {\em readNextEvent/RunHeader} methods.
 
-The corresponding event loop (in the main program) might then look something like this:
+In an analysis job one could for example create histograms for every run in \\
+\verb$processRunHeader( LCRunHeader* run)$
+and then fill the histograms in \verb$processEvent( LCEvent * evt )$.
+
+The corresponding -- simplified but complete -- main program will then look something 
+like this (in C++):
 
 \begin{verbatim}
-   MyAnalysis myAnalysis ;
-   lcReader->registerLCRunListener( &myAnalysis ) ;
-   lcReader->registerLCEventListener( &myAnalysis ) ;
+#include "lcio.h"
+#include "IO/LCReader.h"
+#include "MyAnalysis.h"
 
-   try{
-     lcReader->readStream() ;
-   }
-   catch(IOException &e){
-     cout<< " io error: " <<  e.what() << endl ;
-   }
+using namespace lcio ;
+
+int main(int argc, char** argv ){
+
+  LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+  
+  lcReader->open( argv[1] ) ;
+
+  MyAnalysis myAnalysis ;
+  lcReader->registerLCRunListener( &myAnalysis ) ;
+  lcReader->registerLCEventListener( &myAnalysis ) ;
+
+  lcReader->readStream() ;  // read the whole stream !
+
+  lcReader->close() ;
+   return 0;
+}
 \end{verbatim}
 
 
-
-
-%\vspace{\baselineskip}
-%{\bf Accessing the data}\\
 \subsubsection{Accessing the data}
 Check the API documentation and the examples on how to access the data in the LCIO data structures.
-Mostly this is straight forward, e.g. printing run data is as easy as:
+Mostly this is straightforward, e.g. printing run data is as easy as:
 
 \begin{verbatim}
   LCRunHeader *runHdr ;
@@ -462,8 +543,6 @@ Some examples for writing data with LCIO can be found in
     RecJob.java
 \end{verbatim}
 
-%\vspace{\baselineskip}
-%{\bf File handling}\\
 \subsubsection{File handling}
 Before you can write to an LCIO file you have to create an instance of LCWriter using LCFactory:
 
@@ -476,25 +555,15 @@ or in Java:
 \end{verbatim}
 
 
-Opening and closing the file is the same as described for the LCReader - include everything in a
-{\em try-catch} block, e.g. in Java:
+Opening and closing the file is the same as described for the LCReader, e.g. in Java:
 \begin{verbatim}
-  try{
-
-    lcWriter.open( "my_data.slcio" ) ;
+  lcWriter.open( "my_data.slcio" ) ;
 
     // ... write sth. to the file....
 
-    lcWriter.close() ;
-  }
-  catch(IOException e){
-    System.out.println(" io error : " +  e.getMessage() ) ;
-  }
+  lcWriter.close() ;
 \end{verbatim}
 
-
-%\vspace{\baselineskip}
-%{\bf Writing to the file}\\
 \subsubsection{Writing to the file}
 As mentioned in section~\ref{sec_api} the LCWriter interface only uses the interfaces 
 in DATA/hep.lcio.data. So all classes implementing these interfaces can be written with LCIO.
@@ -554,9 +623,6 @@ collection and finally add the collection to the event with a unique name:
 
 The last line is of course only relevant for C++:
 
-%\vspace{\baselineskip}
-%{\bf LCIO Memory management in C++}
-
 \subsubsection{ LCIO Memory management in C++}
 {\em The philosophy of memory management in LCIO is: " If you created the object (using new),
 you are responsible for deleting it when it is no longer needed !".\\
@@ -572,6 +638,18 @@ Of course if you use your own implementation of the DATA interface you are also 
 memory management.}
  
 
+\newpage 
+\appendix {\bf \Large Appendix}
+\section{SIO File Format of LCIO} \label{app_lcio}
+
+The following is a detailed xml-based description of the currently used SIO files.
+It describes the  detailed layout of the peristent data in the files 
+and thus can also be used as a reference of the data model used in LCIO.
+
+{\footnotesize \verbatiminput{../../../doc/lcio.xml} }
+
+
+
 % Create the reference section using BibTeX:
 %\bibliography{basename of .bib file}
 \begin{thebibliography}{9}   % Use for  1-9  references
@@ -586,8 +664,18 @@ e-Print Archive: physics/0306114 / LC Note LC-TOOL-2003-053}
 \bibitem{lcio_home}
 LCIO Homepage: \\
 {\footnotesize \verb#http://www-it.desy.de/physics/projects/simsoft/lcio/index.html#}
-
-
+\bibitem{sio_doc}
+SIO documentation: \\
+{\footnotesize \verb#http://www-sldnt.slac.stanford.edu/nld/new/Docs/FileFormats/sio.pdf#}
+\bibitem{ref_aid}
+AID Homepage: \\
+{\footnotesize \verb#http://java.freehep.org/aid/index.html#}
+\bibitem{ref_javadoc}
+javadoc Homepage: \\
+{\footnotesize \verb#http://java.sun.com/j2se/javadoc#}
+\bibitem{ref_doxygen}
+doxygen Homepage: \\
+{\footnotesize \verb#http://www.stack.nl/~dimitri/doxygen#}
 \end{thebibliography}
 
 
