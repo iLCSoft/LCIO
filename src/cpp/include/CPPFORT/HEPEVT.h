@@ -18,7 +18,7 @@
 
 #include "lcio.h"
 #include "Exceptions.h"
-#include "hepevt.h"
+#include "hepevt0.h"
 #include "hepevt1.h"
 
 using namespace lcio;
