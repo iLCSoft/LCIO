@@ -22,7 +22,7 @@
            <data type="string" name="subdetectorName"></data>
         </repeat>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -63,7 +63,7 @@
 	   <data type="string" name="blockType">e.g. CalorimeterHit, TrackerHit</data>
         </repeat>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -96,7 +96,7 @@
       <block name="MCParticle" major="1" minor="3">
          <data type="int" name="flags"> not yet used, Bits 0-15 user/application dependent</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -126,7 +126,7 @@
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
             <data type="ptag" name="this"></data>
-            <if condition="major==0&amp;&amp;minor&lt;9">
+            <if condition="1000*major+minor&lt;9">
                 <data type="pntr" name="parent"></data>
                 <data type="pntr" name="secondParent"></data>
                 <data type="int" name="nDaughter"></data>
@@ -146,17 +146,17 @@
                               =2   particle decayed in the generator
                               =3   documentation line
 	    </data>
-            <if condition="!(major==0&amp;&amp;minor&lt;9)">
+            <if condition="!(1000*major+minor&lt;9)">
                 <data type="int" name="simulatorStatus"></data>
             </if>
             <data type="double[3]" name="vertex">Production vertex</data>
-            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+            <if condition="1000*major+minor&gt;1002">
                 <data type="float" name="time">creation time of the particle in ns</data>
             </if>
 	    <data type="float[3]" name="momentum">Momentum at production vertex</data>
             <data type="float" name="mass"></data>
             <data type="float" name="charge"></data>
-	    <if condition="major==0&amp;&amp;minor&lt;9"> 
+	    <if condition="1000*major+minor&lt;9"> 
                <if condition="nDaughter==0">
                   <data type="double[3]" name="endpoint"/>
                </if>
@@ -170,7 +170,7 @@
       <block name="SimTrackerHit" major="1" minor="3">
          <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -204,7 +204,7 @@
             <data type="float" name="dedx"></data>
             <data type="float" name="time"></data>
             <data type="pntr" name="MCParticle"></data>
-           <if condition="major>1||(major==1&amp;&amp;minor>0)">
+           <if condition="1000*major+minor&gt;1000">
             <data type="ptag" name="this"></data>
            </if>
          </repeat>
@@ -213,7 +213,7 @@
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0; Bit 28 PDG = 1, no PDG =0, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -243,7 +243,7 @@
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
-	    <if condition="(major==0&amp;&amp;minor&lt;9)||(flags&amp;(1&lt;&lt;29)) != 0">
+	    <if condition="1000*major+minor&lt;9||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="float" name="energy"></data>
@@ -259,7 +259,7 @@
 		   <data type="int" name="PDG"></data>
 		</if>
             </repeat>
-           <if condition="major>1||(major==1&amp;&amp;minor>0)">
+           <if condition="1000*major+minor&gt;1000">
              <data type="ptag" name="this"></data>
            </if>
          </repeat>
@@ -267,7 +267,7 @@
       <block name="LCFloatVec" major="1" minor="3">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -305,7 +305,7 @@
       <block name="LCIntVec" major="1" minor="3">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -343,7 +343,7 @@
       <block name="LCStrVec" major="1" minor="3">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -383,7 +383,7 @@
               Bit 29 cellid1 = 1, no cellid1 = 0;Bit 28 = 1: don't store ptr tag;
 	      Bit 27 = 1: timeStamp stored; Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -413,7 +413,7 @@
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
-	    <if condition="minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
+	    <if condition="1000*major+minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="int" name="amplitude"></data>
@@ -430,7 +430,7 @@
               Bit 29 cellid1 = 1, no cellid1 = 0;
 	      Bit 27 = 1: timeStamp stored; Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -464,16 +464,16 @@
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="float" name="energy"></data>
-	    <if condition="(major>1||(major==1&amp;&amp;minor>2))&amp;&amp;(flags&amp;(1&lt;&lt;27)) != 0">
+	    <if condition="1000*major+minor&gt;1002&amp;&amp;(flags&amp;(1&lt;&lt;27)) != 0">
 	       <data type="float" name="time"></data>
 	    </if>
 	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
 	       <data type="float[3]" name="position"></data>
 	    </if>
-	    <!--<if condition="(major>1||(major==1&amp;&amp;minor>2))">
+	    <!--<if condition="1000*major+minor&gt;1002">
 	       <data type="pntr" name="rawHit"></data>
 	    </if>-->
-            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+            <if condition="1000*major+minor&gt;1002">
               <data type="ptag" name="this"></data>
 	    <else/>
 	      <if condition="(flags&amp;(1&lt;&lt;28)) != 0">
@@ -485,7 +485,7 @@
       <block name="TrackerHit" major="1" minor="3">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -514,7 +514,7 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
-            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+            <if condition="1000*major+minor&gt;1002">
 	      <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
 	      TrackerHitTypeValue</data>
             </if>
@@ -522,7 +522,7 @@
             <data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data>
             <data type="float" name="dedx"></data>
             <data type="float" name="time"></data>
-            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+            <if condition="1000*major+minor&gt;1002">
               <data type="int" name="nRawHits">number of raw hits</data>
               <repeat count="nRawHits">
 	        <data type="pntr" name="rawHit"></data>
@@ -536,7 +536,7 @@
       <block name="TPCHit" major="1" minor="3">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -575,7 +575,7 @@
 		<data type="int" name="rawDataWord"></data>
             </repeat>
 	    </if>
-            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+            <if condition="1000*major+minor&gt;1002">
 	      <if condition="(flags&amp;(1&lt;&lt;30)) == 0">
                 <data type="ptag" name="this"></data>
 	      </if>
@@ -590,7 +590,7 @@
     <block name="Track" major="1" minor="3">
       <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -653,7 +653,7 @@
     <block name="Cluster" major="1" minor="3">
       <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -692,7 +692,7 @@
 	<data type="float" name="phi">intrinsic direction: phi at position</data>
 	<data type="float[3]" name="errdir">cov matrix of direction</data>
 
-        <if condition="major>1||(major==1&amp;&amp;minor>2)">
+        <if condition="1000*major+minor&gt;1002">
           <data type="int" name="nParams"></data>
 	  <repeat count="nParams">
 	  <data type="float" name="shape">Shape parameters, defined in collection parameter 
@@ -703,7 +703,7 @@
 	    <data type="float" name="loglikelihood"/>
 	    <data type="int" name="type"/>
 	    <data type="int" name="pdg"/>
-	    <data type="string" name="identifier"/>
+	    <data type="int" name="algorithmType"/>
 	    <data type="int" name="npar"/>
 	    <repeat count="npar">
 	       <data type="float" name="parameter"/>
@@ -734,7 +734,7 @@
     <block name="ReconstructedParticle" major="1" minor="3">
       <data type="int" name="flag"></data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -774,11 +774,11 @@
 	<data type="float[3]" name="reference"> reference point for 4-vec</data>
 	<data type="int" name="npid"/>
 	<repeat count="npid">
-          <if condition="major>1||(major==1&amp;&amp;minor>2)">
+          <if condition="1000*major+minor&gt;1002">
 	    <data type="float" name="loglikelihood"/>
 	    <data type="int" name="type"/>
 	    <data type="int" name="pdg"/>
-	    <data type="string" name="identifier"/>
+	    <data type="int" name="algorithmType"/>
 	    <data type="int" name="npar"/>
 	    <repeat count="npar">
 	       <data type="float" name="parameter"/>
@@ -794,7 +794,7 @@
             </repeat>
 	  </if>
 	</repeat>
-        <if condition="major>1||(major==1&amp;&amp;minor>2)">
+        <if condition="1000*major+minor&gt;1002">
           <data type="pntr" name="ParticleIDUsed"></data>
 	  <data type="float" name="goodnessOfPID">overall quality of the particle 
            identification</data>
@@ -802,25 +802,25 @@
         <data type="int" name="nrecopart"/>
         <repeat count="nrecopart">
 	  <data type="pntr" name="ReconstructedParticle"></data>
-          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+          <if condition="1000*major+minor&lt;1003">
 	    <data type="float" name="weight">weight of contribution</data>
           </if>
         </repeat>
 	<data type="int" name="ntrk"/>
 	<repeat count="ntrk">
 	  <data type="pntr" name="Track"/>
-          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+          <if condition="1000*major+minor&lt;1003">
 	    <data type="float" name="weight">TODO: to be defined </data>
           </if>
 	</repeat>
 	<data type="int" name="ncal"/>
 	<repeat count="ncal">
 	  <data type="pntr" name="Cluster"/>
-          <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+          <if condition="1000*major+minor&lt;1003">
 	    <data type="float" name="weight">TODO: to be defined </data>
           </if>
 	</repeat>
-        <if condition="major==0||(major==1&amp;&amp;minor&lt;3)">
+        <if condition="1000*major+minor&lt;1003">
 	  <data type="int" name="nmc"/>
 	  <repeat count="nmc">
 	    <data type="pntr" name="MCParticle"/>
@@ -833,7 +833,7 @@
     <block name="LCGenericObject" major="1" minor="3">
       <data type="int" name="flag"></data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
@@ -887,7 +887,7 @@
     <block name="LCRelation" major="1" minor="3">
        <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
 	<!-- start of named parameters -->
-        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+        <if condition="1000*major+minor&gt;1001">
           <data type="int" name="nIntParameters">number of named integer parameter entries</data>
           <repeat count="nIntParameters">
              <data type="string" name="key">key (name) of parameter</data>
