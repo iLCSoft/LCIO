@@ -3,7 +3,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.33 2004-08-20 16:45:23 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.34 2004-08-25 08:20:29 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -18,7 +18,7 @@ public interface LCIO{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 1 ; 
-    static const int MINORVERSION  = 2 ; 
+    static const int MINORVERSION  = 3 ; 
 
     // bits in flag words
     // SimCalorimeterHit (CH)
@@ -31,7 +31,8 @@ public interface LCIO{
     static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
     static const int RCHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
     static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
-    static const int RCHBIT_PTR = 28 ; // 1: pointer tag added (needed for TrackerHit) 
+    static const int RCHBIT_NO_PTR = 28 ; // 1: pointer tag not added 
+    static const int RCHBIT_TIME   = 27 ; // 1: time information stored
     
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
@@ -44,7 +45,7 @@ public interface LCIO{
 
     // TPCHit
     static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
-    static const int TPCBIT_PTR = 30 ; // 1: pointer tag added (needed for TrackerHit) 
+    static const int TPCBIT_NO_PTR = 30 ; // 1: pointer tag not added (needed for TrackerHit) 
 
 
     // LCRelation
@@ -70,6 +71,7 @@ public interface LCIO{
     static const char* LCRUNHEADER ;
     static const char* MCPARTICLE ; 
     static const char* SIMCALORIMETERHIT ;
+    static const char* RAWCALORIMETERHIT ;
     static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
     static const char* TPCHIT ; 
@@ -87,7 +89,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 2 ; 
+  public static const int MINORVERSION  = 3 ; 
 
   // bits in flag words
   // SimCalorimeterHit (CH)
@@ -100,7 +102,8 @@ public interface LCIO{
   public static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
   public static const int RCHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
   public static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
-  public static const int RCHBIT_PTR = 28 ; // 1: pointer tag added (needed for TrackerHit) 
+  public static const int RCHBIT_NO_PTR = 28 ; // 1: pointer tag not added
+  public static const int RCHBIT_TIME   = 27 ; // 1: time information stored
 
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
@@ -113,7 +116,7 @@ public interface LCIO{
 
   // TPCHit
   public static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
-  public static const int TPCBIT_PTR = 30 ; // 1: pointer tag added (needed for TrackerHit) 
+  public static const int TPCBIT_NO_PTR = 30 ; // 1: pointer tag not added (needed for TrackerHit)
 
     // LCRelation
     //  public static const int LCREL_ONE2MANY = 31 ; // relation is one to many
@@ -137,6 +140,7 @@ public interface LCIO{
   public static const String LCRUNHEADER = "LCRunHeader" ;
   public static const String MCPARTICLE = "MCParticle" ;
   public static const String SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+  public static const String RAWCALORIMETERHIT = "RawCalorimeterHit" ;
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String TPCHIT = "TPCHit" ;

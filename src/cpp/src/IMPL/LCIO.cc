@@ -8,6 +8,7 @@ const char* LCIO::LCEVENT = "LCEvent" ;
 const char* LCIO::LCRUNHEADER = "LCRunHeader" ;
 const char* LCIO::MCPARTICLE = "MCParticle" ;
 const char* LCIO::SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+const char* LCIO::RAWCALORIMETERHIT = "RawCalorimeterHit" ;
 const char* LCIO::CALORIMETERHIT = "CalorimeterHit" ;
 const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
 const char* LCIO::TPCHIT = "TPCHit" ;

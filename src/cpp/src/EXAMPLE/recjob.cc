@@ -117,11 +117,11 @@ public:
 
     // here we set the pointer flag bit that is needed to be able to point from
     // the generic TrckerHit to the raw data TPCHit
-    //-> this should be done automatically in a future release
-    LCFlagImpl tpcFlag( tpcHits->getFlag() ) ;
-    tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
-    tpcHits->setFlag( tpcFlag.getFlag()  ) ;
-
+    //fg20040824 -> THE LOGIC IS REVERSED - NO NEED TO SET A BIT TO GET THE POINTER FLAG
+    //     LCFlagImpl tpcFlag( tpcHits->getFlag() ) ;
+    //     tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
+    //     tpcHits->setFlag( tpcFlag.getFlag()  ) ;
+    
     LCCollectionVec* trkhitVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
     int nTPCHits = tpcHits->getNumberOfElements() ;
 
@@ -226,13 +226,11 @@ public:
     // here we set the pointer flag bit that is needed to be able to point from
     // the generic Clusters to the 'raw data' CalorimeterHits
     //-> this should be done automatically in a future release
-    LCFlagImpl calFlag( calHits->getFlag() ) ;
-    calFlag.setBit( LCIO::RCHBIT_PTR ) ;
-    calHits->setFlag( calFlag.getFlag()  ) ;
-
-
-//     LCRelation* scRel = new LCRelationImpl( LCIO::CALORIMETERHIT , LCIO::SIMCALORIMETERHIT  )  ; // still experimental code ...
-
+    //fg20040824 -> THE LOGIC IS REVERSED - NO NEED TO SET A BIT TO GET THE POINTER FLAG
+    //     LCFlagImpl calFlag( calHits->getFlag() ) ;
+    //     calFlag.setBit( LCIO::RCHBIT_PTR ) ;
+    //     calHits->setFlag( calFlag.getFlag()  ) ;
+    
 
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
     scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;

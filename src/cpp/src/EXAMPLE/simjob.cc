@@ -295,7 +295,6 @@ int main(int argc, char** argv ){
 	LCFlagImpl tpcFlag(0) ;
 	if(  storeRawData )  // if we want to store the raw data we need to set the flag
 	  tpcFlag.setBit( LCIO::TPCBIT_RAW ) ;
-	  tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
 	TPCVec->setFlag( tpcFlag.getFlag()  ) ;
 	
 	for(int j=0;j<NHITS;j++){

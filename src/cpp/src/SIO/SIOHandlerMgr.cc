@@ -1,6 +1,7 @@
 #include "SIO/SIOHandlerMgr.h"
 
 #include "SIO/SIOSimCalHitHandler.h" 
+#include "SIO/SIORawCalHitHandler.h" 
 #include "SIO/SIOCalHitHandler.h" 
 #include "SIO/SIOSimTrackHitHandler.h" 
 #include "SIO/SIOTrackHandler.h" 
@@ -30,6 +31,7 @@ namespace SIO {
     
     _map[ LCIO::MCPARTICLE     ] = new SIOParticleHandler ;
     _map[ LCIO::SIMCALORIMETERHIT ] = new SIOSimCalHitHandler ;
+    _map[ LCIO::RAWCALORIMETERHIT ] = new SIORawCalHitHandler ;
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;

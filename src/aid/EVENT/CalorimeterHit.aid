@@ -15,34 +15,40 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
 }
 @endif
 
-/** The generic calorimeter hit for real data. 
- * If Clusters from reconstruction want to point back to
- * CalorimeterHit objects, these have to be stored in a collection
- * with flag(LCIO::RCHBIT_PTR)==1.
+/** The generic calorimeter hit - created from SimCalorimeterHit or
+ *  RawCalorimeterHit. The difference to RawCalorimeterHit is that amplitude
+ *  ( energy) and time are now float and an optional position (x,y,z) can be stored
+ *  with the hit.
+ *  In order to suppress a (32-bit) pointer tag stored with every hit set
+ *  flag(LCIO::RCHBIT_NO_PTR)==1. 
  *  
  * @author gaede
- * @version Aug 8, 2003
+ * @version $Id: CalorimeterHit.aid,v 1.11 2004-08-25 08:20:29 gaede Exp $
  */
 
 public interface CalorimeterHit extends LCObject {
     
-    /**Returns the detector specific (geometrical) cell id.
+    /** Returns the detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;
     
-    /**Returns the second detector specific (geometrical) cell id.
-     *  0 if information is not stored -  check the flag word (bit CHBIT_ID1) 
-     *  of the collection. Default is to store only cellid0.
+    /** Returns the second detector specific (geometrical) cell id. Optional, check/set 
+     *  flag(LCIO::RCHBIT_ID1)==1.
      */
     public int getCellID1() const ;
     
-    /** Returns the energy (amplitude) of the hit on a detector (and calibration) 
-     * depending scale.
+    /** Returns the energy of the hit in [GeV].
      */
     public float getEnergy() const ;
     
+    /** Returns the time of the hit in [ns]. Optional, check/set 
+     *  flag(LCIO::RCHBIT_TIME)==1.
+     */
+    public float getTime() const ;
+    
     /** Returns the position of the hit in world coordinates.
-     *  NULL if information is not stored - check the flag word (bit CHBIT_LONG) 
+     *  NULL if information is not stored - check 
+     *  flag(LCIO::RCHBIT_LONG)==1.
      */
     public const float3V getPosition() const ;	
 

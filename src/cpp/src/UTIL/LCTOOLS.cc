@@ -64,7 +64,12 @@ namespace UTIL {
     
       cout << endl 
 	   << " collection name : " << *name 
-	   << endl ;
+	   << endl 
+	   << " parameters: " << endl ;
+
+      printParameters( col->getParameters() ) ;
+
+
 
       // call the detailed print functions depending on type name
       if( evt->getCollection( *name )->getTypeName() == LCIO::MCPARTICLE ){
@@ -552,7 +557,7 @@ namespace UTIL {
     
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::TPCBIT_RAW   : " << flag.bitSet( LCIO::TPCBIT_RAW ) << endl ;
-    cout << "  -> LCIO::TPCBIT_PTR   : " << flag.bitSet( LCIO::TPCBIT_PTR ) << endl ;
+    cout << "  -> LCIO::TPCBIT_NO_PTR   : " << flag.bitSet( LCIO::TPCBIT_NO_PTR ) << endl ;
     
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -839,10 +844,11 @@ namespace UTIL {
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
  
     LCFlagImpl flag( col->getFlag() ) ;
-    cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
-    cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-    cout << "     LCIO::CHBIT_ID1    : " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
-    cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
+    cout << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
+    cout << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
+    cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
+    cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
+    cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
 
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -1362,7 +1368,7 @@ namespace UTIL {
 
   }
   
-  void LCTOOLS::printParameters( EVENT::LCParameters& params ){
+  void LCTOOLS::printParameters( const EVENT::LCParameters& params ){
 
     StringVec intKeys ;
     int nIntParameters = params.getIntKeys( intKeys ).size() ;

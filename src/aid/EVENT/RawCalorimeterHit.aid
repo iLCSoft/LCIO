@@ -1,0 +1,46 @@
+package hep.lcio.event ;
+
+@ifdef cpp
+@cpp{
+#include <vector>
+}
+@endif
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
+
+@ifdef cpp
+@cpp{
+class RawCalorimeterHit ;
+typedef std::vector<RawCalorimeterHit*> RawCalorimeterHitVec ;
+}
+@endif
+
+/** The generic calorimeter hit for real data. 
+ *  In order to suppress a (32-bit) pointer tag stored with every hit set
+ *  flag(LCIO::RCHBIT_NO_PTR)==1. 
+ * 
+ * @author gaede
+ * @version $Id: RawCalorimeterHit.aid,v 1.1 2004-08-25 08:20:29 gaede Exp $
+ */
+
+public interface RawCalorimeterHit extends LCObject {
+    
+    /** Returns the detector specific (geometrical) cell id.
+     */
+    public int getCellID0() const ;
+    
+    /** Returns the second detector specific (geometrical) cell id. Optional, check/set 
+     *  flag(LCIO::RCHBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+    
+    /** Returns the amplitude of the hit in ADC counts.
+     */
+    public int getAmplitude() const ;
+    
+    /** Returns a time stamp for the hit. Optional, check/set 
+     *  flag(LCIO::RCHBIT_TIME)==1.
+     */
+    public int getTimeStamp() const ;
+    
+}

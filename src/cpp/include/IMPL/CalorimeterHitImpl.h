@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
- * @version Aug 8, 2003
+ * @version $Id: CalorimeterHitImpl.h,v 1.12 2004-08-25 08:20:29 gaede Exp $
  */
 
   class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
@@ -47,12 +47,18 @@ namespace IMPL {
      */
     virtual float getEnergy() const ;
     
+    /** Returns the time of the hit in [ns]. Optional, check/set 
+     *  flag(LCIO::RCHBIT_TIME)==1.
+     */
+    virtual float getTime() const ;
+
     /** Returns the position of the hit in world coordinates.
      *  NULL if information is not stored. Ask collection for flag, only 
      * available if bit LCIO.CHBIT_LONG is set.
      */
     
     virtual const float * getPosition() const ;
+
     // setters
     /** Sets the first cell id;
      */
@@ -67,6 +73,10 @@ namespace IMPL {
     /** Sets the energy/amplitude.
      */
     void setEnergy(float en) ;
+
+    /** Sets the time.
+     */
+    void setTime(float t) ;
     
     /** Sets the position. Not stored if LCIO.CHBIT_LONG isn't set.
      */
@@ -78,8 +88,9 @@ namespace IMPL {
     int _cellID0 ;
     int _cellID1 ;
     float _energy ;
+    float _time ;
     float _position[3] ;
-
+    
     
   }; // class
 }; // namespace IMPL

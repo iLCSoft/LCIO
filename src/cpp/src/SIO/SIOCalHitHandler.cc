@@ -29,8 +29,11 @@ namespace SIO{
 	
     SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
 
+    LCFlagImpl lcFlag(_flag) ;
+
+
     // in v00-08 cellid1 has been stored by default
-    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_ID1 ) || 
+    if( lcFlag.bitSet( LCIO::RCHBIT_ID1 ) || 
 
 	( SIO_VERSION_MAJOR(_vers)==0 && SIO_VERSION_MINOR(_vers)==8) ){
 
@@ -39,20 +42,31 @@ namespace SIO{
     }
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
 
-    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_LONG ) ){
+
+    if( _vers > SIO_VERSION_ENCODE( 1, 2) && lcFlag.bitSet( LCIO::RCHBIT_TIME ) ){
+      SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
+    }
+
+    if( lcFlag.bitSet( LCIO::RCHBIT_LONG ) ){
       SIO_DATA( stream ,  hit->_position  , 3 ) ;
     }
 
-//     // read a pointer tag for future reference to calorimeter hits
+    // read a pointer tag for future reference to calorimeter hits
     
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::RCHBIT_PTR ) && _vers > SIO_VERSION_ENCODE( 1, 0 )  ) {
-      SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+    if( _vers > SIO_VERSION_ENCODE( 1, 2) ){    // the logic of the pointer bit has been inverted in v1.3
+      
+      if( ! lcFlag.bitSet( LCIO::RCHBIT_NO_PTR )  )
+	SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+      
+    }else{
+      
+      if( lcFlag.bitSet( LCIO::RCHBIT_NO_PTR )  )
+	SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
     }
-
+    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
-    
+  
     
   unsigned int SIOCalHitHandler::write(SIO_stream* stream, 
 				       const LCObject* obj ){
@@ -61,21 +75,29 @@ namespace SIO{
 
     const CalorimeterHit* hit = dynamic_cast<const CalorimeterHit*>(obj)  ;
     
+    LCFlagImpl lcFlag(_flag) ;
+
+
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_ID1 ) ){
+
+    if( lcFlag.bitSet( LCIO::RCHBIT_ID1 ) ){
       LCSIO_WRITE( stream, hit->getCellID1()  ) ;
     }
     LCSIO_WRITE( stream, hit->getEnergy()  ) ;
+
+    if( lcFlag.bitSet( LCIO::RCHBIT_TIME ) ){
+      LCSIO_WRITE( stream ,  hit->getTime() ) ;
+    }
+
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_LONG ) ){
+    if( lcFlag.bitSet( LCIO::RCHBIT_LONG ) ){
       float* pos = const_cast<float*> ( hit->getPosition() ) ; 
       SIO_DATA( stream,  pos , 3 ) ;
     }
 
 
-    if( LCFlagImpl(_flag).bitSet( LCIO::RCHBIT_PTR ) ){
+    if( !lcFlag.bitSet( LCIO::RCHBIT_NO_PTR ) ){
       SIO_PTAG( stream , hit  ) ;
     }
 

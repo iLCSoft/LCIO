@@ -5,7 +5,8 @@ namespace IMPL{
   CalorimeterHitImpl::CalorimeterHitImpl() :
     _cellID0(0),
     _cellID1(0),
-    _energy(0){
+    _energy(0.),
+    _time(0.){
     _position[0] = 0. ;
     _position[1] = 0. ;
     _position[2] = 0. ; 
@@ -26,11 +27,14 @@ namespace IMPL{
   float CalorimeterHitImpl::getEnergy() const {
     return _energy ;
   }
+
+  float CalorimeterHitImpl::getTime() const {
+    return _time ;
+  }
   
   const float* CalorimeterHitImpl::getPosition() const {
     return _position ;
   }
-  
   
   void CalorimeterHitImpl::setCellID0(int id0){
     checkAccess("CalorimeterHitImpl::setCellID0") ;
@@ -45,6 +49,11 @@ namespace IMPL{
   void CalorimeterHitImpl::setEnergy(float en){
     checkAccess("CalorimeterHitImpl::setEnergy") ;
     _energy = en ;
+  }
+  
+  void CalorimeterHitImpl::setTime(float t){
+    checkAccess("CalorimeterHitImpl::setTime") ;
+    _time = t ;
   }
   
   void CalorimeterHitImpl::setPosition(const float pos[3]){

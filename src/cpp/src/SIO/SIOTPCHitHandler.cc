@@ -41,10 +41,18 @@ namespace SIO{
 
     }
 
-//     // read a pointer tag for reference to TPC hits from generic hits
-    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_PTR )  &&
-	_vers > SIO_VERSION_ENCODE( 1, 0) ) { 
-      SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
+    // read a pointer tag for reference to TPC hits from generic hits
+
+    if( _vers > SIO_VERSION_ENCODE( 1, 2) ){    // the logic of the pointer bit has been inverted in v1.3
+      
+      if( ! LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_NO_PTR )  )
+	SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
+      
+    }else{
+      
+      if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_NO_PTR )  )    
+	SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
+      
     }
     
     return ( SIO_BLOCK_SUCCESS ) ;
@@ -73,7 +81,7 @@ namespace SIO{
     }
 
     //  add a pointer tag for reference to TPC hits from generic hits
-    if( LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_PTR ) ){
+    if( ! LCFlagImpl(_flag).bitSet( LCIO::TPCBIT_NO_PTR ) ){
       SIO_PTAG( stream , hit ) ;
     }
     
