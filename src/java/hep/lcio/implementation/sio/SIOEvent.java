@@ -19,6 +19,7 @@ import hep.lcio.implementation.event.ICluster;
 import hep.lcio.implementation.event.ILCEvent;
 import hep.lcio.implementation.event.ILCFloatVec;
 import hep.lcio.implementation.event.ILCIntVec;
+import hep.lcio.implementation.event.ITrack;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.17 2004-05-10 03:15:53 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.18 2004-05-24 03:37:40 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -166,6 +167,16 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc,name);
          }
+         else if (type.equals(LCIO.TRACK))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOTrack(in, this, flags, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc,name);
+         }
       }
    }
 
@@ -242,6 +253,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i=0; i < n; i++)
                   SIOCluster.write((ICluster) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.TRACK))
+            {
+               for (int i=0; i < n; i++)
+                  SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
             }
          }
       }

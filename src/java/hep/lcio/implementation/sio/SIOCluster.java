@@ -8,6 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
+ * @version $Id: SIOCluster.java,v 1.3 2004-05-24 03:37:40 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
