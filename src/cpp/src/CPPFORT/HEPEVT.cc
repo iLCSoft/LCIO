@@ -25,6 +25,7 @@ namespace HEPEVTIMPL{
         MCParticleImpl* mcp = new MCParticleImpl ;
         mcp->setPDG( FTNhep.idhep[j] ) ;
         mcp->setGeneratorStatus( FTNhep.isthep[j] ) ;
+        mcp->setSimulatorStatus( 0 ) ;
 
         // now momentum, vertex, charge
         for(int k=0;k<3;k++)  p[k] = (float)FTNhep.phep[j][k];
