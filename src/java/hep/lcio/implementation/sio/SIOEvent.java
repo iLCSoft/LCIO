@@ -26,6 +26,7 @@ import hep.lcio.event.TPCHit;
 import hep.lcio.implementation.event.ILCCollection;
 import hep.lcio.implementation.event.ILCEvent;
 import hep.lcio.implementation.event.ILCFloatVec;
+import hep.lcio.implementation.event.ILCIntVec;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -35,7 +36,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.12 2003-09-15 21:44:32 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.13 2003-09-16 12:38:11 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -226,6 +227,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOFloatVec.write((ILCFloatVec) col.getElementAt(i), out);
+            }
+            else if (type.equals(LCIO.LCINTVEC))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOIntVec.write((ILCIntVec) col.getElementAt(i), out);
             }
          }
       }
