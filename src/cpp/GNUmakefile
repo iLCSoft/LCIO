@@ -13,7 +13,7 @@ export LCIOBASE
 LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include
 export LCIOINCLUDE
 
-LCIOCPPFLAGS = -g
+LCIOCPPFLAGS = -g -D NO_DEBUG
 export LCIOCPPFLAGS
 
 
@@ -25,7 +25,7 @@ all: lib bin
 lib: IMPL SIO IOIMPL
 
 
-bin:
+bin: lib
 	$(MAKE) -C ./src/EXAMPLE bin
 
 IMPL:
@@ -37,8 +37,8 @@ IOIMPL:
 
 
 clean:
-	$(MAKE) -C ./src/IMPL clean; $(MAKE) -C ./src/SIO clean; $(MAKE) \
-	-C ./src/IOIMPL clean; \
+	$(MAKE) -C ./src/IMPL clean; $(MAKE) -C ./src/SIO clean; \
+	 $(MAKE) -C ./src/IOIMPL clean ; $(MAKE) -C ./src/EXAMPLE clean;\
 	rm -rf $(LCIOBASE)/lib/liblcio.a
 
 

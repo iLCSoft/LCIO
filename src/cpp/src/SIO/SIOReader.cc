@@ -13,6 +13,7 @@
 #include "SIO_stream.h" 
 #include "SIO_record.h" 
 
+#include <iostream>
 
 using namespace EVENT ;
 using namespace IOIMPL ;
@@ -47,7 +48,7 @@ namespace SIO {
   int SIOReader::open(const std::string& filename){
   
 
-    string stream_name( filename.begin() ,  filename.find(".") ) ;
+    std::string stream_name( filename.data() ,  filename.find(".") ) ;
     _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
     _stream->open( filename.c_str() , SIO_MODE_READ ) ; 
   

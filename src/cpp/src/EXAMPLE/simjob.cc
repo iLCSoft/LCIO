@@ -30,7 +30,7 @@ static const string FILEN = "simjob.sio" ;
 int main(int argc, char** argv ){
   
   
-  // create sio writer (will be done by factory ...)
+  // create sio writer
   LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
 
   int status ;
@@ -73,9 +73,13 @@ int main(int argc, char** argv ){
     for(int j=0;j<NHITS;j++){
 
       CalorimeterHitImpl* hit = new CalorimeterHitImpl ;
+
       hit->setEnergy( 3.1415 * rand()/RAND_MAX   )  ;
+
       float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
+
       hit->setPosition( pos ) ;
+
       calVec->push_back( hit ) ;
       
       // assign the hits randomly to MC particles
@@ -87,7 +91,7 @@ int main(int argc, char** argv ){
       hit->addMCParticleContribution(  dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx )) , 
 				       0.314159, 0.1155 , 121212 ) ;
       
- }
+    }
     
     
     evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
@@ -105,8 +109,14 @@ int main(int argc, char** argv ){
     if( ! (i%100) ) cout << ". " << flush  ;
     
   }
-  cout << endl ;
   
+  cout << endl 
+       << " created  " << NEVENT <<" events"  
+       << " with two collections each."
+       << endl << endl ;
+
+
+
   lcWrt->close() ;
   
   return 0 ;

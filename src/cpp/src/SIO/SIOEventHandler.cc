@@ -58,7 +58,7 @@ namespace SIO  {
       for( int i=0; i<nCol ; i++ ){
 	char* dummy ; 
 	LCSIO_READ( stream,  &dummy ) ; 
-	string colName( dummy ) ;
+	std::string colName( dummy ) ;
 	LCSIO_READ( stream,  &dummy ) ; 
 	// don't attach a new collection to the event
 	// will be done by collection handlers
@@ -106,7 +106,10 @@ namespace SIO  {
   }
 
   unsigned int   SIOEventHandler::version(){
-    return 0 ;
+
+    int version = SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
+    return version ;
+
   }
 
 };

@@ -35,6 +35,10 @@ public interface LCIO{
 @ifdef cpp
 @cpp{
   public:
+    // current version number of lcio
+    static const int MAJORVERSION  = 0 ; 
+    static const int MINORVERSION  = 1 ; 
+
     // bits in flag words
     // CalorimeterHit (CH)
     static const int CHBIT_LONG   = 31; // long(1) - short(0), (position)
@@ -56,6 +60,10 @@ public interface LCIO{
     static char* const TRACKERHIT = "TrackerHit" ;
 }
 @else
+    // current version number of lcio
+  public static const int MAJORVERSION  = 0 ; 
+  public static const int MINORVERSION  = 1 ; 
+
   // bits in flag words
   // CalorimeterHit (CH)
   public static const int CHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position

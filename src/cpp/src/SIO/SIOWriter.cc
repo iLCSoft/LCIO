@@ -49,7 +49,7 @@ namespace SIO {
   int SIOWriter::open(const std::string& filename){
 
     unsigned int status ;
-    string stream_name( filename.begin() ,  filename.find(".") ) ;
+    std::string stream_name( filename.data() ,  filename.find(".") ) ;
 
  
     _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;

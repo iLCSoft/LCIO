@@ -72,11 +72,11 @@ namespace IMPL {
     // set methods
     /** Sets the parent. 
      */
-    void setParent( EVENT::MCParticle *mom0 ) ;
+    void setParent( const EVENT::MCParticle *mom0 ) ;
 
     /** Sets a second parent.
      */
-    void setSecondParent( EVENT::MCParticle *mom1 ) ;
+    void setSecondParent( const EVENT::MCParticle *mom1 ) ;
 
     /** Adds a daughter particle.
      */

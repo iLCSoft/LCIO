@@ -64,9 +64,15 @@ namespace SIO {
     SIO_PNTR( stream , &myMom1 ) ;
 
     const MCParticleVec* dVec =  particle->getDaughters() ;
+    int nD = dVec->size() ;
+
+    SIO_DATA( stream , &nD  , 1 ) ;
+
     MCParticleVec::const_iterator iter = dVec->begin() ;
-    while( iter != dVec->end() )  SIO_PNTR( stream ,  iter++ );
-    
+    while( iter != dVec->end() ) {
+      const MCParticle* part = *iter++ ;
+      SIO_PNTR( stream ,  &part  ); 
+    }
     LCSIO_WRITE( stream, particle->getPDG() ) ;
     LCSIO_WRITE( stream, particle->getHepEvtStatus() ) ;
     SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;

@@ -14,7 +14,7 @@ AR = ar
 INSTALL = $(LCIOBASE)/lib
 BINDIR = $(LCIOBASE)/bin
 INCLUDE =  $(LCIOINCLUDE) -I $(SIOINSTALL)/include
-CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE)
+CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE) 
 
 LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -llcio -lsio -lz
 
@@ -30,11 +30,12 @@ clean:
 $(BINDIR)/simjob: simjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/simjob $(CPPFLAGS) simjob.cc  $(LIBS) 
 
-#../bin/recjob: recjob.C lib
-#	$(CXX) -o ../bin/recjob $(CPPFLAGS) recjob.C  $(LIBS) 
+$(BINDIR)/recjob: recjob.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/recjob $(CPPFLAGS) recjob.cc  $(LIBS) 
 
-#../bin/anajob: anajob.C lib
-#	$(CXX) -o ../bin/anajob $(CPPFLAGS) anajob.C  $(LIBS) 
+$(BINDIR)/anajob: anajob.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/anajob $(CPPFLAGS) anajob.cc  $(LIBS) 
+
 
 
 

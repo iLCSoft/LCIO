@@ -32,8 +32,8 @@ namespace IMPL {
   float MCParticleImpl::getEnergy() const { return _energy ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
 
-  void MCParticleImpl::setParent( MCParticle *mom0 ) { _mother0 = mom0 ; }
-  void MCParticleImpl::setSecondParent( MCParticle *mom1 ) { _mother1 = mom1 ; }
+  void MCParticleImpl::setParent(  const  MCParticle *mom0 ) { _mother0 = mom0 ; }
+  void MCParticleImpl::setSecondParent(  const  MCParticle *mom1 ) { _mother1 = mom1 ; }
   void MCParticleImpl::addDaughter( const MCParticle* daughter) { 
     _daughters.push_back( daughter ) ;
   }

@@ -2,6 +2,8 @@
 
 #include "SIO/LCSIO.h"
 
+#include "EVENT/LCIO.h"
+
 #include "IOIMPL/LCCollectionIOVec.h"
 #include "IOIMPL/LCEventIOImpl.h" 
 
@@ -100,7 +102,10 @@ namespace SIO {
   }
   
   unsigned int   SIOCollectionHandler::version(){
-    return 0 ;
+    
+    int version = SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
+    
+    return version ;
   }
   
 }; // namespace

@@ -30,11 +30,23 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
     SIO_DATA( stream ,  hit->_position  , 3 ) ;
+    
+//     cout << " reading hit from file :" 
+// 	 << hit->_cellID0 << "  " 
+// 	 << hit->_cellID1 << "  " 
+// 	 << hit->_energy << "  " 
+// 	 << hit->_position << "  "  << endl ;
+
 
     // read MCContributions
     int nCon ;
     SIO_DATA( stream ,  &nCon , 1  ) ;
+
+//     cout << "   nCOn :  " <<  nCon << endl ;
+
+
     for(int i=0; i< nCon ; i++){
+
       MCParticleCont* mcCon = new MCParticleCont ;
       SIO_PNTR( stream , &(mcCon->Particle)  ) ;
       SIO_DATA( stream , &(mcCon->Energy) , 1 ) ;
@@ -74,6 +86,8 @@ namespace SIO{
     
     // now the MCParticle contributions
     int nMC = hit->getNMCParticles() ;
+    SIO_DATA( stream,  &nMC , 1 ) ;
+
     for(int i=0; i<nMC ;i++){
 
       const MCParticle* part = hit->getParticleCont(i)  ;
