@@ -14,7 +14,7 @@ public interface TrackerHit extends LCObject {
 
     /**Covariance of the position (x,y,z)
      */
-    public const FloatVec& getCovMatrix() ;
+    public const FloatVec& getCovMatrix() const ;
 
     /** The dE/dx of the hit in [GeV/mm].
      */ 	
@@ -24,10 +24,25 @@ public interface TrackerHit extends LCObject {
      */
     public float getTime() const ;	
 
+    /**Type of raw data hit, either one of<br>
+     * LCIO::TPCHIT<br>
+     * LCIO::SIMTRACKERHIT<br>
+     */
+    public const String& getType() const ;
 
     /**The raw data hit. Type is one 
      * of TPCHit, VTXHit,...
      * User has to check with cast.
      */
-    public LCObject* getRawDataHit() ;
+    public LCObject* getRawDataHit() const ;
+
+
+
+
+    public void setPosition( double3V pos) ;
+    public void setCovMatrix( const FloatVec& cov) ;
+    public void setdEdx( float dEdx ) ;
+    public void setTime( float time ) ;
+    public void setTPCHit( TPCHit* hit ) ;
+
 }

@@ -154,6 +154,17 @@
 	    </if>
          </repeat>
       </block>
+      <block name="TrackerHit" major="1" minor="0">
+         <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, Bits 0-15 user/detector specific</data>
+         <data type="int" name="n"></data>
+         <repeat count="n">
+            <data type="double[3]" name="position"></data>
+            <data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data>
+            <data type="float" name="dedx"></data>
+            <data type="float" name="time"></data>
+            <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
+         </repeat>
+      </block>
       <block name="TPCHit" major="1" minor="0">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, Bits 0-15 user/detector specific</data>
          <data type="int" name="n"></data>
