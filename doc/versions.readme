@@ -13,7 +13,9 @@
    - renamed analyze/update methods to processEvent/modifyEvent and 
      processRunHeader/modifyRunHeader in the LCRun(Event)Listener interfaces
      
+   - added printout for unexpected or uncaught exceptions in C++
 
+ 
 --------------------
   to do for release:
 --------------------
