@@ -1325,7 +1325,7 @@ namespace UTIL {
 
 //   void LCTOOLS::printRelation( const EVENT::LCRelation* rel_const ) {
 
-//     LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; // FIXME: the relation interface needs to properly support const
+//     LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; 
     
 //     cout << " relation from " << rel->getFromType() << " to " << rel->getToType() << endl ; 
     

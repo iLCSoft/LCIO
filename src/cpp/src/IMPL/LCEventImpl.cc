@@ -113,8 +113,6 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
   // check if name exists
   if( _colMap.find( name ) != _colMap.end() )
     
-    // FIXME: what is this - no error handling ?
-    //  std::cout << " addCollection: collection already exists: " << name << std::endl ;
     throw EventException( std::string("LCEventImpl::addCollection() name already exists: "
 				      +name) ) ; 
 
@@ -172,12 +170,10 @@ void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyExce
 //   // check if name exists
 //   if( _relMap.find( name ) != _relMap.end() )
     
-//     // FIXME: what is this - no error handling ?
 //     //  std::cout << " addRelation: relation already exists: " << name << std::endl ;
 //     throw EventException( std::string("LCEventImpl::addRelation() name already exists: "
 // 				      +name) ) ; 
 
-// //   // FIXME: debug stuff 
 // //   LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ;
 // //   if( relImpl == 0 ) 
 // //     throw EventException( std::string("LCEventImpl::addRelation() cannot cast to LCRelationImpl - sth. is odd !!!! "+name ) ) ;

@@ -55,4 +55,6 @@ $(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/readcalibration $(CPPFLAGS) readcalibration.cc  $(LIBS) 
 
 
+$(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/stdhepjob $(CPPFLAGS) stdhepjob.cc  $(LIBS) 
 
