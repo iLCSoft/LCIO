@@ -55,7 +55,7 @@ namespace IMPL {
      * @throws DataNotAvailableException
      * @see MCParticle
      */
-    virtual EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException, std::exception) ;
 
 
     // ---------- setters ------------------------

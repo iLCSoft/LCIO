@@ -87,7 +87,8 @@ namespace IMPL {
      * @see MCParticle
      * @see getNMCParticles()
      */
-    virtual EVENT::MCParticle * getParticleCont(int i) const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getParticleCont(int i) const 
+      throw (EVENT::DataNotAvailableException, std::exception) ;
 
     /** Returns the energy of the i-th particle that contributed to the hit.
      */ 

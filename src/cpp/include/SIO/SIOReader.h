@@ -35,20 +35,20 @@ namespace SIO {
     /** Opens a file for reading (read-only).
      * @throws IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException) ;
+    virtual void open(const std::string & filename) throw (IO::IOException, std::exception) ;
     
     /** Reads the next run header from the file. 
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException/*, IO::EndOfDataException*/) ;  
+    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException, std::exception) ;
 
 
     /** Reads the next event from the file. 
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException/*, IO::EndOfDataException*/) ;
+    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException, std::exception) ;
     
 
     /** Same as readNextRunHeader() but allows to set the access mode 
@@ -56,7 +56,7 @@ namespace SIO {
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException/*, IO::EndOfDataException*/) ;
+    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException, std::exception) ;
     
 
     /** Reads the specified event from file. 
@@ -65,13 +65,14 @@ namespace SIO {
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) throw (IO::IOException /*, EVENT::DataNotAvailableException */) ;
+    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) 
+      throw (IO::IOException, std::exception/*, EVENT::DataNotAvailableException */) ;
 
     /** Closes the output file/stream etc.
      *
      * @throws IOException
      */
-    virtual void close() throw (IO::IOException) ;
+    virtual void close() throw (IO::IOException, std::exception) ;
     
     // interface for listeners
  
@@ -98,7 +99,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual void readStream() throw (IO::IOException /*, IO::EndOfDataException*/) ;
+    virtual void readStream() throw (IO::IOException, std::exception) ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
@@ -107,7 +108,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual void readStream(int maxRecord) throw (IO::IOException/*, IO::EndOfDataException*/) ;
+    virtual void readStream(int maxRecord) throw (IO::IOException, std::exception) ;
 
 
 
@@ -115,7 +116,7 @@ namespace SIO {
   protected:
 
     void setUpHandlers() ;
-    void readRecord() throw (IO::IOException , IO::EndOfDataException ) ;
+    void readRecord() throw (IO::IOException , IO::EndOfDataException , std::exception) ;
 
   protected:
     

@@ -24,9 +24,9 @@ namespace IMPL {
 
   DATA::MCParticleData * SimTrackerHitImpl::getMCParticleData() const {  return _particle ; }
 
-  EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const throw (DataNotAvailableException) { 
+  EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const throw (DataNotAvailableException, std::exception) { 
     if( _particle == 0 ) 
-      throw DataNotAvailableException("SimTrackerHitImpl::getMCParticle: no MCPArticle contribution") ;
+      throw DataNotAvailableException("SimTrackerHitImpl::getMCParticle: no MCParticle contribution") ;
     return _particle ; 
   }
 

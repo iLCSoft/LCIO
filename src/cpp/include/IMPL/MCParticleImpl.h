@@ -34,14 +34,14 @@ namespace IMPL {
      *
      * @throws DataNotAvailableException
      */
-    virtual EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException, std::exception) ;
 
     /** Returns the second parent of this particle. 
      * Same as getSecondParentData() except for type and exception.
      *
      * @throws DataNotAvailableException
      */
-    virtual EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException, std::exception) ;
 
     /** Returns the i-th daughter of this particle.
      * Same as getDaughterData() except for type and exception - applies range check.
@@ -49,7 +49,7 @@ namespace IMPL {
      * @throws DataNotAvailableException
      * @see getNumberOfDaughters
      */
-    virtual EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException, std::exception) ;
 
 
     /** Returns the parent of this particle. Null if the mother (beam particle).

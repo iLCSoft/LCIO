@@ -1,4 +1,7 @@
 package hep.lcio.io;
+@java{
+import hep.lcio.exceptions.* ;
+}
 
 /**Interface for writing data with LCIO. Uses only interfaces 
  * from DATA/hep.lcio.data.
@@ -17,7 +20,7 @@ public interface LCWriter {
      *
      *@throws IOException
      */
-    public void open(const String& filename ) throws IOException ;
+    public void open(const String& filename ) throws IOException ,DataNotAvailableException ;
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW

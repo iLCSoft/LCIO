@@ -41,14 +41,14 @@ namespace IMPL {
   }
   
   MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
-  MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException) 
+  MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException, std::exception) 
   { 
     if( _mother0 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no parent ! ") ;
     return _mother0 ; 
   }
 
   MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1 ;  }  
-  MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException){ 
+  MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException, std::exception){ 
     if( _mother1 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no second parent ! ");
     return _mother1 ; 
   }
@@ -58,7 +58,7 @@ namespace IMPL {
 
   int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
 
-  MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException) { 
+  MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException, std::exception) { 
 
     try{
       //      return _daughters.at(i) ;

@@ -76,7 +76,7 @@ namespace IMPL{
   }
 
   EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const 
-    throw (EVENT::DataNotAvailableException){
+    throw (EVENT::DataNotAvailableException, std::exception){
     try{
       //return _vec.at(i)->Particle ;
       //FIXME gcc 2.95 doesn't know at(i) ??

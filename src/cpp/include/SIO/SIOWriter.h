@@ -43,7 +43,7 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException) ;
+    virtual void open(const std::string & filename) throw (IO::IOException, std::exception) ;
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW
@@ -51,23 +51,25 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename, int writeMode)throw (IO::IOException) ;
+    virtual void open(const std::string & filename, int writeMode)throw (IO::IOException, std::exception) ;
     
     /** Writes the given run header to file.
      *
      *@throws IOException
      */
-    virtual void writeRunHeader(const DATA::LCRunHeaderData * hdr)throw (IO::IOException) ;
+    virtual void writeRunHeader(const DATA::LCRunHeaderData * hdr)throw (IO::IOException, std::exception) ;
 
     /** Writes the given event to file.
      *
      *@throws IOException
      */
-    virtual void writeEvent(const DATA::LCEventData * evt) throw (IO::IOException) ;
+    virtual void writeEvent(const DATA::LCEventData * evt) throw (IO::IOException, std::exception) ;
 
     /** Closes the output file/stream etc.
+     *
+     *@throws IOException
      */
-    virtual void close() throw (IO::IOException) ;
+    virtual void close() throw (IO::IOException, std::exception) ;
 
   protected:
 

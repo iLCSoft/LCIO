@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.9 2003-09-04 04:26:59 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.10 2003-09-09 12:37:37 gaede Exp $
  */
 public class SimJob
 {
@@ -29,7 +29,7 @@ public class SimJob
    /**
     * @param args the command line arguments
     */
-   public static void main(String[] args) throws IOException
+    public static void main(String[] args) throws IOException
    {
       if (args.length == 0)
          help();

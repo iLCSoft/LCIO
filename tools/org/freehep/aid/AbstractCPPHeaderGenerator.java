@@ -8,7 +8,7 @@ import org.freehep.jaco.rtti.*;
 
 /**
  * @author Mark Donszelmann
- * @version $Id: AbstractCPPHeaderGenerator.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: AbstractCPPHeaderGenerator.java,v 1.3 2003-09-09 12:37:37 gaede Exp $
  */
 public abstract class AbstractCPPHeaderGenerator extends AbstractCPPGenerator {
 
@@ -201,7 +201,9 @@ public abstract class AbstractCPPHeaderGenerator extends AbstractCPPGenerator {
 		if( e != 0 ) out.print( ", " ) ;
 		out.print( converter.qualifiedName( exceptionTypes[e], nameSpace)  ) ;		
             }
-	    out.print(") "); 
+	    // add default exception at end of throw clause
+	    out.print(", std::exception) "); 
+	    //	    out.print(") "); 
 	}
 	//fg--
 

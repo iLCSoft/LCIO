@@ -79,7 +79,8 @@ const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
 
     
 
-LCCollection * LCEventImpl::getCollection(const std::string & name) const throw (DataNotAvailableException) {
+LCCollection * LCEventImpl::getCollection(const std::string & name) const 
+  throw (DataNotAvailableException, std::exception) {
 
   if( _map.find( name ) == _map.end() ) 
     throw(DataNotAvailableException( std::string("LCEventImpl::getCollection: collection not in event:" 
@@ -94,7 +95,8 @@ DATA::LCCollectionData * LCEventImpl::getCollectionData(const std::string & name
 
     
 
-void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) throw (EventException)  {
+void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) 
+  throw (EventException, std::exception)  {
 
   // check if name exists
   if( _map.find( name ) != _map.end() )
@@ -110,7 +112,7 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) t
 
     
 
-void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyException) {
+void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyException, std::exception) {
 
   // remove collection only, if access mode == update
   checkAccess("LCEventImpl::removeCollection") ;

@@ -16,13 +16,10 @@
 #include "SIO_stream.h" 
 #include "SIO_record.h" 
 
-//#include <iostream>
-
 //#define DEBUG 1
 #include "IMPL/LCTOOLS.h"
 
 using namespace DATA ;
-//using namespace EVENT ;
 using namespace IO ;
 
 namespace SIO {
@@ -53,7 +50,7 @@ namespace SIO {
 
 
 
-  void SIOWriter::open(const std::string & filename) throw(IOException ){
+  void SIOWriter::open(const std::string & filename) throw(IOException, std::exception){
 
     std::string sioFilename ;  
     getSIOFileName( filename, sioFilename ) ;
@@ -82,7 +79,7 @@ namespace SIO {
       sioFilename = filename ;    
   } 
 
-  void SIOWriter::open(const std::string& filename, int writeMode) throw(IOException ) {
+  void SIOWriter::open(const std::string& filename, int writeMode) throw(IOException, std::exception) {
 
     
     // make sure filename has the proper extension (.slcio) 
@@ -132,7 +129,7 @@ namespace SIO {
   }
 
 
-  void SIOWriter::writeRunHeader(const DATA::LCRunHeaderData * hdr)  throw(IOException ) {
+  void SIOWriter::writeRunHeader(const DATA::LCRunHeaderData * hdr)  throw(IOException, std::exception) {
 
     // create a new handler for every new run 
     
@@ -200,7 +197,7 @@ namespace SIO {
     
   }
 
-  void SIOWriter::writeEvent(const LCEventData* evt)  throw(IOException ) {
+  void SIOWriter::writeEvent(const LCEventData* evt)  throw(IOException, std::exception) {
   
 
     //here we set up the collection handlers 
@@ -241,7 +238,7 @@ namespace SIO {
   }
 
 
-  void SIOWriter::close() throw (IOException) {
+  void SIOWriter::close() throw (IOException, std::exception) {
   
     const std::string* streamName  = _stream->getName() ;
 

@@ -62,7 +62,8 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      *
      * @throws DataNotAvailableException
      */
-    EVENT::LCCollection * getCollection(const std::string & name) const throw (EVENT::DataNotAvailableException) ;
+    EVENT::LCCollection * getCollection(const std::string & name) const 
+      throw (EVENT::DataNotAvailableException, std::exception) ;
 
     /** Returns the collection for the given name - null if it doesn't exist.
      *  Returns the identical object as getCollection()  except for the type.
@@ -75,14 +76,15 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      * 
      *@throws EventException
      */ 
-    virtual void addCollection(EVENT::LCCollection * col, const std::string & name)  throw (EVENT::EventException) ;
+    virtual void addCollection(EVENT::LCCollection * col, const std::string & name)  
+      throw (EVENT::EventException, std::exception) ;
     
     /** Removes (and deletes) the collection with name (if it exists in the event). 
      * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
      *
      *@throws ReadOnlyException
      */ 
-    virtual void removeCollection(const std::string & name) throw (EVENT::ReadOnlyException)  ;
+    virtual void removeCollection(const std::string & name) throw (EVENT::ReadOnlyException, std::exception)  ;
     
     //---- set methods -----
     /** Sets the run number.

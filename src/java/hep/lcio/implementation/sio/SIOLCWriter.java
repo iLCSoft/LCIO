@@ -14,12 +14,13 @@ import hep.lcio.io.LCWriter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import hep.lcio.exceptions.* ;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOLCWriter.java,v 1.7 2003-09-09 12:37:37 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -30,7 +31,7 @@ class SIOLCWriter implements LCWriter
       writer.close();
    }
 
-   public void open(String filename) throws IOException
+   public void open(String filename) throws IOException,DataNotAvailableException
    {
       // FIX ME - what is the default behavior 
       // for existing files ?

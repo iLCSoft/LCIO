@@ -76,7 +76,7 @@ namespace SIO {
 
 
 
-  void SIOReader::open(const std::string& filename) throw( IOException )  {
+  void SIOReader::open(const std::string& filename) throw( IOException , std::exception)  {
 
 
     std::string sioFilename ;  
@@ -119,7 +119,7 @@ namespace SIO {
   }
 
 
-  void SIOReader::readRecord() throw (IOException , EndOfDataException ) {
+  void SIOReader::readRecord() throw (IOException , EndOfDataException , std::exception) {
     // read the next record from the stream
     if( _stream->getState()== SIO_STATE_OPEN ){
       
@@ -147,7 +147,7 @@ namespace SIO {
   }
   
 
-  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException /*, EndOfDataException*/ ) {
+  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException , std::exception ) {
 
     // set the _runRecord to unpack for this scope
     SIORecordUnpack runUnp( _runRecord ) ;
@@ -209,13 +209,13 @@ namespace SIO {
   }
 
 
-  LCEvent* SIOReader::readNextEvent() throw (IOException /*, EndOfDataException*/) {
+  LCEvent* SIOReader::readNextEvent() throw (IOException , std::exception ) {
 
     return readNextEvent( LCIO::READ_ONLY ) ;
 
   }
 
-  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException/*, EndOfDataException*/) {
+  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException, std::exception ) {
     
 
     // first, we need to read the event header 
@@ -252,7 +252,7 @@ namespace SIO {
   
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
-    throw (IOException /*, DataNotAvailableException*/) {
+    throw (IOException , std::exception) {
     
     bool runFound = false ;
     bool evtFound = false ;
@@ -309,7 +309,7 @@ namespace SIO {
   }
 
 
-  void SIOReader::close() throw (IOException ){
+  void SIOReader::close() throw (IOException, std::exception ){
   
     int status  =  SIO_streamManager::remove( _stream ) ;
     
@@ -336,12 +336,12 @@ namespace SIO {
     _runListeners.erase( _runListeners.find( ls ) );
  }
 
-  void SIOReader::readStream() throw (IO::IOException/*, IO::EndOfDataException*/){
+  void SIOReader::readStream() throw ( IO::IOException, std::exception ){
 
     int maxInt = INT_MAX ; // numeric_limits<int>::max() ;
     readStream( maxInt ) ;
   }
-  void SIOReader::readStream(int maxRecord) throw (IOException/*, EndOfDataException */){
+  void SIOReader::readStream(int maxRecord) throw (IOException, std::exception ){
     
 
     bool readUntilEOF = false ;

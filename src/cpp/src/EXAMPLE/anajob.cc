@@ -26,7 +26,11 @@ int main(int argc, char** argv ){
   
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
 
-  try{
+  // first we read the run information
+ 
+  // use a try catch block here: if sth. went wrong with reading the run data we 
+  // still can try and read the event data - see below
+  try{  
     
     lcReader->open( FILEN ) ;
     
@@ -45,49 +49,35 @@ int main(int argc, char** argv ){
     cout << endl ;
     
     lcReader->close() ;
+
   }
   catch(IOException& e){
-    cout << " io error : " << e.what() << endl ;
+    cout << " io error when reading run data : " << e.what() << endl ;
   }
   
+
   // now loop over the file again and dump event data
-  try {
-    
-    lcReader->open( FILEN ) ;
-    
-    
-    cout << " reopened " << FILEN << " for reading " << endl ; 
-    
-    LCEvent* evt ;
-    
-    // dump all events in the file
-    int nEvents = 0 ;
-    
-    //----------- the event loop -----------
-    while( (evt = lcReader->readNextEvent()) != 0 ) {
-      
-      LCTOOLS::dumpEvent( evt ) ;
-      
-      nEvents ++ ;
-      
-    } 
-    // -------- end of event loop -----------
-    
-    cout << endl <<  "  " <<  nEvents << " events read from file : " << FILEN << endl << endl ;
-    
-    
-    lcReader->close() ;
-    
-  }  
-  catch(IOException& e){
-    cout << " io error : " << e.what() << endl ;
-  }
-  catch(Exception& e){
-    cout << " exception caught : " << e.what() << endl ;
-  }
+
+  lcReader->open( FILEN ) ;
+
+  cout << " reopened " << FILEN << " for reading " << endl ; 
   
+  LCEvent* evt ;
+  int nEvents = 0 ;
+  
+  //----------- the event loop -----------
+  while( (evt = lcReader->readNextEvent()) != 0 ) {
+    
+    LCTOOLS::dumpEvent( evt ) ;
+    nEvents ++ ;
+  } 
+  // -------- end of event loop -----------
+  
+  cout << endl <<  "  " <<  nEvents << " events read from file : " << FILEN << endl << endl ;
+  
+  lcReader->close() ;
   
   return 0 ;
 }
-  
+
   
