@@ -7,7 +7,7 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version $Id: lcio.h,v 1.15 2004-09-09 15:57:50 gaede Exp $ 
+ * @version $Id: lcio.h,v 1.16 2004-09-14 08:31:41 gaede Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"
@@ -51,7 +51,7 @@ namespace UTIL{};
 
 
 
-/** The LCIO namespace combines EVENT, IO and IMPL for user convenience. 
+/** The LCIO namespace combines EVENT, IO, IMPL and UTIL for user convenience. 
  */
 namespace lcio{
 
