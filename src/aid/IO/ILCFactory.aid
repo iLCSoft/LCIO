@@ -2,19 +2,19 @@ package hep.lcio.io;
 
 
 /**Factory to create LCWriter and Reader object for the known data 
- * formats, e.g. SIO. There has to be one subclass for every 
- * persistency type.
+ * formats, e.g. SIO. The implementation (LCFactory) will be a singleton class 
+ * that knows all concrete reader/writer implementations.
  * 
  * @author gaede
  * @version Mar 7, 2003
  */
-public class LCFactory {
+public interface ILCFactory {
 
 
-    /** Returns the instance of the factory.
-     * In the future we need to specify the data format here...
-     * This doesn't work for java as an interface can't have static members ...
-     */
+//     /** Returns the instance of the factory.
+//      * In the future we need to specify the data format here...
+//      * This doesn't work for java as an interface can't have static members ...
+//      */
     // this needs more thought ....
 // @ifdef cpp
 // @cpp{ static LCFactory* getInstance() ;  

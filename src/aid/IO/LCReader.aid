@@ -10,7 +10,7 @@ public interface LCReader {
 
 /** Opens a file for reading and returns LCIO::SUCCESS if no error occured.
  */
-	public int open(String filename) ;
+	public int open(const String& filename) ;
 
 /** Reads the next event from the file. Returns null if no more 
  * events or error occured.

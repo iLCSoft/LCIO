@@ -36,7 +36,7 @@ namespace SIO {
 
     /** Opens a file for writing.
      */
-    virtual int open(std::string filename) ;
+    virtual int open(const std::string& filename) ;
 
     /** Writes the given event to file.
      */

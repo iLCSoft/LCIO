@@ -34,7 +34,7 @@ namespace SIO {
     /** Opens the file filename for writing and returns LCIO::SUCCESS if succeeded, 
      *  otherwise LCIO::ERROR is returned. 
      */
-    virtual int open(std::string filename) ;
+    virtual int open(const std::string& filename) ;
     
     /** Reads the next event in read only mode from file - in case of error or EOF NULL is returned.
      */

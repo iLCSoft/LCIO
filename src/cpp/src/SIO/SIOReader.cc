@@ -43,7 +43,8 @@ namespace SIO {
   }
 
 
-  int SIOReader::open(std::string filename){
+
+  int SIOReader::open(const std::string& filename){
   
 
     string stream_name( filename.begin() ,  filename.find(".") ) ;

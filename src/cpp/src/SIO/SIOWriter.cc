@@ -46,8 +46,8 @@ namespace SIO {
   }
 
 
-  int SIOWriter::open(std::string filename){
-  
+  int SIOWriter::open(const std::string& filename){
+
     unsigned int status ;
     string stream_name( filename.begin() ,  filename.find(".") ) ;
 
