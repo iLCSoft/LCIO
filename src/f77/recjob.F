@@ -324,7 +324,8 @@ ccc       end do
       calflag = ibset ( calflag, LCIO_RCHBIT_PTR )
       status  = lccolsetflag ( calhitcol, calflag )
 
-      scRelp  = lcrelcreate( LCIO_CALORIMETERHIT,LCIO_SIMCALORIMETERHIT)
+ccFG---- remove relations from code untile the API has been fixed
+ccFG      scRelp  = lcrelcreate( LCIO_CALORIMETERHIT,LCIO_SIMCALORIMETERHIT)
 
       nsimhits = lccolgetnumberofelements ( simcalcol )
 ccc         print *, '# of nsimhits: ',nsimhits
@@ -338,14 +339,14 @@ ccc         print *, '# of nsimhits: ',nsimhits
      &                  ( calhitp, lcschgetcellid0 ( simcalhitp ) )
         status      = lcschgetposition ( simcalhitp, posv )
         status      = lccahsetposition ( calhitp, posv )
-        status      = lcreladdrelation ( scRelp, calhitp,simcalhitp, .5)
-        status      = lcreladdrelation ( scRelp, calhitp,simcalhitp, .5)
+cFG        status      = lcreladdrelation ( scRelp, calhitp,simcalhitp, .5)
+cFG        status      = lcreladdrelation ( scRelp, calhitp,simcalhitp, .5)
         status      = lccoladdelement ( calhitcol, calhitp )
       end do
       colname2 = 'CalorimeterHits'
       status   = lcevtaddcollection ( eventi, calhitcol, colname2 )
       colname3 = 'CalorimeterHitsSimRel'
-      status   = lcevtaddrelation ( eventi, scRelp, colname3 )
+ccFG      status   = lcevtaddrelation ( eventi, scRelp, colname3 )
 
 ***   if we want to point back to the hits we need to set the flag
       cluflag = 0
