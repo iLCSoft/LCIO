@@ -1,0 +1,58 @@
+#include "CPPFORT/lcrdr.h"
+
+#include "lcio.h" 
+#include "Exceptions.h"
+#include "IOIMPL/LCFactory.h"
+#include "IMPL/LCRunHeaderImpl.h"
+#include "IMPL/LCEventImpl.h"
+#include "IMPL/LCTOOLS.h"
+#include <iostream>
+
+using namespace lcio ;
+
+
+#define LCREADER_PNTR( reader ) if(! (reader) ) return LCIO::ERROR ; \
+LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
+
+
+PTRTYPE lcrdrcreate(){
+  LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
+  return reinterpret_cast<PTRTYPE>(lcReader) ;
+}
+
+PTRTYPE lcrdrdelete(PTRTYPE reader){
+  LCREADER_PNTR( reader ) ;
+  delete lcReader ;
+  return LCIO::SUCCESS ;
+}
+
+int lcrdropen(PTRTYPE reader, const char* filename ){
+  try{
+    LCReader* lcReader = reinterpret_cast<LCReader*>(reader) ;
+    lcReader->open( filename ) ; 
+  }catch(...){ return LCIO::ERROR ; }
+  return LCIO::SUCCESS ;
+}
+
+int lcrdrclose(PTRTYPE reader){
+  try{
+    LCReader* lcReader = reinterpret_cast<LCReader*>(reader) ;
+    lcReader->close() ;
+  }catch(...){ return LCIO::ERROR ; }
+  return LCIO::SUCCESS ;
+}
+
+PTRTYPE lcrdrreadnextrunheader(PTRTYPE reader, int accessMode){
+  LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
+  return C2F_POINTER( LCRunHeader*,  rdr->readNextRunHeader( accessMode ) ) ;
+}
+
+PTRTYPE lcrdrreadnextevent(PTRTYPE reader, int accessMode){
+  LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
+  return C2F_POINTER( LCEvent*,  rdr->readNextEvent( accessMode ) );
+}
+
+PTRTYPE lcrdrreadevent(PTRTYPE reader, int runNumber, int evtNumber ){
+  LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
+  return C2F_POINTER( LCEvent*,  rdr->readEvent( runNumber, evtNumber ) );
+}
