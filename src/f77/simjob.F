@@ -4,296 +4,311 @@
 *     SIMJOB                                                         *
 *     A program to demonstrate the use of the low level              *
 *     fortran interface to LCIO for writing LCIO files.              *
+*     it corresponts to lcio/src/cpp/src/EXAMPLE/simjob.cc           *
 *                                                                    *
-*     F.Gaede 09/10/2003                                             *
-*     Bug corrected by H. Vogt  03/19/2004                           *
+*     H. Vogt  06/15/2004                                            *
 *                                                                    *
 **********************************************************************
+
+      call my_simjob
+      end
+
+      subroutine my_simjob
       implicit none
  
 #include "lciof77api.inc"
+#include "lciof77apiext.inc"
+
+#define      RAND_MAX        2147483647
+#define      INT_MAX         2147483647
 
 c---- variables
       PTRTYPE runheader, event, writer, sthcol
       PTRTYPE mcpcol, schcol, cahcol
-      PTRTYPE  hit, mcp, mcpm, mcpd, mcpdd
+      PTRTYPE mom, hit, mcp, mcpm, mcpd, mcpdd, tpcHit
+      PTRTYPE TPCVec, trkVec, extFVec, extIVec, extF, extI
+      logical storeRawData
       integer status
-      integer i, j, k, irun, nrun, iev, nev, itim, locf
-      integer nhit, flag
-      character*15 filename
-      character*10 detectorname
-      real mcpp(3), schpos(3), cahpos(3)
-      double precision sthpos(3)
+      integer i, j, k, l, irun, nrun, iev, nev, itim, locf, nmcpart
+      integer nhits, flag, extiv(2), tpcFlag, rawData(10), size, argc
+      real    p0(3), mcpp(3), schpos(3), cahpos(3), rn, extfv(4)
+      character*80 description
+      character*30 filename
+      character*11 detectorname
+      character*7  ecalName,tpcName
+      double precision sthpos(3), ep(3)
 
 C----- some constants
-      filename = 'f_simjob.slcio'
-      detectorname = 'TeslaPPT'
-      nev = 10
-      nrun = 10
-      nhit = 100
+      filename     = 'f_simjob.slcio'
+      detectorname = 'D09TileHcal'
+      ecalName     = 'ECAL007'
+      tpcName      = 'TPC4711'
 
+      nrun    = 10  !
+      nev     = 10  ! events
+      nmcpart = 10  ! mc particles per event
+      nhits   = 50  ! calorimeter hits per event
 
-      writer = lcwrtcreate()
-      status = lcwrtopen( writer, filename , LCIO_WRITE_NEW )
+         argc = iargc()
+         if ( argc .gt. 0 )  call getarg (1, filename)
 
 c ----- create a few runs
-      do irun=0,nrun
+      do  irun= 0,nrun-1
 
-c----- write a run header first
+c-----   create sio writer
+         writer = lcwrtcreate()
+         if (irun .eq. 0)  then
+           status = lcwrtopen( writer, filename , LCIO_WRITE_NEW )
+         else
+           status = lcwrtopen( writer, filename , LCIO_WRITE_APPEND )
+         end if
+
+* ****   NB: in order to test writing multiple files we create a new LCWriter
+* ****   for every run even though we are in fact writing to one file only;
+* ****   so for a simple job writing one file the
+* ****   'createLCWriter/open' and 'close/delete' will be outside the run loop...
+
+
+c-----   run header 
          runheader = lcrhdcreate()
          status = lcrhdsetrunnumber( runheader, irun )
          status = lcrhdsetdetectorname( runheader, detectorname  )
-         status = lcrhdsetdescription( runheader,
-     $        ' simple test file for f77 interface - no physiscs' )
+         write (description,'(a,i1,a)') " run: ", irun,
+     $      " just for testing lcio  - no physics !" ;
+         status = lcrhdsetdescription
+     $            ( runheader, description(1:len_trim(description)) )
 
-         status = lcrhdaddactivesubdetector( runheader, 'VXD')
-         status = lcrhdaddactivesubdetector( runheader, 'TPC')
-         status = lcrhdaddactivesubdetector( runheader, 'HCal')
-         status = lcrhdaddactivesubdetector( runheader, 'HCalPPT')
+         status = lcrhdaddactivesubdetector( runheader, ecalName )
+         status = lcrhdaddactivesubdetector( runheader, tpcName )
          
-         status =  lcwrtwriterunheader( writer, runheader ) 
+         status = lcwrtwriterunheader( writer, runheader ) 
 
 c-----  event loop 
-         do iev = 1,nev
+         do  iev = 0,nev-1
             
-            itim   = 20031009*1000+iev
-            event = lcevtcreate()
-            status = lcevtsetdetectorname( event, detectorname )
+c--------   we need to use the implementation classes here
+            event  = lcevtcreate()
             status = lcevtsetrunnumber( event, irun ) 
             status = lcevtseteventnumber( event,  iev ) 
-            status = lcevtsettimestamp( event, itim )
+            status = lcevtsetdetectorname( event, detectorname )
 
+c--------   create and add some mc particles
             mcpcol = lccolcreate( LCIO_MCPARTICLE )
-            sthcol = lccolcreate( LCIO_SIMTRACKERHIT )
-            schcol = lccolcreate( LCIO_SIMCALORIMETERHIT )
-            cahcol = lccolcreate( LCIO_CALORIMETERHIT )
 
-c-------- create some monte carlo particles
+c--------   debug only - add the same particle to more than one collection
+c--------   LCCollectionVec* mcVec2 = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 
-            do i=1,nhit/2
-               mcp = lcmcpcreate()
-               status = lcmcpsetpdg( mcp, 123 ) 
-               mcpp(1) = i*1.
-               mcpp(2) = i*2.
-               mcpp(3) = i*3.
+            mom    = lcmcpcreate()
+            status = lcmcpsetpdg( mom, 1 )
+            p0(1)  = 0.
+            p0(2)  = 0.
+            p0(3)  = 1000.
+            status = lcmcpsetmomentum( mom, p0 )
+            status = lcmcpsetmass( mom, 3.01 )
+
+            do j = 1,nmcpart
+               mcp    = lcmcpcreate()
+               status = lcmcpsetpdg( mcp , 1000*j )
+               mcpp(1) = (j-1)*1.
+               mcpp(2) = 4./1024.
+               mcpp(3) = 8./1024.
                status = lcmcpsetmomentum( mcp, mcpp ) 
+               status = lcmcpsetmass( mcp, .135 )
 
-               status = lccoladdelement( mcpcol, mcp ) 
+c--------      create and add some daughters
+               do k = 1,3
+                 mcpd    = lcmcpcreate()
+                 status  = lcmcpsetpdg( mcpd, 1000*j + 100*k )
+                 mcpp(1) = (k-1)*1.
+                 mcpp(2) = 4.1
+                 mcpp(3) = 8.1
+                 status  = lcmcpsetmomentum( mcpd, mcpp )
+                 status  = lcmcpsetmass( mcpd, .135 )
+                 do l = 1,2
+                    mcpdd   = lcmcpcreate()
+                    status  = lcmcpsetpdg( mcpdd, 
+     &                           1000*j + 100*k + 10*l )
+                    mcpp(1) = (l-1)*1.
+                    mcpp(2) = 0.41
+                    mcpp(3) = 4.1
+                    status  = lcmcpsetmomentum( mcpdd, mcpp )
+                    status  = lcmcpsetmass( mcpdd, .135 )
+                    ep(1)   = 1.111111
+                    ep(2)   = 2.2222222
+                    ep(3)   = 3.3333333
+                    status  = lcmcpsetendpoint( mcpdd, ep )
+                    flag    = 0
+                    flag = ibset( flag, BITCreatedInSimulation )
+                    flag = ibset( flag, BITBackscatter )
+                    flag = ibset( flag, BITDecayedInTracker )
+                    flag = ibset( flag, BITStopped )
+                    status  = lcmcpsetsimulatorstatus( mcpdd, flag )
+                    status  = lcmcpaddparent( mcpdd , mcpd )
+                    status  = lccoladdelement( mcpcol, mcpdd )
 
-               do j=1,2
-                  mcpd = lcmcpcreate()
-                  status = lcmcpsetpdg( mcpd , 12345 ) 
-                  mcpp(1) = j*1.
-                  mcpp(2) = j*2.
-                  mcpp(3) = j*3.
-                  status = lcmcpsetmomentum( mcpd, mcpp ) 
+c--------           debug only - add the same particle to more than one collection
+c--------           mcVec2->push_back( d2 )
+                 end do
+                 status  = lcmcpaddparent( mcpd, mcp)
+                 status  = lccoladdelement( mcpcol, mcpd )
+               end do
+               status  = lcmcpaddparent( mcp, mom )
+               status  = lccoladdelement( mcpcol, mcp )
+            end do
+            status  = lccoladdelement( mcpcol, mom )
 
-                  status = lcmcpaddparent( mcpd , mcp ) 
+c------     now add some calorimeter hits
+            schcol = lccolcreate( LCIO_SIMCALORIMETERHIT )
 
-
-                  status = lccoladdelement( mcpcol, mcpd ) 
-
-                  do k=1,3
-                     mcpdd = lcmcpcreate()
-                     status = lcmcpsetpdg( mcpdd , 1234567 ) 
-                     mcpp(1) = k*1.
-                     mcpp(2) = k*2.
-                     mcpp(3) = k*3.
-                     status = lcmcpsetmomentum( mcpdd, mcpp ) 
-                     
-                     status = lcmcpaddparent( mcpdd , mcpd ) 
-                     
-                     status = lccoladdelement( mcpcol, mcpdd ) 
-                  enddo
-               enddo
-            enddo
-
-c------   simulated tracker hits
-
-c--------   set the flag bits to store position and pdg for simulated calorimeter hits
-            flag = 2**31 + 2**28
+c--------   set flag for long format (including position )
+c--------   and PDG and cellid1
+            flag = 0
+            flag = ibset( flag, LCIO_CHBIT_LONG )
+            flag = ibset( flag, LCIO_CHBIT_PDG )
+            flag = ibset( flag, LCIO_CHBIT_ID1 )
             status = lccolsetflag( schcol, flag )
 
-            do k=1,nhit
+            do j = 1,nhits
 
-               hit = lcsthcreate() 
-               status = lcsthsetcellid( hit,  314159 ) 
-               sthpos(1) = 1.
-               sthpos(2) = 2.
-               sthpos(3) = 3.
-               status = lcsthsetposition( hit, sthpos )
-
-c ---            assign a MCParticle to each hit
-               mcp = lccolgetelementat( mcpcol, k ) 
-               status = lcsthsetmcparticle( hit, mcp ) 
-
-               status = lccoladdelement( sthcol, hit ) 
-
-            enddo
-
-
-c---- simulated calorimeter hits
-            do k=1,nhit
-
-               hit = lcschcreate() 
-               status = lcschsetcellid0( hit,  314159 ) 
-               status = lcschsetcellid1( hit,  314159*2 ) 
-               schpos(1) = 1.
-               schpos(2) = 2.
-               schpos(3) = 3.
+               hit = lcschcreate()
+               status = lcschsetenergy
+     &                    ( hit, 3.1415*irand( 0 )/RAND_MAX)
+               status = lcschsetcellid0( hit,  1024 )
+               status = lcschsetcellid1( hit,  65535 )
+               schpos(1) = 1.1*irand( 0 )/RAND_MAX
+               schpos(2) = 2.2*irand( 0 )/RAND_MAX
+               schpos(3) = 3.3*irand( 0 )/RAND_MAX
                status = lcschsetposition( hit, schpos )
+               status = lccoladdelement( schcol, hit )
 
-c ---            add energy from 2 MCParticles to each hit
-
-               mcp = lccolgetelementat( mcpcol, k ) 
+c--------      assign the hits randomly to MC particles
+               rn     = .99999*irand( 0 )/RAND_MAX
+               rn        = rn*nmcpart
+               mcp    = lccolgetelementat( mcpcol, int( rn) + 1 )
                status = lcschaddmcparticlecontribution
-     $              ( hit, mcp, 0.001, 0. , 1234 ) 
-
-               mcp = lccolgetelementat( mcpcol, k+1 ) 
+     $                    ( hit, mcp, 0.314159, 0.1155 , 0 )  ! no pdg
+            end do
+               
+c--------   data can be modified as long as is not not made persistent
+            do j = 1,nhits
+               hit    = lccolgetelementat( schcol, j )
+               mcp    = lccolgetelementat( mcpcol, 1 )
                status = lcschaddmcparticlecontribution
-     $              ( hit, mcp, 0.007, 0. , 4711 ) 
+     $                    ( hit, mcp, 0.1, 0., 0 )
+            end do
 
-               status = lccoladdelement( schcol, hit ) 
-            enddo
+c--------   and finally some tracker hits
+c--------   with some user extensions (4 floats and 2 ints) per track:
+c--------   we just need to create parallel collections of float and int vectors
+            trkVec    = lccolcreate( LCIO_SIMTRACKERHIT )
+            extFVec   = lccolcreate( LCIO_LCFLOATVEC )
+            extIVec   = lccolcreate( LCIO_LCINTVEC )
+            do j = 1,nhits
+               hit       = lcsthcreate()
+               status    = lcsthsetdedx( hit, 30.e-9 )
+               sthpos(1) = 1.1*irand( 0 )/RAND_MAX
+               sthpos(2) = 2.2*irand( 0 )/RAND_MAX
+               sthpos(3) = 3.3*irand( 0 )/RAND_MAX
+               status    = lcsthsetposition( hit, sthpos )
+
+c--------      assign the hits randomly to MC particles
+               rn        = .99999*irand( 0 )/RAND_MAX
+               rn        = rn*nmcpart
+               mcp       = lccolgetelementat( mcpcol, int( rn) + 1 )
+               status    = lcsthsetmcparticle ( hit, mcp )
+
+c--------      fill the extension vectors (4 floats, 2 ints)
+               extfv(1)  = 3.14159
+               do k = 1,3
+                 extfv(k+1) = sthpos(k)*0.1
+               end do
+               extiv(1)  = 123456789
+               extiv(2)  = int( rn )
+
+c--------      create the extension vectors
+               extF      = lcfloatvectorcreate( extfv, 4 )
+               extI      = lcintvectorcreate( extiv, 2 )
+
+c--------      add the hit and the extensions to their corresponding collections
+               status    = lccoladdelement( trkVec, hit )
+               status    = lccoladdelement( extFVec, extF )
+               status    = lccoladdelement( extIVec, extI )
+            end do
 
 
-c---- real data calorimeter hits
+c--------   add all collections to the event
+            status = lcevtaddcollection( event, mcpcol, 'MCParticle' )
 
-c ----      set the flag bits to store position for calorimeter hits
-            flag = 2**31
-            status = lccolsetflag( cahcol, flag )
+            status = lcevtaddcollection( event, schcol, ecalName )
+            status = lcevtaddcollection( event, trkVec, tpcName )
+            status = lcevtaddcollection( 
+     &                 event, extFVec, tpcName//'UserFloatExtension' )
 
-            do k=1,nhit
-               hit = lccahcreate() 
-               status = lccahsetcellid0( hit,  314159 ) 
-               status = lccahsetcellid1( hit,  314159*2 ) 
-               cahpos(1) = 11.
-               cahpos(2) = 22.
-               cahpos(3) = 33.
-               status = lccahsetposition( hit, cahpos )
-               status = lccahsetenergy( hit, 2.*k ) 
+            status = lcevtaddcollection(
+     &                 event, extIVec, tpcName//'UserIntExtension' )
 
-               status = lccoladdelement( cahcol, hit ) 
-            enddo
-            
-c-----     now add everything to the event
-            status = lcevtaddcollection(event,mcpcol ,'MCParticle') 
-            status = lcevtaddcollection(event,sthcol ,'MyTrackerHits') 
-            status = lcevtaddcollection(event,schcol ,'MyCalHits') 
-            status = lcevtaddcollection(event,cahcol ,'MyRealCalHits') 
-            
-            status = lcwrtwriteevent( writer , event )
-            
-            if (status .eq. LCIO_ERROR )  then
-               print *, 'SIMJOB: error - can not write event', iev
-               stop
+c--------   test: add a collection for one event only:
+            if (irun .eq. 1 .and. iev .eq. 0)  then     ! first event o last run
+              extFVec   = lccolcreate( LCIO_LCFLOATVEC )
+              do  l = 1,4
+                extfv(l) = l
+              end do
+              extF   = lcfloatvectorcreate( extfv, 4 )
+              status = lccoladdelement( extFVec, extF )
+              status = lcevtaddcollection(
+     &                   event, extFVec, 'AdditionalExtension' )
             end if
-            
-c------- need to delete the event as we created it
+
+c--------   even though this is a simjob we can store 'real data' objects :
+c--------   --- for example we can store TPC hits ------------
+
+            TPCVec       = lccolcreate( LCIO_TPCHIT )
+            storeRawData = .true.
+            flag = 0
+            if (storeRawData)  flag = ibset( flag, LCIO_TPCBIT_RAW )
+            status       = lccolsetflag ( TPCVec, flag )
+            do  j = 1,nhits
+              tpcHit     = lctphcreate()
+              status     = lctphsetcellid( tpcHit, j-1 )
+              status     = lctphsettime( tpcHit, 0.1234567 )
+              status     = lctphsetcharge( tpcHit, 3.14159 )
+              status     = lctphsetquality( tpcHit, z'bad' )
+              if (storeRawData)  then
+                size       = ( dble(irand( 0 ) )/RAND_MAX )*10
+                do  k = 1,size
+                  rawData(k) =  
+     &               int ( ( dble(irand( 0 ) )/RAND_MAX )*INT_MAX )
+                end do
+                status     = lctphsetrawdata( tpcHit, rawData, size )
+              end if
+              status     = lccoladdelement( TPCVec, tpcHit )
+            end do
+            status       = lcevtaddcollection(
+     &                       event, TPCVec, 'TPCRawFADC' )
+
+c--------   write the event to the file
+            status = lcwrtwriteevent( writer , event )
+            status = lcdumpevent( event )
+
+c--------   we created the event so we need to delete it ...
             status = lcevtdelete( event )
-         enddo
-      enddo
-      status = lcwrtclose( writer ) 
-      write(*,*)
-      write(*,*) "----------------------------------------------------"
-      write(*,*) "simjob is finished"
-      write(*,*) "----------------------------------------------------"
-      write(*,*)
 
-c---- now call anajob
-      call anajob
-      
+c----    event loop end
+         end do
+
+         status = lcrhddelete( runheader )
+
+         status = lcwrtclose( writer )
+         status = lcwrtdelete( writer )
+
+c---- run loop end
+      end do
+
+      print *
+      print *, 'created ', nrun, ' runs with ', nrun*nev, ' events'
+      print *
+      stop
+
 C     
-      end
-***********************************************************
-*
-      subroutine anajob
-*
-*     A program to demonstrate the use of the
-*     fortran interface to LCIO for reading LCIO files.
-*
-*     H. Vogt  30/09/2003
-*     modified by F. Gaede 10/30/2003
-***********************************************************
-      implicit none
-
-#include "lciof77api.inc"
-#include "lciof77apiext.inc"
-
-      PTRTYPE reader, event, runhdr, detnames
-      
-      integer status, irun, ievent
-      integer i, nactdet
-      character*80 detname
-
-      write(*,*)
-      write(*,*) "----------------------------------------------------"
-      write(*,*) "anajob is started"
-      write(*,*) "----------------------------------------------------"
-      write(*,*)
-
-      reader = lcrdrcreate()
-c      write(*,*) " created reader at " , reader
-      
-      status = lcrdropen( reader, 'f_simjob.slcio' )
-      
-      if( status.eq.LCIO_ERROR) then
-         write(*,*) " could not open file f_simjob.slcio "
-         goto 99
-      else
-         write(*,*) " opened file f_simjob.slcio "
-      endif
-      
-
-c---- first loop over runs and print information
-      do 
-         runhdr = lcrdrreadnextrunheader( reader, LCIO_READ_ONLY )
-         if( runhdr.eq.0 ) goto 9
-         
-         write(*,*) "  Run : ",lcrhdgetrunnumber( runHdr )
-     $        ,lcrhdgetdetectorname( runHdr )
-     $        ,lcrhdgetdescription( runHdr )
-         
-         write(*,*) " active subdetectors : "
-         detnames = lcrhdgetactivesubdetectors( runHdr ) 
-         nactdet = lcsvcgetlength( detnames  ) 
-         do i=1,nactdet
-            write(*,*) lcsvcgetstringat( detnames, i ) 
-         enddo
-
-
-      enddo
- 9    continue
-
-      status = lcrdrclose( reader ) 
-
-      status = lcrdropen( reader, 'f_simjob.slcio' )
-      
-      if( status.eq.0) then
-         write(*,*) " could not reopen file f_simjob.slcio "
-         goto 99
-      else
-         write(*,*) " reopened file simjob.slcio "
-      endif
-
-
-c     ---- event loop ------
-      do 
-         
-         event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
-         if( event.eq.0 ) goto 11 
-         
-         status = lcdumpevent( event )
-
-
-      enddo
- 11   continue
-c     ---- end event loop ------
-
-
-      status = lcrdrclose( reader )
-      write(*,*) " closed file simjob.sio - status : " , status
-
- 99   continue
       end
 
