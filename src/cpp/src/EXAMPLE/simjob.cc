@@ -90,6 +90,8 @@ int main(int argc, char** argv ){
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	
+	// debug only - add the same particle to more than one collection
+	//LCCollectionVec* mcVec2 = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 
 	MCParticleImpl* mom = new MCParticleImpl ;
 	mom->setPDG( 1  ) ;
@@ -135,6 +137,9 @@ int main(int argc, char** argv ){
 
 	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;
+
+	      // debug only - add the same particle to more than one collection
+	      //mcVec2->push_back( d2 ) ;
 	    }
 	    d1->addParent( mcp );
 	    mcVec->push_back( d1 ) ;
@@ -238,6 +243,10 @@ int main(int argc, char** argv ){
 	
 	// add all collections to the event
 	evt->addCollection( mcVec , "MCParticle" ) ;
+
+	//deubg only 
+	//evt->addCollection( mcVec2, "MCParticle2" ) ;
+
 	evt->addCollection( calVec , ecalName ) ;
 	evt->addCollection( trkVec , tpcName ) ;
 	evt->addCollection( extFVec , tpcName+"UserFloatExtension" ) ;

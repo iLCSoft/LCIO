@@ -28,12 +28,26 @@ namespace SIO{
     TrackIOImpl* trk  = new TrackIOImpl ;
     *objP = trk ;
 	
-    SIO_DATA( stream ,  &(trk->_type) , 1  ) ;
-    SIO_DATA( stream ,  &(trk->_p)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_theta)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_phi)  , 1 ) ;
+//     SIO_DATA( stream ,  &(trk->_type) , 1  ) ;
+//     SIO_DATA( stream ,  &(trk->_p)  , 1 ) ;
+//     SIO_DATA( stream ,  &(trk->_theta)  , 1 ) ;
+//     SIO_DATA( stream ,  &(trk->_phi)  , 1 ) ;
+//     SIO_DATA( stream ,  &(trk->_d0)  , 1 ) ;
+//     SIO_DATA( stream ,  &(trk->_z0)  , 1 ) ;
+
+//     char* dummy ; 
+//     LCSIO_READ( stream,  &dummy ) ; 
+//     trk->setType( dummy ) ;
+
+    int type ;
+    SIO_DATA( stream ,  &type  , 1 ) ;
+    trk->setType( type ) ;  // type is bitset<32> - can't be set directly
+
     SIO_DATA( stream ,  &(trk->_d0)  , 1 ) ;
+    SIO_DATA( stream ,  &(trk->_phi)  , 1 ) ;
+    SIO_DATA( stream ,  &(trk->_omega)  , 1 ) ;
     SIO_DATA( stream ,  &(trk->_z0)  , 1 ) ;
+    SIO_DATA( stream ,  &(trk->_tanLambda)  , 1 ) ;
 
 
     float cov[NCOVMATRIX] ;
@@ -41,8 +55,11 @@ namespace SIO{
     trk->setCovMatrix( cov ) ;
 
     SIO_DATA( stream ,  trk->_reference  , 3 ) ;
+    //    SIO_DATA( stream ,  &(trk->_isReferencePointPCA )  , 1 ) ;
 
     SIO_DATA( stream ,  &(trk->_chi2)  , 1 ) ;
+    SIO_DATA( stream ,  &(trk->_ndf)  , 1 ) ;
+
     SIO_DATA( stream ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(trk->_dEdxError) , 1  ) ;
 
@@ -115,12 +132,19 @@ namespace SIO{
     // by having a common collection of objects
     const Track* trk = dynamic_cast<const Track*>(obj)  ;
 
+//     LCSIO_WRITE( stream, trk->getType()  ) ;
+//     LCSIO_WRITE( stream, trk->getMomentum()  ) ;
+//     LCSIO_WRITE( stream, trk->getTheta()  ) ;
+//     LCSIO_WRITE( stream, trk->getPhi()  ) ;
+//     LCSIO_WRITE( stream, trk->getD0()  ) ;
+//     LCSIO_WRITE( stream, trk->getZ0()  ) ;
 
     LCSIO_WRITE( stream, trk->getType()  ) ;
-    LCSIO_WRITE( stream, trk->getMomentum()  ) ;
-    LCSIO_WRITE( stream, trk->getTheta()  ) ;
-    LCSIO_WRITE( stream, trk->getPhi()  ) ;
+
     LCSIO_WRITE( stream, trk->getD0()  ) ;
+    LCSIO_WRITE( stream, trk->getPhi()  ) ;
+    LCSIO_WRITE( stream, trk->getOmega()  ) ;
+    LCSIO_WRITE( stream, trk->getTanLambda()  ) ;
     LCSIO_WRITE( stream, trk->getZ0()  ) ;
 
     const FloatVec& cov = trk->getCovMatrix() ;
@@ -132,6 +156,7 @@ namespace SIO{
     SIO_DATA( stream,  pos , 3 ) ;
 
     LCSIO_WRITE( stream, trk->getChi2()  ) ;
+    LCSIO_WRITE( stream, trk->getNdf()  ) ;
     LCSIO_WRITE( stream, trk->getdEdx()  ) ;
     LCSIO_WRITE( stream, trk->getdEdxError()  ) ;
 

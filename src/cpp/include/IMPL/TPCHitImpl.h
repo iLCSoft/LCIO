@@ -12,7 +12,7 @@ namespace IMPL {
  * @version Sep 11, 2003
  */
 
-class TPCHitImpl : virtual public EVENT::TPCHit , public AccessChecked {
+class TPCHitImpl :  public EVENT::TPCHit , public AccessChecked {
 
 public: 
 

@@ -158,16 +158,15 @@ c-----the TrackerHit interface
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits
       integer lctrkdelete, lctrkid, lctrkgettype, lctrkgetcovmatrix
-      integer lctrkgetreferencepoint
-      real    lctrkgetmomentum, lctrkgettheta, lctrkgetphi, lctrkgetd0
+      integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
+      real    lctrkgetomega, lctrkgetanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
-      integer lctrksettype, lctrksetmomentum, lctrksettheta
+      integer lctrkgetndf
+      integer lctrksettypebit, lctrksetomega, lctrksettanlambda
       integer lctrksetphi, lctrksetd0, lctrksetz0, lctrksetcovmatrix
       integer lctrksetreferencepoint, lctrksetchi2, lctrksetdedx
+      integer lctrksetisreferencepointpca, lctrksetndf
       integer lctrksetdedxerror, lctrkaddtrack, lctrkaddhit
-      integer LCIO_TPC
-      parameter (LCIO_TPC=4)
-
 
 c---- constants as defined in EVENT::LCIO
 

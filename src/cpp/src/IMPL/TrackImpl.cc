@@ -5,15 +5,20 @@ using namespace EVENT ;
 
 namespace IMPL {
   
-  
-  TrackImpl::TrackImpl() { 
-
+  TrackImpl::TrackImpl() 
+    //: 
+    //    _type("UNKN") ,
+    //    _isReferencePointPCA(true) 
+  { 
     for(int i=0 ; i < NCOVMATRIX ; i++ ) {
       _covMatrix.push_back( 0.0 ) ; 
     }
     _reference[0] = 0.0 ;
     _reference[1] = 0.0 ;
     _reference[2] = 0.0 ;
+
+    _type.set( BIT_ISREFERENCEPOINTDCA ) ;
+
   }
 
   TrackImpl::~TrackImpl() { 
@@ -24,63 +29,79 @@ namespace IMPL {
 
   } 
 
-  int TrackImpl::getType() const { return _type ; }
-  float TrackImpl::getMomentum() const { return _p ; }
-  float TrackImpl::getTheta() const { return _theta ;}
-  float TrackImpl::getPhi() const { return _phi ; }
+  //  const std::string & TrackImpl::getType() const { return _type ; }
+
+  int TrackImpl::getType() const { return _type.to_ulong() ; }
+
+  bool TrackImpl::testType(int bitIndex) const {
+    return _type.test( bitIndex ) ;
+  }
+
   float TrackImpl::getD0() const { return _d0 ;}
+  float TrackImpl::getPhi() const { return _phi ; }
+  float TrackImpl::getOmega() const { return _omega ; }
   float TrackImpl::getZ0() const { return _z0 ;}
+  float TrackImpl::getTanLambda() const { return _tanLambda ;}
+
   const FloatVec& TrackImpl::getCovMatrix() const { return _covMatrix ; }
   const float* TrackImpl::getReferencePoint() const { return _reference ; }
+
+  bool  TrackImpl::isReferencePointPCA() const { 
+    //    return _isReferencePointPCA ;
+    return _type.test( BIT_ISREFERENCEPOINTDCA ) ;
+  }
+
   float TrackImpl::getChi2() const { return _chi2 ;}
+  int   TrackImpl::getNdf() const { return _ndf ;}
   float TrackImpl::getdEdx() const { return _dEdx ; }
   float TrackImpl::getdEdxError() const { return _dEdxError ; }
-
 
 
   const TrackerHitVec & TrackImpl::getTrackerHits() const {
     return _hits ;
   }
 
-//   const std::vector<std::string>&  TrackImpl::getHitCollectionNames() const { 
-//     _hitCollectionNames.clear() ;
-//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-//       _hitCollectionNames.push_back ( iter->first ) ;
-//     }
-//     return _hitCollectionNames ;
-//   }
-//   const IntVec& TrackImpl::getHitIndicesForCollection(const std::string & colName) const { 
-//     return *_indexMap[ colName ] ;
-//   }
-
   const TrackVec & TrackImpl::getTracks() const {
     return _tracks ;
   } 
   
-  void  TrackImpl::setType( int type ){  
+  void  TrackImpl::setTypeBit( int  index){  
+    _type.set( index )  ;
+  }
+
+  //  void  TrackImpl::setType( const std::string&  type ){  
+  void  TrackImpl::setType( int  type ){  
     checkAccess("TrackImpl::setType") ;
-    _type = type ; 
+   
+//     int highWord = ( _type.to_ulong() & 0xFFFF0000 ) ;
+//     int lowWord = ( 0x0000FFFF & type ) ;
+//     _type = highWord | lowWord ; 
+
+    _type = type ;
   } 
-  void  TrackImpl::setMomentum( float momentum ) { 
-    checkAccess("TrackImpl::setMomentum") ;
-    _p = momentum  ;
-  } 
-  void  TrackImpl::setTheta( float theta ){
-    checkAccess("TrackImpl::setTheta") ;
-    _theta = theta ; 
+
+  void  TrackImpl::setD0( float d0 ){
+    checkAccess("TrackImpl::setD0") ;
+    _d0 = d0  ;
   } 
   void  TrackImpl::setPhi( float phi ){ 
     checkAccess("TrackImpl::setPhi") ;
     _phi = phi ; 
   } 
-  void  TrackImpl::setD0( float d0 ){
-    checkAccess("TrackImpl::setD0") ;
-    _d0 = d0  ;
+  void  TrackImpl::setOmega( float omega ) { 
+    checkAccess("TrackImpl::setOmega") ;
+    _omega = omega  ;
   } 
   void  TrackImpl::setZ0( float z0 ){
     checkAccess("TrackImpl::setZ0") ;
     _z0 = z0 ; 
   } 
+  void  TrackImpl::setTanLambda( float tanLambda ){
+    checkAccess("TrackImpl::setTanLambda") ;
+    _tanLambda = tanLambda ; 
+  } 
+
+
   void  TrackImpl::setCovMatrix( float* cov ){ 
     checkAccess("TrackImpl::setCovMatrix") ;
     for(int i=0;i<NCOVMATRIX;i++) {
@@ -100,9 +121,21 @@ namespace IMPL {
       _reference[i] = rPnt[i]  ; 
     }
   } 
+
+  void  TrackImpl::setIsReferencePointPCA( bool val){ 
+    checkAccess("TrackImpl::setIsReferencePointPCA") ;
+    //    _isReferencePointPCA = val ;
+    _type.set( BIT_ISREFERENCEPOINTDCA , val ) ;
+
+  } 
+
   void  TrackImpl::setChi2( float chi2 ){ 
     checkAccess("TrackImpl::setChi2") ;
     _chi2 = chi2 ; 
+  } 
+  void  TrackImpl::setNdf( int ndf ){ 
+    checkAccess("TrackImpl::setNdf") ;
+    _ndf = ndf  ; 
   } 
   void  TrackImpl::setdEdx( float dEdx ){ 
     checkAccess("TrackImpl::setdEdx") ;
@@ -117,15 +150,6 @@ namespace IMPL {
     _hits.push_back( hit ) ;
   }
 
-//   void  TrackImpl::addHitIndex( const std::string& colName, int index ){   
-//     checkAccess("TrackImpl::addHitIndex") ;
-//     IntVec* vec = _indexMap[ colName ] ;
-//     if( vec == 0 ){
-//       vec = new IntVec ;
-//       _indexMap[ colName ] = vec ;
-//     }
-//     vec->push_back( index )  ;
-//   }    
   void  TrackImpl::addTrack( EVENT::Track* trk ) {
     checkAccess("TrackImpl::addTrack") ;
     _tracks.push_back( trk ) ;

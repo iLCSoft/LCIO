@@ -127,32 +127,36 @@ namespace IMPL{
 
     checkAccess("SimCalorimeterHitImpl::addMCParticleContribution") ;
     if( p==0){
-      // just add the energy contribution
+      // just add the energy - no MC contribution  !!
       _energy += en ;
+      return ;
     }
-    else{
-      // look for contribution from this particle
+    else if( pdg == 0 ) { // not in extended mode - only one contribution per primary particle
+
+
+
       for( std::vector<MCParticleCont*>::iterator iter=_vec.begin() ;
 	   iter != _vec.end() ; iter++ ){
-	if( (*iter)->Particle == p  && (*iter)->PDG == pdg ){
+
+	if( (*iter)->Particle == p ) {  //  && (*iter)->PDG == pdg ){
 	  
 	  (*iter)->Energy += en ;
-	  _energy += en ;
 
+	  _energy += en ;
 	  return ;
 	}
+
       }
-
-      
-      _energy += en ;
-      MCParticleCont* con = new  MCParticleCont ;
-      
-      con->Particle = p ;
-      con->Energy = en ;
-      con->Time = t ;
-      con->PDG = pdg ;
-      _vec.push_back( con ) ;
-
     }
+      
+    _energy += en ;
+    MCParticleCont* con = new  MCParticleCont ;
+    
+    con->Particle = p ;
+    con->Energy = en ;
+    con->Time = t ;
+    con->PDG = pdg ;
+    _vec.push_back( con ) ;
+    
   }
 }; // namespace IMPL

@@ -5,6 +5,10 @@
 #include "EVENT/Track.h"
 #include "AccessChecked.h"
 #include <map>
+#include <bitset>
+
+
+#define BIT_ISREFERENCEPOINTDCA 31
 
 typedef std::map< std::string , EVENT::IntVec* > IndexMap ; 
 
@@ -33,52 +37,70 @@ namespace IMPL {
     
     virtual int id() { return simpleUID() ; }
 
-    /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
-     *  Track::UNKNOWN <br> 
-     *  Track::VTX <br> 
-     *  Track::FTD <br> 
-     *  Track::SIT <br> 
-     *  Track::TPC <br> 
-     *  Track::MUON <br> 
-     *  Track::FULL <br> 
-     */
-    virtual int getType() const;
+//     /** Type of track, i.e. the subdetector(s) used to derive the track paramters, e.g. "TPC", "COMB", etc.
+//      *  In order to save disc space working groups should try and define three to four letter acronyms for
+//      *  their tracking detectors.
+//      */
+//     virtual const std::string & getType() const ;
 
-    /** The magnitude of the track's momentum,
-     *  signed by the charge.
-     */
-    virtual float getMomentum() const;
 
-    /** Theta of the  track.
-     */
-    virtual float getTheta() const;
 
-    /** Phi of the track.
+    /** Flagword that defines the type of track. Bits 0-15 can be used to denote the subdetectors
+     *  that have contributed hits used in the track fit. The definition of the  hits has to be done 
+     *  elsewhere, e.g. in the run header. Bit 31 is used to encode isReferencePointPCA.
      */
-    virtual float getPhi() const;
+    virtual  int getType() const  ;
+
+    /** Returns true if the corresponding bit in the type word is set.
+     */
+    virtual bool testType(int bitIndex) const ;
 
     /** Impact paramter of the track
      *  in (r-phi).
      */
-    virtual float getD0() const;
+    virtual float getD0() const ;
+
+    /** Phi of the track at reference point or PCA -- FIXME: is this at reference point or PCA ?
+     */
+    virtual float getPhi() const ;
+
+    /** Omega is the signed curvature of the track in [1/mm].
+     * The sign is that of the particle's charge.
+     */
+    virtual float getOmega() const ;
 
     /** Impact paramter of the track
      *  in (r-z).
      */
-    virtual float getZ0() const;
+    virtual float getZ0() const ;
 
-
-    /** Covariance matrix of the track parameters.
+    /** Lambda is the dip angle of the track in r-z --- FIXME: at reference point ??? . 
      */
-    virtual const EVENT::FloatVec& getCovMatrix() const;
+    virtual float getTanLambda() const ;
+
+    /** Covariance matrix of the track parameters. Stored as upper triangle matrix where
+     * the order of parameters is:   d0, phi, omega, z0, tan(lambda).
+     * So we have cov(d0,d0), cov( d0,phi ), cov( d0, omega), ...
+     */
+    virtual const EVENT::FloatVec & getCovMatrix() const ;
 
     /** Reference point of the track parameters.
+     *  The default for the reference point is the point of closest approach.
+     *  @see isReferencPointPCA() 
      */
-    virtual const float* getReferencePoint() const;
+    virtual const float* getReferencePoint() const ;
+
+    /** True if the reference point is the point of closest approach.
+     */
+    virtual bool isReferencePointPCA() const ;
 
     /** Chi^2 of the track fit.
      */
-    virtual float getChi2() const;
+    virtual float getChi2() const ;
+
+    /** Number of degrees of freedom  of the track fit.
+     */
+    virtual int getNdf() const ;
 
     /** dEdx of the track.
      */
@@ -107,40 +129,54 @@ namespace IMPL {
     
 
     // setters 
-    virtual void  setType( int type ) ;
-    virtual void  setMomentum( float momentum ) ;
-    virtual void  setTheta( float theta ) ;
-    virtual void  setPhi( float phi ) ;
+    //    virtual void  setType( const std::string&  type ) ;
+    virtual void  setTypeBit( int index ) ;
+
     virtual void  setD0( float d0 ) ;
+    virtual void  setPhi( float phi ) ;
+    virtual void  setOmega( float omega ) ;
     virtual void  setZ0( float z0 ) ;
+    virtual void  setTanLambda( float tanLambda ) ;
 
     virtual void  setCovMatrix( float* cov ) ;
     virtual void  setCovMatrix( const EVENT::FloatVec& cov ) ;
 
     virtual void  setReferencePoint( float* rPnt) ;
+    virtual void  setIsReferencePointPCA( bool val ) ;
+
     virtual void  setChi2( float chi2 ) ;
+    virtual void  setNdf( int ndf ) ;
     virtual void  setdEdx( float dEdx ) ;
     virtual void  setdEdxError( float dEdxError ) ;
-//     virtual void  addHitIndex( const std::string& colName, int index ) ;   
+
     virtual void  addTrack( EVENT::Track* trk ) ;
     virtual void  addHit( EVENT::TrackerHit* hit) ;
 
   protected:
-    int _type ;
-    float _p ;
-    float _theta;
-    float _phi ;
+
+    virtual void  setType( int  type ) ;
+
+    //    std::string _type ;
+    std::bitset<32> _type ;
     float _d0 ;
+    float _phi ;
+    float _omega ;
     float _z0 ;
+    float _tanLambda ;
+
     EVENT::FloatVec _covMatrix ;
     float  _reference[3] ;
+    bool _isReferencePointPCA ;
+
     float _chi2 ;
+    int   _ndf ; 
     float _dEdx ;
     float _dEdxError ;
-//     mutable  EVENT::StringVec _hitCollectionNames ;
-//     mutable IndexMap _indexMap ;
+    
+
     EVENT::TrackVec _tracks ;
     EVENT::TrackerHitVec _hits ;
+
 }; // class
 
 

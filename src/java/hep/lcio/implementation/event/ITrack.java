@@ -1,26 +1,35 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.Track;
+
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.List;
 
 /**
  *
  * @author  Tony Johnson
+ * fg20040602 changed to new parameters d0,phi,omega,z0,tanLambda
+ * added Ndf and changed type to bitset.
  */
 public class ITrack extends ILCObject implements Track
 {
    protected float chi2;
    protected float[] covMatrix;
    protected float d0;
-   protected float momentum;
+   protected float omega ;
    protected float phi;
    protected float[] referencePoint;
-   protected float theta;
-   protected int type;
+   protected float tanLambda;
+   //protected int type;
    protected float dEdx;
    protected float dEdxError;
    protected float z0;
+   protected int ndf ;
+   //boolean isReferencePointPCA ;
+   protected BitSet type ;  
+   
+   public final static int BITISREFERENCEPOINTPCA = 31 ;
    
    public float getChi2()
    {
@@ -37,11 +46,6 @@ public class ITrack extends ILCObject implements Track
       return d0;
    }
    
-   public float getMomentum()
-   {
-      return momentum;
-   }
-   
    public float getPhi()
    {
       return phi;
@@ -52,10 +56,6 @@ public class ITrack extends ILCObject implements Track
       return referencePoint;
    }
    
-   public float getTheta()
-   {
-      return theta;
-   }
    
    public List getTrackerHits()
    {
@@ -70,8 +70,14 @@ public class ITrack extends ILCObject implements Track
    }
    
    public int getType()
-   {
-      return type;
+   {	
+   	  int intType = 0 ;
+   	  for (int i = 0; i < 32; i++) {
+		if( type.get(i) ){
+		   intType |= 1<<i ;
+		}	
+	  }
+      return intType;
    }
    
    public float getZ0()
@@ -115,10 +121,6 @@ public class ITrack extends ILCObject implements Track
       this.dEdxError = dEdxError;
    }
    
-   public void setMomentum(float momentum)
-   {
-      this.momentum = momentum;
-   }
 
    public void setPhi(float phi)
    {
@@ -131,18 +133,62 @@ public class ITrack extends ILCObject implements Track
       this.referencePoint = referencePoint;
    }
    
-   public void setTheta(float theta)
-   {
-      this.theta = theta;
-   }
    
-   public void setType(int type)
+   protected void setType(int typeWord)
    {
-      this.type = type;
+     
+      for (int i = 0; i < 32 ; i++) {
+		if( (typeWord & (1<<i)) > 1 )
+		 type.set(i) ;
+		else
+         type.clear(i) ;			
+	}
+      
+     // this.type = type;
    }
    
    public void setZ0(float z0)
    {
       this.z0 = z0;
    } 
+public float getOmega() {
+	return omega;
+}
+
+public float getTanLambda() {
+	return tanLambda;
+}
+
+public void setOmega(float f) {
+	omega = f;
+}
+
+public void setTanLambda(float f) {
+	tanLambda = f;
+}
+
+public int getNdf() {
+	return ndf;
+}
+
+public void setNdf(int i) {
+	ndf = i;
+}
+
+public boolean isReferencePointPCA() {
+    return type.get( BITISREFERENCEPOINTPCA ) ;
+}
+
+public void setReferencePointPCA(boolean b) {
+	type.set( BITISREFERENCEPOINTPCA, b ) ;
+}
+
+	/* (non-Javadoc)
+	 * @see hep.lcio.event.Track#testType(int)
+	 */
+	public boolean testType(int bitIndex) {
+	
+	return type.get( bitIndex );
+	}
+
 }

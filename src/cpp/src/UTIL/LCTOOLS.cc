@@ -339,9 +339,9 @@ namespace UTIL {
     int nPrint = nTracks > MAX_HITS ? MAX_HITS : nTracks ;
     
     std::cout << endl
-	      << " [   id   ] |type| p         | theta    | phi      | d0        | z0        |   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   "
+	      << " [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   "
 	      << endl 
-	      << "------------|----|-----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
+	      << "------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -349,14 +349,19 @@ namespace UTIL {
       Track* trk = 
       	dynamic_cast<Track*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | %2d | %5.3e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n"
+      printf(" [%8.8x] | %8.8x | %4.2e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n"
 	     , trk->id()
 	     , trk->getType() 
-	     , trk->getMomentum() 
-	     , trk->getTheta() 
-	     , trk->getPhi()
 	     , trk->getD0() 
+	     , trk->getPhi()
+	     , trk->getOmega() 
 	     , trk->getZ0() 
+	     , trk->getTanLambda()
+// 	     , trk->getMomentum() 
+// 	     , trk->getTheta() 
+// 	     , trk->getPhi()
+// 	     , trk->getD0() 
+// 	     , trk->getZ0() 
 	     , trk->getReferencePoint()[0]
 	     , trk->getReferencePoint()[1]
 	     , trk->getReferencePoint()[2]
@@ -368,11 +373,11 @@ namespace UTIL {
       for(int l=0;l<15;l++){
 	printf("%4.2e, ", trk->getCovMatrix()[l] ) ; 
       }
-      cout << endl << " tracks(p): " ;
+      cout << endl << " tracks(id): " ;
       const TrackVec& tracks = trk->getTracks() ;
 
       for(unsigned int l=0;l<tracks.size();l++){
-		printf("%4.2e, ",  tracks[l]->getMomentum() ) ; 
+		printf("[%8.8x], ",  tracks[l]->id() ) ; 
       }
       cout << endl ;
       if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
@@ -400,8 +405,7 @@ namespace UTIL {
 // 	   << trk->getZ0()     << " | "
 // 	   << endl ;
 
-      cout << endl 
-	   << "-------------------------------------------------------------------------------- " 
+      cout << "------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
 	   << endl ;
     }
   }

@@ -34,14 +34,24 @@ int lctrkgettype( PTRTYPE track )  {
   return trk->getType() ;
 }
 
-float lctrkgetmomentum( PTRTYPE track )  {
+// float lctrkgetmomentum( PTRTYPE track )  {
+//   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//   return trk->getMomentum() ;
+// }
+
+float lctrkgetomega( PTRTYPE track )  {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  return trk->getMomentum() ;
+  return trk->getOmega() ;
 }
 
-float lctrkgettheta( PTRTYPE track ) {
+// float lctrkgettheta( PTRTYPE track ) {
+//   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//   return trk->getTheta() ;
+// }
+
+float lctrkgettanlambda( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  return trk->getTheta() ;
+  return trk->getTanLambda() ;
 }
 
 float lctrkgetphi( PTRTYPE track ) {
@@ -71,9 +81,19 @@ int lctrkgetreferencepoint( PTRTYPE track, float* refpoint ) {
   return LCIO::SUCCESS ;
 }
 
+int lctrkisreferencepointpca( PTRTYPE track ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  return trk->isReferencePointPCA() ;
+}
+
 float lctrkgetchi2( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   return trk->getChi2() ;
+}
+
+int lctrkgetndf( PTRTYPE track ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  return trk->getNdf() ;
 }
 
 float lctrkgetdedx( PTRTYPE track ) {
@@ -101,21 +121,27 @@ PTRTYPE lctrkgettrackerhits( PTRTYPE track ) {
 
 // set,add Methods
 
-int lctrksettype( PTRTYPE track, int type ) {
+// int lctrksettype( PTRTYPE track, int type ) {
+//   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//   trk->setType( type ) ;
+//   return LCIO::SUCCESS ;
+// }
+
+int lctrksettypebit( PTRTYPE track, int index ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  trk->setType( type ) ;
+  trk->setTypeBit( index ) ;
   return LCIO::SUCCESS ;
 }
 
-int lctrksetmomentum( PTRTYPE track, float p ) {
+int lctrksetomega( PTRTYPE track, float omega ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-   trk->setMomentum( p ) ;
+   trk->setOmega( omega ) ;
    return LCIO::SUCCESS ;
 }
 
-int lctrksettheta( PTRTYPE track, float theta ) {
+int lctrksettanlambda( PTRTYPE track, float tanLambda ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  trk->setTheta( theta ) ;
+  trk->setTanLambda( tanLambda ) ;
   return LCIO::SUCCESS ;
 }
 
@@ -149,9 +175,21 @@ int lctrksetreferencepoint( PTRTYPE track, float refpoint[3] ) {
   return LCIO::SUCCESS ;
 }
 
+int lctrksetisreferencepointpca( PTRTYPE track , int val) { 
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  trk->setIsReferencePointPCA( val ) ;
+  return LCIO::SUCCESS ;
+}
+
 int lctrksetchi2( PTRTYPE track, float chi2) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   trk->setChi2( chi2 ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrksetndf( PTRTYPE track, int ndf) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  trk->setNdf( ndf ) ;
   return LCIO::SUCCESS ;
 }
 

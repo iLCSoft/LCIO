@@ -23,8 +23,13 @@ INCLUDE =  $(LCIOINCLUDE)
 
 # check the gcc compiler version which warning option is accepted
 COMPILER_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 )
-ifeq ($(COMPILER_VERSION),3)
+COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep "gcc version" | cut -d' ' -f3 | cut -c3 )
+ifeq ($(COMPILER_VERSION),3) 
+ ifneq ($(COMPILER_MINOR_VERSION),0)
   UNUSEDCPP = -Wno-unused-function
+ else
+  UNUSEDCPP = -Wno-unused
+ endif
 else
   UNUSEDCPP = -Wno-unused
 endif

@@ -206,9 +206,9 @@ ccc      write(*,*) ' opened file ', fileiname(1:lnblnk(fileiname))
       ntracks  = 10
       do  i = 1, ntracks
         trkp    = lctrkcreate ()
-        status  = lctrksettype ( trkp, LCIO_TPC )
-        status  = lctrksetmomentum (  trkp, i*1.1 )
-        status  = lctrksettheta ( trkp, i*m_pi/10. )
+        status  = lctrksettypebit ( trkp, 7 )
+        status  = lctrksetomega (  trkp, i*1.1 )
+        status  = lctrksettanlambda ( trkp, i*m_pi/10. )
         status  = lctrksetphi ( trkp, i*m_pi/5. )
         status  = lctrksetd0 ( trkp, i*1. )
         status  = lctrksetz0 ( trkp, i*10. )
@@ -239,8 +239,8 @@ ccc      write(*,*) ' opened file ', fileiname(1:lnblnk(fileiname))
 ***     add tracks that where used to create this track
         j       = lccolgetnumberofelements ( trackcol )
         if ( j .gt. 1 )  then
-          status  = lctrkaddhit (trkp, lccolgetelementat(trackcol, j))
-          status  = lctrkaddhit (trkp, lccolgetelementat(trackcol, j-1))
+          status= lctrkaddtrack (trkp, lccolgetelementat(trackcol, j))
+          status= lctrkaddtrack (trkp, lccolgetelementat(trackcol, j-1))
         end if
         status  =  lccoladdelement ( trackcol , trkp )
       end do
@@ -355,19 +355,19 @@ ccc         stop
           ihit2   =  int ( dble ( ncalhit) * rand ( 0 ) )
           ihit3   =  int ( dble ( ncalhit) * rand ( 0 ) )
           helpp   = lccolgetelementat ( calhitcol, ihit1 + 1 )
-          status  = lccluaddhit ( clusp, helpp )
+          status  = lccluaddhit ( clusp, helpp , 1.)
           helpp   = lccolgetelementat ( calhitcol, ihit2 + 1 )
-          status  = lccluaddhit ( clusp, helpp )
+          status  = lccluaddhit ( clusp, helpp , 2. )
           helpp   = lccolgetelementat ( calhitcol, ihit3 + 1 )
-          status  = lccluaddhit ( clusp, helpp )
+          status  = lccluaddhit ( clusp, helpp , 3. )
 
 ***       add clusters that where used to create this cluster
           ncluscol = lccolgetnumberofelements ( cluscol )
           if ( ncluscol .gt. 1 )  then
             helpp   = lccolgetelementat ( cluscol, ncluscol )
-            status  = lccluaddhit ( clusp, helpp )
+            status  = lccluaddcluster ( clusp, helpp )
             helpp   = lccolgetelementat ( cluscol, ncluscol - 1 )
-            status  = lccluaddhit ( clusp, helpp )
+            status  = lccluaddcluster ( clusp, helpp )
           end if
           status  =  lccoladdelement ( cluscol, clusp )
         end do
