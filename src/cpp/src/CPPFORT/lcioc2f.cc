@@ -65,7 +65,10 @@ int levtGetEventNumber( PTRTYPE event ){
   return lcEvent->getEventNumber() ;
 
 }
+
 char* levtGetDetectorName( PTRTYPE event ){
-  LCEVENT_PNTR( event ) ;
-  return const_cast<char*> ( lcEvent->getDetectorName().c_str() ) ;
+   if(! (event) ) return NULL;
+   LCEvent* lcEvent = reinterpret_cast<LCEvent*>( (event) ) ;
+   return const_cast<char*> ( lcEvent->getDetectorName().c_str() ) ;
 }
+
