@@ -62,6 +62,10 @@ namespace UTIL{
      */
     static void printLCIntVecs( const EVENT::LCCollection* col ) ;
 
+    /** Print LCStrVecs user extension vectors in the collection
+     */
+    static void printLCStrVecs( const EVENT::LCCollection* col ) ;
+
     /** Complete printout of all Tracks in the collection
      */
     static void printTracks( const EVENT::LCCollection* col ) ;

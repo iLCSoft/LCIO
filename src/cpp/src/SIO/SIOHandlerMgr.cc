@@ -8,6 +8,7 @@
 #include "SIO/SIOTPCHitHandler.h" 
 #include "SIO/SIOTrackerHitHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
+#include "SIO/SIOStrVecHandler.h"
 #include "SIO/SIOFloatVecHandler.h" 
 #include "SIO/SIOIntVecHandler.h" 
 #include "SIO/SIOReconstructedParticleHandler.h" 
@@ -35,6 +36,7 @@ namespace SIO {
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
     _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;
     // generic arrays/vectors
+    _map[ LCIO::LCSTRVEC ] = new SIOStrVecHandler ;
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
   } 

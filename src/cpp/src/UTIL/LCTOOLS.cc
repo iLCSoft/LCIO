@@ -26,6 +26,8 @@
 #include <set>
 #include <cstdio>
 
+typedef std::vector<std::string> LCStrVec ;
+
 using namespace std ;
 using namespace EVENT ;
 using namespace IMPL ;
@@ -101,7 +103,12 @@ namespace UTIL {
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
 	  
-	printLCIntVecs( col ) ;
+	printLCIntVecs( col ) ;                                  \
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCSTRVEC ){
+	  
+	printLCStrVecs( col ) ;                                  \
 
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACK ){
@@ -592,6 +599,50 @@ namespace UTIL {
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 
 	 << endl ;
+  }
+
+  void LCTOOLS::printLCStrVecs( const EVENT::LCCollection* col ) {
+
+    if( col->getTypeName() != LCIO::LCSTRVEC ){
+
+      cout << " collection not of type " << LCIO::LCSTRVEC << endl ;
+      return ;
+    }
+
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::LCSTRVEC << " collection (user extension) "
+	 << "--------------- " << endl ;
+
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " element index: val0, val1, ..." 
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      LCStrVec* vec =
+	dynamic_cast<LCStrVec*>( col->getElementAt( i ) ) ;
+      
+      std::cout << i << ": " ;
+      for(unsigned int j=0;j< vec->size();j++){
+
+	std::cout << (*vec)[j] ;
+	if( j<vec->size()-1) std::cout << ", " ;
+
+	if( ! ( (j+1) % 10)  ) std::cout << endl << "     " ;
+      }
+      std::cout << std::endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+
   }
 
   void LCTOOLS::printLCFloatVecs( const EVENT::LCCollection* col ) {

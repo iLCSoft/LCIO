@@ -71,6 +71,7 @@ public interface LCIO{
     static const char* SIMTRACKERHIT ; 
     static const char* TPCHIT ; 
     static const char* TRACKERHIT ; 
+    static const char* LCSTRVEC ;
     static const char* LCFLOATVEC ; 
     static const char* LCINTVEC ; 
     static const char* TRACK ; 
