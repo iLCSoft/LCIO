@@ -317,7 +317,7 @@ C
 
       IMPLICIT NONE
 
-#include "hepevt.inc"
+#include "hepevt0.inc"
 #include "hepevt1.inc"
 
       INTEGER LUN, IEORUN
@@ -402,7 +402,7 @@ c$$$ 1234 FORMAT(I3,I5,I9,4I5)
 
       IMPLICIT NONE
 
-#include "hepevt.inc" 
+#include "hepevt0.inc"
 #include "hepevt1.inc"
 
       INTEGER LUN,I,J,K,L,M
