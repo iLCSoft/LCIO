@@ -47,6 +47,11 @@ int lcschgetnmcparticles( PTRTYPE simcalhit )  {
   return hit->getNMCParticles() ;
 }
 
+int lcschgetnmccontributions( PTRTYPE simcalhit )  {
+  SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return hit->getNMCContributions() ;
+}
+
 PTRTYPE lcschgetparticlecont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
   return C2F_POINTER( LCObject*, hit->getParticleCont( i-1 ) ) ;

@@ -254,7 +254,7 @@ int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, floa
 
   SimCalorimeterHitImpl* lcHit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( hit ) ;
 // checking on i !
-  const int Nelements = lcHit->getNMCParticles() ;
+  const int Nelements = lcHit->getNMCContributions() ;
   if (i < 0 && i > Nelements-1) {
     std::cerr << "Exception in lcgetsimcalohitmccont: index " << i << " out of range" << std::endl ;
     return LCIO::ERROR ;

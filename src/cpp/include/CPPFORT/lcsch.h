@@ -19,6 +19,7 @@ int lcschgetcellid1( PTRTYPE simcalhit )  ;
 float lcschgetenergy( PTRTYPE simcalhit )  ;
 int lcschgetposition( PTRTYPE simcalhit, float * )  ;
 int lcschgetnmcparticles( PTRTYPE simcalhit )  ;
+int lcschgetnmccontributions( PTRTYPE simcalhit )  ;
 
 PTRTYPE lcschgetparticlecont( PTRTYPE simcalhit, int i)  ;
 float lcschgetenergycont( PTRTYPE simcalhit, int i)  ;
@@ -42,6 +43,7 @@ FCALLSCFUN1(INT, lcschgetcellid1, LCSCHGETCELLID1, lcschgetcellid1, CFORTRANPNTR
 FCALLSCFUN1(FLOAT, lcschgetenergy, LCSCHGETENERGY, lcschgetenergy, CFORTRANPNTR ) ;
 FCALLSCFUN2(INT, lcschgetposition,LCSCHGETPOSITION,lcschgetposition, CFORTRANPNTR, FLOATV ) ;
 FCALLSCFUN1(INT, lcschgetnmcparticles,LCSCHGETNMCPARTICLES,lcschgetnmcparticles, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lcschgetnmccontributions,LCSCHGETNMCCONTRIBUTIONS,lcschgetnmccontributions, CFORTRANPNTR ) ;
 
 FCALLSCFUN2(CFORTRANPNTR, lcschgetparticlecont,LCSCHGETPARTICLECONT,lcschgetparticlecont,CFORTRANPNTR,INT ) ;
 FCALLSCFUN2(FLOAT, lcschgetenergycont,LCSCHGETENERGYCONT,lcschgetenergycont,CFORTRANPNTR, INT ) ;

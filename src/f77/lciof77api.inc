@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.30 2004-09-24 10:54:58 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.31 2004-11-24 14:12:19 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -144,7 +144,8 @@ c-----the SimCalorimeterHit interface
       integer lcschdelete, lcschid
       integer lcschgetcellid0, lcschgetcellid1
       real    lcschgetenergy, lcschgetenergycont, lcschgettimecont
-      integer lcschgetposition, lcschgetnmcparticles
+      integer lcschgetposition, lcschgetnmcparticles 
+      integer lcschgetnmccontributions
       PTRTYPE lcschgetparticlecont
       integer lcschgetpdgcont
       integer lcschsetcellid0, lcschsetcellid1, lcschsetenergy

@@ -819,10 +819,10 @@ namespace UTIL {
       }else{
 	cout << "   no position avaliable  ) | " ;
       }
-      cout << hit->getNMCParticles() 
+      cout << hit->getNMCContributions() 
 	   << endl ;
       
-      for(int k=0;k < hit->getNMCParticles();k++){
+      for(int k=0;k < hit->getNMCContributions();k++){
 
 	try{
 	  cout << "           ->   " 

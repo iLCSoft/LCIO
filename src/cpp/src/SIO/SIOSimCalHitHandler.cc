@@ -90,7 +90,7 @@ namespace SIO{
       SIO_DATA( stream,  pos , 3 ) ;
     }
     // now the MCParticle contributions
-    int nMC = hit->getNMCParticles() ;
+    int nMC = hit->getNMCContributions() ;
     SIO_DATA( stream,  &nMC , 1 ) ;
 
     for(int i=0; i<nMC ;i++){
