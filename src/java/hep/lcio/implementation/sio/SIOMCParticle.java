@@ -18,7 +18,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.10 2003-11-11 19:13:17 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.11 2004-01-14 00:03:27 tonyj Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -37,6 +37,8 @@ class SIOMCParticle extends IMCParticle
          int nDaughters = in.readInt();
          for (int i = 0; i < nDaughters; i++)
             temp.add(in.readPntr());
+         
+         hasEndPoint = (nDaughters == 0);
       }
       else
       {
