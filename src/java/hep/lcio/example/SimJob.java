@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.14 2004-07-02 08:46:45 hvogt Exp $
+ * @version $Id: SimJob.java,v 1.15 2004-07-14 15:50:44 gaede Exp $
  */
 public class SimJob
 {
@@ -50,9 +50,9 @@ public class SimJob
          runHdr.addActiveSubdetector(ecalName);
          runHdr.addActiveSubdetector(tpcName);
          
-         runHdr.parameters().setValue("SimulationProgram","SimJob.java") ;
+         runHdr.getParameters().setValue("SimulationProgram","SimJob.java") ;
 		 int[] idx = { 1,2,3,4,5 } ;
-         runHdr.parameters().setValues("SomeIndices",idx) ;
+         runHdr.getParameters().setValues("SomeIndices",idx) ;
 
          lcWrt.writeRunHeader(runHdr);
 

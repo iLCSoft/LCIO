@@ -22,7 +22,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.11 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.12 2004-07-14 15:50:45 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -136,12 +136,13 @@ class SIOLCReader implements LCReader
                continue;
 
             SIOBlock block = record.getBlock();
-
-            if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+			int major = block.getMajorVersion() ;
+			int minor = block.getMinorVersion() ;
+			if (( major < 1) && ( minor < 8))
                throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
 	    // FIX ME: need to set access mode here....
-            return new SIORunHeader(block.getData());
+            return new SIORunHeader(block.getData(),major,minor);
          }
       }
       catch (EOFException x)
@@ -175,15 +176,17 @@ class SIOLCReader implements LCReader
                {
                   SIOBlock block = record.getBlock();
 
-                  if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+     			  int major = block.getMajorVersion() ;
+	    		  int minor = block.getMinorVersion() ;
+		    	  if (( major < 1) && ( minor < 8))
                      throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
-                  SIORunHeader header = new SIORunHeader(block.getData());
+                  SIORunHeader header = new SIORunHeader(block.getData(),major,minor);
                   for (int i = 0; i < l; i++){
 		      // FIX ME: need to set access mode here....
                      ((LCRunListener) runListeners.get(i)).processRunHeader(header);
                      ((LCRunListener) runListeners.get(i)).modifyRunHeader(header);
-		  }
+		          }
                }
             }
             else if (record.getRecordName().equals(SIOFactory.eventHeaderRecordName))

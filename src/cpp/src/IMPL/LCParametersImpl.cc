@@ -11,7 +11,7 @@ namespace IMPL{
     
   }
 
-  int LCParametersImpl::getIntVal(const std::string & key){
+  int LCParametersImpl::getIntVal(const std::string & key) const {
     
     IntVec &  iv =  _intMap[ key ] ;
 
@@ -20,7 +20,7 @@ namespace IMPL{
     return iv[0] ;
   }
 
-  float LCParametersImpl::getFloatVal(const std::string & key){
+  float LCParametersImpl::getFloatVal(const std::string & key) const {
 
     FloatVec &  fv =  _floatMap[ key ] ;
 
@@ -29,7 +29,7 @@ namespace IMPL{
     return fv[0] ;
   }
 
-  const std::string & LCParametersImpl::getStringVal(const std::string & key){
+  const std::string & LCParametersImpl::getStringVal(const std::string & key) const {
 
     static std::string empty("") ;
 
@@ -40,7 +40,7 @@ namespace IMPL{
     return sv[0] ;
   }
 
-  IntVec & LCParametersImpl::getIntVals(const std::string & key, IntVec & values){
+  IntVec & LCParametersImpl::getIntVals(const std::string & key, IntVec & values) const {
 
     //    copy( _intMap[ key ].begin() , _intMap[ key ].end() , back_inserter( values )  ) ;
     IntVec& v =  _intMap[ key ] ;
@@ -48,7 +48,7 @@ namespace IMPL{
     return values ;
   }
 
-  FloatVec & LCParametersImpl::getFloatVals(const std::string & key, FloatVec & values){
+  FloatVec & LCParametersImpl::getFloatVals(const std::string & key, FloatVec & values) const {
 
     //    copy( _floatMap[ key ].begin() , _floatMap[ key ].end() , back_inserter( values )  ) ;
     FloatVec& v =  _floatMap[ key ] ;
@@ -57,7 +57,7 @@ namespace IMPL{
     return values ;
   }
 
-  StringVec & LCParametersImpl::getStringVals(const std::string & key, StringVec & values){
+  StringVec & LCParametersImpl::getStringVals(const std::string & key, StringVec & values) const {
 
     //    copy( _stringMap[ key ].begin() , _stringMap[ key ].end() , back_inserter( values )  ) ;
     StringVec& v =  _stringMap[ key ] ;
@@ -67,7 +67,7 @@ namespace IMPL{
   }
 
 
-  const StringVec & LCParametersImpl::getIntKeys(StringVec & keys) {
+  const StringVec & LCParametersImpl::getIntKeys(StringVec & keys) const  {
 
 //     for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
 //       keys.push_back( iter->first ) ; 
@@ -78,7 +78,7 @@ namespace IMPL{
   return keys ;
   }
 
-  const StringVec & LCParametersImpl::getFloatKeys(StringVec & keys) {
+  const StringVec & LCParametersImpl::getFloatKeys(StringVec & keys) const  {
     
 //     for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
 //       keys.push_back( iter->first ) ; 
@@ -88,7 +88,7 @@ namespace IMPL{
     return keys ;
   }
 
-  const StringVec & LCParametersImpl::getStringKeys(StringVec & keys) {
+  const StringVec & LCParametersImpl::getStringKeys(StringVec & keys) const  {
 
 //     for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
 //       keys.push_back( iter->first ) ; 
@@ -98,15 +98,15 @@ namespace IMPL{
     return keys ;
   }
   
-  int LCParametersImpl::getNInt(const std::string & key){
+  int LCParametersImpl::getNInt(const std::string & key) const {
     return _intMap[ key ].size() ;
   }
 
-  int LCParametersImpl::getNFloat(const std::string & key){
+  int LCParametersImpl::getNFloat(const std::string & key) const {
     return _floatMap[ key ].size() ;
   }
 
-  int LCParametersImpl::getNString(const std::string & key){
+  int LCParametersImpl::getNString(const std::string & key) const {
     return _stringMap[ key ].size() ;
   }
 

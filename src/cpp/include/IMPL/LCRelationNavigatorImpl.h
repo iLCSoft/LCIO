@@ -11,7 +11,7 @@ namespace IMPL {
  *
  * 
  * @author gaede 
- * @version $Id: LCRelationNavigatorImpl.h,v 1.1 2004-07-13 11:54:27 gaede Exp $
+ * @version $Id: LCRelationNavigatorImpl.h,v 1.2 2004-07-14 15:50:41 gaede Exp $
  * @see LCReverseRelationNavigatorImpl
  */
   class LCRelationNavigatorImpl : public LCRelationNavigatorBaseImpl {
@@ -20,11 +20,12 @@ namespace IMPL {
   public: 
     /**Default constructor.
      */
-    LCRelationNavigatorImpl() { /* nop */; }
+    LCRelationNavigatorImpl(const std::string &fromType, const std::string &toType) :
+      LCRelationNavigatorBaseImpl( fromType, toType ) { /* nop */; }
 
     /** Use the given collection to create this navigator object.
      */
-    LCRelationNavigatorImpl( const EVENT::LCCollection* col ) { initialize(col) ; }
+    LCRelationNavigatorImpl( const EVENT::LCCollection* col ) ;
     
     /// Destructor.
     virtual ~LCRelationNavigatorImpl() { /* nop */; }

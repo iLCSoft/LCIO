@@ -7,7 +7,7 @@ import hep.lcio.event.LCRunHeader;
 /**
  * A default implementation of LCRunHeader
  * @author Tony Johnson
- * @version $Id: ILCRunHeader.java,v 1.5 2004-06-25 12:53:20 gaede Exp $
+ * @version $Id: ILCRunHeader.java,v 1.6 2004-07-14 15:50:44 gaede Exp $
  */
 public class ILCRunHeader extends ILCObject implements LCRunHeader
 {
@@ -67,7 +67,7 @@ public class ILCRunHeader extends ILCObject implements LCRunHeader
       activeSubdetectors = newActive;
    }
 
-	public LCParameters parameters() {
+	public LCParameters getParameters() {
 		return parameters ;
 	}
 

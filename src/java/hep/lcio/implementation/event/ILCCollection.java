@@ -1,6 +1,7 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.LCObject;
+import hep.lcio.event.LCParameters;
 
 import hep.lcio.event.LCCollection;
 
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.7 2004-04-08 09:57:59 gaede Exp $
+ * @version $Id: ILCCollection.java,v 1.8 2004-07-14 15:50:44 gaede Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {
    private String type;
    private int flag;
+   protected ILCParameters parameters = new ILCParameters() ;
 
    public ILCCollection(String type)
    {
@@ -78,4 +80,14 @@ public class ILCCollection extends ArrayList implements LCCollection
    {
       
    }
+   public LCParameters getParameters() {
+	   return parameters;
+   }
+   
+   public void setParameters(LCParameters p) {
+	   if(p!=null)
+	     parameters = (ILCParameters) p ; 
+   }
+
+
 }

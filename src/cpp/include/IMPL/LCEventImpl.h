@@ -8,6 +8,7 @@
 #include "EVENT/LCRelation.h"
 #include "EVENT/LCIO.h"
 #include "AccessChecked.h"
+#include "LCParametersImpl.h"
 
 namespace IMPL{
 
@@ -113,6 +114,13 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      */ 
     virtual void removeRelation(const std::string & name) throw (EVENT::ReadOnlyException, std::exception)  ;
 
+    /** Parameters defined for this run.
+     */
+    virtual const EVENT::LCParameters & getParameters() const { return _params ; }
+
+    /** Parameters defined for this run.
+     */
+    virtual EVENT::LCParameters & parameters() { return _params ; }
 
     //---- set methods -----
     /** Sets the run number.
@@ -151,6 +159,8 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
 
     mutable LCRelationMap _relMap ;
     mutable std::vector<std::string> _relNames ;
+
+    LCParametersImpl _params ;
     
     
   }; // class

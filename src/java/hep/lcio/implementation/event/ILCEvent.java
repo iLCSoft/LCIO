@@ -2,15 +2,16 @@ package hep.lcio.implementation.event;
 
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
+import hep.lcio.event.LCParameters;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import hep.lcio.exceptions.DataNotAvailableException; 
+import hep.lcio.exceptions.DataNotAvailableException;
 
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.10 2004-05-10 03:15:52 tonyj Exp $
+ * @version $Id: ILCEvent.java,v 1.11 2004-07-14 15:50:44 gaede Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -19,6 +20,7 @@ public class ILCEvent extends ILCObject implements LCEvent
    protected int runNumber;
    protected long timeStamp;
    private Map collections = new LinkedHashMap();
+   protected ILCParameters parameters = new ILCParameters() ;
 
    public LCCollection getCollection(String name) throws DataNotAvailableException
    {
@@ -117,4 +119,8 @@ public class ILCEvent extends ILCObject implements LCEvent
       //FIXME:
    }
    
+   public LCParameters getParameters() {
+	return parameters;
+   }
+
 }

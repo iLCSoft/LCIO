@@ -3,7 +3,7 @@ package hep.lcio.event;
 /** Interface for the run header. 
  *
  * @author gaede
- * @version Jan 3, 2003
+ * @version $Id: LCRunHeader.aid,v 1.7 2004-07-14 15:50:40 gaede Exp $
  */
 public interface LCRunHeader extends LCObject {
     
@@ -27,5 +27,11 @@ public interface LCRunHeader extends LCObject {
 
     /** Parameters defined for this run.
      */
+    public const LCParameters& getParameters() const ;
+
+@ifdef cpp
+    /** Parameters defined for this run.
+     */
     public LCParameters& parameters() ;
+@endif
 }

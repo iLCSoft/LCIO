@@ -15,6 +15,7 @@
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 #include "IMPL/TPCHitImpl.h"
+#include "IMPL/LCRelationNavigatorImpl.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -282,17 +283,24 @@ int main(int argc, char** argv ){
 
 	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
 
-	 
+	//---- test new relation navigator object
+	LCRelationNavigatorImpl* relNav = 
+	  new LCRelationNavigatorImpl( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
+
 	bool storeRawData = true ;
 
 	LCFlagImpl tpcFlag(0) ;
 	if(  storeRawData )  // if we want to store the raw data we need to set the flag
 	  tpcFlag.setBit( LCIO::TPCBIT_RAW ) ;
+	  tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
 	TPCVec->setFlag( tpcFlag.getFlag()  ) ;
 	
 	for(int j=0;j<NHITS;j++){
 	  
 	  TPCHitImpl* tpcHit = new TPCHitImpl ;
+	  
+	  //---- test new relation navigator object
+	  relNav->addRelation( tpcHit , trkVec->getElementAt(j) , 0.95  ) ;
 	  
 	  tpcHit->setCellID( j ) ;
 	  tpcHit->setTime( 0.1234567 ) ;
@@ -313,6 +321,8 @@ int main(int argc, char** argv ){
 	  TPCVec->push_back( tpcHit ) ;
 	}	
 	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
+	evt->addCollection( relNav->createLCCollection() , "TPCRawFADCMCTruth" ) ;
+
 	//--------------  all for TPC --------------------
 
 

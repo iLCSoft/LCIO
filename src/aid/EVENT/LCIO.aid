@@ -3,7 +3,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version Mar 4, 2003
+ * @version $Id: LCIO.aid,v 1.31 2004-07-14 15:50:40 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -18,7 +18,7 @@ public interface LCIO{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 1 ; 
-    static const int MINORVERSION  = 1 ; 
+    static const int MINORVERSION  = 2 ; 
 
     // bits in flag words
     // SimCalorimeterHit (CH)
@@ -83,7 +83,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 1 ; 
+  public static const int MINORVERSION  = 2 ; 
 
   // bits in flag words
   // SimCalorimeterHit (CH)

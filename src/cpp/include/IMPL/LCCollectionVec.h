@@ -7,6 +7,7 @@
 #include "EVENT/LCCollection.h"
 #include "EVENT/LCObject.h"
 #include "AccessChecked.h"
+#include "LCParametersImpl.h"
 
 //#include "LCIO.h"
 
@@ -82,12 +83,21 @@ namespace IMPL {
      */
     virtual void removeElementAt(int i) throw (EVENT::ReadOnlyException) ;
     
+    /** Parameters defined for this run.
+     */
+    virtual const EVENT::LCParameters & getParameters() const { return _params ; } 
+
+    /** Parameters defined for this run.
+     */
+    virtual EVENT::LCParameters & parameters() { return _params ; } 
+    
 
   protected:
     void setReadOnly(bool readOnly) ;
 
     std::string _typeName ;
     int _flag ;
+    LCParametersImpl _params ;
     //    int _access ;
 
 }; // class

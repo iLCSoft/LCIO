@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version Mar 4, 2003
+ * @version $Id: LCEvent.aid,v 1.6 2004-07-14 15:50:40 gaede Exp $
  * @see LCCollection
  */
 
@@ -56,6 +56,17 @@ public interface LCEvent {
      */ 
     public void removeCollection(const  String& name ) throws ReadOnlyException ;
     
+    /** Parameters defined for this event.
+     */
+    public const LCParameters& getParameters() const ;
+
+@ifdef cpp
+    /** Parameters defined for this event.
+     */
+    public LCParameters& parameters() ;
+@endif
+
+
 
 
     //fg20040528:   added relations to the event

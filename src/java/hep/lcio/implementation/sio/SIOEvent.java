@@ -18,6 +18,7 @@ import hep.lcio.event.TPCHit;
 import hep.lcio.implementation.event.ICluster;
 
 import hep.lcio.implementation.event.ILCEvent;
+import hep.lcio.implementation.event.ILCParameters;
 import hep.lcio.implementation.event.ILCStrVec;
 import hep.lcio.implementation.event.ILCFloatVec;
 import hep.lcio.implementation.event.ILCIntVec;
@@ -32,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.20 2004-07-07 05:32:09 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.21 2004-07-14 15:50:45 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -42,8 +43,9 @@ class SIOEvent extends ILCEvent
    {
       setAccess(accessMode);
       SIOBlock block = record.getBlock();
-
-      if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+	  int major = block.getMajorVersion() ;
+      int minor = block.getMinorVersion() ;
+      if (( major < 1) && ( minor < 8))
          throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
       SIOInputStream in = block.getData();
@@ -62,6 +64,11 @@ class SIOEvent extends ILCEvent
 
          blockMap.put(blockName, blockType);
       }
+
+	if( (major<<16 | minor ) > (1<<16|1)  ){
+		parameters = new SIOLCParameters(in) ;
+	} 
+
    }
    void setReadOnly(boolean mode)
    {
@@ -87,11 +94,20 @@ class SIOEvent extends ILCEvent
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
          if (type == null) continue;
+         
+         
+		int flags = in.readInt();
+		ILCParameters colParameters = null ;
+		if( (major<<16 | minor ) > (1<<16|1)  ){
+			colParameters = new SIOLCParameters(in) ;
+		} 
+		
          if (type.equals(LCIO.MCPARTICLE))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int nMC = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < nMC; i++)
                ilc.add(new SIOMCParticle(in, this, major, minor));
             for (int i = 0; i < nMC; i++)
@@ -101,9 +117,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.SIMTRACKERHIT))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOSimTrackerHit(in, this,major,minor));
             ilc.setOwner(this);
@@ -111,9 +128,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.TPCHIT))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add (new SIOTPCHit(in,flags, this,major,minor) );
             ilc.setOwner(this);
@@ -121,9 +139,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.SIMCALORIMETERHIT))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOSimCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
@@ -131,9 +150,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.CALORIMETERHIT))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
@@ -141,9 +161,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCSTRVEC))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOStrVec(in, this));
             ilc.setOwner(this);
@@ -151,9 +172,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCFLOATVEC))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOFloatVec(in, this));
             ilc.setOwner(this);
@@ -161,9 +183,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCINTVEC))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOIntVec(in, this));
             ilc.setOwner(this);
@@ -171,9 +194,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.CLUSTER))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOCluster(in, this, flags, major, minor));
             ilc.setOwner(this);
@@ -181,9 +205,10 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.TRACK))
          {
-            int flags = in.readInt();
+            //int flags = in.readInt();
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+			ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
                ilc.add(new SIOTrack(in, this, flags, major, minor));
             ilc.setOwner(this);
@@ -191,7 +216,7 @@ class SIOEvent extends ILCEvent
          }
          else if (type.equals(LCIO.LCRELATION))
          {
-            int flags = in.readInt();            
+          //  int flags = in.readInt();            
             String fromType = "from"; // FixMe:
             String toType = "to"; // FixMe:
             SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
@@ -219,6 +244,10 @@ class SIOEvent extends ILCEvent
             out.writeString(blockName);
             out.writeString(event.getCollection(blockName).getTypeName());
          }
+		if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+		 SIOLCParameters.write( event.getParameters() , out ) ;
+		}
+
       }
       else
       {
@@ -231,6 +260,11 @@ class SIOEvent extends ILCEvent
             String type = col.getTypeName();
             int flags = col.getFlag();
             out.writeInt(flags);
+
+			if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+			 SIOLCParameters.write( col.getParameters() , out ) ;
+			}
+
 
             int n = col.getNumberOfElements();
             out.writeInt(n);

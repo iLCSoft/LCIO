@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include "IMPL/LCCollectionVec.h"
+#include "IMPL/LCFlagImpl.h"
 #include "IMPL/LCWgtRelationImpl.h"
 #include "EVENT/LCIO.h"
 
@@ -82,6 +83,11 @@ namespace IMPL{
     LCCollectionVec* col = new LCCollectionVec( LCIO::LCWGTRELATION ) ;
     
     
+    col->parameters().setValue( "FromType" , getFromType() ) ;
+    col->parameters().setValue( "ToType" , getToType() ) ;
+
+
+    bool storeWeights = false ;
     for(RelMap::iterator iter = _map.begin() ;
 	iter != _map.end() ; iter++ ) {
       
@@ -89,14 +95,21 @@ namespace IMPL{
       LCObjectVec& vTo = iter->second.first ;
       FloatVec & vWgt  = iter->second.second ;
       
-      int n =  vTo.size() ;
+      unsigned int n =  vTo.size() ;
       assert( n == vWgt.size() ) ;
 
-      for( int i=0 ; i<n ; i++ ){
+      for( unsigned int i=0 ; i<n ; i++ ){
 
-	LCWgtRelationImpl* rel = new LCWgtRelationImpl( from , vTo[i] , vWgt[i] )   ;
+	col->addElement( new LCWgtRelationImpl( from , vTo[i] , vWgt[i] )    ) ;
+	if( vWgt[i] != 1.0f ) storeWeights = true ;
       }
     }
+    if( storeWeights ) {
+      LCFlagImpl flag(0) ; 
+      flag.setBit( LCIO::LCREL_WEIGHTED ) ;
+      col->setFlag( flag.getFlag() ) ;
+    }
+      
 
     return col ;
   }

@@ -6,7 +6,7 @@ import hep.lcio.exceptions.* ;
 /** The generic collection used in LCIO. Holds objects of type LCObject.
  * 
  * @author gaede 
- * @version Mar 4, 2003
+ * @version $Id: LCCollection.aid,v 1.7 2004-07-14 15:50:40 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -58,6 +58,17 @@ public interface LCCollection
     /** Set the flag word. This is allowed in 'read only' mode.
      */
     public void setFlag(int flag)  ;
+
+
+    /** Parameters defined for this collection.
+     */
+    public const LCParameters& getParameters() const ;
+
+@ifdef cpp
+   /** Parameters defined for this collection.
+     */
+    public LCParameters& parameters() ;
+@endif
 
 }
 

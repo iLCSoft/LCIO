@@ -86,7 +86,7 @@ namespace SIO{
     
     
   unsigned int SIOLCParameters::write(SIO_stream* stream, 
-				      LCParameters& params) {
+				      const LCParameters& params) {
     
     unsigned int status ; 
 

@@ -86,6 +86,10 @@ namespace UTIL{
 
     /** Print the relation.
      */
+    static void printRelation( const EVENT::LCCollection* col ) ;
+
+    /** Print the relation.
+     */
     static void printRelation( const EVENT::LCRelation* rel ) ;
 
 

@@ -26,7 +26,7 @@ namespace SIO {
     /** Writes lcio objects to an SIO stream.
      */
     static unsigned int write(SIO_stream* stream, 
-			      LCParameters& params) ;
+			      const LCParameters& params) ;
     
   }; // class
 }; // namespace

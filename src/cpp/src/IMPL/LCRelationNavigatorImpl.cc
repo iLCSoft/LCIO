@@ -3,11 +3,21 @@
 #include "EVENT/LCWgtRelation.h"
 
 #include "EVENT/LCCollection.h"
+#include "EVENT/LCParameters.h"
 #include "EVENT/LCIO.h"
 
 using namespace EVENT ;
 
 namespace IMPL {
+
+
+  LCRelationNavigatorImpl::LCRelationNavigatorImpl( const EVENT::LCCollection* col ) :
+  
+    LCRelationNavigatorBaseImpl( col->getParameters().getStringVal("FromType") , 
+				 col->getParameters().getStringVal("ToType") ) { 
+
+    initialize(col) ; 
+  }
 
   void LCRelationNavigatorImpl::initialize( const LCCollection* col ) {
 

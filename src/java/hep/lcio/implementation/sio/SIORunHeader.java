@@ -3,6 +3,7 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 
+import hep.lcio.event.LCIO;
 import hep.lcio.event.LCRunHeader;
 
 import hep.lcio.implementation.event.ILCRunHeader;
@@ -13,11 +14,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.6 2004-06-25 12:53:20 gaede Exp $
+ * @version $Id: SIORunHeader.java,v 1.7 2004-07-14 15:50:45 gaede Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {
-   SIORunHeader(SIOInputStream in) throws IOException
+   SIORunHeader(SIOInputStream in,int major,int minor) throws IOException
    {
       runNumber = in.readInt();
       detectorName = in.readString();
@@ -28,7 +29,9 @@ class SIORunHeader extends ILCRunHeader
       for (int i = 0; i < n; i++)
          activeSubdetectors[i] = in.readString();
    
+	if( (major<<16 | minor ) > (1<<16|1)  ){
       parameters = new SIOLCParameters(in) ;
+	} 
    }
 
    static void write(LCRunHeader header, SIOOutputStream out) throws IOException
@@ -46,7 +49,9 @@ class SIORunHeader extends ILCRunHeader
          for (int i = 0; i < active.length; i++)
             out.writeString(active[i]);
  
-         SIOLCParameters.write( header.parameters() , out ) ;
+		if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+         SIOLCParameters.write( header.getParameters() , out ) ;
+		}
       }
    }
 
@@ -58,6 +63,8 @@ class SIORunHeader extends ILCRunHeader
       out.writeInt(activeSubdetectors.length);
       for (int i = 0; i < activeSubdetectors.length; i++)
          out.writeString(activeSubdetectors[i]);
-   	  SIOLCParameters.write( parameters , out ) ;
+	  if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+   	   SIOLCParameters.write( parameters , out ) ;
+	  }
    }
 }

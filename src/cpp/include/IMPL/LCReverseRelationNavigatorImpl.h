@@ -10,7 +10,7 @@ namespace IMPL {
  *  when instantiated from a collection of LCWgtRelation objects.
  *
  * @author gaede 
- * @version $Id: LCReverseRelationNavigatorImpl.h,v 1.1 2004-07-13 11:54:27 gaede Exp $
+ * @version $Id: LCReverseRelationNavigatorImpl.h,v 1.2 2004-07-14 15:50:41 gaede Exp $
  * @see LCRelationNavigatorImpl
  */
   class LCReverseRelationNavigatorImpl : public LCRelationNavigatorBaseImpl {
@@ -19,12 +19,13 @@ namespace IMPL {
   public: 
     /**Default constructor.
      */
-    LCReverseRelationNavigatorImpl() { /* nop */; }
+    LCReverseRelationNavigatorImpl(const std::string &fromType, const std::string &toType) :
+      LCRelationNavigatorBaseImpl( fromType, toType ) { /* nop */; }
 
     /** Use the given collection to create this navigator object but reverse the 
      *  direction, i.e. exchange 'from' and 'to' object.
      */
-    LCReverseRelationNavigatorImpl( const EVENT::LCCollection* col ) { initialize(col) ; }
+    LCReverseRelationNavigatorImpl( const EVENT::LCCollection* col ) ; 
     
     /// Destructor.
     virtual ~LCReverseRelationNavigatorImpl() { /* nop */; }

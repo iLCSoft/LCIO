@@ -47,54 +47,54 @@ namespace IMPL {
     
     /** Returns the first integer value for the given key.
      */
-    virtual int getIntVal(const std::string & key);
+    virtual int getIntVal(const std::string & key) const  ;
     
     /** Returns the first float value for the given key.
      */
-    virtual float getFloatVal(const std::string & key);
+    virtual float getFloatVal(const std::string & key) const ;
     
     /** Returns the first string value for the given key.
      */
-    virtual const std::string & getStringVal(const std::string & key);
+    virtual const std::string & getStringVal(const std::string & key) const ;
     
     /** Adds all integer values for the given key to values.
      *  Returns a reference to values for convenience.
      */
-    virtual EVENT::IntVec & getIntVals(const std::string & key, EVENT::IntVec & values);
+    virtual EVENT::IntVec & getIntVals(const std::string & key, EVENT::IntVec & values) const ;
     
     /** Adds all float values for the given key to values.
      *  Returns a reference to values for convenience.
      */
-    virtual EVENT::FloatVec & getFloatVals(const std::string & key, EVENT::FloatVec & values);
+    virtual EVENT::FloatVec & getFloatVals(const std::string & key, EVENT::FloatVec & values) const ;
     
     /** Adds all float values for the given key to values.
      *  Returns a reference to values for convenience.
      */
-    virtual  EVENT::StringVec & getStringVals(const std::string & key, EVENT::StringVec & values);
+    virtual  EVENT::StringVec & getStringVals(const std::string & key, EVENT::StringVec & values) const ;
     
     /** Returns a list of all keys of integer parameters.
      */
-    virtual const EVENT::StringVec & getIntKeys( EVENT::StringVec & keys) ;
+    virtual const EVENT::StringVec & getIntKeys( EVENT::StringVec & keys) const  ;
 
     /** Returns a list of all keys of float parameters.
      */
-    virtual const EVENT::StringVec & getFloatKeys(EVENT::StringVec & keys) ;
+    virtual const EVENT::StringVec & getFloatKeys(EVENT::StringVec & keys)  const ;
 
     /** Returns a list of all keys of string parameters.
      */
-    virtual const EVENT::StringVec & getStringKeys(EVENT::StringVec & keys) ;
+    virtual const EVENT::StringVec & getStringKeys(EVENT::StringVec & keys)  const ;
     
     /** The number of integer values stored for this key.
      */ 
-    virtual int getNInt(const std::string & key);
+    virtual int getNInt(const std::string & key) const ;
     
     /** The number of float values stored for this key.
      */ 
-    virtual int getNFloat(const std::string & key);
+    virtual int getNFloat(const std::string & key) const ;
     
     /** The number of string values stored for this key.
      */ 
-    virtual int getNString(const std::string & key);
+    virtual int getNString(const std::string & key) const ;
     
     /** Set integer value for the given key.
      */
@@ -123,9 +123,9 @@ namespace IMPL {
 
   protected:
 
-    IntMap _intMap ;
-    FloatMap _floatMap ;
-    StringMap _stringMap ;
+    mutable IntMap _intMap ;
+    mutable FloatMap _floatMap ;
+    mutable StringMap _stringMap ;
     
   }; // class
 } // namespace IMPL

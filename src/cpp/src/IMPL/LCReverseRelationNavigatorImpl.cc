@@ -3,11 +3,20 @@
 #include "EVENT/LCWgtRelation.h"
 
 #include "EVENT/LCCollection.h"
+#include "EVENT/LCParameters.h"
 #include "EVENT/LCIO.h"
 
 using namespace EVENT ;
 
 namespace IMPL {
+
+  LCReverseRelationNavigatorImpl::LCReverseRelationNavigatorImpl( const EVENT::LCCollection* col ) :
+  
+    LCRelationNavigatorBaseImpl( col->getParameters().getStringVal("FromType") , 
+				 col->getParameters().getStringVal("ToType") ) { 
+
+    initialize(col) ; 
+  }
 
   void LCReverseRelationNavigatorImpl::initialize( const LCCollection* col ) {
 

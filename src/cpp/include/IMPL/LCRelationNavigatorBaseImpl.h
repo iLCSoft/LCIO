@@ -14,7 +14,7 @@ namespace IMPL {
  *
  * 
  * @author gaede 
- * @version $Id: LCRelationNavigatorBaseImpl.h,v 1.1 2004-07-13 11:54:27 gaede Exp $
+ * @version $Id: LCRelationNavigatorBaseImpl.h,v 1.2 2004-07-14 15:50:41 gaede Exp $
  */
   class LCRelationNavigatorBaseImpl : public EVENT::LCRelationNavigator {
     
@@ -22,7 +22,10 @@ namespace IMPL {
     
     
   public: 
-    LCRelationNavigatorBaseImpl() { /* nop */; }
+
+    LCRelationNavigatorBaseImpl(const std::string &fromType, const std::string &toType) :
+      _from( fromType) ,
+      _to( toType ) { /* nop */; }
     
     /// Destructor.
     virtual ~LCRelationNavigatorBaseImpl() { /* nop */; }
@@ -56,6 +59,8 @@ namespace IMPL {
     virtual EVENT::LCCollection * createLCCollection() ;
 
   protected:
+
+    LCRelationNavigatorBaseImpl() ;
 
     /** Make this class abstract
      */

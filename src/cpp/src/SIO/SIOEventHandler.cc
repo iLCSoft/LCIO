@@ -7,6 +7,7 @@
 #include "IOIMPL/LCCollectionIOVec.h"
 #include "IOIMPL/LCRelationIOImpl.h"
 #include "LCIOSTLTypes.h"
+#include "SIO/SIOLCParameters.h"
 
 #include "SIO_functions.h"
 #include <sstream> 
@@ -104,10 +105,12 @@ namespace SIO  {
 	   }
 	   catch( EventException ){  return LCIO::ERROR ; }
 	 }
-
-
       }
 
+      // read parameters
+      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
+	SIOLCParameters::read( stream ,  (*_evtP)->parameters() , versionID) ;
+      
 
     }  else if( op == SIO_OP_WRITE ){ 
     
@@ -157,6 +160,10 @@ namespace SIO  {
 	  LCSIO_WRITE( stream, relTypeName.str() ) ;
 		
 	} 
+	
+	// write parameters
+	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
+	  SIOLCParameters::write( stream ,  _evt->getParameters() ) ;
 
       } else {
 	return 0 ;

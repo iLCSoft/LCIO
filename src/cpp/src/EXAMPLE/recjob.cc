@@ -231,9 +231,8 @@ public:
 
 //     LCRelation* scRel = new LCRelationImpl( LCIO::CALORIMETERHIT , LCIO::SIMCALORIMETERHIT  )  ; // still experimental code ...
 
+
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
-
-
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
 

@@ -46,6 +46,10 @@ namespace IMPL {
 
     /** Parameters defined for this run.
      */
+    virtual const EVENT::LCParameters & getParameters() const { return _params ; } 
+
+    /** Parameters defined for this run.
+     */
     virtual EVENT::LCParameters & parameters() { return _params ; } 
 
 

@@ -3,6 +3,7 @@
 #include "SIO/LCSIO.h"
 
 #include "EVENT/LCIO.h"
+#include "SIO/SIOLCParameters.h"
 
 #include "IOIMPL/LCCollectionIOVec.h"
 
@@ -71,9 +72,14 @@ namespace SIO {
       catch(DataNotAvailableException){   return LCIO::ERROR ; }
 
       SIO_DATA( stream ,  &(ioCol->_flag) , 1  ) ;
+      
+      // read parameters
+      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
+	SIOLCParameters::read( stream ,  ioCol->parameters() , versionID) ;
+      
       int nObj ;
       SIO_DATA( stream ,  &nObj , 1  ) ;
-      
+
       // now read all the objects :
       for( int i=0 ; i< nObj ; i ++ ){
 	
@@ -85,6 +91,7 @@ namespace SIO {
 	ioCol->push_back( obj ) ;
       }
       
+
     } else if( op == SIO_OP_WRITE ){ 
       
 //       const LCCollection* vec = _col ;
@@ -92,9 +99,14 @@ namespace SIO {
       if( _col  != 0 ){
 	
 	LCSIO_WRITE( stream, _col->getFlag()  ) ;
+
+	// write parameters
+	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
+	  SIOLCParameters::write( stream ,  _col->getParameters() ) ;
+
 	int nObj = _col->getNumberOfElements() ;
+
 	SIO_DATA( stream,  &nObj , 1  ) ;
-	
 	
 	//  now write all the objects :
 	for( int i=0 ; i< nObj ; i ++ ){

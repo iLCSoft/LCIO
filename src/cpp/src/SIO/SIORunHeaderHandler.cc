@@ -84,7 +84,8 @@ namespace SIO  {
       }
 
       // read parameters
-      SIOLCParameters::read( stream ,  (*_rhP)->parameters() , versionID) ;
+      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
+	SIOLCParameters::read( stream ,  (*_rhP)->parameters() , versionID) ;
       
     }  else if( op == SIO_OP_WRITE ){ 
     
@@ -105,7 +106,8 @@ namespace SIO  {
 	} 
 	
 	// write parameters
-	SIOLCParameters::write( stream ,  const_cast<LCRunHeader*>(_hdr)->parameters() ) ;
+	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
+	  SIOLCParameters::write( stream , _hdr->getParameters() ) ;
 
 	
 
