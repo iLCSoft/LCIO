@@ -1,4 +1,3 @@
-// -*- C++ -*-
 /** Collection of static helper  functions for reading and writing
  * data with SIO. Could go to the SIO_functions class.
  * Also defines some constant names for lcio-SIO.
@@ -17,7 +16,10 @@ class SIO_stream ;
 namespace SIO {
 
 
-#define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt)  ); if( !(status & 1) ) return status;
+  //fg 20030508 changing the way strings are saved - ommit the trailing '\00'
+  // for a transition period we need to give the versionID
+  // to be able to read old files transparently
+#define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt) ,(versionID) ); if( !(status & 1) ) return status;
 
 #define LCSIO_WRITE( rec, pnt ) status = LCSIO::write( (rec), (pnt)  ); if( !(status & 1) ) return status;
 
@@ -39,6 +41,12 @@ namespace SIO {
      * So the return value needs to be copied to its final memory destination.
      */
     static unsigned int read( SIO_stream* stream ,char** c ) ;
+
+    /** This version checks the versionId to be able to read 'old' files with 
+     * trailing '\00' (version <= 00-02).
+     * Remove this method after a reasonable transition period...
+     */
+    static unsigned int read( SIO_stream* stream ,char** c, int versionID) ;
   
     /** Write an int to the stream.
      */

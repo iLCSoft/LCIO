@@ -22,8 +22,8 @@ using namespace std ;
 using namespace lcio ;
 
 
-static const char* FILEN = "simjob.sio" ;
-static const char* OUTFILEN = "recjob.sio" ;
+static  char* FILEN = "simjob.sio" ;
+static char* OUTFILEN = "recjob.sio" ;
 static const int NHITS = 50 ;  // calorimeter hits per event
 
 
@@ -159,6 +159,10 @@ int main(int argc, char** argv ){
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     
     
+    // read file name from command line 
+    if( argc > 1 ) { FILEN = argv[1] ; }
+    if( argc > 2 ) { OUTFILEN = argv[2] ; }
+
     try{  lcReader->open( FILEN ) ; } 
     
     catch( IOException& e){

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_functions.cc,v 1.2 2003-05-09 15:40:52 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -245,7 +245,10 @@ else
                       << stream->name     << "/"
                       << stream->rec_name << "/"
                       << stream->blk_name << "] "
-                      << "Read request exceeds size of block"
+                      << "Read request exceeds size of block: "
+		      << bytlen << " requested "
+		      << (int) stream->blkmax - (int) stream->bufloc   
+		      << " available !" 
                       << std::endl;
 	}
 

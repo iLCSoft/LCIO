@@ -25,14 +25,14 @@ public interface LCIO{
     
     // it seems to be impossible to have one declaration for
     // static constants in Java and C++ - so we need to define
-    // the same constant twice !!
+    // the same constants twice !!
 
 @ifdef cpp
 @cpp{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 0 ; 
-    static const int MINORVERSION  = 2 ; 
+    static const int MINORVERSION  = 3 ; 
 
     // bits in flag words
     // CalorimeterHit (CH)
@@ -61,7 +61,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 0 ; 
-  public static const int MINORVERSION  = 1 ; 
+  public static const int MINORVERSION  = 3 ; 
 
   // bits in flag words
   // CalorimeterHit (CH)

@@ -27,6 +27,9 @@ clean:
 	rm -f $(BINS)
 
 
+$(BINDIR)/minijob: minijob.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/minijob $(CPPFLAGS) minijob.cc  $(LIBS) 
+
 $(BINDIR)/simjob: simjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/simjob $(CPPFLAGS) simjob.cc  $(LIBS) 
 
