@@ -10,7 +10,7 @@ import hep.lcio.exceptions.DataNotAvailableException;
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.9 2004-04-08 09:57:59 gaede Exp $
+ * @version $Id: ILCEvent.java,v 1.10 2004-05-10 03:15:52 tonyj Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -94,4 +94,27 @@ public class ILCEvent extends ILCObject implements LCEvent
       checkAccess();
       collections.remove(name);
    }
+   
+   public void addRelation(hep.lcio.event.LCRelation col, String name) throws hep.lcio.exceptions.EventException
+   {
+      // FIXME:
+   }
+   
+   public hep.lcio.event.LCRelation getRelation(String name) throws DataNotAvailableException
+   {
+      // FIXME:
+      return null;
+   }
+   
+   public String[] getRelationNames()
+   {
+      // FIXME:
+      return null;
+   }
+   
+   public void removeRelation(String name) throws hep.lcio.exceptions.ReadOnlyException
+   {
+      //FIXME:
+   }
+   
 }

@@ -140,9 +140,11 @@ public interface ReconstructedParticle extends LCObject {
      */
     public void setCovMatrix( const float3V cov ) ; 
     
-    /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
+@ifdef cpp   
+   /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
      */
     public void setCovMatrix( const FloatVec& cov ) ;
+@endif
 
     /**Set mass - independently from four vector. 
      */

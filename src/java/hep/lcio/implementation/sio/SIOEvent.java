@@ -14,6 +14,7 @@ import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
 import hep.lcio.event.TPCHit;
+import hep.lcio.implementation.event.ICluster;
 
 import hep.lcio.implementation.event.ILCEvent;
 import hep.lcio.implementation.event.ILCFloatVec;
@@ -27,7 +28,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.16 2004-04-15 14:52:55 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.17 2004-05-10 03:15:53 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -155,6 +156,16 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
+         else if (type.equals(LCIO.CLUSTER))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOCluster(in, this, flags, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc,name);
+         }
       }
    }
 
@@ -226,6 +237,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOIntVec.write((ILCIntVec) col.getElementAt(i), out);
+            }
+            else if (type.equals(LCIO.CLUSTER))
+            {
+               for (int i=0; i < n; i++)
+                  SIOCluster.write((ICluster) col.getElementAt(i), out, flags);
             }
          }
       }
