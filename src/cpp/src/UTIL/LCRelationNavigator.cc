@@ -1,4 +1,4 @@
-#include "IMPL/LCRelationNavigatorImpl.h"
+#include "IMPL/LCRelationNavigator.h"
 
 #include <algorithm>
 #include <cassert>
@@ -12,7 +12,7 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  LCRelationNavigatorImpl::LCRelationNavigatorImpl( const EVENT::LCCollection* col ) :
+  LCRelationNavigator::LCRelationNavigator( const EVENT::LCCollection* col ) :
   
     _from( col->getParameters().getStringVal("FromType") ) ,
     _to( col->getParameters().getStringVal("ToType") ) { 
@@ -20,7 +20,7 @@ namespace IMPL{
     initialize(col) ; 
   }
 
-  void LCRelationNavigatorImpl::initialize( const LCCollection* col ) {
+  void LCRelationNavigator::initialize( const LCCollection* col ) {
 
 
     if( col->getTypeName() != LCIO::LCWGTRELATION ) {
@@ -39,39 +39,39 @@ namespace IMPL{
   }
 
 
-  const std::string & LCRelationNavigatorImpl::getFromType() const { return _from ; }
-  const std::string & LCRelationNavigatorImpl::getToType() const { return _to ; }
+  const std::string & LCRelationNavigator::getFromType() const { return _from ; }
+  const std::string & LCRelationNavigator::getToType() const { return _to ; }
   
   const EVENT::LCObjectVec& 
-  LCRelationNavigatorImpl::getRelatedToObjects(EVENT::LCObject * from) const{
+  LCRelationNavigator::getRelatedToObjects(EVENT::LCObject * from) const{
 
     return _map[ from ].first ;
   }
 
   const EVENT::LCObjectVec& 
-  LCRelationNavigatorImpl::getRelatedFromObjects(EVENT::LCObject * to) const{
+  LCRelationNavigator::getRelatedFromObjects(EVENT::LCObject * to) const{
 
     return _rMap[ to ].first ;
   }
 
-  const  EVENT::FloatVec & LCRelationNavigatorImpl::getRelatedToWeights(EVENT::LCObject * from) const {
+  const  EVENT::FloatVec & LCRelationNavigator::getRelatedToWeights(EVENT::LCObject * from) const {
 
     return _map[ from ].second ;
   }
 
-  const  EVENT::FloatVec & LCRelationNavigatorImpl::getRelatedFromWeights(EVENT::LCObject * to) const {
+  const  EVENT::FloatVec & LCRelationNavigator::getRelatedFromWeights(EVENT::LCObject * to) const {
 
     return _rMap[ to ].second ;
   }
 
-  void LCRelationNavigatorImpl::addRelation(EVENT::LCObject * from, 
+  void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
 					       EVENT::LCObject * to, 
 					       float weight) {
     addRelation( from , to , weight ,  _map ) ;
     addRelation( to , from, weight ,  _rMap ) ;
   }
   
-  void LCRelationNavigatorImpl::addRelation(EVENT::LCObject * from, 
+  void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
 					       EVENT::LCObject * to, 
 					       float weight,
 					       RelMap& map) {
@@ -96,14 +96,14 @@ namespace IMPL{
   
 
 
-  void LCRelationNavigatorImpl::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) {
+  void LCRelationNavigator::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) {
     removeRelation( from, to, _map ) ;
     removeRelation( to, from, _rMap ) ;
   }
   
   
   
-  void LCRelationNavigatorImpl::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to, RelMap& map ){
+  void LCRelationNavigator::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to, RelMap& map ){
 
     RelMap::iterator iter =  map.find( from ) ;
     if( iter != map.end() ) {
@@ -135,7 +135,7 @@ namespace IMPL{
     }
   }
 
-  EVENT::LCCollection * LCRelationNavigatorImpl::createLCCollection() {
+  EVENT::LCCollection * LCRelationNavigator::createLCCollection() {
     
     LCCollectionVec* col = new LCCollectionVec( LCIO::LCWGTRELATION ) ;
     

@@ -10,9 +10,9 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of CalorimeterHits.
    *
    * @author gaede
-   * @version $Id: SIOLCWgtRelationHandler.h,v 1.2 2004-08-20 16:45:24 gaede Exp $
+   * @version $Id: SIOLCRelationHandler.h,v 1.1 2004-09-06 14:05:06 gaede Exp $
    */
-  class SIOLCWgtRelationHandler : public SIOObjectHandler {
+  class SIOLCRelationHandler : public SIOObjectHandler {
 	
   public:
 	

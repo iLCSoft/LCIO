@@ -1,6 +1,6 @@
 // -*- C++ -*-
-#ifndef EVENT_LCRELATIONIMPL_H
-#define EVENT_LCRELATIONIMPL_H 1
+#ifndef EVENT_LCWGTRELATIONIMPL_H
+#define EVENT_LCWGTRELATIONIMPL_H 1
 
 #include <vector>
 #include <map>
@@ -13,9 +13,6 @@
 
 namespace IMPL {
   
-  typedef std::multimap< EVENT::LCObject*, std::pair< EVENT::LCObject*, float > > LCWgtMultiMap ;
-  typedef LCWgtMultiMap::iterator LCRelationIter ;
-
   /** Implementation of the LCRelation.
    * 
    * @author gaede 
@@ -25,101 +22,27 @@ namespace IMPL {
     
     public:
 
-    LCRelationImpl() { /* no default c'tor */ }
+    LCRelationImpl() : _from(0) , _to(0) , _weight(1.0f) { }
+    LCRelationImpl( EVENT::LCObject* from, EVENT::LCObject* to , float weight=1.0f ) : _from(from),
+											  _to(to),
+											  _weight(weight) {}
+    ~LCRelationImpl(){}
 
-    /** Default constructor for users takes types of the related objects.
-     */
-    LCRelationImpl(const std::string& fromType, const std::string& toType ) ;
+    int id() { return simpleUID() ; }
+
+    EVENT::LCObject * getFrom() const { return _from ; }
+    EVENT::LCObject * getTo() const { return _to ; } 
+    float getWeight() const { return _weight ; } 
     
-    /** Destructor.
-     */    
-    virtual ~LCRelationImpl() ;
+    void setFrom( EVENT::LCObject* from ) { _from = from ; }
+    void setTo( EVENT::LCObject* to ) { _to = to ; }
+    void setWeight( float weight ) { _weight = weight ; }
     
-    /**The type of the 'from' objects in this relation.
-     */
-    virtual const std::string & getFromType() const ;
-
-    /**The type of the 'to' objects in this relation.
-     */
-    virtual const std::string & getToType() const ;
-
-    /** The total number of stored relations. 
-     */
-    virtual int numberOfRelations() const ;
-
-    /** The 'from' object of the given relation. 
-     */
-    virtual EVENT::LCObject * getFrom(int index) const ;
-
-    /** The 'to' object of the given relation. 
-     */
-    virtual EVENT::LCObject * getTo(int index) const ;
-
-    /** The weight of the given relation. 
-     */
-    virtual float getWeight(int index) const ;
-
-    /** Get the list of objects involving the given "from" object
-     */
-    virtual EVENT::IntVec getRelationsFrom(EVENT::LCObject * from) const ;
-
-    /** Get the list of objects involving the given "to" object
-     */
-    virtual EVENT::IntVec getRelationsTo(EVENT::LCObject * to) const ;
-
-    /** Add a new relation. 
-     */
-    virtual void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight = 1.0) ;
-
-    /** Remove a given relation.
-     */
-    virtual void removeRelation(int index) ;
-
-//     /**The type of the 'from' objects in this relation.
-//      */
-//     virtual const std::string & getFromType() const ;
-
-//     /**The type of the 'to' objects in this relation.
-//      */
-//     virtual const std::string & getToType() const ;
-
-//     /** The number of stored relations for the given object.
-//      */
-//     virtual int numberOfRelations(EVENT::LCObject * obj=0) ;
-
-//     /** The 'from object' of the given relation. Needed to analyze the relations without 
-//      * knowledge of the participating objects.
-//      */
-//     virtual EVENT::LCObject* getRelation( int index ) ;
-
-//     /** The relation with the given index for obj.
-//      */
-//     virtual EVENT::LCObject * getRelation(EVENT::LCObject * obj, int index=0) ;
-
-//     /** The weight of the relation with the given index.
-//      */
-//     virtual float getWeight(EVENT::LCObject * obj, int index=0) ;
-
-//     /** Add a new relation. 
-//      */
-//     virtual void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight=1.0) ;
-
-//     /**If caching is enabled the result of numberOfRelations() is stored
-//      * for subsequent calls to getRelation() and getWeight().
-//      */
-//     virtual void useCaching(bool val) ;
-
-
-    virtual void setTypes( const std::string& fromType, const std::string& toType ) ;
 
   protected:
- 
-    bool _useCaching ;
-    mutable std::pair<LCRelationIter,LCRelationIter> _cached ;
-    LCWgtMultiMap _map ;
-    std::string _fromType ; 
-    std::string _toType ;
-
+    EVENT::LCObject* _from ;
+    EVENT::LCObject* _to ;
+    float _weight ;
 
 }; // class
 }; // namespace IMPL

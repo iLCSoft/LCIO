@@ -1,11 +1,11 @@
-#include "SIO/SIOLCWgtRelationHandler.h"
+#include "SIO/SIOLCRelationHandler.h"
 
 #include "SIO/LCSIO.h"
 
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
-#include "EVENT/LCWgtRelation.h"
-#include "IOIMPL/LCWgtRelationIOImpl.h"
+#include "EVENT/LCRelation.h"
+#include "IOIMPL/LCRelationIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
 #include "SIO_functions.h"
@@ -19,12 +19,12 @@ using namespace IOIMPL ;
 
 namespace SIO{
     
-  unsigned int SIOLCWgtRelationHandler::read(SIO_stream* stream, 
+  unsigned int SIOLCRelationHandler::read(SIO_stream* stream, 
 				      LCObject** objP){
     unsigned int status ; 
 	
     // create a new object :
-    LCWgtRelationIOImpl* rel  = new LCWgtRelationIOImpl ;
+    LCRelationIOImpl* rel  = new LCRelationIOImpl ;
     *objP = rel ;
 	
 
@@ -40,12 +40,12 @@ namespace SIO{
   }
   
     
-  unsigned int SIOLCWgtRelationHandler::write(SIO_stream* stream, 
+  unsigned int SIOLCRelationHandler::write(SIO_stream* stream, 
 				       const LCObject* obj){
     
     unsigned int status ; 
 
-    const LCWgtRelation* rel = dynamic_cast<const LCWgtRelation*>(obj)  ;
+    const LCRelation* rel = dynamic_cast<const LCRelation*>(obj)  ;
     
     LCObject* from = rel->getFrom() ;
     SIO_PNTR( stream,  &from ) ;

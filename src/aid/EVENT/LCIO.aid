@@ -3,7 +3,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.34 2004-08-25 08:20:29 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.35 2004-09-06 14:05:04 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -83,7 +83,6 @@ public interface LCIO{
     static const char* CLUSTER ; 
     static const char* RECONSTRUCTEDPARTICLE ; 
     static const char* LCRELATION ; 
-    static const char* LCWGTRELATION ; 
     static const char* LCGENERICOBJECT ; 
 }
 @else
@@ -152,7 +151,6 @@ public interface LCIO{
   public static const String CLUSTER = "Cluster"; 
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
   public static const String LCRELATION = "LCRelation" ; 
-  public static const String LCWGTRELATION = "LCWgtRelation" ; 
   public static const String LCGENERICOBJECT = "LCGenericObject"; 
 @endif
 }

@@ -17,10 +17,10 @@ namespace IMPL {
    *  at the price of a slower (by a factor of ~2) modification speed.
    * 
    * @author gaede 
-   * @version $Id: LCRelationNavigatorImpl.h,v 1.3 2004-07-22 16:31:46 gaede Exp $
+   * @version $Id: LCRelationNavigator.h,v 1.1 2004-09-06 14:05:06 gaede Exp $
    */
 
-  class LCRelationNavigatorImpl : public EVENT::LCRelationNavigator {
+  class LCRelationNavigator : public EVENT::LCRelationNavigator {
     
     typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::FloatVec > > RelMap ; 
 
@@ -29,16 +29,16 @@ namespace IMPL {
                                           
     /** Default constructor
      */
-    LCRelationNavigatorImpl(const std::string &fromType, const std::string &toType) :
+    LCRelationNavigator(const std::string &fromType, const std::string &toType) :
       _from( fromType ),
       _to( toType )  { /* nop */; }
     
     /**Create the navigator object from an existing collection of relations
      */
-    LCRelationNavigatorImpl( const EVENT::LCCollection* col ) ;
+    LCRelationNavigator( const EVENT::LCCollection* col ) ;
     
     /// Destructor.
-    virtual ~LCRelationNavigatorImpl() { /* nop */; }
+    virtual ~LCRelationNavigator() { /* nop */; }
     
     /**The type of the 'from' objects in this relation.
      */
@@ -84,7 +84,7 @@ namespace IMPL {
 
   protected:
 
-    LCRelationNavigatorImpl() ;
+    LCRelationNavigator() ;
 
     virtual void initialize( const EVENT::LCCollection* col ) ;
 
