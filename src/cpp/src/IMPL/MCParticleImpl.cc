@@ -158,7 +158,7 @@ namespace IMPL {
 
   void MCParticleImpl::setSimulatorStatus( int status ) { 
     checkAccess("MCParticleImpl::setSimulatorStatus") ;
-    // bit 31 reserved for endpioint
+    // bit 31 reserved for endpoint
     _simstatus |= ( 0x7fffffff  & status )  ;
   } 
 
