@@ -3,15 +3,14 @@ package hep.lcio.io;
 import hep.lcio.exceptions.* ;
 }
 
-/**Interface for writing data with LCIO. Uses only interfaces 
- * from DATA/hep.lcio.data.
+/**Interface for writing data with LCIO. Uses interfaces 
+ * from EVENT/hep.lcio.event.
  * Use LCFactory to instantiate a corresponding LCWriter object
  * for the output format at hand (SIO only, so far).
  *
  * @see LCFactory
  * @author gaede
  * @version Mar 4, 2003
- * fg 20030609 added exceptions; using data interface only.
  */
 public interface LCWriter {
 
@@ -35,13 +34,13 @@ public interface LCWriter {
      *
      *@throws IOException
      */
-    public void writeRunHeader(const LCRunHeaderData*  hdr) throws IOException ;
+    public void writeRunHeader(const LCRunHeader*  hdr) throws IOException ;
 
     /** Writes the given event to file.
      *
      *@throws IOException
      */
-    public void writeEvent(const LCEventData*  evt) throws IOException ;
+    public void writeEvent(const LCEvent*  evt) throws IOException ;
     
     /** Closes the output file/stream.
      *

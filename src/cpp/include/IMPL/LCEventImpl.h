@@ -8,10 +8,9 @@
 #include "EVENT/LCIO.h"
 #include "AccessChecked.h"
 
-
 namespace IMPL{
 
-  //class  DATA::LCCollectionData ;
+  //class  EVENT::LCCollection ;
  
   typedef std::map<std::string,EVENT::LCCollection*> LCCollectionMap ; 
   
@@ -57,18 +56,18 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     virtual const std::vector<std::string>  * getCollectionNames() const;
     
     /** Returns the collection for the given name.
-     * Same as getCollectionData() except that no cast to (LCCollection) and check for 
+     * Same as getCollection() except that no cast to (LCCollection) and check for 
      * NULL pointer/reference is needed.  
      *
-     * @throws DataNotAvailableException
+     * @throws NotAvailableException
      */
     EVENT::LCCollection * getCollection(const std::string & name) const 
       throw (EVENT::DataNotAvailableException, std::exception) ;
 
-    /** Returns the collection for the given name - null if it doesn't exist.
-     *  Returns the identical object as getCollection()  except for the type.
-     */ 
-    DATA::LCCollectionData * getCollectionData(const std::string & name) const ;
+//     /** Returns the collection for the given name - null if it doesn't exist.
+//      *  Returns the identical object as getCollection()  except for the type.
+//      */ 
+//     EVENT::LCCollection * getCollection(const std::string & name) const ;
 
 
     /** Adds a collection with the given name. Throws an exception if the name already

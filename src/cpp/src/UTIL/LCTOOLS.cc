@@ -7,8 +7,8 @@
 #include "EVENT/TPCHit.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
-#include "DATA/LCFloatVec.h"
-#include "DATA/LCIntVec.h"
+#include "EVENT/LCFloatVec.h"
+#include "EVENT/LCIntVec.h"
 #include "IMPL/LCFlagImpl.h"
 #include "EVENT/Track.h"
 #include "EVENT/Cluster.h"
@@ -26,7 +26,6 @@
 
 using namespace std ;
 using namespace EVENT ;
-using namespace DATA ;
 using namespace IMPL ;
 
 
@@ -859,8 +858,8 @@ namespace UTIL {
       ReconstructedParticle* recP = 
       	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
       
-      int primary = unsigned( recP->getTypeFlag() & ( 1 << 31 ) ) > 0 ;
-      int type =  ( recP->getTypeFlag() & 0x0000FFFF ) ;
+      int primary = recP->isPrimary() ;
+      int type =  recP->getType() ;
 
       printf(" %8.8x | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) \n"
 	     , reinterpret_cast<int> ( recP )

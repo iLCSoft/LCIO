@@ -1,7 +1,6 @@
 #include "IMPL/ClusterImpl.h"
 
 
-using namespace DATA ;
 using namespace EVENT ;
 
 namespace IMPL{
@@ -34,11 +33,7 @@ namespace IMPL{
   const FloatVec & ClusterImpl::getDirectionError() const{ return _errdir ;  }
   const FloatVec & ClusterImpl::getShape() const{ return _shape ;  }
   const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
-  const ClusterDataVec & ClusterImpl::getClustersData() const{ 
-    // pointers to ClusterData and Cluster are the same (provided non virtual inheritance)
-    const ClusterDataVec* clustersData = reinterpret_cast<const ClusterDataVec*>( &_clusters ) ;
-    return *clustersData  ;
-  }
+
   const StringVec & ClusterImpl::getHitCollectionNames() const{ 
     _hitCollectionNames.clear() ;
     

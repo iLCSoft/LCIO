@@ -11,7 +11,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -59,7 +59,7 @@ namespace SIO{
     
     unsigned int status ; 
 
-    const CalorimeterHitData* hit = dynamic_cast<const CalorimeterHitData*>(obj)  ;
+    const CalorimeterHit* hit = dynamic_cast<const CalorimeterHit*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
     if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) ){

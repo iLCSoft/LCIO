@@ -1,8 +1,8 @@
 #include "CPPFORT/lcvec.h"
-#include "DATA/LCIntVec.h"
-#include "DATA/LCFloatVec.h"
+#include "EVENT/LCIntVec.h"
+#include "EVENT/LCFloatVec.h"
 
-using namespace DATA ;
+using namespace EVENT ;
 
 // define an interface to read a string/int/float vector
 

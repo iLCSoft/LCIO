@@ -2,13 +2,13 @@
 
 #include "SIO/LCSIO.h"
 
-#include "DATA/LCIntVec.h"
+#include "EVENT/LCIntVec.h"
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-//using namespace EVENT ;
-using namespace DATA ;
+using namespace EVENT ;
+
 
 namespace SIO{
     

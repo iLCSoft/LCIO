@@ -1,7 +1,7 @@
 #include "SIO/SIOParticleHandler.h"
 #include "SIO/LCSIO.h"
 
-#include "DATA/MCParticleData.h"
+#include "EVENT/MCParticle.h"
 #include "IOIMPL/MCParticleIOImpl.h"
 
 #include "SIO_functions.h"
@@ -11,7 +11,7 @@
 #include "EVENT/LCCollection.h"
 
 using namespace EVENT ;
-using namespace DATA ;
+
 using namespace IOIMPL ;
 
 namespace SIO {
@@ -78,14 +78,14 @@ namespace SIO {
 					 const LCObject* obj, 
 					 unsigned int flag ){
 
-    //fg 20030609 changed to use MCParticleData    
+    //fg 20030609 changed to use MCParticle    
     unsigned int status ; 
     
-    const MCParticleData* particle  = dynamic_cast<const MCParticleData*>(obj)  ;
+    const MCParticle* particle  = dynamic_cast<const MCParticle*>(obj)  ;
     SIO_PTAG( stream , particle ) ;
     
-//     const MCParticleData* myMom0 = particle->getParentData() ;
-//     const MCParticleData* myMom1 = particle->getSecondParentData() ;
+//     const MCParticle* myMom0 = particle->getParent() ;
+//     const MCParticle* myMom1 = particle->getSecondParent() ;
 //     SIO_PNTR( stream , &myMom0 ) ;
 //     SIO_PNTR( stream , &myMom1 ) ;
 
@@ -94,7 +94,7 @@ namespace SIO {
     SIO_DATA( stream , &numberOfParents  , 1 ) ;
     
     for(int i=0;i<numberOfParents;i++){
-      const MCParticleData* part = particle->getParentData(i) ;
+      const MCParticle* part = particle->getParent(i) ;
       SIO_PNTR( stream ,  &part  ); 
     }
 

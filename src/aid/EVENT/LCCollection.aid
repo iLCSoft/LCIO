@@ -4,7 +4,6 @@ package hep.lcio.event ;
 import hep.lcio.exceptions.* ;
 }
 /** The generic collection used in LCIO. Holds objects of type LCObject.
- *  Extends LCCollectionData by adding methods to add/remove elements.
  * 
  * @author gaede 
  * @version Mar 4, 2003
@@ -12,13 +11,11 @@ import hep.lcio.exceptions.* ;
  * @see LCIO
  */
 @ifdef java
-public interface LCCollection extends LCCollectionData, java.util.List
+public interface LCCollection extends java.util.List
 @else
-public interface LCCollection extends LCCollectionData
+public interface LCCollection
 @endif
 {
-    
-@ifdef overwriteDataInterface
     /**Returns the number of elements in the collection.
      */
     public int getNumberOfElements() const ;
@@ -29,23 +26,18 @@ public interface LCCollection extends LCCollectionData
     
     /** Returns pointer to element at index - no range check, use getNumberOfEntries().
      */
-    public const LCObject* getElementAt(int index) const ;
+    public LCObject* getElementAt(int index) const ;
 
-    /** Returns flag word for collection. Depending on the 
-     * actual type bits have different meaning, e.g. for CalorimeterHits:
-     *  Bit 31 Barrel = 0, Endcap = 1 <br>
-     *  Bit 30 long = 1, short = 0 <br>
-     *  Bit 29 PDG = 1, no PDG =0 <br>
-     *  The long format (bit 30) includes the position of the hit in
-     *  world coordinates. <br>
-     *  PDG (bit 29) means additional entries in the collection of
-     *  MCHitContributions per primary: one for every  type of secondary.
-     *  Take for example a photon that produces exactly one e+e- pair in
-     *  a given cell. In PDG mode this results in two entries, one for the e+
-     *  and one for the e-, whereas there will be only one entry if bit29==0.
+    /** Returns flag word for collection. Bits 16-31 are reserved for LCIO
+     *  Depending on the object type stored they have a special meaning, e.g. 
+     *  for CalorimeterHits: <br>
+     *  CHBIT_LONG = 31   -  store position <br>
+     *  CHBIT_BARREL = 30 -  endcap or barrel <br>
+     *  CHBIT_ID1 = 29 -   cellid1 is sored <br>
+     *  CHBIT_PDG = 28 - store pdg of secondaries <br>
+     *  Bits 0-15 are subdetector/user specific.
      */
     public int getFlag() const ;
-@endif
 
     /** Adds the given element to (end of) the collection. Throws an exception 
      * if the collection (event) is 'read only'.

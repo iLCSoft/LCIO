@@ -1,0 +1,33 @@
+package hep.lcio.event;
+
+/** A generic tracker hit. 
+ * 
+ * @author gaede
+ * @version Apr 7, 2004
+ */
+
+public interface TrackerHit extends LCObject {
+    
+    /** The hit  position in [mm].	
+     */
+    public const double3V getPosition() const ;
+
+    /**Covariance of the position (x,y,z)
+     */
+    public const FloatVec& getCovMatrix() ;
+
+    /** The dE/dx of the hit in [GeV/mm].
+     */ 	
+    public float getdEdx() const ;
+    
+    /** The  time of the hit in [ns]. Is this needed ?
+     */
+    public float getTime() const ;	
+
+
+    /**The raw data hit. Type is one 
+     * of TPCHit, VTXHit,...
+     * User has to check with cast.
+     */
+    public LCObject* getRawDataHit() ;
+}

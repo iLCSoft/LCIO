@@ -2,7 +2,6 @@
 #include <algorithm>
 
 
-using namespace DATA ;
 using namespace EVENT ;
 
 namespace IMPL{
@@ -18,58 +17,45 @@ namespace IMPL{
     }
   }
  
-  int ReconstructedParticleImpl::getTypeFlag() const { return  _typeFlag ; }
+  int ReconstructedParticleImpl::getType() const { return _type ; }
+  bool ReconstructedParticleImpl::isPrimary() const { return _primary ;}
+
   const float* ReconstructedParticleImpl::getMomentum() const { return  _momentum ; }
   float ReconstructedParticleImpl::getEnergy() const { return  _energy ; }
-  const DATA::FloatVec & ReconstructedParticleImpl::getCovMatrix() const { return _cov   ; }
+  const EVENT::FloatVec & ReconstructedParticleImpl::getCovMatrix() const { return _cov   ; }
   float ReconstructedParticleImpl::getMass() const { return  _mass ; }
   float ReconstructedParticleImpl::getCharge() const { return  _charge ; }
   const float* ReconstructedParticleImpl::getReferencePoint() const { return  _reference ; }
 
-  const DATA::ParticleIDDataVec & ReconstructedParticleImpl::getParticleIDsData() const {
-    const ParticleIDDataVec* pidData = reinterpret_cast<const ParticleIDDataVec*>
-      ( &_pid ) ;
-    return *pidData  ;
-  }
   const EVENT::ParticleIDVec & ReconstructedParticleImpl::getParticleIDs() const { return  _pid ; }
 
-  const DATA::ReconstructedParticleDataVec & ReconstructedParticleImpl::getParticlesData() const { 
-    // reinterpret pointers to ReconstructedParticle as pointers to ReconstructedParticleData
-    const ReconstructedParticleDataVec* pData = reinterpret_cast<const ReconstructedParticleDataVec*>
-      ( &_particles ) ;
-    return *pData  ;
-  }
   const EVENT::ReconstructedParticleVec& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
-  const DATA::FloatVec & ReconstructedParticleImpl::getParticleWeights() const { return  _particleWeights ; }
+  const EVENT::FloatVec & ReconstructedParticleImpl::getParticleWeights() const { return  _particleWeights ; }
 
-  const DATA::ClusterDataVec & ReconstructedParticleImpl::getClustersData() const { 
-    // pointers to ClusterData and Cluster are the same (provided non virtual inheritance)
-    const ClusterDataVec* clustersData = reinterpret_cast<const ClusterDataVec*>( &_clusters ) ;
-    return *clustersData  ;
-  }
   const EVENT::ClusterVec& ReconstructedParticleImpl::getClusters() const { return _clusters  ; } 
-  const DATA::FloatVec & ReconstructedParticleImpl::getClusterWeights() const { return _clusterWeights  ; }
+  const EVENT::FloatVec & ReconstructedParticleImpl::getClusterWeights() const { return _clusterWeights  ; }
 
-  const DATA::TrackDataVec & ReconstructedParticleImpl::getTracksData() const { 
-    // pointers to TrackData and Track are the same (provided non virtual inheritance)
-    const TrackDataVec* tracksData = reinterpret_cast<const TrackDataVec*>( &_tracks ) ;
-    return *tracksData  ;
-  }
   const EVENT::TrackVec& ReconstructedParticleImpl::getTracks() const { return _tracks  ; } 
-  const DATA::FloatVec & ReconstructedParticleImpl::getTrackWeights() const { return  _trackWeights ; }
+  const EVENT::FloatVec & ReconstructedParticleImpl::getTrackWeights() const { return  _trackWeights ; }
 
-  const DATA::MCParticleDataVec & ReconstructedParticleImpl::getMCParticlesData() const { 
-    const MCParticleDataVec* mcpData = reinterpret_cast<const MCParticleDataVec*>( &_mcParticles ) ;
-    return *mcpData  ;
-  }
   const EVENT::MCParticleVec& ReconstructedParticleImpl::getMCParticles() const { return _mcParticles  ; }
-  const DATA::FloatVec & ReconstructedParticleImpl::getMCParticleWeights() const { return  _mcParticleWeights ; }
+  const EVENT::FloatVec & ReconstructedParticleImpl::getMCParticleWeights() const { return  _mcParticleWeights ; }
   
 
-  void ReconstructedParticleImpl::setTypeFlag( int typeFlag){
-    checkAccess("ReconstructedParticleImpl::setTypeFlag" );
-    _typeFlag  = typeFlag ;
+  void ReconstructedParticleImpl::setType(int type){
+    checkAccess("ReconstructedParticleImpl::setType" );
+    _type = type ;
   }
+  void ReconstructedParticleImpl::setPrimary(bool primary){
+    checkAccess("ReconstructedParticleImpl::setPrimary" );
+    _primary = primary ;
+  }
+
+//   void ReconstructedParticleImpl::setTypeFlag( int typeFlag){
+//     checkAccess("ReconstructedParticleImpl::setTypeFlag" );
+//     _typeFlag  = typeFlag ;
+//   }
+
   void ReconstructedParticleImpl::setMomentum( const float* momentum ){
     checkAccess("ReconstructedParticleImpl::setMomentum" );
     _momentum[0]  = momentum[0] ;
@@ -87,7 +73,7 @@ namespace IMPL{
     for(int i=0;i<NCOVARIANCE;i++) _cov[i] = cov[i] ;
   }
 
-  void ReconstructedParticleImpl::setCovMatrix( const DATA::FloatVec& cov ){
+  void ReconstructedParticleImpl::setCovMatrix( const EVENT::FloatVec& cov ){
     checkAccess("ReconstructedParticleImpl::" );
     for(int i=0;i<NCOVARIANCE;i++) _cov[i] = cov[i] ;
   }

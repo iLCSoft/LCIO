@@ -3,15 +3,13 @@ package hep.lcio.event ;
 /** A generic TPCHit for real data. Optionaly contains an integer array
  *  with raw data that is implementation dependent, e.g. the FADC read out 
  *  of the corresponding bump. 
- *  Possibly adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Sep 11, 2003
  */
 
-public interface TPCHit extends TPCHitData {
+public interface TPCHit extends LCObject {
     
-@ifdef overwriteDataInterface
     /** Returns the detector specific cell id.
      */
     public int getCellID() const ;
@@ -32,14 +30,13 @@ public interface TPCHit extends TPCHitData {
      *  Check the flag word (bit TPCBIT_RAW) of the collection if raw data is
      *  stored at all.
      */
-    public int getNRawDataWords() ;
+    public int getNRawDataWords() const;
 
     /** Return the raw data (32-bit) word at i.
      *  Check the flag word (bit TPCBIT_RAW) of the collection if raw data is
      *  stored at all.
      */
-    public int getRawDataWord(int i) ;
-@endif
+    public int getRawDataWord(int i) const;
 
 }
 

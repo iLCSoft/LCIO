@@ -10,8 +10,8 @@
 #include "IMPL/LCTOOLS.h"
 
 #include "CPPFORT/HEPEVT.h"
-#include "DATA/LCIntVec.h"
-#include "DATA/LCFloatVec.h"
+#include "EVENT/LCIntVec.h"
+#include "EVENT/LCFloatVec.h"
 
 //#include "CPPFORT/lcvec.h"
 #include <string>

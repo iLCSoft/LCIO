@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "DATA/LCEventData.h"
+#include "EVENT/LCEvent.h"
 #include "IOIMPL/LCEventIOImpl.h"
 
 #include "SIO_block.h"
@@ -32,13 +32,14 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-    void setEvent(const DATA::LCEventData* evt ) ; 
+    void setEvent(const EVENT::LCEvent* evt ) ; 
+    void setEventPtr( IOIMPL::LCEventIOImpl** evtP ) ; 
     
   private: 
-    // event implemenatation for reading 
+    // event implementation for reading 
     IOIMPL::LCEventIOImpl **_evtP ;  
     // event data interface for writing
-    const DATA::LCEventData *_evt ;  
+    const EVENT::LCEvent *_evt ;  
     
   }; // class
   

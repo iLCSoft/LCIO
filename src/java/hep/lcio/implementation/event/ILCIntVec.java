@@ -1,12 +1,12 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.data.LCIntVec;
+import hep.lcio.event.LCIntVec;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCIntVec.java,v 1.2 2003-09-15 21:44:31 tonyj Exp $
+ * @version $Id: ILCIntVec.java,v 1.3 2004-04-08 09:57:59 gaede Exp $
  */
 public class ILCIntVec extends ILCObject implements LCIntVec
 {

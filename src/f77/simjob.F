@@ -189,6 +189,7 @@ c-----     now add everything to the event
 c------- need to delete the event as we created it
             status = lcevtdelete( event )
          enddo
+         status = lcrhddelete( runheader ) 
       enddo
       status = lcwrtclose( writer ) 
       write(*,*)

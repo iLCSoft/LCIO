@@ -30,16 +30,10 @@ namespace IMPL {
     /// Destructor.
     virtual ~MCParticleImpl() ;
 
-    /** Returns the i-th parent of this particle.
-     * Same as getParentData() except for return type.
-     *
-     * @see MCParticleData.getNumberOfParents()
-     */
-    virtual MCParticle * getParent(int i) const ;
 
 
     /** Returns the i-th daughter of this particle.
-     * Same as getDaughterData() except for return type.
+     * Same as getDaughter() except for return type.
      *
      * @see getNumberOfDaughters
      */
@@ -50,9 +44,16 @@ namespace IMPL {
      */
     virtual int getNumberOfParents() const ;
 
+//     /** Returns the i-th parent of this particle.
+//      * Same as getParent() except for return type.
+//      *
+//      * @see MCParticle.getNumberOfParents()
+//      */
+//     virtual MCParticle * getParent(int i) const ;
+
     /** Returns the i-th parent of this particle.
      */
-    virtual MCParticleData * getParentData(int i) const ;
+    virtual MCParticle * getParent(int i) const ;
 
 
     /** Returns the endpoint of the particle in [mm] - returns NULL if

@@ -22,20 +22,16 @@
  * There you can also find the API documentation of the Java version.
  * \section Usage
  * A good starting point to browse this documentation is the <a href="./namespaces.html">Namespace List</a>.
- * As all data entities inherit from DATA::LCObject, the corresponding class documentation shows the complete
+ * As all data entities inherit from EVENT::LCObject, the corresponding class documentation shows the complete
  * hierarchy of all objects that can be stored with LCIO.
  * The namespace IO contains the abstract interfaces for reading and writing data.
  */
 
-/** The namespace DATA holds all base interfaces of data entities.
- * These interfaces are used to write the data, i.e. all user classes 
- * that implement them can be made persistent with LCIO.
+/** The namespace DATA has been removed from LCIO all data entities are now defined in EVENT.
  */
 namespace DATA{};
 
-/** The namespace EVENT holds all base interfaces of the event.
- *  These interfaces extend the bare data interfaces with convienient 
- *  methods for analysis. They are used when lcio events/data are read in.
+/** The namespace EVENT holds all base interfaces of the event entities.
  */
 namespace EVENT{};
 
@@ -43,7 +39,7 @@ namespace EVENT{};
  */
 namespace IO{};
 
-/** The namespace IMPL holds all default implementations of
+/** The namespace IMPL holds the implementations of
  * the base interfaces that are defined in EVENT.
  */
 namespace IMPL{};
@@ -58,8 +54,6 @@ namespace UTIL{};
 /** The LCIO namespace combines DATA, EVENT, IO and IMPL for user convenience. 
  */
 namespace lcio{
-
-  using namespace DATA ;
 
   using namespace EVENT ;
 

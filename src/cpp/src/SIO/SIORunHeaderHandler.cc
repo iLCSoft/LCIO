@@ -1,14 +1,14 @@
 #include "SIO/SIORunHeaderHandler.h"
 #include "SIO/LCSIO.h"
 
-#include "DATA/LCRunHeaderData.h"
+#include "EVENT/LCRunHeader.h"
 #include "EVENT/LCIO.h"
 
 #include "SIO_functions.h"
 
 #include <iostream>
 
-using namespace DATA ;
+
 using namespace EVENT ; // for LCIO object
 using namespace IOIMPL ;
 
@@ -33,9 +33,12 @@ namespace SIO  {
   }
 
   
-  void SIORunHeaderHandler::setRunHeader(const LCRunHeaderData* rh ){
+  void SIORunHeaderHandler::setRunHeader(const LCRunHeader* rh ){
     _hdr = rh ;
   }
+  void SIORunHeaderHandler::setRunHeaderPtr( LCRunHeaderIOImpl** hdrP ) {
+    _rhP= hdrP ;
+  } 
 
 
   unsigned int SIORunHeaderHandler::xfer( SIO_stream* stream, SIO_operation op, 

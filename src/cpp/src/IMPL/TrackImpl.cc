@@ -1,7 +1,6 @@
 #include "IMPL/TrackImpl.h"
 
 
-using namespace DATA ;
 using namespace EVENT ;
 
 namespace IMPL {
@@ -26,7 +25,6 @@ namespace IMPL {
   } 
 
   int TrackImpl::getType() const { return _type ; }
-
   float TrackImpl::getMomentum() const { return _p ; }
   float TrackImpl::getTheta() const { return _theta ;}
   float TrackImpl::getPhi() const { return _phi ; }
@@ -54,20 +52,11 @@ namespace IMPL {
   const IntVec& TrackImpl::getHitIndicesForCollection(const std::string & colName) const { 
     return *_indexMap[ colName ] ;
   }
-  
-
-  const TrackDataVec & TrackImpl::getTracksData() const {
-    // pointers to TrackData and Track are the same (provided non virtual inheritance)
-    const TrackDataVec* tracksData = reinterpret_cast<const TrackDataVec*>( &_tracks ) ;
-    return *tracksData  ;
-  } 
 
   const TrackVec & TrackImpl::getTracks() const {
     return _tracks ;
   } 
   
-    
-
   void  TrackImpl::setType( int type ){  
     checkAccess("TrackImpl::setType") ;
     _type = type ; 
@@ -139,16 +128,6 @@ namespace IMPL {
     checkAccess("TrackImpl::addTrack") ;
     _tracks.push_back( trk ) ;
   }
-  
-
-//   Track* Track::operator=(LCObject* obj) {
-    
-//     Track* trk = dynamic_cast<Track*>(obj) ;
-//     if(trk==0)
-//       throw Exception("Cannot dynamic_cast<Track*>( obj)" ) ;
-//     return trk ;
-//   }
-  
 
 }; // namespace IMPL
 

@@ -83,7 +83,7 @@ namespace SIO {
      * @throws IOException
      */
     virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) 
-      throw (IO::IOException, std::exception/*, EVENT::DataNotAvailableException */) ;
+      throw (IO::IOException, std::exception/*, EVENT::NotAvailableException */) ;
 
     /** Closes the output file/stream etc.
      *
@@ -114,16 +114,16 @@ namespace SIO {
      * found in the stream. 
      *
      * @throws IOException
-     * @throws EndOfDataException
+     * @throws EndOfException
      */
     virtual void readStream() throw (IO::IOException, std::exception) ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
-     * Throws EndOfDataException if less than maxRecord records are found in the stream. 
+     * Throws EndOfException if less than maxRecord records are found in the stream. 
      *
      * @throws IOException
-     * @throws EndOfDataException
+     * @throws EndOfException
      */
     virtual void readStream(int maxRecord) throw (IO::IOException, std::exception) ;
 

@@ -20,14 +20,14 @@ namespace SIO {
     /** Reads lcio tracker hit objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      DATA::LCObject** objP,  
+			      EVENT::LCObject** objP,  
 			      unsigned int flag,
 			      unsigned int vers)  ;
 	
     /** Writes lcio objects to an SIO stream.
      */
     virtual unsigned int write(SIO_stream* stream, 
-			       const DATA::LCObject* obj,
+			       const EVENT::LCObject* obj,
 			       unsigned int flag) ;
 	
   }; // class

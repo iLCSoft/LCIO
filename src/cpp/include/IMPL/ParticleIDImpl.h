@@ -51,7 +51,7 @@ namespace IMPL {
 
     /**Parameters associated with this hypothesis.
      */
-    virtual const DATA::FloatVec & getParameters() const ;
+    virtual const EVENT::FloatVec & getParameters() const ;
 
     // setters
     void setTypeID( int typeID ) ;
@@ -63,7 +63,7 @@ namespace IMPL {
     int _typeID ;
     float _probability ;
     std::string _identifier ;
-    DATA::FloatVec _parameters ;
+    EVENT::FloatVec _parameters ;
 
 }; // class
 

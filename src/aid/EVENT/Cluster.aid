@@ -8,14 +8,13 @@ typedef std::vector<Cluster*> ClusterVec ;
 @endif
 
 /** The LCIO cluster.
- * Adding convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Mar 26, 2004
  */
 
 
-public interface Cluster extends ClusterData {
+public interface Cluster extends LCObject {
     
 @ifdef cpp
 @cpp{
@@ -42,23 +41,18 @@ public interface Cluster extends ClusterData {
  @endif 
 
 
-    /** The clusters that have been combined to this cluster.
-     */
-    public const ClusterVec& getClusters() const ; 
-
-@ifdef overwriteDataInterface
     /** Type of cluster:<br>
      *  ------------- detector:(bits31-16): ECAL,HCAL,COMBINED,LAT,LCAL
-     *  ClusterData::UNKNOWN <br> 
-     *  ClusterData::ECAL <br> 
-     *  ClusterData::HCAL <br> 
-     *  ClusterData::COMBINED <br> 
-     *  ClusterData::LAT <br> 
-     *  ClusterData::LCAL <br> 
-     *	------------- track cluster link (bits15-0):
-     *  ClusterData::NEUTRAL <br> 
-     *  ClusterData::CHARGED <br> 
-     *  ClusterData::UNDEFINED <br> 
+     *  Cluster::UNKNOWN <br> 
+     *  Cluster::ECAL <br> 
+     *  Cluster::HCAL <br> 
+     *  Cluster::COMBINED <br> 
+     *  Cluster::LAT <br> 
+     *  Cluster::LCAL <br> 
+     *	--------- track cluster link (bits15-0):
+     *  Cluster::NEUTRAL <br> 
+     *  Cluster::CHARGED <br> 
+     *  Cluster::UNDEFINED <br> 
      */
     public int getType() const ;	
     
@@ -95,11 +89,9 @@ public interface Cluster extends ClusterData {
      */
     public const FloatVec& getParticleType() const ;
 
-
-    /** The clusters (as ClusterData objects) that have been combined to this cluster.
+    /** The clusters that have been combined to this cluster.
      */
-    public const ClusterDataVec& getClustersData() const ; 
-
+    public const ClusterVec& getClusters() const ; 
 
     /** Returns the names of the hit collections that have been
      *  used to create the cluster.
@@ -116,5 +108,7 @@ public interface Cluster extends ClusterData {
      * Runs parallel to the IntVec from getHitIndicesForCollection()
      */
     public const FloatVec& getHitContributionsForCollection(const String& colName ) const ;
-@endif
+
+
+
 }

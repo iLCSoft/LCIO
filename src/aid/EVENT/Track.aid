@@ -7,19 +7,12 @@ typedef std::vector<Track*> TrackVec ;
 @endif
 
 /** The LCIO track.
- * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Mar 15, 2004
  */
 
-public interface Track extends TrackData {
-    
-
-
-    /** The tracks that have been combined to this track.
-     */
-    public const TrackVec& getTracks() const ; 
+public interface Track extends LCObject {
     
 
 @ifdef cpp
@@ -44,16 +37,15 @@ public interface Track extends TrackData {
     public static const int FULL =  6 ; 
 @endif
 
-@ifdef overwriteDataInterface
 
     /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
-     *  TrackData::UNKNOWN <br> 
-     *  TrackData::VTX <br> 
-     *  TrackData::FTD <br> 
-     *  TrackData::SIT <br> 
-     *  TrackData::TPC <br> 
-     *  TrackData::MUON <br> 
-     *  TrackData::FULL <br> 
+     *  Track::UNKNOWN <br> 
+     *  Track::VTX <br> 
+     *  Track::FTD <br> 
+     *  Track::SIT <br> 
+     *  Track::TPC <br> 
+     *  Track::MUON <br> 
+     *  Track::FULL <br> 
      */
     public int getType() const ;	
     
@@ -61,7 +53,7 @@ public interface Track extends TrackData {
      *  signed by the charge.
      */
     public float getMomentum() const ;	
-
+    
     /** Theta of the  track.
      */
     public float getTheta() const ;	
@@ -82,16 +74,10 @@ public interface Track extends TrackData {
      */
     public float getZ0() const ;	
 
-    /** Impact paramter of the track
-     *  in (r-z).
-     */
-    public float getZ0() const ;	
-
  
-
     /** Covariance matrix of the track parameters.
      */
-    public FloatVec getCovMatrix() const ;
+    public const FloatVec& getCovMatrix() const ;
 
 
     /** Reference point of the track parameters.
@@ -111,7 +97,12 @@ public interface Track extends TrackData {
      */
     public float getdEdxError() const ;	
 
-    
+
+    /** The tracks that have been combined to this track.
+     */
+    public const TrackVec& getTracks() const ; 
+
+
     /** Returns the names of the hit collections that have been
      *  used to create the track.
      */
@@ -120,12 +111,11 @@ public interface Track extends TrackData {
 
     /** Returns all hit indices for the given collection name.
      */
-    public IntVec getHitIndicesForCollection(const String& colName ) const ;
+    public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
 
-    /** The tracks (as TrackData objects) that have been combined to this track.
-     */
-    public const TrackDataVec& getTracksData() const ; 
 
-@endif
+
+
+
 
 }

@@ -6,7 +6,7 @@
 #include "AccessChecked.h"
 #include <map>
 
-typedef std::map< std::string , DATA::IntVec* > IndexMap ; 
+typedef std::map< std::string , EVENT::IntVec* > IndexMap ; 
 
 #define NCOVMATRIX 15
 
@@ -32,13 +32,13 @@ namespace IMPL {
     virtual ~TrackImpl() ; 
     
     /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
-     *  TrackData::UNKNOWN <br> 
-     *  TrackData::VTX <br> 
-     *  TrackData::FTD <br> 
-     *  TrackData::SIT <br> 
-     *  TrackData::TPC <br> 
-     *  TrackData::MUON <br> 
-     *  TrackData::FULL <br> 
+     *  Track::UNKNOWN <br> 
+     *  Track::VTX <br> 
+     *  Track::FTD <br> 
+     *  Track::SIT <br> 
+     *  Track::TPC <br> 
+     *  Track::MUON <br> 
+     *  Track::FULL <br> 
      */
     virtual int getType() const;
 
@@ -68,7 +68,7 @@ namespace IMPL {
 
     /** Covariance matrix of the track parameters.
      */
-    virtual const DATA::FloatVec& getCovMatrix() const;
+    virtual const EVENT::FloatVec& getCovMatrix() const;
 
     /** Reference point of the track parameters.
      */
@@ -89,16 +89,11 @@ namespace IMPL {
     /** Returns the names of the hit collections that have been
      *  used to create the track.
      */
-    virtual const DATA::StringVec& getHitCollectionNames() const;
+    virtual const EVENT::StringVec& getHitCollectionNames() const;
 
     /** Returns all hit indices for the given collection name.
      */
-    virtual const DATA::IntVec& getHitIndicesForCollection(const std::string & colName) const;
-
-
-    /** The tracks (as TrackData objects) that have been combined to this track.
-     */
-    virtual const DATA::TrackDataVec& getTracksData() const ;
+    virtual const EVENT::IntVec& getHitIndicesForCollection(const std::string & colName) const;
 
     /** The tracks (as Track objects) that have been combined to this track.
      */
@@ -113,7 +108,7 @@ namespace IMPL {
     virtual void  setZ0( float z0 ) ;
 
     virtual void  setCovMatrix( float* cov ) ;
-    virtual void  setCovMatrix( const DATA::FloatVec& cov ) ;
+    virtual void  setCovMatrix( const EVENT::FloatVec& cov ) ;
 
     virtual void  setReferencePoint( float* rPnt) ;
     virtual void  setChi2( float chi2 ) ;
@@ -129,14 +124,13 @@ namespace IMPL {
     float _phi ;
     float _d0 ;
     float _z0 ;
-    DATA::FloatVec _covMatrix ;
+    EVENT::FloatVec _covMatrix ;
     float  _reference[3] ;
     float _chi2 ;
     float _dEdx ;
     float _dEdxError ;
-    mutable  DATA::StringVec _hitCollectionNames ;
+    mutable  EVENT::StringVec _hitCollectionNames ;
     mutable IndexMap _indexMap ;
-    //    DATA::TrackDataVec _tracks ;
     EVENT::TrackVec _tracks ;
 
 }; // class

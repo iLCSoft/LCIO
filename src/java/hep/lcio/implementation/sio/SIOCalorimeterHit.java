@@ -2,9 +2,6 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
-
-import hep.lcio.data.CalorimeterHitData;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCIO;
@@ -17,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.10 2003-11-11 18:28:08 gaede Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.11 2004-04-08 09:58:01 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -37,7 +34,7 @@ class SIOCalorimeterHit extends ICalorimeterHit
       }
    }
 
-   static void write(CalorimeterHitData hit, SIOOutputStream out, int flags) throws IOException
+   static void write(CalorimeterHit hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOCalorimeterHit)
          ((SIOCalorimeterHit) hit).write(out, flags);

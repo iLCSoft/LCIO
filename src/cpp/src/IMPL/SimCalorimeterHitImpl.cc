@@ -38,7 +38,7 @@ namespace IMPL{
 //   }  
 // }
 
-  DATA::LCObject* SimCalorimeterHitImpl::clone() const{
+  EVENT::LCObject* SimCalorimeterHitImpl::clone() const{
     // shallow copy ... more thought needed
     return new SimCalorimeterHitImpl( *this ) ;
   }
@@ -74,10 +74,6 @@ namespace IMPL{
     return _vec.size() ;
   }
   
-  DATA::MCParticleData * SimCalorimeterHitImpl::getParticleContData(int i) const {
-    return _vec[i]->Particle ;
-  }
-
   EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const {
     try{
       //return _vec.at(i)->Particle ;

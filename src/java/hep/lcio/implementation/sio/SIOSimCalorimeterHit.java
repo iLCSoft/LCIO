@@ -4,8 +4,6 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
-import hep.lcio.data.SimCalorimeterHitData;
-
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
@@ -18,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.9 2003-11-11 18:28:08 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.10 2004-04-08 09:58:02 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -63,7 +61,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       return (MCParticle) particle[i];
    }
 
-   static void write(SimCalorimeterHitData hit, SIOOutputStream out, int flags) throws IOException
+   static void write(SimCalorimeterHit hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOSimCalorimeterHit)
          ((SIOSimCalorimeterHit) hit).write(out, flags);
@@ -86,7 +84,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          out.writeInt(n);
          for (int i = 0; i < n; i++)
          {
-            out.writePntr(hit.getParticleContData(i));
+            out.writePntr(hit.getParticleCont(i));
             out.writeFloat(hit.getEnergyCont(i));
             out.writeFloat(hit.getTimeCont(i));
             if (hasPDG)

@@ -15,7 +15,7 @@ namespace IMPL{
   const std::string& ParticleIDImpl::getIdentifier() const{
     return _identifier ;
   }
-  const DATA::FloatVec & ParticleIDImpl::getParameters() const{
+  const EVENT::FloatVec & ParticleIDImpl::getParameters() const{
     return _parameters ;
   }
 

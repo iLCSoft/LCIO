@@ -1,15 +1,13 @@
 package hep.lcio.event ;
 
 /** The generic calorimeter hit for real data. 
- * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Aug 8, 2003
  */
 
-public interface CalorimeterHit extends CalorimeterHitData {
+public interface CalorimeterHit extends LCObject {
     
-@ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;
@@ -29,9 +27,5 @@ public interface CalorimeterHit extends CalorimeterHitData {
      *  NULL if information is not stored. 
      */
     public const float3V getPosition() const ;	
-
-    
-    
-@endif
 
 }

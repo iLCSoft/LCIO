@@ -9,7 +9,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -101,7 +101,7 @@ namespace SIO{
     // this is where we gave up type safety in order to
     // simplify the API and the implementation
     // by having a common collection of objects
-    const TrackData* trk = dynamic_cast<const TrackData*>(obj)  ;
+    const Track* trk = dynamic_cast<const Track*>(obj)  ;
 
 
     LCSIO_WRITE( stream, trk->getType()  ) ;
@@ -124,14 +124,14 @@ namespace SIO{
     LCSIO_WRITE( stream, trk->getdEdxError()  ) ;
 
 
-    const TrackDataVec& tracks = trk->getTracksData() ;
+    const TrackVec& tracks = trk->getTracks() ;
     int nTracks=  tracks.size() ;
 
     SIO_DATA( stream, &nTracks , 1  ) ;
     
     for(int i=0;i<nTracks;i++){
-//       const TrackData** _trkP ;
-//       _trkP = const_cast<const TrackData**> ( &(tracks[i]) ) ;
+//       const Track** _trkP ;
+//       _trkP = const_cast<const Track**> ( &(tracks[i]) ) ;
 //       SIO_PNTR( stream , _trkP ) ;
       SIO_PNTR( stream , &(tracks[i]) ) ;
     }

@@ -3,8 +3,8 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIOWriter;
 
-import hep.lcio.data.LCEventData;
-import hep.lcio.data.LCRunHeaderData;
+import hep.lcio.event.LCEvent;
+import hep.lcio.event.LCRunHeader;
 
 //import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
@@ -14,13 +14,12 @@ import hep.lcio.io.LCWriter;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import hep.lcio.exceptions.* ;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.9 2003-09-15 21:44:32 tonyj Exp $
+ * @version $Id: SIOLCWriter.java,v 1.10 2004-04-08 09:58:02 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -43,12 +42,12 @@ class SIOLCWriter implements LCWriter
       writer = new SIOWriter(new FileOutputStream(filename,append));
    }
 
-   public void writeEvent(LCEventData evt) throws IOException
+   public void writeEvent(LCEvent evt) throws IOException
    {
       SIOEvent.write(evt, writer);
    }
 
-   public void writeRunHeader(LCRunHeaderData hdr) throws IOException
+   public void writeRunHeader(LCRunHeader hdr) throws IOException
    {
       writer.createRecord(SIOFactory.runRecordName, SIOFactory.compressionMode);
 

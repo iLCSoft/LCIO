@@ -8,13 +8,12 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 @endif
 
 /** The LCIO reconstructedParticle.
- * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Mar 30, 2004
  */
 
-public interface ReconstructedParticle extends ReconstructedParticleData {
+public interface ReconstructedParticle extends LCObject {
     
 
 @ifdef cpp
@@ -34,40 +33,19 @@ public interface ReconstructedParticle extends ReconstructedParticleData {
     public static const int JET      =  4 ; 
 @endif
 
-    /** The particle Id's sorted by their probability.
-     * @see ParticleID
+    /** Type of reconstructed particle, one of:<br>
+     *  ReconstructedParticle::SINGLE,<br>  
+     *  ReconstructedParticle::V0,<br>
+     *  ReconstructedParticle::COMPOUND,<br>
+     *  ReconstructedParticle::JET<br>
      */
-    public const ParticleIDVec& getParticleIDs() const ;
+    public int getType() const ;	
+    
+    /** Return particles primary flag. All particles in the ReconstructedParticle
+     *  collection should by definition return true. Compound partciles will return false.
+     */
+    public boolean isPrimary() const ;
 
-    /** The reconstructed particles that have been combined to this particle.
-     */
-    public const ReconstructedParticleVec& getParticles() const ; 
-    
-    /** The clusters that have been used for this particle.
-     */
-    public const ClusterVec& getClusters() const ; 
-    
-    /** The tracks that have been used for this particle.
-     */
-    public const TrackVec& getTracks() const ; 
-    
-    /** The MCParticle assigned to this reconstructed particle.
-     * @see MCParticle
-     */
-    public const MCParticleVec& getMCParticles() const ;
-
-
-@ifdef overwriteDataInterface
-    /** Flag word that decodes some particle type information<br>
-     *  bit 31, primary: 0 secondary, 1 primary <br>   
-     *  bits0-15: type: <br>
-     *  ReconstructedParticleData::SINGLE,<br>  
-     *  ReconstructedParticleData::V0,<br>
-     *  ReconstructedParticleData::COMPOUND,<br>
-     *  ReconstructedParticleData::JET<br>
-     */
-    public int getTypeFlag() const ;	
-    
     /** The magnitude of the reconstructed particle's momentum,
      */
     public const float3V getMomentum() const ;	
@@ -80,7 +58,7 @@ public interface ReconstructedParticle extends ReconstructedParticleData {
      */
     public const FloatVec& getCovMatrix() const ;
     
-    /** Mass of the  reconstructed particle.
+    /** Mass of the  reconstructed particle, set independently from four vector quantities.
      */
     public float getMass() const ;	
 
@@ -92,49 +70,111 @@ public interface ReconstructedParticle extends ReconstructedParticleData {
      */
     public const float3V getReferencePoint() const;
 
+
     /** The particle Id's sorted by their probability.
      * @see ParticleIDData
      */
-    public const ParticleIDDataVec& getParticleIDsData() const ;
+    public const ParticleIDVec& getParticleIDs() const ;
 
 
-    /** The particles (as ReconstructedParticleData objects) that have
-     *  been combined to this particle.
+    /** The reconstructed particles that have been combined to this particle.
      */
-    public const ReconstructedParticleDataVec& getParticlesData() const ; 
-
+    public const ReconstructedParticleVec& getParticles() const ; 
+    
     /** The weights of the reconstructed particles combined to this particle
      */
     public const FloatVec& getParticleWeights() const ; 
 
-
-    /** The clusters (as ClusterData objects) that have been used for this particle.
+    /** The clusters that have been used for this particle.
      */
-    public const ClusterDataVec& getClustersData() const ; 
+    public const ClusterVec& getClusters() const ; 
     
     /** The weights of cluster contributions to this particle
      */
     public const FloatVec& getClusterWeights() const ; 
     
-    /** The tracks (as TrackData objects) that have been used for this particle.
-     */
-    public const TrackDataVec& getTracksData() const ; 
-    
 
+    /** The tracks that have been used for this particle.
+     */
+    public const TrackVec& getTracks() const ; 
+    
     /** The weights of track contributions to this particle
      */
     public const FloatVec& getTrackWeights() const ; 
     
 
     /** The MCParticle assigned to this reconstructed particle.
-     * @see MCParticleData
+     * @see MCParticle
      */
-    public const MCParticleDataVec& getMCParticlesData() const ;
+    public const MCParticleVec& getMCParticles() const ;
+
 
     /** The weights of the MCParticle assignment.
      */
     public const FloatVec& getMCParticleWeights() const ;
 
-@endif
 
+    // set methods
+
+    /** Set the type of reconstructed particle, one of:<br>
+     *  ReconstructedParticle::SINGLE,<br>  
+     *  ReconstructedParticle::V0,<br>
+     *  ReconstructedParticle::COMPOUND,<br>
+     *  ReconstructedParticle::JET<br>
+     */
+    public void setType( int type)  ;
+
+    /**Set primary flag.
+     */
+    public void setPrimary( boolean primary ) ;
+
+    /** Set particle momentum (px,py,pz).
+     */
+    public void setMomentum( const float3V momentum ) ;
+
+    /**Set energy.
+     */
+    public void setEnergy( float energy) ;
+
+    /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
+     */
+    public void setCovMatrix( const float3V cov ) ; 
+    
+    /** Set the values of the covariance matrix of the particles four vector (px,py,pz,E).
+     */
+    public void setCovMatrix( const FloatVec& cov ) ;
+
+    /**Set mass - independently from four vector. 
+     */
+    public void setMass( float mass ) ;
+
+    /** Set the charge. 
+     */
+    public void setCharge( float charge ) ;
+
+    /**Set the reference point, i.e. the point where the four vector is defined.
+     */
+    public void setReferencePoint( const float3V reference ) ;
+
+    /**Add a ParticleID object.
+     * @see ParticleID
+     */
+    public void addParticleID( ParticleID*  pid ) ;
+
+    /**Add a particle that has been used to create this particle.
+     */
+    public void addParticle( ReconstructedParticle* particle , float weight = 1.0 ) ;
+
+    /**Add a cluster that has been used to create this particle.
+     */
+    public void addCluster( Cluster* cluster, float weight = 1.0 ) ;
+
+    /**Add a track that has been used to create this particle.
+     */
+    public void addTrack( Track* track, float weight = 1.0 ) ;
+
+    /**Add a hypothesis for the MCParticle that this reconstructed particle corresponds to.
+     */
+    public void addMCParticle( MCParticle* mcParticle , float weight = 1.0 ) ;
 }
+

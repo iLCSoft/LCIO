@@ -1,20 +1,18 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.data.LCObject;
+import hep.lcio.event.LCObject;
 
 import hep.lcio.event.LCCollection;
-import hep.lcio.event.LCIO;
 
 import hep.lcio.exceptions.ReadOnlyException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.6 2003-09-15 21:44:31 tonyj Exp $
+ * @version $Id: ILCCollection.java,v 1.7 2004-04-08 09:57:59 gaede Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {

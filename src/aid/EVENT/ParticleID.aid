@@ -13,9 +13,15 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  * @version Mar 30, 2004
  */
 
-public interface ParticleID extends ParticleIDData {
-    
-@ifdef overwriteDataInterface
+/** Persistent interface for LCIO ParticleIDs.
+ *  Used by ReconstructedParticle for different hypotheses on
+ *  the particle type.
+ * 
+ * @author gaede
+ * @version Mar 20, 2004
+ */
+public interface ParticleID extends  LCObject {
+
     /** TypeID, if applicable this is the PDG code of the particle.
      */
     public int getTypeID() const ;	
@@ -26,12 +32,10 @@ public interface ParticleID extends ParticleIDData {
     
     /**Name of the algorithm/module that created this hypothesis.
      */
-    public String getIdentifier() const ;	
+    public const String& getIdentifier() const ;	
     
     /**Parameters associated with this hypothesis.
      */
     public const FloatVec& getParameters() const ;
     
-@endif
-
 }

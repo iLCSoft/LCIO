@@ -9,8 +9,9 @@
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
+#include <bitset>
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -29,7 +30,11 @@ namespace SIO{
     ReconstructedParticleIOImpl* recP  = new ReconstructedParticleIOImpl ;
     *objP = recP ;
 	
-    SIO_DATA( stream ,  &(recP->_typeFlag) , 1  ) ;
+    int typeFlag ;
+    SIO_DATA( stream ,  &typeFlag , 1  ) ;
+    recP->setType( 0x0000ffff & typeFlag ) ;
+    recP->setPrimary( (1<<31) &  typeFlag ) ;
+
     SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
     SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
 
@@ -132,10 +137,15 @@ namespace SIO{
     // this is where we gave up type safety in order to
     // simplify the API and the implementation
     // by having a common collection of objects
-    const ReconstructedParticleData* recP = dynamic_cast<const ReconstructedParticleData*>(obj)  ;
+    const ReconstructedParticle* recP = dynamic_cast<const ReconstructedParticle*>(obj)  ;
 
 
-    LCSIO_WRITE( stream, recP->getTypeFlag()  ) ;
+    // bit 31 is primary flag 
+    // lower 16 bits are type 
+    std::bitset<32> typeFlag =   recP->getType() ; 
+    if( recP->isPrimary() ) typeFlag[31] = 1 ;
+    LCSIO_WRITE( stream, (int) typeFlag.to_ulong()  ) ;
+
     float* mom = const_cast<float*> ( recP->getMomentum() ) ; 
     SIO_DATA( stream,  mom , 3 ) ;
     LCSIO_WRITE( stream, recP->getEnergy()  ) ;
@@ -152,11 +162,11 @@ namespace SIO{
 
 
     // write Pids
-    int nPid  = recP->getParticleIDsData().size() ;
+    int nPid  = recP->getParticleIDs().size() ;
     SIO_DATA( stream ,  &nPid  , 1 ) ;
 
     for(int i=0;i<nPid;i++){
-      const ParticleIDData* pid = recP->getParticleIDsData()[i]  ;
+      const ParticleID* pid = recP->getParticleIDs()[i]  ;
       LCSIO_WRITE( stream, pid->getProbability()  ) ;
       LCSIO_WRITE( stream, pid->getTypeID()  ) ;
       LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
@@ -168,38 +178,38 @@ namespace SIO{
     }
 
     // write reconstructed particles
-    int nReconstructedParticles=  recP->getParticlesData().size() ;
+    int nReconstructedParticles=  recP->getParticles().size() ;
     SIO_DATA( stream, &nReconstructedParticles , 1  ) ;
     
     for(int i=0;i<nReconstructedParticles;i++){
-      SIO_PNTR( stream , &(recP->getParticlesData()[i]) ) ;
+      SIO_PNTR( stream , &(recP->getParticles()[i]) ) ;
       LCSIO_WRITE( stream, recP->getParticleWeights()[i]  ) ;
     }
     
     // write tracks
-    int nTrk = recP->getTracksData().size() ;
+    int nTrk = recP->getTracks().size() ;
     SIO_DATA( stream, &nTrk , 1  ) ;
 
     for(int i=0;i<nTrk;i++){
-      SIO_PNTR( stream , &(recP->getTracksData()[i]) ) ;
+      SIO_PNTR( stream , &(recP->getTracks()[i]) ) ;
       LCSIO_WRITE( stream, recP->getTrackWeights()[i]  ) ;
     }
 
     // write clusters
-    int nClu = recP->getClustersData().size() ;
+    int nClu = recP->getClusters().size() ;
     SIO_DATA( stream, &nClu , 1  ) ;
 
     for(int i=0;i<nClu;i++){
-      SIO_PNTR( stream , &(recP->getClustersData()[i]) ) ;
+      SIO_PNTR( stream , &(recP->getClusters()[i]) ) ;
       LCSIO_WRITE( stream, recP->getClusterWeights()[i]  ) ;
     }
 
     // write MCParticles
-    int nMCP = recP->getMCParticlesData().size() ;
+    int nMCP = recP->getMCParticles().size() ;
     SIO_DATA( stream, &nMCP , 1  ) ;
 
     for(int i=0;i<nMCP;i++){
-      SIO_PNTR( stream , &(recP->getMCParticlesData()[i]) ) ;
+      SIO_PNTR( stream , &(recP->getMCParticles()[i]) ) ;
       LCSIO_WRITE( stream, recP->getMCParticleWeights()[i]  ) ;
     }
 

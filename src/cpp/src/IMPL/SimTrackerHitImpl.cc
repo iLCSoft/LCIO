@@ -25,7 +25,6 @@ namespace IMPL {
 
   float SimTrackerHitImpl::getTime() const { return _time ; }
 
-  DATA::MCParticleData * SimTrackerHitImpl::getMCParticleData() const{ return _particle;}
   EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const { return _particle ; }
 
   void SimTrackerHitImpl::setCellID( int id) {

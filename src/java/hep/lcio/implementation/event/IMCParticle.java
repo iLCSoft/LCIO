@@ -1,7 +1,5 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.data.MCParticleData;
-
 import hep.lcio.event.MCParticle;
 
 import java.util.ArrayList;
@@ -11,7 +9,7 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.7 2003-11-08 03:08:50 tonyj Exp $
+ * @version $Id: IMCParticle.java,v 1.8 2004-04-08 09:57:59 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -42,10 +40,6 @@ public class IMCParticle extends ILCObject implements MCParticle
       return (MCParticle) daughters.get(i);
    }
 
-   public MCParticleData getDaughterData(int i)
-   {
-      return getDaughter(i);
-   }
 
    public void setEndpoint(double[] pos)
    {
@@ -125,11 +119,6 @@ public class IMCParticle extends ILCObject implements MCParticle
    public MCParticle getParent(int i)
    {
       return (MCParticle) parents.get(i);
-   }
-
-   public MCParticleData getParentData(int i)
-   {
-      return getParent(i);
    }
 
    public void setSimulatorStatus(int status)

@@ -88,10 +88,10 @@ LCCollection * LCEventImpl::getCollection(const std::string & name) const
   return  _map[ name ] ;
 }
 
-DATA::LCCollectionData * LCEventImpl::getCollectionData(const std::string & name) const {
-    if( _map.find( name ) == _map.end() ) return 0 ;
-    return  _map[ name ] ;
-}
+// EVENT::LCCollection * LCEventImpl::getCollection(const std::string & name) const {
+//     if( _map.find( name ) == _map.end() ) return 0 ;
+//     return  _map[ name ] ;
+// }
 
     
 

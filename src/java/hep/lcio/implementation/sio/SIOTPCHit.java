@@ -2,11 +2,9 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
 
 import hep.lcio.event.LCIO;
 
-import hep.lcio.data.TPCHitData;
 import hep.lcio.event.TPCHit;
 import hep.lcio.implementation.event.ITPCHit;
 
@@ -16,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTPCHit.java,v 1.3 2004-01-08 21:46:54 tonyj Exp $
+ * @version $Id: SIOTPCHit.java,v 1.4 2004-04-08 09:58:02 gaede Exp $
  */
 class SIOTPCHit extends ITPCHit
 {
@@ -39,7 +37,7 @@ class SIOTPCHit extends ITPCHit
       }
    }
    
-   static void write(TPCHitData hit, SIOOutputStream out, int flags) throws IOException
+   static void write(TPCHit hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOTPCHit)
          ((SIOTPCHit) hit).write(out, flags);

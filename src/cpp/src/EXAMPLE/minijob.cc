@@ -2,7 +2,7 @@
 
 #include "IO/LCWriter.h"
 #include "EVENT/LCIO.h"
-#include "DATA/LCFloatVec.h"
+#include "EVENT/LCFloatVec.h"
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 

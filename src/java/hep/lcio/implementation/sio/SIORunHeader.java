@@ -3,8 +3,6 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 
-import hep.lcio.data.LCRunHeaderData;
-
 import hep.lcio.event.LCRunHeader;
 
 import hep.lcio.implementation.event.ILCRunHeader;
@@ -15,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIORunHeader.java,v 1.5 2004-04-08 09:58:02 gaede Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {
@@ -31,7 +29,7 @@ class SIORunHeader extends ILCRunHeader
          activeSubdetectors[i] = in.readString();
    }
 
-   static void write(LCRunHeaderData header, SIOOutputStream out) throws IOException
+   static void write(LCRunHeader header, SIOOutputStream out) throws IOException
    {
       if (header instanceof SIORunHeader)
          ((SIORunHeader) header).write(out);

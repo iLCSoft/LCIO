@@ -13,7 +13,6 @@
 
 //#include <iostream>
 
-using namespace DATA ;
 using namespace EVENT ;
 using namespace IOIMPL ;
 
@@ -41,7 +40,7 @@ namespace SIO {
 //     std::cout << " deleteing SIOCollectionHandler " << _myType << std::endl ;
   }
   
-  void SIOCollectionHandler::setCollection(const LCCollectionData *col){
+  void SIOCollectionHandler::setCollection(const LCCollection *col){
     _col = col ;
   } 
   void SIOCollectionHandler::setEvent(LCEventIOImpl**  anEvtP){
@@ -88,7 +87,7 @@ namespace SIO {
       
     } else if( op == SIO_OP_WRITE ){ 
       
-//       const LCCollectionData* vec = _col ;
+//       const LCCollection* vec = _col ;
       
       if( _col  != 0 ){
 	

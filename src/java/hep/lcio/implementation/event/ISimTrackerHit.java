@@ -1,7 +1,5 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.data.MCParticleData;
-
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
 
@@ -9,7 +7,7 @@ import hep.lcio.event.SimTrackerHit;
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.6 2003-09-10 18:19:46 gaede Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.7 2004-04-08 09:58:00 gaede Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -39,11 +37,6 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
    public MCParticle getMCParticle()
    {
       return (MCParticle) particle;
-   }
-
-   public MCParticleData getMCParticleData()
-   {
-      return getMCParticle();
    }
 
    public void setPosition(double[] pos)

@@ -1,9 +1,9 @@
 #include "SIO/SIOWriter.h" 
 
-#include "DATA/LCEventData.h"
-#include "DATA/LCRunHeaderData.h"
+#include "EVENT/LCEvent.h"
+#include "EVENT/LCRunHeader.h"
 #include "EVENT/LCIO.h"
-#include "DATA/LCCollectionData.h"
+#include "EVENT/LCCollection.h"
 
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
@@ -20,7 +20,8 @@
 //#define DEBUG 1
 #include "IMPL/LCTOOLS.h"
 
-using namespace DATA ;
+
+using namespace EVENT ;
 using namespace IO ;
 using namespace IMPL ;
 
@@ -154,7 +155,7 @@ namespace SIO {
   }
 
 
-  void SIOWriter::writeRunHeader(const DATA::LCRunHeaderData * hdr)  throw(IOException, std::exception) {
+  void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)  throw(IOException, std::exception) {
 
     // create a new handler for every new run 
     
@@ -190,7 +191,7 @@ namespace SIO {
   /** Creates Handlers needed for writing the event on this stream.
    * Needs to be called for every event.
    */
-  void SIOWriter::setUpHandlers(const LCEventData * evt){
+  void SIOWriter::setUpHandlers(const LCEvent * evt){
   
     // connect handlers to the record
     // create them if needed, i.e. they are not already in SIO_blockManager !
@@ -223,7 +224,7 @@ namespace SIO {
       SIOCollectionHandler* ch = dynamic_cast<SIOCollectionHandler*> 
 	( SIO_blockManager::get( name->c_str() )  ) ;
       
-      LCCollectionData* col = evt->getCollectionData( *name ) ;
+      LCCollection* col = evt->getCollection( *name ) ;
       
       if( ch == 0 ) {
 	ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
@@ -235,7 +236,7 @@ namespace SIO {
     
   }
 
-  void SIOWriter::writeEvent(const LCEventData* evt)  throw(IOException, std::exception) {
+  void SIOWriter::writeEvent(const LCEvent* evt)  throw(IOException, std::exception) {
   
 
     //here we set up the collection handlers 

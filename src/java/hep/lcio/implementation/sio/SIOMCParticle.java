@@ -4,7 +4,6 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
-import hep.lcio.data.MCParticleData;
 
 import hep.lcio.event.MCParticle;
 
@@ -18,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.13 2004-02-17 09:52:53 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.14 2004-04-08 09:58:02 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -92,7 +91,7 @@ class SIOMCParticle extends IMCParticle
       }
       temp = null;
    }
-   static void write(MCParticleData hit, SIOOutputStream out) throws IOException
+   static void write(MCParticle hit, SIOOutputStream out) throws IOException
    {
       if (hit instanceof SIOMCParticle)
          ((SIOMCParticle) hit).write(out);
@@ -104,7 +103,7 @@ class SIOMCParticle extends IMCParticle
 
          for (int i = 0; i < nParents; i++)
          {
-            out.writePntr(hit.getParentData(i));
+            out.writePntr(hit.getParent(i));
          }
 
          out.writeInt(hit.getPDG());

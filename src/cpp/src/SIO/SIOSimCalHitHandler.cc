@@ -11,7 +11,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -79,8 +79,8 @@ namespace SIO{
     // simplify the API and the implementation
     // by having a common collection of objects
     
-    //fg 20030609 changed to use SimCalorimeterHitData
-    const SimCalorimeterHitData* hit = dynamic_cast<const SimCalorimeterHitData*>(obj)  ;
+    //fg 20030609 changed to use SimCalorimeterHit
+    const SimCalorimeterHit* hit = dynamic_cast<const SimCalorimeterHit*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
     if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) ){
@@ -100,7 +100,7 @@ namespace SIO{
 
     for(int i=0; i<nMC ;i++){
 
-      const MCParticleData* part = hit->getParticleContData(i)  ;
+      const MCParticle* part = hit->getParticleCont(i)  ;
       SIO_PNTR( stream , &part ) ;
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;

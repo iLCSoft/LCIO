@@ -6,7 +6,6 @@
 #include <vector>
 #include <math.h> 
 
-using namespace DATA ;
 using namespace EVENT ;
 
 namespace IMPL {
@@ -40,10 +39,10 @@ namespace IMPL {
 
   }
   
-//   MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
+//   MCParticle * MCParticleImpl::getParent() const { return _mother0 ; } 
 //   MCParticle * MCParticleImpl::getParent() const { return _mother0 ; }
 
-//   MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1; }  
+//   MCParticle * MCParticleImpl::getSecondParent() const { return _mother1; }  
 //   MCParticle * MCParticleImpl::getSecondParent() const { return _mother1; }
 
 //   //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
@@ -64,10 +63,10 @@ namespace IMPL {
     }
     
   }
-  // unchecked access
-  MCParticleData* MCParticleImpl::getParentData(int i) const {
-    return _parentsP[i] ;
-  }
+//   // unchecked access
+//   MCParticle* MCParticleImpl::getParent(int i) const {
+//     return _parentsP[i] ;
+//   }
 
 
   int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
@@ -86,7 +85,7 @@ namespace IMPL {
     
   }
 //   // unchecked access
-//   MCParticleData* MCParticleImpl::getDaughterData(int i) const {
+//   MCParticle* MCParticleImpl::getDaughter(int i) const {
 //     return *_daughtersP[i] ;
 //   }
 

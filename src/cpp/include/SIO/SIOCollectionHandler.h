@@ -2,7 +2,7 @@
 #define SIO_SIOCOLLECTIONHANDLER_H 1
 
 #include <string>
-#include "DATA/LCCollectionData.h"
+#include "EVENT/LCCollection.h"
 #include "IOIMPL/LCEventIOImpl.h"
 #include "Exceptions.h"
 
@@ -43,13 +43,13 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-    void setCollection(const DATA::LCCollectionData *col) ; 
+    void setCollection(const EVENT::LCCollection *col) ; 
     void setEvent(IOIMPL::LCEventIOImpl**  anEvtP) ; 
     
     
   private: 
     IOIMPL::LCEventIOImpl**  _evtP ;    // adress of the event that data is read into 
-    const DATA::LCCollectionData *_col ;   // for writing we use the data interface
+    const EVENT::LCCollection *_col ;   // for writing we use the data interface
     
     std::string _myType ;
     SIOObjectHandler* _myHandler  ;

@@ -1,4 +1,4 @@
-package hep.lcio.data ;
+package hep.lcio.event ;
 
 @cpp{
 #include <vector>

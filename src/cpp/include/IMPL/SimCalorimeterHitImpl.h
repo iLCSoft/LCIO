@@ -79,11 +79,6 @@ namespace IMPL {
     virtual int getNMCParticles() const ;
     
     /** Returns the i-th particle that contributed to the hit.
-     */
-    virtual DATA::MCParticleData * getParticleContData(int i) const ;
-    
-    /** Returns the i-th particle that contributed to the hit.
-     *  Same as getParticleContData() except for return type.
      *
      * @see MCParticle
      * @see getNMCParticles()

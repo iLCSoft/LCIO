@@ -6,22 +6,19 @@ import hep.lcio.exceptions.* ;
 /**The main event interface. Holds named collections
  * with elements of type LCObject ('untyped'). Users have to cast to
  * the corresponding types.  
- * Adds methods to add.remove collections to LCEventData.
- * 
+ *
  * @author gaede
  * @version Mar 4, 2003
  * @see LCCollection
- * fg 20030607 extends the corresponding data interface
  */
 
-public interface LCEvent extends LCEventData{
+public interface LCEvent {
     
-@ifdef overwriteDataInterface
-    /** Return the run number off this data.
+    /** Return the run number off this event.
      */
     public int getRunNumber() const ;
     
-    /** Returns this data's number .
+    /** Returns this event's number .
      */
     public int getEventNumber() const ;
     
@@ -29,23 +26,16 @@ public interface LCEvent extends LCEventData{
      */
     public const String& getDetectorName() const ;
     
-    /** Returns the time stamp of the data.
+    /** Returns the time stamp of the event.
      */
     public long getTimeStamp() const ;
     
-    /** Returns the names of the collections in the  data.
+    /** Returns the names of the collections in the  event.
      */
     public const String[]*  getCollectionNames() const ;
-    
-    /** Returns the collection for the given name - NULL if it doesn't exist.
-     */ 
-    public LCCollectionData* getCollectionData(const String& name) const ;
 
-@endif
 
     /** Returns the collection for the given name.
-     * Same as getCollectionData() except that no cast to (LCCollection) and check for 
-     * NULL pointer/reference is needed.  
      *
      * @throws DataNotAvailableException
      */

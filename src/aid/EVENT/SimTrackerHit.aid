@@ -1,29 +1,17 @@
 package hep.lcio.event;
 
 /** A generic simulated tracker hit. 
- * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Mar 6, 2003
- * fg 20030607 extends the corresponding data interface
  */
 
-public interface SimTrackerHit extends SimTrackerHitData {
+public interface SimTrackerHit extends LCObject {
     
-    
-    /** Returns the MC particle that caused the hit.
-     * Same as getMCParticleData except for return type.
-     *
-     * @see MCParticle
-     */
-    public const MCParticle* getMCParticle() const ;
-    
-    
-@ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
      */
     public int getCellID() const ;
-    
+
     /** Returns the hit  position in [mm].	
      */
     public const double3V getPosition() const ;
@@ -35,10 +23,11 @@ public interface SimTrackerHit extends SimTrackerHitData {
     /** Returns the  time of the hit in [ns]. TO DO needs definition.
      */
     public float getTime() const ;	
-
-    /** Returns the MC particle that caused the hit - NULL if unknown.
+    
+    /** Returns the MC particle that caused the hit.
+     *
+     * @see MCParticle
      */
-    public const MCParticleData* getMCParticleData() const ;
-@endif
+    public const MCParticle* getMCParticle() const ;
 
 }

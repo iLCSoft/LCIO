@@ -2,37 +2,26 @@ package hep.lcio.event ;
 
 @ifdef cpp
 @cpp{
+#include <vector>
+}
+@endif
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
+@ifdef cpp
+@cpp{
 class MCParticle ;
 typedef std::vector<MCParticle*> MCParticleVec ;
 }
 @endif
 
 /** The LCIO Monte Carlo particle. 
- * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
  * @version Jun 6, 2003
- * fg 20030607 extends the corresponding data interface
  */
-public interface MCParticle extends MCParticleData {
+public interface MCParticle extends LCObject {
     
 
-    /** Returns the i-th parent of this particle.
-     * Same as getParentData() except for return type.
-     *
-     * @see MCParticleData.getNumberOfParents()
-     */
-    public MCParticle* getParent( int i ) const ;
-    
-
-    /** Returns the number of daughters of this particle.
-     */
-    public int  getNumberOfDaughters() const ;
-    
-    /** Returns the i-th daughter of this particle.
-     *
-     */
-    public MCParticle* getDaughter(int i) const ; 
     
     /** Returns the energy of the particle (at the vertex) in [GeV] computed from
      * the particle's momentum and mass.
@@ -40,21 +29,23 @@ public interface MCParticle extends MCParticleData {
     public float getEnergy() const;
 
 
-@ifdef overwriteDataInterface
-
     /** Returns the number of parents of this particle - 0 if mother.
      */
     public int getNumberOfParents() const ;
 
+
     /** Returns the i-th parent of this particle.
+     *
+     * @see MCParticle.getNumberOfParents()
      */
-    public MCParticleData* getParentData(int i) const ;
-    
+    public MCParticle* getParent( int i ) const ;
+
+
     /** Returns the PDG code of the particle.
      */
     public int getPDG() const;
     
-    /** Returns the status for particles from the generator (HepEvt)
+    /** Returns the status for particles from the generator
      * <br> 0  empty line
      * <br> 1  undecayed particle, stable in the generator
      * <br> 2  particle decayed in the generator
@@ -93,6 +84,15 @@ public interface MCParticle extends MCParticleData {
     /** Returns the particle's charge.
      */
     public float getCharge() const;
+    
 
-@endif   
+    /** Returns the number of daughters of this particle.
+     */
+    public int  getNumberOfDaughters() const ;
+    
+    /** Returns the i-th daughter of this particle.
+     *
+     */
+    public MCParticle* getDaughter(int i) const ; 
+
 }

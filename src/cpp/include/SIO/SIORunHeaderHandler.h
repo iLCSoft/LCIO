@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "DATA/LCRunHeaderData.h"
+#include "EVENT/LCRunHeader.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 
 #include "SIO_block.h"
@@ -36,11 +36,12 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-    void setRunHeader(const DATA::LCRunHeaderData* hdr ) ; 
+    void setRunHeader(const EVENT::LCRunHeader* hdr ) ; 
+    void setRunHeaderPtr(IOIMPL::LCRunHeaderIOImpl** hdrP ) ; 
     
   private: 
     IOIMPL::LCRunHeaderIOImpl** _rhP ;  // address for reading
-    const DATA::LCRunHeaderData* _hdr ;  // runheader for writing
+    const EVENT::LCRunHeader* _hdr ;  // runheader for writing
     
   }; // class
   

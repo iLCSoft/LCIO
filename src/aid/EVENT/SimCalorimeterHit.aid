@@ -1,25 +1,14 @@
 package hep.lcio.event ;
 
-/** The generic calorimeter hit. 
- * Adding some convenient methods to the pure data interface.
+/** The generic simulated calorimeter hit. 
  * 
  * @author gaede
  * @version Mar 5, 2003
- * fg 20030607 extends the corresponding data interface
  */
 
-public interface SimCalorimeterHit extends SimCalorimeterHitData {
+public interface SimCalorimeterHit extends LCObject {
     
-    /** Returns the i-th particle that contributed to the hit.
-     *  Same as getParticleContData() except for return type.
-     *
-     * @see MCParticle
-     * @see SimCalorimeterHitData.getNMCParticles()
-     */
-    public  MCParticle* getParticleCont( int i) const ;
 
-
-@ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;
@@ -35,7 +24,8 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
     public float getEnergy() const ;
     
     /** Returns the position of the hit in world coordinates.
-     *  NULL if information is not stored. 
+     *  NULL if information is not stored -  check the flag word (bit CHBIT_LONG) 
+     *  of the collection.
      */
     public const float3V getPosition() const ;	
 
@@ -57,16 +47,16 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
     
     /** Returns the PDG code of the secondary type of the i-th particle that 
      * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
-     * wether this information is available. If so, every primary will show up in 
+     * whether this information is available. If so, every primary will show up in 
      * the list of contributions once for every type of secondaries. If not the 
      * value returned is undefined. 
      */ 
     public int  getPDGCont(int i) const ;
     
     /** Returns the i-th particle that contributed to the hit.
+     * @see MCParticle
+     * @see SimCalorimeterHit.getNMCParticles()
      */
-    public MCParticleData* getParticleContData( int i) const ;
-
-@endif
+    public  MCParticle* getParticleCont( int i) const ;
 
 }

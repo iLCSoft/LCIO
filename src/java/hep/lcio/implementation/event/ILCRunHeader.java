@@ -2,14 +2,11 @@ package hep.lcio.implementation.event;
 
 import hep.lcio.event.LCRunHeader;
 
-import java.util.Arrays;
-import java.util.List;
-
 
 /**
  * A default implementation of LCRunHeader
  * @author Tony Johnson
- * @version $Id: ILCRunHeader.java,v 1.3 2003-09-16 10:30:18 gaede Exp $
+ * @version $Id: ILCRunHeader.java,v 1.4 2004-04-08 09:57:59 gaede Exp $
  */
 public class ILCRunHeader extends ILCObject implements LCRunHeader
 {

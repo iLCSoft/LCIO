@@ -1,7 +1,7 @@
 #ifndef LCIO_OBJECTHANDLE_H
 #define LCIO_OBJECTHANDLE_H 1
 
-#include "DATA/LCObject.h"
+#include "EVENT/LCObject.h"
 #include "Exceptions.h"
 //#include "lcio.h"
 
@@ -23,7 +23,7 @@ namespace UTIL{
     LCObjectHandle( T* lcObj) : _lcObj(lcObj) {
     }
 
-    LCObjectHandle(DATA::LCObject* lcObj){
+    LCObjectHandle(EVENT::LCObject* lcObj){
       
       _lcObj = dynamic_cast< T* >( lcObj ) ;
 

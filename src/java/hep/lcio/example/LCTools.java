@@ -5,8 +5,8 @@
  */
 package hep.lcio.example;
 
-import hep.lcio.data.LCFloatVec;
-import hep.lcio.data.LCIntVec;
+import hep.lcio.event.LCFloatVec;
+import hep.lcio.event.LCIntVec;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;

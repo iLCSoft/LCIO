@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include "IO/LCWriter.h"
-#include "DATA/LCEventData.h"
-#include "DATA/LCRunHeaderData.h"
+#include "EVENT/LCEvent.h"
+#include "EVENT/LCRunHeader.h"
 
 class SIO_record ;
 class SIO_stream ;    
@@ -60,13 +60,13 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void writeRunHeader(const DATA::LCRunHeaderData * hdr)throw (IO::IOException, std::exception) ;
+    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr)throw (IO::IOException, std::exception) ;
 
     /** Writes the given event to file.
      *
      *@throws IOException
      */
-    virtual void writeEvent(const DATA::LCEventData * evt) throw (IO::IOException, std::exception) ;
+    virtual void writeEvent(const EVENT::LCEvent * evt) throw (IO::IOException, std::exception) ;
 
     /** Closes the output file/stream etc.
      *
@@ -78,7 +78,7 @@ namespace SIO {
 
     /** Sets up the handlers for writing the current event.
      */
-    void setUpHandlers(const DATA::LCEventData * evt)  ;
+    void setUpHandlers(const EVENT::LCEvent * evt)  ;
     
     /** Creates a proper filename with extension 'slcio' 
      * in sioFilename.

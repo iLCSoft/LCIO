@@ -9,7 +9,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -48,12 +48,12 @@ namespace SIO{
 				       unsigned int flag ){
     
     unsigned int status ; 
-    // fg 20030609 changed to use SimTrackerHitData
+    // fg 20030609 changed to use SimTrackerHit
     
     // this is where we gave up type safety in order to
     // simplify the API and the implementation
     // by having a common collection of objects
-    const SimTrackerHitData* hit = dynamic_cast<const SimTrackerHitData*>(obj)  ;
+    const SimTrackerHit* hit = dynamic_cast<const SimTrackerHit*>(obj)  ;
 
     LCSIO_WRITE( stream, hit->getCellID()  ) ;
     // as SIO doesn't provide a write function with const arguments
@@ -63,7 +63,7 @@ namespace SIO{
     LCSIO_WRITE( stream, hit->getdEdx()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;
     
-    const MCParticleData* part = hit->getMCParticleData()  ;
+    const MCParticle* part = hit->getMCParticle()  ;
     SIO_PNTR( stream , &part ) ;
 
 //     // write a ptag in order to be able to point to tracker hits in the future

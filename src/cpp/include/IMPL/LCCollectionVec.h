@@ -5,14 +5,14 @@
 #include <vector>
 
 #include "EVENT/LCCollection.h"
-#include "DATA/LCObject.h"
+#include "EVENT/LCObject.h"
 #include "AccessChecked.h"
 
 //#include "LCIO.h"
 
 namespace IMPL {
   
-  typedef std::vector<DATA::LCObject*> LCObjectVec ;
+  typedef std::vector<EVENT::LCObject*> LCObjectVec ;
 
   /** Implementation of the LCCollection using (inheriting from) an STL vector
    *  of LCObjects.
@@ -55,10 +55,10 @@ namespace IMPL {
     
     /** Returns pointer to element at index - no range check !.
      */
-    virtual DATA::LCObject * getElementAt(int index) const ;
+    virtual EVENT::LCObject * getElementAt(int index) const ;
     
     /** Returns flag word for collection. 
-     * @see DATA::LCCollectionData::getFlag() 
+     * @see EVENT::LCCollection::getFlag() 
      */
     virtual int getFlag() const ;
     
@@ -73,7 +73,7 @@ namespace IMPL {
      *
      * @throws ReadOnlyException
      */
-    virtual void addElement(DATA::LCObject * obj) throw (EVENT::ReadOnlyException) ;
+    virtual void addElement(EVENT::LCObject * obj) throw (EVENT::ReadOnlyException) ;
 
     /** Removes the i-th element from the collection. Throws an exception 
      * if the collection (event) is 'read only'.

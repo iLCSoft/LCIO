@@ -149,13 +149,15 @@ namespace SIO {
       ( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
     if( rh == 0 ) 
       rh = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ;
+    else
+      rh->setRunHeaderPtr( _runP ) ;
 
     SIOEventHandler* eh  = dynamic_cast<SIOEventHandler*> 
       ( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
     if( eh == 0 ) 
       eh = new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ;
-
-    
+    else
+      eh->setEventPtr( _evtP ) ;
   }
 
 
@@ -317,7 +319,7 @@ namespace SIO {
     if( !runFound ){
 //       std::stringstream message ;
 //       message << " run not found: " << runNumber << std::ends ;
-//       throw DataNotAvailableException( message.str()  ) ;
+//       throw NotAvailableException( message.str()  ) ;
       return 0 ;
     }
     { // -- scope for unpacking evt header --------

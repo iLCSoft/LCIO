@@ -10,7 +10,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
+
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -35,11 +35,11 @@ namespace SIO{
 
     if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_RAW ) ){
 
-      SIO_DATA( stream ,  &(hit->_rawDataSize)  , 1 ) ;
+      SIO_DATA( stream ,  &(hit->_rawSize)  , 1 ) ;
 
-      hit->initRawDataArray( hit->_rawDataSize ) ; // reserve enough space for raw data
+      hit->initRawArray( hit->_rawSize ) ; // reserve enough space for raw data
 
-      SIO_DATA( stream ,  hit->_rawDataArray  , hit->_rawDataSize  ) ;
+      SIO_DATA( stream ,  hit->_rawArray  , hit->_rawSize  ) ;
 
     }
     return ( SIO_BLOCK_SUCCESS ) ;
@@ -52,7 +52,7 @@ namespace SIO{
     
     unsigned int status ; 
 
-    const TPCHitData* hit = dynamic_cast<const TPCHitData*>(obj)  ;
+    const TPCHit* hit = dynamic_cast<const TPCHit*>(obj)  ;
 
     LCSIO_WRITE( stream, hit->getCellID()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;

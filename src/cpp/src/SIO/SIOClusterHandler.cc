@@ -9,7 +9,6 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-using namespace DATA ;
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -114,7 +113,7 @@ namespace SIO{
     // this is where we gave up type safety in order to
     // simplify the API and the implementation
     // by having a common collection of objects
-    const ClusterData* cluster = dynamic_cast<const ClusterData*>(obj)  ;
+    const Cluster* cluster = dynamic_cast<const Cluster*>(obj)  ;
 
 
     LCSIO_WRITE( stream, cluster->getType()  ) ;
@@ -142,7 +141,7 @@ namespace SIO{
       LCSIO_WRITE( stream, particleType[i]  ) ;
     }
 
-    const ClusterDataVec& clusters = cluster->getClustersData() ;
+    const ClusterVec& clusters = cluster->getClusters() ;
     int nClusters=  clusters.size() ;
 
     SIO_DATA( stream, &nClusters , 1  ) ;

@@ -45,12 +45,8 @@ namespace IMPL {
      */
     virtual float getTime() const ;
 
-    /** Returns the MC particle that caused the hit. NULL if unknown.
-     */
-    virtual DATA::MCParticleData * getMCParticleData() const  ;
 
     /** Returns the MC particle that caused the hit.
-     * Same as getMCParticleData except for return type.
      * @see MCParticle
      */
     virtual EVENT::MCParticle * getMCParticle() const ;

@@ -69,20 +69,20 @@ public:
 
   /** Set the raw data.
    */
-  virtual void setRawData(const int* rawData, int size ) ;
+  virtual void setRawData(const int* raw, int size ) ;
 
 protected:
   /** initialize the raw data array - for faster reading
    */
-  virtual void initRawDataArray(int size) ;
+  virtual void initRawArray(int size) ;
 
 
   int _cellID ;
   float _time ;
   float _charge ;
   int _quality ;
-  int _rawDataSize ;
-  int* _rawDataArray ;
+  int _rawSize ;
+  int* _rawArray ;
 
 }; // class
 }; // namespace IMPL

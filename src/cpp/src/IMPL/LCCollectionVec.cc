@@ -71,7 +71,7 @@ const std::string & LCCollectionVec::getTypeName() const{
 
 
 
-DATA::LCObject * LCCollectionVec::getElementAt(int index) const{
+EVENT::LCObject * LCCollectionVec::getElementAt(int index) const{
   return this->operator[](index) ;
 }
 
@@ -86,7 +86,7 @@ void LCCollectionVec::setFlag(int flag){
 }
 
 
-  void LCCollectionVec::addElement(DATA::LCObject * obj) throw (ReadOnlyException){
+  void LCCollectionVec::addElement(EVENT::LCObject * obj) throw (ReadOnlyException){
     
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;

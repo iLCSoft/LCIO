@@ -6,14 +6,12 @@ import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /** Small programm that dumps the structure and contents of an (LCIO) SIO file to the screen.
  *
  * @author Frank Gaede
- * @version $Id: SIODump.java,v 1.3 2003-09-04 04:26:59 tonyj Exp $
+ * @version $Id: SIODump.java,v 1.4 2004-04-08 09:57:59 gaede Exp $
  */
 public class SIODump
 {
