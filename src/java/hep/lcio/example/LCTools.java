@@ -88,9 +88,9 @@ public class LCTools
 
                System.out.print(" values(" + i + "): ");
 
-               // FIXME:
-               //	  for(int k=0 ; k< vec.size() ; k++ )
-               //	    System.out.print( (*vec)[k]  + ", ") ;
+               float[] data = vec.toArray();
+               for(int k=0 ; k< data.length ; k++ )
+                  System.out.print( data[k]  + ", ") ;
                System.out.println();
             }
          }

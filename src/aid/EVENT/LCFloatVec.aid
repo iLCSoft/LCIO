@@ -19,6 +19,8 @@ public interface LCFloatVec extends LCObject
 @endif
 
 
-    // here we need sth. reasonable for java ... FLoat[] ?
+@ifdef java
+    public float[] toArray();
+@endif
 }
 

@@ -6,7 +6,7 @@ import hep.lcio.event.LCFloatVec;
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCFloatVec.java,v 1.3 2003-05-06 07:10:34 tonyj Exp $
+ * @version $Id: ILCFloatVec.java,v 1.4 2003-05-06 17:26:46 tonyj Exp $
  */
 public class ILCFloatVec implements LCFloatVec
 {
@@ -23,5 +23,14 @@ public class ILCFloatVec implements LCFloatVec
       }
       data[size++] = f;
    }
-   //FIXME:
+   public float[] toArray()
+   {
+      if (size != data.length) 
+      {
+          float[] result = new float[size];
+          System.arraycopy(data,0,result,0,size);
+          data = result;
+      }
+      return data;
+   }
 }
