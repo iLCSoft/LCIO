@@ -4,6 +4,49 @@
 ---------------------------------------------------------------
 
 ============================
+ v00-06 ( fg 20030827 )
+============================
+
+   - added integer user extensions (LCIntVec)
+     [ C++ only ]
+
+   - removed EndOfDataException from LCReader API
+     EOF is signaled by null pointers again ( while ( evt=lcRdr->readNextEvent()) != 0)
+     -> we only use exceptions to signal errors (and unexpected events)
+     [ C++ only ]
+
+   - new class 'CalorimeterHit' for real data 
+     same as SimCalorimeterHit except for MCParticle link
+     [ Java and C++ ]      
+
+   - some code documentation for the C++ API from doxygen
+     
+   - modification of build.xml ( now 'ant   '  builds everything)
+
+--------------------
+  to do for release:
+--------------------
+
+  - store mass for MCParticle instead of energy
+    + convenient method getEnergy() in EVENT::MCParticle
+
+  - Exceptions in LCReader 
+    [Java] 
+
+  - SimCalorimeterHit - MCParticleCont doesn't work
+    Java version   -> needs debugging ...
+
+  - integer extensions in Java
+    
+  - remove const from C++ methods ?  - no 
+
+  - read-only mode with Exceptions ?  - no
+
+  - general documentation
+
+  - ...
+ 
+============================
  v00-05beta ( fg 20030613 )
 ============================
 
@@ -50,29 +93,6 @@
   - new method SIOWriter::readStream(int maxRecord)
     [C++ only]
 
-
---------------------
-  to do for release:
---------------------
-
-
-  - Exceptions in LCReader 
-    [Java] 
-
-  - SimCalorimeterHit - MCParticleCont doesn't work
-    Java version   -> needs debugging ...
-
-  - integer extensions in C++ and Java
-    
-  - remove const from C++ methods ?  - no 
-
-  - read-only mode with Exceptions ?  - no
-
-  - check API doc/comments for doxygen
-
-  - general documentation
-
-  - ...
 
 =====================
 v00-04  (fg 20030514)

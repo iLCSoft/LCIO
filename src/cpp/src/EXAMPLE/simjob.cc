@@ -48,11 +48,6 @@ int main(int argc, char** argv ){
       cout << e.what() << endl ;
       return 0 ;
     }
-//     int status ;
-//     if( (status = lcWrt->open( FILEN ))  != LCIO::SUCCESS ) {
-//       cout << " couldn't open file  : " << FILEN << " status: " << status << endl ;
-//       return 0 ;
-//     }
     
     // loop over runs
     for(int rn=0;rn<NRUN;rn++){
@@ -89,7 +84,6 @@ int main(int argc, char** argv ){
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	
-
 
 	MCParticleImpl* mom = new MCParticleImpl ;
 	mom->setPDG( 1  ) ;
@@ -182,7 +176,7 @@ int main(int argc, char** argv ){
 
 	// and finally some tracker hits
 	// with some user extensions (4 floats and 2 ints) per track:
-	// we just create parallel collections of float and int vectors
+	// we just need to create parallel collections of float and int vectors
 	LCCollectionVec* trkVec = new LCCollectionVec( LCIO::SIMTRACKERHIT )  ;
 	LCCollectionVec* extFVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
 	LCCollectionVec* extIVec = new LCCollectionVec( LCIO::LCINTVEC )  ;
@@ -241,18 +235,17 @@ int main(int argc, char** argv ){
 	  evt->addCollection( (LCCollection*) addExtVec , "AdditionalExtension" ) ;
 	}
 
-
-      
 	// write the event to the file
 	lcWrt->writeEvent( evt ) ;
 	
 	// dump the event to the screen 
 	LCTOOLS::dumpEvent( evt ) ;
-	//	LCTOOLS::printMCParticles( mcVec ) ;
-	
-	// we created the event so we need to take care of deleting it ...
+
+	// ------------ IMPORTANT ------------- !
+	// we created the event so we need to delete it ...
 	delete evt ;
-	
+	// -------------------------------------
+
 	if( ! (i%100) ) cout << ". " << flush  ;
 	
       } // evt loop
