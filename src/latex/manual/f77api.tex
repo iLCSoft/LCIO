@@ -1,0 +1,49 @@
+\subsection{Fortran API}
+
+The Fortran API of LCIO is based on a set of wrapper functions to the 
+C++ implementation using "cfrotran.h" to create the correct Fortran name.
+
+The main idea is that we will use integers in Fortran to represent pointers to 
+objects on the C++ side. There will be one wrapper function for every class method
+of the implementation classes (namespaces IMPL and IO) plus two additional methods 
+to create and delete the object respectively.
+By using a unique naming convention the documentation of the C++ version of the API
+can be utilized for the Fortran API as well.
+
+\subsubsection{Naming convention}
+The following naming convention is used for the fortran wrapper functions to the 
+C++ implementation of LCIO:
+\begin{itemize}
+\item{all function names start with {\bf lc}}
+\item{{\bf lc} is followed by a three letter acronym that uniquley identifies the 
+corresponding C++ class, e.g. {\bf evt} for LCEvent.} See table \ref{tab_f77} for a complete 
+listing.
+
+\item{the function name ends on the full lowercased name of the class method, e.g. \\
+ \verb$LCEventImpl::getRunNumber()$ becomes  {\bf lcevtgetrunnumber() } }
+\item{the constructor and destructor of the class  end on {\bf create} and {\bf delete} 
+respectively, eg. {\bf lcevtdelete()} }
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\rule[-5mm]{0mm}{10mm} C++ class  &  f77 acronym   \\ \hline \hline
+
+ LCRunHeaderImpl       & rhd \\ \hline
+ LCEventImpl           & evt \\ \hline
+ LCCollectionVec       & col \\ \hline
+ MCParticleImpl        & mcp \\ \hline
+ SimTrackerHitImpl     & sth \\ \hline
+ SimCalorimeterHitImpl & sch \\ \hline
+ CalorimeterHitImpl    & cah \\ \hline
+ TPCHitImpl            & tph \\ \hline
+ LCReader              & rdr \\ \hline
+ LCWriter              & wrt \\ \hline
+
+\end{tabular}
+\end{center}
+\caption{Three letter acronyms for f77 wrapper functions.}
+\label{tab_f77}
+\end{table}

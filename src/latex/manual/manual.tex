@@ -325,13 +325,14 @@ catch {\em run time} exceptions for parts of the code in order to prevent an abo
 
 
 
-\subsection{Fortran API}
-There will be a one to one mapping of the Fortran interface to the C++ API. For every class member 
-function there will be a Fortran function with one additional integer parameter that holds the 
-pointer to the underlying C++ object. This Fortran function is realized by a wrapper function 
-that calls the underlying C++ implementation.
-There is a naming convention, that allows to find the name of 
-the wrapper function from the C++ name and vice versa. 
+%\subsection{Fortran API}
+%There will be a one to one mapping of the Fortran interface to the C++ API. For every class member 
+%function there will be a Fortran function with one additional integer parameter that holds the 
+%pointer to the underlying C++ object. This Fortran function is realized by a wrapper function 
+%that calls the underlying C++ implementation.
+%There is a naming convention, that allows to find the name of 
+%the wrapper function from the C++ name and vice versa. 
+\input{f77api}
 
 
 \subsection{Data model \label{sec_datamodel}}
