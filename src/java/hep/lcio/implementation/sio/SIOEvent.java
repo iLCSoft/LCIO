@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.27 2004-09-17 06:30:38 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.28 2004-09-22 16:12:39 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -74,7 +74,6 @@ class SIOEvent extends ILCEvent
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
-         System.out.println("name="+name+" type="+type);
          if (type == null) continue;
                  
          int flags = in.readInt();
@@ -217,7 +216,7 @@ class SIOEvent extends ILCEvent
          }
          else 
          {
-           System.err.println("UNKNOWN collection type: " + type) ;
+           System.err.println("Warning: UNKNOWN collection type: " + type) ;
          }
          
       }
