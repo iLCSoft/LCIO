@@ -11,14 +11,14 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOParticleID.java,v 1.4 2004-09-17 04:37:43 tonyj Exp $
+ * @version $Id: SIOParticleID.java,v 1.5 2004-09-22 16:18:34 gaede Exp $
  */
 class SIOParticleID extends IParticleID
 {
    SIOParticleID(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
       setParent(owner);
-      logLikelihood = in.readFloat();
+      likelihood = in.readFloat();
       type = in.readInt();
       pdg = in.readInt();
       algorithmType =in.readInt() ;
@@ -46,7 +46,7 @@ class SIOParticleID extends IParticleID
 
    private void write(SIOOutputStream out) throws IOException
    {
-      out.writeFloat(logLikelihood);
+      out.writeFloat(likelihood);
       out.writeInt(type);
       out.writeInt(pdg);
       out.writeInt(algorithmType);

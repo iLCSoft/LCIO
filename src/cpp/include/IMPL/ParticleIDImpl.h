@@ -9,12 +9,12 @@
 namespace IMPL {
 
 
-  /** Helper class to sort ParticleIDs wrt. their loglikelihood.
+  /** Helper class to sort ParticleIDs wrt. their likelihood.
    */
   class PIDSort : public std::binary_function<EVENT::ParticleID*,EVENT::ParticleID*,bool>{
   public:
     bool operator()(const EVENT::ParticleID* p1, const EVENT::ParticleID* p2){
-      return p1->getLoglikelihood() > p2->getLoglikelihood() ;
+      return p1->getLikelihood() > p2->getLikelihood() ;
     }
   };
 
@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version $Id: ParticleIDImpl.h,v 1.7 2004-09-16 10:46:34 gaede Exp $
+ * @version $Id: ParticleIDImpl.h,v 1.8 2004-09-22 16:18:32 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -47,9 +47,9 @@ namespace IMPL {
      */
     virtual int getPDG() const ;
 
-    /**The log likelihood  of this hypothesis
+    /**The likelihood  of this hypothesis - in a user defined normalization.
      */
-    virtual float getLoglikelihood() const ;
+    virtual float getLikelihood() const ;
 
     /** Type of the algorithm/module that created this hypothesis. 
      * Check/set collection parameters PIDAlgorithmTypeName and PIDAlgorithmTypeID.
@@ -64,14 +64,14 @@ namespace IMPL {
     // setters
     void setType( int type ) ;
     void setPDG( int pdg ) ;
-    void setLoglikelihood( float logL ) ;
+    void setLikelihood( float logL ) ;
     void setAlgorithmType(int algorithmType ) ;
     void addParameter( float p ) ;
     
   protected:
     int _type ;
     int _pdg ;
-    float _loglikelihood ;
+    float _likelihood ;
     int _algorithmType ;
     EVENT::FloatVec _parameters ;
 

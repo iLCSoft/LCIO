@@ -416,7 +416,7 @@ public:
 	int nPID = 5 ;
 	for(int j=0;j<nPID;j++){
 	  ParticleIDImpl* pid = new ParticleIDImpl ;
-	  pid->setLoglikelihood( (double) j / nPID ) ;
+	  pid->setLikelihood( (double) j / nPID ) ;
 	  pid->setType( j ) ;
 	  pid->setPDG( -11 ) ;
 	  pid->setAlgorithmType( RunEventProcessorID ) ;
@@ -496,7 +496,7 @@ public:
       int nPID = 5 ;
       for(int j=0;j<nPID;j++){
 	ParticleIDImpl* pid = new ParticleIDImpl ;
-	pid->setLoglikelihood( (double) j / nPID ) ;
+	pid->setLikelihood( (double) j / nPID ) ;
 	pid->setType( j ) ;
 	pid->setPDG( -11 ) ;
 	pid->setAlgorithmType( RunEventProcessorID ) ;

@@ -38,9 +38,9 @@ int lcpidgetpdg( PTRTYPE pidit )  {
   return pid->getPDG() ;
 }
 
-float lcpidgetloglikelihood( PTRTYPE pidit ) {
+float lcpidgetlikelihood( PTRTYPE pidit ) {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  return pid->getLoglikelihood() ;
+  return pid->getLikelihood() ;
 }
 
 int lcpidgetalgorithmtype( PTRTYPE pidit )  {
@@ -78,9 +78,9 @@ int lcpidsetpdg( PTRTYPE pidit, int pdg ) {
   return LCIO::SUCCESS ;
 }
 
-int lcpidsetloglikelihood( PTRTYPE pidit, float logl) {
+int lcpidsetlikelihood( PTRTYPE pidit, float logl) {
   ParticleIDImpl* pid = f2c_pointer<ParticleIDImpl,LCObject>( pidit ) ;
-  pid->setLoglikelihood( logl ) ;
+  pid->setLikelihood( logl ) ;
   return LCIO::SUCCESS ;
 }
 

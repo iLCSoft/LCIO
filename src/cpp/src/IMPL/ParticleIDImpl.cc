@@ -5,7 +5,7 @@ namespace IMPL{
   ParticleIDImpl::ParticleIDImpl() :
     _type(0) ,
     _pdg(0) ,
-    _loglikelihood(0) {
+    _likelihood(0) {
   }
 
   ParticleIDImpl::~ParticleIDImpl(){
@@ -17,8 +17,8 @@ namespace IMPL{
   int ParticleIDImpl::getPDG() const{
     return _pdg ; 
   }
-  float ParticleIDImpl::getLoglikelihood() const{
-    return _loglikelihood ;
+  float ParticleIDImpl::getLikelihood() const{
+    return _likelihood ;
   }
   int ParticleIDImpl::getAlgorithmType() const{
     return _algorithmType ;
@@ -36,9 +36,9 @@ namespace IMPL{
     _pdg = pdg ;
   }
 
-  void ParticleIDImpl::setLoglikelihood( float logL ){
-    checkAccess("ParticleIDImpl::setLoglikelihood") ;
-    _loglikelihood = logL ; 
+  void ParticleIDImpl::setLikelihood( float logL ){
+    checkAccess("ParticleIDImpl::setLikelihood") ;
+    _likelihood = logL ; 
   }
   
   void ParticleIDImpl::setAlgorithmType(int algorithmType ) {

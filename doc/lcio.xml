@@ -700,7 +700,7 @@
 	  </repeat>
        	  <data type="int" name="npid"/>
 	  <repeat count="npid">
-	    <data type="float" name="loglikelihood"/>
+	    <data type="float" name="likelihood"/>
 	    <data type="int" name="type"/>
 	    <data type="int" name="pdg"/>
 	    <data type="int" name="algorithmType"/>
@@ -775,7 +775,7 @@
 	<data type="int" name="npid"/>
 	<repeat count="npid">
           <if condition="1000*major+minor&gt;1002">
-	    <data type="float" name="loglikelihood"/>
+	    <data type="float" name="likelihood"/>
 	    <data type="int" name="type"/>
 	    <data type="int" name="pdg"/>
 	    <data type="int" name="algorithmType"/>

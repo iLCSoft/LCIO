@@ -593,7 +593,7 @@ c        status   =  lcrcpsetprimary ( recopp, .true. )
         do  j = 1, npid
           pidp     = lcpidcreate ()
           prob     = dble ( (j+1)/npid )
-          status   = lcpidsetloglikelihood (pidp, prob )
+          status   = lcpidsetlikelihood (pidp, prob )
           status   = lcpidsettype ( pidp, j )
           status   = lcpidsetpdg ( pidp, -11 )
 

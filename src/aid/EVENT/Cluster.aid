@@ -10,7 +10,7 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.9 2004-09-10 12:26:18 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.10 2004-09-22 16:18:31 gaede Exp $
  */
 
 
@@ -63,7 +63,7 @@ public interface Cluster extends LCObject {
 //      */
 //     public const FloatVec& getParticleType() const ;
 
-    /** The particle Id's sorted by their loglikelihood.
+    /** The particle Id's sorted by their likelihood.
      * @see ParticleID
      */
     public const ParticleIDVec& getParticleIDs() const ;

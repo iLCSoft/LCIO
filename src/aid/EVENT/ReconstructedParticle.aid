@@ -10,7 +10,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.11 2004-09-16 07:15:30 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.12 2004-09-22 16:18:31 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -75,7 +75,7 @@ public interface ReconstructedParticle extends LCObject {
     public const float3V getReferencePoint() const;
 
 
-    /** The particle Id's sorted by their loglikelihood.
+    /** The particle Id's sorted by their likelihood.
      * @see ParticleID
      */
     public const ParticleIDVec& getParticleIDs() const ;

@@ -67,7 +67,7 @@ namespace IMPL {
      */
     virtual const float* getReferencePoint() const ;
 
-    /** The particle Id's sorted by their loglikelihood.
+    /** The particle Id's sorted by their likelihood.
      * @see ParticleID
      */
     virtual const EVENT::ParticleIDVec & getParticleIDs() const ;

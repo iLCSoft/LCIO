@@ -68,7 +68,7 @@ namespace SIO{
 	// create new Pid objects
 	ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
 	
-	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_likelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_algorithmType) , 1  ) ;
@@ -178,7 +178,7 @@ namespace SIO{
     SIO_DATA( stream ,  &nPid  , 1 ) ;
     for(int i=0;i<nPid;i++){
       const ParticleID* pid = cluster->getParticleIDs()[i]  ;
-      LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
+      LCSIO_WRITE( stream, pid->getLikelihood()  ) ;
       LCSIO_WRITE( stream, pid->getType()  ) ;
       LCSIO_WRITE( stream, pid->getPDG()  ) ;
       LCSIO_WRITE( stream, pid->getAlgorithmType()  ) ;
