@@ -8,6 +8,7 @@
 #include "IMPL/LCTOOLS.h"
 #include <iostream>
 
+
 using namespace lcio ;
 
 
@@ -37,7 +38,10 @@ char* lcevtgetdetectorname( PTRTYPE event ){
   return const_cast<char*> (evt->getDetectorName().c_str()  ) ;
 }
 
-// const std::vector<std::string>  * getCollectionNames() const;
+PTRTYPE lcevtgetcollectionnames( PTRTYPE event ){
+  LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
+  return reinterpret_cast<PTRTYPE> ( evt->getCollectionNames() ) ;
+}
 
 long lcevtgettimestamp( PTRTYPE event )
 {

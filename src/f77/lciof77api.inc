@@ -26,11 +26,15 @@ c-----the LCWriter interface
       integer lcwrtwriterunheader, lcwrtwriteevent
 c-----the LCRunHeader interface
       PTRTYPE lcrhdcreate
+      PTRTYPE lcrhdgetactivesubdetectors
       integer lcrhddelete, lcrhdgetrunnumber
       character*80 lcrhdgetdetectorname
       character*1024 lcrhdgetdescription
       integer lcrhdsetrunnumber, lcrhdsetdetectorname
       integer lcrhdsetdescription, lcrhdaddactivesubdetector
+c-----the LCStrVec interface
+      integer lcstvgetlength
+      character*80 lcstvgetstringat
 c-----the LCEvent interface
       PTRTYPE lcevtcreate, lcevtgetcollection
       integer lcevtdelete

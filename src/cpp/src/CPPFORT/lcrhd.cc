@@ -33,7 +33,13 @@ char* lcrhdgetdescription( PTRTYPE runHeader ){
   LCRunHeaderImpl* rhd =  reinterpret_cast<LCRunHeaderImpl*>(runHeader) ;
   return  const_cast<char*>( rhd->getDescription().c_str() );
 }
-// std::vector<std::string> * lcrhdgetActiveSubdetectors(PTRTYPE runHeader) const ;
+
+
+PTRTYPE lcrhdgetactivesubdetectors(PTRTYPE runHeader){
+  LCRunHeaderImpl* rhd =  reinterpret_cast<LCRunHeaderImpl*>(runHeader) ;
+  return reinterpret_cast<PTRTYPE>( rhd->getActiveSubdetectors()  ) ;
+}
+
 int lcrhdsetrunnumber( PTRTYPE runHeader, int rn){
   LCRunHeaderImpl* rhd =  reinterpret_cast<LCRunHeaderImpl*>(runHeader) ;
   rhd->setRunNumber( rn ) ;

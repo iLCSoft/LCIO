@@ -316,14 +316,14 @@ EOF
 #------- modify as needed: ------
 
 #----- DESY Hamburg -----
-#g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
-#-L${CERN_ROOT}/lib -lpythia6125 -lpdflib -lpacklib -lmathlib -lkernlib \
-#-lg2c -lz -lc -lm
+g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
+-L${CERN_ROOT}/lib -lpythia6125 -lpdflib -lpacklib -lmathlib -lkernlib \
+-lg2c -lz -lc -lm
 
 #----- DESY Zeuthen -----
-g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
--L${CERN_ROOT}/lib -lpythia6205 -lpdflib804 -lpacklib -lmathlib -lkernlib \
--lg2c -lz -lc -lm
+#g77 -o /tmp/pyhepevt.bin /tmp/pyhepevt.f \
+#-L${CERN_ROOT}/lib -lpythia6205 -lpdflib804 -lpacklib -lmathlib -lkernlib \
+#-lg2c -lz -lc -lm
 
 # and run
 rm -f pythia.data pythiahepevt.log pyhepevt.log

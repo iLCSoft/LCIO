@@ -332,7 +332,12 @@ C
         READ (LUN, 11, IOSTAT=ICHECK, END=999) (PHEP(J,I),J=1,5)
         READ (LUN, 11, IOSTAT=ICHECK, END=999) (VHEP(L,I),L=1,4),
      +                                         CHHEP(I)
+
+c        write(*,1234) i,ISTHEP(I),IDHEP(I),(JMOHEP(J,I),J=1,2),
+c     $       (JDAHEP(L,I),L=1,2)
       END DO
+
+c 1234 FORMAT(I3,I5,I9,4I5)
 
       RETURN
 *

@@ -12,7 +12,7 @@ c --------------- convenient methods to read/write the run header
 
 *     Write a run header to the specified writer with the given data.
 *     
-*     status lcwriterunheader(PTRTYPE writer,int irun, const char* detname, const char* descr,
+*     int lcwriterunheader(PTRTYPE writer,int irun, const char* detname, const char* descr,
 *                         void* sdnamevec, const int nsubd, const int nchsubd) ;
       integer lcwriterunheader
       

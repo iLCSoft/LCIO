@@ -13,17 +13,19 @@
 #include "lciof77api.inc"
 #include "lciof77apiext.inc"
 
-      PTRTYPE reader, event, runhdr
+      PTRTYPE reader, event, runhdr, detnames
       
       integer status, irun, ievent
+      integer i, nactdet
+      character*80 detname
 
       reader = lcrdrcreate()
 c      write(*,*) " created reader at " , reader
       
       status = lcrdropen( reader, 'f_simjob.slcio' )
       
-      if( status.eq.0) then
-         write(*,*) " could not open file simjob.slcio "
+      if( status.eq.LCIO_ERROR) then
+         write(*,*) " could not open file f_simjob.slcio "
          goto 99
       else
          write(*,*) " opened file simjob.slcio "
@@ -39,15 +41,23 @@ c---- first loop over runs and print information
      $        , lcrhdgetdetectorname( runHdr )
      $        , lcrhdgetdescription( runHdr )
          
+         write(*,*) " active subdetectors : "
+         detnames = lcrhdgetactivesubdetectors( runHdr ) 
+         nactdet = lcstvgetlength( detnames  ) 
+         do i=1,nactdet
+            write(*,*) lcstvgetstringat( detnames, i ) 
+         enddo
+
+
       enddo
  9    continue
 
       status = lcrdrclose( reader ) 
 
-      status = lcrdropen( reader, 'simjob.slcio' )
+      status = lcrdropen( reader, 'f_simjob.slcio' )
       
       if( status.eq.0) then
-         write(*,*) " could not reopen file simjob.slcio "
+         write(*,*) " could not reopen file f_simjob.slcio "
          goto 99
       else
          write(*,*) " reopened file simjob.slcio "

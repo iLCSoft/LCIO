@@ -20,7 +20,7 @@ char* lcevtgetdetectorname( PTRTYPE event );
 
 long lcevtgettimestamp( PTRTYPE event ) ;
 
-// const std::vector<std::string>  * getCollectionNames() const;  // FIX ME need way to return string array 
+PTRTYPE lcevtgetcollectionnames( PTRTYPE event ) ;
 
 PTRTYPE lcevtgetcollection( PTRTYPE event, const char* colname ) ;
 int lcevtaddcollection(     PTRTYPE event, PTRTYPE collection , char* colname ) ;
@@ -42,6 +42,8 @@ FCALLSCFUN1(INT, lcevtgeteventnumber, LCEVTGETEVENTNUMBER,lcevtgeteventnumber, C
 FCALLSCFUN1(STRING, lcevtgetdetectorname, LCEVTGETDETECTORNAME, lcevtgetdetectorname, CFORTRANPNTR ) ;
 
 FCALLSCFUN1(LONG, lcevtgettimestamp, LCEVTGETTIMESTAMP,lcevtgettimestamp, CFORTRANPNTR ) ;
+
+FCALLSCFUN1(CFORTRANPNTR, lcevtgetcollectionnames, LCEVTGETCOLLECTIONNAMES, lcevtgetcollectionnames, CFORTRANPNTR ) ;
 
 FCALLSCFUN2(CFORTRANPNTR, lcevtgetcollection, LCEVTGETCOLLECTION, lcevtgetcollection, CFORTRANPNTR, STRING ) ;
 FCALLSCFUN3(INT,lcevtaddcollection,LCEVTADDCOLLECTION,lcevtaddcollection,CFORTRANPNTR,CFORTRANPNTR,STRING ) ;
