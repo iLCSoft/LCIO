@@ -389,10 +389,22 @@ PTRTYPE intvectorcreate( int* intv, const int nintv ){
   return reinterpret_cast<PTRTYPE>( intVec ) ;
 }
 
+int intvectordelete( PTRTYPE vector ){
+  IntVec* intVec =  reinterpret_cast<IntVec*>(vector) ;
+  delete intVec ;
+  return LCIO::SUCCESS ;
+}
+
 PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ){
   FloatVec* floatVec = new FloatVec ;
   for(int j=0;j<nfloatv;j++) floatVec->push_back( floatv[j] ) ;
   return reinterpret_cast<PTRTYPE>( floatVec ) ;
+}
+
+int floatvectordelete( PTRTYPE vector ){
+  FloatVec* floatVec = reinterpret_cast<FloatVec*>(vector) ;
+  delete floatVec ;
+  return LCIO::SUCCESS ;
 }
 
 PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv){
@@ -408,12 +420,31 @@ PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstri
   return reinterpret_cast<PTRTYPE>( stringVec ) ;
 }
 
+int stringvectordelete( PTRTYPE vector ){
+  StringVec* stringVec = reinterpret_cast<StringVec*>(vector) ;
+  delete stringVec ;
+  return LCIO::SUCCESS ;
+}
+
+PTRTYPE pointervectorcreate( PTRTYPE* pointerv, const int npointerv ){
+  PointerVec* pointerVec = new PointerVec ;
+  for(int j=0;j<npointerv;j++) pointerVec->push_back( pointerv[j] ) ;
+  return reinterpret_cast<PTRTYPE>( pointerVec ) ;
+}
+
+int pointervectordelete( PTRTYPE vector ){
+  PointerVec* pointerVec = reinterpret_cast<PointerVec*>(vector) ;
+  delete pointerVec ;
+  return LCIO::SUCCESS ;
+}
+
+
 int getintvector( PTRTYPE vector, int* intv, int* nintv ){
   IntVec* intVec =  reinterpret_cast<IntVec*>(vector) ;
   int intVecLength = 0;
   intVecLength = intVec->size() ;
   if (intVecLength > *nintv) {
-    std::cerr << "Warning in lcgetintvector: vector size " << intVecLength
+    std::cerr << "Warning in getintvector: vector size " << intVecLength
               << " larger then target array size " << *nintv << std::endl ;
     intVecLength = *nintv ;
   }
@@ -429,7 +460,7 @@ int getfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ){
   int floatVecLength = 0 ;
   floatVecLength = floatVec->size() ;
   if (floatVecLength > *nfloatv) {
-    std::cerr << "Warning in lcgetfloatvector: vector size " << floatVecLength
+    std::cerr << "Warning in getfloatvector: vector size " << floatVecLength
               << " larger then target array size " << *nfloatv << std::endl ;
     floatVecLength = *nfloatv ;
   }
@@ -446,7 +477,7 @@ int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nch
   int stringVecLength = 0 ;
   stringVecLength = stringVec->size() ;
   if (stringVecLength > *nstringv) {
-    std::cerr << "Warning in lcgetstringvector: vector size " << stringVecLength
+    std::cerr << "Warning in getstringvector: vector size " << stringVecLength
               << " larger then target array size " << *nstringv << std::endl ;
     stringVecLength =  *nstringv ;
   }
@@ -464,6 +495,23 @@ int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nch
   }
   return LCIO::SUCCESS ;
 }
+
+int getpointervector( PTRTYPE vector, PTRTYPE* pointerv, int* npointerv ){
+  PointerVec* pointerVec =  reinterpret_cast<PointerVec*>(vector) ;
+  int pointerVecLength = 0;
+  pointerVecLength = pointerVec->size() ;
+  if (pointerVecLength > *npointerv) {
+    std::cerr << "Warning in getpointervector: vector size " << pointerVecLength
+              << " larger then target array size " << *npointerv << std::endl ;
+    pointerVecLength = *npointerv ;
+  }
+  else {
+    *npointerv = pointerVecLength ;
+  }
+  for (int j=0;j < pointerVecLength;j++)  *pointerv++ = (*pointerVec)[j] ;
+  return LCIO::SUCCESS ;
+}
+
 
 
 int lcsetparameters (const char* class_name, PTRTYPE classp, const char* method, const char* key, PTRTYPE vecp){

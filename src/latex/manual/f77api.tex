@@ -1,7 +1,7 @@
 %-----------------------------------------
 %  LCIO fotran wrapper manual 
 %
-%  $Id: f77api.tex,v 1.16 2004-09-24 11:50:55 hvogt Exp $  $Name: not supported by cvs2svn $
+%  $Id: f77api.tex,v 1.17 2004-09-24 16:14:46 hvogt Exp $  $Name: not supported by cvs2svn $
 %
 %-----------------------------------------
 \subsection{The Fortran Interface} \label{f77api}
@@ -149,16 +149,22 @@ and to fetch the content of a vector\\
  {\bf lcgetfloatvector(...)} \\
  {\bf lcgetstringvector(...)} \\
 
-to create the stl vectors having int, float, and string datamembers
+to create/delete the stl vectors having int, float, string, and pointer datamembers
 (e.g needed for the setShape method in the ClusterImpl Class)\\
  {\bf intvectorcreate(...)} \\
+ {\bf intvectordelete(...)} \\
  {\bf floatvectorcreate(...)} \\
+ {\bf floatvectordelete(...)} \\
  {\bf stringvectorcreate(...)} \\
+ {\bf stringvectordelete(...)} \\
+ {\bf pointervectorcreate(...)} \\
+ {\bf pointervectordelete(...)} \\
 
 and to fetch the content of a vector\\
  {\bf getintvector(...)} \\
  {\bf getfloatvector(...)} \\
  {\bf getstringvector(...)} \\
+ {\bf getpointervector(...)} \\
 
 The parameters of the functions above are explained in 
 the the second part of {\bf Appendix~\ref{ftn_summary} }

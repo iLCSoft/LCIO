@@ -13,6 +13,8 @@ typedef long PTRTYPE ;
 #define CFORTRANPNTR LONG
 #define CFORTRANPNTRV LONGV
 
+#include <vector>
+typedef std::vector<PTRTYPE> PointerVec ;
 
 /** Template for casting from integers to LCIO classes 
  * First template is the resulting type, second argument is the original 

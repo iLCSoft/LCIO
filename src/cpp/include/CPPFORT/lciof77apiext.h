@@ -136,17 +136,26 @@ int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
 
                   
-/**Create an int vector
+/**Create/Delete an int vector
 */
 PTRTYPE intvectorcreate( int* intv, const int nintv ) ;
+int intvectordelete( PTRTYPE vector ) ;
 
-/**Create a float vector
+/**Create/Delete a float vector
 */
 PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ) ;
+int floatvectordelete( PTRTYPE vector ) ;
 
-/**Create a string vector
+/**Create/Delete a string vector
 */
 PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
+int stringvectordelete( PTRTYPE vector ) ;
+                  
+/**Create/Delete a pointer vector
+*/
+PTRTYPE pointervectorcreate( PTRTYPE* pointerv, const int npointerv ) ;
+int pointervectordelete( PTRTYPE vector ) ;
+
 
 /**Return the content of an int vector
 */
@@ -159,6 +168,10 @@ int getfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 /**Return the content of a string vector
 */
 int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+
+/**Return the content of a pointer vector
+*/
+int getpointervector( PTRTYPE vector, PTRTYPE* pointerv, int* npointerv ) ;
 
 
 
@@ -246,11 +259,21 @@ FCALLSCFUN4(INT, lcgetstringvector, LCGETSTRINGVECTOR , lcgetstringvector,
 
 FCALLSCFUN2(CFORTRANPNTR, intvectorcreate, INTVECTORCREATE , intvectorcreate,
             INTV, INT ) ;
+FCALLSCFUN1(INT, intvectordelete, INTVECTORDELETE, intvectordelete,
+            CFORTRANPNTR) ;
 FCALLSCFUN2(CFORTRANPNTR, floatvectorcreate, FLOATVECTORCREATE , floatvectorcreate,
             FLOATV, INT ) ;
+FCALLSCFUN1(INT, floatvectordelete, FLOATVECTORDELETE, floatvectordelete,
+            CFORTRANPNTR) ;
 #define stringvectorcreate_STRV_A1 NUM_ELEM_ARG(2)
 FCALLSCFUN3(CFORTRANPNTR, stringvectorcreate, STRINGVECTORCREATE , stringvectorcreate,
             PSTRINGV, INT, INT ) ;
+FCALLSCFUN1(INT, stringvectordelete, STRINGVECTORDELETE, stringvectordelete,
+            CFORTRANPNTR) ;
+FCALLSCFUN2(CFORTRANPNTR, pointervectorcreate, POINTERVECTORCREATE , pointervectorcreate,
+            CFORTRANPNTRV, INT ) ;
+FCALLSCFUN1(INT, pointervectordelete, POINTERVECTORDELETE, pointervectordelete,
+            CFORTRANPNTR) ;
 
 FCALLSCFUN3(INT, getintvector, GETINTVECTOR , getintvector,
             CFORTRANPNTR , INTV, INTV ) ;
@@ -259,6 +282,8 @@ FCALLSCFUN3(INT, getfloatvector, GETFLOATVECTOR , getfloatvector,
 #define getstringvector_STRV_A2 NUM_ELEM_ARG(3)
 FCALLSCFUN4(INT, getstringvector, GETSTRINGVECTOR , getstringvector,
             CFORTRANPNTR , PSTRINGV, INTV, INT ) ;
+FCALLSCFUN3(INT, getpointervector, GETPOINTERVECTOR , getpointervector,
+            CFORTRANPNTR , CFORTRANPNTRV, INTV ) ;
 
 
 FCALLSCFUN5(INT, lcsetparameters, LCSETPARAMETERS, lcsetparameters,

@@ -74,6 +74,8 @@ c---- variables
       PTRTYPE runheader, event, writer, sthcol, mcpcol, schcol, cahcol
       PTRTYPE stringvcol, floatvcol, intvcol, pstringv, pfloatv, pintv
       PTRTYPE  hit, mcp, mcpm, mcpd, mcpdd
+      PTRTYPE  mcpv(50), pointerv(50), ppointerv
+      integer npointers
       integer status
       integer i, j, k, irun, nrun, iev, nev, itim, locf
       integer nhit, flag
@@ -142,9 +144,10 @@ c-----  event loop
 
 c-------- create some monte carlo particles
 
-            do i=1,nhit/2
-               mcp = lcmcpcreate()
-               status = lcmcpsetpdg( mcp, 123 ) 
+            do i = 1,nhit/2
+               mcp     = lcmcpcreate()
+               mcpv(i) = mcp
+               status  = lcmcpsetpdg( mcp, 123 )
                mcpp(1) = i*1.
                mcpp(2) = i*2.
                mcpp(3) = i*3.
@@ -247,6 +250,19 @@ c ----      set the flag bits to store position for calorimeter hits
 
                status = lccoladdelement( cahcol, hit ) 
             enddo
+
+c-----     now we will check the stl pointer vector
+           if (irun .eq. 1 .and. iev .eq. 1)  then
+             print *, 'pointers going into the pointer vector'
+             print '(10z10)', (mcpv(i), i=1,nhit/2)
+             ppointerv = pointervectorcreate( mcpv, nhit/2 )
+             npointers = pointervectorgetlength( ppointerv )
+             status = getpointervector( ppointerv, pointerv, npointers)
+             print *, 'pointers got from the pointer vector'
+             print '(10z10)', (pointerv(i), i=1,npointers)
+             status = pointervectordelete( ppointerv )
+           end if
+
             
 c-----     now add everything to the event
             status = lcevtaddcollection(event,mcpcol ,'MCParticle') 

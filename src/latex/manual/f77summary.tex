@@ -513,15 +513,21 @@ getIntVector           -> status  = lcgetintvector( pvec , intv, nintv )
 getFloatVector         -> status  = lcgetfloatvector( pvec , floatv , nfloatv )
 getStringVector        -> status  = lcgetstringvector( pvec , stringv , nstringv, len(stringv(1)) )
 
-for the stl vector class (int, float ,string):
+for the stl vector class (int, float ,string, pointer):
 
 IntVectorCreate        -> pveci   = intvectorcreate( intv, nintv )
+IntVectorDelete        -> status  = intvectordelete( pveci )
 FloatVectorCreate      -> pvecf   = floatvectorcreate( floatv , nfloatv )
+FloatVectorDelete      -> status  = floatvectordelete( pvecf )
 StringVectorCreate     -> pvecs   = stringvectorcreate( stringsv, nstrings, len(stringsv(1)) )
+StringVectorDelete     -> status  = stringvectordelete( pvecs )
+PointerVectorCreate    -> pvecp   = pointervectorcreate( pointerv, npointerv )
+PointerVectorDelete    -> status  = pointervectordelete( pvecp )
 
-getIntVector           -> status  = getintvector( pvec , intv, nintv )
-getFloatVector         -> status  = getfloatvector( pvec , floatv , nfloatv )
-getStringVector        -> status  = getstringvector( pvec , stringv , nstringv, len(stringv(1)) )
+getIntVector           -> status  = getintvector( pveci , intv, nintv )
+getFloatVector         -> status  = getfloatvector( pvecf , floatv , nfloatv )
+getStringVector        -> status  = getstringvector( pvecs , stringv , nstringv, len(stringv(1)) )
+get PointerVector      -> status  = getpointervector( pvecp , pointerv, npointerv )
 \end{verbatim}
 
 \end{scriptsize}
