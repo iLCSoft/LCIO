@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.22 2004-09-21 16:30:39 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.23 2004-09-22 09:41:46 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -54,8 +54,7 @@ c-----the LCRelationNavigator interface
       character*80 lcrnvgetfromtype, lcrnvgettotype
 
 c-----the LCRelationNavigator utility interface
-      integer lcobvgetlength
-      PTRTYPE lcobvgetobjectid
+      integer lcobvgetlength, lcobvgetobjectid
       real    lcobvgetweight
 
 c-----the LCEvent interface

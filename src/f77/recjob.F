@@ -383,6 +383,7 @@ ccc         print *, '# of nsimhits: ',nsimhits
         calhitp     = lccahcreate ()
 ccc         print '(a,z10)', 'id of calhit:', lccahid (calhitp)
         simcalhitp  = lccolgetelementat ( simcalcol, i )
+
         energy      = lcschgetenergy ( simcalhitp )
         status      = lccahsetenergy 
      &                  ( calhitp, lcschgetenergy ( simcalhitp ) )
@@ -423,9 +424,6 @@ ccc      status   = lcevtaddrelation ( eventi, screlcol, colname3 )
           simhitsvp = lcrnvgetrelatedtoobjects ( helpp, calhitp )
           simhitswp = lcrnvgetrelatedtoweights ( helpp, calhitp )
 
-CCC     pointers are taken as integer, needs to make consistent for pointers !!!
-CCC     ========================================================================
-ccc          print*, 'length is: ', lcobvgetlength ( simhitsvp )
           do  j = 1, lcobvgetlength ( simhitsvp )
             print '(a,z2,a,f3.1,a,$)', ' [',
      &               lcobvgetobjectid ( simhitsvp, j ),
@@ -434,6 +432,7 @@ ccc          print*, 'length is: ', lcobvgetlength ( simhitsvp )
      &               ') '
           end do
           print *
+
         end do
 
 ***   add some calibration constants as generic user objects
