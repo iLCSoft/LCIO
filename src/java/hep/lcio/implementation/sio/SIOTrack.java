@@ -14,15 +14,13 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.5 2004-07-16 12:31:08 gaede Exp $
+ * @version $Id: SIOTrack.java,v 1.6 2004-09-13 22:43:09 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
    SIOTrack(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
-      
-      int typeWord ;
-      typeWord = in.readInt();
+      int typeWord = in.readInt();
       setType( typeWord) ;
       
       d0 = in.readFloat();

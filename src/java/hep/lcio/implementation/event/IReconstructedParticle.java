@@ -1,225 +1,164 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.Cluster;
-import hep.lcio.event.MCParticle;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+
 import java.util.List;
 
-import java.util.Vector;
 
 /**Implementation of ReconstructedParticle
  * @author gaede
  *
  */
-public class IReconstructedParticle implements ReconstructedParticle
+public class IReconstructedParticle extends ILCObject implements ReconstructedParticle
 {
-   public void addParticleID(ParticleID pid)
-   {
-      particleIDs.add( pid) ;
-   }
-   public void addParticle(ReconstructedParticle particle)
-   {
-      addParticle( particle ) ;
-      
-   }
-//   public void addParticle(ReconstructedParticle particle, float weight)
-//   {
-//      particles.add( particle ) ;
-//      //TODO: particleWeights.add( new Float(weight) ) ;
-//   }
+   protected ParticleID particleIDUsed;
+   protected List clusters;
+   protected List particleIDs;
+   protected List particles;
+   protected List tracks;
+   protected float[] covMatrix;
+   protected float[] momentum = new float[3];
+   protected float[] referencePoint = new float[3];
+   protected float charge;
+   protected float energy;
+   protected float mass;
+   protected int type;
 
-   public void addCluster(Cluster cluster)
+   public void setCharge(float charge)
    {
-      addCluster( cluster  ) ;
+      checkAccess();
+      this.charge = charge;
    }
 
-//   public void addCluster(Cluster cluster, float weight)
-//   {
-//      clusters.add( cluster  ) ;
-//      //TODO: clusterWeights.add( new Float(weight)) ;
-//      
-//   }
-   
-   public void addTrack(Track track)
+   public float getCharge()
    {
-      addTrack( track ) ;
+      return charge;
    }
-   
-//   public void addTrack(Track track, float weight)
-//   {
-//      tracks.add( track ) ;
-//      //TODO: trackWeights.add( new Float( weight) ) ;
-//      
-//   }
 
-//   public void addMCParticle(MCParticle mcParticle)
-//   {
-//      addMCParticle( mcParticle, (float) 1. ) ;
-//   }
-//   
-//   public void addMCParticle(MCParticle mcParticle, float weight)
-//   {
-//      mCParticles.add(mcParticle) ;
-//      
-//   }
-   
-   protected int type ;
-//   protected boolean primary ;
-   protected float[] momentum = new float[3] ;
-   protected float[] referencePoint = new float[3] ;
-   protected float mass ;
-   protected float energy ;
-   protected float charge ;
-   protected Vector particleIDs ;
-   protected ParticleID particleIDUsed ;  // Fixme: need IParticleID
-//   protected Vector mCParticles ;
-//   protected float[] mCParticleWeights ;
-   protected Vector particles ;
-//   protected float[] particleWeights ;
-   protected Vector tracks ;
-//   protected float[] trackWeights ;
-   protected Vector clusters;
-//   protected float[] clusterWeights ;
-   protected float[] covMatrix ;
-   
-   public float[] getMomentum()
+   public void setClusters(List clusters)
    {
-      return momentum;
+      checkAccess();
+      this.clusters = clusters;
    }
-   
-//   public boolean isPrimary()
-//  {
-//      return primary;
-//   }
-   
-   public int getType()
-   {
-      return type;
-   }
-   
-   public void setMomentum(float[] fs)
-   {
-      momentum = fs;
-   }
-   
-//   public void setPrimary(boolean b)
-//   {
-//      primary = b;
-//   }
-   
-   public void setType(int i)
-   {
-      type = i;
-   }
-   
-//   public List getMCParticles()
-//   {
-//      return mCParticles;
-//   }
-   
+
    public List getClusters()
    {
       return clusters;
    }
-   
-//   public float[] getClusterWeights()
-//   {
-//      return clusterWeights;
-//   }
-   
+
+   public boolean isCompound()
+   {
+      return !particles.isEmpty();
+   }
+
+   public void setCovMatrix(float[] cov)
+   {
+      if (cov.length != 10) throw new IllegalArgumentException();
+      checkAccess();
+      this.covMatrix = cov;
+   }
+
+   public float[] getCovMatrix()
+   {
+      return covMatrix;
+   }
+
+   public void setEnergy(float e)
+   {
+      checkAccess();
+      this.energy = e;
+   }
+
    public float getEnergy()
    {
       return energy;
-   }
-
-   public float getMass()
-   {
-      return mass;
-   }
-   
-//   public float[] getMCParticleWeights()
-//   {
-//      return mCParticleWeights;
-//   }
-   
-   public List getParticles()
-   {
-      return particles;
-   }
-   
-//   public float[] getParticleWeights()
-//   {
-//      return particleWeights;
-//   }
-   
-   public List getTracks()
-   {
-      return tracks;
-   }
-   
-//   public float[] getTrackWeights()
-//   {
-//      return trackWeights;
-//   }
-   
-   public void setClusters(Vector vector)
-   {
-      clusters = vector;
-   }
-
-   public void setEnergy(float f)
-   {
-      energy = f;
    }
 
    public void setMass(float f)
    {
       mass = f;
    }
-   
-   public float[] getReferencePoint()
+
+   public float getMass()
    {
-      return referencePoint;
+      return mass;
    }
-   
-   public void setReferencePoint(float[] fs)
+
+   public void setMomentum(float[] fs)
    {
-      referencePoint = fs;
+      if (fs.length != 3) throw new IllegalArgumentException();
+      checkAccess();
+      momentum = fs;
    }
-   
-   public float getCharge()
+
+   public float[] getMomentum()
    {
-      return charge;
+      return momentum;
    }
-   
-   public float[] getCovMatrix()
+
+   public ParticleID getParticleIDUsed()
    {
-      return covMatrix;
+      return particleIDUsed;
    }
-   
-   public void setCharge(float f)
-   {
-      charge = f;
-   }
-   
+
    public List getParticleIDs()
    {
       return particleIDs;
    }
-   
-   public void setCovMatrix(float[] cov)
+
+   public List getParticles()
    {
-      covMatrix = cov;
+      return particles;
    }
-   
-	public ParticleID getParticleIDUsed() {
-		return particleIDUsed ;
-	}
 
-	public boolean isCompound() {
-		return particles.size() > 0 ;
-	}
+   public void setReferencePoint(float[] fs)
+   {
+      if (fs.length != 3) throw new IllegalArgumentException();
+      checkAccess();
+      referencePoint = fs;
+   }
 
+   public float[] getReferencePoint()
+   {
+      return referencePoint;
+   }
+
+   public List getTracks()
+   {
+      return tracks;
+   }
+
+   public void setType(int type)
+   {
+      checkAccess();
+      this.type = type;
+   }
+
+   public int getType()
+   {
+      return type;
+   }
+
+   public void addCluster(Cluster cluster)
+   {
+      addCluster(cluster);
+   }
+
+   public void addParticle(ReconstructedParticle particle)
+   {
+      addParticle(particle);
+   }
+
+   public void addParticleID(ParticleID pid)
+   {
+      particleIDs.add(pid);
+   }
+
+   public void addTrack(Track track)
+   {
+      addTrack(track);
+   }
 }
