@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.10 2003-09-09 17:23:24 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.11 2003-09-17 11:34:45 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -161,7 +161,7 @@
    </target>
 
   <!-- =================================================================== -->
-  <!-- Generates the users manual from latex source                                      -->
+  <!-- Generates the users manual (ps and pdf)  from latex source          -->
   <!-- =================================================================== -->
    <target name="doc.manual">
      <exec dir="./src/latex/manual" executable="latex" os="Linux">
@@ -175,6 +175,12 @@
      </exec>
      <exec dir="./src/latex/manual" executable="cp" os="Linux">
        <arg line=" manual.ps ../../../doc/"/>
+     </exec>
+     <exec dir="./src/latex/manual" executable="pdflatex" os="Linux">
+       <arg line=" manual.tex"/>
+     </exec>
+     <exec dir="./src/latex/manual" executable="cp" os="Linux">
+       <arg line=" manual.pdf ../../../doc/"/>
      </exec>
    </target>
 
