@@ -45,6 +45,10 @@ $(BINDIR)/anajob_F: anajob.o $(INSTALL)/liblcio.a
 	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
 	$(CXX) -o $(BINDIR)/anajob_F anajob.o  $(LIBS)
 
+$(BINDIR)/simjob_chain_F: simjob_chain.o $(INSTALL)/liblcio.a
+	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
+	$(CXX) -o $(BINDIR)/simjob_chain_F simjob_chain.o  $(LIBS)
+
 
 
 

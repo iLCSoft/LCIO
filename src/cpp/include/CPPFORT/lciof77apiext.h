@@ -13,16 +13,22 @@
 #include "cpointer.h"
 
 
+//--------------- convenient method to open a list of files for reading (read-only)
+
+/**Opens a list of files for reading (read-only).
+ */
+int lcrdropenchain( PTRTYPE reader, void* filenamesv, const int nfiles, const int nchfilename );
+
 //--------------- convenient methods to read/write the run header
 
 /**Write a run header to the specified writer with the given data.
  */
-int lcwriterunheader(PTRTYPE writer, const int irun, const char* detname, const char* descr,
+int lcwriterunheader( PTRTYPE writer, const int irun, const char* detname, const char* descr,
                          void* sdnamevec, const int nsubd, const int nchsubd) ;
 
 /**Read the next run header and fills the return arguments with the data.
  */
-PTRTYPE lcreadnextrunheader(PTRTYPE reader, int* irun, void* detname, void* descr,
+PTRTYPE lcreadnextrunheader( PTRTYPE reader, int* irun, void* detname, void* descr,
                             void* sdnamevec, int* nsubd, const int nchsubd) ;
 
 //---------------  convenient methods for the event interface
@@ -34,7 +40,7 @@ int lcseteventheader( PTRTYPE event, const int irun, const int ievent,
 
 /**Read the complete event header data from the event.
  */
-int lcgeteventheader(PTRTYPE event, int* irun, int* ievent, int* timestamp, void* detname );
+int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, void* detname );
 
 /**Dump the event to the stdout - one line per collection.
  */
@@ -113,6 +119,11 @@ int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int n
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
+
+#define lcrdropenchain_STRV_A2 NUM_ELEM_ARG(3)
+FCALLSCFUN4(INT, lcrdropenchain, LCRDRDOPENCHAIN, lcrdropenchain,
+            CFORTRANPNTR, STRINGV, INT, INT) ;
+
 
 #define lcwriterunheader_STRV_A5 NUM_ELEM_ARG(6)
 FCALLSCFUN7(INT, lcwriterunheader, LCWRITERUNHEADER, lcwriterunheader, CFORTRANPNTR, INT, 

@@ -8,6 +8,14 @@
 *  10/30/2003
 *************************************************************
 
+c --------------- convenient method to open a list of files for reading (read-only)
+
+*     Opens a list of files for reading (read-only).
+*
+*     int lcrdropenchain( PTRTYPE reader, 
+*                       void* filenamesv, const int nfiles, const int nchfilename );
+      integer lcrdropenchain
+
 c --------------- convenient methods to read/write the run header
 
 *     Write a run header to the specified writer with the given data.
@@ -134,6 +142,6 @@ c ---------------  convenient methods for the vector interface
 
 
 c----  need to define the HEPEVT common block
-#include "hepevt.inc"
+#include "hepevt0.inc"
 #include "hepevt1.inc"
 

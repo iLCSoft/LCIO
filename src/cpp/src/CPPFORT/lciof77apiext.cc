@@ -26,6 +26,28 @@ using namespace std ;
 using namespace HEPEVTIMPL ;
 
 
+static std::vector<std::string> filenamelist ;
+
+int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const int nchfilename ){
+
+
+  try {
+    int elemlen = nchfilename +1 ;
+    int stringpos = reinterpret_cast<int>( filenamesv ) ;
+    for (int j=0;j < nfiles;j++)
+    {
+      char* filename = reinterpret_cast<char*>( stringpos ) ;
+      filenamelist.push_back( filename ) ;
+      stringpos = stringpos + elemlen ;
+    }
+    LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
+    lcReader->open( filenamelist ) ;
+    return LCIO::SUCCESS ;
+  }catch( Exception& e1) {
+    std::cerr << "Exception in LCRdrOpenChain: " << e1.what() << std::endl ;
+    return LCIO::ERROR ;
+  }
+}
 
 PTRTYPE lcwriterunheader( PTRTYPE writer , const int irun , const char* detname , 
 			  const char* description , void* sdnamevec , const int nsubd, 
