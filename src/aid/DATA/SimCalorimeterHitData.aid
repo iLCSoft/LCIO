@@ -22,7 +22,8 @@ public interface SimCalorimeterHitData extends LCObject {
     public float getEnergy() const ;
     
     /** Returns the position of the hit in world coordinates.
-     *  NULL if information is not stored. 
+     *  NULL if information is not stored -  check the flag word (bit CHBIT_LONG) 
+     *  of the collection.
      */
     public const float3V getPosition() const ;	
 
@@ -44,7 +45,7 @@ public interface SimCalorimeterHitData extends LCObject {
     
     /** Returns the PDG code of the secondary type of the i-th particle that 
      * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
-     * wether this information is available. If so, every primary will show up in 
+     * whether this information is available. If so, every primary will show up in 
      * the list of contributions once for every type of secondaries. If not the 
      * value returned is undefined. 
      */ 

@@ -12,6 +12,7 @@ import hep.lcio.data.LCEventData;
 import hep.lcio.data.MCParticleData;
 import hep.lcio.data.SimCalorimeterHitData;
 import hep.lcio.data.SimTrackerHitData;
+import hep.lcio.data.TPCHitData;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
@@ -20,6 +21,7 @@ import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
+import hep.lcio.event.TPCHit;
 
 import hep.lcio.implementation.event.ILCCollection;
 import hep.lcio.implementation.event.ILCEvent;
@@ -33,7 +35,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.10 2003-09-08 23:10:20 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.11 2003-09-11 14:07:07 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -98,6 +100,15 @@ class SIOEvent extends ILCEvent
             ILCCollection ilc = new ILCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
                ilc.add(new SIOSimTrackerHit(in));
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.TPCHIT))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            ILCCollection ilc = new ILCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add (new SIOTPCHit(in,flags) );
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.SIMCALORIMETERHIT))
@@ -175,6 +186,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOSimTrackerHit.write((SimTrackerHitData) col.getElementAt(i), out);
+            }
+            else if (type.equals(LCIO.TPCHIT))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOTPCHit.write((TPCHitData) col.getElementAt(i), out, flags );
             }
             else if (type.equals(LCIO.SIMCALORIMETERHIT))
             {

@@ -30,18 +30,22 @@ namespace IMPL{
   
   
   void CalorimeterHitImpl::setCellID0(int id0){
+    checkAccess("CalorimeterHitImpl::setCellID0") ;
     _cellID0 = id0 ;
   }
   
   void CalorimeterHitImpl::setCellID1(int id1){
+    checkAccess("CalorimeterHitImpl::setCellID1") ;
     _cellID1 = id1 ;
   }
   
   void CalorimeterHitImpl::setEnergy(float en){
+    checkAccess("CalorimeterHitImpl::setEnergy") ;
     _energy = en ;
   }
   
   void CalorimeterHitImpl::setPosition(float pos[3]){
+    checkAccess("CalorimeterHitImpl::setPosition") ;
     _position[0] = pos[0] ;
     _position[1] = pos[1] ;
     _position[2] = pos[2] ;

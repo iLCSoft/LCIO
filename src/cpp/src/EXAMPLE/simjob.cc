@@ -14,6 +14,7 @@
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
+#include "IMPL/TPCHitImpl.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -166,17 +167,13 @@ int main(int argc, char** argv ){
 	  
 	}
 	
-	// ------- changed in v00-07 --------- 
 	// -------- data can be modified as long as is not not made persistent --------
-// 	// we can modify hits that already exist in a collection, e.g. in a simulation step function ...
-// 	// we need a non const pointer to the hit and use the std::vector::operator[]() instead of the 
-// 	// LCCollection::getElementAt(i)
-
 
 	for(int j=0;j<NHITS;j++){
 	  SimCalorimeterHitImpl* existingHit 
 	    = dynamic_cast<SimCalorimeterHitImpl*>( calVec->getElementAt(j) ) ; // << Ok now
- 	  //	    = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;
+
+ 	  //	    = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;  // << not needed 
 	  
 	  existingHit->addMCParticleContribution( dynamic_cast<MCParticle*>
 						  (mcVec->getElementAt(0)), 
@@ -239,8 +236,47 @@ int main(int argc, char** argv ){
 	  addExt->push_back( 3. );
 	  addExt->push_back( 4. );
 	  addExtVec->push_back( addExt ) ;
-	  evt->addCollection( (LCCollection*) addExtVec , "AdditionalExtension" ) ;
+	  evt->addCollection( addExtVec , "AdditionalExtension" ) ;
 	}
+
+	// even though this is a simjob we can store 'real data' objects :)
+	// --- for example we can store TPC hits ------------
+
+	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
+
+	 
+	bool storeRawData = true ;
+
+	LCFlagImpl tpcFlag(0) ;
+	if(  storeRawData )  // if we want to store the raw data we need to set the flag
+	  tpcFlag.setBit( LCIO::TPCBIT_RAW ) ;
+	TPCVec->setFlag( tpcFlag.getFlag()  ) ;
+	
+	for(int j=0;j<NHITS;j++){
+	  
+	  TPCHitImpl* tpcHit = new TPCHitImpl ;
+	  
+	  tpcHit->setCellID( j ) ;
+	  tpcHit->setTime( 0.1234567 ) ;
+	  tpcHit->setCharge( 3.14159 ) ;
+	  tpcHit->setQuality(  0xbad ) ;
+
+	  if(  storeRawData ) {
+	    int rawData[10] ;
+	    // fill some random numbers 
+	    int size =   int( (double(rand()) / RAND_MAX ) * 10 )  ;   
+	    for(int k=0;k<size;k++){
+	      rawData[k] = int( (double(rand()) / RAND_MAX ) * INT_MAX ) ;   
+	    }
+
+	    tpcHit->setRawData( rawData , size ) ;
+	  }
+
+	  TPCVec->push_back( tpcHit ) ;
+	}	
+	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
+	//--------------  all for TPC --------------------
+
 
 	// write the event to the file
 	lcWrt->writeEvent( evt ) ;

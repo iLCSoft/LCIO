@@ -1,8 +1,5 @@
 package hep.lcio.event ;
 
-@java{
-import hep.lcio.exceptions.* ;
-}
 /** The generic calorimeter hit for real data. 
  * Adding some convenient methods to the pure data interface.
  * 

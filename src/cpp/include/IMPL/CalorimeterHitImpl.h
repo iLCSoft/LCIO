@@ -5,6 +5,7 @@
 #include "EVENT/MCParticle.h"
 #include "EVENT/CalorimeterHit.h"
 #include <vector>
+#include "AccessChecked.h"
 
 namespace IMPL {
   
@@ -15,7 +16,7 @@ namespace IMPL {
  * @version Aug 8, 2003
  */
 
-  class CalorimeterHitImpl : public EVENT::CalorimeterHit {
+  class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
     
   public: 
     

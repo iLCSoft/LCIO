@@ -43,6 +43,9 @@ public interface LCIO{
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
+    // TPCHit
+    static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
+
     static const int READ_ONLY =  0 ;
     static const int UPDATE   =  1 ;
     // error handling
@@ -60,6 +63,7 @@ public interface LCIO{
     static const char* SIMCALORIMETERHIT ;
     static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
+    static const char* TPCHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTVEC ; 
 }
@@ -77,6 +81,9 @@ public interface LCIO{
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
+  // TPCHit
+  public static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
+
   public static const int READ_ONLY =  0 ;
   public static const int UPDATE   =  1 ;
   public static const int ERROR   =  0 ;
@@ -93,6 +100,7 @@ public interface LCIO{
   public static const String SIMCALORIMETERHIT = "SimCalorimeterHit" ;
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
+  public static const String TPCHIT = "TPCHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;
 @endif

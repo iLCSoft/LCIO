@@ -120,6 +120,22 @@
             </repeat>
          </repeat>
       </block>
+      <block name="TPCHit" major="0" minor="7">
+         <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, rest is detector specific</data>
+         <data type="int" name="n"></data>
+         <repeat count="n">
+            <data type="int" name="cellID">Detector specific</data>
+            <data type="float" name="time">TODO: Definition Needed</data>
+            <data type="float" name="charge"></data>
+            <data type="int" name="quality"></data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+            <data type="int" name="nRawDataWords"></data>
+            <repeat count="nRawDataWords">
+		<data type="int" name="rawDataWord"></data>
+            </repeat>
+	    </if>
+         </repeat>
+      </block>
   </record>
 </sio>
 

@@ -2,9 +2,11 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
-============================
-  ( fg20030909 ) 
-============================
+  
+   - added TPCHit class for real data TPC prototypes
+     lcio.xml updated
+     [C++ and Java]
+
 
    - removed DataNotAvailableExceptions from all get-methods that return object 
      pointers or referencs, e.g. MCParticle::getParent(), return null pointers instead

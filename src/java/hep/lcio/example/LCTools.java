@@ -14,8 +14,7 @@ import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
-
-import hep.lcio.exceptions.DataNotAvailableException;
+import hep.lcio.event.TPCHit;
 
 
 /**
@@ -101,14 +100,28 @@ public class LCTools
                double[] x = hit.getPosition();
 
                int pdg = -999;
-               try
-               {
-                  MCParticle part = hit.getMCParticle();
-                  pdg = part.getPDG();
-               }
-               catch (DataNotAvailableException e) {}
+               MCParticle part = hit.getMCParticle();
+               if( part != null)
+                 pdg = part.getPDG();
 
                System.out.print("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + pdg + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
+            }
+         }
+         else if (evt.getCollection(name).getTypeName().equals(LCIO.TPCHIT))
+         {
+            int nHits = col.getNumberOfElements();
+            System.out.print(nHits + " hits : ");
+
+            int nPrint = (nHits > 0) ? 1 : 0;
+
+            if (nPrint == 0)
+               System.out.println();
+            for (int i = 0; i < nPrint; i++)
+            {
+               TPCHit hit = (TPCHit) col.getElementAt(i);
+
+               System.out.print("    hit -  id: " + hit.getCellID() + " time: " + hit.getTime()
+                + "  charge: " + hit.getCharge() + ", quality: " + hit.getQuality() );
             }
          }
          else if (evt.getCollection(name).getTypeName().equals(LCIO.LCFLOATVEC))
