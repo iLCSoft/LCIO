@@ -43,6 +43,11 @@ PTRTYPE lcevtgetcollectionnames( PTRTYPE event ){
   return reinterpret_cast<PTRTYPE> ( evt->getCollectionNames() ) ;
 }
 
+PTRTYPE lcevtgettrelationnames( PTRTYPE event ){
+  LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
+  return reinterpret_cast<PTRTYPE> ( evt->getRelationNames() ) ;
+}
+
 long lcevtgettimestamp( PTRTYPE event )
 {
   LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
@@ -53,6 +58,13 @@ PTRTYPE lcevtgetcollection(PTRTYPE event, const char* colname){
   try{
     LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
     return reinterpret_cast<PTRTYPE>( evt->getCollection( colname ) ) ;
+  }catch(...){ return 0 ;}
+}
+
+PTRTYPE lcevtgetrelation(PTRTYPE event, const char* colname){
+  try{
+    LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
+    return reinterpret_cast<PTRTYPE>( evt->getRelation( colname ) ) ;
   }catch(...){ return 0 ;}
 }
 
@@ -69,6 +81,23 @@ int lcevtremovecollection( PTRTYPE event, char* colname ){
   try{
     LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
     evt->removeCollection( colname ) ;
+  }catch(...){ return LCIO::ERROR ; }
+  return LCIO::SUCCESS ;
+}
+
+int lcevtaddrelation( PTRTYPE event, PTRTYPE relation, char* colname ){
+  try{
+    LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
+    LCRelation* rel = reinterpret_cast<LCRelation*>(relation) ;
+    evt->addRelation( rel , colname ) ;
+  }catch(...){ return LCIO::ERROR ; }
+  return LCIO::SUCCESS ;
+}
+
+int lcevtremoverelation( PTRTYPE event, const char* colname ){
+  try{
+    LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(event) ; 
+    evt->removeRelation( colname ) ;
   }catch(...){ return LCIO::ERROR ; }
   return LCIO::SUCCESS ;
 }
