@@ -91,7 +91,7 @@ namespace IMPL {
 
   const double* MCParticleImpl::getEndpoint() const { 
     
-    if( isEndpointVertexOfDaughter() ){
+    if( ! _simstatus.test( BITEndpoint  ) ){
       
       if( getNumberOfDaughters() == 0 ) return  _endpoint ;
       
@@ -119,7 +119,7 @@ namespace IMPL {
 
   bool MCParticleImpl::isCreatedInSimulation() const      { return   _simstatus[ BITCreatedInSimulation ] ;  }
   bool MCParticleImpl::isBackscatter() const              { return   _simstatus[ BITBackscatter ] ;          }
-  bool MCParticleImpl::isEndpointVertexOfDaughter() const { return ! _simstatus[ BITEndpoint ] ;             }
+  bool MCParticleImpl::vertexIsNotEndpointOfParent() const { return  _simstatus[ BITVertexIsNotEndpointOfParent ] ;             }
   bool MCParticleImpl::isDecayedInTracker() const         { return   _simstatus[ BITDecayedInTracker ] ;     }
   bool MCParticleImpl::isDecayedInCalorimeter() const     { return   _simstatus[ BITDecayedInCalorimeter ] ; }
   bool MCParticleImpl::hasLeftDetector() const            { return   _simstatus[ BITLeftDetector ]  ;        }
@@ -202,18 +202,21 @@ namespace IMPL {
 
   void MCParticleImpl::setEndpoint( double endpoint[3] ){
     checkAccess("MCParticleImpl::setEndpoint") ;
-    _simstatus |= 0x80000000 ; // set bit 31 
+
+    _simstatus.set( BITEndpoint ) ; 
+
     _endpoint[0] = endpoint[0] ;
     _endpoint[1] = endpoint[1] ;
     _endpoint[2] = endpoint[2] ;
   }
 
-  void MCParticleImpl::setCreatedInSimulation(bool val) {   _simstatus[ BITCreatedInSimulation ] = val ;  }
-  void MCParticleImpl::setBackscatter(bool val)         {   _simstatus[ BITBackscatter ]  = val;          }
-  void MCParticleImpl::setDecayedInTracker(bool val)    {   _simstatus[ BITDecayedInTracker ]  = val;     }
-  void MCParticleImpl::setDecayedInCalorimeter(bool val){   _simstatus[ BITDecayedInCalorimeter ]  = val; }
-  void MCParticleImpl::setHasLeftDetector(bool val)     {   _simstatus[ BITLeftDetector ]  = val ;        }
-  void MCParticleImpl::setStopped(bool val)             {   _simstatus[ BITStopped ]  = val;              }
+  void MCParticleImpl::setCreatedInSimulation(bool val)         {   _simstatus[ BITCreatedInSimulation ] = val ;  }
+  void MCParticleImpl::setBackscatter(bool val)                 {   _simstatus[ BITBackscatter ]  = val;          }
+  void MCParticleImpl::setVertexIsNotEndpointOfParent(bool val) {   _simstatus[ BITVertexIsNotEndpointOfParent ]  = val; }
+  void MCParticleImpl::setDecayedInTracker(bool val)            {   _simstatus[ BITDecayedInTracker ]  = val;     }
+  void MCParticleImpl::setDecayedInCalorimeter(bool val)        {   _simstatus[ BITDecayedInCalorimeter ]  = val; }
+  void MCParticleImpl::setHasLeftDetector(bool val)             {   _simstatus[ BITLeftDetector ]  = val ;        }
+  void MCParticleImpl::setStopped(bool val)                     {   _simstatus[ BITStopped ]  = val;              }
 
 
 } ; /// namespace IMPl

@@ -88,7 +88,7 @@ namespace IMPL {
      * proper simulator status:<br>
      * @see isCreatedInSimulation() 
      * @see isBackscatter() 
-     * @see vertexIsEndpointOfParent() 
+     * @see vertexIsNotEndpointOfParent() 
      * @see isDecayedInTracker() 
      * @see isDecayedInCalorimeter() 
      * @see hasLeftDetector() 
@@ -104,9 +104,9 @@ namespace IMPL {
      */
     virtual bool isBackscatter() const ;
 
-    /** True if the particle's endpoint is the vertex of the daughters.
+    /** True if the particle's vertex is not the endpoint of the  parent particle.
      */
-    virtual bool isEndpointVertexOfDaughter() const ;
+    virtual bool vertexIsNotEndpointOfParent() const ;
 
     /** True if the particle has interacted in a tracking region.
      */
@@ -200,6 +200,8 @@ namespace IMPL {
     virtual void setCreatedInSimulation(bool val) ;
 
     virtual void setBackscatter(bool val) ;
+
+    virtual void setVertexIsNotEndpointOfParent(bool val) ;
 
     virtual void setDecayedInTracker(bool val) ;
 

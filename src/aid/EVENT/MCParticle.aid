@@ -59,7 +59,7 @@ public interface MCParticle extends LCObject {
      * proper simulator status:<br>
      * @see isCreatedInSimulation() 
      * @see isBackscatter() 
-     * @see vertexIsEndpointOfParent() 
+     * @see vertexIsNotEndpointOfParent() 
      * @see isDecayedInTracker() 
      * @see isDecayedInCalorimeter() 
      * @see hasLeftDetector() 
@@ -73,19 +73,21 @@ public interface MCParticle extends LCObject {
     static const int BITEndpoint = 31 ;
     static const int BITCreatedInSimulation = 30 ;
     static const int BITBackscatter = 29 ;
-    static const int BITDecayedInTracker = 28 ;
-    static const int BITDecayedInCalorimeter = 27 ;
-    static const int BITLeftDetector = 26 ;
-    static const int BITStopped = 25 ;
+    static const int BITVertexIsNotEndpointOfParent = 28 ;
+    static const int BITDecayedInTracker = 27 ;
+    static const int BITDecayedInCalorimeter = 26 ;
+    static const int BITLeftDetector = 25 ;
+    static const int BITStopped = 24 ;
 
 }@else
     public static const int BITEndpoint = 31 ;
     public static const int BITCreatedInSimulation = 30 ;
     public static const int BITBackscatter = 29 ;
-    public static const int BITDecayedInTracker = 28 ;
-    public static const int BITDecayedInCalorimeter = 27 ;
-    public static const int BITLeftDetector = 26 ;
-    public static const int BITStopped = 25 ;
+    public static const int BITVertexIsNotEndpointOfParent = 28 ;
+    public static const int BITDecayedInTracker = 27 ;
+    public static const int BITDecayedInCalorimeter = 26 ;
+    public static const int BITLeftDetector = 25 ;
+    public static const int BITStopped = 24 ;
 @endif
 
 
@@ -97,11 +99,9 @@ public interface MCParticle extends LCObject {
      */
     public boolean isBackscatter() const ; 
     
-    /** True if the particle's endpoint is the vertex of the daughters, i.e. the endpoint of the particle has been
-     *  set explicitly.
-     * @see getEndpoint()
+    /** True if the particle's vertex is not the endpoint of the  parent particle.
      */
-    public boolean isEndpointVertexOfDaughter() const ; 
+    public boolean vertexIsNotEndpointOfParent() const ; 
     
     /** True if the particle has interacted in a tracking region.
      */
@@ -123,14 +123,13 @@ public interface MCParticle extends LCObject {
     // corresponding setters
     public void setCreatedInSimulation(boolean val)   ; 
     public void setBackscatter(boolean val)   ; 
-    //    public void setEndpointVertexOfDaughter(boolean val)   ; 
+    public void setVertexIsNotEndpointOfParent(boolean val)   ; 
     public void setDecayedInTracker(boolean val)   ; 
     public void setDecayedInCalorimeter(boolean val)   ; 
     public void setHasLeftDetector(boolean val)   ; 
     public void setStopped(boolean val)   ; 
 
     
-
     /** Returns the production vertex of the particle in [mm].
      */
     public const double3V getVertex() const;
@@ -138,7 +137,6 @@ public interface MCParticle extends LCObject {
 
     /** Returns the endpoint of the particle in [mm] - returns the vertex of the first daughter
      *  if endpoint hasn't been set explicetly. 
-     *  @see  isEndpointVertexOfDaughter()
      */
     public const double3V getEndpoint() const;
 
