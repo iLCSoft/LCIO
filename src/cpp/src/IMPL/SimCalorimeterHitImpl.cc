@@ -35,8 +35,7 @@ namespace IMPL{
 //   }  
 // }
 
-//EVENT::SimCalorimeterHit* SimCalorimeterHitImpl::clone() const{
-  EVENT::LCObject* SimCalorimeterHitImpl::clone() const{
+  DATA::LCObject* SimCalorimeterHitImpl::clone() const{
     // shallow copy ... more thought needed
     return new SimCalorimeterHitImpl( *this ) ;
   }
@@ -72,9 +71,20 @@ namespace IMPL{
     return _vec.size() ;
   }
   
-  const EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const {
+  const DATA::MCParticleData * SimCalorimeterHitImpl::getParticleContData(int i) const {
     return _vec[i]->Particle ;
   }
+
+  const EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const 
+    throw (EVENT::DataNotAvailableException){
+    try{
+      return _vec.at(i)->Particle ;
+    }
+    catch( ... ){
+      throw EVENT::DataNotAvailableException(std::string("SimCalorimeterHitImpl::getParticleCont: no particle at " + i ) ) ;
+    }
+  }
+
   
   float SimCalorimeterHitImpl::getEnergyCont(int i) const {
     return _vec[i]->Energy ;

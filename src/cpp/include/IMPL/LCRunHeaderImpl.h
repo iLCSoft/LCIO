@@ -39,7 +39,7 @@ namespace IMPL {
     /** Returns the names of the active subdetectors
      *  used in the simulation.
      */ 
-    virtual const EVENT::StringVec * getActiveSubdetectors() const ;
+    virtual const std::vector<std::string> * getActiveSubdetectors() const ;
 
     // set methods
 
@@ -65,7 +65,7 @@ namespace IMPL {
     int _runNumber ;
     std::string _detectorName ;
     std::string _description ;
-    EVENT::StringVec _activeSubdetectors ;
+    std::vector<std::string> _activeSubdetectors ;
 
   }; // class
 }; // namespace IMPL

@@ -14,7 +14,7 @@ namespace IMPL{
   int LCRunHeaderImpl::getRunNumber() const { return _runNumber ; }
   const std::string & LCRunHeaderImpl::getDetectorName() const  { return _detectorName ; }
   const std::string & LCRunHeaderImpl::getDescription() const {  return _description ; }
-  const StringVec * LCRunHeaderImpl::getActiveSubdetectors() const { return &_activeSubdetectors ;}
+  const std::vector<std::string> * LCRunHeaderImpl::getActiveSubdetectors() const { return &_activeSubdetectors ;}
 
   void LCRunHeaderImpl::setRunNumber( int rn) {  _runNumber  = rn  ; }
   void LCRunHeaderImpl::setDetectorName(const std::string& dn) { _detectorName = dn ; }

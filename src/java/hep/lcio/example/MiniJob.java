@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: MiniJob.java,v 1.2 2003-06-06 13:05:56 gaede Exp $
+ * @version $Id: MiniJob.java,v 1.3 2003-06-10 10:02:06 gaede Exp $
  */
 public class MiniJob
 {
@@ -52,8 +52,12 @@ public class MiniJob
          runHdr.setDescription("minimal file");
          runHdr.addActiveSubdetector( ecalName );
 
-         lcWrt.writeRunHeader(runHdr);
-
+         try{
+         	lcWrt.writeRunHeader(runHdr);
+         }
+         catch(IOException e){
+         	System.out.println("Couldn't write run header " + rn ) ;
+         }
          // EventLoop - create some events and write them to the file
          for (int i = 0; i < NEVENT; i++)
          {
@@ -114,7 +118,12 @@ public class MiniJob
             LCTools.dumpEvent(evt);
 
             // write the event to the file
-            lcWrt.writeEvent(evt);
+         	try{
+         		lcWrt.writeEvent(evt);
+         	}
+         	catch(IOException e){
+         		System.out.println("Couldn't write event " + i ) ;
+         	}
          }
           // evt loop
       }
@@ -122,6 +131,8 @@ public class MiniJob
 
       System.out.println();
       System.out.println(" created  " + NRUN + " runs with  " + (NRUN * NEVENT) + " events");
-      lcWrt.close();
+      try {
+	  	lcWrt.close();	
+	  } catch (Exception e) {}
    }
 }

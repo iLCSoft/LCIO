@@ -4,6 +4,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
+import hep.lcio.data.MCParticleData;
 import hep.lcio.event.MCParticle;
 
 import hep.lcio.implementation.event.IMCParticle;
@@ -14,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.3 2003-06-10 10:02:07 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -38,6 +39,11 @@ class SIOMCParticle extends IMCParticle
       momentum[2] = in.readFloat();
       energy = in.readFloat();
       charge = in.readFloat();
+      if(nDaughters == 0 ){
+        endpoint[0] = in.readDouble();
+        endpoint[1] = in.readDouble();
+        endpoint[2] = in.readDouble();
+      }
    }
 
    public MCParticle[] getDaughters()
@@ -64,20 +70,27 @@ class SIOMCParticle extends IMCParticle
       return (MCParticle) secondParent;
    }
 
-   static void write(MCParticle hit, SIOOutputStream out) throws IOException
+   static void write(MCParticleData hit, SIOOutputStream out) throws IOException
    {
       if (hit instanceof SIOMCParticle)
          ((SIOMCParticle) hit).write(out);
       else
       {
          out.writePTag(hit);
-         out.writePntr(hit.getParent());
-         out.writePntr(hit.getSecondParent());
+         out.writePntr(hit.getParentData());
+         out.writePntr(hit.getSecondParentData());
 
-         MCParticle[] daughters = hit.getDaughters();
-         out.writeInt(daughters.length);
-         for (int i = 0; i < daughters.length; i++)
-            out.writePntr(daughters[i]);
+         int nDaughters = hit.getNumberOfDaughters() ;
+         out.writeInt(nDaughters) ;
+         
+         for (int i = 0; i < nDaughters; i++) {
+		     out.writePntr( hit.getDaughterData(i)) ;
+		 }
+         //MCParticle[] daughters = hit.getDaughters();
+         //out.writeInt(daughters.length);
+         // for (int i = 0; i < daughters.length; i++)
+         // out.writePntr(daughters[i]);
+
          out.writeInt(hit.getPDG());
          out.writeInt(hit.getHepEvtStatus());
 
@@ -92,6 +105,15 @@ class SIOMCParticle extends IMCParticle
          out.writeFloat(momentum[2]);
          out.writeFloat(hit.getEnergy());
          out.writeFloat(hit.getCharge());
+
+		// write endpoints only if particle has no daughters
+		if( nDaughters == 0 ){
+         double[] endpoind = hit.getEndpoint();
+         out.writeDouble(endpoind[0]);
+         out.writeDouble(endpoind[1]);
+         out.writeDouble(endpoind[2]);
+		}
+
       }
    }
 

@@ -6,6 +6,11 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORecord;
 import hep.lcd.io.sio.SIOWriter;
 
+import hep.lcio.data.LCCollectionData;
+import hep.lcio.data.LCEventData;
+import hep.lcio.data.MCParticleData;
+import hep.lcio.data.SimCalorimeterHitData;
+import hep.lcio.data.SimTrackerHitData;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
@@ -25,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.6 2003-06-06 13:05:57 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.7 2003-06-10 10:02:07 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -117,7 +122,7 @@ class SIOEvent extends ILCEvent
       }
    }
 
-   static void write(LCEvent event, SIOWriter writer, boolean headerOnly) throws IOException
+   static void write(LCEventData event, SIOWriter writer, boolean headerOnly) throws IOException
    {
        // fg20030513 - changed back to tony's original version
        // we don't duplicate the event header in the C++ implementation any more ...
@@ -136,7 +141,7 @@ class SIOEvent extends ILCEvent
          {
             String blockName = blockNames[i];
             out.writeString( blockName);
-            out.writeString(event.getCollection(blockName).getTypeName());
+            out.writeString(event.getCollectionData(blockName).getTypeName());
          }
       }
       else
@@ -146,7 +151,7 @@ class SIOEvent extends ILCEvent
          {
             String blockName = blockNames[j];
             SIOOutputStream out = writer.createBlock(blockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
-            LCCollection col = event.getCollection(blockName);
+            LCCollectionData col = event.getCollectionData(blockName);
             String type = col.getTypeName();
             int flags = col.getFlag();
             out.writeInt(flags);
@@ -156,17 +161,17 @@ class SIOEvent extends ILCEvent
             if (type.equals(LCIO.MCPARTICLE))
             {
                for (int i = 0; i < n; i++)
-                  SIOMCParticle.write((MCParticle) col.getElementAt(i), out);
+                  SIOMCParticle.write((MCParticleData) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.SIMTRACKERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOSimTrackerHit.write((SimTrackerHit) col.getElementAt(i), out);
+                  SIOSimTrackerHit.write((SimTrackerHitData) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.SIMCALORIMETERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOSimCalorimeterHit.write((SimCalorimeterHit) col.getElementAt(i), out, flags);
+                  SIOSimCalorimeterHit.write((SimCalorimeterHitData) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.LCFLOATVEC))
             {
@@ -177,7 +182,7 @@ class SIOEvent extends ILCEvent
       }
    }
 
-   static void write(LCEvent event, SIOWriter writer) throws IOException
+   static void write(LCEventData event, SIOWriter writer) throws IOException
    {
       writer.createRecord(SIOFactory.eventHeaderRecordName, SIOFactory.compressionMode);
       SIOEvent.write(event, writer, true);

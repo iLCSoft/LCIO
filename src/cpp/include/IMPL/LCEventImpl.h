@@ -9,7 +9,9 @@
 
 
 namespace IMPL{
-  
+
+  //class  DATA::LCCollectionData ;
+ 
   typedef std::map<std::string,EVENT::LCCollection*> LCCollectionMap ; 
   
   /**Implementation of the main event class. This is used by  
@@ -29,7 +31,8 @@ class LCEventImpl : public EVENT::LCEvent {
      */
     //    LCEventImpl(const EVENT::LCEvent& evt) ;  // copy c'tor
     
-    /// Destructor.
+    /**Destructor.
+     */
     virtual ~LCEventImpl() ; 
     
     /** Return the run number off this event.
@@ -50,21 +53,35 @@ class LCEventImpl : public EVENT::LCEvent {
     
     /** Returns the names of the collections in the  event.
      */
-    virtual const EVENT::StringVec* getCollectionNames() const ;
+    virtual const std::vector<std::string>  * getCollectionNames() const;
     
+    /** Returns the collection for the given name.
+     * Same as getCollectionData() except that no cast to (LCCollection) and check for 
+     * NULL pointer/reference is needed.  
+     *
+     * @throws DataNotAvailableException
+     */
+    EVENT::LCCollection * getCollection(const std::string & name) const throw (EVENT::DataNotAvailableException) ;
+
     /** Returns the collection for the given name - null if it doesn't exist.
+     *  Returns the identical object as getCollection()  except for the type.
      */ 
-    virtual EVENT::LCCollection * getCollection(const std::string & name) const ;
+    DATA::LCCollectionData * getCollectionData(const std::string & name) const ;
+
+
+    /** Adds a collection with the given name. Throws an exception if the name already
+     * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
+     * 
+     *@throws EventException
+     */ 
+    virtual void addCollection(EVENT::LCCollection * col, const std::string & name)  throw (EVENT::EventException) ;
     
-    /** Adds a collection with the given name. This method should fail if the event 
-     * is read only and return LCIO::ERROR.
+    /** Removes (and deletes) the collection with name (if it exists in the event). 
+     * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
+     *
+     *@throws ReadOnlyException
      */ 
-    virtual int addCollection(EVENT::LCCollection * col, const std::string & name) ;
-    
-    /** Removes (and deletes) the collection with the given name. This method should fail if the event 
-     * is read only and return LCIO::ERROR.
-     */ 
-    virtual int removeCollection(const std::string & name) ;
+    virtual void removeCollection(const std::string & name) throw (EVENT::ReadOnlyException)  ;
     
     //---- set methods -----
     /** Sets the run number.
@@ -99,7 +116,7 @@ class LCEventImpl : public EVENT::LCEvent {
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
     mutable LCCollectionMap _map ;
-    mutable EVENT::StringVec _colNames ;
+    mutable std::vector<std::string> _colNames ;
     
   private:
     int _access ;   // flag for access mode 

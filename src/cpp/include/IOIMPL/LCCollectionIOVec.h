@@ -22,6 +22,7 @@ namespace IOIMPL {
   protected:
     LCCollectionIOVec() {  /* no default c'tor */ }
     
+
   public:
     LCCollectionIOVec(const std::string& type) : IMPL::LCCollectionVec(type) { } 
     

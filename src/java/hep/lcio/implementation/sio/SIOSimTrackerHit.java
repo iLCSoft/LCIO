@@ -4,6 +4,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
+import hep.lcio.data.SimTrackerHitData;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -28,6 +29,8 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       dEdx = in.readFloat();
       time = in.readFloat();
       particle = in.readPntr();
+      in.readPTag(this);
+   
    }
 
    public MCParticle getMCParticle()
@@ -37,7 +40,7 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       return (MCParticle) particle;
    }
 
-   static void write(SimTrackerHit hit, SIOOutputStream out) throws IOException
+   static void write(SimTrackerHitData hit, SIOOutputStream out) throws IOException
    {
       if (hit instanceof SIOSimTrackerHit)
          ((SIOSimTrackerHit) hit).write(out);
@@ -51,7 +54,9 @@ public class SIOSimTrackerHit extends ISimTrackerHit
          out.writeDouble(pos[2]);
          out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
-         out.writePntr(hit.getMCParticle());
+         out.writePntr(hit.getMCParticleData());
+         out.writePTag(hit);
+
       }
    }
 
@@ -64,5 +69,7 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       out.writeFloat(dEdx);
       out.writeFloat(time);
       out.writePntr(particle);
+      out.writePTag(this);
+
    }
 }

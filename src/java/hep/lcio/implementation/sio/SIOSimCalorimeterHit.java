@@ -4,6 +4,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
+import hep.lcio.data.SimCalorimeterHitData;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
@@ -16,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -49,6 +50,8 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             pdg[i] = in.readInt();
       }
+      in.readPTag(this);
+
    }
 
    public MCParticle getParticleCont(int i)
@@ -58,7 +61,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       return (MCParticle) particle[i];
    }
 
-   static void write(SimCalorimeterHit hit, SIOOutputStream out, int flags) throws IOException
+   static void write(SimCalorimeterHitData hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOSimCalorimeterHit)
          ((SIOSimCalorimeterHit) hit).write(out, flags);
@@ -81,13 +84,15 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          out.writeInt(n);
          for (int i = 0; i < n; i++)
          {
-            out.writePntr(hit.getParticleCont(i));
+            out.writePntr(hit.getParticleContData(i));
             out.writeFloat(hit.getEnergyCont(i));
             out.writeFloat(hit.getTimeCont(i));
             if (hasPDG)
                out.writeInt(hit.getPDGCont(i));
          }
+         out.writePTag(hit);
       }
+
    }
 
    private void write(SIOOutputStream out, int flags) throws IOException
@@ -113,5 +118,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             out.writeInt(pdg[i]);
       }
+      out.writePTag(this);
+
    }
 }

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.3 2003-06-06 13:05:56 gaede Exp $
+ * @version $Id: RecJob.java,v 1.4 2003-06-10 10:02:06 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -59,7 +59,12 @@ public class RecJob implements LCRunListener, LCEventListener
    public void analyze(LCRunHeader run)
    {
       // just copy run headers to the outputfile
-      lcWrt.writeRunHeader(run);
+      try{
+        lcWrt.writeRunHeader(run);
+      }
+      catch(IOException e){
+      	System.out.println("Couldn't write run header " + run.getRunNumber() ) ;
+	  }
    }
 
    public void analyze(LCEvent evt)
@@ -116,13 +121,22 @@ public class RecJob implements LCRunListener, LCEventListener
       evt.addCollection(calVec, "HCALReco");
 
       LCTools.dumpEvent(evt);
-      lcWrt.writeEvent(evt);
+      
+      try{
+        lcWrt.writeEvent(evt);
+      }
+      catch(IOException e){
+        System.out.println("Couldn't write event " + evt.getEventNumber() ) ;
+      }
       nEvent++;
    }
 
    private void close()
    {
-      lcWrt.close();
+	  try {
+		lcWrt.close();
+	  } catch (Exception e) {}
+      
       System.out.println("Analyzed " + nEvent + " events");
    }
 }

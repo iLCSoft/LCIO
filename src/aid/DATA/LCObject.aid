@@ -1,11 +1,12 @@
-package hep.lcio.event ;
+package hep.lcio.data ;
 
-/** The generic object that is held in an LCCollection. 
- *  Every object stored in an LCCollection, i.e. in an LCEvent has to 
+/** The generic object that is held in an LCCollectionData. 
+ *  Every object stored in an LCCollectionData, i.e. in an LCEventData has to 
  *  implement this interface.
  * 
  * @author gaede 
- * @version Mar 5, 2003
+ * @version Jun 7, 2003
+ * fg 20030607 moved here from hep.lcio.event
  */
 public interface LCObject extends Cloneable {
     

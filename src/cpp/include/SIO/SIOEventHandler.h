@@ -1,15 +1,9 @@
-// -*- C++ -*-
-/** Handler for LCEvent/LCEventIOImpl objects.
- * 
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef SIO_SIOEVENTHANDLER_H
 #define SIO_SIOEVENTHANDLER_H 1
 
 #include <string>
 
-#include "EVENT/LCEvent.h"
+#include "DATA/LCEventData.h"
 #include "IOIMPL/LCEventIOImpl.h"
 
 #include "SIO_block.h"
@@ -17,6 +11,12 @@
 namespace SIO {
   
   
+/** Handler for LCEvent/LCEventIOImpl objects.
+ * 
+ * @author gaede
+ * @version Mar 6, 2003
+ * fg 20030609 using data interface for writing
+ */
   class SIOEventHandler : public SIO_block{
     
   protected:
@@ -32,11 +32,13 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-    void setEvent(const EVENT::LCEvent* evt ) ; 
+    void setEvent(const DATA::LCEventData* evt ) ; 
     
   private: 
-    IOIMPL::LCEventIOImpl **_evtP ;     // event for reading 
-    const EVENT::LCEvent *_evt ;  // event for writing
+    // event implemenatation for reading 
+    IOIMPL::LCEventIOImpl **_evtP ;  
+    // event data interface for writing
+    const DATA::LCEventData *_evt ;  
     
   }; // class
   

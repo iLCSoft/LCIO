@@ -1,20 +1,27 @@
 package hep.lcio.event;
 
-/**The main event interface. Has to  be implemented by 
- * all user event classes that are to be made persistent.
+@java{
+import hep.lcio.exceptions.* ;
+}
+/**The main event interface. Holds named collections
+ * with elements of type LCObject ('untyped'). Users have to cast to
+ * the corresponding types.  
+ * Adds methods to add.remove collections to LCEventData.
  * 
  * @author gaede
  * @version Mar 4, 2003
  * @see LCCollection
+ * fg 20030607 extends the corresponding data interface
  */
 
-public interface LCEvent {
+public interface LCEvent extends LCEventData{
     
-    /** Return the run number off this event.
+@ifdef overwriteDataInterface
+    /** Return the run number off this data.
      */
     public int getRunNumber() const ;
     
-    /** Returns this event's number .
+    /** Returns this data's number .
      */
     public int getEventNumber() const ;
     
@@ -22,34 +29,41 @@ public interface LCEvent {
      */
     public const String& getDetectorName() const ;
     
-    /** Returns the time stamp of the event.
+    /** Returns the time stamp of the data.
      */
     public long getTimeStamp() const ;
     
-    /** Returns the names of the collections in the  event.
+    /** Returns the names of the collections in the  data.
      */
-    //    public String[]*  getCollectionNames() const ;
-    public const StringVec*  getCollectionNames() const ;
+    public const String[]*  getCollectionNames() const ;
     
-    /** Returns the collection for the given name - null if it doesn't exist.
+    /** Returns the collection for the given name - NULL if it doesn't exist.
      */ 
-    public LCCollection* getCollection(const String& name) const ;
-    
-    /** Adds a collection with the given name. This method should fail if the event 
-     * is read only and return LCIO::ERROR.
-     */ 
-    public int addCollection(LCCollection* col ,const  String& name ) ;
-    
-    /** Removes (and deletes) the collection with name. 
-     * Should fail if accessMode = read_only.
-     */ 
-    /** Removes (and deletes) the collection with the given name. This method should fail if the event 
-     * is read only and return LCIO::ERROR.
-     */ 
-    public int removeCollection(const  String& name ) ;
-    
+    public LCCollectionData* getCollectionData(const String& name) const ;
 
-    // no extension handling so far -
-    // user extension can be added through LCCollections of LCIOObject(s) ...
+@endif
 
+    /** Returns the collection for the given name.
+     * Same as getCollectionData() except that no cast to (LCCollection) and check for 
+     * NULL pointer/reference is needed.  
+     *
+     * @throws DataNotAvailableException
+     */
+     public LCCollection* getCollection(const String& name) const throws DataNotAvailableException ;
+
+
+    /** Adds a collection with the given name. Throws an exception if the name already
+     * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
+     * 
+     *@throws EventException
+     */ 
+    public void addCollection(LCCollection* col ,const  String& name ) throws EventException ;
+    
+    /** Removes (and deletes) the collection with name (if it exists in the event). 
+     * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
+     *
+     *@throws ReadOnlyException
+     */ 
+    public void removeCollection(const  String& name ) throws ReadOnlyException ;
+    
 }

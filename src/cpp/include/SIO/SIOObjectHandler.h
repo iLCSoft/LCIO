@@ -8,7 +8,7 @@
 #ifndef SIO_SIOOBJECTHANDLER_H
 #define SIO_SIOOBJECTHANDLER_H 1
 
-#include "EVENT/LCObject.h"
+#include "DATA/LCObject.h"
 
 class SIO_stream ;
 
@@ -25,14 +25,14 @@ public:
   /** Reads lcio objects from an SIO stream.
    */
   virtual unsigned int read(SIO_stream* stream, 
-			    EVENT::LCObject** objP,  
+			    DATA::LCObject** objP,  
 			    unsigned int flag,
 			    unsigned int vers) =0 ;
   
   /** Writes lcio objects to an SIO stream.
    */
   virtual unsigned int write(SIO_stream* stream, 
-			     const EVENT::LCObject* obj,
+			     const DATA::LCObject* obj,
 			     unsigned int flag) =0 ;
   
 }; // class

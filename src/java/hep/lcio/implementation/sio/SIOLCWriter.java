@@ -3,9 +3,11 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIOWriter;
 
-import hep.lcio.event.LCEvent;
+import hep.lcio.data.LCEventData;
+import hep.lcio.data.LCRunHeaderData;
+//import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
-import hep.lcio.event.LCRunHeader;
+//import hep.lcio.event.LCRunHeader;
 
 import hep.lcio.io.LCWriter;
 
@@ -16,73 +18,41 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.4 2003-05-14 07:30:11 gaede Exp $
+ * @version $Id: SIOLCWriter.java,v 1.5 2003-06-10 10:02:07 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
    private SIOWriter writer;
 
-   public int close()
+   public void close() throws IOException 
    {
-      try
-      {
          writer.close();
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
    }
 
 
-   public int open(String filename)
+   public void open(String filename) throws IOException 
    {
-      try
-      {
+         // FIX ME - what is the default behavior 
+         // for existing files ?
          writer = new SIOWriter(new FileOutputStream(filename));
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
    }
 
-   public int open(String filename, int writeMode)
+   public void open(String filename, int writeMode) throws IOException 
    {
        // FIX ME - need implementation for append mode
-       //throw new IOException("append not yet supported" );
-       System.out.println("append not yet supported" );
-       return LCIO.ERROR;
+       throw new IOException("append not yet supported" );
    }
 
-   public int writeEvent(LCEvent evt)
+   public void writeEvent(LCEventData evt) throws IOException
    {
-      try
-      {
-         SIOEvent.write(evt, writer);
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
+         SIOEvent.write(evt , writer);
    }
 
-   public int writeRunHeader(LCRunHeader hdr)
+   public void writeRunHeader(LCRunHeaderData hdr) throws IOException
    {
-      try
-      {
          writer.createRecord(SIOFactory.runRecordName, SIOFactory.compressionMode);
 
          SIOOutputStream out = writer.createBlock(SIOFactory.runBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
          SIORunHeader.write(hdr, out);
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
    }
 }

@@ -4,12 +4,13 @@
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
-#include "EVENT/LCFloatVec.h"
+#include "DATA/LCFloatVec.h"
 
 #include "IMPL/LCFlagImpl.h"
 
 using namespace std ;
 using namespace EVENT ;
+using namespace DATA ;
 
 
 namespace IMPL {
@@ -25,10 +26,10 @@ namespace IMPL {
 	 << " - collections  : "
 	 << endl ;
     
-    const StringVec* strVec = evt->getCollectionNames() ;
+    const std::vector< std::string >* strVec = evt->getCollectionNames() ;
 
     // loop over collections:
-    for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+    for( std::vector< std::string >::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
       cout << "     " <<  *name <<   " " 
 	   <<   evt->getCollection( *name )->getTypeName() << " : "  ; 

@@ -190,8 +190,8 @@ namespace SIO {
   void SIOReader::setUpHandlers(){
 
     // use event *_evtP to setup the block readers from header information ....
-    const StringVec* strVec = (*_evtP)->getCollectionNames() ;
-    for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+    const std::vector<std::string>* strVec = (*_evtP)->getCollectionNames() ;
+    for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       
       // remove any old handler of the same name  
       // these handlers are static - so if we write at the same time (e.g. in a recojob)
@@ -295,7 +295,7 @@ namespace SIO {
       
       if( readRecord() != LCIO::SUCCESS )   return 0 ;
       
-      // set the proper acces mode before returnning the event
+      // set the proper acces mode before returning the event
       // FIXME : check access mode ...
       // (*_evtP)->setAccessMode( accessMode ) ;
       

@@ -2,7 +2,9 @@
 #include "IMPL/MCParticleImpl.h"
 
 #include "EVENT/LCIO.h"
+#include <stdexcept>
 
+using namespace DATA ;
 using namespace EVENT ;
 
 namespace IMPL {
@@ -20,10 +22,46 @@ namespace IMPL {
     // no dynamic variables
   }
   
-  const EVENT::MCParticle * MCParticleImpl::getParent() const {    return _mother0 ; }
-  const EVENT::MCParticle * MCParticleImpl::getSecondParent() const { return _mother1 ; }
+  const MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
+  const MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException) 
+  { 
+    if( _mother0 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no parent ! ") ;
+    return _mother0 ; 
+  }
 
-  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
+  const MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1 ;  }  
+  const MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException){ 
+    if( _mother1 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no second parent ! ");
+    return _mother1 ; 
+  }
+
+  //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
+
+
+  int MCParticleImpl::getNumberOfDaughters() const { return _daughters.size() ; }
+
+  const MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException) { 
+    // checked access
+    try{
+      return _daughters.at(i) ;
+    }catch( std::out_of_range ){
+      throw DataNotAvailableException(std::string("MCParticleImpl::getDaughter(): out_of_range :" + i ) );
+    }
+
+  }
+  // unchecked access
+  const MCParticleData* MCParticleImpl::getDaughterData(int i) const {
+    return _daughters[i] ;
+  }
+
+  const double* MCParticleImpl::getEndpoint() const { 
+
+    if( _daughters.size() > 0 )
+      return _daughters[0]->getVertex() ;
+
+    return _endpoint ;
+  }
+
 
   int MCParticleImpl::getPDG() const { return _pdg ;}
   int MCParticleImpl::getHepEvtStatus() const { return _status ;}

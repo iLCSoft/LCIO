@@ -1,15 +1,14 @@
 #include "SIO/SIOParticleHandler.h"
 #include "SIO/LCSIO.h"
 
-#include "EVENT/MCParticle.h"
+#include "DATA/MCParticleData.h"
 #include "IOIMPL/MCParticleIOImpl.h"
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
-
 using namespace EVENT ;
-//using namespace IMPL ;
+using namespace DATA ;
 using namespace IOIMPL ;
 
 namespace SIO {
@@ -31,11 +30,11 @@ namespace SIO {
     SIO_PNTR( stream , &(particle->_mother0) ) ;
     SIO_PNTR( stream , &(particle->_mother1) ) ;
     // daughters
-    int nD ; 
-    SIO_DATA( stream ,  &nD , 1  ) ;
+    int numberOfDaughters ; 
+    SIO_DATA( stream ,  &numberOfDaughters , 1  ) ;
     const MCParticle* daughter ;
 
-    for(int i=0;i<nD;i++){
+    for(int i=0;i<numberOfDaughters;i++){
       SIO_PNTR( stream , &daughter ) ;
       particle->_daughters.push_back( daughter ) ;
     }
@@ -45,6 +44,10 @@ namespace SIO {
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
     SIO_DATA( stream ,  &(particle->_energy) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
+
+    // if the particles doesn't have daughters we read its endpoint
+    if( numberOfDaughters == 0 )
+      SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
     return ( SIO_BLOCK_SUCCESS ) ;
   }
@@ -52,25 +55,28 @@ namespace SIO {
   unsigned int SIOParticleHandler::write(SIO_stream* stream, 
 					 const LCObject* obj, 
 					 unsigned int flag ){
-    
+
+    //fg 20030609 changed to use MCParticleData    
     unsigned int status ; 
     
-    const MCParticle* particle  = dynamic_cast<const MCParticle*>(obj)  ;
+    const MCParticleData* particle  = dynamic_cast<const MCParticleData*>(obj)  ;
     SIO_PTAG( stream , particle ) ;
     
-    const MCParticle* myMom0 = particle->getParent() ;
-    const MCParticle* myMom1 = particle->getSecondParent() ;
+    const MCParticleData* myMom0 = particle->getParentData() ;
+    const MCParticleData* myMom1 = particle->getSecondParentData() ;
     SIO_PNTR( stream , &myMom0 ) ;
     SIO_PNTR( stream , &myMom1 ) ;
 
-    const MCParticleVec* dVec =  particle->getDaughters() ;
-    int nD = dVec->size() ;
+    //const EVENT::MCParticleVec* dVec =  particle->getDaughters() ;
+    int numberOfDaughters = particle->getNumberOfDaughters() ;
 
-    SIO_DATA( stream , &nD  , 1 ) ;
+    SIO_DATA( stream , &numberOfDaughters  , 1 ) ;
 
-    MCParticleVec::const_iterator iter = dVec->begin() ;
-    while( iter != dVec->end() ) {
-      const MCParticle* part = *iter++ ;
+    //EVENT::MCParticleVec::const_iterator iter = dVec->begin() ;
+    //    while( iter != dVec->end() ) {
+    //  const MCParticle* part = *iter++ ;
+    for(int i=0;i<numberOfDaughters;i++){
+      const MCParticleData* part = particle->getDaughterData(i) ;
       SIO_PNTR( stream ,  &part  ); 
     }
     LCSIO_WRITE( stream, particle->getPDG() ) ;
@@ -79,6 +85,11 @@ namespace SIO {
     SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
     LCSIO_WRITE( stream, particle->getEnergy() ) ;
     LCSIO_WRITE( stream, particle->getCharge() ) ;
+
+    // only if the particles doesn't have daughters we write its endpoint
+    if( numberOfDaughters == 0 )
+      SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
+
 
     return ( SIO_BLOCK_SUCCESS ) ;
 

@@ -1,19 +1,14 @@
-package hep.lcio.event ;
+package hep.lcio.data ;
 
-@java{
-import hep.lcio.exceptions.* ;
-}
 /** The generic collection used in LCIO. Holds objects of type LCObject.
- *  Extends LCCollectionData by adding methods to add/remove elements.
  * 
  * @author gaede 
- * @version Mar 4, 2003
+ * @version Jun 7, 2003
  * @see LCObject
  * @see LCIO
  */
-public interface LCCollection extends LCCollectionData{
+public interface LCCollectionData{
     
-@ifdef overwriteDataInterface
     /**Returns the number of elements in the collection.
      */
     public int getNumberOfElements() const ;
@@ -40,22 +35,6 @@ public interface LCCollection extends LCCollectionData{
      *  and one for the e-, whereas there will be only one entry if bit29==0.
      */
     public int getFlag() const ;
-@endif
 
-    /** Adds the given element to (end of) the collection. Throws an exception 
-     * if the collection (event) is 'read only'.
-     *
-     * @throws ReadOnlyException
-     */
-    public void addElement(LCObject* obj) throws ReadOnlyException ;
-    
-    
-    /** Removes the i-th element from the collection. Throws an exception 
-     * if the collection (event) is 'read only'.
-     *
-     * @throws ReadOnlyException
-     */
-    public void removeElementAt(int i) throws ReadOnlyException ;
-    
 }
 

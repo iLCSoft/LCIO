@@ -124,10 +124,22 @@ public:
 	   << endl ;
     }
     
-    if( evt->addCollection( (LCCollection*) calVec , "HCALReco" ) != LCIO::SUCCESS ) {
-      cout << " could not add new collection to the event :  " << "HCALReco"  << endl ;
-      exit(1)  ;
+//     if( evt->addCollection( (LCCollection*) calVec , "HCALReco" ) != LCIO::SUCCESS ) {
+//       cout << " could not add new collection to the event :  " << "HCALReco"  << endl ;
+//       exit(1)  ;
+//     }
+
+    try{
+
+      evt->addCollection( (LCCollection*) calVec , "HCALReco" ) ;
+
+    }catch(EventException& e){
+
+      cout << "excpetion: " << e.what() << endl ;
+      // no need to exit...
     }
+
+
     
     LCTOOLS::dumpEvent( evt ) ;
     

@@ -3,7 +3,7 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 
-import hep.lcio.event.LCFloatVec;
+import hep.lcio.data.LCFloatVec;
 
 import hep.lcio.implementation.event.ILCFloatVec;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFloatVec.java,v 1.4 2003-05-06 17:26:46 tonyj Exp $
+ * @version $Id: SIOFloatVec.java,v 1.5 2003-06-10 10:02:07 gaede Exp $
  */
 class SIOFloatVec extends ILCFloatVec
 {

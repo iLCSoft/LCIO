@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.4 2003-06-06 13:05:56 gaede Exp $
+ * @version $Id: SimJob.java,v 1.5 2003-06-10 10:02:06 gaede Exp $
  */
 public class SimJob
 {
@@ -54,7 +54,12 @@ public class SimJob
          runHdr.addActiveSubdetector(ecalName);
          runHdr.addActiveSubdetector(tpcName);
 
-         lcWrt.writeRunHeader(runHdr);
+         try{
+         	lcWrt.writeRunHeader(runHdr);
+         }
+         catch(IOException e){
+         	System.out.println("Couldn't write run header " + rn ) ;
+         }
 
          // EventLoop - create some events and write them to the file
          for (int i = 0; i < NEVENT; i++)
@@ -155,14 +160,22 @@ public class SimJob
             LCTools.dumpEvent(evt);
 
             // write the event to the file
-            lcWrt.writeEvent(evt);
-         }
+         	try{
+         		lcWrt.writeEvent(evt);
+         	}
+         	catch(IOException e){
+         		System.out.println("Couldn't write event " + i ) ;
+         	}
+        }
           // evt loop
       }
        // run loop
 
       System.out.println();
       System.out.println(" created  " + NRUN + " runs with  " + (NRUN * NEVENT) + " events");
-      lcWrt.close();
+      try {
+		lcWrt.close();
+	  } catch (Exception e) {
+	  }
    }
 }

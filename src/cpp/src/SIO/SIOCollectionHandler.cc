@@ -12,12 +12,11 @@
 
 #include "SIO_functions.h"
 
-//#include "Exceptions.h"
+//#include <iostream>
 
-#include <iostream>
-
-using namespace IOIMPL ;
+using namespace DATA ;
 using namespace EVENT ;
+using namespace IOIMPL ;
 
 namespace SIO {
 
@@ -33,9 +32,9 @@ namespace SIO {
     // here we need to get the handler for our type
     _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
     if( ! _myHandler ){
-      std::cerr << "WARNING:  SIOCollectionHandler no handler for type : " 
-		<< _myType << std::endl ;
-
+      // don't print a warning - just ignore unknown types ....
+      //      std::cerr << "WARNING:  SIOCollectionHandler no handler for type : " 
+      //		<< _myType << std::endl ;
       throw Exception("SIOCollectionHandler: unsuported type") ;
     }
 
@@ -44,7 +43,7 @@ namespace SIO {
   SIOCollectionHandler::~SIOCollectionHandler(){
   }
   
-  void SIOCollectionHandler::setCollection(const LCCollection *col){
+  void SIOCollectionHandler::setCollection(const LCCollectionData *col){
     _col = col ;
   } 
   
@@ -52,21 +51,28 @@ namespace SIO {
   unsigned int SIOCollectionHandler::xfer( SIO_stream* stream, SIO_operation op, 
 					   unsigned int versionID){
     
-    // if we don't have a handler we can't do anything ...
+    // if we don't have a handler we don't do anything ...
     if( !_myHandler) {
-      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " 
-		<< _myType << std::endl ;
-      return 1 ;
+      //      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " 
+      //		<< _myType << std::endl ;
+      return LCIO::SUCCESS ;
     }
     
     unsigned int status ; // needed by the SIO_DATA macro
     
     if( op == SIO_OP_READ ){ 
       
-      // get address of this  handlers collectio in the event
+      // get address of this  handlers collection in the event
       
-      LCCollectionIOVec* ioCol = new LCCollectionIOVec( _myType ) ;
-      
+      LCCollectionIOVec* ioCol ;
+
+
+      // get the collection from event that has been attached by SIOEventHandler
+      try{   // can safely cast - we know we have an LCEventImpl that has LCCollectionIOVecs
+	ioCol = dynamic_cast<LCCollectionIOVec*>( (*_evtP)->getCollection( getName()->c_str() )) ;
+      }
+      catch(DataNotAvailableException){   return LCIO::ERROR ; }
+
       SIO_DATA( stream ,  &(ioCol->_flag) , 1  ) ;
       int nObj ;
       SIO_DATA( stream ,  &nObj , 1  ) ;
@@ -82,13 +88,9 @@ namespace SIO {
 	ioCol->push_back( obj ) ;
       }
       
-      // attach collection to the event  
-      (*_evtP)->addCollection( ioCol , getName()->c_str()  ) ;
-      
-      
     } else if( op == SIO_OP_WRITE ){ 
       
-      const LCCollection* vec = _col ;
+      const LCCollectionData* vec = _col ;
       
       if( vec  != 0 ){
 	

@@ -1,12 +1,13 @@
 package hep.lcio.implementation.event;
 
+import hep.lcio.data.MCParticleData;
 import hep.lcio.event.MCParticle;
 
 
 /**
  * A default implementation of MCParticle
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: IMCParticle.java,v 1.3 2003-06-10 10:02:07 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -16,6 +17,7 @@ public class IMCParticle extends ILCObject implements MCParticle
    protected Object[] daughters = noDaughters;
    protected float[] momentum = new float[3];
    protected double[] vertex = new double[3];
+   protected double[] endpoint = new double[3];
    protected float charge;
    protected float energy;
    protected int hepEvtStatus;
@@ -38,9 +40,16 @@ public class IMCParticle extends ILCObject implements MCParticle
       this.daughters = daughters;
    }
 
-   public MCParticle[] getDaughters()
+   public int getNumberOfDaughters(){
+   	  return daughters.length ;
+   }
+   public MCParticle getDaughter(int i)
    {
-      return (MCParticle[]) daughters;
+      return (MCParticle) daughters[i];
+   }
+   public MCParticleData getDaughterData(int i)
+   {
+      return (MCParticleData) daughters[i];
    }
 
    public void setEnergy(float energy)
@@ -123,4 +132,28 @@ public class IMCParticle extends ILCObject implements MCParticle
    {
       return vertex;
    }
+
+   public void setEndpoint(double[] pos)
+   {
+      checkAccess();
+      if (pos.length != 3)
+         throw new IllegalArgumentException();
+      this.endpoint = pos;
+   }
+
+   public double[] getEndpoint()
+   {
+      return endpoint;
+   }
+
+   public MCParticleData getParentData()
+   {
+      return (MCParticleData) parent;
+   }
+
+   public MCParticleData getSecondParentData()
+   {
+      return (MCParticleData) secondParent;
+   }
+
 }

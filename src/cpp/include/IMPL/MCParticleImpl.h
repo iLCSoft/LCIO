@@ -3,11 +3,15 @@
 #define EVENT_MCPARTICLEIMPL_H 1
 #include <vector>
 
+#include "EVENT/LCIO.h"
+
 
 #include "EVENT/MCParticle.h"
 
+
 namespace IMPL {
   
+  typedef std::vector<const EVENT::MCParticle*> MCParticleVec ;
 
   /** Implementation of MCParticle.
    * 
@@ -24,16 +28,55 @@ namespace IMPL {
     virtual ~MCParticleImpl() ;
 
     /** Returns the parent of this particle. Null if the mother (beam particle).
+     * Same as getParentData() except for type and exception.
+     *
+     * @throws DataNotAvailableException
      */
-    virtual const EVENT::MCParticle * getParent() const ;
+    virtual const EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException) ;
+
+    /** Returns the second parent of this particle. 
+     * Same as getSecondParentData() except for type and exception.
+     *
+     * @throws DataNotAvailableException
+     */
+    virtual const EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException) ;
+
+    /** Returns the i-th daughter of this particle.
+     * Same as getDaughterData() except for type and exception - applies range check.
+     *
+     * @throws DataNotAvailableException
+     * @see getNumberOfDaughters
+     */
+    virtual const EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException) ;
+
+
+    /** Returns the parent of this particle. Null if the mother (beam particle).
+     */
+    virtual const DATA::MCParticleData * getParentData() const ;
 
     /** Returns the second parent of this particle, usually Null.
      */
-    virtual const EVENT::MCParticle * getSecondParent() const ;
+    virtual const DATA::MCParticleData * getSecondParentData() const ;
 
-    /** Returns the daughters of this particle.
+
+    /** Returns the i-th daughter of this particle.
+     *  Unchecked access to vector holding daughters, thus faster than getDaughter(int i).
      */
-    virtual const EVENT::MCParticleVec * getDaughters() const ;
+    virtual const DATA::MCParticleData * getDaughterData(int i) const ;
+
+
+    /** Returns the endpoint of the particle in [mm].
+     *  Definition of the enpoint depends on the application that created 
+     *  the particle, e.g. the start point of the shower in a calorimeter.
+     *  If the particle has daughters, the corresponding vertex is returned.
+     *  Never returns NULL.
+     */
+    virtual const double* getEndpoint() const ;
+
+    /** Returns the number of daughters of this particle.
+     */
+    virtual int getNumberOfDaughters() const ;
+
 
     /** Returns the PDG code of the particle.
      */
@@ -96,6 +139,11 @@ namespace IMPL {
      */
     void setVertex( double vtx[3] ) ;
     
+     /** Sets the particle endpoint.
+      *  Will be ignored for particles that have daughters.
+      */
+    void setEndpoint( double pnt[3] ) ;
+    
     /** Sets the momentum.
       */
     void setMomentum( float p[3] );
@@ -116,10 +164,11 @@ namespace IMPL {
     int _pdg ;
     int _status ;
     double _vertex[3] ;
+    double _endpoint[3] ;
     float _p[3] ;
     float _energy ;
     float _charge ;
-    EVENT::MCParticleVec _daughters ;
+    MCParticleVec _daughters ;
 
 
 }; // class

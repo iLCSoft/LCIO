@@ -1,15 +1,9 @@
-// -*- C++ -*-
-/** Handler for LCRunHeader/LCRunHeaderImpl objects.
- * 
- * @author gaede
- * @version Mar 11, 2003
- */
 #ifndef SIO_SIORUNHEADERHANDLER_H
 #define SIO_SIORUNHEADERHANDLER_H 1
 
 #include <string>
 
-#include "EVENT/LCRunHeader.h"
+#include "DATA/LCRunHeaderData.h"
 #include "IMPL/LCRunHeaderImpl.h"
 
 #include "SIO_block.h"
@@ -17,6 +11,12 @@
 namespace SIO {
   
   
+/** Handler for LCRunHeader/LCRunHeaderImpl objects.
+ * 
+ * @author gaede
+ * @version Mar 11, 2003
+ * fg 20030609 using data interface for writing
+ */
   class SIORunHeaderHandler : public SIO_block{
     
   protected:
@@ -36,11 +36,11 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-    void setRunHeader(const EVENT::LCRunHeader* hdr ) ; 
+    void setRunHeader(const DATA::LCRunHeaderData* hdr ) ; 
     
   private: 
     IMPL::LCRunHeaderImpl** _rhP ;  // address for reading
-    const EVENT::LCRunHeader* _hdr ;  // runheader for writing
+    const DATA::LCRunHeaderData* _hdr ;  // runheader for writing
     
   }; // class
   

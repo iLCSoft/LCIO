@@ -12,7 +12,7 @@ import java.text.DecimalFormat ;
 /** Small programm that dumps the structure and contents of an (LCIO) SIO file to the screen.
  *
  * @author Frank Gaede
- * @version $Id: SIODump.java,v 1.1 2003-05-09 15:18:57 gaede Exp $
+ * @version $Id: SIODump.java,v 1.2 2003-06-10 10:02:06 gaede Exp $
  */
 public class SIODump
 {
@@ -25,7 +25,7 @@ public class SIODump
 
 	SIODump dmp = new SIODump() ;
 
-      	if( args[0]==null ){
+      	if( args.length == 0 ){
 	    System.out.println(" usage: java -cp tools/sio.jar:lib/lcio.jar "
 			       +"hep.lcio.example.SIODump filename [option]!" ) ;
 	    System.out.println("\t options:  h - hex [default] ") ;

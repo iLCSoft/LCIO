@@ -1,19 +1,14 @@
-package hep.lcio.event ;
+package hep.lcio.data ;
 
-@java{
-import hep.lcio.exceptions.* ;
-}
-/** The generic calorimeter hit. 
- * Adding some convenient methods to the pure data interface.
+/** Describes a generic calorimeter hit. Has to be implemented by user 
+ *  classes that are to be made persistent.
  * 
  * @author gaede
  * @version Mar 5, 2003
- * fg 20030607 extends the corresponding data interface
  */
 
-public interface SimCalorimeterHit extends SimCalorimeterHitData {
+public interface SimCalorimeterHitData extends LCObject {
     
-@ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;
@@ -55,15 +50,9 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
      */ 
     public int  getPDGCont(int i) const ;
     
-@endif
-
     /** Returns the i-th particle that contributed to the hit.
-     *  Same as getParticleContData() except for return type and exception.
-     *
-     * @throws DataNotAvailableException
-     * @see MCParticle
-     * @see SimCalorimeterHitData.getNMCParticles()
      */
-    public const MCParticle* getParticleCont( int i) const throws DataNotAvailableException ;
+    public const MCParticleData* getParticleContData( int i) const ;
+
 
 }

@@ -8,8 +8,9 @@
 #define EVENT_CALORIMETERHITIMPL_H 1
 
 
-#include "EVENT/SimCalorimeterHit.h"
 #include "EVENT/MCParticle.h"
+#include "EVENT/SimCalorimeterHit.h"
+#include <vector>
 
 namespace IMPL {
   
@@ -22,7 +23,6 @@ namespace IMPL {
   }  MCParticleCont  ;
   
   typedef std::vector< MCParticleCont* > MCParticleContVec ;
-  
   
   class SimCalorimeterHitImpl : public EVENT::SimCalorimeterHit {
     
@@ -76,8 +76,17 @@ namespace IMPL {
     
     /** Returns the i-th particle that contributed to the hit.
      */
-    virtual const EVENT::MCParticle * getParticleCont(int i) const ;
+    virtual const DATA::MCParticleData * getParticleContData(int i) const ;
     
+    /** Returns the i-th particle that contributed to the hit.
+     *  Same as getParticleContData() except for return type and exception.
+     *
+     * @throws DataNotAvailableException
+     * @see MCParticle
+     * @see getNMCParticles()
+     */
+    virtual const EVENT::MCParticle * getParticleCont(int i) const throw (EVENT::DataNotAvailableException) ;
+
     /** Returns the energy of the i-th particle that contributed to the hit.
      */ 
     virtual float getEnergyCont(int i) const ;

@@ -3,6 +3,8 @@
 
 
 #include "EVENT/SimTrackerHit.h"
+#include "EVENT/MCParticle.h"
+
 
 namespace IMPL {
 
@@ -42,9 +44,17 @@ namespace IMPL {
      */
     virtual float getTime() const ;
 
-    /** Returns the MC particle that caused the hit.
+    /** Returns the MC particle that caused the hit. NULL if unknown.
      */
-    virtual const EVENT::MCParticle * getMCParticle() const ;
+    virtual const DATA::MCParticleData * getMCParticleData() const  ;
+
+    /** Returns the MC particle that caused the hit.
+     * Same as getMCParticleData except for type and exception.
+     *
+     * @throws DataNotAvailableException
+     * @see MCParticle
+     */
+    virtual const EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException) ;
 
 
     // ---------- setters ------------------------

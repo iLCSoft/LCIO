@@ -2,6 +2,7 @@
 
 #include "SIO/LCSIO.h"
 
+#include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "EVENT/SimCalorimeterHit.h"
 #include "IOIMPL/SimCalorimeterHitIOImpl.h"
@@ -10,6 +11,7 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
+using namespace DATA ;
 using namespace EVENT ;
 using namespace IMPL ;
 using namespace IOIMPL ;
@@ -51,8 +53,8 @@ namespace SIO{
       hit->_vec.push_back(  mcCon  );
     }
 
-    // if we want to point at calo hits we need to add a ptag:
-    //  SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
+    // read a pointer tag for future reference to calorimeter hits
+    SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
 	
     return ( SIO_BLOCK_SUCCESS ) ;
 	
@@ -69,7 +71,8 @@ namespace SIO{
     // simplify the API and the implementation
     // by having a common collection of objects
     
-    const SimCalorimeterHit* hit = dynamic_cast<const SimCalorimeterHit*>(obj)  ;
+    //fg 20030609 changed to use SimCalorimeterHitData
+    const SimCalorimeterHitData* hit = dynamic_cast<const SimCalorimeterHitData*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
     LCSIO_WRITE( stream, hit->getCellID1()  ) ;
@@ -87,7 +90,7 @@ namespace SIO{
 
     for(int i=0; i<nMC ;i++){
 
-      const MCParticle* part = hit->getParticleCont(i)  ;
+      const MCParticleData* part = hit->getParticleContData(i)  ;
       SIO_PNTR( stream , &part ) ;
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;
@@ -96,7 +99,9 @@ namespace SIO{
 	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
       
     }
-    //  SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
+    
+    // add a pointer tag for future reference to calorimeter hits
+    SIO_PTAG( stream , hit ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     

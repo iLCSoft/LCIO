@@ -1,36 +1,49 @@
 package hep.lcio.io;
 
-/**Interface for LCWriter objects - there will be one 
- * implementation per data format, e.g. SIO, Root, ASCII. 
- * 
+/**Interface for writing data with LCIO. Uses only interfaces 
+ * from DATA/hep.lcio.data.
+ * Use LCFactory to instantiate a corresponding LCWriter object
+ * for the output format at hand (SIO only, so far).
+ *
+ * @see LCFactory
  * @author gaede
  * @version Mar 4, 2003
+ * fg 20030609 added exceptions; using data interface only.
  */
 public interface LCWriter {
 
-    /** Opens a file for writing and returns LCIO::SUCCESS if 
-     * no error occured. If file with given name exists, it will be opened in
-     * append-mode.
+    /** Opens a file for writing. If file with given name exists, 
+     * an exception is thrown. Use append or new mode instead.
+     *
+     *@throws IOException
      */
-    public int open(const String& filename ) throws IOException ;
+    public void open(const String& filename ) throws IOException ;
 
-    /** Opens a file for writing and returns LCIO::SUCCESS if 
-     *  no error occured. Possible write modes are: LCIO::WRITE_NEW
+    /** Opens a file for writing.
+     * Possible write modes are: LCIO::WRITE_NEW
      * (existing files are replaced) and LCIO::WRITE_APPEND. 
+     *
+     *@throws IOException
      */
-    public int open(const String& filename , int writeMode ) ;
+    public void open(const String& filename , int writeMode ) throws IOException ;
 
     
-    /** Writes the given run header to file and returns LCIO::SUCCESS if no error occured.
+    /** Writes the given run header to file.
+     *
+     *@throws IOException
      */
-    public int writeRunHeader(const LCRunHeader*  hdr) ;
+    public void writeRunHeader(const LCRunHeaderData*  hdr) throws IOException ;
 
-    /** Writes the given event to file and returns LCIO::SUCCESS if no error occured.
+    /** Writes the given event to file.
+     *
+     *@throws IOException
      */
-    public int writeEvent(const LCEvent*  evt) ;
+    public void writeEvent(const LCEventData*  evt) throws IOException ;
     
-    /** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
+    /** Closes the output file/stream.
+     *
+     *@throws IOException
      */
-    public int close() ;
+    public void close() throws IOException ;
     
 }

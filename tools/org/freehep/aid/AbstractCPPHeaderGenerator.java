@@ -8,7 +8,7 @@ import org.freehep.jaco.rtti.*;
 
 /**
  * @author Mark Donszelmann
- * @version $Id: AbstractCPPHeaderGenerator.java,v 1.1 2003-05-07 09:38:18 gaede Exp $
+ * @version $Id: AbstractCPPHeaderGenerator.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
  */
 public abstract class AbstractCPPHeaderGenerator extends AbstractCPPGenerator {
 
@@ -172,7 +172,7 @@ public abstract class AbstractCPPHeaderGenerator extends AbstractCPPGenerator {
 
         INamedType[] parameterTypes = method.getParameterTypes();
 
-        out.print("    virtual ");
+	out.print("    virtual ");
 
         if ((exceptionTypes.length > 0) && (method.getReturnType().isVoid()) && !useExceptions ) { //fg--
             out.print("bool");

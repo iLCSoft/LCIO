@@ -5,13 +5,13 @@
 #include <vector>
 
 #include "EVENT/LCCollection.h"
-#include "EVENT/LCObject.h"
+#include "DATA/LCObject.h"
 
 //#include "LCIO.h"
 
 namespace IMPL {
   
-  typedef std::vector<EVENT::LCObject*> LCObjectVec ;
+  typedef std::vector<DATA::LCObject*> LCObjectVec ;
 
   /** Implementation of the LCCollection using (inheriting from) an STL vector
    *  of LCObjects.
@@ -31,16 +31,16 @@ namespace IMPL {
     
   public:
     
-    /** The public default constructur that takes the name of the type of the elements.
-     */
+    /** The public default constructur that takes the name of the type of the elements.     */
     LCCollectionVec( const std::string& type ) ;
     
-    /** Coppy constructor creating a deep copy of an LCCollection.
+    /* Coppy constructor creating a deep copy of an LCCollection.
      */
-    LCCollectionVec( const EVENT::LCCollection& col ) ;
+    //    LCCollectionVec( const EVENT::LCCollection& col ) ;
     
     
-    /// Destructor.
+    /** Destructor.
+     */    
     virtual ~LCCollectionVec() ;
     
     /**Returns the number of entries in the collection.
@@ -53,7 +53,7 @@ namespace IMPL {
     
     /** Returns pointer to element at index - no range check !.
      */
-    virtual const EVENT::LCObject * getElementAt(int index) const ;
+    virtual const DATA::LCObject * getElementAt(int index) const ;
     
     /** Returns flag word for collection. 
      * @see EVENT::LCCollection::getFlag() 
@@ -65,11 +65,27 @@ namespace IMPL {
      */
     void setFlag(int flag) ;
     
+
+    /** Adds the given element to (end of) the collection. Throws an exception 
+     * if the collection (event) is 'read only'.
+     *
+     * @throws ReadOnlyException
+     */
+    virtual void addElement(DATA::LCObject * obj) throw (EVENT::ReadOnlyException) ;
+
+    /** Removes the i-th element from the collection. Throws an exception 
+     * if the collection (event) is 'read only'.
+     *
+     * @throws ReadOnlyException
+     */
+    virtual void removeElementAt(int i) throw (EVENT::ReadOnlyException) ;
     
+
   protected:
     
     std::string _typeName ;
     int _flag ;
+    int _access ;
 
 }; // class
 }; // namespace IMPL

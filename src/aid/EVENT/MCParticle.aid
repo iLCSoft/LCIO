@@ -1,25 +1,73 @@
 package hep.lcio.event ;
 
-/** Describes a Monte Carlo particle. Has to be implementet by user classes
- *  that are to be made persistent.
+@java{
+import hep.lcio.exceptions.* ;
+}
+/** The LCIO Monte Carlo particle. 
+ * Adding some convenient methods to the pure data interface.
  * 
  * @author gaede
- * @version Mar 5, 2003
+ * @version Jun 6, 2003
+ * fg 20030607 extends the corresponding data interface
  */
-public interface MCParticle extends LCObject {
+public interface MCParticle extends MCParticleData {
     
     /** Returns the parent of this particle. Null if the mother (beam particle).
+     * Same as getParentData() except for type and exception.
+     *
+     * @throws DataNotAvailableException
      */
-    public const MCParticle* getParent() const ;
+    public const MCParticle* getParent() const throws DataNotAvailableException ;
+    
+    /** Returns the second parent of this particle. 
+     * Same as getSecondParentData() except for type and exception.
+     *
+     * @throws DataNotAvailableException
+     */
+    public const MCParticle* getSecondParent() const throws DataNotAvailableException ;
+    
+
+    /** Returns the i-th daughter of this particle.
+     * Same as getDaughterData() except for type and exception.
+     *
+     * @throws DataNotAvailableException
+     * @see MCParticleData.getNumberOfDaughters()
+     */
+    public const MCParticle* getDaughter(int i) const throws DataNotAvailableException ;
+    
+    /** Returns the endpoint of the particle in [mm].
+     *  Definition of the enpoint depends on the application that created 
+     *  the particle, e.g. the start point of the shower in a calorimeter.
+     *  If the particle has daughters, the corresponding vertex is returned.
+     *
+     * @throws DataNotAvailableException
+     */
+    public const double3V getEndpoint() const ;
+
+
+@ifdef overwriteDataInterface
+
+    /** Returns the parent of this particle. Null if the mother (beam particle).
+     */
+    public const MCParticleData* getParentData() const ;
     
     /** Returns the second parent of this particle, usually Null.
      */
-    public const MCParticle* getSecondParent() const;
+    public const MCParticleData* getSecondParentData() const;
     
-    /** Returns the daughters of this particle.
+    /** Returns the number of daughters of this particle.
      */
-    public const MCParticleVec * getDaughters() const ;
-    
+    public int  getNumberOfDaughters() const ;
+
+    /** Returns the i-th daughter of this particle.
+     */
+    public const MCParticleData* getDaughterData(int i) const ;
+
+
+    /** Returns the number of daughters of this particle.
+     */
+    public int  getNumberOfDaughters() const ;
+
     /** Returns the PDG code of the particle.
      */
     public int getPDG() const;
@@ -35,29 +83,22 @@ public interface MCParticle extends LCObject {
      */
     public int getHepEvtStatus() const ;
 
-    /** Returns the production vertex of the particle.
+    /** Returns the production vertex of the particle in [mm].
      */
-@ifdef cpp
-    public const double* getVertex() const;
-@else
-    public const double[] getVertex() const;
-@endif    
-    
+    public const double3V getVertex() const;
 
-    /** Returns the particle momentum at the production vertex.
+
+    /** Returns the particle momentum at the production vertex in [GeV].
      */
-@ifdef cpp
-    public const float* getMomentum() const;
-@else
-    public const float[] getMomentum() const;
-@endif    
+    public const float3V getMomentum() const;
+
     
-    /** Returns the energy of the particle (at the vertex).
+    /** Returns the energy of the particle (at the vertex) in [GeV].
      */
     public float getEnergy() const;
     
     /** Returns the particle's charge.
      */
     public float getCharge() const;
-    
+@endif   
 }

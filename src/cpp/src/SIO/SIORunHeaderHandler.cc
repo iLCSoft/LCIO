@@ -1,7 +1,7 @@
 #include "SIO/SIORunHeaderHandler.h"
 #include "SIO/LCSIO.h"
 
-#include "EVENT/LCRunHeader.h"
+#include "DATA/LCRunHeaderData.h"
 #include "EVENT/LCIO.h"
 #include "IMPL/LCRunHeaderImpl.h"
 
@@ -9,7 +9,8 @@
 
 #include <iostream>
 
-using namespace EVENT ;
+using namespace DATA ;
+using namespace EVENT ; // for LCIO object
 using namespace IMPL ;
 
 namespace SIO  {
@@ -32,7 +33,7 @@ namespace SIO  {
   }
 
   
-  void SIORunHeaderHandler::setRunHeader(const LCRunHeader* rh ){
+  void SIORunHeaderHandler::setRunHeader(const LCRunHeaderData* rh ){
     _hdr = rh ;
   }
 
@@ -86,12 +87,12 @@ namespace SIO  {
 	LCSIO_WRITE( stream, _hdr->getDescription() ) ;
 	
 	// now write list of  active sub detector names
-	const StringVec* strVec = _hdr->getActiveSubdetectors() ;
+	const std::vector<std::string>* strVec = _hdr->getActiveSubdetectors() ;
 	
 	int nSDN = strVec->size() ;
 	SIO_DATA( stream, &nSDN, 1 ) ;
 	
-	for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	  LCSIO_WRITE( stream, *name ) ;
 	} 
 	

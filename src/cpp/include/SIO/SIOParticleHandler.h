@@ -20,7 +20,7 @@ namespace SIO {
     /** Reads lcio MCParticle objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP,
+			      DATA::LCObject** objP,
 			      unsigned int flag, 
 			      unsigned int vers)  ;
 	
@@ -28,7 +28,7 @@ namespace SIO {
      */
 	
     virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj,
+			       const DATA::LCObject* obj,
 			       unsigned int flag) ;
 	
   }; // class

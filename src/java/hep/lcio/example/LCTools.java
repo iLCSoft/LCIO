@@ -5,10 +5,10 @@
  */
 package hep.lcio.example;
 
+import hep.lcio.data.LCFloatVec;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
-import hep.lcio.event.LCFloatVec;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;

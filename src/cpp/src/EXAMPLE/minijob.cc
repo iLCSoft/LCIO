@@ -3,7 +3,7 @@
 
 #include "IO/LCWriter.h"
 #include "EVENT/LCIO.h"
-#include "EVENT/LCFloatVec.h"
+#include "DATA/LCFloatVec.h"
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 
@@ -43,9 +43,9 @@ int main(int argc, char** argv ){
   // create sio writer
   LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
   
-  int status ;
-  if( (status = lcWrt->open( FILEN ))  != LCIO::SUCCESS ) {
-    cout << " couldn't open file  : " << FILEN << " status: " << status << endl ;
+  try{  lcWrt->open( FILEN ) ;
+  }
+  catch( IOException& e ){    cout << e.what() << endl ;
     return 0 ;
   }
 

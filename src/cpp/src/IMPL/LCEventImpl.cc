@@ -1,7 +1,8 @@
 #include "IMPL/LCEventImpl.h"
-
+#include <iostream>
 
 using namespace EVENT ;
+//using namespace DATA ;
 
 namespace IMPL {
   
@@ -23,10 +24,10 @@ LCEventImpl::LCEventImpl() :
 //   _detectorName( evt.getDetectorName().c_str() ),
 //   _access( LCIO::UPDATE ) { // copy will be updateable
   
-//   StringVec* strVec = evt.getCollectionNames() ;
+//   std::vector<std::string>* strVec = evt.getCollectionNames() ;
 //   int nCol = strVec->size() ;
   
-//   for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
+//   for( std::vector<std::string>::iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
 //     const LCCollection* col = evt.getCollection( *name ) ;
 //     col->getTypeName() ;
@@ -67,7 +68,7 @@ long LCEventImpl::getTimeStamp() const {
 }
 
     
-const StringVec* LCEventImpl::getCollectionNames() const {
+const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
 
   // return pointer to updated vector _colNames 
   typedef LCCollectionMap::const_iterator LCI ;
@@ -81,37 +82,45 @@ const StringVec* LCEventImpl::getCollectionNames() const {
 }
 
     
-LCCollection * LCEventImpl::getCollection(const std::string & name) const {
 
-  if( _map.find( name ) == _map.end() ) return 0 ;
+LCCollection * LCEventImpl::getCollection(const std::string & name) const throw (DataNotAvailableException) {
+
+  if( _map.find( name ) == _map.end() ) 
+    throw(DataNotAvailableException( std::string("LCEventImpl::getCollection: collection not in event:" 
+						 + name) )) ; 
   return  _map[ name ] ;
 }
 
-    
-
-int LCEventImpl::addCollection(LCCollection * col, const std::string & name) {
-
-  // add a new collection only, if access mode == update
-  if( _access != LCIO::UPDATE )
-    return LCIO::ERROR ;
-
-  _map[ name ]  = col ;
-  return LCIO::SUCCESS  ;  
-
+DATA::LCCollectionData * LCEventImpl::getCollectionData(const std::string & name) const {
+    if( _map.find( name ) == _map.end() ) return 0 ;
+    return  _map[ name ] ;
 }
 
     
 
-int LCEventImpl::removeCollection(const std::string & name) {
+void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) throw (EventException)  {
+
+  // check if name exists
+  if( _map.find( name ) != _map.end() )
+    
+    std::cout << " addCollection: collection already exists: " << name << std::endl ;
+
+    //    throw EventException( std::string("LCEventImpl::addCollection() name already exists in event: "+name) ) ; 
+
+  _map[ name ]  = col ;
+ 
+}
+
+    
+
+void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyException) {
 
   // remove collection only, if access mode == update
   if( _access != LCIO::UPDATE )
-    return LCIO::ERROR ;
-  
-  // return error if name wasn't in the event - do we care ?
-  if( _map.erase( name ) == 0 ) return LCIO::ERROR ;
-  
-  return LCIO::SUCCESS ;
+    throw ReadOnlyException( std::string("LCEventImpl::removeCollection: can't remove collection" 
+					 + name + " - event is read only") ) ;
+  _map.erase( name ) ;  
+
 }
 
     

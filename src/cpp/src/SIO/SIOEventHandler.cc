@@ -1,13 +1,14 @@
 #include "SIO/SIOEventHandler.h"
 #include "SIO/LCSIO.h"
 
-#include "EVENT/LCEvent.h"
+#include "DATA/LCEventData.h"
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCCollectionIOVec.h"
 
 #include "SIO_functions.h"
 
+using namespace DATA ;
 using namespace EVENT ;
 using namespace IOIMPL ;
 
@@ -31,7 +32,7 @@ namespace SIO  {
   }
 
   
-  void SIOEventHandler::setEvent(const LCEvent* evt ){
+  void SIOEventHandler::setEvent(const LCEventData* evt ){
     _evt = evt ;
   }
 
@@ -44,11 +45,8 @@ namespace SIO  {
 
     if( op == SIO_OP_READ ){ 
 
-//      if(!_evtP) return LCIO::ERROR ;  // in read mode we need an address for the pointer
-
       // delete the old event object 
       // -> for every handler there will only be one event object at any given time      
-
        if (*_evtP )  delete *_evtP ;
        *_evtP = new LCEventIOImpl ;
       
@@ -69,17 +67,14 @@ namespace SIO  {
 	char* dummy ; 
 	LCSIO_READ( stream,  &dummy ) ; 
 	std::string colName( dummy ) ;
+	// read type 
 	LCSIO_READ( stream,  &dummy ) ; 
-	// don't attach a new collection to the event
-	// will be done by collection handlers
-	
-	// if we are reading the header, we attach a new collection to the event
-	// if we are reading the event this is done by the collection handler
-	
-	if( ! strcmp( getName()->c_str(), LCSIO::HEADERBLOCKNAME)  ){
-	  (*_evtP)->addCollection( new LCCollectionIOVec( dummy ) , colName) ;
-	}
 
+	//  we have to attach a new collection to the event for every type in the header
+
+	try{ (*_evtP)->addCollection( new LCCollectionIOVec( dummy ) , colName) ; 
+	}
+	catch( EventException ){  return LCIO::ERROR ; }
 
       }
 
@@ -94,13 +89,13 @@ namespace SIO  {
       
 	// now write a list of colection types and names
       
-	const StringVec* strVec = _evt->getCollectionNames() ;
+	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
 	int nCol = strVec->size() ;
 	SIO_DATA( stream, &nCol, 1 ) ;
       
-	for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	
-	  const LCCollection* col = _evt->getCollection( *name ) ;
+	  const LCCollectionData* col = _evt->getCollectionData( *name ) ;
 	  LCSIO_WRITE( stream, *name ) ;
 	  LCSIO_WRITE( stream, col->getTypeName() ) ;
 		

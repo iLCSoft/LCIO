@@ -1,12 +1,12 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.event.LCFloatVec;
+import hep.lcio.data.LCFloatVec;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: ILCFloatVec.java,v 1.4 2003-05-06 17:26:46 tonyj Exp $
+ * @version $Id: ILCFloatVec.java,v 1.5 2003-06-10 10:02:07 gaede Exp $
  */
 public class ILCFloatVec implements LCFloatVec
 {

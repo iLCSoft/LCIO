@@ -1,0 +1,67 @@
+package hep.lcio.data ;
+
+/** Describes a Monte Carlo particle. Has to be implementet by user classes
+ *  that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Mar 5, 2003
+ */
+public interface MCParticleData extends LCObject {
+    
+    /** Returns the parent of this particle. Null if the mother (beam particle).
+     */
+    public const MCParticleData* getParentData() const ;
+    
+    /** Returns the second parent of this particle, usually Null.
+     */
+    public const MCParticleData* getSecondParentData() const;
+    
+    /** Returns the number of daughters of this particle.
+     */
+    public int  getNumberOfDaughters() const ;
+
+    /** Returns the i-th daughter of this particle.
+     */
+    public const MCParticleData* getDaughterData(int i) const ;
+
+    /** Returns the PDG code of the particle.
+     */
+    public int getPDG() const;
+    
+    /** Returns the status for particles from the generator (HepEvt)
+     * and for particles added in simulation:
+     * <br> 0  empty line
+     * <br> 1  undecayed particle, stable in the generator
+     * <br> 2  particle decayed in the generator
+     * <br> 3  documentation line
+     * <br> 201 stable state, but created in the tracking in the detector
+     * <br> 202 particle decayed in the tracking in the detector
+     */
+    public int getHepEvtStatus() const ;
+
+    /** Returns the production vertex of the particle in [mm].
+     */
+    public const double3V getVertex() const;
+
+    /** Returns the endpoint of the particle in [mm] - returns NULL if 
+     *  particle has daughters (the endpoint beeing the daughters vertex then).
+     *  Definition of the enpoint depends on the application that created 
+     *  the particle, e.g. the start point of the shower in a calorimeter.
+     */
+    public const double3V getEndpoint() const;
+
+
+    /** Returns the particle momentum at the production vertex in [GeV].
+     */
+    public const float3V getMomentum() const;
+
+    
+    /** Returns the energy of the particle (at the vertex) in [GeV].
+     */
+    public float getEnergy() const;
+    
+    /** Returns the particle's charge.
+     */
+    public float getCharge() const;
+    
+}
