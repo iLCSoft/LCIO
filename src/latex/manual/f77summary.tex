@@ -22,9 +22,13 @@ create                 -> preader = lcrdrcreate()
 delete                 -> status  = lcrdrdelete( preader )
 open                   -> status  = lcrdropen( preader, filename )
 close                  -> status  = lcrdrclose( preader )
+readStream             -> status  = lcrdrreadstream( preader, nmax )
 readNextRunHeader      -> pheader = lcreadnextrunheader( preader, iaccessmode )
 readNextEvent          -> pevent  = lcrdrreadnextevent( preader, iaccessmode )
 readEvent              -> pevent  = lcrdrreadevent( preader, irun, ievt )
+
+RunEventProcessor (includes registerLCEventListener, registerLCRunListener)
+                       -> status  = lcrdreventprocessor( filename )
 
 class LCWriter:
 
@@ -65,6 +69,8 @@ setDetectorName        -> status  = lcevtsetdetectorname( pevent , detname)
 setTimeStamp           -> status  = lcevtsettimestamp( pevent , itim)
 addCollection          -> status  = lcevtaddcollection( pevent , pcol , colname)
 removeCollection       -> status  = lcevtremovecollection( pevent , colname)
+addRelation            -> status  = lcevtaddrelation( pevent , prelation, name)
+removeRelation         -> status  = lcevtremovecollection( pevent , name)
 
 getRunNumber           -> irun    = lcevtgetrunnumber( pevent )
 getEventNumber         -> ievt    = lcevtgeteventnumber( pevent )
@@ -91,6 +97,18 @@ getNumberOfElements    -> number  = lccolgetnumberofelements( pcol )
 getElementAt           -> pobject = lccolgetelementat( pcol , i )  (i=1,...,number)
 getFlag                -> iflag   = lccolgetflag( pcol )
 
+
+class LCRelation:
+
+create                 -> prel    = lcrelcreate( fromtypename , totypename )
+delete                 -> status  = lcreldelete( prel )
+numberOfRelations      -> nrel    = lcrelnumberofrelations( prel, pobject )
+getRelation            -> pgetrel = lcrelgetrelation( prel, pobject, i ) (i=1,...,nrel)
+getWeight              -> weight  = lcrelgetweight( prel, pobject, i ) (i=1,...,nrel)
+
+addRelation            -> status  = lcreladdrelation( prel, pobjectfrom, pobjectto, weight )
+useCaching             -> status  = lcrelusecaching( prel, lval ) (lval = type logical)
+setTypes               -> status  = lcrelsettypes( prel, fromtypename , totypename )
 
 class SimTrackerHit:
 
@@ -205,6 +223,7 @@ setdEdxError           -> status  = lctrksetdedxerror( ptrk, dedxerr )
 setRadiusOfInnermostHit-> status  = lctrksetradiusofinnermosthit( ptrk, radius)
 addTrack               -> status  = lctrkaddtrack( ptrk, ptrack )
 addHit                 -> status  = lctrkaddhit( ptrk, phit )
+subdetectorHitNumbers  -> status  = lctrksetsubdetectorhitnumbers( ptrk, intv, nintv)
 
 id                     -> id      = lctrkid( ptrk )
 getType                -> itype   = lctrkgettype( ptrk )
@@ -222,6 +241,7 @@ getNdf                 -> ndf     = lctrkgetndf( ptrk )
 getdEdx                -> dedx    = lctrkgetdedx( ptrk )
 getdEdxError           -> dedxerr = lctrkgetdedxerror( ptrk )
 getRadiusOfInnermostHit-> radius  = lctrkgetradiusofinnermosthit( ptrk )
+subdetectorHitNumbers  -> status  = lctrkgetsubdetectorhitnumbers( ptrk, intv, nintv)
 getTracks              -> ptrackv = lctrkgettracks( ptrk )
 getTrackerHits         -> ptrhitv = lctrkgettrackerhits( ptrk )
 
@@ -375,7 +395,8 @@ $*$ arrays denoted by a name ending with {\bf v} \\
 $*$ reals {\bf else} \\
 If arguments of the type {\bf array of character strings} are used the last
 argument has to be the length of a character string in the array.   \\
-Integers starting with n are also used to give the length of an array (input/output argument)
+Integers starting with n are also used to give the length of an array 
+(input/output argument for get... functions, input: dimension of the array, output: number of values stored).
 
 
 \begin{verbatim}

@@ -73,6 +73,7 @@ A Summary of all functions in the basic Fortran API is given in the first part o
  LCEventImpl                & evt \\ \hline
  MCParticleImpl             & mcp \\ \hline
  ParticleIDImpl             & pid \\ \hline
+ LCRelationImpl             & rel \\ \hline
  ReconstructedParticleImpl  & rcp \\ \hline
  LCReader                   & rdr \\ \hline
  LCRunHeaderImpl            & rhd \\ \hline
@@ -108,6 +109,7 @@ Examples for reading and writing LCIO files can be found in:
 \begin{verbatim}
   src/f77
     simjob.F
+    recjob.F
     anajob.F
 \end{verbatim}
 To build these examples, do:
@@ -115,6 +117,8 @@ To build these examples, do:
    gmake -C src/f77
 \end{verbatim}
 
+These examples correspond to that provided in \verb#$LCIO/src/cpp/src/EXAMPLE# for C++. \\
+                                                                                       
 The complete interface is declared in the include file \verb#$LCIO/src/f77/lciof77api.inc#. 
 %$
 A simple example for reading an LCIO file with Fortran:
@@ -189,3 +193,58 @@ c------- need to delete the event as we created it
 \end{verbatim}
 
 Note that as in the C++ case we have to delete the event if we created it as described in \ref{cppmem}. \\
+
+\subsubsection{Using a C++ RunEventProcessor class for LCIO files processing in Fortran}
+
+A RunEventProcessor class is added to the Fortran API. To use it a wrapper function {\bf lcrdreventprocessor}
+is provided which has to be called as:
+\begin{verbatim}
+...
+#include "lciof77api.inc"
+      integer          lcrdreventprocessor, status
+      character*30     filenamein , filenameout
+      PTRTYPE          writer
+      common /outinfo/ writer
+...
+      filenamein  = 'simjob_f.slcio'
+      filenameout = 'recjob_f.slcio'
+***     create writer, open output file
+      writer = lcwrtcreate()
+      status = lcwrtopen( writer, filenameout , LCIO_WRITE_NEW )
+***     create reader, open input file, start event loop
+      status = lcrdreventprocessor( fileinamein )
+...
+      subroutine processrunheader ( pheader )
+      PTRTYPE pheader
+***      some code if wanted
+      end
+
+      subroutine modifyrunheader ( pheader )
+      PTRTYPE pheader
+***      some code if wanted
+      end
+
+      subroutine processevent ( pevent )
+      PTRTYPE pevent
+***      some code if wanted
+      end
+
+      subroutine modifyevent ( pevent )
+#include "lciof77api.inc"
+      PTRTYPE          pevent
+      PTRTYPE          writer
+      common /outinfo/ writer
+...
+***      some code if wanted
+*
+***      write event
+      status = lcwrtwriteevent ( writer, pevent )
+...
+
+      end
+\end{verbatim}
+
+The 4 subroutines {\bf processrunheader, modifyrunheader, processevent, and modifyevent} must be provided if
+the wrapper function {\bf lcrdreventprocessor} is used. They are called via the LCRunListener, LCEventListener classes.
+As an expample the code in \verb#$LCIO/src/f77/recjob.F# may be looked at.
+
