@@ -2,10 +2,12 @@
 *                                                                    *
       PROGRAM SIMJOB_CHAIN                                           !*
 *                                                                    *
-*     A program to demonstrate the use of the low level              *
+*     A program to demonstrate the use of the                        *
+*     low level and the extended level                               *  
 *     fortran interface to LCIO for writing LCIO files.              *
 *                                                                    *
 *     F.Gaede 09/10/2003                                             *
+*     H.Vogt  14/06/2004  (modified)                                 *
 **********************************************************************
       implicit none
 
@@ -66,9 +68,11 @@ c      write(*,*) " created reader at " , reader
       implicit none
  
 #include "lciof77api.inc"
+#include "lciof77apiext.inc"
 
 c---- variables
       PTRTYPE runheader, event, writer, sthcol, mcpcol, schcol, cahcol
+      PTRTYPE floatvcol, intvcol, pstringv, pfloatv, pintv
       PTRTYPE  hit, mcp, mcpm, mcpd, mcpdd
       integer status
       integer i, j, k, irun, nrun, iev, nev, itim, locf
@@ -79,6 +83,12 @@ c---- variables
       character*10 detectorname
       real mcpp(3), schpos(3), cahpos(3)
       double precision sthpos(3)
+      integer      intvvals(10)
+      real         realvvals(10)
+
+      data intvvals  / 1234, 2345, 3456, 4567, 5678, 0, 0, 0, 0, 0 /
+      data realvvals / 123.4, 234.5, 345.6, 456.7, 567.8,
+     &                 0., 0., 0., 0., 0. /
 
 C----- some constants
       detectorname = 'TeslaPPT'
@@ -122,6 +132,11 @@ c-----  event loop
             sthcol = lccolcreate( LCIO_SIMTRACKERHIT )
             schcol = lccolcreate( LCIO_SIMCALORIMETERHIT )
             cahcol = lccolcreate( LCIO_CALORIMETERHIT )
+
+            floatvcol  = lccolcreate( LCIO_LCFLOATVEC )
+            intvcol    = lccolcreate( LCIO_LCINTVEC )
+            pfloatv    = lcfloatvectorcreate ( realvvals, 10 )
+            pintv      = lcintvectorcreate ( intvvals, 10 )
 
 c-------- create some monte carlo particles
 
@@ -236,6 +251,12 @@ c-----     now add everything to the event
             status = lcevtaddcollection(event,sthcol ,'MyTrackerHits') 
             status = lcevtaddcollection(event,schcol ,'MyCalHits') 
             status = lcevtaddcollection(event,cahcol ,'MyRealCalHits') 
+
+            status = lccoladdelement( floatvcol, pfloatv )
+            status = lccoladdelement( intvcol, pintv )
+
+            status = lcevtaddcollection(event,floatvcol,'MyFloatVec')
+            status = lcevtaddcollection(event,intvcol,'MyIntVec')
             
             status = lcwrtwriteevent( writer , event )
             
@@ -275,11 +296,17 @@ C
 #include "lciof77apiext.inc"
 
       PTRTYPE reader, event, runhdr, detnames
+      PTRTYPE pcol1, pcol2, pobject1, pobject2
       
       character*(*) filename
       integer status, irun, ievent
-      integer i, nactdet
+      integer i, nactdet, ii
       character*80 detname
+
+      character*40 colname1, colname2
+      integer nfloatv, nintv
+      integer intv(20)
+      real    floatv(20)
 
       write(*,*)
       write(*,*) "----------------------------------------------------"
@@ -306,6 +333,25 @@ c---- look for the run header and print information
          do i=1,nactdet
             write(*,*) lcsvcgetstringat( detnames, i ) 
          enddo
+
+c---- read first event of this run and print floatvec and intvec collection
+         event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
+         colname1 = 'MyFloatVec'
+         colname2 = 'MyIntVec'
+         pcol1    = lcevtgetcollection( event , colname1 )
+         pcol2    = lcevtgetcollection( event , colname2 )
+         pobject1 = lccolgetelementat( pcol1, 1 )
+         pobject2 = lccolgetelementat( pcol2, 1 )
+         nfloatv  = 20
+         status   = lcgetfloatvector( pobject1, floatv, nfloatv )
+         print '(a,i3,a,i3,a,10f10.5)',
+     &              'floatv ', i, ' has ', nfloatv, ' elements: ',
+     &              (floatv(ii),ii=1,nfloatv)
+         nintv    = 20
+         status   = lcgetintvector( pobject2, intv, nintv )
+         print '(a,i3,a,i3,a,10i10)',
+     &              'intv ', i, ' has ', nintv, ' elements: ',
+     &              (intv(ii),ii=1,nintv)
 
       end do
          
