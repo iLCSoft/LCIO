@@ -15,12 +15,15 @@ typedef std::vector<RawCalorimeterHit*> RawCalorimeterHitVec ;
 }
 @endif
 
-/** The generic calorimeter hit for real data. 
- *  In order to suppress a (32-bit) pointer tag stored with every hit set
- *  flag(LCIO::RCHBIT_NO_PTR)==1. 
+/** The generic calorimeter hit for real data (or simulation thereof). 
+ *  In order to reduce the file size you can suppress a (32-bit) pointer 
+ *  tag stored with every hit by setting the flag(LCIO::RCHBIT_NO_PTR)==1. <br>
+ *  <b>NB: If you apply this flag to reduce the file size
+ *  you won't be able to point/refer to the RawCalorimeterHits, e.g. from an
+ *  LCRelation object.</b>
  * 
  * @author gaede
- * @version $Id: RawCalorimeterHit.aid,v 1.1 2004-08-25 08:20:29 gaede Exp $
+ * @version $Id: RawCalorimeterHit.aid,v 1.2 2005-03-11 09:58:03 gaede Exp $
  */
 
 public interface RawCalorimeterHit extends LCObject {
