@@ -215,12 +215,13 @@ getStringAt            -> string  = lcsvcgetstringat( pstrvec , i ) (i=1,...,nel
 The return value of the functions and the meaning of arguments are either: \\
 $*$ pointers denoted by a name beginning with the {\bf letter p} \\
 $*$ character strings denoted by {\bf ...name} or {\bf string} \\
-$*$ integers  denoted by {\bf status} or a variable name starting with {\bf i} \\
+$*$ integers  denoted by {\bf status} or a variable name starting with {\bf i} or {\bf n} \\
 $*$ double precision variables denoted by a name starting with {\bf d} \\
 $*$ arrays denoted by a name ending with {\bf v} \\
 $*$ reals {\bf else} \\
 If arguments of the type {\bf array of character strings} are used the last
-argument has to be the length of a character string in the array.
+argument has to be the length of a character string in the array.   \\
+Integers starting with n are also used to give the length of an array (input/output argument)
 
 
 \begin{verbatim}
@@ -258,11 +259,11 @@ for class HEPEVT (Fortran interface  to COMMON /HEPEVT/ ):
 toHepEvt               -> status  = lcio2hepevt( pevent )
 fromHepEvt             -> status  = hepevt2lcio( pevent )
 
-%for stl vector Interface:
+for stl vector Interface:
 
-%getIntVector           -> status  = lcgetintvector( pvec , intv, nintv )
-%getFloatVector         -> status  = lcgetfloatvector( pvec , floatv , nfloatv )
-%getStringVector        -> status  = lcgetstringvector( pvec , stringv , nstringv, len(stringv(1)) )
+getIntVector           -> status  = lcgetintvector( pvec , intv, nintv )
+getFloatVector         -> status  = lcgetfloatvector( pvec , floatv , nfloatv )
+getStringVector        -> status  = lcgetstringvector( pvec , stringv , nstringv, len(stringv(1)) )
 
 \end{verbatim}
 
