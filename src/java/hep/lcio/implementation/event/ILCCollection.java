@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: ILCCollection.java,v 1.3 2003-05-09 15:25:50 gaede Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {
@@ -52,5 +52,10 @@ public class ILCCollection extends ArrayList implements LCCollection
    public void add(LCObject object)
    {
       super.add(object);
+   }
+
+
+   public void setFlag(int flag ){
+       this.flag = flag ;
    }
 }
