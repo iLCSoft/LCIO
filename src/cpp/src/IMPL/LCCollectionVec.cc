@@ -79,7 +79,7 @@ bool LCCollectionVec::isTransient() const {
   return (_flag & (1<<BITTransient) ) ; 
 }
 
-void LCCollectionVec::setTransient(bool val=true) {
+void LCCollectionVec::setTransient(bool val) {
   if(val) _flag |= (1<<BITTransient) ;
   else _flag &= ~(1<<BITTransient) ;
 }
