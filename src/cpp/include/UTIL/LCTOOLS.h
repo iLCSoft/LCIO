@@ -88,9 +88,9 @@ namespace UTIL{
      */
     static void printRelation( const EVENT::LCCollection* col ) ;
 
-    /** Print the relation.
-     */
-    static void printRelation( const EVENT::LCRelation* rel ) ;
+//     /** Print the relation.
+//      */
+//     static void printRelation( const EVENT::LCRelation* rel ) ;
 
 
     /** Print the parameters.

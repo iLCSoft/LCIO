@@ -5,7 +5,7 @@
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCCollectionIOVec.h"
-#include "IOIMPL/LCRelationIOImpl.h"
+// #include "IOIMPL/LCRelationIOImpl.h"
 #include "LCIOSTLTypes.h"
 #include "SIO/SIOLCParameters.h"
 
@@ -83,28 +83,17 @@ namespace SIO  {
 	 ;
 
 	//  we have to attach a new collection or relation object to the event for every type in the header
-	 std::string typeStr( type ) ;
+// 	 std::string typeStr( type ) ;
+// 	 if( typeStr.find( LCIO::LCRELATION) == 0  ){ // typeStr starts with LCRelation
+// 	   try{ (*_evtP)->addRelation( new LCRelationIOImpl() , colName) ; 
+// 	   }
+// 	   catch( EventException ){  return LCIO::ERROR ; }
+// 	 }else{
 
-
-	 if( typeStr.find( LCIO::LCRELATION) == 0  ){ // typeStr starts with LCRelation
-	 // LCRelations have type : LCRelation_FromType_ToType !
-// 	   int idx0 = typeStr.find("_" ) ;
-// 	   int idx1 = typeStr.rfind("_" ) ;
-	   
-// 	   std::string fromType = typeStr.substr( idx0 ,  idx1 - idx0 ) ;
-// 	   std::string toType = typeStr.substr( idx1 ,  typeStr.length()  - idx1 ) ;
-//     	   try{ (*_evtP)->addRelation( new LCRelationIOImpl( fromType , toType ) , colName) ; 
-
-	   try{ (*_evtP)->addRelation( new LCRelationIOImpl() , colName) ; 
-	   }
-	   catch( EventException ){  return LCIO::ERROR ; }
-
-
-	 }else{
 	   try{ (*_evtP)->addCollection( new LCCollectionIOVec( type ) , colName) ; 
 	   }
 	   catch( EventException ){  return LCIO::ERROR ; }
-	 }
+// 	 }
       }
 
       // read parameters
@@ -136,9 +125,9 @@ namespace SIO  {
 
 //	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
 	const StringVec* colNames =   _evt->getCollectionNames() ;
-	const StringVec* relNames =   _evt->getRelationNames() ;
+// 	const StringVec* relNames =   _evt->getRelationNames() ;
 	
-	int nCol = colNames->size()  + relNames->size()  ;
+	int nCol = colNames->size()  ; //+ relNames->size()  ;
 
 	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
 	  if( _evt->getCollection( (*colNames)[i] )->isTransient() ) nCol-- ;
@@ -154,17 +143,14 @@ namespace SIO  {
 	    LCSIO_WRITE( stream, col->getTypeName() ) ;
 	  }
 	} 
-	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   
-	  const LCRelation* rel = _evt->getRelation( (*relNames)[i] ) ;
-
-	  std::stringstream  relTypeName  ;
-	  relTypeName <<  LCIO::LCRELATION ; 
-	  // << "_" <<   rel->getFromType() << "_"  << rel->getToType() << std::ends ;
-
-	  LCSIO_WRITE( stream, (*relNames)[i] ) ;
-	  LCSIO_WRITE( stream, relTypeName.str() ) ;
-		
-	} 
+// 	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   
+// 	  const LCRelation* rel = _evt->getRelation( (*relNames)[i] ) ;
+// 	  std::stringstream  relTypeName  ;
+// 	  relTypeName <<  LCIO::LCRELATION ; 
+// 	  // << "_" <<   rel->getFromType() << "_"  << rel->getToType() << std::ends ;
+// 	  LCSIO_WRITE( stream, (*relNames)[i] ) ;
+// 	  LCSIO_WRITE( stream, relTypeName.str() ) ;
+// 	} 
 	
 	// write parameters
 	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "IMPL/AccessChecked.h"
 
-#include "IMPL/LCRelationImpl.h"
+// #include "IMPL/LCRelationImpl.h"
 
 
 using namespace EVENT ;
@@ -45,12 +45,12 @@ LCEventImpl::~LCEventImpl() {
   for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
     delete i->second ;
   }
-  // and all relations in the event
-  typedef LCRelationMap::const_iterator LRI ;
+//   // and all relations in the event
+//   typedef LCRelationMap::const_iterator LRI ;
   
-  for ( LRI i=_relMap.begin() ; i != _relMap.end() ; i++ ){
-    delete i->second ;
-  }
+//   for ( LRI i=_relMap.begin() ; i != _relMap.end() ; i++ ){
+//     delete i->second ;
+//   }
   
 
 
@@ -133,69 +133,69 @@ void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyExce
 }
 
     
-  //fg20040528 added relations
+//   //fg20040528 added relations
 
-const std::vector<std::string>* LCEventImpl::getRelationNames() const {
+// const std::vector<std::string>* LCEventImpl::getRelationNames() const {
 
-  // return pointer to updated vector _relNames 
-  typedef LCRelationMap::const_iterator LCI ;
+//   // return pointer to updated vector _relNames 
+//   typedef LCRelationMap::const_iterator LCI ;
   
-  _relNames.clear() ;
+//   _relNames.clear() ;
 
-  for ( LCI i=_relMap.begin() ; i != _relMap.end() ; i++ ){
-    _relNames.push_back( i->first  ) ; 
-  }
-  return &_relNames ;
-}
-
-    
-
-LCRelation * LCEventImpl::getRelation(const std::string & name) const 
-  throw (DataNotAvailableException, std::exception) {
-
-  if( _relMap.find( name ) == _relMap.end() ) 
-    throw(DataNotAvailableException( std::string("LCEventImpl::getRelation: relation not in event:" 
-						 + name) )) ; 
-  return  _relMap[ name ] ;
-}
-
-// EVENT::LCRelation * LCEventImpl::getRelation(const std::string & name) const {
-//     if( _relMap.find( name ) == _relMap.end() ) return 0 ;
-//     return  _relMap[ name ] ;
+//   for ( LCI i=_relMap.begin() ; i != _relMap.end() ; i++ ){
+//     _relNames.push_back( i->first  ) ; 
+//   }
+//   return &_relNames ;
 // }
 
     
 
-void  LCEventImpl::addRelation(LCRelation * rel, const std::string & name) 
-  throw (EventException, std::exception)  {
+// LCRelation * LCEventImpl::getRelation(const std::string & name) const 
+//   throw (DataNotAvailableException, std::exception) {
 
-  // check if name exists
-  if( _relMap.find( name ) != _relMap.end() )
-    
-    // FIXME: what is this - no error handling ?
-    //  std::cout << " addRelation: relation already exists: " << name << std::endl ;
-    throw EventException( std::string("LCEventImpl::addRelation() name already exists: "
-				      +name) ) ; 
+//   if( _relMap.find( name ) == _relMap.end() ) 
+//     throw(DataNotAvailableException( std::string("LCEventImpl::getRelation: relation not in event:" 
+// 						 + name) )) ; 
+//   return  _relMap[ name ] ;
+// }
 
-//   // FIXME: debug stuff 
-//   LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ;
-//   if( relImpl == 0 ) 
-//     throw EventException( std::string("LCEventImpl::addRelation() cannot cast to LCRelationImpl - sth. is odd !!!! "+name ) ) ;
+// // EVENT::LCRelation * LCEventImpl::getRelation(const std::string & name) const {
+// //     if( _relMap.find( name ) == _relMap.end() ) return 0 ;
+// //     return  _relMap[ name ] ;
+// // }
+
     
-  _relMap[ name ]  = rel ;
+
+// void  LCEventImpl::addRelation(LCRelation * rel, const std::string & name) 
+//   throw (EventException, std::exception)  {
+
+//   // check if name exists
+//   if( _relMap.find( name ) != _relMap.end() )
+    
+//     // FIXME: what is this - no error handling ?
+//     //  std::cout << " addRelation: relation already exists: " << name << std::endl ;
+//     throw EventException( std::string("LCEventImpl::addRelation() name already exists: "
+// 				      +name) ) ; 
+
+// //   // FIXME: debug stuff 
+// //   LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ;
+// //   if( relImpl == 0 ) 
+// //     throw EventException( std::string("LCEventImpl::addRelation() cannot cast to LCRelationImpl - sth. is odd !!!! "+name ) ) ;
+    
+//   _relMap[ name ]  = rel ;
  
-}
+// }
 
     
 
-void LCEventImpl::removeRelation(const std::string & name) throw (ReadOnlyException, std::exception) {
+// void LCEventImpl::removeRelation(const std::string & name) throw (ReadOnlyException, std::exception) {
 
-  // remove relation only, if access mode == update
-  checkAccess("LCEventImpl::removeRelation") ;
-  _relMap.erase( name ) ;  
+//   // remove relation only, if access mode == update
+//   checkAccess("LCEventImpl::removeRelation") ;
+//   _relMap.erase( name ) ;  
 
-}
-  //------ relations
+// }
+//   //------ relations
 
 
 

@@ -1308,7 +1308,7 @@ namespace UTIL {
   }
 
 
-  void LCTOOLS::printRelation( const EVENT::LCRelation* rel_const ) {
+//   void LCTOOLS::printRelation( const EVENT::LCRelation* rel_const ) {
 
 //     LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; // FIXME: the relation interface needs to properly support const
     
@@ -1339,7 +1339,7 @@ namespace UTIL {
 //       }
       
 //     }
-  }
+//   }
 
   int LCTOOLS::printDaughterParticles(const MCParticle* part, int index){
 

@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version $Id: LCEvent.aid,v 1.6 2004-07-14 15:50:40 gaede Exp $
+ * @version $Id: LCEvent.aid,v 1.7 2004-09-10 12:52:53 gaede Exp $
  * @see LCCollection
  */
 
@@ -69,33 +69,33 @@ public interface LCEvent {
 
 
 
-    //fg20040528:   added relations to the event
+//     //fg20040528:   added relations to the event
 
-    /** Returns the names of the relations in the  event.
-     */
-    public const String[]*  getRelationNames() const ;
-
-
-    /** Returns the relation for the given name.
-     *
-     * @throws DataNotAvailableException
-     */
-     public LCRelation* getRelation(const String& name) const throws DataNotAvailableException ;
+//     /** Returns the names of the relations in the  event.
+//      */
+//     public const String[]*  getRelationNames() const ;
 
 
-    /** Adds a relation with the given name. Throws an exception if the name already
-     * exists in the event. NB: Adding relations is allowed even when the event is 'read only'.
-     * 
-     *@throws EventException
-     */ 
-    public void addRelation(LCRelation* col ,const  String& name ) throws EventException ;
+//     /** Returns the relation for the given name.
+//      *
+//      * @throws DataNotAvailableException
+//      */
+//      public LCRelation* getRelation(const String& name) const throws DataNotAvailableException ;
+
+
+//     /** Adds a relation with the given name. Throws an exception if the name already
+//      * exists in the event. NB: Adding relations is allowed even when the event is 'read only'.
+//      * 
+//      *@throws EventException
+//      */ 
+//     public void addRelation(LCRelation* col ,const  String& name ) throws EventException ;
     
-    /** Removes (and deletes) the relation with name (if it exists in the event). 
-     * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
-     *
-     *@throws ReadOnlyException
-     */ 
-    public void removeRelation(const  String& name ) throws ReadOnlyException ;
+//     /** Removes (and deletes) the relation with name (if it exists in the event). 
+//      * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
+//      *
+//      *@throws ReadOnlyException
+//      */ 
+//     public void removeRelation(const  String& name ) throws ReadOnlyException ;
     
 
 }
