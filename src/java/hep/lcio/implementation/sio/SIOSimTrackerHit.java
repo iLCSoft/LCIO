@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.5 2003-09-08 23:10:20 tonyj Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -71,7 +71,7 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       out.writeDouble(position[2]);
       out.writeFloat(dEdx);
       out.writeFloat(time);
-      out.writePntr(particle);
+      out.writePntr(getMCParticle());
       out.writePTag(this);
    }
 }

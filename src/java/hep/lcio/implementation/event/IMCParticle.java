@@ -6,9 +6,9 @@ import hep.lcio.event.MCParticle;
 
 
 /**
- * A default implementation of MCParticle
+ * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.5 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: IMCParticle.java,v 1.6 2003-09-08 23:10:20 tonyj Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -42,7 +42,7 @@ public class IMCParticle extends ILCObject implements MCParticle
 
    public MCParticleData getDaughterData(int i)
    {
-      return (MCParticleData) daughters[i];
+      return getDaughter(i);
    }
 
    public void setDaughters(MCParticle[] daughters)
@@ -133,7 +133,7 @@ public class IMCParticle extends ILCObject implements MCParticle
 
    public MCParticleData getParentData()
    {
-      return (MCParticleData) parent;
+      return getParent();
    }
 
    public void setSecondParent(MCParticle parent)
@@ -149,7 +149,7 @@ public class IMCParticle extends ILCObject implements MCParticle
 
    public MCParticleData getSecondParentData()
    {
-      return (MCParticleData) secondParent;
+      return getSecondParent();
    }
 
    public void setVertex(double[] pos)

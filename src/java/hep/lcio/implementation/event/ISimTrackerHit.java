@@ -11,7 +11,7 @@ import hep.lcio.exceptions.DataNotAvailableException;
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.5 2003-09-08 23:10:20 tonyj Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -47,7 +47,7 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 
    public MCParticleData getMCParticleData()
    {
-      return (MCParticleData) particle;
+      return getMCParticle();
    }
 
    public void setPosition(double[] pos)

@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.5 2003-09-08 23:10:20 tonyj Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -110,7 +110,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       out.writeInt(nContributions);
       for (int i = 0; i < nContributions; i++)
       {
-         out.writePntr(particle[i]);
+         out.writePntr(getParticleCont(i));
          out.writeFloat(energyContrib[i]);
          out.writeFloat(time[i]);
          if (hasPDG)

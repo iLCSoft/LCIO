@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.9 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.10 2003-09-08 23:10:20 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -58,7 +58,6 @@ class SIOEvent extends ILCEvent
       blockMap = new HashMap();
       for (int i = 0; i < nBlockNames; i++)
       {
-         // fg20030508 from v00-03 on, we ommit the trailing '\0's for strings
          String blockName = in.readString();
          String blockType = in.readString();
 
@@ -202,32 +201,5 @@ class SIOEvent extends ILCEvent
       SIOEvent.write(event, writer, true);
       writer.createRecord(SIOFactory.eventRecordName, SIOFactory.compressionMode);
       SIOEvent.write(event, writer, false);
-   }
-
-   /**@obsolete - fg20030508
-    */
-   private static void hackString(SIOOutputStream out, String str) throws IOException
-   {
-      out.writeInt(str.length());
-
-      byte[] ascii = str.getBytes();
-      out.write(ascii);
-      out.writeByte(0); // write irrelevant null
-      out.pad();
-   }
-
-   /**@obsolete - fg20030508
-    */
-   private static String stringHack(SIOInputStream in) throws IOException
-   {
-      int l = in.readInt();
-      if (l > 32767)
-         throw new IOException("String too long: " + l);
-
-      byte[] ascii = new byte[l];
-      in.readFully(ascii);
-      in.readByte(); // skip irrelevant null
-      in.pad();
-      return new String(ascii); //BUG: what if default locale is not US-ASCII
    }
 }

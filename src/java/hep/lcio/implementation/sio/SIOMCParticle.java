@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.7 2003-09-08 23:10:20 tonyj Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -48,14 +48,16 @@ class SIOMCParticle extends IMCParticle
       }
    }
 
-   public MCParticle[] getDaughters()
+   public MCParticle getDaughter(int index)
    {
       if (!(daughters instanceof MCParticle[]))
       {
+         MCParticle[] d = new MCParticle[daughters.length];
          for (int i = 0; i < daughters.length; i++)
-            daughters[i] = ((SIORef) daughters[i]).getObject();
+            d[i] = (MCParticle) ((SIORef) daughters[i]).getObject();
+         daughters = d;
       }
-      return (MCParticle[]) daughters;
+      return (MCParticle) daughters[index];
    }
 
    public MCParticle getParent()
@@ -123,11 +125,11 @@ class SIOMCParticle extends IMCParticle
    private void write(SIOOutputStream out) throws IOException
    {
       out.writePTag(this);
-      out.writePntr(parent);
-      out.writePntr(secondParent);
+      out.writePntr(getParent());
+      out.writePntr(getSecondParent());
       out.writeInt(daughters.length);
       for (int i = 0; i < daughters.length; i++)
-         out.writePntr(daughters[i]);
+         out.writePntr(this.getDaughter(i));
       out.writeInt(pdg);
       out.writeInt(hepEvtStatus);
       out.writeDouble(vertex[0]);
