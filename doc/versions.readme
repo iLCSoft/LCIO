@@ -2,7 +2,6 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
-
 ======================
   v01-04
 =======================
@@ -29,6 +28,8 @@
  - added support for multiple read/and write streams in C++
 
  - added support for multiple events in C++
+
+ - removed calls to deprecated functions in f77
 
  - bug fixes (C++):
      + dump only five elements of LCInt/Float/StringVecs in LCTOOLS
