@@ -117,8 +117,6 @@ int main(int argc, char** argv ){
 	mom->setMomentum( p0 ) ;
 	mom->setMass( 3.01 ) ;
 
-	// FIXME: debug
-	LCRelationNavigator mcNav( LCIO::MCPARTICLE, LCIO::MCPARTICLE ) ;
 
 	for(int j=0;j<NMCPART;j++){
 
@@ -158,24 +156,18 @@ int main(int argc, char** argv ){
 
 	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;
-	      mcNav.addRelation( d2, d2 ) ;
 
 	      // debug only - add the same particle to more than one collection
 	      //mcVec2->push_back( d2 ) ;
 	    }
 	    d1->addParent( mcp );
 	    mcVec->push_back( d1 ) ;
-	    mcNav.addRelation( d1, d1 ) ;
 	  }
 	  
 	  mcp->addParent( mom );
 	  mcVec->push_back( mcp ) ;
-	  mcNav.addRelation( mcp, mcp ) ;
 	}
 	mcVec->push_back( mom ) ;
-
-	mcNav.addRelation( mom, mom ) ;
-	evt->addCollection( mcNav.createLCCollection() , "MCParticleRelation" ) ;
 
 	// now add some calorimeter hits
 	LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
@@ -334,7 +326,6 @@ int main(int argc, char** argv ){
 	}	
 	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
 	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
-
 
 	
  	//---- write a subset of MCParticle to the event ------
