@@ -28,7 +28,7 @@ namespace UTIL{
       _lcObj = dynamic_cast< T* >( lcObj ) ;
 
       if( _lcObj == 0 )
-	throw Exception("dynamic cast failed for LCObjectHandle() !") ;
+	throw EVENT::Exception("dynamic cast failed for LCObjectHandle() !" ) ;
     }
 
     T* operator->() { return _lcObj ; } 
