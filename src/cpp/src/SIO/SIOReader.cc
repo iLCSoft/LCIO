@@ -80,8 +80,10 @@ namespace SIO {
 
     std::string stream_name( filename.data() ,  filename.find(".") ) ;
     _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
-    _stream->open( filename.c_str() , SIO_MODE_READ ) ; 
-    
+
+    int status = _stream->open( filename.c_str() , SIO_MODE_READ ) ; 
+    if( status != SIO_STREAM_SUCCESS ) return LCIO::ERROR ;
+
     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
       _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
     
@@ -97,7 +99,6 @@ namespace SIO {
     SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
     
     
-    // no error handling so far ...
     return LCIO::SUCCESS ; 
 
   }

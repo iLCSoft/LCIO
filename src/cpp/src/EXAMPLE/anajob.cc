@@ -3,6 +3,7 @@
 #include "IO/LCReader.h"
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCRunHeader.h" 
+//#include "CPPFORT/lcioc2f.h"
 
 static const char* FILEN = "recjob.sio" ; // default file name 
 
@@ -24,7 +25,9 @@ int main(int argc, char** argv ){
 
 
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-  
+  // test the wrapper function
+  //LCReader*  lcReader = reinterpret_cast<LCReader*>( lfactCreateLCReader() ) ;
+ 
   // read all run headers first :
   if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
     cout << " can't open file: " << FILEN     << endl ;

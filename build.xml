@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.3 2003-03-10 17:23:51 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.4 2003-03-13 15:03:10 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -150,6 +150,12 @@
        <arg line="-C ./src/cpp clean"/>
      </exec>
    </target>
+   <target name="f77" description="&lt;cpp-target&gt; creates f77 examples">
+     <exec dir="." executable="gmake" os="Linux">
+       <arg line="-C ./src/f77"/>
+     </exec>
+   </target>
+
 
   <!-- =================================================================== -->
   <!-- Generates java and hh from aid                                      -->

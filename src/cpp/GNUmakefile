@@ -17,12 +17,12 @@ LCIOCPPFLAGS = -g -D NO_DEBUG
 export LCIOCPPFLAGS
 
 
-.PHONY: lib clean IMPL SIO IOIMPL bin
+.PHONY: lib clean IMPL SIO IOIMPL CPPFORT bin
 
 all: lib bin
 
 
-lib: IMPL SIO IOIMPL
+lib: IMPL SIO IOIMPL CPPFORT
 
 
 bin: lib
@@ -35,6 +35,8 @@ SIO:
 IOIMPL:
 	$(MAKE) -C ./src/IOIMPL
 
+CPPFORT:
+	$(MAKE) -C ./src/CPPFORT
 
 clean:
 	$(MAKE) -C ./src/IMPL clean; $(MAKE) -C ./src/SIO clean; \
