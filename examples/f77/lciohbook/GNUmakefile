@@ -11,7 +11,7 @@
 target_name = lciohbook
 
 # path to cern lib - modify as needed
-HBKLIBS = -L /cern/pro/lib -lpacklib
+HBKLIBS = -L /cern/pro/lib -lpacklib -lnsl -lcrypt -ldl
 
 
 

@@ -1,21 +1,22 @@
 ########################################################
 #
 #  lciohbook:
-#  Simple example that opens an LCIO file and creates
-#  an hbook file wit a few histograms for MCParticles 
-#  using the the fortran interface.
+#  A simple script is provided that creates and runs lciohbook_F.
+#  lciohbook_F opens the LCIO file test.slcio and creates
+#  an hbook file lcio.hbook with a few histograms 
+#  for MCParticles using the the fortran interface.
+#  Finally the cernlib's "paw" is called which presents
+#  the histograms.
 #
 ########################################################
 
  Modify the GNUmakefile according to your needs in particular the
- path to your cernlib installation is required.
+ path to your cernlib installation is required. Provide access to paw
+ (modify the PATH environment variable and add your cernlib bin dir).
 
- then do
+ run:
 
-    gmake
+ ./lciohbook
 
- and run
-
-  ./lciohbook
-
+ If lciohbook is not running please check it and modify it.
 
