@@ -315,8 +315,13 @@ ccc         stop
         nclus     = nhits/10
         do  i = 1, nclus
           clusp   = lcclucreate ()
-          type    = ior (ishft ( COMBINED, 16), CHARGED )
-          status  = lcclusettype ( clusp, type )
+***   set type bits to "Cluster::COMBINED << 16 | Cluster::CHARGED"
+ccc          type    = ior (ishft ( COMBINED, 16), CHARGED ) ! obsolete
+ccc          status  = lcclusettype ( clusp, type )          ! obsolete
+          status  = lcclusettypebit ( clusp, 1 )
+          status  = lcclusettypebit ( clusp, 7 )
+          status  = lcclusettypebit ( clusp, 11 )
+
           status  = lcclusetenergy ( clusp, i*1.1)
           posv(1) = 12.
           posv(2) = 123456789.
