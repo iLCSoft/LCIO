@@ -7,7 +7,7 @@ package hep.lcio.event;
  * @version Mar 6, 2003
  */
 
-public interface TrackerHit {
+public interface TrackerHit extends LCObject {
     
     /**Returns the detector specific (geometrical) cell id.
      */

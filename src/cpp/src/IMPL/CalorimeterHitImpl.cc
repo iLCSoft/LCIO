@@ -37,6 +37,7 @@ namespace IMPL{
 
 //EVENT::CalorimeterHit* CalorimeterHitImpl::clone() const{
   EVENT::LCObject* CalorimeterHitImpl::clone() const{
+    // shallow copy ... more thought needed
     return new CalorimeterHitImpl( *this ) ;
   }
   

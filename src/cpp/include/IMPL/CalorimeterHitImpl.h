@@ -42,7 +42,7 @@ namespace IMPL {
     /** Create a deep copy of itself.
      * Overwrites return type in LCObject::clone().
      * Not yet - as AID genereates virtual inheritance and
-     * g++ doesn't support virtual constructors with virtuakl inheritance
+     * g++ doesn't support virtual constructors with virtual inheritance
      * TODO - change org.freehep.aid.CPPHeaderGenerator !
      */
     //virtual  CalorimeterHit* clone() const;

@@ -11,11 +11,12 @@ package hep.lcio.event ;
 public interface LCObject extends Cloneable {
     
 
-@ifdef cpp
+@cpp{
     /** Deep copy of the object. C++ implementations should return the 
      *  concrete type (virtual constructor). 
      */
-    public LCObject* clone() const ;
-@endif
+    public:
+	 virtual LCObject* clone() const {  return 0 ; } 
+}
 
 }
