@@ -7,6 +7,8 @@
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
 
+#include "SIO_block.h"
+
 class SIO_record ;
 class SIO_stream ;    
 
@@ -97,7 +99,7 @@ namespace SIO {
 
     SIOEventHandler *_hdrHandler ;
     SIORunHeaderHandler *_runHandler ;
-    std::vector<SIOCollectionHandler*> _colVector ;
+    std::vector<SIO_block*> _connectedBlocks ;
 
   }; // class
 

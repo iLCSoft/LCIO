@@ -8,7 +8,10 @@
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h" 
+#include "SIO/SIORelationHandler.h" 
 #include "SIO/SIORunHeaderHandler.h" 
+
+#include "LCIOSTLTypes.h"
 
 #include "SIO_streamManager.h" 
 #include "SIO_recordManager.h" 
@@ -19,7 +22,7 @@
 
 //#define DEBUG 1
 #include "IMPL/LCTOOLS.h"
-
+#include "IMPL/LCRelationImpl.h" 
 
 using namespace EVENT ;
 using namespace IO ;
@@ -59,7 +62,7 @@ namespace SIO {
 
 //     // delete and disconnect all existing handlers (SIO_blocks)
 //     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-//     for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+//     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
 //       _evtRecord->disconnect( *ch );
 //       delete *ch ;
 //     }
@@ -207,13 +210,13 @@ namespace SIO {
     } 
 
     // disconnect old handlers from last event first 
-    typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-    for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+    typedef std::vector< SIO_block* >::iterator CHI ;
+    for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
 
       _evtRecord->disconnect( *ch );
 
     }
-    _colVector.clear() ;
+    _connectedBlocks.clear() ;
     
     
     const std::vector<std::string>* strVec = evt->getCollectionNames() ;
@@ -230,9 +233,33 @@ namespace SIO {
 	ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
       }
       _evtRecord->connect( ch ) ;
-      _colVector.push_back( ch ) ;  
+      _connectedBlocks.push_back( ch ) ;  
       ch->setCollection( col ) ; 
     } 
+
+    //--- fg20040504 added relation handlers
+    const StringVec* relNames = evt->getRelationNames() ;
+    
+    for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++){
+      
+      
+      //      std::cout << " relation name:  " << *relName << std::endl ;
+
+      SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
+	( SIO_blockManager::get( relName->c_str() )  ) ;
+      
+      LCRelation* rel = evt->getRelation( *relName ) ;
+      //      LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ; 
+      //      std::cout << " relation " << *relName << " casted  to LCRelationImpl  : " <<  relImpl << std::endl ;
+
+      if( rh == 0 ) {
+	rh = new SIORelationHandler( *relName ) ;
+      }
+      _evtRecord->connect( rh ) ;
+      _connectedBlocks.push_back( rh ) ;  
+      rh->setRelation( rel ) ; 
+    } 
+    //--- fg20040504 ------
     
   }
 

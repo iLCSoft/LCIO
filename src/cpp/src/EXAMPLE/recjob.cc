@@ -18,7 +18,7 @@
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
-//#include "IMPL/LCRelationImpl.h"
+#include "IMPL/LCRelationImpl.h"
 
 
 // M_PI is non ansi ...
@@ -190,42 +190,6 @@ public:
       
       trkVec->addElement( trk ) ;
     }
-    //   }
-    
-    //     if( tpcHits ){
-
-//       int nTrk = nTPCHits / 10 ;
-
-//       for( int i=0; i < nTrk ; i ++ ){
-
-// 	TrackImpl* trk = new TrackImpl ;
-// 	trk->setType( Track::TPC ) ;
-// 	trk->setMomentum(  (i+1)*1.1 ) ;
-// 	trk->setTheta( (i+1)* M_PI / 10. ) ;
-// 	trk->setPhi( (i+1)* M_PI / 5. ) ;
-// 	trk->setD0( i+1 ) ;
-// 	trk->setZ0( (i+1)*10. ) ;
-// 	trk->setChi2( 1.01 ) ;
-// 	trk->setdEdx( 3.14159 ) ;
-// 	trk->setdEdxError( 42. ) ;
-// 	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
-// 	trk->setCovMatrix( cov ) ;
-// 	float ref[3] = { 12. ,123456789. , .0987654321 } ;
-// 	trk->setReferencePoint( ref ) ;
-// 	// add the hits used to create this track
-// 	for( int j=0; j < 10  ; j ++ ){
-// 	  trk->addHitIndex( tpcHitName ,  i*10+j  ) ;   
-// 	}
-// 	// add tracks that where used to create this track
-// 	if( trkVec->size() > 1 ){
-// 	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
-// 	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
-// 	}
-
-// 	trkVec->addElement( trk ) ;
-//       }
-//     }
-
 
 
     evt->addCollection(  trkVec , "SomeTracks" ) ;
@@ -250,7 +214,7 @@ public:
     calHits->setFlag( calFlag.getFlag()  ) ;
 
 
-    //    LCRelation* scRel = new LCRelationImpl ; // still experimental code ...
+    LCRelation* scRel = new LCRelationImpl( LCIO::CALORIMETERHIT , LCIO::SIMCALORIMETERHIT  )  ; // still experimental code ...
 
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
@@ -258,18 +222,22 @@ public:
       CalorimeterHitImpl* calHit = new CalorimeterHitImpl ;
       SimCalorimeterHit* simcalHit =  dynamic_cast<SimCalorimeterHit*> ( simcalHits->getElementAt(j)  ) ;
 
+      //      std::cout << " adding new calorimeter hit and relation : " << j << " : "  << calHit << " - " << simcalHit << std::endl ;
+
       calHit->setEnergy(   simcalHit->getEnergy()  ) ;
       calHit->setCellID0(  simcalHit->getCellID0() ) ;
       calHit->setPosition( simcalHit->getPosition()) ;
 
-//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
       
       calHits->addElement( calHit ) ;
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
+    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
 
 
+    // the following is some example code on how to access the relation 
 //     // --- dump the relations ----
 //     int nCalHits = calHits->getNumberOfElements() ;
 //     for(int j=0;j<nCalHits;j++){
@@ -281,8 +249,7 @@ public:
 //       }
 //       std::cout << dec << std::endl ;
 //      }
-//     delete scRel ;
-    // -----------
+//    // -----------
     
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl clusterFlag(0) ;

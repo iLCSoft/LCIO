@@ -15,23 +15,38 @@ import hep.lcio.exceptions.* ;
 public interface LCRelation
 {
 
-    /** The number of stored relations for the given object.
+    /**The type of the 'from' objects in this relation.
      */
-    public int numberOfRelations( LCObject* obj ) ; 
+    public const String& getFromType() const ;
+
+    /**The type of the 'to' objects in this relation.
+     */
+    public const String& getToType() const ;
+
+    /** The number of stored relations for the given object. If obj==0 
+     * the total number of stored relations is returned.
+     */
+    public int numberOfRelations( LCObject* obj=0 ) ; 
+
+    /** The 'from object' of the given relation. Needed to analyze the relations without 
+     * knowledge of the participating objects.
+     */
+    public LCObject* getRelation( int index ) ;
+
 
     /** The relation with the given index.
      */
-    public LCObject* getRelation(LCObject* obj, int index) ;
+    public LCObject* getRelation(LCObject* obj, int index=0) ;
 
 
     /** The weight of the relation with the given index.
      */
-    public float getWeight(LCObject* obj, int index)  ;
+    public float getWeight(LCObject* obj, int index=0)  ;
 
 
     /** Add a new relation. 
      */
-    public void addRelation(LCObject* from, LCObject* to, float weight)  ;
+    public void addRelation(LCObject* from, LCObject* to, float weight=1.0)  ;
     
 
     /**If caching is enabled the result of numberOfRelations() is stored

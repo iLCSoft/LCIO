@@ -10,9 +10,10 @@
 CXX = g++ 
 AR = ar
 
+SIOINSTALL = $(LCIOBASE)/sio
 
 INSTALL = $(LCIOBASE)/lib
-INCLUDE =  $(LCIOINCLUDE)
+INCLUDE =  $(LCIOINCLUDE) -I $(SIOINSTALL)/include
 CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE)
 
 objects := $(patsubst %.cc,%.o,$(wildcard *.cc))

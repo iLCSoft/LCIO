@@ -135,6 +135,10 @@ namespace SIO {
     void setUpHandlers() ;
     void readRecord() throw (IO::IOException , IO::EndOfDataException , std::exception) ;
 
+
+    void postProcessEvent() ;
+
+
   protected:
     
     // we need an SIO record for every type

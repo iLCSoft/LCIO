@@ -37,7 +37,7 @@ namespace SIO {
   }
 
   SIOCollectionHandler::~SIOCollectionHandler(){
-//     std::cout << " deleteing SIOCollectionHandler " << _myType << std::endl ;
+//     std::cout << " deleting SIOCollectionHandler " << _myType << std::endl ;
   }
   
   void SIOCollectionHandler::setCollection(const LCCollection *col){

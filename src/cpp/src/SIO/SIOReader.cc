@@ -4,10 +4,12 @@
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h"
+#include "SIO/SIORelationHandler.h"
 #include "SIO/SIORunHeaderHandler.h"
 #include "SIO/SIOParticleHandler.h"
 
 #include "SIO/SIOWriter.h"
+#include "LCIOSTLTypes.h"
 
 #include "EVENT/LCIO.h"
 
@@ -17,6 +19,7 @@
 #include "SIO_stream.h" 
 #include "SIO_record.h" 
 #include "IMPL/LCIOExceptionHandler.h"
+
 
 #include <iostream>
 #include <sstream>
@@ -65,12 +68,6 @@ namespace SIO {
     *_runP = 0 ;
 
 
-    // this is our default event 
-    // collections are attached to this event when blocks are read
-
-    // FIXME : default event no longer needed ....
-    //    _defaultEvt = new LCEventIOImpl ;
-
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
     SIO_recordManager::setVerbosity( SIO_ALL ) ;
@@ -117,16 +114,12 @@ namespace SIO {
     //else 
     sioFilename = filename ;
     
-    //    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
     std::string stream_name = LCSIO::getValidSIOName(sioFilename) ;
     _stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
 
     if( _stream == 0 )
       throw IOException( std::string( "[SIOReader::open()] Bad stream name: " 
     				      + stream_name  )) ;
-    //    				      + std::string(stream_name)  )) ;
-    //    delete[] stream_name ;
-
 
     int status = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ; 
     
@@ -254,6 +247,38 @@ namespace SIO {
 	  ch->setEvent( _evtP ) ; 
       }
     }
+
+
+    //---- fg 20040504 add block handlers for the relations in the event
+    const StringVec* relNames =  (*_evtP)->getRelationNames() ;
+    for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++ ) {
+
+      //      const LCRelation rel = (*_evtP)->getRelation( *relName )  ;
+
+      // check if block handler exists in manager
+      SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
+	( SIO_blockManager::get( relName->c_str() )  ) ;
+      
+      // if not, create a new block handler
+      if( rh == 0 ) {
+	
+	// create collection handler for event
+	try{
+	  rh =  new SIORelationHandler( *relName , _evtP )  ;
+	  // calls   SIO_blockManager::add( rh )  in the c'tor !
+	}
+	catch(Exception& ex){   // unsuported type !
+	  delete rh ;
+	  rh =  0 ;
+	}
+
+      } else { // handler already exists
+	if( rh != 0 )
+	  rh->setEvent( _evtP ) ; 
+      }
+    }
+    // ---- fg 20040504 ----------
+
   }
 
 
@@ -294,9 +319,10 @@ namespace SIO {
       // set the proper acces mode before returning the event
       (*_evtP)->setAccessMode( accessMode ) ;
       
-      // restore the daughter relations from the parent relations
-      SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
-      
+//       // restore the daughter relations from the parent relations
+//       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+ 	  postProcessEvent() ;
+     
       return *_evtP ;      
     }
   }
@@ -354,8 +380,9 @@ namespace SIO {
       // (*_evtP)->setAccessMode( accessMode ) ;
       (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
       
-      // restore the daughter relations from the parent relations
-      SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+//       // restore the daughter relations from the parent relations
+//       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+ 	  postProcessEvent() ;
 
       return *_evtP ;      
     }
@@ -453,9 +480,10 @@ namespace SIO {
 	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
 	while( iter != _evtListeners.end() ){
 
-	  // restore the daughter relations from the parent relations
-	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
-	  
+// 	  // restore the daughter relations from the parent relations
+// 	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+	  postProcessEvent() ;
+
 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
 	  (*iter)->processEvent( *_evtP ) ;
 	  
@@ -466,6 +494,13 @@ namespace SIO {
 	}
       }
     }
+  }
+  
+  void  SIOReader::postProcessEvent() {
+    // restore the daughter relations from the parent relations
+    SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+    // fill the relation map from intermediate vector
+    SIORelationHandler::fillRelationMap(  *_evtP ) ;
   }
 
 }; // namespace

@@ -5,8 +5,11 @@
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCCollectionIOVec.h"
+#include "IOIMPL/LCRelationIOImpl.h"
+#include "LCIOSTLTypes.h"
 
 #include "SIO_functions.h"
+#include <sstream> 
 
 
 using namespace EVENT ;
@@ -73,14 +76,35 @@ namespace SIO  {
 	char* dummy ; 
 	LCSIO_READ( stream,  &dummy ) ; 
 	std::string colName( dummy ) ;
+	char* type ;
 	// read type 
-	LCSIO_READ( stream,  &dummy ) ; 
+	LCSIO_READ( stream,  &type ) ; 
+	 ;
 
-	//  we have to attach a new collection to the event for every type in the header
+	//  we have to attach a new collection or relation object to the event for every type in the header
+	 std::string typeStr( type ) ;
 
-	try{ (*_evtP)->addCollection( new LCCollectionIOVec( dummy ) , colName) ; 
-	}
-	catch( EventException ){  return LCIO::ERROR ; }
+
+	 if( typeStr.find( LCIO::LCRELATION) == 0  ){ // typeStr starts with LCRelation
+	 // LCRelations have type : LCRelation_FromType_ToType !
+// 	   int idx0 = typeStr.find("_" ) ;
+// 	   int idx1 = typeStr.rfind("_" ) ;
+	   
+// 	   std::string fromType = typeStr.substr( idx0 ,  idx1 - idx0 ) ;
+// 	   std::string toType = typeStr.substr( idx1 ,  typeStr.length()  - idx1 ) ;
+//     	   try{ (*_evtP)->addRelation( new LCRelationIOImpl( fromType , toType ) , colName) ; 
+
+	   try{ (*_evtP)->addRelation( new LCRelationIOImpl() , colName) ; 
+	   }
+	   catch( EventException ){  return LCIO::ERROR ; }
+
+
+	 }else{
+	   try{ (*_evtP)->addCollection( new LCCollectionIOVec( type ) , colName) ; 
+	   }
+	   catch( EventException ){  return LCIO::ERROR ; }
+	 }
+
 
       }
 
@@ -95,15 +119,42 @@ namespace SIO  {
       
 	// now write a list of colection types and names
       
-	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
-	int nCol = strVec->size() ;
+// 	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
+// 	int nCol = strVec->size() ;
+// 	SIO_DATA( stream, &nCol, 1 ) ;
+      
+// 	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	
+// 	  const LCCollection* col = _evt->getCollection( *name ) ;
+// 	  LCSIO_WRITE( stream, *name ) ;
+// 	  LCSIO_WRITE( stream, col->getTypeName() ) ;
+		
+// 	} 
+
+//	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
+	const StringVec* colNames =   _evt->getCollectionNames() ;
+	const StringVec* relNames =   _evt->getRelationNames() ;
+	
+	int nCol = colNames->size()  + relNames->size()  ;
+
 	SIO_DATA( stream, &nCol, 1 ) ;
       
-	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-	
-	  const LCCollection* col = _evt->getCollection( *name ) ;
-	  LCSIO_WRITE( stream, *name ) ;
+	//	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
+	  const LCCollection* col = _evt->getCollection( (*colNames)[i] ) ;
+	  LCSIO_WRITE( stream, (*colNames)[i] ) ;
 	  LCSIO_WRITE( stream, col->getTypeName() ) ;
+		
+	} 
+	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   
+	  const LCRelation* rel = _evt->getRelation( (*relNames)[i] ) ;
+
+	  std::stringstream  relTypeName  ;
+	  relTypeName <<  LCIO::LCRELATION ; 
+	  // << "_" <<   rel->getFromType() << "_"  << rel->getToType() << std::ends ;
+
+	  LCSIO_WRITE( stream, (*relNames)[i] ) ;
+	  LCSIO_WRITE( stream, relTypeName.str() ) ;
 		
 	} 
 

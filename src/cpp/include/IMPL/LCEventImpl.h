@@ -5,6 +5,7 @@
 #include <map>
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
+#include "EVENT/LCRelation.h"
 #include "EVENT/LCIO.h"
 #include "AccessChecked.h"
 
@@ -13,6 +14,7 @@ namespace IMPL{
   //class  EVENT::LCCollection ;
  
   typedef std::map<std::string,EVENT::LCCollection*> LCCollectionMap ; 
+  typedef std::map<std::string,EVENT::LCRelation*> LCRelationMap ; 
   
   /**Implementation of the main event class. This is used by  
    * LCIO for reading events from file.
@@ -55,7 +57,7 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      */
     virtual const std::vector<std::string>  * getCollectionNames() const;
     
-    /** Returns the collection for the given name.
+    /** Returns the collection for the given name.g
      * Same as getCollection() except that no cast to (LCCollection) and check for 
      * NULL pointer/reference is needed.  
      *
@@ -85,6 +87,33 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      */ 
     virtual void removeCollection(const std::string & name) throw (EVENT::ReadOnlyException, std::exception)  ;
     
+
+    //fg20040528:   added relations to the event
+    /** Returns the names of the relations in the  event.
+     */
+    virtual const std::vector<std::string>  * getRelationNames() const ;
+
+    /** Returns the relation for the given name.
+     *
+     * @throws DataNotAvailableException
+     */
+    virtual EVENT::LCRelation * getRelation(const std::string & name) const throw (EVENT::DataNotAvailableException, std::exception)  ;
+
+    /** Adds a relation with the given name. Throws an exception if the name already
+     * exists in the event. NB: Adding relations is allowed even when the event is 'read only'.
+     * 
+     *@throws EventException
+     */ 
+    virtual void addRelation(EVENT::LCRelation * col, const std::string & name) throw (EVENT::EventException, std::exception)  ;
+
+    /** Removes (and deletes) the relation with name (if it exists in the event). 
+     * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
+     *
+     *@throws ReadOnlyException
+     */ 
+    virtual void removeRelation(const std::string & name) throw (EVENT::ReadOnlyException, std::exception)  ;
+
+
     //---- set methods -----
     /** Sets the run number.
      */
@@ -117,8 +146,11 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
-    mutable LCCollectionMap _map ;
+    mutable LCCollectionMap _colMap ;
     mutable std::vector<std::string> _colNames ;
+
+    mutable LCRelationMap _relMap ;
+    mutable std::vector<std::string> _relNames ;
     
     
   }; // class

@@ -296,6 +296,38 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
+    <block name="LCRelation" major="1" minor="1">
+       <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
+       <data type="int" name="nRelations"/>
+       <repeat count="nRelations">
+          <data type="pntr" name="LCObjectFrom">the 'from' side of the relation</data>
+	  <data type="pntr" name="LCObjectTo">the 'pointed to' side of the relation</data>
+	  <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+	    <data type="float" name="weight">weight of the relation</data>
+	  </if>
+       </repeat>
+    </block>
+    <!-- block name="LCRelation" major="1" minor="1">
+       <data type="int" name="flag">Bit 31: 1[0] 'one to  many [one]' relation, Bit 30: 1[0] Weights are [not] stored</data>
+       <data type="int" name="nRelations"/>
+       <repeat count="nRelations">
+          <data type="pntr" name="LCObjectFrom">the '1' side of the '1 to many' relation</data>
+	  <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+	     <data type="pntr" name="LCObjectTo">the 'pointed to' side of the '1 to 1' relation</data>
+	     <if condition="(flag&amp;(1&lt;&lt;30)) !=0">
+	        <data type="float" name="weight">weight of the relation</data>
+	     </if>
+          <else/>
+	     <data type="int" name="multiplicity"></data>
+	     <repeat count="multiplicity">
+	        <data type="pntr" name="LCObjectTo">the 'many' side of the '1 to many' relation</data>
+	        <if condition="(flag&amp;(1&lt;&lt;30)) !=0">
+	           <data type="float" name="weight">weight of the relation</data>
+	        </if>
+             </repeat>
+	  </if>
+       </repeat>
+    </block -->
   </record>
 </sio>
 
