@@ -22,8 +22,8 @@
 using namespace std ;
 using namespace lcio ;
 
-static const int NRUN = 10 ;
-static const int NEVENT = 10 ; // events
+static const int NRUN = 1 ;
+static const int NEVENT = 1 ; // events
 static const int NMCPART = 10 ;  // mc particles per event
 static const int NHITS = 50 ;  // calorimeter hits per event
 
@@ -88,9 +88,12 @@ int main(int argc, char** argv ){
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	
-	MCParticle* mom = 0 ;
+	MCParticleImpl* mom = 0 ;
 	for(int j=0;j<NMCPART;j++){
+
 	  MCParticleImpl* mcp = new MCParticleImpl ;
+
+	  if(mom!=0) mom->addDaughter( mcp ) ;
 	  
 	  mcp->setPDG( 101 + j*100  ) ;
 	  mcp->setParent(  mom  );
@@ -179,7 +182,7 @@ int main(int argc, char** argv ){
 	
 	
 	// test: add a collection for one event only:
-	if( rn == NRUN-1 && i == 0 ) { // first event oif last run
+	if( rn == NRUN-1 && i == 0 ) { // first event o last run
 	  LCCollectionVec* addExtVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
 	  LCFloatVec* addExt = new LCFloatVec ;
 	  addExt->push_back( 1. );
@@ -197,7 +200,7 @@ int main(int argc, char** argv ){
 	
 	// dump the event to the screen 
 	LCTOOLS::dumpEvent( evt ) ;
-	
+	LCTOOLS::printMCParticles( mcVec ) ;
 	
 	// we created the event so we need to take care of deleting it ...
 	delete evt ;

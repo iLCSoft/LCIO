@@ -1,9 +1,3 @@
-// -*- C++ -*-
-/** Implementation of LCRunHeader.
- * 
- * @author gaede
- * @version Mar 11, 2003
- */
 #ifndef EVENT_LCRUNHEADERIMPL_H
 #define EVENT_LCRUNHEADERIMPL_H 1
 
@@ -15,6 +9,11 @@
 
 namespace IMPL {
 
+/** Implementation of LCRunHeader.
+ * 
+ * @author gaede
+ * @version Mar 11, 2003
+ */
   class LCRunHeaderImpl : public EVENT::LCRunHeader {
 
   public: 

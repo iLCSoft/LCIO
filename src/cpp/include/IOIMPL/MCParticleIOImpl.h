@@ -1,8 +1,3 @@
-/** Adding stuff needed for io (friend declarations, etc.)
- * 
- * @author gaede
- * @version Mar 7, 2003
- */
 #ifndef SIO_MCPARTICLEIOIMPL_H
 #define SIO_MCPARTICLEIOIMPL_H 1
 
@@ -14,6 +9,11 @@ namespace SIO{
 
 namespace IOIMPL {
 
+/** Adding stuff needed for io (friend declarations, etc.)
+ * 
+ * @author gaede
+ * @version Mar 7, 2003
+ */
 class MCParticleIOImpl : public IMPL::MCParticleImpl{
 
   friend class SIO::SIOParticleHandler ;

@@ -1,9 +1,3 @@
-/** Implementation of the generic SimCalorimeterHit.
- * 
- * @author gaede
- * @version Mar 5, 2003
- */
-
 #ifndef EVENT_CALORIMETERHITIMPL_H
 #define EVENT_CALORIMETERHITIMPL_H 1
 
@@ -24,6 +18,12 @@ namespace IMPL {
   
   typedef std::vector< MCParticleCont* > MCParticleContVec ;
   
+/** Implementation of the generic SimCalorimeterHit.
+ * 
+ * @author gaede
+ * @version Mar 5, 2003
+ */
+
   class SimCalorimeterHitImpl : public EVENT::SimCalorimeterHit {
     
   public: 

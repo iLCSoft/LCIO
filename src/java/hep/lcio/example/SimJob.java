@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.5 2003-06-10 10:02:06 gaede Exp $
+ * @version $Id: SimJob.java,v 1.6 2003-06-12 08:58:54 gaede Exp $
  */
 public class SimJob
 {
@@ -91,6 +91,11 @@ public class SimJob
 
             // now add some calorimeter hits
             ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
+
+     	    // set flag for long format - including position
+     	    int flag = 1 << LCIO.CHBIT_LONG  ; 
+	        flag = flag | ( 1<< LCIO.CHBIT_PDG )  ; // include pdg as well
+	        calVec.setFlag(  flag ) ;
 
             for (int j = 0; j < NHITS; j++)
             {

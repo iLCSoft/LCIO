@@ -6,6 +6,7 @@
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
+#include <iostream>
 
 using namespace EVENT ;
 using namespace DATA ;
