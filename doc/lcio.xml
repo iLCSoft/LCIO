@@ -116,7 +116,7 @@
          <repeat count="nVectors">
 	    <data type="int" name="nElements"></data>
             <repeat count="nElements">
-	       <data type="float" name="dedx"></data>
+	       <data type="float" name="value"></data>
             </repeat>
          </repeat>
       </block>
