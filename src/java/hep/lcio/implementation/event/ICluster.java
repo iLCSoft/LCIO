@@ -3,6 +3,7 @@ package hep.lcio.implementation.event;
 import hep.lcio.event.Cluster;
 
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
@@ -23,8 +24,8 @@ public class ICluster extends ILCObject implements Cluster
    protected float[] position = null3;
    protected float[] shape = null6;
    protected float[] positionError = null6;
-   protected float[] subdetectorEnergies = null3;
-   
+   protected float[] subdetectorEnergies = new float[0] ;
+		   
    public List getCalorimeterHits()
    {
       return null;
@@ -173,12 +174,13 @@ public class ICluster extends ILCObject implements Cluster
    }  
    public float[] getSubdetectorEnergies()
    {
-      return subdetectorEnergies;
+      return subdetectorEnergies ;
    }  
    public void setSubdetectorEnergies(float[] fs)
    {
       checkAccess();
-      if (fs.length != 3) throw new IllegalArgumentException();      
-      subdetectorEnergies = fs;
+      // subdetector energies can have arbitrary size 
+      //if (fs.length != 3) throw new IllegalArgumentException();      
+      subdetectorEnergies = fs ;
    }
 }

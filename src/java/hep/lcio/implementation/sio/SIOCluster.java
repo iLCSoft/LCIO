@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.5 2004-07-07 05:32:09 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.6 2004-07-15 09:16:11 gaede Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -110,10 +110,10 @@ class SIOCluster extends ICluster
                out.writeFloat(0);
             }
          }
-         out.writeInt( cluster.getSubdetectorEnergies().length ) ;
-         for (int i = 0; i < cluster.getSubdetectorEnergies().length; i++){
+         //out.writeInt( cluster.getSubdetectorEnergies().length ) ;
+        // for (int i = 0; i < cluster.getSubdetectorEnergies().length; i++){
 			out.writeFloatArray( cluster.getSubdetectorEnergies() ) ;
- 		 }
+ 		// }
          
          out.writePTag(cluster);
       }
@@ -156,10 +156,10 @@ class SIOCluster extends ICluster
             out.writeFloat(0);
          }
       }
-	  out.writeInt( subdetectorEnergies.length ) ;
-	  for (int i = 0; i < subdetectorEnergies.length; i++){
+	  //out.writeInt( subdetectorEnergies.length ) ;
+	  //for (int i = 0; i < subdetectorEnergies.length; i++){
 	     out.writeFloatArray( subdetectorEnergies ) ;
-	  }
+	  //}
       out.writePTag(this);
    }
 }

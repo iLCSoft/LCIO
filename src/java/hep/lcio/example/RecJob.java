@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.10 2004-07-07 05:32:08 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.11 2004-07-15 09:16:10 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -128,9 +128,11 @@ public class RecJob implements LCRunListener, LCEventListener
       for (int j = 0; j < NCLUSTERS; j++)
       {
          ICluster cluster = new ICluster();
-         cluster.setEnergy(j);
-         cluster.setPhi(j);
-         cluster.setTheta(j);        
+         cluster.setEnergy(j+1.0f);
+         cluster.setPhi(j+2.0f);
+         cluster.setTheta(j+3.0f);        
+         float[] subDetEnergies = { 10.0f , 20.0f, 30.0f, 40.0f, 50.0f  } ; 
+         cluster.setSubdetectorEnergies(subDetEnergies) ;
          clusterVec.add(cluster);
       }
       evt.addCollection(clusterVec, "Clusters");      
