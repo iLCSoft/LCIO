@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!--
+    Typical usage:
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE sio SYSTEM "sio.dtd">
+
+    <sio>
+    ...
+    </sio>
+-->
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT block (repeat|data|if)*>
+<!ATTLIST block
+    minor CDATA #REQUIRED
+    major CDATA #REQUIRED
+    name CDATA #REQUIRED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT data (#PCDATA)>
+<!ATTLIST data
+    type CDATA #REQUIRED
+    name CDATA #REQUIRED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT record (block)*>
+<!ATTLIST record
+    name CDATA #REQUIRED
+  >
+
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT repeat (repeat|data|if)*>
+<!ATTLIST repeat
+    count CDATA #REQUIRED
+  >
+  
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT if (repeat|data|if)*>
+<!ATTLIST if
+    condition CDATA #REQUIRED
+  >
+<!--- Put your DTDDoc comment here. -->
+<!ELEMENT sio (record)*>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sio SYSTEM "sio.dtd">
+
+<!--
+    Document   : lcio.xml
+    Created on : December 12, 2002, 5:06 PM
+    Author     : Frank Gaede, Ties Behnke, Norm Graf, Tony Johnson
+    Description:
+        Description of proposed LCIO format.
+
+   fg: added charge to MCparticle and PDG to CalorimeterHit
+   fg: added names and types of blocks to LCRunHeader and small modifications in flag of CalorimeterHit
+   tb: some changes in the MC block
+   fg: new record for event header, additional word for calorimeter cell id
+   fg: added LCFloatVec block and made changes according to first release of LCIO
+-->
+
+<sio>
+  <record name="LCRunHeader" major="1" minor="0">
+     <block name="RunHeader" major="1" minor="0">
+        <data type="int" name="runNumber"></data>
+        <data type="string" name="detectorName"></data>
+        <data type="string" name="description"></data>
+        <data type="int" name="nActiveSubdetectors"></data>
+        <repeat count="nActiveSubdetectors">
+           <data type="string" name="subdetectorName"></data>
+        </repeat>
+     </block>
+  </record>  
+  <record name="LCEventHeader" major="1" minor="0">
+     <block name="EventHeader" major="1" minor="0">
+        <data type="int" name="runNumber"></data>
+        <data type="string" name="detectorName"></data>
+        <data type="long" name="timeStamp">TODO: format</data>
+        <data type="int" name="nBlockNames"></data>
+        <repeat count="nBlockNames">
+           <data type="string" name="blockName"></data>
+	   <data type="string" name="blockType">e.g. CalorimeterHit, TrackerHit</data>
+        </repeat>
+     </block>
+  </record>  
+  <record name="LCEvent" major="1" minor="0">
+      <block name="Event" major="1" minor="0">
+         <data type="int" name="runNumber"></data>
+         <data type="int" name="eventNumber"></data>
+         <data type="string" name="detectorName"></data>
+         <data type="long" name="timeStamp">TODO: format</data>
+         <data type="int" name="nBlockNames"></data>
+         <repeat count="nBlockNames">
+            <data type="string" name="blockName"></data>
+	    <data type="string" name="blockType">e.g. CalorimeterHit, TrackerHit</data>
+         </repeat>
+      </block>
+      <block name="MCParticle" major="1" minor="0">
+         <data type="int" name="flags"> not yesy used </data>
+	 <data type="int" name="nMC"></data>
+         <repeat count="nMC">
+            <data type="ptag" name="this"></data>
+            <data type="pntr" name="parent"></data>
+	    <data type="pntr" name="secondParent"></data>
+	    <data type="int" name="nDaughter"></data>
+	    <repeat count="nDaughter">
+	       <data type="pntr" name="daughter"></data>
+	    </repeat>   
+            <data type="int" name="PDG"></data>
+            <data type="int" name="hepEvtStatus">
+                              =0   empty line
+                              =1   undecayed particle, stable in the generator
+                              =2   particle decayed in the generator
+                              =3   documentation line
+	                      =201 stable state, but created in the tracking in the detector
+	                      =202 particle decayed in the tracking in the detector
+	    </data>
+            <data type="double[3]" name="vertex">Production vertex</data>
+            <data type="float[3]" name="momentum">Momentum at production vertex</data>
+            <data type="float" name="energy"></data>
+            <data type="float" name="charge"></data>
+         </repeat>
+      </block>
+      <block name="TrackerHit-BlockName" major="1" minor="0">
+         <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, rest is detector specific</data>
+         <data type="int" name="n"></data>
+         <repeat count="n">
+            <data type="int" name="cellID">Detector specific</data>
+            <data type="double[3]" name="position"></data>
+            <data type="float" name="dedx"></data>
+            <data type="float" name="time">TODO: Definition Needed (units absolute/relative?)</data>
+            <data type="pntr" name="MCParticle"></data>
+         </repeat>
+      </block>
+      <block name="CalorimeterHit-BlockName" major="1" minor="0">
+         <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; Bit 29 +z = 1, -z = 0; Bit 28 PDG = 1, no PDG =0, rest is detector specific</data>
+         <data type="int" name="nHits"></data>
+         <repeat count="nHits">
+            <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
+            <data type="int" name="cellId1">second word for cell id</data>
+            <data type="float" name="energy"></data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+		<data type="double[3]" name="position"></data>
+	    </if>
+            <data type="int" name="nContributions"></data>
+            <repeat count="nContributions">
+		<data type="pntr" name="MCParticle"></data>
+		<data type="float" name="energyContrib"></data>
+		<data type="float" name="time">TODO: Definition Needed (units absolute/relative?)</data>
+		<if condition="(flags&amp;(1&lt;&lt;28)) != 0">
+		   <data type="int" name="PDG"></data>
+		</if>
+            </repeat>
+         </repeat>
+      </block>
+      <block name="LCFloatVec-ExtensionName" major="1" minor="0">
+         <data type="int" name="flags">not yet used</data>
+         <data type="int" name="nVectors"></data>
+         <repeat count="nVectors">
+	    <data type="int" name="nElements"></data>
+            <repeat count="nElements">
+	       <data type="float" name="dedx"></data>
+            </repeat>
+         </repeat>
+      </block>
+  </record>
+</sio>
+
+
+
+
+

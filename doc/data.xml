@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics//projects/simsoft/lcio/doc/sio.dtd">
+
+<!--
+    Document   : data.xml
+    Created on : December 12, 2002, 8:15 AM
+    Author     : Frank Gaede, Ties Behnke, Norm Graf, Tony Johnson
+    Modified   : January 14, 2003, 10:45 AM  Ties Behnke
+    Description:
+        Description of the proposed LCIO reconstructed event format.
+    fg: modifications from meeting at in2p3
+-->
+
+<sio>
+  <record name="LCEvent" major = "1" minor = "0">
+    <block name="OutputHeader" major="1" minor="0">
+      <data type="int" name="isr flag"/>
+      <data type="float" name="collider energy"/>
+      <data type="int" name="flag0">to be defined</data>
+      <data type="int" name="flag1">to be defined</data>
+      <data type="string" name="reconstruction program tag"/>
+      <data type="float" name="b-field"/>
+    </block>
+    
+    <block name="ReconstructedObject">
+      <data type="string" name="ObjectType">jet, vertex, ... TODO: need
+	definition of code</data>
+      <data type="float[5]" name="4vec">4-vector of object (px, py, pz, E, M)</data>
+      <data type="float[3]" name="reference"> x,y,z where object is defined</data>
+      <data type="float[18?]" name="covariance">cov matrix TODO: review this!</data>
+      <data type="int" name="nrecopart"/>
+      <repeat count="nrecopart">
+	<data type="pntr" name="ReconstructedParticle">particle that contributed to the object</data>
+	<data type="float" name="weight">weight of contribution</data>
+      </repeat>
+    </block>
+
+    <block name="ReconstructedParticle">
+      <data type="int" name="nObject"/>
+      <repeat count="nObject">
+        <data type="int" name="primary">0: secondary, 1: primary</data>
+	<data type="int" name="ObjectType"> charged/ neutral particle </data>
+	<data type="float[4]" name="3-Vec"> 3-vector of object (px, py, pz)</data>
+	<data type="float[1]" name="energy"> energy of object (if measured independently)</data>
+	<data type="float" name="Charge"/>
+	<data type="float[10]" name="covariance">cov matrix for 4-Vec</data>
+	<data type="float[3]" name="reference"> reference point for 4-vec</data>
+	<data type="float[5?]" name="PID_type"> particle type: e,g,pi,K,p,...?</data>
+	<data type="int" name="nmc"/>
+	<repeat count="nmc">
+	  <data type="pntr" name="MCParticle"/>
+	  <data type="float" name="energyfraction"/>
+	</repeat>
+	<data type="int" name="ntrk"/>
+	<repeat count="ntrk">
+	  <data type="pntr" name="Track"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+	<data type="int" name="ncal"/>
+	<repeat count="ncal">
+	  <data type="pntr" name="Cluster"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+      </repeat>
+    </block>
+
+    <block name="TrackObject">
+      <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
+      <data type="int" name="nTrack"/>
+      <repeat count="nTrack">
+	<data type="int" name="tracktype">Type of Track (Full reconstr, TPC only, Muon
+	  only, etc.) </data>
+	<data type="float" name="momentum"> absolute value of momentum </data>
+	<data type="float" name="theta"/>
+	<data type="float" name="phi"/>
+	<data type="float" name="charge"/>
+	<data type="float" name="d0">Impact Parameter in r-phi</data>
+	<data type="float" name="z0">Impact Parameter in r-z</data>
+	<data type="float[3]" name="reference">Reference point (x,y,z) </data>
+	<data type="float[15]" name="covmatrix"> Covariance matrix</data>
+	<data type="float[10]" name="dEdx">dEdx weights and
+	  probabilities</data>
+	<if condition="(flag&amp;(1>>31)) !=0">
+	  <data type="int" name="n"/>
+	  <repeat count="n">
+	    <data type="pntr" name="TrackerHit">TODO: need to define a way to
+	      point to all hits in the list for the track</data>
+	  </repeat>
+	</if>
+      </repeat>
+    </block>
+
+    <block name="ClusterObject">
+      <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
+      <data type="int" name="nCluster"/>
+      <repeat count="nCluster">
+	<data type="int" name="clusterdetector"> Type of cluster: ECAL, HCAL, combined,
+	  ... </data>
+	<data type="int" name="clustertype"> Neutral/ charged/ undefined cluster</data>
+	<data type="float" name="energy">Energy of the cluster </data>
+	<data type="float" name="position">Center of cluster (x,y,z): to be defined</data>
+	<data type="float[6]" name="errpos">cov matrix of position</data>
+	<data type="float" name="theta">intrinsic direction: theta at position</data>
+	<data type="float" name="phi">intrinsic direction: phi at position</data>
+	<data type="float[3]" name="errdir">cov matrix of direction</data>
+	<data type="float[3-9?]" name="shape"> Shape parameters, to be defined</data>
+	<data type="float" name="emcluster">weight to be compatible with EM cluster</data>
+	<data type="float" name="muon"> weight to be compatible with a muon </data>
+	<data type="float" name="hadcluster"> weight to be compatible with HAD cluster </data>
+	<if condition="(flag&amp;(1>>31)) !=0">
+	  <data type="int" name="n"/>
+	  <repeat count="n">
+	    <data type="pntr" name="CalorimeterHit"/>
+	    <data type="float" name="contribution">Energy of hit contributed to this cluster</data> 
+	  </repeat>
+	</if>
+      </repeat>
+    </block>
+
+  </record>
+
+</sio>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
