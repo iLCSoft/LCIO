@@ -463,7 +463,7 @@
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
-	    <if condition="minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
+	    <if condition="1000*major+minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="float" name="energy"></data>
