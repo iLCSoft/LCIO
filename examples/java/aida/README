@@ -22,6 +22,8 @@ This uses the default Java implementation of AIDA from
 You can also use JAS3 to create (and analyze) the AIDA file, see
    http://jas.freehep.org/jas3/index.html
 
+For more information on analysing LCIO files with JAS3 please see:
+   http://jas.freehep.org/jas3/plugins/lcio/1.0/docs/index.html
 
 To build the example under linux use
 
