@@ -61,10 +61,10 @@ int main(int argc, char** argv ){
      exit(1) ;
    }
 
-   catch( Exception& e) {
-     cout << e.what() << endl ;
-     exit(1) ;
-   }
+//    catch( Exception& e) {
+//      cout << e.what() << endl ;
+//      exit(1) ;
+//    }
    return 0 ;
 }
 

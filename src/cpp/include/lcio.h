@@ -14,8 +14,17 @@
 #include "IOIMPL/LCFactory.h"
 
 
-/** \mainpage LCIO
+/** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html" target="_blank">LCIO</a> 
  * A persistency framework for linear collider simulation studies.
+ * \section Overview
+ * This is the API documentation for the C++ version of LCIO. For general documetation on 
+ * LCIO see the <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html" target="_blank">homepage</a>.
+ * There you can also find the API documentation of the Java version.
+ * \section Usage
+ * A good starting point to browse this documentation is the <a href="./namespaces.html">Namespace List</a>.
+ * As all data entities inherit from DATA::LCObject, the corresponding class documentation shows the complete
+ * hierarchy of all objects that can be stored with LCIO.
+ * The namespace IO contains the abstract interfaces for reading and writing data.
  */
 
 /** The Data namespace holds all base interfaces of data entities.

@@ -19,20 +19,22 @@ public interface LCReader {
      */
     public void open(const String& filename) throws IOException  ;
 
-    /** Reads the next run header from the file. 
+    /** Reads the next run header from the file. Returns NULL if
+     * 'EOF' read. 
      *
      * @throws IOException
      */
     public LCRunHeader* readNextRunHeader() throws IOException ;
     
-    /** Reads the next event from the file. 
+    /** Reads the next event from the file. Returns NULL if
+     * 'EOF' read. 
      *
      * @throws IOException
      */
     public LCEvent* readNextEvent() throws IOException ;
     
     /** Same as readNextRunHeader() but allows to set the access mode 
-     *  LCIO::READ_ONLY (default) or LCIO::Update
+     *  LCIO::READ_ONLY (default) or LCIO::Update. 
      *
      * @throws IOException
      */
@@ -40,12 +42,12 @@ public interface LCReader {
 
     /** Reads the specified event from file. 
      *  To be used with care: events have to be read in sequential 
-     *  order (as LCIO has no direct access yet).
+     *  order (as LCIO has no direct access yet).  Returns NULL if
+     * 'EOF' read, i.e. the specified event hasn't been found in the file.
      *
      * @throws IOException
-     * @throws DataNotAvailableException
      */
-    public LCEvent* readEvent(int runNumber, int evtNumber) throws IOException, DataNotAvailableException ;
+    public LCEvent* readEvent(int runNumber, int evtNumber) throws IOException  ;
 
     /** Closes the output file/stream etc.
      *

@@ -67,9 +67,8 @@ namespace SIO {
      *  order (as LCIO has no direct access yet).
      *
      * @throws IOException
-     * @throws DataNotAvailableException
      */
-    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) throw (IO::IOException, EVENT::DataNotAvailableException) ;
+    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) throw (IO::IOException /*, EVENT::DataNotAvailableException */) ;
 
     /** Closes the output file/stream etc.
      *

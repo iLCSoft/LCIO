@@ -257,7 +257,7 @@ namespace SIO {
   
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
-    throw (IOException, DataNotAvailableException) {
+    throw (IOException /*, DataNotAvailableException*/) {
     
     bool runFound = false ;
     bool evtFound = false ;
@@ -271,9 +271,10 @@ namespace SIO {
       runFound = ( (*_runP)->getRunNumber() == runNumber ) ;
     }
     if( !runFound ){
-      std::stringstream message ;
-      message << " run not found: " << runNumber << std::ends ;
-      throw DataNotAvailableException( message.str()  ) ;
+//       std::stringstream message ;
+//       message << " run not found: " << runNumber << std::ends ;
+//       throw DataNotAvailableException( message.str()  ) ;
+      return 0 ;
     }
     { // -- scope for unpacking evt header --------
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
