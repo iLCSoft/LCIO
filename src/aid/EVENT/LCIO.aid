@@ -78,6 +78,7 @@ public interface LCIO{
     static const char* CLUSTER ; 
     static const char* RECONSTRUCTEDPARTICLE ; 
     static const char* LCRELATION ; 
+    static const char* LCWGTRELATION ; 
 }
 @else
     // current version number of lcio
@@ -140,6 +141,7 @@ public interface LCIO{
   public static const String CLUSTER = "Cluster"; 
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
   public static const String LCRELATION = "LCRelation" ; 
+  public static const String LCWGTRELATION = "LCWgtRelation" ; 
 @endif
 }
 

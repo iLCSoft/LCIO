@@ -1,6 +1,8 @@
 #include "IMPL/LCRelationImpl.h"
 
 
+using namespace EVENT ;
+
 namespace IMPL{
 
 
@@ -20,93 +22,86 @@ namespace IMPL{
   const std::string &  LCRelationImpl::getToType()  const { return _toType ; } 
   
 
- int LCRelationImpl::numberOfRelations(EVENT::LCObject * obj){
-    
-    if( obj==0) {
-      int n = 0 ;
-      // is there a smarter way to get the number of relations ?
-      for( LCRelationIter i = begin() ; i != end()  ; i++ ){
-	n++ ;
-      } 
-      return  n ;
-    }
-
-    _cached = equal_range( obj ) ;
-    
-    int n = 0 ;
-    // is there a smarter way to get the number of relations ?
-    for( LCRelationIter i = _cached.first ; i != _cached.second ; i++ ){
-      n++ ;
-    } 
-    return  n ;
+  //  int numberOfRelations() const ;
+  LCObject * LCRelationImpl::getFrom(int index) const {}
+  LCObject * LCRelationImpl::getTo(int index) const {}
+  float LCRelationImpl::getWeight(int index) const {}
+  IntVec LCRelationImpl::getRelationsFrom(LCObject * from) const {}
+  IntVec LCRelationImpl::getRelationsTo(LCObject * to) const {}
+  void LCRelationImpl::addRelation(LCObject * from, LCObject * to, float weight = 1.0) {}
+  void LCRelationImpl::removeRelation(int index) {}
+  
+  
+  int LCRelationImpl::numberOfRelations() const {
+    return  distance( _map.begin() , _map.end() ) ;
   }
   
   
-  EVENT::LCObject * LCRelationImpl::getRelation(int index) {
+//   EVENT::LCObject * LCRelationImpl::getRelation(int index) {
 
-    LCRelationIter i = begin() ;    
-    while( index-- ) {
-      i++ ;
-      if( i == end()  )
-	return 0 ;
-    }
-    return i->first  ;
-  }
+//     LCRelationIter i = begin() ;    
+//     while( index-- ) {
+//       i++ ;
+//       if( i == end()  )
+// 	return 0 ;
+//     }
+//     return i->first  ;
+//   }
 
 
-  EVENT::LCObject * LCRelationImpl::getRelation(EVENT::LCObject * obj, int index) {
+//   EVENT::LCObject * LCRelationImpl::getRelation(EVENT::LCObject * obj, int index) {
     
-    LCRelationIter i ;
+//     LCRelationIter i ;
     
-    if( ! _useCaching) {
+//     if( ! _useCaching) {
       
-      _cached = equal_range( obj ) ;
+//       _cached = equal_range( obj ) ;
 
-    }
+//     }
 
-    i = _cached.first ;
+//     i = _cached.first ;
 
-    while( index-- ) {
-      i++ ;
-      if( i == _cached.second )
-	return 0 ;
-    }
+//     while( index-- ) {
+//       i++ ;
+//       if( i == _cached.second )
+// 	return 0 ;
+//     }
 
-    return i->second.first ;
-  }
-
-  
-  float LCRelationImpl::getWeight(EVENT::LCObject * obj, int index){
-    LCRelationIter i ;
-
-    if( ! _useCaching) {
-
-      _cached = equal_range( obj ) ;
-
-    }
-
-    i = _cached.first ;
-
-    while( index-- ) {
-      i++ ;
-      if( i == _cached.second )
-	return 0 ;
-    }
-
-    return i->second.second ;
-  }
-
-
-  void LCRelationImpl::addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight){
-
-    insert( std::make_pair( from , std::make_pair( to, weight ) ) ) ;
-
-  }
+//     return i->second.first ;
+//   }
 
   
-  void LCRelationImpl::useCaching(bool val){
-    _useCaching = val  ;
-  }
+//   float LCRelationImpl::getWeight(EVENT::LCObject * obj, int index){
+//     LCRelationIter i ;
+
+//     if( ! _useCaching) {
+
+//       _cached = equal_range( obj ) ;
+
+//     }
+
+//     i = _cached.first ;
+
+//     while( index-- ) {
+//       i++ ;
+//       if( i == _cached.second )
+// 	return 0 ;
+//     }
+
+//     return i->second.second ;
+//   }
+
+
+//   void LCRelationImpl::addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight){
+
+//     insert( std::make_pair( from , std::make_pair( to, weight ) ) ) ;
+
+//   }
+
+  
+//   void LCRelationImpl::useCaching(bool val){
+//     _useCaching = val  ;
+//   }
 
   void LCRelationImpl::setTypes( const std::string& fromType, const std::string& toType ){
     _fromType= fromType ;

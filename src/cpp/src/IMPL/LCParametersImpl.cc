@@ -42,21 +42,26 @@ namespace IMPL{
 
   IntVec & LCParametersImpl::getIntVals(const std::string & key, IntVec & values){
 
-    copy( _intMap[ key ].begin() , _intMap[ key ].end() , back_inserter( values )  ) ;
-
+    //    copy( _intMap[ key ].begin() , _intMap[ key ].end() , back_inserter( values )  ) ;
+    IntVec& v =  _intMap[ key ] ;
+    values.insert( values.end() , v.begin() , v.end() ) ;
     return values ;
   }
 
   FloatVec & LCParametersImpl::getFloatVals(const std::string & key, FloatVec & values){
 
-    copy( _floatMap[ key ].begin() , _floatMap[ key ].end() , back_inserter( values )  ) ;
+    //    copy( _floatMap[ key ].begin() , _floatMap[ key ].end() , back_inserter( values )  ) ;
+    FloatVec& v =  _floatMap[ key ] ;
+    values.insert( values.end() , v.begin() , v.end() ) ;
 
     return values ;
   }
 
   StringVec & LCParametersImpl::getStringVals(const std::string & key, StringVec & values){
 
-    copy( _stringMap[ key ].begin() , _stringMap[ key ].end() , back_inserter( values )  ) ;
+    //    copy( _stringMap[ key ].begin() , _stringMap[ key ].end() , back_inserter( values )  ) ;
+    StringVec& v =  _stringMap[ key ] ;
+    values.insert( values.end() , v.begin() , v.end() ) ;
 
     return values ;
   }
@@ -64,23 +69,32 @@ namespace IMPL{
 
   const StringVec & LCParametersImpl::getIntKeys(StringVec & keys) {
 
-    for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
-      keys.push_back( iter->first ) ; 
-    }
-    return keys ;
+//     for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
+//       keys.push_back( iter->first ) ; 
+//     }
+// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+    transform( _intMap.begin() , _intMap.end() , back_inserter( keys )  , select1st< IntMap::value_type >() ) ;
+
+  return keys ;
   }
+
   const StringVec & LCParametersImpl::getFloatKeys(StringVec & keys) {
     
-    for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
-      keys.push_back( iter->first ) ; 
-    }
+//     for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
+//       keys.push_back( iter->first ) ; 
+//     }
+// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+    transform( _floatMap.begin() , _floatMap.end() , back_inserter( keys )  , select1st< FloatMap::value_type >() ) ;
     return keys ;
   }
+
   const StringVec & LCParametersImpl::getStringKeys(StringVec & keys) {
 
-    for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
-      keys.push_back( iter->first ) ; 
-    }
+//     for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
+//       keys.push_back( iter->first ) ; 
+//     }
+// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+    transform( _stringMap.begin() , _stringMap.end() , back_inserter( keys )  , select1st< StringMap::value_type >() ) ;
     return keys ;
   }
   
@@ -98,19 +112,22 @@ namespace IMPL{
 
   void LCParametersImpl::setValue(const std::string & key, int value){
     checkAccess("LCParametersImpl::setValue") ;
-    if(  _intMap[ key ].size() > 0 ) _intMap[ key ].clear() ;
+//     if(  _intMap[ key ].size() > 0 ) 
+    _intMap[ key ].clear() ;
     _intMap[ key ].push_back( value ) ;
   }
 
   void LCParametersImpl::setValue(const std::string & key, float value){
     checkAccess("LCParametersImpl::setValue") ;
-    if(  _floatMap[ key ].size() > 0 ) _floatMap[ key ].clear() ;
+//     if(  _floatMap[ key ].size() > 0 ) 
+    _floatMap[ key ].clear() ;
     _floatMap[ key ].push_back( value ) ;
   }
 
   void LCParametersImpl::setValue(const std::string & key, const std::string & value) {
     checkAccess("LCParametersImpl::setValue") ;
-    if(  _stringMap[ key ].size() > 0 ) _stringMap[ key ].clear() ;
+//     if(  _stringMap[ key ].size() > 0 ) 
+    _stringMap[ key ].clear() ;
     _stringMap[ key ].push_back( value ) ;
 
   }
@@ -121,27 +138,30 @@ namespace IMPL{
     
     checkAccess("LCParametersImpl::setValues") ;
 
-    if(  _intMap[ key ].size() > 0 ) _intMap[ key ].clear() ;
+//     if(  _intMap[ key ].size() > 0 ) _intMap[ key ].clear() ;
+//     copy( values.begin() , values.end() , back_inserter(  _intMap[ key ] )  ) ;
 
-    copy( values.begin() , values.end() , back_inserter(  _intMap[ key ] )  ) ;
+    _intMap[ key ].assign(  values.begin() , values.end() ) ;
   }
   
   void LCParametersImpl::setValues(const std::string & key, EVENT::FloatVec & values){
 
     checkAccess("LCParametersImpl::setValues") ;
 
-    if(  _floatMap[ key ].size() > 0 ) _floatMap[ key ].clear() ;
+//     if(  _floatMap[ key ].size() > 0 ) _floatMap[ key ].clear() ;
+//     copy( values.begin() , values.end() , back_inserter(  _floatMap[ key ] )  ) ;
 
-    copy( values.begin() , values.end() , back_inserter(  _floatMap[ key ] )  ) ;
+    _floatMap[ key ].assign(  values.begin() , values.end() ) ;
   }
   
   void LCParametersImpl::setValues(const std::string & key, EVENT::StringVec & values){
 
     checkAccess("LCParametersImpl::setValues") ;
 
-    if(  _stringMap[ key ].size() > 0 ) _stringMap[ key ].clear() ;
+//     if(  _stringMap[ key ].size() > 0 ) _stringMap[ key ].clear() ;
+//     copy( values.begin() , values.end() , back_inserter(  _stringMap[ key ] )  ) ;
 
-    copy( values.begin() , values.end() , back_inserter(  _stringMap[ key ] )  ) ;
+    _stringMap[ key ].assign(  values.begin() , values.end() ) ;
   }
 
 } ; // namespace 

@@ -1,0 +1,47 @@
+package hep.lcio.event ;
+
+@java{
+import hep.lcio.exceptions.* ;
+}
+
+/** Interface for a relationship navigator object that facilitates the navigation of 
+ *  relationships stored in an LCCollection. Implementations will use some sort of associative 
+ *  container to provide reasonably fast lookup of the relations of a given LCObject.
+ *
+ * 
+ * @author gaede 
+ * @version $Id: LCRelationNavigator.aid,v 1.1 2004-07-13 11:54:26 gaede Exp $
+ */
+
+public interface LCRelationNavigator
+{
+
+    /**The type of the 'from' objects in this relation.
+     */
+    public const String& getFromType() const ;
+
+    /**The type of the 'to' objects in this relation.
+     */
+    public const String& getToType() const ;
+
+    /** The objects related to this object.
+     */
+    public const LCObjectVec& getRelatedObjects( LCObject* from ) const;
+    
+    /** The weight of the given relation. 
+     */
+    public const FloatVec& getWeights( LCObject* from ) const;
+
+    /** Adds a relation.
+     */
+    public void addRelation( LCObject* from, LCObject* to, float weight=1.0 );
+    
+    /** Remove a given relation.
+     */
+    public void removeRelation( LCObject* from, LCObject* to ) ;
+
+    /** Creates an LCCollection of LCWgtRelation objects.
+     */
+    public LCCollection* createLCCollection() ;
+
+}

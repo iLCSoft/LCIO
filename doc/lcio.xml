@@ -11,7 +11,6 @@
 	Unless specified otherwise the default units used in LCIO files are:
 	length: mm, energy: GeV and time ns
 -->
-
 <sio>
   <record name="LCRunHeader">
      <block name="RunHeader" major="1" minor="1">
@@ -22,30 +21,34 @@
         <repeat count="nActiveSubdetectors">
            <data type="string" name="subdetectorName"></data>
         </repeat>
-        <data type="int" name="nIntParameters">number of named integer parameter entries</data>
-        <repeat count="nIntParameters">
-           <data type="string" name="key">key (name) of parameter</data>
-           <data type="int" name="nVals">number of values for this parameter</data>
-           <repeat count="nVals">
-	     <data type="int" name="value"></data>
-           </repeat>
-        </repeat>
-        <data type="int" name="nFloatParameters">number of named float parameter entries</data>
-        <repeat count="nFloatParameters">
-           <data type="string" name="key">key (name) of parameter</data>
-           <data type="int" name="nVals">number of values for this parameter</data>
-           <repeat count="nVals">
-	     <data type="float" name="value"></data>
-           </repeat>
-        </repeat>
-        <data type="int" name="nStringParameters">number of named string parameter entries</data>
-        <repeat count="nStringParameters">
-           <data type="string" name="key">key (name) of parameter</data>
-           <data type="int" name="nVals">number of values for this parameter</data>
-           <repeat count="nVals">
-	     <data type="string" name="value"></data>
-           </repeat>
-        </repeat>
+	<!-- start of named parameters -->
+        <if condition="major>2||(major==1&amp;&amp;minor==1)">
+          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+          <repeat count="nIntParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="int" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+          <repeat count="nFloatParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="float" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nStringParameters">number of named string parameter entries</data>
+          <repeat count="nStringParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="string" name="value"></data>
+             </repeat>
+          </repeat>
+	<!-- end of named parameters -->
+        </if>
      </block>
   </record>  
   <record name="LCEventHeader">
@@ -341,6 +344,17 @@
       </repeat>
     </block>
     <block name="LCRelation" major="1" minor="1">
+       <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
+       <data type="int" name="nRelations"/>
+       <repeat count="nRelations">
+          <data type="pntr" name="LCObjectFrom">the 'from' side of the relation</data>
+	  <data type="pntr" name="LCObjectTo">the 'pointed to' side of the relation</data>
+	  <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+	    <data type="float" name="weight">weight of the relation</data>
+	  </if>
+       </repeat>
+    </block>
+    <block name="LCWgtRelation" major="1" minor="1">
        <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
        <data type="int" name="nRelations"/>
        <repeat count="nRelations">

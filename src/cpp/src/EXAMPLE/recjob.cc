@@ -19,6 +19,7 @@
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
 #include "IMPL/LCRelationImpl.h"
+#include "IMPL/LCWgtRelationImpl.h"
 
 
 // M_PI is non ansi ...
@@ -228,7 +229,10 @@ public:
     calHits->setFlag( calFlag.getFlag()  ) ;
 
 
-    LCRelation* scRel = new LCRelationImpl( LCIO::CALORIMETERHIT , LCIO::SIMCALORIMETERHIT  )  ; // still experimental code ...
+//     LCRelation* scRel = new LCRelationImpl( LCIO::CALORIMETERHIT , LCIO::SIMCALORIMETERHIT  )  ; // still experimental code ...
+
+    LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
+
 
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
@@ -242,13 +246,19 @@ public:
       calHit->setCellID0(  simcalHit->getCellID0() ) ;
       calHit->setPosition( simcalHit->getPosition()) ;
 
-      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-      
+//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
+      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       calHits->addElement( calHit ) ;
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
-    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
+    evt->addCollection( scRel , "CalorimeterHitsSimRel" ) ;
+    LCFlagImpl relFlag(0) ;
+    relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
+    //    LCFlagImpl(0).setBit( LCIO::LCREL_WEIGHTED ).getFlag() ;
+    scRel->setFlag( relFlag.getFlag()  ) ;
+		      //    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
 
 
     // the following is some example code on how to access the relation 

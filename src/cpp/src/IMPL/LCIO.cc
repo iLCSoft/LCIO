@@ -19,5 +19,6 @@ const char* LCIO::TRACK= "Track" ;
 const char* LCIO::CLUSTER = "Cluster" ; 
 const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ; 
 const char* LCIO::LCRELATION = "LCRelation" ; 
+const char* LCIO::LCWGTRELATION = "LCWgtRelation" ; 
 
 };

@@ -1,4 +1,18 @@
 package hep.lcio.event ;
+@ifdef cpp
+@cpp{
+#include <vector>
+}
+@endif
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
+
+@ifdef cpp
+@cpp{
+class LCObject ;
+typedef std::vector<LCObject*> LCObjectVec ;
+}
+@endif
 
 /** The generic object that is held in an LCCollection. 
  *  Every object stored in an LCCollection, i.e. in an LCEvent has to 

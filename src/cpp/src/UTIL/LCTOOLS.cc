@@ -133,19 +133,19 @@ namespace UTIL {
 
     // now dump the relations in the event
 
-    const StringVec* relVec = evt->getRelationNames() ;
+//     const StringVec* relVec = evt->getRelationNames() ;
     
 
-    for(StringVec::const_iterator name = relVec->begin() ; name != relVec->end() ; name++){
+//     for(StringVec::const_iterator name = relVec->begin() ; name != relVec->end() ; name++){
     
-      LCRelation* rel = evt->getRelation( *name ) ;
+//       LCRelation* rel = evt->getRelation( *name ) ;
       
-      cout << endl 
-	   << " relation name : " << *name 
-	   << endl ;
+//       cout << endl 
+// 	   << " relation name : " << *name 
+// 	   << endl ;
       
-      printRelation( rel ) ;
-    }
+//       printRelation( rel ) ;
+//     }
 
   }
 
@@ -1258,35 +1258,35 @@ namespace UTIL {
 
   void LCTOOLS::printRelation( const EVENT::LCRelation* rel_const ) {
 
-    LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; // FIXME: the relation interface needs to properly support const
+//     LCRelation* rel = const_cast< LCRelation* >( rel_const )  ; // FIXME: the relation interface needs to properly support const
     
-    cout << " relation from " << rel->getFromType() << " to " << rel->getToType() << endl ; 
+//     cout << " relation from " << rel->getFromType() << " to " << rel->getToType() << endl ; 
     
-    int nRel = rel->numberOfRelations() ;
+//     int nRel = rel->numberOfRelations() ;
     
-    cout <<  " |  [from_id]  |  [to_id]   | weight "  << endl ;
+//     cout <<  " |  [from_id]  |  [to_id]   | weight "  << endl ;
     
-    // need to get a set of from objects first
-    set<LCObject*> objs ;
-    for( int i=0; i<nRel ; i++ ) {
-      objs.insert( rel->getRelation( i )  ) ;
-    } 
+//     // need to get a set of from objects first
+//     set<LCObject*> objs ;
+//     for( int i=0; i<nRel ; i++ ) {
+//       objs.insert( rel->getRelation( i )  ) ;
+//     } 
 
-    for( std::set< LCObject* >::const_iterator iter = objs.begin() ; iter != objs.end() ; iter++ ){
+//     for( std::set< LCObject* >::const_iterator iter = objs.begin() ; iter != objs.end() ; iter++ ){
 
-      LCObject* from = *iter ;
+//       LCObject* from = *iter ;
       
-      for( int j=0; j < rel->numberOfRelations( from ) ; j++ ){
+//       for( int j=0; j < rel->numberOfRelations( from ) ; j++ ){
 	
-	printf(" | [%8.8x] |  [[%8.8x]   | %5.3e \n" 
-	       , from->id() 
-	       , rel->getRelation( from, j )->id()  
-	       , rel->getWeight(  from, j )
-	       );
+// 	printf(" | [%8.8x] |  [[%8.8x]   | %5.3e \n" 
+// 	       , from->id() 
+// 	       , rel->getRelation( from, j )->id()  
+// 	       , rel->getWeight(  from, j )
+// 	       );
 	
-      }
+//       }
       
-    }
+//     }
   }
 
   int LCTOOLS::printDaughterParticles(const MCParticle* part, int index){

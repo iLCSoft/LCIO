@@ -12,6 +12,7 @@
 #include "SIO/SIOFloatVecHandler.h" 
 #include "SIO/SIOIntVecHandler.h" 
 #include "SIO/SIOReconstructedParticleHandler.h" 
+#include "SIO/SIOLCWgtRelationHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -35,10 +36,12 @@ namespace SIO {
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
     _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;
+    _map[ LCIO::LCWGTRELATION] = new SIOLCWgtRelationHandler ;
     // generic arrays/vectors
     _map[ LCIO::LCSTRVEC ] = new SIOStrVecHandler ;
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
+
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

@@ -59,111 +59,111 @@ namespace SIO {
     
     if( op == SIO_OP_READ ){ 
       
-      // get address of this  handlers relation in the event
+//       // get address of this  handlers relation in the event
       
-      LCRelationIOImpl* ioRel ;
+//       LCRelationIOImpl* ioRel ;
 
 
-      // get the relation from event that has been attached by SIOEventHandler
-      try{   // can safely cast - we know we have an LCEventImpl that has LCRelationIOImpls
-	ioRel = dynamic_cast<LCRelationIOImpl*>( (*_evtP)->getRelation( getName()->c_str() )) ;
-      }
-      catch(DataNotAvailableException){   return LCIO::ERROR ; }
+//       // get the relation from event that has been attached by SIOEventHandler
+//       try{   // can safely cast - we know we have an LCEventImpl that has LCRelationIOImpls
+// 	ioRel = dynamic_cast<LCRelationIOImpl*>( (*_evtP)->getRelation( getName()->c_str() )) ;
+//       }
+//       catch(DataNotAvailableException){   return LCIO::ERROR ; }
 
-      int flag ;
-      SIO_DATA( stream ,  &flag , 1  ) ;
+//       int flag ;
+//       SIO_DATA( stream ,  &flag , 1  ) ;
 
-      //      bool isOneToMany = LCFlagImpl(flag).bitSet( LCIO::LCREL_ONE2MANY ) ;
-      bool isWeighted =  LCFlagImpl(flag).bitSet( LCIO::LCREL_WEIGHTED ) ;
+//       //      bool isOneToMany = LCFlagImpl(flag).bitSet( LCIO::LCREL_ONE2MANY ) ;
+//       bool isWeighted =  LCFlagImpl(flag).bitSet( LCIO::LCREL_WEIGHTED ) ;
       
 
-      int nRel ;
-      SIO_DATA( stream ,  &nRel , 1  ) ;
+//       int nRel ;
+//       SIO_DATA( stream ,  &nRel , 1  ) ;
       
-      // initialize the helper vector
-      ioRel->_relVec = new RelVec( nRel )  ;
+//       // initialize the helper vector
+//       ioRel->_relVec = new RelVec( nRel )  ;
 
-      // now read all the relations into the helper vector
-      for( int i=0 ; i< nRel ; i ++ ){
+//       // now read all the relations into the helper vector
+//       for( int i=0 ; i< nRel ; i ++ ){
 
-	SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].from ) ) ;
-	SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].to ) ) ;
-	if( isWeighted) {
-	  SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].wgt ) ) ;
-	}
-      }
-      // -> after pointer reallocation the vector is filled into the multimap
+// 	SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].from ) ) ;
+// 	SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].to ) ) ;
+// 	if( isWeighted) {
+// 	  SIO_PNTR( stream ,   &(  (*ioRel->_relVec)[i].wgt ) ) ;
+// 	}
+//       }
+//       // -> after pointer reallocation the vector is filled into the multimap
 
     } else if( op == SIO_OP_WRITE ){ 
       
 
-      if( _rel  != 0 ){
+//       if( _rel  != 0 ){
 
-	// check if we have weights not equal to one
-	LCFlagImpl flag(0) ;
-	bool isWeighted = false ; 
+// 	// check if we have weights not equal to one
+// 	LCFlagImpl flag(0) ;
+// 	bool isWeighted = false ; 
 	
-	//	std::cout << " number of relations : "  <<  _rel->numberOfRelations() << std::endl ;
+// 	//	std::cout << " number of relations : "  <<  _rel->numberOfRelations() << std::endl ;
 
-	for(int i=0 ; i< _rel->numberOfRelations()  ; i++){
+// 	for(int i=0 ; i< _rel->numberOfRelations()  ; i++){
 	  
 
-	  LCObject* from =  _rel->getRelation( i ) ;
+// 	  LCObject* from =  _rel->getRelation( i ) ;
 	  
-	  for(int j=0 ; j< _rel->numberOfRelations( from ) ; j++ ){
+// 	  for(int j=0 ; j< _rel->numberOfRelations( from ) ; j++ ){
 	    
-	    if( _rel->getWeight( from , j  ) != 1.0 ){
-	      isWeighted = true ;
-	      break ;
-	    }
+// 	    if( _rel->getWeight( from , j  ) != 1.0 ){
+// 	      isWeighted = true ;
+// 	      break ;
+// 	    }
 	    
-	  }
-	  if( isWeighted ) {
-	    flag.setBit(  LCIO::LCREL_WEIGHTED ) ;
-	    break ;
-	  }
-	}
+// 	  }
+// 	  if( isWeighted ) {
+// 	    flag.setBit(  LCIO::LCREL_WEIGHTED ) ;
+// 	    break ;
+// 	  }
+// 	}
 
-	int flagWord = flag.getFlag() ; 
+// 	int flagWord = flag.getFlag() ; 
 
-	SIO_DATA( stream ,  &flagWord , 1  ) ;
+// 	SIO_DATA( stream ,  &flagWord , 1  ) ;
 
 
-	int nRel = _rel->numberOfRelations() ;
-	SIO_DATA( stream,  &nRel , 1  ) ;
+// 	int nRel = _rel->numberOfRelations() ;
+// 	SIO_DATA( stream,  &nRel , 1  ) ;
 	
-	int count(0) ;
-	// first we need a set of all the 'from' objects in the relations map
-	std::set< LCObject* > fromObjects ;
+// 	int count(0) ;
+// 	// first we need a set of all the 'from' objects in the relations map
+// 	std::set< LCObject* > fromObjects ;
 
-	for( int i=0 ; i< nRel ; i ++ ){
+// 	for( int i=0 ; i< nRel ; i ++ ){
 
-	  LCObject* from =  _rel->getRelation( i ) ;
-	  fromObjects.insert( from ) ;
-	}
+// 	  LCObject* from =  _rel->getRelation( i ) ;
+// 	  fromObjects.insert( from ) ;
+// 	}
 
-	for( std::set< LCObject* >::const_iterator iter = fromObjects.begin() ; iter != fromObjects.end() ; iter++ ){
+// 	for( std::set< LCObject* >::const_iterator iter = fromObjects.begin() ; iter != fromObjects.end() ; iter++ ){
 
-	  LCObject* from = *iter ;
+// 	  LCObject* from = *iter ;
 
-	  for(int j=0 ; j< _rel->numberOfRelations( from )  ; j++ ){
+// 	  for(int j=0 ; j< _rel->numberOfRelations( from )  ; j++ ){
 	    
-	    LCObject* to = _rel->getRelation( from , j  ) ;
+// 	    LCObject* to = _rel->getRelation( from , j  ) ;
 
-	    SIO_PNTR( stream , &from ) ;
-	    SIO_PNTR( stream , &to ) ;
+// 	    SIO_PNTR( stream , &from ) ;
+// 	    SIO_PNTR( stream , &to ) ;
 	    
-	    if( isWeighted ){ 
-	      float weight = _rel->getWeight( from , j  ) ;
-	      SIO_DATA( stream ,  &weight , 1  ) ;
-	    }
+// 	    if( isWeighted ){ 
+// 	      float weight = _rel->getWeight( from , j  ) ;
+// 	      SIO_DATA( stream ,  &weight , 1  ) ;
+// 	    }
 	    
-	  }
-	}
+// 	  }
+// 	}
 
-      }else{ 
-	return 0 ;
-      }
+//       }else{ 
+// 	return 0 ;
+//       }
     }
 
     

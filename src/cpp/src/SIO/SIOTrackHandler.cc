@@ -94,9 +94,11 @@ namespace SIO{
       
       // fill the vector to have correct size
       // as we are using the addresses of the elements henceforth
-      for(int i=0;i<nHits;i++){
-	trk->_hits.push_back( 0 ) ;
-      }
+//       for(int i=0;i<nHits;i++){
+// 	trk->_hits.push_back( 0 ) ;
+//       }
+      trk->_hits.resize( nHits) ;
+
       for(int i=0;i<nHits;i++){
 	SIO_PNTR( stream , &(trk->_hits[i] ) ) ;
       }
