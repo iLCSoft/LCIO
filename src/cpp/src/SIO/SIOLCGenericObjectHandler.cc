@@ -86,11 +86,10 @@ namespace SIO{
 	SIO_DATA( stream , &_nInt  , 1  ) ;
 	SIO_DATA( stream , &_nFloat  , 1  ) ;
 	SIO_DATA( stream , &_nDouble  , 1  ) ;
-      }
 
-//       cout << ">>>>>>>>>>>>> written nInt: " << _nInt << endl ;
-//       cout << ">>>>>>>>>>>>> written nFloat: " << _nFloat << endl ;
-//       cout << ">>>>>>>>>>>>> written nDouble: " << _nDouble << endl ;
+	// 	cout << " >>>>>>>  written nInt, nFloat, nDouble : " << _nInt << ", " << _nFloat << ", " << _nDouble  
+	// << " for type " << col->getTypeName() << endl ;
+      }
       
     }
     return ( SIO_BLOCK_SUCCESS ) ;
@@ -103,32 +102,32 @@ namespace SIO{
 
     LCGenericObjectIOImpl* obj  = new LCGenericObjectIOImpl ;	
     *objP = obj ;
-
+    
+    obj->_isFixedSize = _isFixedSize ;
+    
     if( ! _isFixedSize ){ 
       
       SIO_DATA( stream ,  &_nInt , 1  ) ;
       SIO_DATA( stream ,  &_nFloat , 1  ) ;
       SIO_DATA( stream ,  &_nDouble , 1  ) ;
-      
-      obj->_isFixedSize = false ;
-
     } 
-
+    
+    
     obj->_intVec.resize( _nInt )  ; 
     obj->_floatVec.resize( _nFloat ) ; 
     obj->_doubleVec.resize( _nDouble ) ;
-	
+    
     // the 2003 C++ standard guarantes that vector uses  contigous memory ...
     SIO_DATA( stream , &(obj->_intVec[0])  , _nInt  ) ;      
     SIO_DATA( stream , &(obj->_floatVec[0])  , _nFloat  ) ;      
     SIO_DATA( stream , &(obj->_doubleVec[0])  , _nDouble  ) ;      
-
+    
     SIO_PTAG( stream , obj  ) ;
-
+    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
-    
+  
   unsigned int SIOLCGenericObjectHandler::write(SIO_stream* stream, 
 						const LCObject* obj){
     
