@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFloatVec.java,v 1.9 2004-09-23 13:49:53 gaede Exp $
+ * @version $Id: SIOFloatVec.java,v 1.10 2004-09-24 10:45:19 tonyj Exp $
  */
 class SIOFloatVec extends ILCFloatVec
 {
@@ -24,10 +24,9 @@ class SIOFloatVec extends ILCFloatVec
       data = new float[size];
       for (int i = 0; i < size; i++)
          data[i] = in.readFloat();
-	  if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) ;
-	    in.readPTag(this);
+      if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) in.readPTag(this);
    }
-
+   
    static void write(LCFloatVec vec, SIOOutputStream out) throws IOException
    {
       if (vec instanceof SIOFloatVec)
@@ -39,10 +38,9 @@ class SIOFloatVec extends ILCFloatVec
          for (int i = 0; i < data.length; i++)
             out.writeFloat(data[i]);
          out.writePTag(vec) ;
-      
       }
    }
-
+   
    private void write(SIOOutputStream out) throws IOException
    {
       out.writeInt(size);

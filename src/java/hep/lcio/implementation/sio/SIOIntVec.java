@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOIntVec.java,v 1.4 2004-09-23 13:49:53 gaede Exp $
+ * @version $Id: SIOIntVec.java,v 1.5 2004-09-24 10:45:19 tonyj Exp $
  */
 class SIOIntVec extends ILCIntVec
 {
@@ -24,10 +24,9 @@ class SIOIntVec extends ILCIntVec
       data = new int[size];
       for (int i = 0; i < size; i++)
          data[i] = in.readInt();
-   	  if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) ;
-	    in.readPTag(this);
+      if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) in.readPTag(this);
    }
-
+   
    static void write(LCIntVec vec, SIOOutputStream out) throws IOException
    {
       if (vec instanceof SIOIntVec)
@@ -41,7 +40,7 @@ class SIOIntVec extends ILCIntVec
          out.writePTag(vec);
       }
    }
-
+   
    private void write(SIOOutputStream out) throws IOException
    {
       out.writeInt(size);

@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOStrVec.java,v 1.2 2004-09-23 13:49:53 gaede Exp $
+ * @version $Id: SIOStrVec.java,v 1.3 2004-09-24 10:45:19 tonyj Exp $
  */
 class SIOStrVec extends ILCStrVec
 {
@@ -24,11 +24,10 @@ class SIOStrVec extends ILCStrVec
       data = new String[size];
       for (int i = 0; i < size; i++)
          data[i] = in.readString();
-
-	  if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) ;
-	    in.readPTag(this);
+      
+      if(SIOVersion.encode(major,minor)>SIOVersion.encode(1,2)) in.readPTag(this);
    }
-
+   
    static void write(LCStrVec vec, SIOOutputStream out) throws IOException
    {
       if (vec instanceof SIOStrVec)
@@ -39,15 +38,15 @@ class SIOStrVec extends ILCStrVec
          out.writeInt(data.length);
          for (int i = 0; i < data.length; i++)
             out.writeString(data[i]);
-		 out.writePTag(vec) ;
+         out.writePTag(vec) ;
       }
    }
-
+   
    private void write(SIOOutputStream out) throws IOException
    {
       out.writeInt(size);
       for (int i = 0; i < size; i++)
          out.writeString(data[i]);
-   	  out.writePTag(this) ;
+      out.writePTag(this) ;
    }
 }
