@@ -245,6 +245,8 @@ public class RandomEvent extends ILCEvent
       lcWrt.writeEvent(e);
       lcWrt.close();
       
+      
+//      File inFile = new File("temp.slcio"); 
       LCReader lcRead = factory.createLCReader();
       lcRead.open(file.getAbsolutePath());
       LCEvent e2 = lcRead.readNextEvent();

@@ -2,6 +2,8 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+  - added isDefault flag to LCCollection   
+
   - LCGenericObject added
 
   - usage/logic of SimCalorimeterHit MCParticle contributions has changed

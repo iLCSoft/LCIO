@@ -111,7 +111,8 @@ namespace SIO {
 	int nObj = _col->getNumberOfElements() ;
 
 	SIO_DATA( stream,  &nObj , 1  ) ;
-	
+// 	cout << " >>>>>>>  written nObj : " << nObj << " for type " << _col->getTypeName() << endl ;
+
 	//  now write all the objects :
 	for( int i=0 ; i< nObj ; i ++ ){
 	  

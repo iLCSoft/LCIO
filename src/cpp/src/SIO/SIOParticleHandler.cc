@@ -162,8 +162,10 @@ namespace SIO {
     //    particle->prepareArrayOfDaughters( numberOfDaughters ) ;
 
 
-    for(int i=0;i<numberOfDaughters;i++){
-    }
+//     for(int i=0;i<numberOfDaughters;i++){
+//     }
+    particle->_daughters.resize( numberOfDaughters ) ;
+
     for(int i=0;i<numberOfDaughters;i++){
       SIO_PNTR( stream , &(particle->_daughters[i] ) ) ;
     }

@@ -534,22 +534,39 @@ user, e.g. define a bit per subdetector. Check/Set the collection variables Trac
 TrackTypeBitIndices.
 
 \subsubsection{ReconstructedParticle}
-ReconstructedParticle is the class to be used for every object that is reconstructed. ReconstructedParticle can be
-a single particle, e.g. a track with a pion PID, or a compound object like a jet made from many particles.
+ReconstructedParticle is the class to be used for every object that is reconstructed. ReconstructedParticle
+can be a single particle, e.g. a track with a pion PID, or a compound object like a jet made from many 
+particles.
 ReconstructedParticle has lists of Tracks, Clusters and ReconstructedParticles that have been combined to form 
 this particle. The particle type  is encoded  in a type word - check/set the collection parameters 
 ReconstructedParticleTypeNames and ReconstructedParticleTypeValues.
+ReconstructedParticles have a 4-momentum and for convenience a redundant mass field. In general users will 
+want to fill these consistently. Typically kinematics is calculated from the most likely PID assigned
+to this particle.
+ReconstructedParticle also points nack to CLusters and Tracks that have been used to create the particle.
 
 {\bf Users have to make sure that they don't double count when looping over lists of ReconstructedParticles. 
 LCIO might provide a convenient method to help looping over lists in a future release.}
+
+Reconstruction programs are expected to provide one reasonable list of ReconstructedParticles in the event
+that serves as a starting point for physics analysis. The corresponding LCCollection should be flagged 
+as {\em default} and has to fulfill the following requirements:
+\begin{itemize}
+\item{{\bf unambigous:} elements in the list can be combined to compound particles like $K_s$ but no particle
+can be used in more than one compound. Additional particle hypotheses are supposed to  be stored in another 
+list.}
+\item{{\bf complete:} the list should be reasonably complete, i.e. everything seen in the event should have 
+been taken into account to create that list.}
+\end{itemize}
+
 
 \subsubsection{LCGenericObject}
 Users are free to store additional data in LCIO files that cannot be expressed in terms of the classes that 
 are provided with LCIO. To do so it is easiest to implement the interface LCGenericObject in a user defined
 concrete class. In order to write data, simply create instances of this class and add them to an LCCollection
 that in turn is added to the LCEvent. When reading back this information users are free to instantiate 
-objects of the user class' type via copy constructor or simply access the information through the LCGenericObject
-interface.
+objects of the user class' type via copy constructor or simply access the information through the
+LCGenericObject interface.
 
 \subsubsection{LCIntVec, LCFloatVec and LCStringVec}
 Simple user extension data can be stored in LCCollections of vectors of type of {\em float, int} and {\em string}. 
@@ -996,6 +1013,10 @@ An optional time word has been added to CalorimeterHit.
 \item{{\bf Transient flag added to LCCollection} \\
 LCCollections can now be flagged as transient for use in applications that have LCEvent as the
 underlying transient data model.
+}
+\item{{\bf Default flag added to LCCollection} \\
+LCCollections can now be flagged as default lists. There should be only one default LCCollection
+for every type.
 }
 \item{{\bf  New package UTIL for C++} \\
 A new namespace UTIL has been added to the C++ version. It holds convenient classes and methods

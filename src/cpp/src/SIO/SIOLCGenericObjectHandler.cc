@@ -87,7 +87,10 @@ namespace SIO{
 	SIO_DATA( stream , &_nFloat  , 1  ) ;
 	SIO_DATA( stream , &_nDouble  , 1  ) ;
       }
-      
+
+//       cout << ">>>>>>>>>>>>> written nInt: " << _nInt << endl ;
+//       cout << ">>>>>>>>>>>>> written nFloat: " << _nFloat << endl ;
+//       cout << ">>>>>>>>>>>>> written nDouble: " << _nDouble << endl ;
       
     }
     return ( SIO_BLOCK_SUCCESS ) ;

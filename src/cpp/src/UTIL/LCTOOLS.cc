@@ -13,6 +13,7 @@
 #include "EVENT/Track.h"
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
+#include "EVENT/LCGenericObject.h"
 
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
@@ -129,6 +130,11 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::RECONSTRUCTEDPARTICLE ){
 	  
 	printReconstructedParticles( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCGENERICOBJECT ){
+	  
+	printLCGenericObjects( col ) ;
 
       }
       // relations in ordinary LCCollections
@@ -1119,6 +1125,58 @@ namespace UTIL {
 	   << endl ;
     
   }
+
+  void LCTOOLS::printLCGenericObjects( const EVENT::LCCollection* col ){
+    
+    if( col->getTypeName() != LCIO::LCGENERICOBJECT ){
+      
+      cout << " collection not of type " << LCIO::LCGENERICOBJECT 
+	   << " [ " <<  col->getParameters().getStringVal("TypeName") << " ] " 
+	   << endl ;
+      
+      return ;
+    }
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::LCGENERICOBJECT << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    
+    int nLCGenericObjects =  col->getNumberOfElements() ;
+    int nPrint = nLCGenericObjects > MAX_HITS ? MAX_HITS : nLCGenericObjects ;
+    
+    bool isFixedSize  =  LCFlagImpl( col->getFlag() ).bitSet( LCIO::GOBIT_FIXED ) ;
+    
+    cout << endl
+	 << " [   id   ] " <<  col->getParameters().getStringVal("DataDescription") 
+    	 << " - isFixedSize: "   <<  ( isFixedSize ? "true" : "false" )
+	 << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      LCGenericObject* obj = dynamic_cast<LCGenericObject*> ( col->getElementAt(i) );
+      
+      printf("[%8.8x] ", obj->id() ) ;
+      
+      for(int j=0;j<obj->getNInt();j++)
+	cout << "i:" << obj->getIntVal( j ) << "; " ;
+      for(int j=0;j<obj->getNFloat();j++)
+	cout << "f:" << obj->getFloatVal( j ) << "; " ;
+      for(int j=0;j<obj->getNDouble();j++)
+	cout << "d:" << obj->getDoubleVal( j ) << "; " ;
+      
+      cout << endl ;
+      
+    }
+    cout << endl 
+	   << "-------------------------------------------------------------------------------- " 
+	   << endl ;
+      
+   
+  }
+
 
   void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
     

@@ -84,6 +84,10 @@ namespace UTIL{
      */
     static void printReconstructedParticles( const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of all LCGenericObjects in the collection
+     */
+    static void printLCGenericObjects( const EVENT::LCCollection* col ) ;
+
     /** Print the relation.
      */
     static void printRelation( const EVENT::LCCollection* col ) ;
