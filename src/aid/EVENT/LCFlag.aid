@@ -1,0 +1,29 @@
+package hep.lcio.event ;
+
+/** Helper class to create and interpret the 32-bit flag word in LCCollections.
+ *  Bits are defined in class LCIO.
+ *
+ * @see LCIO
+ * @author gaede 
+ * @version May 6, 2003
+ */
+public interface LCFlag{
+    
+    /** Returns true if bit at given index is set.
+     */
+    public boolean bitSet( int index ) const ;
+
+    /**Returns the flag word.
+     */
+    public int getFlag() const ;
+
+
+    /** Sets bit to 1.
+     */
+    public void setBit(int bit) ;
+
+    /** Sets bit to 0.
+     */
+    public void unsetBit(int bit) ;
+
+}
