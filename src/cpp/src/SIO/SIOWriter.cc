@@ -61,7 +61,7 @@ namespace SIO {
     unsigned int status ;
     
     // make sure filename has the proper extension (.slcio) 
-    string sioFilename ;  
+    std::string sioFilename ;  
     if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
 	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
       sioFilename = filename + LCSIO::FILE_EXTENSION ;

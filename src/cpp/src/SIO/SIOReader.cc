@@ -81,7 +81,7 @@ namespace SIO {
 
 
     // make sure filename has the proper extension (.slcio) 
-    string sioFilename ;  
+    std::string sioFilename ;  
     if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
 	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
       sioFilename = filename + LCSIO::FILE_EXTENSION ;
@@ -131,7 +131,7 @@ namespace SIO {
       
 
       if( SIO_blockManager::get( LCSIO::RUNBLOCKNAME ) == 0 ){ 
-	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << endl ;
+	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << std::endl ;
 	return LCIO::ERROR ; }
 
       unsigned int status =  _stream->read( &_dummyRecord ) ;

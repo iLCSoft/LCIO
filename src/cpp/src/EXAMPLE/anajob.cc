@@ -37,7 +37,7 @@ int main(int argc, char** argv ){
 
     lcReader->open( FILEN ) ;
 
-  } catch( Exception& e) {
+  } catch( exception& e) {
     cout << e.what() << endl ;
     exit(1) ;
   }
@@ -60,14 +60,14 @@ int main(int argc, char** argv ){
 
   try{   lcReader->open( FILEN ) ; } 
 
-  catch( IOException& ioe) { 
-    cout << ioe.what() << endl ; 
-    exit(1) ;
-  }
-  catch( Exception& e) { 
-    cout << e.what() << endl ; 
-    exit(1) ;
-  }
+//   catch( IOException& ioe) { 
+//     cout << ioe.what() << endl ; 
+//     exit(1) ;
+//   }
+//   catch( Exception& e) { 
+//     cout << e.what() << endl ; 
+//     exit(1) ;
+//   }
   catch( exception& e1) { 
     cout << e1.what() << endl ; 
     exit(1) ;

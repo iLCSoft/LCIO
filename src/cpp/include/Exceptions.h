@@ -16,18 +16,19 @@ namespace EVENT {
    * @author gaede
    * @version Apr 30, 2003
    */
-  class Exception : public exception {
+  class Exception : public std::exception {
     
   protected:
     std::string message ;
     
     Exception(){  /*no_op*/ ; } 
+    virtual ~Exception() throw() ; 
     
   public: 
     Exception( std::string text ){
       message = "lcio::Exception: " + text ;
     }
-    virtual const char* what() const { return  message.c_str() ; } 
+    virtual const char* what() const  throw() { return  message.c_str() ; } 
   };
 
   /**EventException used for errors accessing the event data.

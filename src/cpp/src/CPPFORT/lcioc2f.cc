@@ -3,6 +3,7 @@
 #include "lcio.h" 
 #include "Exceptions.h"
 #include "IOIMPL/LCFactory.h"
+#include <iostream>
 
 using namespace lcio ;
 
@@ -28,7 +29,7 @@ int lrdrOpen(PTRTYPE reader, const char* filename ){
     lcReader->open( filename ) ; 
     return LCIO::SUCCESS ;
   }catch(Exception& e){
-    std::cerr << "Exception in lrdrOpen: " << e.what() << endl ;
+    std::cerr << "Exception in lrdrOpen: " << e.what() << std::endl ;
     return LCIO::ERROR ;
   }
 }

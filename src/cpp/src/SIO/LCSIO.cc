@@ -2,6 +2,7 @@
 
 #include "SIO_functions.h"
 #include "SIO_definitions.h"
+#include <cctype>
 
 namespace SIO {
 
