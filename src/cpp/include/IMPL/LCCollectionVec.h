@@ -13,7 +13,7 @@
 
 namespace IMPL {
   
-  typedef std::vector<EVENT::LCObject*> LCObjectVec ;
+  //  typedef std::vector<EVENT::LCObject*> LCObjectVec ;
 
   /** Implementation of the LCCollection using (inheriting from) an STL vector
    *  of LCObjects.
@@ -23,7 +23,7 @@ namespace IMPL {
    * @see LCObject
    * @see LCCollection
    */
-  class LCCollectionVec : public EVENT::LCCollection , public LCObjectVec 
+  class LCCollectionVec : public EVENT::LCCollection , public EVENT::LCObjectVec 
     , public AccessChecked {
     
   protected:

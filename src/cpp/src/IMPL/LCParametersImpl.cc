@@ -13,18 +13,22 @@ namespace IMPL{
 
   int LCParametersImpl::getIntVal(const std::string & key) const {
     
-    IntVec &  iv =  _intMap[ key ] ;
+    IntMap::iterator it = _intMap.find( key ) ;
 
-    if( iv.size() == 0 )  return 0 ;
+    if( it == _intMap.end() )  return 0 ;
+
+    IntVec &  iv =  it->second ;
 
     return iv[0] ;
   }
 
   float LCParametersImpl::getFloatVal(const std::string & key) const {
 
-    FloatVec &  fv =  _floatMap[ key ] ;
+    FloatMap::iterator it = _floatMap.find( key ) ;
 
-    if( fv.size() == 0 )  return 0 ;
+    if( it == _floatMap.end() )  return 0 ;
+
+    FloatVec &  fv =  it->second ;
 
     return fv[0] ;
   }
@@ -32,37 +36,44 @@ namespace IMPL{
   const std::string & LCParametersImpl::getStringVal(const std::string & key) const {
 
     static std::string empty("") ;
-
-    StringVec &  sv =  _stringMap[ key ] ;
-
-    if( sv.size() == 0 )  return empty  ;
-
+    
+    StringMap::iterator it = _stringMap.find( key ) ;
+    
+    if( it == _stringMap.end() )  return empty ;
+    
+    StringVec &  sv =  it->second ;
+    
     return sv[0] ;
   }
 
   IntVec & LCParametersImpl::getIntVals(const std::string & key, IntVec & values) const {
 
-    //    copy( _intMap[ key ].begin() , _intMap[ key ].end() , back_inserter( values )  ) ;
-    IntVec& v =  _intMap[ key ] ;
-    values.insert( values.end() , v.begin() , v.end() ) ;
+    IntMap::iterator it = _intMap.find( key ) ;
+
+    if( it != _intMap.end() ) {
+      values.insert( values.end() , it->second.begin() , it->second.end() ) ;
+    }
+
     return values ;
   }
 
   FloatVec & LCParametersImpl::getFloatVals(const std::string & key, FloatVec & values) const {
 
-    //    copy( _floatMap[ key ].begin() , _floatMap[ key ].end() , back_inserter( values )  ) ;
-    FloatVec& v =  _floatMap[ key ] ;
-    values.insert( values.end() , v.begin() , v.end() ) ;
+    FloatMap::iterator it = _floatMap.find( key ) ;
 
+    if( it != _floatMap.end() ) {
+      values.insert( values.end() , it->second.begin() , it->second.end() ) ;
+    }
     return values ;
   }
 
   StringVec & LCParametersImpl::getStringVals(const std::string & key, StringVec & values) const {
 
-    //    copy( _stringMap[ key ].begin() , _stringMap[ key ].end() , back_inserter( values )  ) ;
-    StringVec& v =  _stringMap[ key ] ;
-    values.insert( values.end() , v.begin() , v.end() ) ;
+    StringMap::iterator it = _stringMap.find( key ) ;
 
+    if( it != _stringMap.end() ) {
+      values.insert( values.end() , it->second.begin() , it->second.end() ) ;
+    }
     return values ;
   }
 
@@ -72,7 +83,7 @@ namespace IMPL{
      for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
        keys.push_back( iter->first ) ; 
      }
-// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+// fg: select1st is non-standard 
 //    transform( _intMap.begin() , _intMap.end() , back_inserter( keys )  , select1st< IntMap::value_type >() ) ;
 
   return keys ;
@@ -83,7 +94,7 @@ namespace IMPL{
      for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
        keys.push_back( iter->first ) ; 
      }
-// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+// fg: select1st is non-standard
 //    transform( _floatMap.begin() , _floatMap.end() , back_inserter( keys )  , select1st< FloatMap::value_type >() ) ;
     return keys ;
   }
@@ -93,21 +104,39 @@ namespace IMPL{
     for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
       keys.push_back( iter->first ) ; 
     }
-// fg: select1st is non-standard but widely available - use code above on machines where it is missing
+// fg: select1st is non-standard
 //    transform( _stringMap.begin() , _stringMap.end() , back_inserter( keys )  , select1st< StringMap::value_type >() ) ;
     return keys ;
   }
   
   int LCParametersImpl::getNInt(const std::string & key) const {
-    return _intMap[ key ].size() ;
+
+    IntMap::iterator it = _intMap.find( key ) ;
+
+    if( it == _intMap.end() )
+      return 0 ;
+    else
+      return it->second.size() ;
   }
 
   int LCParametersImpl::getNFloat(const std::string & key) const {
-    return _floatMap[ key ].size() ;
+
+    FloatMap::iterator it = _floatMap.find( key ) ;
+
+    if( it == _floatMap.end() )  
+      return 0 ;
+    else
+      return it->second.size() ;
   }
 
   int LCParametersImpl::getNString(const std::string & key) const {
-    return _stringMap[ key ].size() ;
+
+    StringMap::iterator it = _stringMap.find( key ) ;
+
+    if( it == _stringMap.end() )  
+      return 0 ;
+    else
+      return it->second.size() ;
   }
 
   void LCParametersImpl::setValue(const std::string & key, int value){

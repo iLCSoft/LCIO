@@ -20,7 +20,7 @@
 #include "UTIL/LCTOOLS.h"
 #include "IMPL/LCRelationImpl.h"
 #include "IMPL/LCWgtRelationImpl.h"
-
+#include "IMPL/LCRelationNavigatorImpl.h"
 
 // M_PI is non ansi ...
 #define M_PI 3.14159265358979323846
@@ -233,6 +233,9 @@ public:
 
 
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
+//     scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;
+//     scRel->parameters().setValue( "ToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
+    
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
 
@@ -249,30 +252,47 @@ public:
 //       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
       scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
+      scRel->addElement( new LCWgtRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       calHits->addElement( calHit ) ;
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
-    evt->addCollection( scRel , "CalorimeterHitsSimRel" ) ;
+
     LCFlagImpl relFlag(0) ;
     relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
-    //    LCFlagImpl(0).setBit( LCIO::LCREL_WEIGHTED ).getFlag() ;
     scRel->setFlag( relFlag.getFlag()  ) ;
-		      //    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
+
+    evt->addCollection( scRel , "CalorimeterHitsSimRel" ) ;
+    //    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
 
 
-    // the following is some example code on how to access the relation 
-//     // --- dump the relations ----
-//     int nCalHits = calHits->getNumberOfElements() ;
-//     for(int j=0;j<nCalHits;j++){
-//       int n = scRel->numberOfRelations( calHits->getElementAt(j)  )  ; 
-//       std::cout << "Relations for object " << hex << calHits->getElementAt(j)->id()  ; // << std::endl ;
-//       for(int k=0;k<n;k++){
-// 	std::cout << "[" << scRel->getRelation( calHits->getElementAt(j) , k )->id() << "] (" 
-// 		  << scRel->getWeight( calHits->getElementAt(j) , k ) << ") "  ;
-//       }
-//       std::cout << dec << std::endl ;
-//      }
-//    // -----------
+
+    //------  the following is some example code on how to access the relation: --------------
+
+    if( evt->getEventNumber() == 0 && evt->getRunNumber() == 0 ) {
+
+      std::cout << "Relation example for first event: " << std::endl ;
+      LCRelationNavigatorImpl rel( scRel ) ;  // create a navigation object from collection
+      
+      int nCalHits = calHits->getNumberOfElements() ;
+      for(int j=0; j < nCalHits ; j++){
+	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
+	
+	std::cout << "   relations for object " << hex << calHit->id()  ; // << std::endl ;
+	
+	const LCObjectVec& simHits = rel.getRelatedObjects( calHit ) ;
+	const FloatVec& weights = rel.getWeights( calHit ) ;
+
+	int nSimHits = simHits.size() ;
+	for(int k=0;k<nSimHits;k++){
+	  
+	  std::cout << " [" << simHits[k]->id() << "] (" 
+		    <<  weights[k]  << ") "  ;
+	}
+	std::cout << dec << std::endl ;
+      }
+    }
+    // -------------------------------------------------------------------------------------
+
     
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl clusterFlag(0) ;

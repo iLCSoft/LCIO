@@ -51,7 +51,7 @@ namespace UTIL{};
 
 
 
-/** The LCIO namespace combines DATA, EVENT, IO and IMPL for user convenience. 
+/** The LCIO namespace combines EVENT, IO and IMPL for user convenience. 
  */
 namespace lcio{
 
