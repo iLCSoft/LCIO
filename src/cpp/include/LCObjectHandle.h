@@ -3,6 +3,7 @@
 
 #include "DATA/LCObject.h"
 #include "Exceptions.h"
+#include "lcio.h"
 
 namespace lcio{
 

@@ -1,4 +1,5 @@
-#include "IMPL/LCTOOLS.h"
+#include "UTIL/LCTOOLS.h"
+
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
 #include "EVENT/CalorimeterHit.h"
@@ -11,15 +12,18 @@
 
 #include "IMPL/LCFlagImpl.h"
 
+#include "UTIL/LCFourVector.h"
+
 #include <map>
 #include <set>
 
 using namespace std ;
 using namespace EVENT ;
 using namespace DATA ;
+using namespace IMPL ;
 
 
-namespace IMPL {
+namespace UTIL {
 
   static int MAX_HITS = 1000 ;
 
@@ -669,10 +673,12 @@ namespace IMPL {
 // loop over collection - preserve order
     for(  int index = 0 ; index < nParticles ; index++){
       
-      MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
-      
+      //MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
+      MCParticle4V part( col->getElementAt( index ) ) ;
+
+
       cout << index << " [" ;
-      for(int k=0;k<part->getNumberOfParents();k++){
+      for(int k=0;k<part.lcObj()->getNumberOfParents();k++){
 	if(k>0) cout << "," ;
 	cout << p2i_map[ part->getParent(k) ]  ;
       }
@@ -702,6 +708,10 @@ namespace IMPL {
       cout <<  part->getMass()         << " | " 
 	   <<  part->getCharge()       << " | " 
 	   <<  part->getEnergy()      
+	//---- DEBUG
+	   << " m(4V) : " << part.m()
+	   << " e(4V) : " << part.e()
+	//---- DEBUG
 	   << endl ;	
 
 

@@ -2,7 +2,20 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
- 
+
+
+
+   - new package UTIL for C++
+      -> LCTOOLS moved to UTIL
+
+   - added LCFourVector (CLHEP::HepLorentzvector) as handle template
+     for MCParticle
+
+============================
+  v01-00
+============================
+
+   first public releas
 
 ============================
   v00-08  ( fg20030911 ) 

@@ -1,0 +1,44 @@
+#ifdef CLHEP  // only if CLHEP is available !
+
+#include "UTIL/LCFourVector.h"
+#include "IMPL/MCParticleImpl.h"
+#include "Exceptions.h"
+
+
+using namespace EVENT;
+using namespace IMPL;
+
+namespace UTIL{
+  
+
+  typedef LCFourVector<MCParticle> MCParticle4V ;
+  typedef LCFourVector<MCParticleImpl> MCParticleI4V ;
+  
+
+
+  // specializations for the different LCObjects that have 4 vector information
+  LCFourVector<MCParticle>::LCFourVector<MCParticle>( MCParticle* mcPart ) : 
+    HepLorentzVector(mcPart->getMomentum()[0],
+		     mcPart->getMomentum()[1],
+		     mcPart->getMomentum()[2],
+		     mcPart->getEnergy() )  
+  {
+  }
+  LCFourVector<MCParticle>::LCFourVector<MCParticle>(DATA::LCObject* lcObj){
+    
+    _lcObj = dynamic_cast<MCParticle* >( lcObj ) ;
+
+    if( _lcObj == 0 )
+      throw EVENT::Exception("Dynamic cast failed for LCFourVector() !") ;
+
+    const float* p =  _lcObj->getMomentum() ;
+    setPx( p[0] ) ;
+    setPy( p[1] ) ;
+    setPz( p[2] ) ;
+    // use the mass to set the energy in order to avoid rounding problems
+    setVectM( v() , _lcObj->getMass() ) ;
+    //    setE( _lcObj->getEnergy() )  ;
+  }
+  
+} ; // end namespace
+#endif

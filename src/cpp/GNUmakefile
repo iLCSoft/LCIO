@@ -11,7 +11,11 @@
 LCIOBASE := $(LCIO)
 export LCIOBASE 
 
-LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include
+
+CLHEP_INCLUDE := $(CLHEP)/include
+
+
+LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include -I $(CLHEP_INCLUDE)
 export LCIOINCLUDE
 
 #LCIOCPPFLAGS = -O4 -Wall -ansi 
@@ -20,12 +24,12 @@ LCIOCPPFLAGS = -g -Wall -ansi
 export LCIOCPPFLAGS
 
 
-.PHONY: lib clean IMPL SIO IOIMPL CPPFORT bin
+.PHONY: lib clean IMPL SIO IOIMPL CPPFORT bin UTIL
 
 all: lib bin
 
 
-lib: IMPL SIO IOIMPL CPPFORT
+lib: IMPL SIO IOIMPL CPPFORT UTIL
 
 
 bin: lib
@@ -36,6 +40,10 @@ IMPL:
 
 SIO:
 	$(MAKE) -C ./src/SIO
+
+UTIL:
+	$(MAKE) -C ./src/UTIL
+
 
 IOIMPL:
 # on new fast pc's it is required here to wait a bit to avoid
@@ -48,7 +56,7 @@ CPPFORT:
 clean:
 	$(MAKE) -C ./src/IMPL clean; $(MAKE) -C ./src/SIO clean; \
 	$(MAKE) -C ./src/IOIMPL clean ; $(MAKE) -C ./src/EXAMPLE clean;\
-	$(MAKE) -C ./src/CPPFORT clean ; \
+	$(MAKE) -C ./src/CPPFORT clean ; $(MAKE) -C ./src/UTIL clean ; \
 	rm -rf $(LCIOBASE)/lib/liblcio.a
 
 

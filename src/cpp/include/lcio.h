@@ -27,27 +27,31 @@
  * The namespace IO contains the abstract interfaces for reading and writing data.
  */
 
-/** The Data namespace holds all base interfaces of data entities.
+/** The namespace DATA holds all base interfaces of data entities.
  * These interfaces are used to write the data, i.e. all user classes 
  * that implement them can be made persistent with LCIO.
  */
 namespace DATA{};
 
-/** The EVENT namespace holds all base interfaces of the event.
+/** The namespace EVENT holds all base interfaces of the event.
  *  These interfaces extend the bare data interfaces with convienient 
  *  methods for analysis. They are used when lcio events/data are read in.
  */
 namespace EVENT{};
 
-/** The IO namespace holds the base interfaces for io of data. 
+/** The namespace IO  holds the base interfaces for io of data. 
  */
 namespace IO{};
 
-/** The IMPL namespace holds all default implementations of
+/** The namespace IMPL holds all default implementations of
  * the base interfaces that are defined in EVENT.
  */
 namespace IMPL{};
 
+/** The namespace UTIL holds convenient and support classes and 
+ *  methods for the LCIO objects.
+ */
+namespace UTIL{};
 
 
 
@@ -62,6 +66,8 @@ namespace lcio{
   using namespace IO ;
 
   using namespace IMPL ;
+
+  using namespace UTIL ;
 
   using IOIMPL::LCFactory ;
 
