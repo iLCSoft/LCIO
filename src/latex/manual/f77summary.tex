@@ -18,20 +18,20 @@ $*$ arrays are denoted by a name ending with {\bf v} \\
 
 class LCReader:
 
-createLCReader         -> preader = lcrdrcreate()
+create                 -> preader = lcrdrcreate()
+delete                 -> status  = lcrdrdelete( preader )
 open                   -> status  = lcrdropen( preader, filename )
 close                  -> status  = lcrdrclose( preader )
-delete                 -> status  = lcrdrdelete( preader )
 readNextRunHeader      -> pheader = lcreadnextrunheader( preader, iaccessmode )
 readNextEvent          -> pevent  = lcrdrreadnextevent( preader, iaccessmode )
 readEvent              -> pevent  = lcrdrreadevent( preader, irun, ievt )
 
 class LCWriter:
 
-createLCWriter         -> pwriter = lcwrtcreate()
-open                   -> status  = lcwrtopen( pwriter, filename )
-close                  -> status  = lcwrtclose( pwriter )
+create                 -> pwriter = lcwrtcreate()
 delete                 -> status  = lcwrtdelete( pwriter )
+open                   -> status  = lcwrtopen( pwriter, filename, imode )
+close                  -> status  = lcwrtclose( pwriter )
 writeRunHeader         -> status  = lcwrtwriterunheader( pwriter, pheader )
 writeEvent             -> status  = lcwrtwriteevent( pwriter, pevent )
 
@@ -77,7 +77,7 @@ getElementAt           -> colname = lcsvcgetstringat( pstv , i ) (i=1,...,nelem)
 
 class LCCollection:
 
-create                 -> pcol    = lccolcreate()
+create                 -> pcol    = lccolcreate( colname )
 delete                 -> status  = lccoldelete( pcol )
 addElement             -> status  = lccoladdelement( pcol , pobject)
 removeElementAt        -> status  = lccolremoveelementat ( pcol , i )
@@ -174,12 +174,11 @@ setMass                -> status  = lcmcpsetmass( pmcp , mass )
 setCharge              -> status  = lcmcpsetcharge( pmcp , charge )
 
 getNumberOfParents     -> number  = lcmcpgetnumberofparents( pmcp )
-% getParent              -> pmcpp   = lcmcpgetparent( pmcp )
 getParent              -> pmcpp   = lcmcpgetparent( pmcp , i )
 % getSecondParent        -> pmcpp   = lcmcpgetsecondparent( pmcp )
 getNumberOfDaughters   -> number  = lcmcpgetnumberofdaughters( pmcp )
 getDaughter            -> pmcpd   = lcmcpgetdaughter( pmcp , i )  (i=1,...,number)
-getPDG                 -> status  = lcmcpgetpdg( pmcp , ipdg )
+getPDG                 -> ipdg    = lcmcpgetpdg( pmcp )
 % getHepEvtStatus        -> istat   = lcmcpgethepevtstatus( pmcp )
 getGeneratorStatus     -> istatg  = lcmcpgetgeneratorstatus( pmcp )
 getSimulatorStatus     -> istats  = lcmcpgetsimulatorstatus( pmcp )
@@ -228,8 +227,8 @@ argument has to be the length of a character string in the array.
 
 for class LCRunHeader:
 
-writeRunHeader         -> status  = lcwriterunheader( pwriter, irun, detname, descrname, sdnamev, nsubd, len(sdnamev(1)) )
-readNextRunHeader      -> pheader = lcreadnextrunheader( preader, irun, detname, descrname, sdnamev, nsubd, len(sdnamev(1)) )
+writeRunHeader         -> status  = lcwriterunheader( pwriter, irun, detname, descrname, sdnamev, nsdn, len(sdnamev(1)) )
+readNextRunHeader      -> pheader = lcreadnextrunheader( preader, irun, detname, descrname, sdnamev, nsdn, len(sdnamev(1)) )
 
 for class LCEvent:
 
@@ -245,14 +244,14 @@ getSimTrackerHit       -> status  = lcgetsimtrackerhit( pcolhitt, i, icellid, dp
 
 for class SimCalorimeterHit:
 
-addSimCaloHit          -> phit    = lcaddsimcalohit( icellid0, icellid1, energy, posv )
+addSimCaloHit          -> phit    = lcaddsimcalohit( pcolhitc, icellid0, icellid1, energy, posv )
 addSimCaloHitMCont     -> status  = lcschaddmcparticlecontribution( phit, pmcp, energy, time, ipdg )  (from basic f77 API)
-getSimCaloHit          -> phit    = lcgetsimcalohit( pcol, i, icellid0, icellid1, energy, posv )
+getSimCaloHit          -> phit    = lcgetsimcalohit( pcolhitc, i, icellid0, icellid1, energy, posv )
 getSimCaloHitMCont     -> status  = lcgetsimcalohitmccont( phit, i, pmcp, energy, time, ipdg )
 
 for class MCParticle:
 
-getMCParticleData      -> status  = lcgetmcparticledata ( ipdg, ihepevtst, dvtxv, momv, mass, charge, ndaughters )
+getMCParticleData      -> status  = lcgetmcparticledata ( pmcp, ipdg, igstat, isstat, dvtxv, momv, mass, charge, ndaughters )
 
 for class HEPEVT (Fortran interface  to COMMON /HEPEVT/ ):
 
