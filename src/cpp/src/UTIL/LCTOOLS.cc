@@ -1151,14 +1151,14 @@ namespace UTIL {
 #endif
       printf(" [%8.8x] |", part->id() );
       cout << index << " [" ;
-      for(int k=0;k<part->getNumberOfParents();k++){
+      for(unsigned int k=0;k<part->getParents().size();k++){
 	if(k>0) cout << "," ;
-	cout << p2i_map[ part->getParent(k) ]  ;
+	cout << p2i_map[ part->getParents()[k] ]  ;
       }
       cout << "] | [" ;
-      for(int k=0;k<part->getNumberOfDaughters();k++){
+      for(unsigned int k=0;k<part->getDaughters().size();k++){
 	if(k>0) cout << "," ;
-	cout << p2i_map[ part->getDaughter(k) ]  ;
+	cout << p2i_map[ part->getDaughters()[k] ]  ;
       }
       cout << "] | " ;
       cout <<  part->getPDG() << " | ("
@@ -1220,7 +1220,7 @@ namespace UTIL {
 //       // get the particle from the collection - needs a cast !
 //       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( k ) ) ;
       
-//       if( part->getNumberOfParents() == 0 )
+//       if( part->getParents().size() == 0 )
 // 	moms.push_back( part ) ;
 //     }
 
@@ -1336,9 +1336,9 @@ namespace UTIL {
 
     int motherIndex = index - 1 ;
     // print this particles daughters
-    for(int i=0; i<part->getNumberOfDaughters();i++){
+    for(unsigned int i=0; i<part->getDaughters().size();i++){
       
-      MCParticle* d =  part->getDaughter(i) ;
+      MCParticle* d =  part->getDaughters()[i] ;
 
       cout << index++ << " [" << motherIndex << "] " 
 	   <<  d->getPDG() << " | ("
@@ -1362,7 +1362,7 @@ namespace UTIL {
 	   <<  d->getEnergy()      
 	   << endl ;	
 
-      index = printDaughterParticles( part->getDaughter(i) , index ) ;
+      index = printDaughterParticles( part->getDaughters()[i] , index ) ;
     }
     return index ;
 

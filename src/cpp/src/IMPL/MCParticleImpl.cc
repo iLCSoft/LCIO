@@ -56,10 +56,24 @@ namespace IMPL {
     return _daughters ;
   }
 
-  int MCParticleImpl::getNumberOfParents() const { return _parents.size() ; }
+  int MCParticleImpl::getNumberOfParents() const { 
+    static bool first = true ;
+    if( first ){
+      std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
+		<< " - please use  MCParticleImpl::getParents().size() ! " << endl ;
+      first = false ;
+    }
+    return _parents.size() ; 
+  }
 
   MCParticle* MCParticleImpl::getParent(int i) const {
     
+    static bool first = true ;
+    if( first ){
+      std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
+		<< " - please use  MCParticleImpl::getParents()[i] ! " << endl ;
+      first = false ;
+    }
     try{
       //      return _parents.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
@@ -69,18 +83,32 @@ namespace IMPL {
       throw Exception(std::string("MCParticleImpl::getParent(): out_of_range :" 
 				  + i ) );
     }
-    
   }
-//   // unchecked access
-//   MCParticle* MCParticleImpl::getParent(int i) const {
-//     return _parents[i] ;
-//   }
+  
+  //   // unchecked access
+  //   MCParticle* MCParticleImpl::getParent(int i) const {
+  //     return _parents[i] ;
+  //   }
 
 
-  int MCParticleImpl::getNumberOfDaughters() const { return _daughters.size() ; }
+  int MCParticleImpl::getNumberOfDaughters() const { 
+    static bool first = true ;
+    if( first ){
+      std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
+		<< " - please use  MCParticleImpl::getDaughters().size() ! " << endl ;
+      first = false ;
+    }
+    return _daughters.size() ; 
+  }
 
   MCParticle* MCParticleImpl::getDaughter(int i) const {
     
+    static bool first = true ;
+    if( first ){
+      std::cout << " WARNING >>>>>>>  MCParticleImpl::getDaughter(i) is deprecated "
+		<< " - please use  MCParticleImpl::getDaughters()[i] ! " << endl ;
+      first = false ;
+    }
     try{
       //      return _daughters.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??

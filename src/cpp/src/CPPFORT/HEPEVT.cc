@@ -106,8 +106,8 @@ namespace HEPEVTIMPL{
         FTNhep.jmohep[j][0] = 0 ;
         FTNhep.jmohep[j][1] = 0 ;
         const MCParticle* mcpp  = 0 ;
-        int nparents = mcp->getNumberOfParents() ;
-	if(  nparents > 0 ) mcpp = mcp->getParent(0) ;
+        int nparents = mcp->getParents().size() ;
+	if(  nparents > 0 ) mcpp = mcp->getParents()[0] ;
 	
         try{
           for(int jjm=0;jjm < *NMCPART;jjm++)
@@ -123,7 +123,7 @@ namespace HEPEVTIMPL{
         {
           try{
 	    const MCParticle* mcpsp  = 0 ;
-	    if(  mcp->getNumberOfParents() > 1 ) mcpsp = mcp->getParent( nparents-1 ) ;
+	    if(  mcp->getParents().size() > 1 ) mcpsp = mcp->getParents()[ nparents-1 ] ;
 
             for(int jjj=0;jjj < *NMCPART;jjj++)
             {
@@ -145,11 +145,11 @@ namespace HEPEVTIMPL{
         // for the StdHep convention particles with GeneratorStatus = 3 have no daughters
         if ( FTNhep.isthep[j] != 3 )
         {
-          int ndaugthers = mcp->getNumberOfDaughters() ;
+          int ndaugthers = mcp->getDaughters().size() ;
 
           if (ndaugthers > 0)
           {
-             const MCParticle* mcpd = mcp->getDaughter( 0 ) ;
+             const MCParticle* mcpd = mcp->getDaughters()[0] ;
              for (int jjj=0; jjj < *NMCPART; jjj++)
              {
                const MCParticle* mcpdtest = dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjj )) ;

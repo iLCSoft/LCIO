@@ -13,6 +13,8 @@
 
   - added time to CalorimterHit
 
+  - added getParents()/getDaughters() to MCParticle
+
 ======================
   v01-02 prebeta
 =======================

@@ -90,12 +90,12 @@ namespace SIO {
 //     SIO_PNTR( stream , &myMom0 ) ;
 //     SIO_PNTR( stream , &myMom1 ) ;
 
-    int numberOfParents = particle->getNumberOfParents() ;
+    int numberOfParents = particle->getParents().size() ;
     
     SIO_DATA( stream , &numberOfParents  , 1 ) ;
     
     for(int i=0;i<numberOfParents;i++){
-      const MCParticle* part = particle->getParent(i) ;
+      const MCParticle* part = particle->getParents()[i] ;
       SIO_PNTR( stream ,  &part  ); 
     }
 
@@ -196,8 +196,8 @@ namespace SIO {
 	int nParentsTotal = 0 ; 
 	for(int i=0; i < col->getNumberOfElements() ; i++){
 	  MCParticleIOImpl* mcp = dynamic_cast<MCParticleIOImpl*>( col->getElementAt(i) ) ;
-	  nDaughtersTotal += mcp->getNumberOfDaughters()  ;
-	  nParentsTotal += mcp->getNumberOfParents() ;
+	  nDaughtersTotal += mcp->getDaughters().size()  ;
+	  nParentsTotal += mcp->getParents().size() ;
 	}
 
 	for(int i=0; i < col->getNumberOfElements() ; i++){
@@ -207,7 +207,7 @@ namespace SIO {
 	  // for version v00-08 we restore parents from daughters
 	  if ( nParentsTotal == 0 &&  nDaughtersTotal > 0 ){
 	    
-	    int nDaughters = mcp->getNumberOfDaughters() ;
+	    int nDaughters = mcp->getDaughters().size() ;
 	    for( int j=0; j<nDaughters; j++){
 	      MCParticleIOImpl* dgh = dynamic_cast<MCParticleIOImpl*>( mcp->getDaughter(j) ) ;
 	      
@@ -220,9 +220,9 @@ namespace SIO {
 	  } 
 	  else if ( nParentsTotal > 0 && nDaughtersTotal == 0 ) {
 	    
-	    int nParents = mcp->getNumberOfParents() ;
+	    int nParents = mcp->getParents().size() ;
 	    for( int j=0; j<nParents; j++){
-	      MCParticleIOImpl* mom = dynamic_cast<MCParticleIOImpl*>( mcp->getParent(j) ) ;
+	      MCParticleIOImpl* mom = dynamic_cast<MCParticleIOImpl*>( mcp->getParents()[j] ) ;
 // 	      MCParticle ** mcpP = new (MCParticle*) ;
 // 	      *mcpP = mcp ;
 // 	      mom->_daughters.push_back( mcpP ) ;
