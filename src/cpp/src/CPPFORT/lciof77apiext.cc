@@ -147,7 +147,7 @@ int lcaddsimtrackerhit( PTRTYPE collectionvec, int cellID, double* pos, float dE
 
   LCCollectionVec* lcCollectionVec = reinterpret_cast<LCCollectionVec*>( (collectionvec) ) ;
   SimTrackerHitImpl* hit = new SimTrackerHitImpl ;
-  MCParticle* mmcp = reinterpret_cast<MCParticle*>( mcp ) ;
+  MCParticle* mmcp = f2c_pointer<MCParticle,LCObject>( mcp ) ;
 
   hit->setCellID( cellID ) ;
   hit->setPosition( pos ) ;
