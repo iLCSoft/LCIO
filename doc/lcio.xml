@@ -195,7 +195,7 @@
       <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
       <data type="int" name="nTrack"/>
       <repeat count="nTrack">
-	<data type="string" name="type">Type of Track, e.g. TPC, VTX, SIT</data>
+	<data type="int" name="type">Type of Track, e.g. TPC, VTX, SIT</data>
 	<data type="float" name="d0">Impact Parameter in r-phi</data>
 	<data type="float" name="phi">Phi of track in r-phi</data>
 	<data type="float" name="omega">curvature signed with charge</data>

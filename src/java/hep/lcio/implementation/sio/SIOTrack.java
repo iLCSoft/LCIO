@@ -2,24 +2,34 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcio.event.Track;
+import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
+import hep.lcio.implementation.event.ITrackerHit;
+
+import java.util.Iterator;
+import java.util.List;
 import java.io.IOException;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.1 2004-05-24 03:37:41 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.2 2004-06-03 12:03:46 gaede Exp $
  */
 class SIOTrack extends ITrack
 {
    SIOTrack(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
-      type = in.readInt();
-      momentum = in.readFloat();
-      theta = in.readFloat();
-      phi = in.readFloat();
-      d0 = in.readFloat();
+      
+      int typeWord ;
+      typeWord = in.readInt();
+      setType( typeWord) ;
+      
+ 	  d0 = in.readFloat();
+	  phi = in.readFloat();
+      omega = in.readFloat();
       z0 = in.readFloat();
+      tanLambda = in.readFloat();
       covMatrix = new float[15];
       for (int i=0; i<covMatrix.length; i++) covMatrix[i] = in.readFloat();
       referencePoint = new float[3];
@@ -27,18 +37,20 @@ class SIOTrack extends ITrack
       referencePoint[1] = in.readFloat();
       referencePoint[2] = in.readFloat();
       chi2 = in.readFloat();
+      ndf = in.readInt() ;
       dEdx = in.readFloat();
       dEdxError = in.readFloat();
       int nTracks = in.readInt();
       for (int i=0; i<nTracks; i++)
       {
-         in.readPntr(); // FixMe:
-         if ((flag & 1<<31) != 0)
-         {
-            int nHits = in.readInt();
-            in.readPntr(); // Fixme;
-         }
+         addTrack( (ITrack) in.readPntr().getObject() ) ; 
+      }  
+      if ((flag & 1<<31) != 0)
+      {
+        int nHits = in.readInt();
+        addHit( (ITrackerHit) in.readPntr().getObject() ) ; 
       }
+      
       in.readPTag(this);
    }
    static void write(ITrack track, SIOOutputStream out, int flag) throws IOException
@@ -48,11 +60,11 @@ class SIOTrack extends ITrack
       else
       {
          out.writeInt(track.getType());
-         out.writeFloat(track.getMomentum());
-         out.writeFloat(track.getTheta());
-         out.writeFloat(track.getPhi());
-         out.writeFloat(track.getD0());
+		 out.writeFloat(track.getD0());
+		 out.writeFloat(track.getPhi());
+         out.writeFloat(track.getOmega());
          out.writeFloat(track.getZ0());
+		 out.writeFloat(track.getTanLambda());
          float[] covMatrix = track.getCovMatrix();
          for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
          float[] referencePoint = track.getReferencePoint();
@@ -60,28 +72,49 @@ class SIOTrack extends ITrack
          out.writeFloat(referencePoint[1] );
          out.writeFloat(referencePoint[2]);
          out.writeFloat(track.getChi2());
+		 out.writeInt(track.getNdf());
          out.writeFloat(track.getdEdx());
          out.writeFloat(track.getdEdxError());
-         out.writeInt(0); // Fixme:
+         
+         List tracks = track.getTracks() ;
+		 out.writeInt( tracks.size()  ) ;
+         for (Iterator iter = tracks.iterator(); iter.hasNext();) {
+			out.writePntr( (Track) iter.next() );
+         }
+         if( (flag & 1<<31) != 0 ){
+           List hits = track.getTrackerHits() ;
+           for (Iterator iter = hits.iterator(); iter.hasNext();) {
+			out.writePntr( (TrackerHit) iter.next() ) ;
+		   }
+         }
          out.writePTag(track);
       }
    }
    private void write(SIOOutputStream out, int flag) throws IOException
    {
-      out.writeInt(type);
-      out.writeFloat(momentum);
-      out.writeFloat(theta);
-      out.writeFloat(phi);
+      out.writeInt( getType() );
       out.writeFloat(d0);
+      out.writeFloat(phi);
+      out.writeFloat(omega);
       out.writeFloat(z0);
+      out.writeFloat(tanLambda);
       for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
       out.writeFloat(referencePoint[0]);
       out.writeFloat(referencePoint[1] );
       out.writeFloat(referencePoint[2]);
       out.writeFloat(chi2);
+   	  out.writeFloat(ndf);
       out.writeFloat(dEdx);
       out.writeFloat(dEdxError);
-      out.writeInt(0); // Fixme:
-      out.writePTag(this);
+	  out.writeInt( tracks.size()  ) ;
+	  for (Iterator iter = tracks.iterator(); iter.hasNext();) {
+	   out.writePntr( (Track) iter.next() );
+	  }
+	  if( (flag & 1<<31) != 0 ){
+	  for (Iterator iter = hits.iterator(); iter.hasNext();) {
+	   out.writePntr( (TrackerHit) iter.next() ) ;
+	  }
+	}
+    out.writePTag(this);
    }
 }
