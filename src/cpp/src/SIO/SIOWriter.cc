@@ -117,12 +117,17 @@ namespace SIO {
       
   
     // tell SIO the record names if not yet known 
-    if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
-      _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
-    if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
-      _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
-    if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
-      _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
+    if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) != 0 )
+      SIO_recordManager::remove( LCSIO::RUNRECORDNAME ) ;
+    _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
+
+    if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) != 0 )
+      SIO_recordManager::remove( LCSIO::HEADERRECORDNAME ) ;
+    _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
+
+    if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) !=0 ) 
+      SIO_recordManager::remove( LCSIO::EVENTRECORDNAME ) ;
+    _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
 
     
 
@@ -172,7 +177,8 @@ namespace SIO {
     if( ! _hdrHandler ){
       _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
       _hdrRecord->connect( _hdrHandler ) ;
-    }
+    } 
+
 
     // now create handlers for all collections in the event
     // and connect them to the record
