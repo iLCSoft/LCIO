@@ -9,7 +9,7 @@ import hep.lcio.event.MCParticle;
 /**
  * A default implementation of SimCalorimeterHit
  * @author Tony Johnson
- * @version $Id: ISimCalorimeterHit.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: ISimCalorimeterHit.java,v 1.3 2003-09-04 01:16:40 tonyj Exp $
  */
 public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 {
@@ -115,8 +115,8 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 
    private int getIndexForNextContrib()
    {
-      int i = ++nContributions;
-      if ((particle == null) || (i > particle.length))
+      int i = nContributions++;
+      if ((particle == null) || (i >= particle.length))
       {
          int oldSize = (particle == null) ? 0 : particle.length;
          int size = oldSize + 10;

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.7 2003-09-01 09:11:54 gaede Exp $
+ * @version $Id: SimJob.java,v 1.8 2003-09-04 01:16:40 tonyj Exp $
  */
 public class SimJob
 {
@@ -29,20 +29,14 @@ public class SimJob
    /**
     * @param args the command line arguments
     */
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
+      if (args.length == 0) help();
       // create sio writer
       Random random = new Random();
       LCWriter lcWrt = LCFactory.getInstance().createLCWriter();
 
-      try{ 
-      	lcWrt.open(args[0]) ;
-      }
-      catch(IOException e){
-      	System.out.println( "cannot open file" +  args[0] 
-      	                    + e.getMessage() ) ;
-	    System.exit(1) ;
-      }	  
+      lcWrt.open(args[0]) ; 
 
       // loop over runs
       for (int rn = 0; rn < NRUN; rn++)
@@ -54,12 +48,7 @@ public class SimJob
          runHdr.addActiveSubdetector(ecalName);
          runHdr.addActiveSubdetector(tpcName);
 
-         try{
-         	lcWrt.writeRunHeader(runHdr);
-         }
-         catch(IOException e){
-         	System.out.println("Couldn't write run header " + rn ) ;
-         }
+         lcWrt.writeRunHeader(runHdr);
 
          // EventLoop - create some events and write them to the file
          for (int i = 0; i < NEVENT; i++)
@@ -170,13 +159,7 @@ public class SimJob
             // dump the event to the screen
             LCTools.dumpEvent(evt);
 
-            // write the event to the file
-         	try{
-         		lcWrt.writeEvent(evt);
-         	}
-         	catch(IOException e){
-         		System.out.println("Couldn't write event " + i ) ;
-         	}
+            lcWrt.writeEvent(evt);
         }
           // evt loop
       }
@@ -184,9 +167,11 @@ public class SimJob
 
       System.out.println();
       System.out.println(" created  " + NRUN + " runs with  " + (NRUN * NEVENT) + " events");
-      try {
-		lcWrt.close();
-	  } catch (Exception e) {
-	  }
+      lcWrt.close();
+   }
+   private static void help()
+   {
+      System.out.println("java "+SimJob.class.getName()+" <output-file>");
+      System.exit(1);
    }
 }

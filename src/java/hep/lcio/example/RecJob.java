@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.4 2003-06-10 10:02:06 gaede Exp $
+ * @version $Id: RecJob.java,v 1.5 2003-09-04 01:16:40 tonyj Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -23,24 +23,18 @@ public class RecJob implements LCRunListener, LCEventListener
    private Random random = new Random();
    private int nEvent;
 
-   private RecJob(String file)
+   private RecJob(String file) throws IOException
    {
       lcWrt = LCFactory.getInstance().createLCWriter();
-      try{ 
-	      lcWrt.open(file);
-      }
-      catch(IOException e){
-      	System.out.println( "cannot open file" +  file
-      	                    + e.getMessage() ) ;
-	    System.exit(1) ;
-      }	  
+      lcWrt.open(file);
    }
 
    /**
     * @param args the command line arguments
     */
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
+      if (args.length < 2) help();
       // create reader and writer for input and output streams 
       LCReader lcReader = LCFactory.getInstance().createLCReader();
       lcReader.open(args[0]);
@@ -58,13 +52,14 @@ public class RecJob implements LCRunListener, LCEventListener
 
    public void analyze(LCRunHeader run)
    {
-      // just copy run headers to the outputfile
-      try{
-        lcWrt.writeRunHeader(run);
+      try
+      {
+         lcWrt.writeRunHeader(run);
       }
-      catch(IOException e){
-      	System.out.println("Couldn't write run header " + run.getRunNumber() ) ;
-	  }
+      catch (IOException x)
+      {
+         throw new RuntimeException("Error writing event",x);
+      }
    }
 
    public void analyze(LCEvent evt)
@@ -121,22 +116,26 @@ public class RecJob implements LCRunListener, LCEventListener
       evt.addCollection(calVec, "HCALReco");
 
       LCTools.dumpEvent(evt);
-      
-      try{
-        lcWrt.writeEvent(evt);
+
+      try
+      {
+         lcWrt.writeEvent(evt);
+         nEvent++;
       }
-      catch(IOException e){
-        System.out.println("Couldn't write event " + evt.getEventNumber() ) ;
+      catch (IOException x)
+      {
+         throw new RuntimeException("Error writing event",x);
       }
-      nEvent++;
    }
 
-   private void close()
+   private void close() throws IOException
    {
-	  try {
-		lcWrt.close();
-	  } catch (Exception e) {}
-      
+      lcWrt.close();
       System.out.println("Analyzed " + nEvent + " events");
+   }
+   private static void help()
+   {
+      System.out.println("java "+RecJob.class.getName()+" <input-file> <output-file>");
+      System.exit(1);
    }
 }

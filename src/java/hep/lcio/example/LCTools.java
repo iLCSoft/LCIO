@@ -57,8 +57,8 @@ public class LCTools
                System.out.print("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]) ;
 
 	       // FIX ME sth. is wrong with accessing the mc particle contributions 
-	       //	       if(hit.getNMCParticles()>0)
-	       //	   System.out.print(" - mc: " + hit.getParticleCont(0).getPDG() ) ;
+	       	       if(hit.getNMCParticles()>0)
+	       	   System.out.print(" - mc: " + hit.getParticleCont(0).getPDG() ) ;
 
 	       System.out.println() ;
 		       

@@ -5,6 +5,7 @@ import hep.lcio.event.*;
 import hep.lcio.implementation.io.LCFactory;
 
 import hep.lcio.io.*;
+import java.io.IOException;
 
 
 /**
@@ -16,8 +17,10 @@ public class AnalysisJob
    /**
     * @param args the command line arguments
     */
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
+      if (args.length == 0) help();
+      
       LCReader lcReader = LCFactory.getInstance().createLCReader();
       lcReader.open(args[0]);
 
@@ -38,8 +41,7 @@ public class AnalysisJob
       for (;;)
       {
          LCEvent evt = lcReader.readNextEvent();
-         if (evt == null)
-            break;
+         if (evt == null) break;
 
          // the following code will fail at runtime - event is read only !
          // if we use " (const LCEvent*) evt " it won't even compile 
@@ -55,5 +57,10 @@ public class AnalysisJob
 
       System.out.println("  " + nEvents + " events read from file : " + args[0]);
       lcReader.close();
+   }
+   private static void help()
+   {
+      System.out.println("java "+AnalysisJob.class.getName()+" <input-file>");
+      System.exit(1);
    }
 }

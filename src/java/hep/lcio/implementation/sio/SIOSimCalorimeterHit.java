@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.2 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.3 2003-09-04 01:16:41 tonyj Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -35,7 +35,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
 
 	  }
       nContributions = in.readInt();
-      particle = new SIORef[nContributions];
+      particle = new Object[nContributions];
       energyContrib = new float[nContributions];
       time = new float[nContributions];
 

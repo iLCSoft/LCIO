@@ -25,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.4 2003-05-14 07:30:11 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.5 2003-09-04 01:16:40 tonyj Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -33,33 +33,17 @@ class SIOLCReader implements LCReader
    private List runListeners = new ArrayList();
    private SIOReader reader;
 
-   public int close()
+   public void close() throws IOException
    {
-      try
-      {
-         reader.close();
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
+      reader.close();
    }
 
-   public int open(String filename)
+   public void open(String filename) throws IOException
    {
-      try
-      {
-         reader = new SIOReader(new FileInputStream(filename));
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
+      reader = new SIOReader(new FileInputStream(filename));
    }
 
-   public LCEvent readNextEvent()
+   public LCEvent readNextEvent() throws IOException
    {
       try
       {
@@ -79,25 +63,21 @@ class SIOLCReader implements LCReader
       {
          return null;
       }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
    }
 
-   public LCEvent readNextEvent(int accessMode)
+   public LCEvent readNextEvent(int accessMode) throws IOException
    {
       //FIXME: What to do with access mode
       return readNextEvent();
    }
 
-   public LCEvent readEvent(int runNumber, int evtNumber)
+   public LCEvent readEvent(int runNumber, int evtNumber) throws IOException
    {
       //FIXME: need implementation
       return readNextEvent();
    }
 
-    public LCRunHeader readNextRunHeader()
+   public LCRunHeader readNextRunHeader() throws IOException
    {
       try
       {
@@ -121,17 +101,16 @@ class SIOLCReader implements LCReader
       {
          return null;
       }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
-      }
    }
-
-   public int readStream()
+   public void readStream() throws IOException
+   {
+      readStream(-1);
+   }
+   public void readStream(int maxRecords) throws IOException
    {
       try
       {
-         for (;;)
+         for (int nRead = 0; maxRecords < 0 || nRead < maxRecords; nRead++)
          {
             SIORecord record = reader.readRecord();
             if (record.getRecordName().equals(SIOFactory.runRecordName))
@@ -165,11 +144,8 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-         return LCIO.SUCCESS;
-      }
-      catch (IOException x)
-      {
-         throw new LCIOException(x);
+         if (maxRecords < 0) return;
+         else throw x;
       }
    }
 
