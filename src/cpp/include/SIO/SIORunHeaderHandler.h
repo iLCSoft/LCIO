@@ -4,7 +4,7 @@
 #include <string>
 
 #include "DATA/LCRunHeaderData.h"
-#include "IMPL/LCRunHeaderImpl.h"
+#include "IOIMPL/LCRunHeaderIOImpl.h"
 
 #include "SIO_block.h"
 
@@ -29,7 +29,7 @@ namespace SIO {
     SIORunHeaderHandler(const std::string& name) ;
     /** C'tor for reading.
      */
-    SIORunHeaderHandler(const std::string& name, IMPL::LCRunHeaderImpl** rhP) ;
+    SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** rhP) ;
     virtual ~SIORunHeaderHandler() ;
     
     // interface from SIO_block
@@ -39,7 +39,7 @@ namespace SIO {
     void setRunHeader(const DATA::LCRunHeaderData* hdr ) ; 
     
   private: 
-    IMPL::LCRunHeaderImpl** _rhP ;  // address for reading
+    IOIMPL::LCRunHeaderIOImpl** _rhP ;  // address for reading
     const DATA::LCRunHeaderData* _hdr ;  // runheader for writing
     
   }; // class

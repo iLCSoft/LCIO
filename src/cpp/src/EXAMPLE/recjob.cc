@@ -22,7 +22,7 @@ using namespace std ;
 using namespace lcio ;
 
 
-static  char* FILEN = "simjob.slcio" ;
+static char* FILEN = "simjob.slcio" ;
 static char* OUTFILEN = "recjob.slcio" ;
 static const int NHITS = 50 ;  // calorimeter hits per event
 
@@ -58,8 +58,10 @@ public:
   }
   
   ~RunEventProcessor(){
+
     // close outputfile
     lcWrt->close()  ;
+
     cout << endl 
 	 << " added collection HCALReco with " << NHITS << " hits" 
 	 << " to   " << nEvent <<" events"  
@@ -67,21 +69,19 @@ public:
 	 << endl << endl ;
   }
   
-  void analyze( const LCEvent * evt ) { /* used for read only access*/ 
+  void modifyEvent( LCEvent * evt ) {
 
-    // trying to modify objects here will cause a ReadOnlyExcpetion
-    // uncomment the following code to try:
-
-//     LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
-//     int NMCPART = mcVec->getNumberOfElements() ;
-//     for(int i=0 ; i< NMCPART ; i++ ){
-//       MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt(i)) ;
-//       part->setPDG(1234) ;   // <<<<< not allowed !
-//     }
-    
-  }
+    // here we can modify existing objects that have been read from a stream:
+    LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+    int NMCPART = mcVec->getNumberOfElements() ;
+    for(int i=0 ; i< NMCPART ; i++ ){
+      MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt(i)) ;
+      part->setPDG(1234) ;   // <<<<< modifying persistent data
+    }
+   }
   
-  void update( LCEvent * evt ) {
+  void processEvent( LCEvent * evt ) { /* used for 'read only' access*/ 
+
     // this is our event loop code
     
     // read collection with MCParticles
@@ -89,12 +89,11 @@ public:
     
     int NMCPART = mcVec->getNumberOfElements() ;
     
-    // here we can modify existing objects that have been read from a stream:
-    for(int i=0 ; i< NMCPART ; i++ ){
-      MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
-      part->setPDG(1234) ;
-    }
-
+    // ---- trying to modify objects here would cause a ReadOnlyExcpetion. e.g. -----
+//     for(int i=0 ; i< NMCPART ; i++ ){
+//       MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
+//       part->setPDG(1234) ;// <<<<< ------- not allowed ! ---------
+//     }
 
     // create a new collection to be added to the event
     // for simplicity just add some calorimeter hits (don't have cluster class yet) 
@@ -119,7 +118,7 @@ public:
       // assign the hits randomly to MC particles
       float rn =  1.*rand()/RAND_MAX ;
       int mcIndx = static_cast<int>( NMCPART * rn ) ;
-      hit->addMCParticleContribution(  dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx )) , 
+      hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx )) , 
 				       0.2876 , 0.007 , 565656 ) ;
       
     }
@@ -133,13 +132,13 @@ public:
       MCParticleImpl* part = new MCParticleImpl ;
       
       part->setPDG( 1234 ) ;
-      part->setParent( dynamic_cast<const MCParticle*>( colVec->getElementAt(0) )) ;
+      part->setParent( dynamic_cast<MCParticle*>( colVec->getElementAt(0) )) ;
       
       colVec->push_back( part ) ;
       
       
     } else {
-      cout << " couldn't do dynamic_cast<LCCollectionVec*>( const LCCollection*) " 
+      cout << " couldn't do dynamic_cast<LCCollectionVec*>( LCCollection*) " 
 	   << endl ;
     }
     
@@ -149,7 +148,7 @@ public:
 
     }catch(EventException& e){
 
-      cout << "excpetion: " << e.what() << endl ;
+      cout << "exception: HCALReco not added: " << e.what() << endl ;
       // no need to exit...
     }
 
@@ -162,10 +161,10 @@ public:
 
   }
 
-  void update(LCRunHeader* run){/*no_op*/;}
+  void modifyRunHeader(LCRunHeader* run){/*no_op*/;}
 
   // don't manipulate run headers - use analyze 
-  void analyze(const LCRunHeader* run){
+  void processRunHeader( LCRunHeader* run){
 
     // just copy run headers to the outputfile
     lcWrt->writeRunHeader( run ) ;
@@ -178,7 +177,6 @@ public:
 
 int main(int argc, char** argv ){
   
-  //  try{ // a large try block for debugging ....
     srand(1234) ;
     
     // create reader and writer for input and output streams 
@@ -205,26 +203,18 @@ int main(int argc, char** argv ){
       lcReader->registerLCEventListener( &evtProc ) ; 
       
       lcReader->readStream() ;
-      try{ 
-	//lcReader->readStream() ;
-      }
-      catch(IOException &e){
-	cout<< " io error: " <<  e.what() << endl ;
-      }
-      catch(exception& ex){
-	cout << "something went wrong:  " << ex.what() << endl ; 
-      }
+//       try{ 
+// 	lcReader->readStream() ;
+//       }
+//       catch(IOException &e){
+// 	cout<< " io error: " <<  e.what() << endl ;
+//       }
       
     } 
     
     lcReader->close() ;
-    
-//  }  catch(exception& ex){
-//    cout << "something went wrong:  " << ex.what() << endl ; 
-//  }
-  
-  return 0 ;
-  
+
+    return 0 ;
 }
 
 //=============================================================================

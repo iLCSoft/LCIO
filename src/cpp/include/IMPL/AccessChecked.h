@@ -16,8 +16,8 @@ namespace IMPL {
    */
   class AccessChecked {
     
-    friend class LCEventImpl ;  // the event needs to set the access mode
-    friend class LCCollectionVec ;  // the collection needs to set the access mode
+    friend class LCEventImpl ;     
+    friend class LCCollectionVec ; 
     
   public:
     AccessChecked() ;

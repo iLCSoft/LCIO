@@ -12,12 +12,25 @@ package hep.lcio.io ;
 
 public interface LCEventListener{
     
-    /** Call back for analyzing an LCEvent. 
+    /** Call back for analyzing an LCEvent. The access to the event is 'read only'.
+     *  Adding new collections to the event is allowed wheras
+     * 	existing data collections and elements can not be modified.  
      */
-    public void analyze( const LCEvent* evt) ;
-    
-    /** Call back for updating an LCEvent. 
+    public void processEvent( LCEvent* evt) ;
+
+    /** Call back for updating an LCEvent. Here all modifications are allowed.
+     *  Only use this method if you need to remove a collection from the event or 
+     *  you need to modify (fix) exisiting data.
      */
-    public void update( LCEvent* evt ) ;
+    public void modifyEvent( LCEvent* evt ) ;
+
+//     /** Call back for analyzing an LCEvent.
+//      * @deprecated - use processEvent().
+//      */
+//     public void analyze(const LCEvent* evt) ;
     
+//     /** Call back for updating an LCEvent.
+//      * @deprecated - use modifyEvent().
+//      */
+//     public void update( LCEvent* evt ) ;
 }

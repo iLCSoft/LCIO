@@ -161,18 +161,24 @@ int main(int argc, char** argv ){
 	  
 	  // in order to access a MCParticle,  we need a dynamic cast as the 
 	  // LCCollection returns an LCIOObject - this is like vectors in Java 
-	  hit->addMCParticleContribution(  dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx )) , 
+	  hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx )) , 
 					   0.314159, 0.1155 ) ; // no pdg
 	  
 	}
 	
-	// we can modify hits that already exist in a collection, e.g. in a simulation step function ...
-	// we need a non const pointer to the hit and use the std::vector::operator[]() instead of the 
-	// LCCollection::getElementAt(i)
-	for(int j=0;j<NHITS;j++){
-	  SimCalorimeterHitImpl* existingHit = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;
+	// ------- changed in v00-07 --------- 
+	// -------- data can be modified as long as is not not made persistent --------
+// 	// we can modify hits that already exist in a collection, e.g. in a simulation step function ...
+// 	// we need a non const pointer to the hit and use the std::vector::operator[]() instead of the 
+// 	// LCCollection::getElementAt(i)
 
-	  existingHit->addMCParticleContribution( dynamic_cast<const MCParticle*>
+
+	for(int j=0;j<NHITS;j++){
+	  SimCalorimeterHitImpl* existingHit 
+	    = dynamic_cast<SimCalorimeterHitImpl*>( calVec->getElementAt(j) ) ; // << Ok now
+ 	  //	    = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;
+	  
+	  existingHit->addMCParticleContribution( dynamic_cast<MCParticle*>
 						  (mcVec->getElementAt(0)), 
 						  0.1, 0. ) ;
 	}
@@ -200,7 +206,7 @@ int main(int argc, char** argv ){
 	  float rn =  .99999*rand()/RAND_MAX ;
 	  int mcIndx = static_cast<int>( NMCPART * rn ) ;
 	  
-	  hit->setMCParticle( dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
+	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
 	  
 	  
 	  // fill the extension vectors (4 floats, 2 ints)

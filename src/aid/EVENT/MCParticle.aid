@@ -17,14 +17,14 @@ public interface MCParticle extends MCParticleData {
      *
      * @throws DataNotAvailableException
      */
-    public const MCParticle* getParent() const throws DataNotAvailableException ;
+    public MCParticle* getParent() const throws DataNotAvailableException ;
     
     /** Returns the second parent of this particle. 
      * Same as getSecondParentData() except for type and exception.
      *
      * @throws DataNotAvailableException
      */
-    public const MCParticle* getSecondParent() const throws DataNotAvailableException ;
+    public MCParticle* getSecondParent() const throws DataNotAvailableException ;
     
 
     /** Returns the i-th daughter of this particle.
@@ -33,7 +33,7 @@ public interface MCParticle extends MCParticleData {
      * @throws DataNotAvailableException
      * @see MCParticleData.getNumberOfDaughters()
      */
-    public const MCParticle* getDaughter(int i) const throws DataNotAvailableException ;
+    public MCParticle* getDaughter(int i) const throws DataNotAvailableException ;
     
     /** Returns the endpoint of the particle in [mm].
      *  Definition of the enpoint depends on the application that created 
@@ -53,11 +53,11 @@ public interface MCParticle extends MCParticleData {
 
     /** Returns the parent of this particle. Null if the mother (beam particle).
      */
-    public const MCParticleData* getParentData() const ;
+    public MCParticleData* getParentData() const ;
     
     /** Returns the second parent of this particle, usually Null.
      */
-    public const MCParticleData* getSecondParentData() const;
+    public MCParticleData* getSecondParentData() const;
     
     /** Returns the number of daughters of this particle.
      */
@@ -65,7 +65,7 @@ public interface MCParticle extends MCParticleData {
 
     /** Returns the i-th daughter of this particle.
      */
-    public const MCParticleData* getDaughterData(int i) const ;
+    public MCParticleData* getDaughterData(int i) const ;
 
 
     /** Returns the number of daughters of this particle.

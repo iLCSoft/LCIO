@@ -20,6 +20,15 @@ namespace IMPL {
     _charge(0),
     _daughtersP(0)
   {
+    _vertex[0] = 0.0 ;
+    _vertex[1] = 0.0 ;
+    _vertex[2] = 0.0 ;
+    _p[0] = 0.0 ;
+    _p[1] = 0.0 ;
+    _p[2] = 0.0 ;
+    _endpoint[0] = 0.0 ;
+    _endpoint[1] = 0.0 ;
+    _endpoint[2] = 0.0 ;
   }
   
   MCParticleImpl::~MCParticleImpl(){
@@ -31,15 +40,15 @@ namespace IMPL {
 
   }
   
-  const MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
-  const MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException) 
+  MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
+  MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException) 
   { 
     if( _mother0 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no parent ! ") ;
     return _mother0 ; 
   }
 
-  const MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1 ;  }  
-  const MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException){ 
+  MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1 ;  }  
+  MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException){ 
     if( _mother1 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no second parent ! ");
     return _mother1 ; 
   }
@@ -49,7 +58,7 @@ namespace IMPL {
 
   int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
 
-  const MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException) { 
+  MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException) { 
 
     try{
       //      return _daughters.at(i) ;
@@ -62,7 +71,7 @@ namespace IMPL {
 
   }
   // unchecked access
-  const MCParticleData* MCParticleImpl::getDaughterData(int i) const {
+  MCParticleData* MCParticleImpl::getDaughterData(int i) const {
     return *_daughtersP[i] ;
   }
 
@@ -86,19 +95,19 @@ namespace IMPL {
   float MCParticleImpl::getMass() const { return _mass ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
 
-  void MCParticleImpl::setParent(  const  MCParticle *mom0 ) { 
+  void MCParticleImpl::setParent( MCParticle *mom0 ) { 
     checkAccess("MCParticleImpl::setParent") ;
     _mother0 = mom0 ; 
   }
-  void MCParticleImpl::setSecondParent(  const  MCParticle *mom1 ) {
+  void MCParticleImpl::setSecondParent( MCParticle *mom1 ) {
     checkAccess("MCParticleImpl::setSecondParent") ;
     _mother1 = mom1 ; 
   }
-  void MCParticleImpl::addDaughter( const MCParticle* daughter) { 
+  void MCParticleImpl::addDaughter( MCParticle* daughter) { 
 
     checkAccess("MCParticleImpl::addDaughter") ;
 
-    const MCParticle** pD = new (const MCParticle*)  ;
+    MCParticle** pD = new (MCParticle*)  ;
     *pD = daughter ;
     _daughtersP.push_back( pD ) ;
   }

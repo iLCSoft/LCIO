@@ -12,12 +12,24 @@ package hep.lcio.io ;
 
 public interface LCRunListener{
     
-    /** Call back for analyzing an LCRunHeader. 
+    /** Call back for processing an LCRunHeader. Access is 'read only'. 
      */
-    public void analyze( const LCRunHeader* rh ) ;
-    
-    /** Call back for updating an LCRunHeader. 
+    public void processRunHeader( LCRunHeader* rh ) ;
+
+
+    /** Call back for modifying an existing LCRunHeader. 
      */
-    public void update( LCRunHeader* rh ) ;
+    public void modifyRunHeader( LCRunHeader* rh ) ;
+
+
+//     /** Call back for analyzing an LCRunHeader.
+//      * @deprecated - use processRunHeader().
+//      */
+//     public void analyze(const  LCRunHeader* rh ) ;
     
+
+//     /** Call back for updating an LCRunHeader.
+//      * @deprecated - use modifyRunHeader().
+//      */
+//     public void update( LCRunHeader* rh ) ;
 }

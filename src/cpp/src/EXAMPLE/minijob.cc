@@ -118,7 +118,7 @@ int main(int argc, char** argv ){
 	calVec->push_back( hit ) ;
 	
 
-	hit->addMCParticleContribution(  dynamic_cast<const MCParticle*>(mcVec->getElementAt(0)) , 
+	hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt(0)) , 
 					 1. , 2. , 4 ) ; 
 	
       }

@@ -49,9 +49,9 @@ public:
     cout << endl << "      "  << nEvent << " events copied ! " << endl ; 
   }
   
-  void update( LCEvent * evt ) {  /*no changes to event ! */ ; }
+  void modifyEvent( LCEvent * evt ) {  /*no changes to event ! */ ; }
 
-  void analyze( const LCEvent * evt ) {  
+  void processEvent( LCEvent * evt ) {  
     
     // just copy events to outputfiles  
     lcWrt->writeEvent( evt ) ;
@@ -60,10 +60,10 @@ public:
 	 << " [run: " << evt->getRunNumber() << "] copied" << endl ;
   }
 
-  void update(LCRunHeader* run){  /*no changes to event ! */ ;}
+  void modifyRunHeader(LCRunHeader* run){  /*no changes to event ! */ ;}
 
   // don't manipulate run headers - use analyze 
-  void analyze(const LCRunHeader* run){
+  void processRunHeader( LCRunHeader* run){
 
     // just copy run headers to the outputfile
     lcWrt->writeRunHeader( run ) ;

@@ -5,9 +5,6 @@
 #include "SIO/SIOCollectionHandler.h"
 #include "SIO/SIORunHeaderHandler.h"
 
-#include "IMPL/LCRunHeaderImpl.h"
-
-#include "IOIMPL/LCEventIOImpl.h"
 #include "EVENT/LCIO.h"
 
 #include "SIO_streamManager.h" 
@@ -51,7 +48,7 @@ namespace SIO {
     _evtP = new LCEventIOImpl* ;
     *_evtP = 0 ;
 
-    _runP = new LCRunHeaderImpl* ;
+    _runP = new LCRunHeaderIOImpl* ;
     *_runP = 0 ;
 
     // this is our default event 
@@ -118,8 +115,6 @@ namespace SIO {
     //    SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
-
-
 
   }
 
@@ -327,14 +322,14 @@ namespace SIO {
 
 
   void SIOReader::registerLCEventListener(LCEventListener * ls){ 
-    _evtListeners.insert( ls );
+    _evtListeners.insert( _evtListeners.end() , ls );
   }
   void SIOReader::removeLCEventListener(LCEventListener * ls){ 
     _evtListeners.erase( _evtListeners.find( ls )  );
   }
   
   void SIOReader::registerLCRunListener(LCRunListener * ls){ 
-    _runListeners.insert( ls );
+    _runListeners.insert( _runListeners.end() , ls );
   }
 
   void SIOReader::removeLCRunListener(LCRunListener * ls){
@@ -360,9 +355,6 @@ namespace SIO {
     SIORecordUnpack hdrUnp( _hdrRecord ) ;
     SIORecordUnpack evtUnp( _evtRecord ) ;
     
-    //    while( readRecord() == LCIO::SUCCESS  ){
-    //try{
-
     int recordsRead = 0 ;
     while( recordsRead < maxRecord ){ 
 	
@@ -377,43 +369,43 @@ namespace SIO {
 	  return ;
 	}else{
 	  std::stringstream message ;
-	  message << "EOF before " << maxRecord << "s read from file" << std::ends ;
+	  message << "SIOReader::readStream(int maxRecord) : EOF before " 
+		  << maxRecord << " records read from file" << std::ends ;
 	  throw IOException( message.str())  ;
 	}
       }
       
-      //try{
-	// notify LCRunListeners 
-	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+      // notify LCRunListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
 	
-	  std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-	  while( iter != _runListeners.end() ){
-	    (*iter)->analyze( *_runP ) ;
-	    (*iter)->update( *_runP ) ;
-	    iter++ ;
-	  }
-	}
-	// notify LCEventListeners 
-	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+	while( iter != _runListeners.end() ){
+
+	  (*_runP)->setReadOnly( true ) ;
+	  (*iter)->processRunHeader( *_runP ) ;
 	  
-	  std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-	  while( iter != _evtListeners.end() ){
-	    // set the proper acces mode for the event
-	    (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
-	    (*iter)->analyze( *_evtP ) ;
-	    
-	    (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	    (*iter)->update( *_evtP ) ;
-	    iter++ ;
-	    
-	  }
+	  (*_runP)->setReadOnly( false ) ;
+	  (*iter)->modifyRunHeader( *_runP ) ;
+	  iter++ ;
 	}
-	//}catch(ReadOnlyException& e){
-	//	throw  IOException( e.what())  ;
-	//} 
+      }
+      // notify LCEventListeners 
+      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+	
+	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+	while( iter != _evtListeners.end() ){
+
+	  
+	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
+	  (*iter)->processEvent( *_evtP ) ;
+	  
+	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->modifyEvent( *_evtP ) ;
+	  iter++ ;
+	  
+	}
+      }
     }
-    //    return LCIO::SUCCESS ;
-    
   }
 
 }; // namespace

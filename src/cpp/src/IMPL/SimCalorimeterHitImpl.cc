@@ -71,11 +71,11 @@ namespace IMPL{
     return _vec.size() ;
   }
   
-  const DATA::MCParticleData * SimCalorimeterHitImpl::getParticleContData(int i) const {
+  DATA::MCParticleData * SimCalorimeterHitImpl::getParticleContData(int i) const {
     return _vec[i]->Particle ;
   }
 
-  const EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const 
+  EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const 
     throw (EVENT::DataNotAvailableException){
     try{
       //return _vec.at(i)->Particle ;
@@ -123,7 +123,7 @@ namespace IMPL{
     _position[2] = pos[2] ;
   }
   
-  void SimCalorimeterHitImpl::addMCParticleContribution( const EVENT::MCParticle *p,
+  void SimCalorimeterHitImpl::addMCParticleContribution( EVENT::MCParticle *p,
 						      float en,
 						      float t,
 						      int pdg ){

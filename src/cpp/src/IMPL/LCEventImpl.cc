@@ -100,8 +100,9 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) t
   if( _map.find( name ) != _map.end() )
     
     // FIXME: what is this - no error handling ?
-    std::cout << " addCollection: collection already exists: " << name << std::endl ;
-    //    throw EventException( std::string("LCEventImpl::addCollection() name already exists in event: "+name) ) ; 
+    //  std::cout << " addCollection: collection already exists: " << name << std::endl ;
+    throw EventException( std::string("LCEventImpl::addCollection() name already exists: "
+				      +name) ) ; 
 
   _map[ name ]  = col ;
  

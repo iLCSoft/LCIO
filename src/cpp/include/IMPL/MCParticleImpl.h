@@ -11,7 +11,7 @@
 
 namespace IMPL {
   
-  typedef std::vector<const EVENT::MCParticle**> MCParticlePVec ;
+  typedef std::vector<EVENT::MCParticle**> MCParticlePVec ;
   // use  pointers to pointer to MCParticle 
   // as SIO needs the address of the pointer for pointer reallocation....
 
@@ -34,14 +34,14 @@ namespace IMPL {
      *
      * @throws DataNotAvailableException
      */
-    virtual const EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException) ;
 
     /** Returns the second parent of this particle. 
      * Same as getSecondParentData() except for type and exception.
      *
      * @throws DataNotAvailableException
      */
-    virtual const EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException) ;
 
     /** Returns the i-th daughter of this particle.
      * Same as getDaughterData() except for type and exception - applies range check.
@@ -49,22 +49,22 @@ namespace IMPL {
      * @throws DataNotAvailableException
      * @see getNumberOfDaughters
      */
-    virtual const EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException) ;
 
 
     /** Returns the parent of this particle. Null if the mother (beam particle).
      */
-    virtual const DATA::MCParticleData * getParentData() const ;
+    virtual DATA::MCParticleData * getParentData() const ;
 
     /** Returns the second parent of this particle, usually Null.
      */
-    virtual const DATA::MCParticleData * getSecondParentData() const ;
+    virtual DATA::MCParticleData * getSecondParentData() const ;
 
 
     /** Returns the i-th daughter of this particle.
      *  Unchecked access to vector holding daughters, thus faster than getDaughter(int i).
      */
-    virtual const DATA::MCParticleData * getDaughterData(int i) const ;
+    virtual DATA::MCParticleData * getDaughterData(int i) const ;
 
 
     /** Returns the endpoint of the particle in [mm].
@@ -122,16 +122,16 @@ namespace IMPL {
     // set methods
     /** Sets the parent. 
      */
-    void setParent( const EVENT::MCParticle *mom0 ) ;
+    void setParent(  EVENT::MCParticle *mom0 ) ;
 
     /** Sets a second parent.
      */
-    void setSecondParent( const EVENT::MCParticle *mom1 ) ;
+    void setSecondParent(  EVENT::MCParticle *mom1 ) ;
 
     /** Adds a daughter particle.
      */
 
-    void addDaughter( const EVENT::MCParticle* daughter) ;
+    void addDaughter(  EVENT::MCParticle* daughter) ;
 
     /** Sets the PDG code.
      */
@@ -170,8 +170,8 @@ namespace IMPL {
      */
     //void prepareArrayOfDaughters(int i) ;
 
-    const EVENT::MCParticle* _mother0 ;
-    const EVENT::MCParticle* _mother1 ;
+    EVENT::MCParticle* _mother0 ;
+    EVENT::MCParticle* _mother1 ;
     int _pdg ;
     int _status ;
     double _vertex[3] ;

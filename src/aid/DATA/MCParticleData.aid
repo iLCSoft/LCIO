@@ -10,11 +10,11 @@ public interface MCParticleData extends LCObject {
     
     /** Returns the parent of this particle. Null if the mother (beam particle).
      */
-    public const MCParticleData* getParentData() const ;
+    public MCParticleData* getParentData() const ;
     
     /** Returns the second parent of this particle, usually Null.
      */
-    public const MCParticleData* getSecondParentData() const;
+    public MCParticleData* getSecondParentData() const;
     
     /** Returns the number of daughters of this particle.
      */
@@ -22,7 +22,7 @@ public interface MCParticleData extends LCObject {
 
     /** Returns the i-th daughter of this particle.
      */
-    public const MCParticleData* getDaughterData(int i) const ;
+    public MCParticleData* getDaughterData(int i) const ;
 
     /** Returns the PDG code of the particle.
      */

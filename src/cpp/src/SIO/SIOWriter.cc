@@ -94,7 +94,7 @@ namespace SIO {
     _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
     
     if( _stream == 0 )
-      throw IOException( std::string( "[SIOWriter::open()] Bad stream name: " 
+      throw IOException( std::string( "[SIOWriter::open()] Bad or duplicate stream name: " 
 				      + std::string(stream_name)  )) ;
     delete stream_name ;
     

@@ -25,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOLCReader.java,v 1.7 2003-09-08 17:20:42 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -128,8 +128,11 @@ class SIOLCReader implements LCReader
                      throw new IOException("Sorry: files created with versions older than v00-03" + " are no longer supported !");
 
                   SIORunHeader header = new SIORunHeader(block.getData());
-                  for (int i = 0; i < l; i++)
-                     ((LCRunListener) runListeners.get(i)).analyze(header);
+                  for (int i = 0; i < l; i++){
+		      // FIX ME: need to set access mode here....
+                     ((LCRunListener) runListeners.get(i)).processRunHeader(header);
+                     ((LCRunListener) runListeners.get(i)).modifyRunHeader(header);
+		  }
                }
             }
             else if (record.getRecordName().equals(SIOFactory.eventHeaderRecordName))
@@ -139,8 +142,11 @@ class SIOLCReader implements LCReader
                {
                   SIOEvent event = new SIOEvent(record);
                   event.readData(reader.readRecord());
-                  for (int i = 0; i < l; i++)
-                     ((LCEventListener) eventListeners.get(i)).update(event);
+		  // FIX ME: need to set access mode here....
+                  for (int i = 0; i < l; i++){
+                     ((LCEventListener) eventListeners.get(i)).processEvent(event);
+                     ((LCEventListener) eventListeners.get(i)).modifyEvent(event);
+		  }
                }
             }
          }

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.6 2003-09-04 04:26:59 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.7 2003-09-08 17:20:42 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -52,7 +52,7 @@ public class RecJob implements LCRunListener, LCEventListener
       recjob.close();
    }
 
-   public void analyze(LCRunHeader run)
+   public void processRunHeader(LCRunHeader run)
    {
       try
       {
@@ -64,17 +64,17 @@ public class RecJob implements LCRunListener, LCEventListener
       }
    }
 
-   public void analyze(LCEvent evt)
+   public void modifyEvent(LCEvent evt)
    {
-      // used for read only access
+      // don't modify events (except for adding new collections)
    }
 
-   public void update(LCRunHeader run)
+   public void modifyRunHeader(LCRunHeader run)
    {
-      // don't manipulate run headers - use analyze
+      // don't manipulate run headers 
    }
 
-   public void update(LCEvent evt)
+   public void processEvent(LCEvent evt)
    {
       // this is our event loop code
       // read collection with MCParticles

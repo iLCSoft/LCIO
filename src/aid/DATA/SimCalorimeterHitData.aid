@@ -52,7 +52,7 @@ public interface SimCalorimeterHitData extends LCObject {
     
     /** Returns the i-th particle that contributed to the hit.
      */
-    public const MCParticleData* getParticleContData( int i) const ;
+    public MCParticleData* getParticleContData( int i) const ;
 
 
 }

@@ -3,7 +3,6 @@
 
 #include "DATA/LCRunHeaderData.h"
 #include "EVENT/LCIO.h"
-#include "IMPL/LCRunHeaderImpl.h"
 
 #include "SIO_functions.h"
 
@@ -11,7 +10,7 @@
 
 using namespace DATA ;
 using namespace EVENT ; // for LCIO object
-using namespace IMPL ;
+using namespace IOIMPL ;
 
 namespace SIO  {
 
@@ -21,7 +20,7 @@ namespace SIO  {
     _rhP(0) {
   }
 
-  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name, IMPL::LCRunHeaderImpl** aRhP) : 
+  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** aRhP) : 
     SIO_block( name.c_str() ),
     _rhP( aRhP ) {
     
@@ -50,7 +49,7 @@ namespace SIO  {
       // delete the old run header object 
       // -> for every handler there will only be one RunHeader object at any given time
       if (*_rhP != 0 )  delete *_rhP ;
-      *_rhP = new IMPL::LCRunHeaderImpl ;
+      *_rhP = new IOIMPL::LCRunHeaderIOImpl ;
 
       // for the run header we read all the data into temporary variables
       // as the data is mostly strings that need temporaries anyhow ...

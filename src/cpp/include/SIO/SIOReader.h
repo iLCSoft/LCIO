@@ -8,7 +8,7 @@
 #include "IO/LCRunListener.h"
 
 #include "IOIMPL/LCEventIOImpl.h"
-#include "IMPL/LCRunHeaderImpl.h"
+#include "IOIMPL/LCRunHeaderIOImpl.h"
 
 
 class SIO_record ;
@@ -130,7 +130,7 @@ namespace SIO {
     
     IOIMPL::LCEventIOImpl *_defaultEvt ; // used to add collections when reading 
     IOIMPL::LCEventIOImpl **_evtP ;
-    IMPL::LCRunHeaderImpl **_runP ;
+    IOIMPL::LCRunHeaderIOImpl **_runP ;
 
     std::set<IO::LCRunListener*> _runListeners ;
     std::set<IO::LCEventListener*> _evtListeners ;

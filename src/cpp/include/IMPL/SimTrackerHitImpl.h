@@ -47,7 +47,7 @@ namespace IMPL {
 
     /** Returns the MC particle that caused the hit. NULL if unknown.
      */
-    virtual const DATA::MCParticleData * getMCParticleData() const  ;
+    virtual DATA::MCParticleData * getMCParticleData() const  ;
 
     /** Returns the MC particle that caused the hit.
      * Same as getMCParticleData except for type and exception.
@@ -55,7 +55,7 @@ namespace IMPL {
      * @throws DataNotAvailableException
      * @see MCParticle
      */
-    virtual const EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException) ;
 
 
     // ---------- setters ------------------------
@@ -77,7 +77,7 @@ namespace IMPL {
 
     /** Sets the MCParticle that caused the hit.
      */
-    void setMCParticle( const EVENT::MCParticle* particle)  ;
+    void setMCParticle( EVENT::MCParticle* particle)  ;
 
 
   protected:
@@ -85,7 +85,7 @@ namespace IMPL {
     double _pos[3] ;
     float _dEdx ;
     float _time ;
-    const EVENT::MCParticle* _particle ;
+    EVENT::MCParticle* _particle ;
 
 }; // class
 }; // namespace IMPL

@@ -28,6 +28,6 @@ public interface SimTrackerHitData extends LCObject {
     
     /** Returns the MC particle that caused the hit - NULL if unknown.
      */
-    public const MCParticleData* getMCParticleData() const ;
+    public MCParticleData* getMCParticleData() const ;
     
 }

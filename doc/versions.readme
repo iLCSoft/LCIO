@@ -2,10 +2,17 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+============================
+  ( fg 20030908 ) 
+============================
 
    - implemented new 'access check' mechanism: 
      removed const methods from data entities using ReadOnlyExceptions instead
-     introduced base class AccessChecked  [ C++ only ]
+     introduced base class AccessChecked  [ C++ only - Java has ILCObject]
+
+   - renamed analyze/update methods to processEvent/modifyEvent and 
+     processRunHeader/modifyRunHeader in the LCRun(Event)Listener interfaces
+     
 
 --------------------
   to do for release:
@@ -14,13 +21,14 @@
   - SimCalorimeterHit - MCParticleCont doesn't work
     Java version   -> needs debugging ...
 
-  - remove const from C++ methods ?     yes
-
   - additional methods in LCReader specifying the access mode (readNextRunHeader)
 
-  - ...
-  
+  - Exceptions:  -  remove all throw clauses ??
+                 -  user documentation 
 
+  - LCCollection::addElement() method
+  
+  - ...
 
 ============================
  v00-07beta ( fg 20030903 ) 

@@ -11,7 +11,7 @@ namespace IMPL {
   
   // helper class for particle contributions to hits
   typedef struct MCParticleCont_S{
-    const EVENT::MCParticle* Particle ;
+    EVENT::MCParticle* Particle ;
     float Energy ;
     float Time ;
     int   PDG ;
@@ -78,7 +78,7 @@ namespace IMPL {
     
     /** Returns the i-th particle that contributed to the hit.
      */
-    virtual const DATA::MCParticleData * getParticleContData(int i) const ;
+    virtual DATA::MCParticleData * getParticleContData(int i) const ;
     
     /** Returns the i-th particle that contributed to the hit.
      *  Same as getParticleContData() except for return type and exception.
@@ -87,7 +87,7 @@ namespace IMPL {
      * @see MCParticle
      * @see getNMCParticles()
      */
-    virtual const EVENT::MCParticle * getParticleCont(int i) const throw (EVENT::DataNotAvailableException) ;
+    virtual EVENT::MCParticle * getParticleCont(int i) const throw (EVENT::DataNotAvailableException) ;
 
     /** Returns the energy of the i-th particle that contributed to the hit.
      */ 
@@ -130,7 +130,7 @@ namespace IMPL {
      *  The energy contribution is also added to the     
      *  hit's total energy. 
      */
-    void addMCParticleContribution( const EVENT::MCParticle *p,
+    void addMCParticleContribution( EVENT::MCParticle *p,
 				    float en,
 				    float t,
 				    int pdg=0 ) ; 

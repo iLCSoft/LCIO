@@ -27,7 +27,7 @@ namespace SIO {
     // tell SIO the address of particle as an abstract  MCParticle ...
     // this is important, as SIO takes the bare address 
     // (int)(MCParticle*) particle != (int)particle !!!!
-    SIO_PTAG( stream , dynamic_cast<const MCParticle*>(particle) ) ;
+    SIO_PTAG( stream , dynamic_cast<MCParticle*>(particle) ) ;
     SIO_PNTR( stream , &(particle->_mother0) ) ;
     SIO_PNTR( stream , &(particle->_mother1) ) ;
     // daughters
@@ -40,7 +40,7 @@ namespace SIO {
 
       // create a pointer to a pointer to a MCParticle 
       // as SIO need the address of the pointer for pointer reallocation....
-      const MCParticle** pD = new (const MCParticle*) ;
+      MCParticle** pD = new (MCParticle*) ;
       SIO_PNTR( stream , pD ) ;
       particle->_daughtersP.push_back( pD ) ;
       //SIO_PNTR( stream , &daughter ) ;
