@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.7 2004-07-14 15:50:45 gaede Exp $
+ * @version $Id: SIORunHeader.java,v 1.8 2004-07-15 15:49:30 gaede Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {
@@ -49,9 +49,9 @@ class SIORunHeader extends ILCRunHeader
          for (int i = 0; i < active.length; i++)
             out.writeString(active[i]);
  
-		if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+//		if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
          SIOLCParameters.write( header.getParameters() , out ) ;
-		}
+//		}
       }
    }
 
@@ -63,8 +63,8 @@ class SIORunHeader extends ILCRunHeader
       out.writeInt(activeSubdetectors.length);
       for (int i = 0; i < activeSubdetectors.length; i++)
          out.writeString(activeSubdetectors[i]);
-	  if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+//	  if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
    	   SIOLCParameters.write( parameters , out ) ;
-	  }
+//	  }
    }
 }

@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.21 2004-07-14 15:50:45 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.22 2004-07-15 15:49:30 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -222,7 +222,11 @@ class SIOEvent extends ILCEvent
             SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
             addRelation(rel,name);
          }
-      }
+//         else {
+//           System.out.println("UNKNOWN collection type: " + type) ;
+//         }
+      
+      }      
    }
 
    static void writeData(LCEvent event, SIOWriter writer, boolean headerOnly) throws IOException
@@ -244,9 +248,9 @@ class SIOEvent extends ILCEvent
             out.writeString(blockName);
             out.writeString(event.getCollection(blockName).getTypeName());
          }
-		if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+		//if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
 		 SIOLCParameters.write( event.getParameters() , out ) ;
-		}
+		//}
 
       }
       else
@@ -261,9 +265,9 @@ class SIOEvent extends ILCEvent
             int flags = col.getFlag();
             out.writeInt(flags);
 
-			if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
+			//if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
 			 SIOLCParameters.write( col.getParameters() , out ) ;
-			}
+			//}
 
 
             int n = col.getNumberOfElements();
