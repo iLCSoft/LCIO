@@ -1024,8 +1024,8 @@ that facilitate the handling ov LCIO data.
 }
 \item{{\bf Support of CLHEP::HepLorentzvector for C++}\\
 For C++ there is a template LCFourVector that can be used to create CLHEP::HepLorentzvectors
-from MCParticles and ReconstructedParticles.
-A Java equivalent will added in the next release FIXME: is this true ???? }
+from MCParticles and ReconstructedParticles. A Java equivalent will added in the next release. }
+
 \item{{\bf Added 'chain reader' to LCReader} \\
 Added a new method LCReader::open(vector fileNames) that allows to specify a list of files that
 will be read sequentially. \\
@@ -1034,6 +1034,10 @@ will be read sequentially. \\
 A number of methods have been added and/or modified to make the API more consistent. Some methods
 that have a new name or calling signature have been marked as deprecated. Usdage of those methods will
 generate a warning - please switch to the new methods. 
+}
+\item{{\bf StdHep-Reader}\\
+Added support for reading binary StdHep files and create an LCCollection of MCParticles.
+See UTIL::LCStdHepRdr and EXAMPLES/stdhepjob.cc.
 }
 
 \end{itemize}

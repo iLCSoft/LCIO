@@ -2,6 +2,14 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+======================
+  v01-03
+=======================
+  - added support for reading stdhep binary files  
+
+  - added ant target 'doc.all' - requires javadoc, doxygen, pdflatex,latex2html
+    builds all documentation on linux 
+	
   - added isDefault flag to LCCollection   
 
   - LCGenericObject added
