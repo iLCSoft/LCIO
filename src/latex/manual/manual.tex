@@ -66,11 +66,6 @@
 \newpage
 \section{INTRODUCTION \label{intro}}
 
-{\bf This document is not yet fully updated to the version 1.3 that is to be released soon.
-In particular it does not yet contain the reconstruction data model (Tracks, Clusters and ReconstructedParticles).
-Please do not use v1.3beta for producing large amounts of data.
-}
-
 LCIO is a persistency framework that defines a data model for the linear collider 
 physics community. It is intended to be used in both simulation studies and 
 analysis frameworks. Its light weight and portability makes it also suitable 
@@ -382,7 +377,7 @@ constants in the class LCIO.
 The boxes correspond to classes and the arrows denote relationships between these. The main class in LCIO 
 is LCEvent that serves as a container of named collections (LCCollection) of data objects (LCObject).
 All data that are related to one event is stored in such collections (A few example classes are shown, see 
-\ref{fig_evtdata} for details on the data entities.) The LCRunHeader is used to store run related 
+\ref{fig_lcobjects} for details on the data entities.) The LCRunHeader is used to store run related 
 information. The class LCParameters can be used to attach keyed parameters of type \textit{int, float, string}
 to either LCRunHeader, LCEvent or LCCollection in order to store so called meta data, e.g. the encoding of certain 
 bits in some type word, or the order of some parameters in a given array.\label{fig_eventdata}
@@ -490,21 +485,90 @@ per hit can be suppressed (LCIO.TPCBIT\_NO\_PTR=1).
 
 \subsubsection{TrackerHit}
 The TrackerHit serves as a generic hit type that can be used for pattern recognition. It allready has a space 
-point position and error matrix, computed from the raw data.
+point position and error matrix, computed from the raw data. TrackerHits point back to the raw data hits that they
+have been created from.
 
 \subsubsection{Cluster}
+Clusters are made from sets of CalorimeterHits that they point back to. Clusters can also be combined from other
+Clusters allowing a tree-like structure, e.g. one could buikd clusters with a geometrical algorithm and then
+combine some of these clusters to 'particles' applying some track-match criterieon. Due to the imaging capabilities
+of the LC calorimeters, clusters have an intrinsic direction, denoted ITheta, IPhi. For fast Monte Carlo or in case
+where the hits are droped from the files (DST) Clusters can have vector of subdetector energies. Check/set the 
+collection variable ClusterSubdetectorNames for the decoding of the indices in the vector.
+And similarly check/set the collection variable ClusterShapeParameters for the indices in the shape parameter 
+vector. Clusters have a type word where the lower 15 bits can be used to decode the type of the cluster by the
+user, e.g. define a bit per subdetector. Check/Set the collection variables ClusterTypeBitNames and 
+ClusterTypeBitIndices.
+
+
 
 \subsubsection{Track}
+For LCIO we use the following parameters for Track:
+\begin{itemize}
+\item{{\bf d0}\\
+Impact paramter of the track in the r-phi plane.}
+\item{{\bf phi}\\
+Phi of the track at the reference point.}
+\item{{\bf omega}\\
+The signed curvature of the track in [1/mm] - the sign is that of the particle's charge.
+}
+\item{{\bf z0}\\
+Impact paramter of the track the in the r-z plane.
+}
+\item{{\bf tanLambda}\\
+Lambda is the dip angle of the track in the r-z plane at the reference point. 
+}
+\end{itemize}
+By default LCIO tracks have the point of closest approach (PCA) as the reference point. But any other point can 
+be chosen at will, check \verb$isReferencePointPCA()$.  A full covariance matrix is stored with every track as the
+lower triangel matrix of the parameters in the given order.
+
+Track points back to the hits that have been used in the  fit. 
+If the hits are not available there is a vector of subdetector hit numbers, check/set the collection parameter
+TrackSubdetectorNames to decode the indices. Also Tracks can point to other Tracks (typically track segments from
+other subdetectors) that have been combined to the track at hand.
+
+Tracks have a type word where the lower 15 bits can be used to decode the type of the track by the
+user, e.g. define a bit per subdetector. Check/Set the collection variables TrackTypeBitNames and 
+TrackTypeBitIndices.
 
 \subsubsection{ReconstructedParticle}
+ReconstructedParticle is the class to be used for every object that is reconstructed. ReconstructedParticle can be
+a single particle, e.g. a track with a pion PID, or a compound object like a jet made from many particles.
+ReconstructedParticle has lists of Tracks, Clusters and ReconstructedParticles that have been combined to form 
+this particle. The particle type  is encoded  in a type word - check/set the collection parameters 
+ReconstructedParticleTypeNames and ReconstructedParticleTypeValues.
+
+{\bf Users have to make sure that they don't double count when looping over lists of ReconstructedParticles. 
+LCIO might provide a convenient method to help looping over lists in a future release.}
 
 \subsubsection{LCGenericObject}
+Users are free to store additional data in LCIO files that cannot be expressed in terms of the classes that 
+are provided with LCIO. To do so it is easiest to implement the interface LCGenericObject in a user defined
+concrete class. In order to write data, simply create instances of this class and add them to an LCCollection
+that in turn is added to the LCEvent. When reading back this information users are free to instantiate 
+objects of the user class' type via copy constructor or simply access the information through the LCGenericObject
+interface. 
+
+\subsubsection{LCIntVec, LCFloatVec and LCStringVec}
+Simple user extension data can be stored in LCCollections of vectors of type of {\em float, int} and {\em string}. 
+
+The LCIntVec can also be used to store indices of objects in another collection thus building
+subcollections. For example one can have a lepton finder that returns lepton candidates as a list of 
+indices that point into the LCCollection of type Track that was given to finder.
 
 \subsubsection{LCRelation}
- 
+As described above, some LCIO classes have built-in links/relations to other classes, e.g. tracks point back to 
+hits. LCIO intentionally does not define such links to point back from reconstructed objects to Monte Carlo truth 
+information, in order to allow a clean development of tools that could run on 'real data'.
 
-Users are free to store collections of {\em float} and {\em int} vectors/arrays of arbitrary size
-as 'extensions' to the data model, see the example code listed in~\ref{examples}.
+Using the LCRelation one is still able to make such relations for simulation data. In general LCRelation can be
+used to store a weighted many to many relationship between objects of two arbitrary (but fixed) type.
+LCRelations are stored as any other data entity in an LCCollection. For user convenience a LCRelationNavigator
+is provided in {\it UTIL/hep.lcio.util} that allows to quickly navigate the relationships.
+
+The type of the from- and to-object are stored in the collection parameters RelationFromType and RelationToType.
+
 
 \subsection{Data format \label{sec_sio}}
 
@@ -897,8 +961,9 @@ using the Pythia routine {\bf PYHEPC} to fill the \verb$hepevt$ common block
 and a modified version of {\bf LCWRITE} to create the ASCII file (is included in the script). To run this script
 one has to provide \verb$cernlib$~\cite{ref_cernlib} 2002 or later. The script has to be modified if necessary
 to provide a valid path to the \verb$cernlib$ libraries. \\
-The program {\bf PYSIMJOB} (\verb$pysimjob.F$) reads the ASCII file, fills the \verb$hepevt$ common block, and writes
-a LCIO file which is read again in a second pass to fill the \verb$hepevt$ common block.
+The program {\bf PYSIMJOB} (\verb$pysimjob.F$) reads the ASCII file, fills the \verb$hepevt$ common 
+block, and writes a LCIO file which is read again in a second pass to fill the \verb$hepevt$ common 
+block.
 
 
 \newpage 
@@ -907,8 +972,49 @@ a LCIO file which is read again in a second pass to fill the \verb$hepevt$ commo
 \end{latexonly}
 
 \section{Changes wrt. v1.0}
+There have been a number of changes in LCIO wrt. to the last public release v01-00, the more important 
+of which are:
+\begin{itemize}
+\item{{\bf Tracks, Cluster and ReconstructedParticles added} \\
+These are the main classes for reconstruction output.
+}
+\item{{\bf RawCalorimeterHit added} \\
+A calorimeter hit class for testbeam data that reflects 'real data' more closely than CalorimeterHit. 
+}
+\item{{\bf LCRelation added} \\
+Can be used to map arbitrary weighted n to m relationships, with $n,m \ge 1$.
+}
+\item{{\bf LCGenericObject added} \\
+Support for user defined objects that have an arbitrary number of attributes of type {\em int, float}
+and {\it double}.
+}
+\item{{\bf Added time information to CalorimterHit} \\
+An optional time word has been added to CalorimeterHit.
+}
+\item{{\bf Transient flag added to LCCollection} \\
+LCCollections can now be flagged as transient for use in applications that have LCEvent as the
+underlying transient data model.
+}
+\item{{\bf  New package UTIL for C++} \\
+A new namespace UTIL has been added to the C++ version. It holds convenient classes and methods
+that facilitate the handling ov LCIO data.
+}
+\item{{\bf Support of CLHEP::HepLorentzvector for C++}\\
+For C++ there is a template LCFourVector that can be used to create CLHEP::HepLorentzvectors
+from MCParticles and ReconstructedParticles.
+A Java equivalent will added in the next release FIXME: is this true ???? }
+\item{{\bf Added 'chain reader' to LCReader} \\
+Added a new method LCReader::open(vector fileNames) that allows to specify a list of files that
+will be read sequentially. \\
+}
+\item{{\bf Made API more consistent} \\
+A number of methods have been added and/or modified to make the API more consistent. Some methods
+that have a new name or calling signature have been marked as deprecated. Usdage of those methods will
+generate a warning - please switch to the new methods. 
+}
 
-{\Huge TO BE DONE !!! }
+\end{itemize}
+
 \clearpage
 
 %\section{SIO File Format of LCIO} \label{app_lcio}
