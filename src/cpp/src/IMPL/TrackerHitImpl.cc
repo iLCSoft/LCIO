@@ -6,17 +6,20 @@ using namespace EVENT ;
 namespace IMPL {
   
   TrackerHitImpl::TrackerHitImpl() :
-    //    _cov(TRKHITNCOVMATRIX),
+    _type(0),
     _dEdx(0),
-    _time(0) {
+    _time(0),
+    _rawHit(0) {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
-    for(int i=0;i<TRKHITNCOVMATRIX;i++){
-      _cov.push_back(0.0) ;
-    }
+    
+    _cov.resize( TRKHITNCOVMATRIX ) ;
+    //     for(int i=0;i<TRKHITNCOVMATRIX;i++){
+    //       _cov.push_back(0.0) ;
+    //     }
   }
-
+  
   TrackerHitImpl::~TrackerHitImpl(){  
   } 
 
@@ -34,19 +37,25 @@ namespace IMPL {
     return _rawHit ;
   }
 
-  const std::string & TrackerHitImpl::getType() const {
+//   const std::string & TrackerHitImpl::getType() const {
+//     static std::string tpcHitType( LCIO::TPCHIT ) ;
+//     static std::string unknown( "Unknown" ) ;
+//     TPCHit* tpchit = dynamic_cast<TPCHit*>( _rawHit ) ;
+//     if( tpchit != 0 ) 
+//       return tpcHitType ;
+//     else
+//       return unknown ;
+//   }
 
-    static std::string tpcHitType( LCIO::TPCHIT ) ;
-    static std::string unknown( "Unknown" ) ;
-
-    TPCHit* tpchit = dynamic_cast<TPCHit*>( _rawHit ) ;
-    if( tpchit != 0 ) 
-      return tpcHitType ;
-    else
-      return unknown ;
-
+  int TrackerHitImpl::getType() const {
+    return _type ;
   }
 
+
+  void TrackerHitImpl::setType(int type) { 
+    checkAccess("TrackerHitImpl::setType") ;
+    _type= type ; 
+  }
 
   void TrackerHitImpl::setPosition( double pos[3]){ 
     checkAccess("TrackerHitImpl::setPosition") ;
@@ -77,7 +86,7 @@ namespace IMPL {
       _cov[i] = cov[i] ;
     }
   }
-  void TrackerHitImpl::setTPCHit( TPCHit* hit){
+  void TrackerHitImpl::setRawHit( LCObject* hit){
     checkAccess("TrackerHitImpl::setTime") ;
     _rawHit = hit ;
   }

@@ -523,7 +523,7 @@ namespace UTIL {
       TrackerHit* hit = 
 	dynamic_cast<TrackerHit*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%8.8x] | %s\n" 
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%8.8x] | [%d] \n" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
 	     , hit->getPosition()[1] 
@@ -531,7 +531,8 @@ namespace UTIL {
 	     , hit->getdEdx() 
 	     , hit->getTime() 
 	     , hit->getRawDataHit()->id() 
-	     , hit->getType().c_str() 
+	     , hit->getType() 
+	     //	     , hit->getType().c_str() 
 	     ) ;
     }
     cout << endl 

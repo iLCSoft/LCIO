@@ -25,6 +25,10 @@ namespace SIO{
     TrackerHitIOImpl* hit  = new TrackerHitIOImpl ;
     *objP = hit ;
 	
+    if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
+      SIO_DATA( stream ,  &(hit->_type) , 1  ) ;
+    } 
+
     SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 
     float cov[TRKHITNCOVMATRIX] ;
@@ -50,6 +54,8 @@ namespace SIO{
 
     const TrackerHit* hit = dynamic_cast<const TrackerHit*>(obj)  ;
 
+    LCSIO_WRITE( stream ,  hit->getType() ) ;
+    
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 
     double* pos = const_cast<double*> ( hit->getPosition() ) ; 

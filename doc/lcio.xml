@@ -514,6 +514,10 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
+            <if condition="major>1||(major==1&amp;&amp;minor>2)">
+	      <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
+	      TrackerHitTypeValue</data>
+            </if>
             <data type="double[3]" name="position"></data>
             <data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data>
             <data type="float" name="dedx"></data>

@@ -28,10 +28,12 @@
 #define M_PI 3.14159265358979323846
 
 #include <iostream>
+#include <map>
+#include <algorithm>
+//#include <string>
 
 using namespace std ;
 using namespace lcio ;
-
 
 static char* FILEN = "simjob.slcio" ;
 static char* OUTFILEN = "recjob.slcio" ;
@@ -134,7 +136,7 @@ public:
       double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
       trkHit->setPosition(  pos  ) ;
 
-      trkHit->setTPCHit( tpcHit ) ; // store the original raw data hit
+      trkHit->setRawHit( tpcHit ) ; // store the original raw data hit
 
       FloatVec cov(6) ;
       cov[0] = 1. ;
@@ -147,6 +149,19 @@ public:
 
       trkhitVec->addElement( trkHit ) ;
     }
+
+    // set the parameters to decode the type information in the collection
+    // for the time being this has to be done manually
+    // in the future we should provide a more convenient mechanism to 
+    // decode this sort of meta information
+    StringVec typeNames ;
+    IntVec typeValues ;
+    typeNames.push_back( LCIO::TPCHIT ) ;
+    typeValues.push_back( 1 ) ;
+    trkhitVec->parameters().setValues("TrackerHitTypeNames" , typeNames ) ;
+    trkhitVec->parameters().setValues("TrackerHitTypeValues" , typeValues ) ;
+    
+    
     evt->addCollection( trkhitVec , "TrackerHits") ;
 
 

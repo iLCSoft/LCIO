@@ -10,7 +10,7 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version Apr 7, 2004
+ * @version $Id: TrackerHit.aid,v 1.7 2004-08-31 12:38:28 gaede Exp $
  */
 
 public interface TrackerHit extends LCObject {
@@ -23,19 +23,26 @@ public interface TrackerHit extends LCObject {
      */
     public const FloatVec& getCovMatrix() const ;
 
-    /** The dE/dx of the hit in [GeV/mm].
+    /** The dE/dx of the hit in [GeV].
      */ 	
     public float getdEdx() const ;
     
-    /** The  time of the hit in [ns]. Is this needed ?
+    /** The  time of the hit in [ns].
      */
     public float getTime() const ;	
 
-    /**Type of raw data hit, either one of<br>
-     * LCIO::TPCHIT<br>
-     * LCIO::SIMTRACKERHIT<br>
+    //     /**Type of raw data hit, either one of<br>
+    //      * LCIO::TPCHIT<br>
+    //      * LCIO::SIMTRACKERHIT<br>
+    //      */
+    //    public const String& getType() const ;
+
+    /** Type of hit. Mapping of integer types to type names
+     * through collection parameters "TrackerHitTypeNames"
+     * and "TrackerHitTypeValues".
      */
-    public const String& getType() const ;
+    public int getType() const ;
+
 
     /**The raw data hit. Type is one 
      * of TPCHit, VTXHit,...
@@ -44,12 +51,10 @@ public interface TrackerHit extends LCObject {
     public LCObject* getRawDataHit() const ;
 
 
-
-
-    public void setPosition( double3V pos) ;
-    public void setCovMatrix( const FloatVec& cov) ;
-    public void setdEdx( float dEdx ) ;
-    public void setTime( float time ) ;
-    public void setTPCHit( TPCHit* hit ) ;
+//     public void setPosition( double3V pos) ;
+//     public void setCovMatrix( const FloatVec& cov) ;
+//     public void setdEdx( float dEdx ) ;
+//     public void setTime( float time ) ;
+//     public void setTPCHit( TPCHit* hit ) ;
 
 }

@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version Apr 7, 2004
+ * @version $Id: TrackerHitImpl.h,v 1.7 2004-08-31 12:38:28 gaede Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -46,11 +46,18 @@ namespace IMPL {
      */
     virtual float getTime() const ;
 
-    /**Type of raw data hit, either one of<br>
-     * LCIO::TPCHIT<br>
-     * LCIO::SIMTRACKERHIT<br>
+//     /**Type of raw data hit, either one of<br>
+//      * LCIO::TPCHIT<br>
+//      * LCIO::SIMTRACKERHIT<br>
+//      */
+//     virtual const std::string & getType() const ;
+
+    /** Type of hit. Mapping of integer types to type names
+     * through collection parameters "TrackerHitTypeNames"
+     * and "TrackerHitTypeValues".
      */
-    virtual const std::string & getType() const ;
+    virtual int getType() const ;
+
 
     /**The raw data hit. Type is one 
      * of TPCHit, VTXHit,...
@@ -60,23 +67,25 @@ namespace IMPL {
 
 
     // setters 
+    void setType(int type) ;
     void setPosition( double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
     void setCovMatrix( float cov[TRKHITNCOVMATRIX]  );
     void setdEdx( float dedx ) ;
     void setTime( float t ) ;
-    void setTPCHit( EVENT::TPCHit* hit) ;
+    void setRawHit( LCObject* hit ) ;
 
 
 
 protected:
   
-  double _pos[3] ;
-  EVENT::FloatVec _cov ;
-  float _dEdx ;
-  float _time ;
-  EVENT::LCObject* _rawHit ;
-
+    int _type ;
+    double _pos[3] ;
+    EVENT::FloatVec _cov ;
+    float _dEdx ;
+    float _time ;
+    EVENT::LCObject* _rawHit ;
+    
 
 }; // class
 }; // namespace IMPL

@@ -6,7 +6,7 @@ import hep.lcio.exceptions.* ;
 /** The generic collection used in LCIO. Holds arbitrary objects of type LCObject.
  * 
  * @author gaede 
- * @version $Id: LCCollection.aid,v 1.8 2004-08-03 13:14:15 gaede Exp $
+ * @version $Id: LCCollection.aid,v 1.9 2004-08-31 12:38:27 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -17,6 +17,7 @@ public interface LCCollection
 @endif
 {
     /**Returns the number of elements in the collection.
+     * Same as size().
      */
     public int getNumberOfElements() const ;
     
@@ -83,9 +84,12 @@ public interface LCCollection
 
 @ifdef cpp
    /** Parameters defined for this collection.
-     */
+    * Can be used to modify the collection paramters. 
+    */
     public LCParameters& parameters() ;
 @endif
+
+
 
 }
 
