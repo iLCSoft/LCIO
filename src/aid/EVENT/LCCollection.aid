@@ -6,7 +6,7 @@ import hep.lcio.exceptions.* ;
 /** The generic collection used in LCIO. Holds arbitrary objects of type LCObject.
  * 
  * @author gaede 
- * @version $Id: LCCollection.aid,v 1.9 2004-08-31 12:38:27 gaede Exp $
+ * @version $Id: LCCollection.aid,v 1.10 2004-09-23 14:03:42 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -38,6 +38,7 @@ public interface LCCollection
      *  CHBIT_PDG = 28 - store pdg of secondaries <br>
      *  &nbsp;<br>
      *  Bit 16 is used to flag collection as transient <br>
+     *  Bit 17 is used to flag collection as default <br>
      *  Bits 0-15 are subdetector/user specific.
      * @see isTransient()
      */
@@ -48,14 +49,23 @@ public interface LCCollection
 @ifdef cpp
 @cpp{
     static const int BITTransient = 16 ;
+    static const int BITDefault = 17 ;
 }@else
     public static const int BITTransient = 16 ;
+    public static const int BITDefault = 17 ;
 @endif
 
     /** True if collection is transient, i.e. will not be written to any LCIO file.
-     *  Convenient method that checks bit 16 of the flag word.
+     *  Convenient method that checks bit BITTransient of the flag word.
      */
     public boolean isTransient() const ;
+
+    /** True if collection is the default collection for the given type.
+     *  This implies that the collection is complete and unambigous.
+     *  Convenient method that checks bit BITDefault of the flag word.
+     */
+    public boolean isDefault() const ;
+
 
     /** Adds the given element to (end of) the collection. Throws an exception 
      * if the collection (event) is 'read only'.

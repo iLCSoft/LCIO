@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * A default implementation of LCCollection
  * @author Tony Johnson
- * @version $Id: ILCCollection.java,v 1.9 2004-08-03 13:14:18 gaede Exp $
+ * @version $Id: ILCCollection.java,v 1.10 2004-09-23 14:03:42 gaede Exp $
  */
 public class ILCCollection extends ArrayList implements LCCollection
 {
@@ -94,12 +94,28 @@ public class ILCCollection extends ArrayList implements LCCollection
    }
 
    public void setTransient() {
-     setTransient(true) ;
+	 setTransient(true) ;
    }
+
    public void setTransient(boolean val) {
 //	checkAccess();
 	if (val) flag |= (1<<BITTransient);
 	else flag &= ~(1<<BITTransient);
+
+   }
+
+   public boolean isDefault() {
+	return (flag & 1 << BITDefault) != 0;
+   }
+
+   public void setDefault() {
+	 setDefault(true) ;
+   }
+
+   public void setDefault(boolean val) {
+//	checkAccess();
+	if (val) flag |= (1<<BITDefault);
+	else flag &= ~(1<<BITDefault);
 
    }
 

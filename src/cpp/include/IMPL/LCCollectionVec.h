@@ -19,7 +19,7 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version $Id: LCCollectionVec.h,v 1.8 2004-08-03 13:14:16 gaede Exp $
+   * @version $Id: LCCollectionVec.h,v 1.9 2004-09-23 14:03:42 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
@@ -83,6 +83,17 @@ namespace IMPL {
      * to LCIO files.
      */
     void setTransient(bool val=true) ;
+
+    /** True if collection is the default collection for the given type.
+     *  This implies that the collection is complete and unambigous.
+     *  Convenient method that checks bit BITDefault of the flag word.
+     */
+    virtual bool isDefault() const ;
+
+    /** Sets the default flag for this collection. User need to make sure this 
+     * flag is unique for a type.
+     */
+    void setDefault(bool val=true) ;
 
     /** Sets the flag word for this collection.
      */

@@ -84,6 +84,17 @@ void LCCollectionVec::setTransient(bool val) {
   else _flag &= ~(1<<BITTransient) ;
 }
 
+
+bool LCCollectionVec::isDefault() const { 
+  return (_flag & (1<<BITDefault) ) ; 
+}
+
+void LCCollectionVec::setDefault(bool val) {
+  if(val) _flag |= (1<<BITDefault) ;
+  else _flag &= ~(1<<BITDefault) ;
+}
+
+
 int LCCollectionVec::getFlag() const{
   return _flag ;
 }
