@@ -69,7 +69,6 @@ namespace SIO {
     SIOEventHandler *_hdrHandler ;
     std::vector<SIOCollectionHandler*> _colVector ;
 
-    bool isFirstEvent ;
     EVENT::LCEvent **evtP ;
 
   }; // class

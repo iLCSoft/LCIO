@@ -161,20 +161,34 @@ int main(int argc, char** argv ){
 	extVec->push_back( ext ) ;
       }
 
-
+      
       // add all collection to the event
       evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
       evt->addCollection( (LCCollection*) calVec , ecalName ) ;
       evt->addCollection( (LCCollection*) trkVec , tpcName ) ;
       evt->addCollection( (LCCollection*) extVec , tpcName+"UserExtension" ) ;
-
       
-      // dump the event to the screen 
-      LCTOOLS::dumpEvent( evt ) ;
+      
+
+      // test: add a collection for one event only:
+      if( rn == NRUN-1 && i == 0 ) { // first event oif last run
+	LCCollectionVec* addExtVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
+	LCFloatVec* addExt = new LCFloatVec ;
+	addExt->push_back( 1. );
+	addExt->push_back( 2. );
+	addExt->push_back( 3. );
+	addExt->push_back( 4. );
+	addExtVec->push_back( addExt ) ;
+	evt->addCollection( (LCCollection*) addExtVec , "AdditionalExtension" ) ;
+      }
+
+
       
       // write the event to the file
       lcWrt->writeEvent( evt ) ;
       
+      // dump the event to the screen 
+      LCTOOLS::dumpEvent( evt ) ;
 
 
       // we created the event so we need to take care of deleting it ...

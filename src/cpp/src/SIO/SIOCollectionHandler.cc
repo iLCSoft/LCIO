@@ -32,7 +32,7 @@ namespace SIO {
     if( ! _myHandler ){
       std::cout << "WARNING:  SIOCollectionHandler no handler for type : " << _myType << std::endl ;
     }
-    
+
   }
 
   SIOCollectionHandler::~SIOCollectionHandler(){
@@ -48,7 +48,8 @@ namespace SIO {
     
     // if we don't have a handler we can't do anything ...
     if( !_myHandler) {
-      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " << _myType << std::endl ;
+      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " 
+		<< _myType << std::endl ;
       return 1 ;
     }
     

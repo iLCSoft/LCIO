@@ -54,7 +54,9 @@ namespace SIO {
 
     // this is our default event 
     // collections are attached to this event when blocks are read
-    _defaultEvt = new LCEventIOImpl ;
+
+    // FIXME : default event no longer needed ....
+    //    _defaultEvt = new LCEventIOImpl ;
 
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
@@ -114,7 +116,7 @@ namespace SIO {
       _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;   
 
     // create SIOHandlers for event and header and tell SIO about it
-    SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
+    //    SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
 
@@ -140,15 +142,15 @@ namespace SIO {
 
       // if the record was an LCEvent record, we need to move the collections
       // from the default event to the current event
-      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+//       if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
 
-	for ( LCCollectionMap::const_iterator iter= _defaultEvt->_map.begin() ; 
-	      iter != _defaultEvt->_map.end() ; iter++ ){
-	  (*_evtP)->_map[ iter->first ] = iter->second ;  
-	  _defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
-	}
+// 	for ( LCCollectionMap::const_iterator iter= _defaultEvt->_map.begin() ; 
+// 	      iter != _defaultEvt->_map.end() ; iter++ ){
+// 	  (*_evtP)->_map[ iter->first ] = iter->second ;  
+// 	  _defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
+// 	}
 
-      }
+//       }
       return LCIO::SUCCESS ;
 
     }    
@@ -202,7 +204,22 @@ namespace SIO {
       // (order of blocks in the SIO record is undefined) 
       // collections have to be moved from the default event to the current event 
       // after the LCEvent record has been read in total (see readRecord() )
-      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_defaultEvt   )  ;
+    //      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_defaultEvt   )  ;
+
+    //SIO_blockManager::add( ch  )  ; 
+      
+      // check if block handler exists in manager
+      SIO_block* oldCH = SIO_blockManager::get( name->c_str() ) ;
+      if( oldCH != NULL) {
+	// remove and then delete old collection handler
+	//SIO_blockManager::remove( name->c_str()  ) ;
+	// the d'tor of SIo_block calls remove ....
+	delete oldCH ; 
+      }
+
+      // create collection handler for event
+      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
+
       SIO_blockManager::add( ch  )  ; 
 
     }
@@ -227,7 +244,8 @@ namespace SIO {
       
     }// -- end of scope for unpacking run header --
     
-    setUpHandlers() ;
+    // fg - not needed ?
+    //setUpHandlers() ;
     
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;

@@ -25,7 +25,7 @@ using namespace EVENT ;
 
 namespace SIO {
 
-  SIOWriter::SIOWriter() : isFirstEvent(true)   {
+  SIOWriter::SIOWriter() : _hdrHandler(0){
   
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
@@ -77,7 +77,7 @@ namespace SIO {
 
     if( !(status &1) ) return LCIO::ERROR ;
   
-    // tell SIO the record names if not yey known 
+    // tell SIO the record names if not yet known 
     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
       _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
@@ -123,29 +123,41 @@ namespace SIO {
 
 
 
-  /** Creates Handlers needed for writing the events on this stream.
+  /** Creates Handlers needed for writing the event on this stream.
+   * Needs to be called for every event.
    */
   void SIOWriter::setUpHandlers(const LCEvent * evt){
   
     // create SIOHandler for event 
     // and connect it to the sio record
 
-    _evtHandler = new SIOEventHandler( LCSIO::EVENTBLOCKNAME ) ;
-    _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
-    _evtRecord->connect( _evtHandler ) ;
-    _hdrRecord->connect( _hdrHandler ) ;
-
+    //    _evtHandler = new SIOEventHandler( LCSIO::EVENTBLOCKNAME ) ;
+    //    _evtRecord->connect( _evtHandler) ;
+    if( ! _hdrHandler ){
+      _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
+      _hdrRecord->connect( _hdrHandler ) ;
+    }
 
     // now create handlers for all collections in the event
     // and connect them to the record
-  
+    // disconnect and delete old block handlers first 
+    typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
+    for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+      _evtRecord->disconnect( *ch );
+      delete *ch ;
+    }
+    _colVector.clear() ;
+
+
     const StringVec* strVec = evt->getCollectionNames() ;
 
     for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
+
       const LCCollection* col = evt->getCollection( *name ) ;
 
       SIOCollectionHandler* ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
+
+      ch->setCollection( col ) ; // fg20030513
 
       _colVector.push_back( ch ) ;  
       _evtRecord->connect( ch ) ;
@@ -155,24 +167,23 @@ namespace SIO {
 
   int SIOWriter::writeEvent(const LCEvent* evt){
   
-    if( isFirstEvent ){
-      setUpHandlers( evt) ;
-      isFirstEvent = false ;
-    }
+
+    //here we set up the collection handlers 
+    setUpHandlers( evt) ;
   
     if( _stream->getState()== SIO_STATE_OPEN ){
     
      //      IMPL::LCTOOLS::dumpEvent( evt ) ;
 
       // need to set the event in event (header) handlers
-      _evtHandler->setEvent( evt ) ;
+      //_evtHandler->setEvent( evt ) ;
       _hdrHandler->setEvent( evt ) ;
 
       // set the collections in the corresponding handlers
-      typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-      for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
-	(*ch)->setCollection(  evt->getCollection(*(*ch)->getName()) ) ;
-      }
+      //      typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
+      //for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+      //	(*ch)->setCollection(  evt->getCollection(*(*ch)->getName()) ) ;
+      //}
 
       // write LCEventHeader record
       unsigned int status =  _stream->write( LCSIO::HEADERRECORDNAME    ) ;
@@ -198,7 +209,6 @@ namespace SIO {
    
     }
   
-    // no error handling, really ...
     return LCIO::SUCCESS ;
   }
 

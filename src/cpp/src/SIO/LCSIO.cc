@@ -104,24 +104,30 @@ unsigned int LCSIO::write( SIO_stream* stream , float f){
 
 unsigned int LCSIO::write(SIO_stream* stream , const std::string& s){
 
-  int status ;
+//   int status ;
+//   int strLen = s.length() ;
+
+//   // make sure our string buffer is large enough 
+//   while( strLen + 1 > dummy_size ){
+//     dummy_size += dummy_size  ;
+//     delete[] dummy ;
+//     dummy = new char[ dummy_size  ] ;
+//   }
+//   strcpy( dummy , s.c_str() ) ;
+  
+//   status = SIO_functions::data( stream ,  & strLen  , 1  ) ;
+//   if( !( status & 1 ) ) return status ;
+  
+//   // fg 20030508 don't write trailing '\0's any more (v-00-03)
+//   status = SIO_functions::data( stream ,  dummy , strLen ) ;
+
+//   return status ;
+
+  // fg: why not use const_cast here - then we don't need to copy to a buffer ....
   int strLen = s.length() ;
-
-  // make sure our string buffer is large enough 
-  while( strLen + 1 > dummy_size ){
-    dummy_size += dummy_size  ;
-    delete[] dummy ;
-    dummy = new char[ dummy_size  ] ;
-  }
-  strcpy( dummy , s.c_str() ) ;
-  
-  status = SIO_functions::data( stream ,  & strLen  , 1  ) ;
+  int status = SIO_functions::data( stream ,  & strLen  , 1  ) ;
   if( !( status & 1 ) ) return status ;
-  
-  // fg 20030508 don't write trailing '\0's any more (v-00-03)
-  status = SIO_functions::data( stream ,  dummy , strLen ) ;
-
-  return status ;
+  return  SIO_functions::data( stream , const_cast<char*>( s.c_str() ), strLen );
 }
 
     
