@@ -376,7 +376,7 @@ namespace SIO {
 	  return ;
 	}else{
 	  std::stringstream message ;
-	  message << "EOF before " << maxRecord << "s read from file" << ends ;
+	  message << "EOF before " << maxRecord << "s read from file" << std::ends ;
 	  throw( IOException( message.str()) ) ;
 	}
       }
