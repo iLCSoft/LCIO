@@ -17,7 +17,8 @@ namespace SIO {
   class SIORunHeaderHandler ;
   class SIOCollectionHandler ;
 
-    
+  class SIOReader ;
+
 /** Concrete implementation of LCWriter using SIO.
  * Use LCFactory to instantiate.
  *
@@ -27,6 +28,8 @@ namespace SIO {
  */
   class SIOWriter : public IO::LCWriter {
 
+
+    friend class SIOReader ; // SIO Reader uses SAME SIO records !!
 
   public:
 
@@ -85,9 +88,9 @@ namespace SIO {
     
   protected:
     
-    SIO_record *_evtRecord ;
-    SIO_record *_hdrRecord ;
-    SIO_record *_runRecord ;
+    static SIO_record *_evtRecord ;
+    static SIO_record *_hdrRecord ;
+    static SIO_record *_runRecord ;
     SIO_stream *_stream ;
 
   private:

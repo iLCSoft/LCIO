@@ -139,9 +139,9 @@ namespace SIO {
   protected:
     
     // we need an SIO record for every type
-    SIO_record *_evtRecord ;
-    SIO_record *_hdrRecord ;
-    SIO_record *_runRecord ;
+//     SIO_record *_evtRecord ;
+//     SIO_record *_hdrRecord ;
+//     SIO_record *_runRecord ;
     SIO_record *_dummyRecord ;  // used for reading arbitrary records
     SIO_stream *_stream ;
     

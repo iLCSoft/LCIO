@@ -26,6 +26,11 @@ using namespace IMPL ;
 
 namespace SIO {
 
+  SIO_record * SIOWriter::_evtRecord ;
+  SIO_record * SIOWriter::_hdrRecord ;
+  SIO_record * SIOWriter::_runRecord ;
+  
+
   SIOWriter::SIOWriter() : _hdrHandler(0), _runHandler(0) {
   
 #ifdef DEBUG
@@ -123,7 +128,16 @@ namespace SIO {
       throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " 
 				      +  sioFilename ) ) ;
       
-    // tell SIO the record names if not yet known 
+//     // tell SIO the record names if not yet known 
+//     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
+//     _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
+
+//     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
+//     _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
+
+//     if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
+//     _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
+
     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) != 0 )
       SIO_recordManager::remove( LCSIO::RUNRECORDNAME ) ;
     _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;

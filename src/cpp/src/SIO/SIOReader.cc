@@ -7,6 +7,8 @@
 #include "SIO/SIORunHeaderHandler.h"
 #include "SIO/SIOParticleHandler.h"
 
+#include "SIO/SIOWriter.h"
+
 #include "EVENT/LCIO.h"
 
 #include "SIO_streamManager.h" 
@@ -126,14 +128,14 @@ namespace SIO {
 				      + sioFilename ) ) ;
 
 
-    if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
-      _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
+    if( (SIOWriter::_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
+      SIOWriter::_hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
     
-    if( (_evtRecord  = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
-      _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
+    if( (SIOWriter::_evtRecord  = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
+      SIOWriter::_evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
     
-    if( (_runRecord  = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) ==0 )
-      _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;   
+    if( (SIOWriter::_runRecord  = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) ==0 )
+      SIOWriter::_runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;   
 
     // create SIOHandlers for event and header and tell SIO about it
     //    SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
@@ -190,7 +192,7 @@ namespace SIO {
   LCRunHeader* SIOReader::readNextRunHeader(int accessMode) throw (IOException , std::exception ) {
 
     // set the _runRecord to unpack for this scope
-    SIORecordUnpack runUnp( _runRecord ) ;
+    SIORecordUnpack runUnp( SIOWriter::_runRecord ) ;
     
     // this might throw the exceptions
     try{ 
@@ -264,7 +266,7 @@ namespace SIO {
     // to know what collections are in the event
     { // -- scope for unpacking evt header --------
       
-      SIORecordUnpack hdrUnp( _hdrRecord ) ;
+      SIORecordUnpack hdrUnp( SIOWriter::_hdrRecord ) ;
       
       try{ 
 	readRecord() ;
@@ -276,7 +278,7 @@ namespace SIO {
     }// -- end of scope for unpacking evt header --
     
     { // now read the event record
-      SIORecordUnpack evtUnp( _evtRecord ) ;
+      SIORecordUnpack evtUnp( SIOWriter::_evtRecord ) ;
       
       try{ 
 	readRecord() ;
@@ -317,7 +319,7 @@ namespace SIO {
       return 0 ;
     }
     { // -- scope for unpacking evt header --------
-      SIORecordUnpack hdrUnp( _hdrRecord ) ;
+      SIORecordUnpack hdrUnp( SIOWriter::_hdrRecord ) ;
       while( !evtFound ){
 
       try{ 
@@ -334,7 +336,7 @@ namespace SIO {
     if( !evtFound ) return 0 ;
 
     { // now read the event record
-      SIORecordUnpack evtUnp( _evtRecord ) ;
+      SIORecordUnpack evtUnp( SIOWriter::SIOWriter::_evtRecord ) ;
       
       try{ 
 	readRecord() ;
@@ -399,9 +401,9 @@ namespace SIO {
     // and then notify the listeners depending on the type ....
     
     // set all known records to unpack 
-    SIORecordUnpack runUnp( _runRecord ) ;
-    SIORecordUnpack hdrUnp( _hdrRecord ) ;
-    SIORecordUnpack evtUnp( _evtRecord ) ;
+    SIORecordUnpack runUnp( SIOWriter::_runRecord ) ;
+    SIORecordUnpack hdrUnp( SIOWriter::_hdrRecord ) ;
+    SIORecordUnpack evtUnp( SIOWriter::_evtRecord ) ;
     
     int recordsRead = 0 ;
     while( recordsRead < maxRecord ){ 
