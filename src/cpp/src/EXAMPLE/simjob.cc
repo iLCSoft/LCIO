@@ -52,6 +52,11 @@ int main(int argc, char** argv ){
       else
 	lcWrt->open( FILEN , LCIO::WRITE_APPEND )  ;
 
+      // NB: in order to test writing multiple files we create a new LCWriter
+      // for every run even though we are in fact writing to one file only;
+      // so for a simple job writing one file the 
+      // 'createLCWriter/open' and 'close/delete' will be outside the run loop...
+
 
       LCRunHeaderImpl* runHdr = new LCRunHeaderImpl ; 
       runHdr->setRunNumber( rn ) ;
@@ -233,7 +238,8 @@ int main(int argc, char** argv ){
 	evt->addCollection( extIVec , tpcName+"UserIntExtension" ) ;
 	
 	// test: add a collection for one event only:
-	if( rn == NRUN-1 && i == 0 ) { // first event o last run
+// 	if( rn == NRUN-1 && i == 0 ) { // first event o last run
+	if( rn == 1 && i == 0 ) { // first event o last run
 	  LCCollectionVec* addExtVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
 	  LCFloatVec* addExt = new LCFloatVec ;
 	  addExt->push_back( 1. );

@@ -7,11 +7,14 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ClusterImpl::ClusterImpl(){
+  ClusterImpl::ClusterImpl() {
     for(int i=0 ; i < NERRPOS ; i++ ) { _errpos.push_back( 0.0 ) ;  }
     for(int i=0 ; i < NERRDIR ; i++ ) { _errdir.push_back( 0.0 ) ;  }
     for(int i=0 ; i < NSHAPE ; i++ )  { _shape.push_back( 0.0 ) ;   }
     for(int i=0 ; i < 3 ; i++ )  { _particletype.push_back( 0.0 ) ;   }
+    _position[0] = 0. ;
+    _position[1] = 0. ;
+    _position[2] = 0. ;
   }
 
   ClusterImpl::~ClusterImpl(){

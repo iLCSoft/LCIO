@@ -9,7 +9,10 @@ namespace IMPL {
     _dEdx(0),
     _time(0),
     _particle(0){
-  }
+    _pos[0] = 0. ;
+    _pos[1] = 0. ;
+    _pos[2] = 0. ;
+ }
 
   SimTrackerHitImpl::~SimTrackerHitImpl(){  
   } 

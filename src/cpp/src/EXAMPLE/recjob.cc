@@ -78,6 +78,7 @@ public:
 	 << " to   " << nEvent <<" events"  
 	 << " and added one extra MCParticle to each event."
 	 << endl << endl ;
+    delete lcWrt ;
   }
   
   void processEvent( LCEvent * evt ) { /* used for 'read only' access*/ 
@@ -172,8 +173,8 @@ public:
 	}
 	// add tracks that where used to create this track
 	if( trkVec->size() > 1 ){
+	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
 	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
-	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 3 ] ) ) ;
 	}
 
 	trkVec->addElement( trk ) ;
@@ -386,7 +387,7 @@ int main(int argc, char** argv ){
     } 
     
     lcReader->close() ;
-
+    delete lcReader ;
     return 0 ;
 }
 

@@ -12,6 +12,9 @@ namespace IMPL {
     for(int i=0 ; i < NCOVMATRIX ; i++ ) {
       _covMatrix.push_back( 0.0 ) ; 
     }
+    _reference[0] = 0.0 ;
+    _reference[1] = 0.0 ;
+    _reference[2] = 0.0 ;
   }
 
   TrackImpl::~TrackImpl() { 

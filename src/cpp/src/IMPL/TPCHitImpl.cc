@@ -59,14 +59,20 @@ namespace IMPL{
 
   void TPCHitImpl::setRawData(const int* rawData, int size ){
    checkAccess("TPCHitImpl::setRawData") ;
-   if( _rawDataArray  != 0 ) delete[] _rawDataArray ;
+   if( _rawDataArray  != 0 ) {
+     delete[] _rawDataArray ;
+     _rawDataArray = 0 ;
+   }
    _rawDataArray = new int[size] ;
    _rawDataSize = size ;
    memcpy( _rawDataArray,  rawData , size*sizeof(int) ) ;
   }
 
   void TPCHitImpl::initRawDataArray(int size){
-    if( _rawDataArray  != 0 ) delete[] _rawDataArray ;
+   if( _rawDataArray  != 0 ) {
+     delete[] _rawDataArray ;
+     _rawDataArray = 0 ;
+   }
     _rawDataArray = new int[size] ;
     _rawDataSize = size ;
   }
