@@ -103,16 +103,32 @@ int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, floa
 			     int* pdg ) ;
 
 
+/**Create an int vector
+*/
+PTRTYPE lcintvectorcreate( int* intv, const int nintv ) ;
+
+
+/**Create a float vector
+*/
+PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ) ;
+
+/**Create a string vector
+*/
+PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
+
+
+
+
 /**Return the content of an int vector
 */
 int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
 
 
-/**Return the content of an float vector
+/**Return the content of a float vector
 */
 int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 
-/**Return the content of an string vector
+/**Return the content of a string vector
 */
 int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
 
@@ -165,6 +181,16 @@ FCALLSCFUN6(CFORTRANPNTR , lcgetsimcalohit, LCGETSIMCALOHIT, lcgetsimcalohit,
             CFORTRANPNTR , INT , INTV ,  INTV , FLOATV , FLOATV ) ;
 FCALLSCFUN6(INT, lcgetsimcalohitmccont, LCGETSIMCALOHITMCCONT, lcgetsimcalohitmccont,
             CFORTRANPNTR , INT , CFORTRANPNTRV, FLOATV , FLOATV , INTV ) ;
+
+
+FCALLSCFUN2(CFORTRANPNTR, lcintvectorcreate, LCINTVECTORCREATE , lcintvectorcreate,
+            INTV, INT ) ;
+FCALLSCFUN2(CFORTRANPNTR, lcfloatvectorcreate, LCFLOATVECTORCREATE , lcfloatvectorcreate,
+            FLOATV, INT ) ;
+#define lcstringvectorcreate_STRV_A1 NUM_ELEM_ARG(2)
+FCALLSCFUN3(CFORTRANPNTR, lcstringvectorcreate, LCSTRINGVECTORCREATE , lcstringvectorcreate,
+            PSTRINGV, INT, INT ) ;
+
 
 FCALLSCFUN3(INT, lcgetintvector, LCGETINTVECTOR , lcgetintvector,
             CFORTRANPNTR , INTV, INTV ) ;

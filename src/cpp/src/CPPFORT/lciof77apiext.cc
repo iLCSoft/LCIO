@@ -1,6 +1,7 @@
 #include "CPPFORT/lciof77apiext.h"
 
 #include "lcio.h" 
+
 #include "IOIMPL/LCFactory.h"
 #include "IMPL/LCRunHeaderImpl.h"
 #include "IMPL/LCEventImpl.h"
@@ -10,8 +11,8 @@
 #include "IMPL/LCTOOLS.h"
 
 #include "CPPFORT/HEPEVT.h"
-#include "DATA/LCIntVec.h"
-#include "DATA/LCFloatVec.h"
+#include "EVENT/LCIntVec.h"
+#include "EVENT/LCFloatVec.h"
 
 //#include "CPPFORT/lcvec.h"
 #include <string>
@@ -275,6 +276,33 @@ int lcio2hepevt( PTRTYPE event ){
     return LCIO::ERROR ;
   }
 }
+
+
+PTRTYPE lcintvectorcreate( int* intv, const int nintv ){
+  LCIntVec* intVec = new LCIntVec ;
+  for(int j=0;j<nintv;j++) intVec->push_back( intv[j] ) ;
+  return reinterpret_cast<PTRTYPE>( intVec ) ;
+}
+
+PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ){
+  LCFloatVec* floatVec = new LCFloatVec ;
+  for(int j=0;j<nfloatv;j++) floatVec->push_back( floatv[j] ) ;
+  return reinterpret_cast<PTRTYPE>( floatVec ) ;
+}
+
+PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv){
+  LCStrVec* stringVec = new LCStrVec ;
+  int elemlen = nchstringv + 1;
+  for(int j=0;j<nstringv;j++){
+    PTRTYPE stringpos = 0 ;
+    stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
+    const std::string& mystring = reinterpret_cast<char*>( stringpos ) ;
+    stringVec->push_back( mystring ) ;
+    stringpos = stringpos + elemlen ;
+  }
+  return reinterpret_cast<PTRTYPE>( stringVec ) ;
+}
+
 
 int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ){
   LCIntVec* intVec =  f2c_pointer<LCIntVec,LCObject>(vector) ;

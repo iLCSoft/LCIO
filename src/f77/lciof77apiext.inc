@@ -122,7 +122,27 @@ c ---------------  convenient methods for SimCalorimeterHits
 
       integer lcgetsimcalohitmccont
 
+
 c ---------------  convenient methods for the vector interface
+
+*     Create a complete vector of Integers
+*
+*     PTRTYPE lcintvectorcreate ( int* intv, const int nintv )
+
+      PTRTYPE lcintvectorcreate
+
+*     Create a complete vector of Floats
+*
+*     PTRTYPE lcfloatvectorcreate ( float* floatv , const int nfloatv )
+
+      PTRTYPE lcfloatvectorcreate
+
+*     Create a complete vector of Strings
+*
+*     PTRTYPE lcstringvectorcreate ( void* stringv, const int nstringv, const int nchstringv)
+
+      PTRTYPE lcstringvectorcreate
+
 
 *     Get the complete vector of Integers
 *     
