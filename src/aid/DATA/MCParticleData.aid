@@ -17,23 +17,11 @@ public interface MCParticleData extends LCObject {
      */
     public MCParticleData* getParentData(int i) const ;
     
-//     /** Returns the second parent of this particle, usually Null.
-//      */
-//     public MCParticleData* getSecondParentData() const;
-    
-    /** Returns the number of daughters of this particle.
-     */
-    public int  getNumberOfDaughters() const ;
-
-    /** Returns the i-th daughter of this particle.
-     */
-    public MCParticleData* getDaughterData(int i) const ;
-
     /** Returns the PDG code of the particle.
      */
     public int getPDG() const;
     
-    /** Returns the status for particles from the generator (HepEvt)
+    /** Returns the status for particles from the generator
      * <br> 0  empty line
      * <br> 1  undecayed particle, stable in the generator
      * <br> 2  particle decayed in the generator
@@ -42,7 +30,8 @@ public interface MCParticleData extends LCObject {
     public int getGeneratorStatus() const ;
 
     /** Returns the status for particles from the simulation, e.g.
-     * decayed in flight.
+     * decayed in flight. Bit 31 ise reserved for internal use thus the
+     * status cannot be negative.
      * FIXME: Needs to be defined.
      */
     public int getSimulatorStatus() const ;
@@ -51,8 +40,8 @@ public interface MCParticleData extends LCObject {
      */
     public const double3V getVertex() const;
 
-    /** Returns the endpoint of the particle in [mm] - returns NULL if 
-     *  particle has daughters (the endpoint beeing the daughters vertex then).
+    /** Returns the endpoint of the particle in [mm] - returns NULL if
+     *  undefined (not set). 
      *  Definition of the enpoint depends on the application that created 
      *  the particle, e.g. the start point of the shower in a calorimeter.
      */

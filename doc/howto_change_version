@@ -17,3 +17,15 @@ src/aid/EVENT/LCIO.aid
 
 src/cpp/include/lcio.h
    /** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html">LCIO</a> (v00-09)
+
+
+doc/lcio.xml
+  <block name="...." major="0" minor="9">
+  <block name="...." major="0" minor="9">
+   ....
+  <block name="...." major="0" minor="9">
+  <block name="...." major="0" minor="9">
+
+
+
+

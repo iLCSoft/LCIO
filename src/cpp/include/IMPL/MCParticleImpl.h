@@ -35,16 +35,6 @@ namespace IMPL {
      */
     virtual MCParticle * getParent(int i) const ;
 
-//     /** Returns the parent of this particle. Returns Null if the mother (
-//      * beam particle). 
-//      * Same as getParentData() except for return type.
-//      */
-//     virtual EVENT::MCParticle * getParent() const ;
-
-//     /** Returns the second parent of this particle. 
-//      * Same as getSecondParentData() except for return type.
-//      */
-//     virtual EVENT::MCParticle * getSecondParent() const ; 
 
     /** Returns the i-th daughter of this particle.
      * Same as getDaughterData() except for return type.
@@ -62,26 +52,11 @@ namespace IMPL {
      */
     virtual MCParticleData * getParentData(int i) const ;
 
-//     /** Returns the parent of this particle. Null if the mother (beam particle).
-//      */
-//     virtual DATA::MCParticleData * getParentData() const ;
 
-//     /** Returns the second parent of this particle, usually Null.
-//      */
-//     virtual DATA::MCParticleData * getSecondParentData() const ;
-
-
-    /** Returns the i-th daughter of this particle.
-     *  Unchecked access to vector holding daughters, thus faster than getDaughter(int i).
-     */
-    virtual DATA::MCParticleData * getDaughterData(int i) const ;
-
-
-    /** Returns the endpoint of the particle in [mm].
+    /** Returns the endpoint of the particle in [mm] - returns NULL if
+     *  undefined (not set). 
      *  Definition of the enpoint depends on the application that created 
      *  the particle, e.g. the start point of the shower in a calorimeter.
-     *  If the particle has daughters, the corresponding vertex is returned.
-     *  Never returns NULL.
      */
     virtual const double* getEndpoint() const ;
 
@@ -200,7 +175,8 @@ namespace IMPL {
     float _charge ;
     MCParticlePVec _parentsP ;
     MCParticlePVec _daughtersP ;
-    
+    bool _endpointSet ;
+
 }; // class
 }; // namespace IMPL
 #endif /* ifndef IMPL_MCPARTICLEIMPL_H */

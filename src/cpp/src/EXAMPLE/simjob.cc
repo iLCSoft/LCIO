@@ -117,6 +117,10 @@ int main(int argc, char** argv ){
 	      float pd2[3] = { l*1. , 0.41 , 4.1 } ;
 	      d2->setMomentum( pd2 ) ;
 	      d2->setMass( .135 ) ;
+	      
+	      double ep[3] = { 1.111111 , 2.2222222, 3.3333333 } ;
+	      d2->setEndpoint( ep ) ;
+	      d2->setSimulatorStatus( 1234 ) ;
 
 	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;

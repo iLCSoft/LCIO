@@ -85,17 +85,17 @@ namespace IMPL {
     }
     
   }
-  // unchecked access
-  MCParticleData* MCParticleImpl::getDaughterData(int i) const {
-    return *_daughtersP[i] ;
-  }
+//   // unchecked access
+//   MCParticleData* MCParticleImpl::getDaughterData(int i) const {
+//     return *_daughtersP[i] ;
+//   }
 
   const double* MCParticleImpl::getEndpoint() const { 
 
-    if( _daughtersP.size() > 0 )
-      return (*_daughtersP[0])->getVertex() ;
+    if( _simstatus & 0x80000000 ) // bit 31 ?
+      return _endpoint ;
+    return 0 ;
 
-    return _endpoint ;
   }
 
   float MCParticleImpl::getEnergy() const { 
@@ -105,8 +105,12 @@ namespace IMPL {
 
   int MCParticleImpl::getPDG() const { return _pdg ;}
   int MCParticleImpl::getGeneratorStatus() const { return _genstatus ;}
-  int MCParticleImpl::getSimulatorStatus() const { return _simstatus ;}
 
+  int MCParticleImpl::getSimulatorStatus() const {
+    // bit 31 reserved for endpoint
+    return ( 0x7fffffff & _simstatus ) ;
+  }
+  
   const double * MCParticleImpl::getVertex() const { return _vertex ;}
   const float * MCParticleImpl::getMomentum() const { return _p ;}
   float MCParticleImpl::getMass() const { return _mass ;}
@@ -154,8 +158,10 @@ namespace IMPL {
 
   void MCParticleImpl::setSimulatorStatus( int status ) { 
     checkAccess("MCParticleImpl::setSimulatorStatus") ;
-    _simstatus = status ;
+    // bit 31 reserved for endpioint
+    _simstatus |= ( 0x7fffffff  & status )  ;
   } 
+
   void MCParticleImpl::setVertex( double vtx[3] ){
     checkAccess("MCParticleImpl::setVertex") ;
     _vertex[0] = vtx[0] ;
@@ -179,6 +185,7 @@ namespace IMPL {
 
   void MCParticleImpl::setEndpoint( double endpoint[3] ){
     checkAccess("MCParticleImpl::setEndpoint") ;
+    _simstatus |= 0x80000000 ; // set bit 31 
     _endpoint[0] = endpoint[0] ;
     _endpoint[1] = endpoint[1] ;
     _endpoint[2] = endpoint[2] ;

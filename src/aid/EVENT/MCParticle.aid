@@ -10,7 +10,6 @@ package hep.lcio.event ;
 public interface MCParticle extends MCParticleData {
     
 
-
     /** Returns the i-th parent of this particle.
      * Same as getParentData() except for return type.
      *
@@ -18,76 +17,61 @@ public interface MCParticle extends MCParticleData {
      */
     public MCParticle* getParent( int i ) const ;
     
-//     /** Returns the second parent of this particle. Null if not available. 
-//      * Same as getSecondParentData() except for return type.
-//      */
-//     public MCParticle* getSecondParent() const ;
-    
 
+    /** Returns the number of daughters of this particle.
+     */
+    public int  getNumberOfDaughters() const ;
+    
     /** Returns the i-th daughter of this particle.
-     * Same as getDaughterData() except for return type.
      *
-     * @see MCParticleData.getNumberOfDaughters()
      */
     public MCParticle* getDaughter(int i) const ; 
     
-    /** Returns the endpoint of the particle in [mm].
-     *  Definition of the enpoint depends on the application that created 
-     *  the particle, e.g. the start point of the shower in a calorimeter.
-     *  If the particle has daughters, the corresponding vertex is returned.
-     */
-    public const double3V getEndpoint() const ;
-
     /** Returns the energy of the particle (at the vertex) in [GeV] computed from
      * the particle's momentum and mass.
      */
     public float getEnergy() const;
 
+
 @ifdef overwriteDataInterface
 
     /** Returns the number of parents of this particle - 0 if mother.
      */
-    public MCParticleData* getNumberOfParents() const ;
+    public int getNumberOfParents() const ;
 
     /** Returns the i-th parent of this particle.
      */
     public MCParticleData* getParentData(int i) const ;
-
-//     /** Returns the second parent of this particle, usually Null.
-//      */
-//     public MCParticleData* getSecondParentData() const;
     
-    /** Returns the number of daughters of this particle.
-     */
-    public int  getNumberOfDaughters() const ;
-
-    /** Returns the i-th daughter of this particle.
-     */
-    public MCParticleData* getDaughterData(int i) const ;
-
-
-    /** Returns the number of daughters of this particle.
-     */
-    public int  getNumberOfDaughters() const ;
-
     /** Returns the PDG code of the particle.
      */
     public int getPDG() const;
     
     /** Returns the status for particles from the generator (HepEvt)
-     * and for particles added in simulation:
      * <br> 0  empty line
      * <br> 1  undecayed particle, stable in the generator
      * <br> 2  particle decayed in the generator
      * <br> 3  documentation line
-     * <br> 201 stable state, but created in the tracking in the detector
-     * <br> 202 particle decayed in the tracking in the detector
      */
-    public int getHepEvtStatus() const ;
+    public int getGeneratorStatus() const ;
+
+    /** Returns the status for particles from the simulation, e.g.
+     * decayed in flight. Bit 31 ise reserved for internal use thus the
+     * status cannot be negative.
+     * FIXME: Needs to be defined.
+     */
+    public int getSimulatorStatus() const ;
 
     /** Returns the production vertex of the particle in [mm].
      */
     public const double3V getVertex() const;
+
+    /** Returns the endpoint of the particle in [mm] - returns NULL if
+     *  undefined (not set). 
+     *  Definition of the enpoint depends on the application that created 
+     *  the particle, e.g. the start point of the shower in a calorimeter.
+     */
+    public const double3V getEndpoint() const;
 
 
     /** Returns the particle momentum at the production vertex in [GeV].
@@ -102,5 +86,6 @@ public interface MCParticle extends MCParticleData {
     /** Returns the particle's charge.
      */
     public float getCharge() const;
+
 @endif   
 }

@@ -58,7 +58,7 @@ namespace IMPL {
     virtual DATA::LCObject * getElementAt(int index) const ;
     
     /** Returns flag word for collection. 
-     * @see EVENT::LCCollection::getFlag() 
+     * @see DATA::LCCollectionData::getFlag() 
      */
     virtual int getFlag() const ;
     

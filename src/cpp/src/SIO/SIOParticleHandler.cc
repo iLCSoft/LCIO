@@ -61,9 +61,8 @@ namespace SIO {
     SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
     
-//     // if the particle doesn't have daughters we read its endpoint
-//     if( particle->getNumberOfDaughters() == 0 )
-//       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
+    if( particle->_simstatus & 0x80000000 )  // bit 31
+      SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
     return ( SIO_BLOCK_SUCCESS ) ;
   }
@@ -94,15 +93,24 @@ namespace SIO {
 
     LCSIO_WRITE( stream, particle->getPDG() ) ;
     LCSIO_WRITE( stream, particle->getGeneratorStatus() ) ;
-    LCSIO_WRITE( stream, particle->getSimulatorStatus() ) ;
+
+    if( particle->getEndpoint() != 0 ) {
+      int simstatus = particle->getSimulatorStatus()  ;
+      simstatus |= 0x80000000 ; // set bit 31
+      LCSIO_WRITE( stream, simstatus ) ;
+    } else {
+      LCSIO_WRITE( stream, particle->getSimulatorStatus() ) ;
+    }
+
+
     SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;
     SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
     LCSIO_WRITE( stream, particle->getMass() ) ;
     LCSIO_WRITE( stream, particle->getCharge() ) ;
 
-//     // only if the particle doesn't have daughters we write its endpoint
-//     if( particle->getNumberOfDaughters() == 0 )
-//       SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
+
+    if( particle->getEndpoint() != 0 ) 
+      SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
 
 
     return ( SIO_BLOCK_SUCCESS ) ;
@@ -148,15 +156,17 @@ namespace SIO {
 
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_genstatus) , 1  ) ;
+    particle->_genstatus = 0 ;   // default value
     SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
     SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
-
-    // if the particles doesn't have daughters we read its endpoint
-    if( numberOfDaughters == 0 )
-      SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
+    // if the particles doesn't have daughters we read its endpoint
+    if( numberOfDaughters == 0 ) {
+      SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
+      particle->_genstatus = 0x80000000 ; // set bit31
+    }
     return ( SIO_BLOCK_SUCCESS ) ;
   }
 

@@ -36,6 +36,8 @@ namespace IMPL {
     virtual int getCellID0() const ;
     
     /**Returns the second detector specific (geometrical) cell id.
+     *  0 if information is not stored -  check the flag word (bit CHBIT_ID1) 
+     *  of the collection. Default is to store only cellid0.
      */
     virtual int getCellID1() const ;
     
@@ -55,6 +57,8 @@ namespace IMPL {
     void setCellID0(int id0) ;
 
     /** Sets the second cell id;
+     *  Only store if the flag word (bit CHBIT_ID1) 
+     *  of the collection is set. Default is to store only cellid0.
      */
     void setCellID1(int id1) ;
     

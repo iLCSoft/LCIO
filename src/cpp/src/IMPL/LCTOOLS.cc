@@ -484,7 +484,7 @@ namespace IMPL {
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
     cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-    cout << "     LCIO::CHBIT_POSZ   : " << flag.bitSet( LCIO::CHBIT_POSZ ) << endl ;
+    cout << "     LCIO::CHBIT_ID1   :  " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
     cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
 
     int nHits =  col->getNumberOfElements() ;
@@ -574,7 +574,7 @@ namespace IMPL {
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
     cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-    cout << "     LCIO::CHBIT_POSZ   : " << flag.bitSet( LCIO::CHBIT_POSZ ) << endl ;
+    cout << "     LCIO::CHBIT_ID1    : " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
     cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
 
     int nHits =  col->getNumberOfElements() ;
@@ -690,11 +690,16 @@ namespace IMPL {
 	   <<  part->getSimulatorStatus() << " | ("
 	   <<  part->getVertex()[0]    << ", "
 	   <<  part->getVertex()[1]    << ", "
-	   <<  part->getVertex()[2]    << ") | ("
-	   <<  part->getEndpoint()[0]  << ", "
-	   <<  part->getEndpoint()[1]  << ", "
-	   <<  part->getEndpoint()[2]  << ") | "
-	   <<  part->getMass()         << " | " 
+	   <<  part->getVertex()[2]    << ") | (" ;
+
+      if( part->getEndpoint() != 0 ){
+	cout <<  part->getEndpoint()[0]  << ", "
+	     <<  part->getEndpoint()[1]  << ", "
+	     <<  part->getEndpoint()[2]  << ") | " ;
+      }else{
+	cout << " not set ) | " ; 
+      }
+      cout <<  part->getMass()         << " | " 
 	   <<  part->getCharge()       << " | " 
 	   <<  part->getEnergy()      
 	   << endl ;	
@@ -790,11 +795,15 @@ namespace IMPL {
 	   <<  part->getSimulatorStatus() << " | ("
 	   <<  d->getVertex()[0]    << ", "
 	   <<  d->getVertex()[1]    << ", "
-	   <<  d->getVertex()[2]    << ") | ("
-	   <<  d->getEndpoint()[0]  << ", "
-	   <<  d->getEndpoint()[1]  << ", "
-	   <<  d->getEndpoint()[2]  << ") | "
-	   <<  d->getMass()         << " | " 
+	   <<  d->getVertex()[2]    << ") | (" ;
+      if( part->getEndpoint() != 0 ){
+	cout <<  part->getEndpoint()[0]  << ", "
+	     <<  part->getEndpoint()[1]  << ", "
+	     <<  part->getEndpoint()[2]  << ") | " ;
+      }else{
+	cout << " not set ) | " ; 
+      }
+      cout <<  d->getMass()         << " | " 
 	   <<  d->getCharge()       << " | " 
 	   <<  d->getEnergy()      
 	   << endl ;	

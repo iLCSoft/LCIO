@@ -30,7 +30,15 @@ namespace SIO{
     *objP = hit ;
 	
     SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
-    SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
+
+    // in v00-08 cellid1 has been stored by default
+    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) || 
+
+	( SIO_VERSION_MAJOR(vers)==0 && SIO_VERSION_MINOR(vers)==8) ){
+
+      SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
+
+    }
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
 
     if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
@@ -75,7 +83,9 @@ namespace SIO{
     const SimCalorimeterHitData* hit = dynamic_cast<const SimCalorimeterHitData*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-    LCSIO_WRITE( stream, hit->getCellID1()  ) ;
+    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_ID1 ) ){
+      LCSIO_WRITE( stream, hit->getCellID1()  ) ;
+    }
     LCSIO_WRITE( stream, hit->getEnergy()  ) ;
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 

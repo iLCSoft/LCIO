@@ -25,6 +25,8 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
     public int getCellID0() const ;
     
     /**Returns the second detector specific (geometrical) cell id.
+     *  0 if information is not stored -  check the flag word (bit CHBIT_ID1) 
+     *  of the collection. Default is to store only cellid0.
      */
     public int getCellID1() const ;
     
