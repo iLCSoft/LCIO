@@ -13,11 +13,11 @@
 #include "CPPFORT/HEPEVT.h"
 #include "EVENT/LCIntVec.h"
 #include "EVENT/LCFloatVec.h"
+#include "EVENT/LCStrVec.h"
 
 //#include "CPPFORT/lcvec.h"
 #include <string>
 #include <vector>
-typedef std::vector<std::string> LCStrVec ;
 
 #include <iostream>
 
@@ -33,6 +33,9 @@ int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const 
 
 
   try {
+//  if an old filenamelist exist clear it
+
+    if ( filenamelist.size() > 0 ) filenamelist.clear() ;
     int elemlen = nchfilename +1 ;
     PTRTYPE stringpos = reinterpret_cast<PTRTYPE>( filenamesv ) ;
     for (int j=0;j < nfiles;j++)
