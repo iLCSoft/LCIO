@@ -43,28 +43,44 @@
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
             <data type="ptag" name="this"></data>
-	    <data type="int" name="nParent"></data>
-	    <repeat count="nParent">
-	       <data type="pntr" name="parent"></data>
-	    </repeat>   
+            <if condition="minor==8">
+                <data type="pntr" name="parent"></data>
+                <data type="pntr" name="secondParent"></data>
+                <data type="int" name="nDaughter"></data>
+                <repeat count="nDaughter">
+                   <data type="pntr" name="daughter"></data>
+                </repeat> 
+            <else/>
+                <data type="int" name="nParent"></data>
+                <repeat count="nParent">
+                   <data type="pntr" name="parent"></data>
+                </repeat>
+            </if>   
             <data type="int" name="PDG"></data>
-
             <data type="int" name="generatorStatus">
                               =0   empty line
                               =1   undecayed particle, stable in the generator
                               =2   particle decayed in the generator
                               =3   documentation line
 	    </data>
-            <data type="int" name="simulatorStatus">
-	       to be defined. Bit 31 reserved for internal use - thus effectively unsigned.
-	    </data>
+            <if condition="minor&gt;8">
+                <data type="int" name="simulatorStatus">
+                   to be defined. Bit 31 reserved for internal use - thus effectively unsigned.
+                </data>
+            </if>
 
             <data type="double[3]" name="vertex">Production vertex</data>
             <data type="float[3]" name="momentum">Momentum at production vertex</data>
             <data type="float" name="mass"></data>
             <data type="float" name="charge"></data>
-	    <if condition="(simulatorStatus&amp;(1&lt;&lt;31)) != 0">
-               <data type="double[3]" name="endpoint"/>
+	    <if condition="minor==8"> 
+               <if condition="nDaughter==0">
+                  <data type="double[3]" name="endpoint"/>
+               </if>
+            <else/>
+               <if condition="(simulatorStatus&amp;(1&lt;&lt;31)) != 0">
+                  <data type="double[3]" name="endpoint"/>
+               </if>               
             </if>
          </repeat>
       </block>
@@ -85,7 +101,7 @@
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
-	    <if condition="(flags&amp;(1&lt;&lt;29)) != 0">
+	    <if condition="minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="float" name="energy"></data>
@@ -129,7 +145,7 @@
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
             <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
-	    <if condition="(flags&amp;(1&lt;&lt;29)) != 0">
+	    <if condition="minor==8||(flags&amp;(1&lt;&lt;29)) != 0">
                 <data type="int" name="cellId1">second word for cell id</data>
             </if>
             <data type="float" name="energy"></data>

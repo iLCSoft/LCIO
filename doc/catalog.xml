@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : lcio.xml
+    Created on : November 7, 2003, 6:08 PM
+    Author     : tonyj
+    Description:
+        Purpose of the OASIS XML Catalog document follows.
+-->
+
+<!-- see http://www.oasis-open.org/committees/entity/spec.html -->
+
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">                
+    <system systemId="http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd" uri="file:sio.dtd"/>
+</catalog>

@@ -40,9 +40,10 @@
   >
   
 <!--- Put your DTDDoc comment here. -->
-<!ELEMENT if (repeat|data|if)*>
+<!ELEMENT if ((repeat|data|if)*,(else,(repeat|data|if)*)?)>
 <!ATTLIST if
     condition CDATA #REQUIRED
-  >
+>
+<!ELEMENT else EMPTY>
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT sio (record)*>
