@@ -19,7 +19,7 @@ public interface LCCollectionData{
     
     /** Returns pointer to element at index - no range check, use getNumberOfEntries().
      */
-    public const LCObject* getElementAt(int index) const ;
+    public LCObject* getElementAt(int index) const ;
 
     /** Returns flag word for collection. Depending on the 
      * actual type bits have different meaning, e.g. for CalorimeterHits:

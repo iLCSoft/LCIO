@@ -1,5 +1,6 @@
 #include "IMPL/LCEventImpl.h"
 #include <iostream>
+#include "IMPL/AccessChecked.h"
 
 using namespace EVENT ;
 //using namespace DATA ;
@@ -10,11 +11,7 @@ LCEventImpl::LCEventImpl() :
   _runNumber(0),
   _eventNumber(0),
   _timeStamp(0),
-  _detectorName("unknown"),
-  _access( LCIO::UPDATE ) {
-  
-  //  std::cout << " LCEventImpl() : " << this << std::endl ;
-
+  _detectorName("unknown") {
 }
   
 // LCEventImpl::LCEventImpl(const LCEvent& evt) : 
@@ -22,7 +19,6 @@ LCEventImpl::LCEventImpl() :
 //   _eventNumber( evt.getEventNumber() ),
 //   _timeStamp( evt.getTimeStamp() ),
 //   _detectorName( evt.getDetectorName().c_str() ),
-//   _access( LCIO::UPDATE ) { // copy will be updateable
   
 //   std::vector<std::string>* strVec = evt.getCollectionNames() ;
 //   int nCol = strVec->size() ;
@@ -103,8 +99,8 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) t
   // check if name exists
   if( _map.find( name ) != _map.end() )
     
+    // FIXME: what is this - no error handling ?
     std::cout << " addCollection: collection already exists: " << name << std::endl ;
-
     //    throw EventException( std::string("LCEventImpl::addCollection() name already exists in event: "+name) ) ; 
 
   _map[ name ]  = col ;
@@ -116,38 +112,55 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) t
 void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyException) {
 
   // remove collection only, if access mode == update
-  if( _access != LCIO::UPDATE )
-    throw ReadOnlyException( std::string("LCEventImpl::removeCollection: can't remove collection" 
-					 + name + " - event is read only") ) ;
+  checkAccess("LCEventImpl::removeCollection") ;
   _map.erase( name ) ;  
 
 }
 
     
 void LCEventImpl::setRunNumber( int rn ) {
+  checkAccess("LCEventImpl::setRunNumber") ;
   _runNumber = rn ;
 }
 
 
 void LCEventImpl::setEventNumber( int en ) {
+  checkAccess("LCEventImpl::setEventNumber") ;
   _eventNumber = en ;
 }
 
     
 void LCEventImpl::setDetectorName(const std::string& dn ) {
+  checkAccess("LCEventImpl::setDetectorName") ;
   _detectorName = dn ;
 }
 
     
 void LCEventImpl::setTimeStamp(long ts) {
+  checkAccess("LCEventImpl::setTimeStamp") ;
   _timeStamp =  ts ;
 }
 
        
      
 void LCEventImpl::setAccessMode( int accessMode ) {
-  _access = accessMode ;
+
+  // loop over all collections and set the access mode
+  bool readOnly = ( accessMode == LCIO::READ_ONLY ) ;
+
+  setReadOnly( readOnly ) ;
+
+  typedef LCCollectionMap::const_iterator LCI ;
+  
+  for ( LCI i=_map.begin() ; i != _map.end() ; i++ ){
+
+    AccessChecked* col = dynamic_cast<AccessChecked*>( i->second ) ; 
+    if( col ){
+      col->setReadOnly( readOnly ) ;
+    }
+  }
+
+
 }
 
-    
 };

@@ -304,8 +304,9 @@ namespace SIO {
       }
       
       // set the proper acces mode before returning the event
-      // FIXME : check access mode ...
+      // FIXME : need update mode as well
       // (*_evtP)->setAccessMode( accessMode ) ;
+      (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
       
       return *_evtP ;      
     }
@@ -377,37 +378,40 @@ namespace SIO {
 	}else{
 	  std::stringstream message ;
 	  message << "EOF before " << maxRecord << "s read from file" << std::ends ;
-	  throw( IOException( message.str()) ) ;
+	  throw IOException( message.str())  ;
 	}
       }
       
-      // notify LCRunListeners 
-      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+      //try{
+	// notify LCRunListeners 
+	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
 	
-	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-	while( iter != _runListeners.end() ){
-	  (*iter)->analyze( *_runP ) ;
-	  (*iter)->update( *_runP ) ;
-	  iter++ ;
+	  std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+	  while( iter != _runListeners.end() ){
+	    (*iter)->analyze( *_runP ) ;
+	    (*iter)->update( *_runP ) ;
+	    iter++ ;
+	  }
 	}
-      }
-      // notify LCEventListeners 
-      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
-	
-	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-	while( iter != _evtListeners.end() ){
-	  // set the proper acces mode for the event
-	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
-	  (*iter)->analyze( *_evtP ) ;
+	// notify LCEventListeners 
+	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
 	  
-	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	  (*iter)->update( *_evtP ) ;
-	  iter++ ;
-	  
+	  std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+	  while( iter != _evtListeners.end() ){
+	    // set the proper acces mode for the event
+	    (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
+	    (*iter)->analyze( *_evtP ) ;
+	    
+	    (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	    (*iter)->update( *_evtP ) ;
+	    iter++ ;
+	    
+	  }
 	}
-      }
-    } 
-    
+	//}catch(ReadOnlyException& e){
+	//	throw  IOException( e.what())  ;
+	//} 
+    }
     //    return LCIO::SUCCESS ;
     
   }

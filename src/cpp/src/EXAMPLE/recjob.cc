@@ -67,7 +67,19 @@ public:
 	 << endl << endl ;
   }
   
-  void analyze( const LCEvent * evt ) { /* used for read only access*/ ;}
+  void analyze( const LCEvent * evt ) { /* used for read only access*/ 
+
+    // trying to modify objects here will cause a ReadOnlyExcpetion
+    // uncomment the following code to try:
+
+//     LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+//     int NMCPART = mcVec->getNumberOfElements() ;
+//     for(int i=0 ; i< NMCPART ; i++ ){
+//       MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt(i)) ;
+//       part->setPDG(1234) ;   // <<<<< not allowed !
+//     }
+    
+  }
   
   void update( LCEvent * evt ) {
     // this is our event loop code
@@ -77,6 +89,13 @@ public:
     
     int NMCPART = mcVec->getNumberOfElements() ;
     
+    // here we can modify existing objects that have been read from a stream:
+    for(int i=0 ; i< NMCPART ; i++ ){
+      MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
+      part->setPDG(1234) ;
+    }
+
+
     // create a new collection to be added to the event
     // for simplicity just add some calorimeter hits (don't have cluster class yet) 
     
@@ -124,11 +143,6 @@ public:
 	   << endl ;
     }
     
-//     if( evt->addCollection( (LCCollection*) calVec , "HCALReco" ) != LCIO::SUCCESS ) {
-//       cout << " could not add new collection to the event :  " << "HCALReco"  << endl ;
-//       exit(1)  ;
-//     }
-
     try{
 
       evt->addCollection( (LCCollection*) calVec , "HCALReco" ) ;
@@ -164,7 +178,7 @@ public:
 
 int main(int argc, char** argv ){
   
-  try{ // a large try block for debugging ....
+  //  try{ // a large try block for debugging ....
     srand(1234) ;
     
     // create reader and writer for input and output streams 
@@ -190,24 +204,24 @@ int main(int argc, char** argv ){
       lcReader->registerLCRunListener( &evtProc ) ; 
       lcReader->registerLCEventListener( &evtProc ) ; 
       
+      lcReader->readStream() ;
       try{ 
-	lcReader->readStream() ;
+	//lcReader->readStream() ;
       }
-      //       catch(EndOfDataException){
-      //       }
       catch(IOException &e){
 	cout<< " io error: " <<  e.what() << endl ;
+      }
+      catch(exception& ex){
+	cout << "something went wrong:  " << ex.what() << endl ; 
       }
       
     } 
     
     lcReader->close() ;
     
-  }
-
-  catch(exception& ex){
-    cout << "something went wrong:  " << ex.what() << endl ; 
-  }
+//  }  catch(exception& ex){
+//    cout << "something went wrong:  " << ex.what() << endl ; 
+//  }
   
   return 0 ;
   

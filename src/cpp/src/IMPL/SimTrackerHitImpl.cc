@@ -30,18 +30,31 @@ namespace IMPL {
     return _particle ; 
   }
 
-  void SimTrackerHitImpl::setCellID( int id) { _cellID = id ; }
+  void SimTrackerHitImpl::setCellID( int id) {
+    checkAccess("SimTrackerHitImpl::setCellID") ;
+    _cellID = id ; 
+  }
 
   void SimTrackerHitImpl::setPosition( double pos[3]){ 
+    checkAccess("SimTrackerHitImpl::setPosition") ;
     _pos[0] = pos[0] ; 
     _pos[1] = pos[1] ; 
     _pos[2] = pos[2] ; 
   }
 
-  void SimTrackerHitImpl::setdEdx( float dedx )  { _dEdx = dedx ; }
+  void SimTrackerHitImpl::setdEdx( float dedx )  {
+    checkAccess("SimTrackerHitImpl::setdEdx") ;
+    _dEdx = dedx ; 
+  }
 
-  void SimTrackerHitImpl::setTime( float t )  {  _time = t ; }
+  void SimTrackerHitImpl::setTime( float t )  { 
+    checkAccess("SimTrackerHitImpl::setTime") ;
+    _time = t ; 
+  }
 
-  void SimTrackerHitImpl::setMCParticle( const EVENT::MCParticle* particle)  { _particle = particle; }
+  void SimTrackerHitImpl::setMCParticle( const EVENT::MCParticle* particle)  {
+    checkAccess("SimTrackerHitImpl::setMCParticle") ;
+    _particle = particle; 
+  }
 
 }; // namespace IMPL

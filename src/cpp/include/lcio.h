@@ -13,6 +13,8 @@
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCFactory.h"
 
+#include "../src/IMPL/exception_handler.cc"
+LCIOExceptionHandler globalHandler ;
 
 /** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html" target="_blank">LCIO</a> 
  * A persistency framework for linear collider simulation studies.

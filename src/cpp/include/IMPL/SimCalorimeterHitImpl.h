@@ -4,6 +4,7 @@
 
 #include "EVENT/MCParticle.h"
 #include "EVENT/SimCalorimeterHit.h"
+#include "AccessChecked.h"
 #include <vector>
 
 namespace IMPL {
@@ -24,7 +25,8 @@ namespace IMPL {
  * @version Mar 5, 2003
  */
 
-  class SimCalorimeterHitImpl : public EVENT::SimCalorimeterHit {
+  class SimCalorimeterHitImpl : public EVENT::SimCalorimeterHit
+			      , public AccessChecked {
     
   public: 
     

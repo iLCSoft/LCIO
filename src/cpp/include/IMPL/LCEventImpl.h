@@ -6,6 +6,7 @@
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
 #include "EVENT/LCIO.h"
+#include "AccessChecked.h"
 
 
 namespace IMPL{
@@ -22,7 +23,7 @@ namespace IMPL{
    * @see LCEvent
    * @see LCCollection
    */
-class LCEventImpl : public EVENT::LCEvent {
+class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
   public: 
     LCEventImpl() ;
@@ -117,9 +118,6 @@ class LCEventImpl : public EVENT::LCEvent {
     // map has to be defined mutable in order to use _map[]  for const methods ...
     mutable LCCollectionMap _map ;
     mutable std::vector<std::string> _colNames ;
-    
-  private:
-    int _access ;   // flag for access mode 
     
     
   }; // class

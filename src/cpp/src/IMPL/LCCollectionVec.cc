@@ -1,6 +1,7 @@
 
 #include "IMPL/LCCollectionVec.h"
 #include "EVENT/LCIO.h"
+#include <iostream>
 
 using namespace EVENT ;
 
@@ -12,8 +13,9 @@ namespace IMPL {
 
 LCCollectionVec::LCCollectionVec( const std::string& type ) :
   _typeName( type ),
-  _flag(0),
-  _access(LCIO::UPDATE ) {
+  _flag(0){ 
+  //,
+  // _access(LCIO::UPDATE ) {
 
 }
   
@@ -32,7 +34,20 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
 
 // }
 
+  // overwrite the default implementation
+  // set flag in all elements
+  void LCCollectionVec::setReadOnly(bool readOnly){
 
+    AccessChecked::setReadOnly(readOnly ) ;
+
+    LCObjectVec::const_iterator iter = begin() ;
+    while( iter != end() ){
+      AccessChecked* element = dynamic_cast<AccessChecked*>(*iter++) ;
+      if(element){
+	element->setReadOnly( readOnly ) ;
+      }
+    }
+  }
 
 LCCollectionVec::~LCCollectionVec() {
 
@@ -56,7 +71,7 @@ const std::string & LCCollectionVec::getTypeName() const{
 
 
 
-const DATA::LCObject * LCCollectionVec::getElementAt(int index) const{
+DATA::LCObject * LCCollectionVec::getElementAt(int index) const{
   return this->operator[](index) ;
 }
 
@@ -73,16 +88,17 @@ void LCCollectionVec::setFlag(int flag){
 
   void LCCollectionVec::addElement(DATA::LCObject * obj) throw (ReadOnlyException){
     
-    if(_access != LCIO::UPDATE )
-      throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
-
+    //    if(_access != LCIO::UPDATE )
+    //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
+    checkAccess("LCCollectionVec::addElement") ;
     this->push_back( obj ) ; 
   }
 
   void LCCollectionVec::removeElementAt(int i) throw (EVENT::ReadOnlyException){
     
-    if(_access != LCIO::UPDATE )
-      throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
+    //    if(_access != LCIO::UPDATE )
+    //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
+    checkAccess("LCCollectionVec::removeElementAt") ;
     this->erase( begin() + i ) ;
 
   }

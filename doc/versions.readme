@@ -1,7 +1,26 @@
-
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+
+
+   - implemented new 'access check' mechanism: 
+     removed const methods from data entities using ReadOnlyExceptions instead
+     introduced base class AccessChecked  [ C++ only ]
+
+--------------------
+  to do for release:
+--------------------
+
+  - SimCalorimeterHit - MCParticleCont doesn't work
+    Java version   -> needs debugging ...
+
+  - remove const from C++ methods ?     yes
+
+  - additional methods in LCReader specifying the access mode (readNextRunHeader)
+
+  - ...
+  
+
 
 ============================
  v00-07beta ( fg 20030903 ) 
@@ -31,20 +50,6 @@
    - modification of build.xml ( now 'ant   '  builds everything)
 
 
---------------------
-  to do for release:
---------------------
-
-  - Exceptions in LCReader 
-    [Java] 
-
-  - SimCalorimeterHit - MCParticleCont doesn't work
-    Java version   -> needs debugging ...
-
-  - remove const from C++ methods ?  - no      <<< MAYBE !?
-  - read-only mode with Exceptions ?  - no     <<< MAYBE !?
-
-  - ...
  
 
 ============================

@@ -102,18 +102,22 @@ namespace IMPL{
   }
   
   void SimCalorimeterHitImpl::setCellID0(int id0){
+    checkAccess("SimCalorimeterHitImpl::setCellID0") ;
     _cellID0 = id0 ;
   }
   
   void SimCalorimeterHitImpl::setCellID1(int id1){
+    checkAccess("SimCalorimeterHitImpl::setCellID1") ;
     _cellID1 = id1 ;
   }
   
   void SimCalorimeterHitImpl::setEnergy(float en){
+    checkAccess("SimCalorimeterHitImpl::setEnergy") ;
     _energy = en ;
   }
   
   void SimCalorimeterHitImpl::setPosition(float pos[3]){
+    checkAccess("SimCalorimeterHitImpl::setPosition") ;
     _position[0] = pos[0] ;
     _position[1] = pos[1] ;
     _position[2] = pos[2] ;
@@ -123,6 +127,8 @@ namespace IMPL{
 						      float en,
 						      float t,
 						      int pdg ){
+
+    checkAccess("SimCalorimeterHitImpl::addMCParticleContribution") ;
     if( p==0){
       // just add the energy contribution
       _energy += en ;

@@ -5,6 +5,7 @@
 
 #include "EVENT/LCIO.h"
 #include "EVENT/LCRunHeader.h"
+#include "AccessChecked.h"
 
 
 namespace IMPL {
@@ -14,7 +15,7 @@ namespace IMPL {
  * @author gaede
  * @version Mar 11, 2003
  */
-  class LCRunHeaderImpl : public EVENT::LCRunHeader {
+  class LCRunHeaderImpl : public EVENT::LCRunHeader, public AccessChecked {
 
   public: 
 

@@ -9,7 +9,7 @@
 namespace IMPL {
   
   
-/** Implementation of the real dataCalorimeterHit.
+/** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
  * @version Aug 8, 2003

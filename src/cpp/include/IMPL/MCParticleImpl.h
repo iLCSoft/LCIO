@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "EVENT/LCIO.h"
-
+#include "AccessChecked.h"
 
 #include "EVENT/MCParticle.h"
 
@@ -20,7 +20,7 @@ namespace IMPL {
    * @author gaede
    * @version Mar 5, 2003
    */
-  class MCParticleImpl : public EVENT::MCParticle  {
+  class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
   public: 
 

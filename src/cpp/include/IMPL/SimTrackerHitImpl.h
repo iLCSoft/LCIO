@@ -4,6 +4,7 @@
 
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/MCParticle.h"
+#include "AccessChecked.h"
 
 
 namespace IMPL {
@@ -16,7 +17,7 @@ namespace IMPL {
  * @version Mar 6, 2003
  */
 
-  class SimTrackerHitImpl : public EVENT::SimTrackerHit {
+  class SimTrackerHitImpl : public EVENT::SimTrackerHit, public AccessChecked {
     
   public: 
     

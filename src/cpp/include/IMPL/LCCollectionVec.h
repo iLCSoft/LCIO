@@ -6,6 +6,7 @@
 
 #include "EVENT/LCCollection.h"
 #include "DATA/LCObject.h"
+#include "AccessChecked.h"
 
 //#include "LCIO.h"
 
@@ -21,7 +22,8 @@ namespace IMPL {
    * @see LCObject
    * @see LCCollection
    */
-  class LCCollectionVec : public EVENT::LCCollection , public LCObjectVec  {
+  class LCCollectionVec : public EVENT::LCCollection , public LCObjectVec 
+    , public AccessChecked {
     
   protected:
     /**  Default Constructor is protected  - every LCCollection needs to know the type
@@ -53,7 +55,7 @@ namespace IMPL {
     
     /** Returns pointer to element at index - no range check !.
      */
-    virtual const DATA::LCObject * getElementAt(int index) const ;
+    virtual DATA::LCObject * getElementAt(int index) const ;
     
     /** Returns flag word for collection. 
      * @see EVENT::LCCollection::getFlag() 
@@ -82,10 +84,11 @@ namespace IMPL {
     
 
   protected:
-    
+    void setReadOnly(bool readOnly) ;
+
     std::string _typeName ;
     int _flag ;
-    int _access ;
+    //    int _access ;
 
 }; // class
 }; // namespace IMPL

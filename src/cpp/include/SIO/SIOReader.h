@@ -40,7 +40,6 @@ namespace SIO {
     /** Reads the next run header from the file. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
     virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException/*, IO::EndOfDataException*/) ;  
 
@@ -48,7 +47,6 @@ namespace SIO {
     /** Reads the next event from the file. 
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
     virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException/*, IO::EndOfDataException*/) ;
     
@@ -57,7 +55,6 @@ namespace SIO {
      *  LCIO::READ_ONLY (default) or LCIO::Update
      *
      * @throws IOException
-     * @throws EndOfDataException
      */
     virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException/*, IO::EndOfDataException*/) ;
     
@@ -101,7 +98,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfDataException
      */
-    virtual void readStream() throw (IO::IOException/*, IO::EndOfDataException*/) ;
+    virtual void readStream() throw (IO::IOException /*, IO::EndOfDataException*/) ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
