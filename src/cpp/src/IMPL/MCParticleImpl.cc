@@ -16,8 +16,8 @@ namespace IMPL {
     _simstatus(0),
     _mass(0),
     _charge(0),
-    _parentsP(0),
-    _daughtersP(0)
+    _parents(0),
+    _daughters(0)
   {
     _vertex[0] = 0.0 ;
     _vertex[1] = 0.0 ;
@@ -33,7 +33,7 @@ namespace IMPL {
   MCParticleImpl::~MCParticleImpl(){
     // no dynamic variables
     //    delete [] _readDaughters ;
-//     for(MCParticlePVec::iterator iter = _daughtersP.begin();iter != _daughtersP.end() ;iter++){
+//     for(MCParticlePVec::iterator iter = _daughters.begin();iter != _daughters.end() ;iter++){
 //       delete (*iter) ;
 //     }
 
@@ -48,7 +48,15 @@ namespace IMPL {
 //   //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
 
 
-  int MCParticleImpl::getNumberOfParents() const { return _parentsP.size() ; }
+  const MCParticleVec & MCParticleImpl::getParents() const {
+    return _parents ;
+  }
+  
+  const MCParticleVec & MCParticleImpl::getDaughters() const {
+    return _daughters ;
+  }
+
+  int MCParticleImpl::getNumberOfParents() const { return _parents.size() ; }
 
   MCParticle* MCParticleImpl::getParent(int i) const {
     
@@ -56,7 +64,7 @@ namespace IMPL {
       //      return _parents.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
       
-      return _parentsP[i] ;
+      return _parents[i] ;
     }catch( std::out_of_range ){
       throw Exception(std::string("MCParticleImpl::getParent(): out_of_range :" 
 				  + i ) );
@@ -65,11 +73,11 @@ namespace IMPL {
   }
 //   // unchecked access
 //   MCParticle* MCParticleImpl::getParent(int i) const {
-//     return _parentsP[i] ;
+//     return _parents[i] ;
 //   }
 
 
-  int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
+  int MCParticleImpl::getNumberOfDaughters() const { return _daughters.size() ; }
 
   MCParticle* MCParticleImpl::getDaughter(int i) const {
     
@@ -77,7 +85,7 @@ namespace IMPL {
       //      return _daughters.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
       
-      return _daughtersP[i] ;
+      return _daughters[i] ;
     }catch( std::out_of_range ){
       throw Exception(std::string("MCParticleImpl::getDaughter(): out_of_range :" 
 				  + i ) );
@@ -86,7 +94,7 @@ namespace IMPL {
   }
 //   // unchecked access
 //   MCParticle* MCParticleImpl::getDaughter(int i) const {
-//     return *_daughtersP[i] ;
+//     return *_daughters[i] ;
 //   }
 
   const double* MCParticleImpl::getEndpoint() const { 
@@ -97,8 +105,8 @@ namespace IMPL {
       
       for(int i=0;i<getNumberOfDaughters();i++)
       {
-          if(!_daughtersP[i]->vertexIsNotEndpointOfParent())
-          return _daughtersP[i]->getVertex();
+          if(!_daughters[i]->vertexIsNotEndpointOfParent())
+          return _daughters[i]->getVertex();
       }
 
 
@@ -154,7 +162,7 @@ namespace IMPL {
     
 //     MCParticle** pD = new (MCParticle*)  ;
 //     *pD = daughter ;
-    _daughtersP.push_back( daughter ) ;
+    _daughters.push_back( daughter ) ;
   }
 
   void MCParticleImpl::addParent( MCParticle* parent) { 
@@ -163,7 +171,7 @@ namespace IMPL {
 
 //     MCParticle** pD = new (MCParticle*)  ;
 //     *pD = parent ;
-    _parentsP.push_back( parent ) ;
+    _parents.push_back( parent ) ;
 
     MCParticleImpl* mom = dynamic_cast<MCParticleImpl*>( parent ) ;
     if( mom ) mom->addDaughter( this ) ;

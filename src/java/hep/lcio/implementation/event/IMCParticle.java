@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.9 2004-05-24 03:33:02 tonyj Exp $
+ * @version $Id: IMCParticle.java,v 1.10 2004-08-25 09:45:39 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -260,4 +260,12 @@ public class IMCParticle extends ILCObject implements MCParticle
       return (simulatorStatus & 1 << BITVertexIsNotEndpointOfParent) != 0;
    }
    
+   public List getDaughters() {
+	  return daughters;
+   }
+
+   public List getParents() {
+	  return parents;
+   }
+
 }

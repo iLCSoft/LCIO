@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version Mar 5, 2003
+   * @version $Id: MCParticleImpl.h,v 1.18 2004-08-25 09:45:38 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -34,6 +34,15 @@ namespace IMPL {
 
     virtual int id() { return simpleUID() ; }
 
+    /** Returns the parents of this particle. 
+     */
+    virtual const EVENT::MCParticleVec & getParents() const ;
+
+    /** Returns the daughters of this particle. 
+     */
+    virtual const EVENT::MCParticleVec & getDaughters() const ;
+
+
     /** Returns the i-th daughter of this particle.
      * Same as getDaughter() except for return type.
      *
@@ -46,12 +55,6 @@ namespace IMPL {
      */
     virtual int getNumberOfParents() const ;
 
-//     /** Returns the i-th parent of this particle.
-//      * Same as getParent() except for return type.
-//      *
-//      * @see MCParticle.getNumberOfParents()
-//      */
-//     virtual MCParticle * getParent(int i) const ;
 
     /** Returns the i-th parent of this particle.
      */
@@ -228,8 +231,8 @@ namespace IMPL {
     float _p[3] ;
     float _mass ;
     float _charge ;
-    EVENT::MCParticleVec _parentsP ;
-    EVENT::MCParticleVec _daughtersP ;
+    EVENT::MCParticleVec _parents ;
+    EVENT::MCParticleVec _daughters ;
     bool _endpointSet ;
 
 }; // class

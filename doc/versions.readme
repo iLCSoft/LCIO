@@ -11,11 +11,15 @@
  
   - introduced RawCalorimeterHit with int amplitude and time
 
+  - added time to CalorimterHit
+
 ======================
-  v01-02 beta
+  v01-02 prebeta
 =======================
 
    - new classes Track, Cluster, ReconstructedParticle 
+  
+   - ....
 
    - new package UTIL for C++
       -> LCTOOLS moved to UTIL

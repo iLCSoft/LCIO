@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.16 2004-08-03 13:14:15 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.17 2004-08-25 09:45:38 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
@@ -28,17 +28,28 @@ public interface MCParticle extends LCObject {
      */
     public float getEnergy() const;
 
+    /** Returns the parents of this particle. 
+     */
+    public const MCParticleVec& getParents() const ;
+    
+    /** Returns the daughters of this particle. 
+     */
+    public const MCParticleVec& getDaughters() const ;
+    
 
     /** Returns the number of parents of this particle - 0 if mother.
+     * @deprecated use getParents()
      */
     public int getNumberOfParents() const ;
 
 
     /** Returns the i-th parent of this particle.
+     * @deprecated use getParents()
      *
      * @see MCParticle.getNumberOfParents()
      */
     public MCParticle* getParent( int i ) const ;
+
 
 
     /** Returns the PDG code of the particle.
@@ -159,11 +170,12 @@ public interface MCParticle extends LCObject {
     
 
     /** Returns the number of daughters of this particle.
+     * @deprecated use getDaughters()
      */
     public int  getNumberOfDaughters() const ;
     
     /** Returns the i-th daughter of this particle.
-     *
+     * @deprecated use getDaughters()
      */
     public MCParticle* getDaughter(int i) const ; 
 
