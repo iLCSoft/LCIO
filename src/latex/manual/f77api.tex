@@ -41,8 +41,10 @@ same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles define
 \verb$LCIO::MCPARTICLE$ is defined in a character constant in Fortran named
 {\bf LCIO\_MCPARTICLE}.}
 
-\item{Two additional methods are defined to handle returned string vectors in Fortran: \\
-{\bf lcstvgetlength()} and {\bf lcstvgetstringat()} 
+\item{Two additional methods are defined to handle string, int and float vectors in Fortran:\\
+{\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
+{\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
+{\bf lcfvcgetlength()} and {\bf lcfvcgetfloatat()} 
 }
 \end{itemize}
 

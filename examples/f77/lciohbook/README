@@ -1,0 +1,21 @@
+########################################################
+#
+#  lciohbook:
+#  Simple example that opens an LCIO file and creates
+#  an hbook file wit a few histograms for MCParticles 
+#  using the the fortran interface.
+#
+########################################################
+
+ Modify the GNUmakefile according to your needs in particular the
+ path to your cernlib installation is required.
+
+ then do
+
+    gmake
+
+ and run
+
+  ./lciohbook
+
+

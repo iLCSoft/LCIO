@@ -28,7 +28,7 @@ c      write(*,*) " created reader at " , reader
          write(*,*) " could not open file f_simjob.slcio "
          goto 99
       else
-         write(*,*) " opened file simjob.slcio "
+         write(*,*) " opened file f_simjob.slcio "
       endif
       
 
@@ -38,14 +38,14 @@ c---- first loop over runs and print information
          if( runhdr.eq.0 ) goto 9
          
          write(*,*) "  Run : ",lcrhdgetrunnumber( runHdr )
-     $        , lcrhdgetdetectorname( runHdr )
-     $        , lcrhdgetdescription( runHdr )
+     $        ,lcrhdgetdetectorname( runHdr )
+     $        ,lcrhdgetdescription( runHdr )
          
          write(*,*) " active subdetectors : "
          detnames = lcrhdgetactivesubdetectors( runHdr ) 
-         nactdet = lcstvgetlength( detnames  ) 
+         nactdet = lcsvcgetlength( detnames  ) 
          do i=1,nactdet
-            write(*,*) lcstvgetstringat( detnames, i ) 
+            write(*,*) lcsvcgetstringat( detnames, i ) 
          enddo
 
 

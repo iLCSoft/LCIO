@@ -32,9 +32,11 @@ c-----the LCRunHeader interface
       character*1024 lcrhdgetdescription
       integer lcrhdsetrunnumber, lcrhdsetdetectorname
       integer lcrhdsetdescription, lcrhdaddactivesubdetector
-c-----the LCStrVec interface
-      integer lcstvgetlength
-      character*80 lcstvgetstringat
+c-----the LCStrVec,LCIntVec,LCFloatVec interface
+      integer lcsvcgetlength,lcivcgetlength,lcfvcgetlength
+      character*80 lcsvcgetstringat
+      integer lcsvcgetintat
+      real lcsvcgetfloatgat
 c-----the LCEvent interface
       PTRTYPE lcevtcreate, lcevtgetcollection
       integer lcevtdelete

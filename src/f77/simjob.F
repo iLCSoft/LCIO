@@ -175,7 +175,7 @@ c ----      set the flag bits to store position for calorimeter hits
             enddo
             
 c-----     now add everything to the event
-            status = lcevtaddcollection(event,mcpcol ,'MCParticles') 
+            status = lcevtaddcollection(event,mcpcol ,'MCParticle') 
             status = lcevtaddcollection(event,sthcol ,'MyTrackerHits') 
             status = lcevtaddcollection(event,schcol ,'MyCalHits') 
             status = lcevtaddcollection(event,cahcol ,'MyRealCalHits') 
