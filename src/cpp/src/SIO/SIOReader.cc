@@ -406,6 +406,7 @@ namespace SIO {
 	
       try{ 
 	readRecord() ;
+	recordsRead++ ;
       }
       catch(EndOfDataException){
 	
