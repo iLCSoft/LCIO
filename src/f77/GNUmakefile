@@ -20,6 +20,12 @@ ifeq ($(COMPILER_VERSION),3)
  endif
 endif
 
+# check for AMD64 Linux and set -fno-f2c to get correct results
+OS_TYPE:= $(shell uname -m)
+ifeq ($(OS_TYPE),x86_64)
+  X86_64_OPTION = -fno-f2c
+endif
+
 # check for private compiler definitions
 ifdef MY_CXX
   CXX = $(MY_CXX)
@@ -29,7 +35,7 @@ endif
 ifdef MY_FC
   FC = $(MY_FC)
 else
-  FC = g77
+  FC = g77 $(X86_64_OPTION)
 endif
 
 
