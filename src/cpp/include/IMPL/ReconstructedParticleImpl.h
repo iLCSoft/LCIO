@@ -136,11 +136,11 @@ namespace IMPL {
     void setMass( float mass ) ;
     void setCharge( float charge ) ;
     void setReferencePoint( const float* reference ) ;
-    void addParticleID( const EVENT::ParticleID*  pid ) ;
-    void addParticle( const ReconstructedParticle* particle , float weight = 1.0 ) ;
-    void addCluster( const EVENT::Cluster* cluster, float weight = 1.0 ) ;
-    void addTrack( const EVENT::Track* track, float weight = 1.0 ) ;
-    void addMCParticle( const EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
+    void addParticleID( EVENT::ParticleID*  pid ) ;
+    void addParticle( ReconstructedParticle* particle , float weight = 1.0 ) ;
+    void addCluster( EVENT::Cluster* cluster, float weight = 1.0 ) ;
+    void addTrack( EVENT::Track* track, float weight = 1.0 ) ;
+    void addMCParticle( EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
 
   protected:
     int _typeFlag ;

@@ -11,7 +11,7 @@ package hep.lcio.data ;
 @ifdef cpp
 @cpp{
 class MCParticleData ;
-typedef std::vector< const MCParticleData*> MCParticleDataVec ;
+typedef std::vector<MCParticleData*> MCParticleDataVec ;
 }
 @endif
 

@@ -112,7 +112,7 @@ namespace IMPL{
     _particletype[2] = muonWeight ;
   }
   
-  void ClusterImpl::addCluster( const EVENT::Cluster* cluster){
+  void ClusterImpl::addCluster(EVENT::Cluster* cluster){
     checkAccess("ClusterImpl::addCluster") ;
     _clusters.push_back( cluster ) ;
   }

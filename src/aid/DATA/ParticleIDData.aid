@@ -1,10 +1,9 @@
 package hep.lcio.data;
+
 @ifdef cpp
 @cpp{
-
 class ParticleIDData ;
-typedef std::vector< const ParticleIDData*> ParticleIDDataVec ;
-
+typedef std::vector<ParticleIDData*> ParticleIDDataVec ;
 }
 @endif
 

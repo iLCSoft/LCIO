@@ -2,10 +2,8 @@ package hep.lcio.data;
 
 @ifdef cpp
 @cpp{
-//namespace DATA {
 class ClusterData ;
-typedef std::vector< const ClusterData*> ClusterDataVec ;
-//};
+typedef std::vector<ClusterData*> ClusterDataVec ;
 }
 @endif
 

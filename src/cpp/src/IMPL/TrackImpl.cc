@@ -132,7 +132,7 @@ namespace IMPL {
 
     vec->push_back( index )  ;
   }    
-  void  TrackImpl::addTrack(const EVENT::Track* trk ) {
+  void  TrackImpl::addTrack( EVENT::Track* trk ) {
     checkAccess("TrackImpl::addTrack") ;
     _tracks.push_back( trk ) ;
   }

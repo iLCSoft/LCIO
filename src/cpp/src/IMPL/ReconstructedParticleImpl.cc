@@ -109,32 +109,32 @@ namespace IMPL{
     _reference[2]  = reference[2] ;
   }
 
-  void ReconstructedParticleImpl::addParticleID( const ParticleID* pid ){
+  void ReconstructedParticleImpl::addParticleID( ParticleID* pid ){
     checkAccess("ReconstructedParticleImpl::addParticleID" );
     _pid.push_back( pid ) ;
     // sort wrt. probability
     sort( _pid.begin() , _pid.end() , PIDSort()  ) ;
   }
 
-  void ReconstructedParticleImpl::addParticle( const ReconstructedParticle* particle , float weight ){
+  void ReconstructedParticleImpl::addParticle( ReconstructedParticle* particle , float weight ){
     checkAccess("ReconstructedParticleImpl::addParticle" );
     _particles.push_back( particle ) ;
     _particleWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addCluster( const Cluster* cluster, float weight ){
+  void ReconstructedParticleImpl::addCluster( Cluster* cluster, float weight ){
     checkAccess("ReconstructedParticleImpl::addCluster" );
     _clusters.push_back( cluster ) ;
     _clusterWeights.push_back( weight ) ;
   }
 
-  void ReconstructedParticleImpl::addTrack( const Track* track, float weight ){
+  void ReconstructedParticleImpl::addTrack( Track* track, float weight ){
     checkAccess("ReconstructedParticleImpl::addTrack" );
     _tracks.push_back( track ) ;
     _trackWeights.push_back( weight ) ;
   }
   
-  void ReconstructedParticleImpl::addMCParticle( const MCParticle* mcParticle , float weight ){
+  void ReconstructedParticleImpl::addMCParticle(  MCParticle* mcParticle , float weight ){
     checkAccess("ReconstructedParticleImpl::addMCParticle" );
     _mcParticles.push_back( mcParticle ) ;
     _mcParticleWeights.push_back( weight ) ;

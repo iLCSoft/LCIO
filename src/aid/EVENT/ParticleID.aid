@@ -3,7 +3,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class ParticleID ;
-typedef std::vector< const ParticleID*> ParticleIDVec ;
+typedef std::vector<ParticleID*> ParticleIDVec ;
 }
 @endif
 

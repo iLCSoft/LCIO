@@ -1,10 +1,9 @@
 package hep.lcio.data;
+
 @ifdef cpp
 @cpp{
-//namespace DATA {
 class TrackData ;
-typedef std::vector< const TrackData*> TrackDataVec ;
-//};
+typedef std::vector<TrackData*> TrackDataVec ;
 }
 @endif
 

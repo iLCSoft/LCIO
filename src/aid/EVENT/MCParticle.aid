@@ -3,7 +3,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class MCParticle ;
-typedef std::vector< const MCParticle*> MCParticleVec ;
+typedef std::vector<MCParticle*> MCParticleVec ;
 }
 @endif
 

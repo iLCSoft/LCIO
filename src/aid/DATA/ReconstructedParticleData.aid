@@ -3,7 +3,7 @@ package hep.lcio.data;
 @ifdef cpp
 @cpp{
 class ReconstructedParticleData ;
-typedef std::vector< const ReconstructedParticleData*> ReconstructedParticleDataVec ;
+typedef std::vector<ReconstructedParticleData*> ReconstructedParticleDataVec ;
 }
 @endif
 

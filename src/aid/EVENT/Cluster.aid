@@ -2,10 +2,8 @@ package hep.lcio.event ;
 
 @ifdef cpp
 @cpp{
-//namespace EVENT {
 class Cluster ;
-typedef std::vector< const Cluster*> ClusterVec ;
-//};
+typedef std::vector<Cluster*> ClusterVec ;
 }
 @endif
 

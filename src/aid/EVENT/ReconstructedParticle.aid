@@ -1,10 +1,9 @@
 package hep.lcio.event;
+
 @ifdef cpp
 @cpp{
-//namespace EVENT {
 class ReconstructedParticle ;
-typedef std::vector< const ReconstructedParticle*> ReconstructedParticleVec ;
-//};
+typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 }
 @endif
 

@@ -1,10 +1,8 @@
 package hep.lcio.event;
 @ifdef cpp
 @cpp{
-//namespace EVENT {
 class Track ;
-typedef std::vector< const Track*> TrackVec ;
-//};
+typedef std::vector<Track*> TrackVec ;
 }
 @endif
 

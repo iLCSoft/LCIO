@@ -7,20 +7,6 @@ package hep.lcio.event ;
  * @see LCObject
  * @see LCIO
  */
-
-@cpp{ 
-// some convenient typedefs
-//#include <string>
-//#include <vector>
-//namespace EVENT{
-//    class MCParticle ;
-//    typedef std::vector<std::string> StringVec ;
-//    //typedef std::vector<const MCParticle*> MCParticleVec ;
-//    typedef std::vector<float> FloatVec ;
-//    typedef std::vector<int> IntegerVec ;
-//} ;
-}
-
 public interface LCIO{
     
     // it seems to be impossible to have one declaration for

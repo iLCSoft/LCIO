@@ -128,7 +128,7 @@ namespace IMPL {
     void setHADWeight(float hadWeight ) ;
     void setMuonWeight(float muonWeight ) ;
     
-    void addCluster( const EVENT::Cluster* cluster) ;
+    void addCluster(EVENT::Cluster* cluster) ;
     
 
     void  addHitIndex( const std::string& colName, int index , float contribution) ;

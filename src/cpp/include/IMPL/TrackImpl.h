@@ -120,7 +120,7 @@ namespace IMPL {
     virtual void  setdEdx( float dEdx ) ;
     virtual void  setdEdxError( float dEdxError ) ;
     virtual void  addHitIndex( const std::string& colName, int index ) ;   
-    virtual void  addTrack(const EVENT::Track* trk ) ;
+    virtual void  addTrack( EVENT::Track* trk ) ;
 
   protected:
     int _type ;
