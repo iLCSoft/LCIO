@@ -39,14 +39,19 @@ respectively, eg. {\bf lcevtdelete()} }
 \item{All constants defined in \verb$Event::LCIO$ are defined as constants in Fortran with the 
 same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles defined in C++ in
 \verb$LCIO::MCPARTICLE$ is defined in a character constant in Fortran named
-{\bf LCIO\_MCPARTICLE}.}
+{\bf LCIO\_MCPARTICLE} (see the Fortran include file {\bf lciof77apiext.inc}).}
 
-\item{Two additional methods are defined to handle string, int and float vectors in Fortran:\\
+\end{itemize}
+
+Two additional methods are defined for each case to handle string, int and float vectors in Fortran:\\
+
 {\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
 {\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
-{\bf lcfvcgetlength()} and {\bf lcfvcgetfloatat()} 
-}
-\end{itemize}
+{\bf lcfvcgetlength()} and {\bf lcfvcgetfloatat()} \\
+
+For strings the Fortran CHARACTER* declaration has to be large enough, otherwise the original
+string is truncated.
+
 
 \begin{table}
 \begin{center}
@@ -157,7 +162,8 @@ c------- need to delete the event as we created it
  ...
 \end{verbatim}
 
-Note that as in the C++ case we have to delete the event if we created it as described in \ref{cppmem}.
+Note that as in the C++ case we have to delete the event if we created it as described in \ref{cppmem}. \\
+A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
 
 
 
@@ -166,8 +172,8 @@ An additional set of Fortran functions is provided for user convenience. These a
 that usually allow to access several attributes of data objects with one function call.
 These functions are declared in \verb#$LCIO/src/f77/lciof77api.inc#,
 %$
-check this file for documentation on usage.
+and are listed in the second part of {\bf Appendix~\ref{ftn_summary} }.
 
 Most Fortran programs for simulation use the \verb$hepevt$ common block. 
 Conversion functions from the LCIO MCParticle collection to the \verb$hepevt$ common block and vice versa 
-are also provided in the extended interface. See the example in \ref{rwlcioframe}.
+are also provided in the extended interface. See the example in \ref{rwpythia}.
