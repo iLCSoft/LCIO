@@ -304,7 +304,9 @@ ccc       end do
 ***   the generic Clusters to the 'raw data' CalorimeterHits
 ***   -> this should be done automatically in a future release
       calflag = lccolgetflag ( calhitcol )
+        print '(a,z8)', 'calflag is= ', calflag
       calflag = ibset ( calflag, LCIO_RCHBIT_PTR )
+        print '(a,z8)', 'calflag is= ', calflag
       status  = lccolsetflag ( calhitcol, calflag )
 
       scRelp  = lcrelcreate( LCIO_CALORIMETERHIT,LCIO_SIMCALORIMETERHIT)
@@ -487,7 +489,7 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
         iclu    = dble ( lccolgetnumberofelements ( cluscol ) )*
      &                   irand( 0 )/RAND_MAX
         clusp   = lccolgetelementat ( cluscol, iclu + 1 )
-        status  = lcrcpaddcluster ( recopp , clusp )
+        status  = lcrcpaddcluster ( recopp , clusp, 1.0 )
 
 ***     and finally an MCParticle
         mcpcol  = lcevtgetcollection( eventi , LCIO_MCPARTICLE )
