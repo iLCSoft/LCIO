@@ -1,8 +1,3 @@
-/** Adding stuff needed for io (friend declarations, etc.)
- * 
- * @author gaede
- * @version Sep 9, 2003
- */
 #ifndef IOIMPL_LCRUNHEADERIOIMPL_H
 #define IOIMPL_LCRUNHEADERIOIMPL_H 1
 
@@ -17,6 +12,11 @@ namespace SIO {
 
 namespace IOIMPL {
   
+/** Adding stuff needed for io (friend declarations, etc.)
+ * 
+ * @author gaede
+ * @version Sep 9, 2003
+ */
   class LCRunHeaderIOImpl : public IMPL::LCRunHeaderImpl {
     
   // the reason for having this subclass

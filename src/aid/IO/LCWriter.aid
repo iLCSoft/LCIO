@@ -20,7 +20,7 @@ public interface LCWriter {
      *
      *@throws IOException
      */
-    public void open(const String& filename ) throws IOException ,DataNotAvailableException ;
+    public void open(const String& filename ) throws IOException ;
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW

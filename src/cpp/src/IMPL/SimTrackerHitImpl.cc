@@ -22,13 +22,8 @@ namespace IMPL {
 
   float SimTrackerHitImpl::getTime() const { return _time ; }
 
-  DATA::MCParticleData * SimTrackerHitImpl::getMCParticleData() const {  return _particle ; }
-
-  EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const throw (DataNotAvailableException, std::exception) { 
-    if( _particle == 0 ) 
-      throw DataNotAvailableException("SimTrackerHitImpl::getMCParticle: no MCParticle contribution") ;
-    return _particle ; 
-  }
+  DATA::MCParticleData * SimTrackerHitImpl::getMCParticleData() const{ return _particle;}
+  EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const { return _particle ; }
 
   void SimTrackerHitImpl::setCellID( int id) {
     checkAccess("SimTrackerHitImpl::setCellID") ;

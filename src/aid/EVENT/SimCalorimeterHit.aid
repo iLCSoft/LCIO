@@ -1,8 +1,5 @@
 package hep.lcio.event ;
 
-@java{
-import hep.lcio.exceptions.* ;
-}
 /** The generic calorimeter hit. 
  * Adding some convenient methods to the pure data interface.
  * 
@@ -13,6 +10,15 @@ import hep.lcio.exceptions.* ;
 
 public interface SimCalorimeterHit extends SimCalorimeterHitData {
     
+    /** Returns the i-th particle that contributed to the hit.
+     *  Same as getParticleContData() except for return type.
+     *
+     * @see MCParticle
+     * @see SimCalorimeterHitData.getNMCParticles()
+     */
+    public const MCParticle* getParticleCont( int i) const ;
+
+
 @ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
      */
@@ -55,15 +61,10 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
      */ 
     public int  getPDGCont(int i) const ;
     
-@endif
-
     /** Returns the i-th particle that contributed to the hit.
-     *  Same as getParticleContData() except for return type and exception.
-     *
-     * @throws DataNotAvailableException
-     * @see MCParticle
-     * @see SimCalorimeterHitData.getNMCParticles()
      */
-    public const MCParticle* getParticleCont( int i) const throws DataNotAvailableException ;
+    public MCParticleData* getParticleContData( int i) const ;
+
+@endif
 
 }

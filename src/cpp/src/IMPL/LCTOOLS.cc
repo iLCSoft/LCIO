@@ -40,7 +40,7 @@ namespace IMPL {
     
     for( name = strVec->begin() ; name != strVec->end() ; name++){
     
-      const LCCollection* col = evt->getCollection( *name ) ;
+      LCCollection* col = evt->getCollection( *name ) ;
     
       cout << endl 
 	   << " collection name : " << *name 
@@ -101,7 +101,7 @@ namespace IMPL {
       cout << "     " <<  *name <<   " " 
 	   <<   evt->getCollection( *name )->getTypeName() << " : "  ; 
     
-      const LCCollection* col = evt->getCollection( *name ) ;
+      LCCollection* col = evt->getCollection( *name ) ;
     
     
       // print SimCalorimeterHit collections:
@@ -115,8 +115,8 @@ namespace IMPL {
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
 	
-	  const SimCalorimeterHit* hit = 
-	    dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+	  SimCalorimeterHit* hit = 
+	    dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
 	
 	  cout << "    hit -  e: "  << hit->getEnergy() ;
 
@@ -140,8 +140,8 @@ namespace IMPL {
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
 	  
-	  const CalorimeterHit* hit = 
-	    dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
+	  CalorimeterHit* hit = 
+	    dynamic_cast<CalorimeterHit*>( col->getElementAt( i ) ) ;
 	  
 	  cout << "    hit -  e: "  << hit->getEnergy() ;
 
@@ -163,8 +163,8 @@ namespace IMPL {
 
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
-	  const SimTrackerHit* hit = 
-	    dynamic_cast<const SimTrackerHit*>( col->getElementAt( i ) ) ;
+	  SimTrackerHit* hit = 
+	    dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
 	
 	  const double* x =  hit->getPosition() ;
 	  cout << "    hit -  dEdx: " 
@@ -183,8 +183,8 @@ namespace IMPL {
 	
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
-	  const LCFloatVec* vec = 
-	    dynamic_cast<const LCFloatVec*>( col->getElementAt( i ) ) ;
+	  LCFloatVec* vec = 
+	    dynamic_cast<LCFloatVec*>( col->getElementAt( i ) ) ;
 	  
 	  cout << " values(" << i << "): " ;
 	  for(unsigned int k=0 ; k< vec->size() ; k++ )
@@ -200,8 +200,8 @@ namespace IMPL {
 	
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
-	  const LCIntVec* vec = 
-	    dynamic_cast<const LCIntVec*>( col->getElementAt( i ) ) ;
+	  LCIntVec* vec = 
+	    dynamic_cast<LCIntVec*>( col->getElementAt( i ) ) ;
 	  
 	  cout << " values(" << i << "): " ;
 	  for(unsigned int k=0 ; k< vec->size() ; k++ )
@@ -218,8 +218,8 @@ namespace IMPL {
 
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
-	  const MCParticle* part = 
-	    dynamic_cast<const MCParticle*>( col->getElementAt( i ) ) ;
+	  MCParticle* part = 
+	    dynamic_cast<MCParticle*>( col->getElementAt( i ) ) ;
 	
 	  cout << "           " << part->getPDG() << " p: " 
 	       <<  part->getMomentum()[0]  << ", "
@@ -290,7 +290,7 @@ namespace IMPL {
 	dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
       
       int id0 = hit->getCellID0() ;
-      int id1 = hit->getCellID1() ;
+      //      int id1 = hit->getCellID1() ;
 	    
       cout << i << ": "
 // 	   << hit->getCellID0() << " | "
@@ -425,9 +425,9 @@ namespace IMPL {
     for( int k=0; k<nParticles; k++){
 
       // get the particle from the collection - needs a cast !
-      const MCParticle* part =  dynamic_cast<const MCParticle*>( col->getElementAt( k ) ) ;
+      MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( k ) ) ;
       
-      if( part->getParentData() == 0 )
+      if( part->getParent() == 0 )
 	moms.push_back( part ) ;
     }
 

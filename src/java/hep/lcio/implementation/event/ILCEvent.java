@@ -8,12 +8,12 @@ import hep.lcio.event.LCIO;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-
+import hep.lcio.exceptions.DataNotAvailableException; 
 
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.6 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: ILCEvent.java,v 1.7 2003-09-10 18:19:46 gaede Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -23,9 +23,12 @@ public class ILCEvent extends ILCObject implements LCEvent
    protected long timeStamp;
    private Map collections = new LinkedHashMap();
 
-   public LCCollection getCollection(String name)
+   public LCCollection getCollection(String name) throws DataNotAvailableException
    {
-      return (LCCollection) collections.get(name);
+       LCCollection col = (LCCollection) collections.get(name);
+       if( col == null )
+	   throw new DataNotAvailableException() ;
+       return col ; 
    }
 
    public LCCollectionData getCollectionData(String name)

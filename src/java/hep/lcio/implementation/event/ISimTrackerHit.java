@@ -5,13 +5,11 @@ import hep.lcio.data.MCParticleData;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
 
-import hep.lcio.exceptions.DataNotAvailableException;
-
 
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.5 2003-09-08 23:10:20 tonyj Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.6 2003-09-10 18:19:46 gaede Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -38,10 +36,8 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       particle = mc;
    }
 
-   public MCParticle getMCParticle() throws DataNotAvailableException
+   public MCParticle getMCParticle()
    {
-      if (particle == null)
-         throw new DataNotAvailableException();
       return (MCParticle) particle;
    }
 

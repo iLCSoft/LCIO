@@ -1,5 +1,5 @@
-#ifndef EVENT_TRACKERHITIMPL_H
-#define EVENT_TRACKERHITIMPL_H 1
+#ifndef IMPL_SIMTRACKERHITIMPL_H
+#define IMPL_SIMTRACKERHITIMPL_H 1
 
 
 #include "EVENT/SimTrackerHit.h"
@@ -50,12 +50,10 @@ namespace IMPL {
     virtual DATA::MCParticleData * getMCParticleData() const  ;
 
     /** Returns the MC particle that caused the hit.
-     * Same as getMCParticleData except for type and exception.
-     *
-     * @throws DataNotAvailableException
+     * Same as getMCParticleData except for return type.
      * @see MCParticle
      */
-    virtual EVENT::MCParticle * getMCParticle() const throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::MCParticle * getMCParticle() const ;
 
 
     // ---------- setters ------------------------
@@ -89,4 +87,4 @@ namespace IMPL {
 
 }; // class
 }; // namespace IMPL
-#endif /* ifndef EVENT_TRACKERHITIMLP_H */
+#endif /* ifndef IMPL_SIMTRACKERHITIMLP_H */

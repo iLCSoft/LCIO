@@ -20,7 +20,7 @@ import hep.lcio.exceptions.* ;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.7 2003-09-09 12:37:37 gaede Exp $
+ * @version $Id: SIOLCWriter.java,v 1.8 2003-09-10 18:19:46 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -31,7 +31,7 @@ class SIOLCWriter implements LCWriter
       writer.close();
    }
 
-   public void open(String filename) throws IOException,DataNotAvailableException
+   public void open(String filename) throws IOException
    {
       // FIX ME - what is the default behavior 
       // for existing files ?

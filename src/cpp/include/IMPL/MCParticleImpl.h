@@ -1,6 +1,5 @@
-// -*- C++ -*-
-#ifndef EVENT_MCPARTICLEIMPL_H
-#define EVENT_MCPARTICLEIMPL_H 1
+#ifndef IMPL_MCPARTICLEIMPL_H
+#define IMPL_MCPARTICLEIMPL_H 1
 #include <vector>
 
 #include "EVENT/LCIO.h"
@@ -29,27 +28,23 @@ namespace IMPL {
     /// Destructor.
     virtual ~MCParticleImpl() ;
 
-    /** Returns the parent of this particle. Null if the mother (beam particle).
-     * Same as getParentData() except for type and exception.
-     *
-     * @throws DataNotAvailableException
+    /** Returns the parent of this particle. Returns Null if the mother (
+     * beam particle). 
+     * Same as getParentData() except for return type.
      */
-    virtual EVENT::MCParticle * getParent() const throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::MCParticle * getParent() const ;
 
     /** Returns the second parent of this particle. 
-     * Same as getSecondParentData() except for type and exception.
-     *
-     * @throws DataNotAvailableException
+     * Same as getSecondParentData() except for return type.
      */
-    virtual EVENT::MCParticle * getSecondParent() const throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::MCParticle * getSecondParent() const ; 
 
     /** Returns the i-th daughter of this particle.
-     * Same as getDaughterData() except for type and exception - applies range check.
+     * Same as getDaughterData() except for return type.
      *
-     * @throws DataNotAvailableException
      * @see getNumberOfDaughters
      */
-    virtual EVENT::MCParticle * getDaughter(int i) const throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::MCParticle * getDaughter(int i) const ;
 
 
     /** Returns the parent of this particle. Null if the mother (beam particle).
@@ -185,4 +180,4 @@ namespace IMPL {
 
 }; // class
 }; // namespace IMPL
-#endif /* ifndef EVENT_MCPARTICLEIMPL_H */
+#endif /* ifndef IMPL_MCPARTICLEIMPL_H */

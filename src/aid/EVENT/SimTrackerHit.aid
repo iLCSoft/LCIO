@@ -1,8 +1,5 @@
 package hep.lcio.event;
 
-@java{
-import hep.lcio.exceptions.* ;
-}
 /** A generic simulated tracker hit. 
  * Adding some convenient methods to the pure data interface.
  * 
@@ -12,6 +9,15 @@ import hep.lcio.exceptions.* ;
  */
 
 public interface SimTrackerHit extends SimTrackerHitData {
+    
+    
+    /** Returns the MC particle that caused the hit.
+     * Same as getMCParticleData except for return type.
+     *
+     * @see MCParticle
+     */
+    public const MCParticle* getMCParticle() const ;
+    
     
 @ifdef overwriteDataInterface
     /**Returns the detector specific (geometrical) cell id.
@@ -34,12 +40,5 @@ public interface SimTrackerHit extends SimTrackerHitData {
      */
     public const MCParticleData* getMCParticleData() const ;
 @endif
-    
-    /** Returns the MC particle that caused the hit.
-     * Same as getMCParticleData except for type and exception.
-     *
-     * @throws DataNotAvailableException
-     * @see MCParticle
-     */
-    public const MCParticle* getMCParticle() const throws DataNotAvailableException ;
+
 }

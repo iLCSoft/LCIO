@@ -41,34 +41,28 @@ namespace IMPL {
   }
   
   MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
-  MCParticle * MCParticleImpl::getParent() const throw (DataNotAvailableException, std::exception) 
-  { 
-    if( _mother0 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no parent ! ") ;
-    return _mother0 ; 
-  }
+  MCParticle * MCParticleImpl::getParent() const { return _mother0 ; }
 
-  MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1 ;  }  
-  MCParticle * MCParticleImpl::getSecondParent() const throw (DataNotAvailableException, std::exception){ 
-    if( _mother1 == 0 ) throw DataNotAvailableException("MCParticleImpl::getParent() : no second parent ! ");
-    return _mother1 ; 
-  }
+  MCParticleData * MCParticleImpl::getSecondParentData() const { return _mother1; }  
+  MCParticle * MCParticleImpl::getSecondParent() const { return _mother1; }
 
   //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
 
 
   int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
 
-  MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException, std::exception) { 
-
+  MCParticle* MCParticleImpl::getDaughter(int i) const {
+    
     try{
       //      return _daughters.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
-
+      
       return *_daughtersP[i] ;
     }catch( std::out_of_range ){
-      throw DataNotAvailableException(std::string("MCParticleImpl::getDaughter(): out_of_range :" + i ) );
+      throw Exception(std::string("MCParticleImpl::getDaughter(): out_of_range :" 
+				  + i ) );
     }
-
+    
   }
   // unchecked access
   MCParticleData* MCParticleImpl::getDaughterData(int i) const {

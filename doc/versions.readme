@@ -6,6 +6,25 @@
   ( fg20030909 ) 
 ============================
 
+   - removed DataNotAvailableExceptions from all get-methods that return object 
+     pointers or referencs, e.g. MCParticle::getParent(), return null pointers instead
+     [C++ and Java]
+      updated manual.tex accordingly
+
+   - manual.tex now able to create ps, pdf and html
+
+--------------------
+  to do for release:
+--------------------
+
+  - additional methods in LCReader specifying the access mode (readNextRunHeader)
+
+  - LCRunHeader::addActiveDetector no ReadOnlyExceptions....
+
+============================
+  ( fg20030909 ) 
+============================
+
    - manual reviewed and updated, added section on Exceptions
 
    - all throw clauses in C++ include std::exception now
@@ -21,13 +40,6 @@
    - added printout for unexpected or uncaught exceptions in C++
 
  
---------------------
-  to do for release:
---------------------
-
-  - additional methods in LCReader specifying the access mode (readNextRunHeader)
-
-  - LCRunHeader::addActiveDetector no ReadOnlyExceptions....
 
 ============================
  v00-07beta ( fg 20030903 ) 

@@ -9,8 +9,6 @@ import hep.lcio.data.SimTrackerHitData;
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimTrackerHit;
 
-import hep.lcio.exceptions.DataNotAvailableException;
-
 import hep.lcio.implementation.event.ISimTrackerHit;
 
 import java.io.IOException;
@@ -19,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.5 2003-09-08 23:10:20 tonyj Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.6 2003-09-10 18:19:46 gaede Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -35,12 +33,10 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       in.readPTag(this);
    }
 
-   public MCParticle getMCParticle() throws DataNotAvailableException
+   public MCParticle getMCParticle()
    {
       if (particle instanceof SIORef)
          particle = ((SIORef) particle).getObject();
-      if (particle == null)
-         throw new DataNotAvailableException();
       return (MCParticle) particle;
    }
 

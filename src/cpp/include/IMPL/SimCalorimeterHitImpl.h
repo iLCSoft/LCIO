@@ -1,5 +1,5 @@
-#ifndef EVENT_SIMCALORIMETERHITIMPL_H
-#define EVENT_SIMCALORIMETERHITIMPL_H 1
+#ifndef IMPL_SIMCALORIMETERHITIMPL_H
+#define IMPL_SIMCALORIMETERHITIMPL_H 1
 
 
 #include "EVENT/MCParticle.h"
@@ -81,14 +81,12 @@ namespace IMPL {
     virtual DATA::MCParticleData * getParticleContData(int i) const ;
     
     /** Returns the i-th particle that contributed to the hit.
-     *  Same as getParticleContData() except for return type and exception.
+     *  Same as getParticleContData() except for return type.
      *
-     * @throws DataNotAvailableException
      * @see MCParticle
      * @see getNMCParticles()
      */
-    virtual EVENT::MCParticle * getParticleCont(int i) const 
-      throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::MCParticle * getParticleCont(int i) const ;
 
     /** Returns the energy of the i-th particle that contributed to the hit.
      */ 
@@ -147,4 +145,4 @@ namespace IMPL {
     
   }; // class
 }; // namespace IMPL
-#endif /* ifndef EVENT_CALORIMETERHITIMPL_H */
+#endif /* ifndef IMPL_SIMCALORIMETERHITIMPL_H */

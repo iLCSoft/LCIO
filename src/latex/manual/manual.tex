@@ -1,7 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Latex source file for the LCIO users manual
+% the file can be processed with pdflatex and latex2html(using .jpg and .pdg) 
+% and plain latex (using .eps) 
+%
+%  --- to create  an html file @ DESY (modify path accordingly for other sites) from this manual :
+% /products/latex2html/latex2html-2002-1/bin/latex2html -info 0 -no_auto_link -split 0 -no_navigation manual.tex 
+% ----- or pdf:
+% pdflatex manual.tex
+% ----- or postscript:
+% latex manual.tex ; dvips manual.dvi
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[twoside]{article}
+% --- the following allows to use either latex/latex2html or pdf latex
+% --- with the same file and have the right images included (eps or jpg/png)
+\newif\ifpdf\ifx\pdfoutput\undefined\pdffalse\else\pdfoutput=1\pdftrue\fi
+\newcommand{\pdfgraphics}{\ifpdf\DeclareGraphicsExtensions{.png,.jpg}\fi}
+%-------------------------------------------------------------------------
 \usepackage{graphicx}
 \usepackage{fancyhdr}
 \usepackage{verbatim}
+\usepackage{html}
 \pagestyle{fancy}
 \fancyhead{} % clear all fields
 \fancyhead[C]{\it {LCIO - Users manual}}
@@ -12,11 +31,8 @@
 \renewcommand{\sfdefault}{phv}
 \renewcommand{\appendixname}{Appendix}
 
-%\setlength{\textheight}{235mm}
-%\setlength{\textwidth}{145mm}
-%\setlength{\topmargin}{-20mm}
-%\setlength{\evensidemargin}{10mm}
-%\setlength{\oddsidemargin}{10mm}
+\newcommand{\Href}[1]{\htmladdnormallink{\footnotesize {#1}}{#1}}
+
 \setlength{\textheight}{235mm}
 \setlength{\textwidth}{155mm}
 \setlength{\topmargin}{-20mm}
@@ -29,6 +45,7 @@
 \bibliographystyle{apsrev}
 
 \begin{document}
+\pdfgraphics
 
 \title{LCIO [v00-08] -  Users manual}
 
@@ -49,7 +66,7 @@ development.
 This manual is intended for application developers that want to incorporate LCIO in their 
 programs. This includes e.g. simulation developers as well as  physicists that want to 
 read LCIO files for their analysis. It focuses on the practical aspects of using LCIO. A more 
-general discussion can be found in \cite{lcio_chep} and other documents referred to at the 
+general discussion can be found in \cite{lcio_chep} and other documents listed on the 
 LCIO homepage~\cite{lcio_home}.
 
 \section{Installation}
@@ -164,7 +181,7 @@ This creates the file \verb|${LCIO}/doc/doxygen_api/html/index.html|   %$
 \section{Using LCIO}
 
 \subsection{Java and C++ API} \label{sec_api}
-Detailed documentation of the API is provided both for Java and C++, e.g. on the 
+Detailed documentation of the API is provided both for Java and C++ on the 
 LCIO homepage~\cite{lcio_home} generated directly  from documentation in the source code using 
 {\em javadoc} and {\em doxygen} respectively.   
 If you are experienced in either Java or C++ you will probably 
@@ -207,11 +224,14 @@ If you want to write data with LCIO you'll either need the implementation classe
 or implement the interface from DATA.
 
 \begin{figure}
-\includegraphics[width=95mm, angle=-90]{cpp_api.eps}
+\includegraphics[width=145mm]{cpp_api}   
 \caption{Documentation of the C++ API. The class description of {\em LCObject} gives you fast access 
 to all data entities (classes). This class hierarchy also reflects the package hierarchy of LCIO.
-\label{fig_cpp_api}}
+\label{fig_cpp_api} 
+%\htmladdnormallink{(click here for a better quality image)}{../cpp_api.jpg}
+}
 \end{figure}
+
 
 \subsubsection{Exceptions} \label{exceptions}
 Both the Java and C++ versions of LCIO make use of the exception mechanism. Exceptions are 
@@ -227,27 +247,24 @@ anyhow.
 In the API you will find {\em throw} clauses/declarations at certain methods. These are meant as a hint
 to the user of what could go wrong in the method at hand - do not try to catch all exceptions with a 
 dedicated {\em try-catch} block around every function call. Most exceptions will be due to 
-{\em programming errors} and will cause an abort of the program which is usually what you want.
+{\em programming errors} and will cause an abort of the program -- when not caught by the user -- 
+which is usually what you want.\\
 There are exceptions to this rule however. In particular the \verb$DataNotAvailableException$ will be
-thrown by methods accessing event data that is not available, e.g. \verb$MCParticle::getParent()$ will 
-throw this exception when applied to a mother particle (no parent available). Clearly you want to catch 
-this exception when searching for the mother particles in the event\footnote{Or use the 
-{\tt MCParticle::getParentData()} method that returns {\tt NULL} for a mother, see  the API 
-documentation}.
-The same exception will be thrown, if you are trying to get a named collection from the event that 
-is not available. Now it depends on your application whether you want to continue or not - if the 
+thrown by methods accessing event data that is not available, e.g. if you are trying to get a named 
+collection from the event that is not available. 
+In this case it depends on your application whether you want to continue or not - if the 
 computation is vital for the rest of the program you'll probably want to abort - if the code just
 produces some check plots for a particular subdetector you might as well carry on with other 
 modules.\\
 In case an exception is thrown at run time that is not caught the program will abort and you will get 
 some printout as to what caused the exception - 
-in Java this done by the VM in C++ we print the type of the exception with some information on the 
+in Java this is done by the VM in C++ we print the type of the exception with some information on the 
 problem (usually the class and function name).
 
 \vspace{\baselineskip}
 {\it {\bf Note to C++ programmers:} We included \verb$std::exception$ in all {\em throw} clauses in 
 C++. This way we ensure a behavior similar to Java, i.e. despite a {\em throw}
-clause basically all exceptions can be thrown by the function, as all std-Exceptions 
+clause basically all exceptions can be thrown by the function, as all STL-Exceptions 
 as well as all LCIO-Exceptions inherit from the base \verb$std::exception$. So the user can decide to
 catch {\em run time} exceptions for parts of the code without causing an abort. 
 }
@@ -267,7 +284,8 @@ the wrapper function from the C++ name and vice versa.
 
 Figure~\ref{fig_datamodel} shows the data entities that are currently defined by LCIO. 
 \begin{figure}
-\includegraphics[width=150mm]{datamodel.eps}
+%\htmlimage{flip=r270}
+\includegraphics[width=150mm]{datamodel}    
 \caption{Overview of the data model defined by LCIO (all classes in namespace DATA). 
 The boxes correspond to separate
 data entities (classes) and the arrows denote relationships between these entities.
@@ -275,9 +293,12 @@ The event data is stored in 'untyped' collections of LCObject subclasses.
 Only the shown interface is used to write data, thus existing user classes can be made persistent 
 by implementing this interface.  Every get-method
 corresponds to a persistent attribute. 
-See details of the file layout in appendix~\ref{app_lcio}.\label{fig_datamodel}}
-
+See  appendix~\ref{app_lcio} for details of how the data is stored in the files.\label{fig_datamodel}
+%\htmladdnormallink{(click here for a better quality image)}{../datamodel.jpg}
+}
 \end{figure}
+
+
 Event data is stored in 'untyped' collections of LCObject subclasses. At the (full) simulation
 output level the most important entities are the two generic hit classes {\em SimTrackerHit} and 
 {\em SimCalorimeterHit}. Both classes have links to the generated particle ({\em MCParticle}) that 
@@ -416,8 +437,8 @@ public:
    MyAnalysis() ;
   ~MyAnalysis() ;
  
-  void processEvent( const LCEvent * evt )  ;
-  void processRunHeader(const LCRunHeader* run) ;
+  void processEvent( LCEvent * evt )  ;
+  void processRunHeader( LCRunHeader* run) ;
  
   void modifyEvent( LCEvent * evt ) { /* not needed */ ;}
   void modifyRunHeader(LCRunHeader* run){ /* not needed */ ;}
@@ -465,7 +486,7 @@ int main(int argc, char** argv ){
   lcReader->readStream() ;  // read the whole stream !
 
   lcReader->close() ;
-   return 0;
+  return 0;
 }
 \end{verbatim}
 
@@ -488,14 +509,14 @@ hold the relevant data as well as the type of the objects, e.g. to access the TP
 write code like the following:
 
 \begin{verbatim}
-  const LCCollection* col = evt->getCollection("TPCHits") ;
+  LCCollection* col = evt->getCollection("TPCHits") ;
 
   int nHits =  col->getNumberOfElements() ;
 
   for( int i=0 ; i< nHits ; i++ ){
 
-    const SimCalorimeterHit* hit = 
-      dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+    SimCalorimeterHit* hit = 
+      dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
 
       cout << "    hit " << i << " - energy: "  
            << hit->getEnergy() ;
@@ -521,13 +542,6 @@ the corresponding type, i.e. we need to know the type of the data. This is analo
 introduce {\em LCObject} as a common base for event data in LCIO.
 }
 
-\item{ {\bf const pointer: } most methods in the C++ DATA interface (the {\em get}-methods) 
-return a {\em const} pointer. This is to prevent from accidental modification of persistent data.
-If you are  new to C++ -- const pointers are a bit cumbersome. Basically they don't allow you to call
-any methods on the object pointed at, that are not declared const as well. \\
-As Java does not have a similar concept we will probably remove const pointers from the C++
-version in a future release.
-}
 \end {itemize}
 
 
@@ -639,7 +653,9 @@ memory management.}
  
 
 \newpage 
-\appendix {\bf \Large Appendix}
+\begin{latexonly}
+\appendix {\bf \Large Appendix}    % FIX Me need a way to have latex print 'Appendix A'
+\end{latexonly}
 \section{SIO File Format of LCIO} \label{app_lcio}
 
 The following is a detailed xml-based description of the currently used SIO files.
@@ -663,19 +679,19 @@ La Jolla, California, 24-28 Mar 2003.
 e-Print Archive: physics/0306114 / LC Note LC-TOOL-2003-053}
 \bibitem{lcio_home}
 LCIO Homepage: \\
-{\footnotesize \verb#http://www-it.desy.de/physics/projects/simsoft/lcio/index.html#}
+\Href{http://www-it.desy.de/physics/projects/simsoft/lcio/index.html}
 \bibitem{sio_doc}
 SIO documentation: \\
-{\footnotesize \verb#http://www-sldnt.slac.stanford.edu/nld/new/Docs/FileFormats/sio.pdf#}
+\Href{http://www-sldnt.slac.stanford.edu/nld/new/Docs/FileFormats/sio.pdf}
 \bibitem{ref_aid}
 AID Homepage: \\
-{\footnotesize \verb#http://java.freehep.org/aid/index.html#}
+\Href{http://java.freehep.org/aid/index.html}
 \bibitem{ref_javadoc}
 javadoc Homepage: \\
-{\footnotesize \verb#http://java.sun.com/j2se/javadoc#}
+\Href{http://java.sun.com/j2se/javadoc}
 \bibitem{ref_doxygen}
 doxygen Homepage: \\
-{\footnotesize \verb#http://www.stack.nl/~dimitri/doxygen#}
+\Href{http://www.stack.nl/\~{}dimitri/doxygen}
 \end{thebibliography}
 
 
