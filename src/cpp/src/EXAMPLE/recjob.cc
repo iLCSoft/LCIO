@@ -233,8 +233,8 @@ public:
 
 
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCWGTRELATION ) ;
-//     scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;
-//     scRel->parameters().setValue( "ToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
+    scRel->parameters().setValue( "FromType" ,  LCIO::CALORIMETERHIT ) ;
+    scRel->parameters().setValue( "ToType"   ,  LCIO::SIMCALORIMETERHIT ) ;
     
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
@@ -270,17 +270,23 @@ public:
 
     if( evt->getEventNumber() == 0 && evt->getRunNumber() == 0 ) {
 
-      std::cout << "Relation example for first event: " << std::endl ;
-      LCRelationNavigatorImpl rel( scRel ) ;  // create a navigation object from collection
-      
+
+      // create a navigation object from a collection
+      LCRelationNavigatorImpl rel( scRel ) ; 
+
+      std::cout << "Relation example for first event: " 
+		<< " [" << rel.getFromType() << " - "  << rel.getToType()  << "] " 
+		<< std::endl ;
+
       int nCalHits = calHits->getNumberOfElements() ;
       for(int j=0; j < nCalHits ; j++){
 	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
 	
-	std::cout << "   relations for object " << hex << calHit->id()  ; // << std::endl ;
+	std::cout << "   relations for object " << hex << calHit->id()  
+		  ; // << std::endl ;
 	
-	const LCObjectVec& simHits = rel.getRelatedObjects( calHit ) ;
-	const FloatVec& weights = rel.getWeights( calHit ) ;
+	const LCObjectVec& simHits = rel.getRelatedToObjects( calHit ) ;
+	const FloatVec& weights = rel.getRelatedToWeights( calHit ) ;
 
 	int nSimHits = simHits.size() ;
 	for(int k=0;k<nSimHits;k++){

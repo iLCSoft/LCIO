@@ -5,12 +5,11 @@ import hep.lcio.exceptions.* ;
 }
 
 /** Interface for a relationship navigator object that facilitates the navigation of 
- *  relationships stored in an LCCollection. Implementations will use some sort of associative 
- *  container to provide reasonably fast lookup of the relations of a given LCObject.
+ *  relationships stored in an LCCollection as LCWgtRelation objects.
  *
  * 
  * @author gaede 
- * @version $Id: LCRelationNavigator.aid,v 1.1 2004-07-13 11:54:26 gaede Exp $
+ * @version $Id: LCRelationNavigator.aid,v 1.2 2004-07-22 16:31:46 gaede Exp $
  */
 
 public interface LCRelationNavigator
@@ -24,21 +23,42 @@ public interface LCRelationNavigator
      */
     public const String& getToType() const ;
 
-    /** The objects related to this object.
-     */
-    public const LCObjectVec& getRelatedObjects( LCObject* from ) const;
-    
-    /** The weight of the given relation. 
-     */
-    public const FloatVec& getWeights( LCObject* from ) const;
 
-    /** Adds a relation.
+    /** All objects that the given from-object is related to.
+     *  LCObjects are of type getToType().
+     */
+    public const LCObjectVec& getRelatedToObjects( LCObject* from ) const;
+    
+
+    /** All from-objects related to the given object ( the  inverse relationship).
+     *  LCObjects are of type getFromType().
+     */
+    public const LCObjectVec& getRelatedFromObjects( LCObject* to ) const;
+
+
+    /** The weights of the relations returned by  a call to getRelatedToObjects(from). 
+     * @see getRelatedToObjects
+     */
+    public const FloatVec& getRelatedToWeights( LCObject* from ) const;
+
+
+    /** The weights of the relations returned by  a call to getRelatedFromObjects(to). 
+     * @see getRelatedFromObjects
+     */
+    public const FloatVec& getRelatedFromWeights( LCObject* to ) const;
+
+
+    /** Adds a relation. If there is already an existing relation between the two given objects
+     * the weight (or default weight 1.0) is added to that relationship's weight.
      */
     public void addRelation( LCObject* from, LCObject* to, float weight=1.0 );
     
-    /** Remove a given relation.
+
+    /** Remove a given relation. To reduce the weight of the relationship, call 
+     *  addRelation( from, to, weight  ) with  weight<0.
      */
     public void removeRelation( LCObject* from, LCObject* to ) ;
+
 
     /** Creates an LCCollection of LCWgtRelation objects.
      */
