@@ -33,9 +33,9 @@ namespace IMPL {
 
   int TrackImpl::getType() const { return _type.to_ulong() ; }
 
-  bool TrackImpl::testType(int bitIndex) const {
-    return _type.test( bitIndex ) ;
-  }
+//   bool TrackImpl::testType(int bitIndex) const {
+//     return _type.test( bitIndex ) ;
+//   }
 
   float TrackImpl::getD0() const { return _d0 ;}
   float TrackImpl::getPhi() const { return _phi ; }

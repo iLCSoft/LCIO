@@ -14,7 +14,7 @@ int     lctrkdelete( PTRTYPE trk ) ;
 
 int     lctrkid( PTRTYPE trk ) ;
 int     lctrkgettype( PTRTYPE trk ) ;
-int     lctrktesttype( PTRTYPE trk , int bit ) ;
+// int     lctrktesttype( PTRTYPE trk , int bit ) ;
 
 float   lctrkgetd0( PTRTYPE trk ) ;
 float   lctrkgetphi( PTRTYPE trk ) ;
@@ -64,7 +64,7 @@ FCALLSCFUN1(INT, lctrkdelete, LCTRKDELETE, lctrkdelete, CFORTRANPNTR ) ;
 
 FCALLSCFUN1(INT, lctrkid, LCTRKID, lctrkid, CFORTRANPNTR) ;
 FCALLSCFUN1(INT, lctrkgettype, LCTRKGETTYPE, lctrkgettype, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lctrktesttype, LCTRKTESTTYPE,lctrktesttype, CFORTRANPNTR, INT ) ;
+// FCALLSCFUN2(INT, lctrktesttype, LCTRKTESTTYPE,lctrktesttype, CFORTRANPNTR, INT ) ;
 FCALLSCFUN1(FLOAT, lctrkgetomega, LCTRKGETOMEGA, lctrkgetomega, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctrkgettanlambda, LCTRKGETTANLAMBDA, lctrkgettanlambda, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctrkgetphi, LCTRKGETPHI, lctrkgetphi, CFORTRANPNTR) ;

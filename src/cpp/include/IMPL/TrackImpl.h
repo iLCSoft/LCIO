@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.9 2004-07-23 09:15:05 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.10 2004-09-03 08:16:24 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -51,9 +51,9 @@ namespace IMPL {
      */
     virtual  int getType() const  ;
 
-    /** Returns true if the corresponding bit in the type word is set.
-     */
-    virtual bool testType(int bitIndex) const ;
+//     /** Returns true if the corresponding bit in the type word is set.
+//      */
+//     virtual bool testType(int bitIndex) const ;
 
     /** Impact paramter of the track
      *  in (r-phi).

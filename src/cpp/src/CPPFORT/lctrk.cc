@@ -35,10 +35,10 @@ int lctrkgettype( PTRTYPE track )  {
   return trk->getType() ;
 }
 
-int lctrktesttype( PTRTYPE track , int bit )  {
-  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  return trk->testType( bit ) ;
-}
+// int lctrktesttype( PTRTYPE track , int bit )  {
+//   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//   return trk->testType( bit ) ;
+// }
 
 // float lctrkgetmomentum( PTRTYPE track )  {
 //   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
