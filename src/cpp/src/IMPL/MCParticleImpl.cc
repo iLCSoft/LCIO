@@ -131,9 +131,9 @@ namespace IMPL {
     
     if( ! _simstatus.test( BITEndpoint  ) ){
       
-      if( getNumberOfDaughters() == 0 ) return  _endpoint ;
+      if( _daughters.size() == 0 ) return  _endpoint ;
       
-      for(int i=0;i<getNumberOfDaughters();i++)
+      for(unsigned int i=0;i<_daughters.size();i++)
       {
           if(!_daughters[i]->vertexIsNotEndpointOfParent())
           return _daughters[i]->getVertex();
