@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.12 2004-04-15 14:52:55 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.13 2004-09-13 08:55:28 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -83,7 +83,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          }
 
          boolean hasPDG = (flags & (1 << LCIO.CHBIT_PDG)) != 0;
-         int n = hit.getNMCParticles();
+         int n = hit.getNMCContributions();
          out.writeInt(n);
          for (int i = 0; i < n; i++)
          {

@@ -7,7 +7,7 @@ import hep.lcio.event.SimCalorimeterHit;
 /**
  * A default implementation of SimCalorimeterHit
  * @author Tony Johnson
- * @version $Id: ISimCalorimeterHit.java,v 1.7 2004-04-08 09:58:00 gaede Exp $
+ * @version $Id: ISimCalorimeterHit.java,v 1.8 2004-09-13 08:55:27 gaede Exp $
  */
 public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 {
@@ -61,7 +61,7 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 
    public int getNMCParticles()
    {
-      return nContributions;
+      return getNMCContributions() ;
    }
 
    public int getPDGCont(int i)
@@ -129,4 +129,9 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
       }
       return i;
    }
+
+	public int getNMCContributions() {
+		return nContributions;
+	}
+
 }
