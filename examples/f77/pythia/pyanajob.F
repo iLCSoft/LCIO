@@ -18,7 +18,7 @@ c**********************************************************
       integer status 
       integer irun, nrun, nrunmax,
      &     ievt, ievent, itim
-      integer  nmcpc, hepevtst, ndaughters
+      integer  nmcpc, genst, simst, ndaughters
       character*100 coltypename
 
 c$$$      PTRTYPE lccreatereader, reader
@@ -35,7 +35,7 @@ c$$$      integer lcgetnumberofelements, lcgetsimtrackerhit
 c$$$      integer lcgethepevt
 c$$$      integer lcdumpevent, lcdumpeventdetailed
 c$$$      integer lcgetsimcalohitnmcp, nmcpc, lcgetsimcalohitcmcp
-c$$$      integer lcgetmcparticlecont, hepevtst, ndaughters
+c$$$      integer lcgetmcparticlecont, genst, simst, ndaughters
 
       integer          i, j, k, length, lenocc
       integer          ncols, ncolvec
@@ -110,11 +110,11 @@ C ***    Check on collections  for first event of each run
                  do  j  = 1,ncolvec
                     mcparticlev(j) = lccolgetelementat ( col, j )
                     status  = lcgetmcparticledata ( mcparticlev(j),
-     &                pdg , hepevtst , dposv, momv , mass , charge, 
+     &                pdg , genst , simst , dposv , momv , mass, charge,
      &                ndaughters)
-                    print '(z10,3h - ,2i6,3d12.5,5e10.3,i3)' ,
+                    print '(z10,3h - ,3i6,3d12.5,5e10.3,i3)' ,
      &                mcparticlev(j) ,
-     &                pdg , hepevtst , dposv , momv , mass , charge, 
+     &                pdg , genst , simst, dposv , momv , mass , charge,
      &                ndaughters
                  enddo
                  print '(a,a)' , 'MCParticle pointers summary: '
@@ -233,7 +233,7 @@ c     ---- end run loop ------
 
       IMPLICIT NONE
 
-#include "hepevt.inc" 
+#include "hepevt0.inc"
 #include "hepevt1.inc"
 
       INTEGER LUN,I,J,K,L,M
