@@ -22,8 +22,8 @@ using namespace std ;
 using namespace lcio ;
 
 
-static  char* FILEN = "simjob.sio" ;
-static char* OUTFILEN = "recjob.sio" ;
+static  char* FILEN = "simjob.slcio" ;
+static char* OUTFILEN = "recjob.slcio" ;
 static const int NHITS = 50 ;  // calorimeter hits per event
 
 

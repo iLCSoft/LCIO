@@ -9,7 +9,7 @@ import hep.lcio.io.LCWriter;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFactory.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
+ * @version $Id: SIOFactory.java,v 1.4 2003-05-12 16:37:31 gaede Exp $
  */
 public class SIOFactory extends LCFactory
 {
@@ -20,7 +20,7 @@ public class SIOFactory extends LCFactory
    final static String eventHeaderRecordName = "LCEventHeader";
    final static String eventHeaderBlockName  = "EventHeader";
 
-    final static boolean  compressionMode = false ;
+    final static boolean  compressionMode = true ;
 
    public LCReader createLCReader()
    {

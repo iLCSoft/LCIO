@@ -5,7 +5,7 @@
 #include "EVENT/LCRunHeader.h" 
 //#include "CPPFORT/lcioc2f.h"
 
-static const char* FILEN = "recjob.sio" ; // default file name 
+static const char* FILEN = "recjob.slcio" ; // default file name 
 
 
 using namespace std ;

@@ -26,7 +26,7 @@ static const int NEVENT = 10 ; // events
 static const int NMCPART = 10 ;  // mc particles per event
 static const int NHITS = 50 ;  // calorimeter hits per event
 
-static const string FILEN = "simjob.sio" ;
+static string FILEN = "simjob.slcio" ;
 
 
 /** Simple test program to demonstrate writing of data with lcio.
@@ -37,6 +37,8 @@ int main(int argc, char** argv ){
   
   // create sio writer
   LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
+
+  if( argc > 1 ) { FILEN = argv[1] ; }
 
   int status ;
   if( (status = lcWrt->open( FILEN ))  != LCIO::SUCCESS ) {

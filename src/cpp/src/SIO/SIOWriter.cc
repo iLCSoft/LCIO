@@ -51,11 +51,29 @@ namespace SIO {
   int SIOWriter::open(const std::string& filename){
 
     unsigned int status ;
-    std::string stream_name( filename.data() ,  filename.find(".") ) ;
+    
+    // make sure filename has the proper extension (.slcio) 
+    string sioFilename ;  
+    if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
+	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
+      sioFilename = filename + LCSIO::FILE_EXTENSION ;
+    else 
+      sioFilename = filename ;
 
- 
-    _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
-    status  = _stream->open( filename.c_str() , SIO_MODE_WRITE_NEW ) ; 
+
+    //    std::string stream_name( filename.data() ,  filename.find(".") ) ;
+    //_stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
+    
+    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
+    
+    if( _stream == 0 ) return LCIO::ERROR ;
+    //      throw IOException( std::string( "[SIOReader::open()] Bad stream name: " 
+    //				      + std::string(stream_name)  )) ;
+    delete stream_name ;
+    
+
+    status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_NEW ) ; 
 
     if( !(status &1) ) return LCIO::ERROR ;
   
@@ -68,9 +86,10 @@ namespace SIO {
       _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
 
     
-    _hdrRecord->setCompress( false ) ;
-    _evtRecord->setCompress( false ) ;
-    _runRecord->setCompress( false ) ;
+
+    _hdrRecord->setCompress( LCSIO::COMPRESSION ) ;
+    _evtRecord->setCompress( LCSIO::COMPRESSION ) ;
+    _runRecord->setCompress( LCSIO::COMPRESSION ) ;
     
     return LCIO::SUCCESS ;
   }

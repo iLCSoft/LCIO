@@ -42,7 +42,7 @@ namespace SIO {
   
 
 
-  //#define DEBUG 1
+//#define DEBUG 1
 
   SIOReader::SIOReader() {
   
@@ -77,14 +77,31 @@ namespace SIO {
 
   void SIOReader::open(const std::string& filename) throw( IOException )  {
 
-    std::string stream_name( filename.data() ,  filename.find(".") ) ;
-    _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
+
+    // make sure filename has the proper extension (.slcio) 
+    string sioFilename ;  
+    if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
+	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
+      sioFilename = filename + LCSIO::FILE_EXTENSION ;
+    else 
+      sioFilename = filename ;
     
-    int status = _stream->open( filename.c_str() , SIO_MODE_READ ) ; 
+    //std::string stream_name( sioFilename.data() ,  sioFilename.rfind(LCSIO::FILE_EXTENSION) ) ;
+    //_stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
+    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
+
+    if( _stream == 0 )
+      throw IOException( std::string( "[SIOReader::open()] Bad stream name: " 
+    				      + std::string(stream_name)  )) ;
+    delete stream_name ;
+
+
+    int status = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ; 
     
     if( status != SIO_STREAM_SUCCESS ) 
-      throw IOException( std::string( "[SIOReader::open()] Couldn't open stream" 
-				      + filename ) ) ;
+      throw IOException( std::string( "[SIOReader::open()] Can't open stream: " 
+				      + sioFilename ) ) ;
 
 
     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
@@ -100,6 +117,7 @@ namespace SIO {
     SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
+
 
 
   }
@@ -293,8 +311,8 @@ namespace SIO {
   
     int status  =  SIO_streamManager::remove( _stream ) ;
     
-    if(! (status &1) ) return LCIO::ERROR ;
-
+    if(! (status &1) )  return LCIO::ERROR ;
+    //throw IOException( std::string("couldn't remove stream") ) ;
     return LCIO::SUCCESS ; 
   }
 

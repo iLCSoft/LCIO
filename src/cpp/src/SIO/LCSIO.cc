@@ -15,6 +15,7 @@ namespace SIO {
   const char* LCSIO::HEADERRECORDNAME = "LCEventHeader"  ;
   const char* LCSIO::HEADERBLOCKNAME="EventHeader" ;
 
+  const char* LCSIO::FILE_EXTENSION=".slcio" ;
 
 
   unsigned int LCSIO::read( SIO_stream* stream ,char** c, int versionID){
@@ -122,6 +123,42 @@ unsigned int LCSIO::write(SIO_stream* stream , const std::string& s){
 
   return status ;
 }
+
+    
+
+
+const char* LCSIO::getValidSIOName(const std::string& aName ){
+
+  const char* name  = aName.c_str()  ;
+
+  char* newName =  new char[  aName.length() + 1 ];
+  const char * returnStr = newName ;
+
+  if( *name == '\\' || *name == '/' || *name=='.' )
+    *newName++ = '_' ;
+  // if first char is not alpha or '_' replace it with an 'A'
+  else if ( (*name < 0 ) || ( !isalpha( (int)*name ) && *name != '_' ) )
+    *newName++ = 'A' ;
+  else 
+    *newName++ = *name ;
+  
+
+  for( name += 1; *name != '\0'; name++ ){
+    
+    if( *name == '\\' || *name == '/' || *name=='.' )
+      *newName++ = '_' ;
+
+    else if( (*name>=0) && ( isalnum( (int)*name ) || *name == '_' ) )
+      *newName++ = *name ;
+    else
+    ; // ignore
+  } 
+  
+  *newName = '\0' ;
+
+  return returnStr ;
+}
+
 
 }; // namespace 
  

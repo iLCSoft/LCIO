@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.5 2003-03-17 12:54:57 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.6 2003-05-12 16:37:31 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -137,7 +137,7 @@
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
-   <target name="cpp.lcio" depends="aid.generate, cpp.sio">
+   <target name="cpp.lcio" depends="cpp.sio">
      <exec dir="." executable="gmake" os="Linux">
        <arg line="-C ./src/cpp all"/>
      </exec>

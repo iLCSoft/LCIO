@@ -13,7 +13,7 @@ export LCIOBASE
 LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include
 export LCIOINCLUDE
 
-LCIOCPPFLAGS = -g -D NO_DEBUG -Wall -ansi 
+LCIOCPPFLAGS = -g -Wall -ansi 
 #-pedantic
 export LCIOCPPFLAGS
 

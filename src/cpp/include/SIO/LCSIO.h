@@ -34,7 +34,11 @@ namespace SIO {
     static const char* EVENTBLOCKNAME;
     static const char* HEADERRECORDNAME ; 
     static const char* HEADERBLOCKNAME;
+    static const char* FILE_EXTENSION ;
 
+    /** the compression mode for SIO
+     */
+    static const bool COMPRESSION = false ;
 
     /** Read a string from the stream into a dummy buffer. 
      * Warning the same buffer is used for each call.
@@ -71,6 +75,13 @@ namespace SIO {
     static unsigned int write(SIO_stream* stream , const std::string& s) ;
   
   
+    /** Creates a valid SIO name (basically equivalent to a valid C++ name)
+     * by replacing every [.], [\] and [/] with underscores and removing all
+     * nonalphanumeric characters and adding an 'A' to the beginning, if necessary.
+     * The user is responsible for deleting the allocated memory.
+     */
+    static const char* getValidSIOName(const std::string& aName ) ;
+
   private:
 
     static char* dummy  ;
