@@ -108,13 +108,15 @@ namespace SIO {
     //else 
     sioFilename = filename ;
     
-    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
-    _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
+    //    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    std::string stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    _stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
 
     if( _stream == 0 )
       throw IOException( std::string( "[SIOReader::open()] Bad stream name: " 
-    				      + std::string(stream_name)  )) ;
-    delete stream_name ;
+    				      + stream_name  )) ;
+    //    				      + std::string(stream_name)  )) ;
+    //    delete[] stream_name ;
 
 
     int status = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ; 

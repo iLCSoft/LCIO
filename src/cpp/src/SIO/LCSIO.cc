@@ -136,16 +136,18 @@ unsigned int LCSIO::write(SIO_stream* stream , const std::string& s){
   if( !( status & 1 ) ) return status ;
   return  SIO_functions::data( stream , const_cast<char*>( s.c_str() ), strLen );
 }
+  
+  
 
-    
-
-
-const char* LCSIO::getValidSIOName(const std::string& aName ){
+  
+  //const char* LCSIO::getValidSIOName(const std::string& aName ){
+std::string LCSIO::getValidSIOName(const std::string& aName ) {
 
   const char* name  = aName.c_str()  ;
 
   char* newName =  new char[  aName.length() + 1 ];
-  const char * returnStr = newName ;
+  const char * returnStrP = newName ;
+  std::string returnStr ;
 
   if( *name == '\\' || *name == '/' || *name=='.' )
     *newName++ = '_' ;
@@ -168,6 +170,9 @@ const char* LCSIO::getValidSIOName(const std::string& aName ){
   } 
   
   *newName = '\0' ;
+
+  returnStr = returnStrP ;
+  delete[] returnStrP ;
 
   return returnStr ;
 }

@@ -80,9 +80,9 @@ namespace SIO {
     /** Creates a valid SIO name (basically equivalent to a valid C++ name)
      * by replacing every [.], [\] and [/] with underscores and removing all
      * nonalphanumeric characters and adding an 'A' to the beginning, if necessary.
-     * The user is responsible for deleting the allocated memory.
      */
-    static const char* getValidSIOName(const std::string& aName ) ;
+    static std::string getValidSIOName(const std::string& aName ) ;
+    //    static const char* getValidSIOName(const std::string& aName ) ;
 
   private:
 

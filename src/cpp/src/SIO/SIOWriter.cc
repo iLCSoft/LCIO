@@ -91,13 +91,15 @@ namespace SIO {
     getSIOFileName( filename, sioFilename ) ;
 
     // SIO has some rules about valid names for streams, records, etc ...
-    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
-    _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
+    //    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    std::string stream_name = LCSIO::getValidSIOName(sioFilename) ;
+    _stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
     
     if( _stream == 0 )
       throw IOException( std::string( "[SIOWriter::open()] Bad or duplicate stream name: " 
-				      + std::string(stream_name)  )) ;
-    delete stream_name ;
+ 				      + stream_name  )) ;
+// 				      + std::string(stream_name)  )) ;
+//     delete[] stream_name ;
     
 
     unsigned int  status = 0  ;
