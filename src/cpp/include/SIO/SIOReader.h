@@ -16,6 +16,7 @@
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
 
+#include "EVENT/LCExceptions.h"
 
 
 class SIO_record ;
@@ -37,10 +38,10 @@ namespace SIO {
     // Destructor
     virtual ~SIOReader() ;
     
-    /** Opens the file filename for writing and returns LCIO::SUCCESS if succeeded, 
-     *  otherwise LCIO::ERROR is returned. 
+    /** Opens a file for reading (read-only).
+     * @throws IOException
      */
-    virtual int open(const std::string& filename) ;
+    virtual void open(const std::string & filename) throw (IO::IOException) ;
     
     /** Reads the next run header from the file. Returns null if no more 
      * run headers or error occured.

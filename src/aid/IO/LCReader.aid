@@ -8,28 +8,35 @@ package hep.lcio.io;
  */
 public interface LCReader {
 
-    /** Opens a file for reading and returns LCIO::SUCCESS if no error occured.
+    /** Opens a file for reading (read-only).
+     * @throws IOException
      */
-    public int open(const String& filename) ;
-
-    /** Reads the next run header from the file. Returns null if no more 
+    @ifdef cpp 
+	public void open(const String& filename) throws IOException  ;
+    @else
+	// exceptions not yet in Java ...
+	public int open(const String& filename) ;
+    @endif
+	/** Reads the next run header from the file. Returns null if no more 
      * run headers or error occured.
      */
     public LCRunHeader* readNextRunHeader() ;
-
+    
     /** Reads the next event from the file. Returns null if no more 
      * events or error occured.
      */
     public LCEvent* readNextEvent() ;
-
+    
     /** Same as above allowing to set the access mode (LCIO::READ_ONLY is default) 
      */
     public LCEvent* readNextEvent(int accessMode) ;
 
-    /** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
+    /** Closes the output file/stream etc.
+     * @throws IOException
      */
+    // public void close() throws IOException ;
     public int close() ;
-	
+    
     /** Registers a listener for reading LCEvents from a stream.
      */ 
     void registerLCEventListener(LCEventListener* ls ) ;
@@ -48,8 +55,18 @@ public interface LCReader {
     
     /** Reads the input stream and notifies registered 
      * listeners according to the object type 
-     * found in the stream. Returns LCIO::SUCCESS and LCIO::ERROR respectively.
+     * found in the stream. 
+     * @throws IOException
      */
+    //public void readStream() throws IOException ;
     public int readStream() ;
+
+    /** Reads maxRecord from the input stream and notifies registered 
+     * listeners according to the object type found in the stream. 
+     * Throws EndOfDataException if less than maxRecord records are found in the stream. 
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    //    public void readStream(int maxRecord) throws IOException, EndOfDataException ;
 
 }

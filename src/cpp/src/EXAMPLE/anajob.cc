@@ -29,10 +29,18 @@ int main(int argc, char** argv ){
   //LCReader*  lcReader = reinterpret_cast<LCReader*>( lfactCreateLCReader() ) ;
  
   // read all run headers first :
-  if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
-    cout << " can't open file: " << FILEN     << endl ;
+  //  if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
+  //  cout << " can't open file: " << FILEN     << endl ;
+  //  exit(1) ;
+  //} 
+  try{
+
+    lcReader->open( FILEN ) ;
+
+  } catch( Exception& e) {
+    cout << e.what() << endl ;
     exit(1) ;
-  } 
+  }
   cout << " opened " << FILEN << " for reading " << endl ; 
   
   LCRunHeader *runHdr ;
@@ -44,10 +52,28 @@ int main(int argc, char** argv ){
   cout << endl ;
   // close and reopen the file
   lcReader->close() ;
-  if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
-    cout << " can't open file: " << FILEN     << endl ;
+
+//   if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
+//     cout << " can't open file: " << FILEN     << endl ;
+//     exit(1) ;
+//   } 
+
+  try{   lcReader->open( FILEN ) ; } 
+
+  catch( IOException& ioe) { 
+    cout << ioe.what() << endl ; 
     exit(1) ;
-  } 
+  }
+  catch( Exception& e) { 
+    cout << e.what() << endl ; 
+    exit(1) ;
+  }
+  catch( exception& e1) { 
+    cout << e1.what() << endl ; 
+    exit(1) ;
+  }
+
+
   cout << " reopened " << FILEN << " for reading " << endl ; 
 
   LCEvent* evt ;

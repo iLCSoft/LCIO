@@ -6,6 +6,7 @@
 #include "IO/LCRunListener.h"
 
 #include "EVENT/LCIO.h"
+#include "EVENT/LCExceptions.h" 
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCCollectionVec.h"
@@ -45,10 +46,14 @@ public:
     
     // open outputfile
     lcWrt = LCFactory::getInstance()->createLCWriter() ;
-    if( lcWrt->open( OUTFILEN ) != LCIO::SUCCESS ) {
-      cout << " can't open file: " <<   OUTFILEN  << endl ;
+
+    try{ lcWrt->open( OUTFILEN ) ; } 
+    
+    catch(IOException& e){
+      cout << "[RunEventProcessor()] Can't open file for writing -  " 
+	   << e.what()  << endl ;
       exit(1) ;
-    } 
+    }
     
   }
   
@@ -139,29 +144,39 @@ public:
 
 int main(int argc, char** argv ){
   
-  srand(1234) ;
-
-  // create reader and writer for input and output streams 
-  LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-
-  if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
-    cout << " can't open file: " << FILEN     << endl ;
-    exit(1) ;
-  } 
-
-  // create a new RunEventProcessor, register it with the reader
-  // and read and proccess the whole stream 
-  {
-    RunEventProcessor evtProc ;   // see definition below ...
+  try{ // a large try block for debugging ....
+    srand(1234) ;
     
-    lcReader->registerLCRunListener( &evtProc ) ; 
-    lcReader->registerLCEventListener( &evtProc ) ; 
+    // create reader and writer for input and output streams 
+    LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     
-    lcReader->readStream() ;
-  } 
+    
+    try{  lcReader->open( FILEN ) ; } 
+    
+    catch( IOException& e){
+      cout << "Can't open file : " << e.what()  << endl ;
+      exit(1) ;
+    }
+    
+    // create a new RunEventProcessor, register it with the reader
+    // and read and proccess the whole stream 
+    {
+      RunEventProcessor evtProc ;
+      
+      lcReader->registerLCRunListener( &evtProc ) ; 
+      lcReader->registerLCEventListener( &evtProc ) ; 
+      
+      lcReader->readStream() ;
+    } 
+    
+    lcReader->close() ;
 
-  lcReader->close() ;
-  
+  }
+
+  catch(exception& ex){
+    cout << "something went wrong:  " << ex.what() << endl ; 
+  }
+
   return 0 ;
   
 }

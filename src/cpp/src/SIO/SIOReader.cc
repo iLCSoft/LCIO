@@ -75,14 +75,17 @@ namespace SIO {
 
 
 
-  int SIOReader::open(const std::string& filename){
-  
+  void SIOReader::open(const std::string& filename) throw( IOException )  {
 
     std::string stream_name( filename.data() ,  filename.find(".") ) ;
     _stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
-
+    
     int status = _stream->open( filename.c_str() , SIO_MODE_READ ) ; 
-    if( status != SIO_STREAM_SUCCESS ) return LCIO::ERROR ;
+    
+    if( status != SIO_STREAM_SUCCESS ) 
+      throw IOException( std::string( "[SIOReader::open()] Couldn't open stream" 
+				      + filename ) ) ;
+
 
     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
       _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
@@ -97,9 +100,7 @@ namespace SIO {
     SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ) ;
     SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
-    
-    
-    return LCIO::SUCCESS ; 
+
 
   }
 
@@ -171,9 +172,9 @@ namespace SIO {
     for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       
       // remove any old handler of the same name  
-      // these handlers are static - so if we write at the same tim (e.g. in a recojob)
-      // we remove the hanlders neede there ....
-      // this needs more thought 
+      // these handlers are static - so if we write at the same time (e.g. in a recojob)
+      // we remove the hanlders needed there ....
+      // this needs more thought ...
       //SIO_blockManager::remove( name->c_str()  ) ;
 
       const LCCollection* col = (*_evtP)->getCollection( *name ) ;
@@ -222,7 +223,7 @@ namespace SIO {
     }
 
 
-//     if( _stream->getState()== SIO_STATE_OPEN ){
+
 //       _hdrRecord->setUnpack( true ) ;
 //       // create new event with pointer at the known address **_evtP
 //       // delete the old event first
