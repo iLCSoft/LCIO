@@ -2,6 +2,15 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+
+ - added LCIODEBUG environment variable to control compilation
+
+ - added support for multiple read/and write streams and multiple events in C++
+
+ - bug fixes:
+     + dump only five elements of LCInt/Float/StringVecs in LCTOOLS
+     + don't allow to add NULL collections to the event
+
 ======================
   v01-03-01
 =======================

@@ -3,6 +3,8 @@
 #include "EVENT/LCIO.h"
 #include <iostream>
 
+// #include "UTIL/LCTOOLS.h"
+
 using namespace EVENT ;
 
 namespace IMPL {
@@ -53,6 +55,10 @@ LCCollectionVec::~LCCollectionVec() {
 
   // delete all elements
   LCObjectVec::const_iterator iter = begin() ;
+//   std::cout << "deleting collection " 
+// 	    << std::endl ;
+//   UTIL::LCTOOLS::printParameters( parameters() )  ;
+
   while( iter != end() ){
     delete *iter++ ;
   }

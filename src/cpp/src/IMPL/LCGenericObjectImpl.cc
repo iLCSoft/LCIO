@@ -16,8 +16,9 @@ namespace IMPL {
     
   }
 
+
   LCGenericObjectImpl::LCGenericObjectImpl(int nInt, int nFloat, int nDouble):
-  _isFixedSize( true ) {
+    _isFixedSize( true ) {  // FIXME - fixed size is a collection property !!!
     _intVec.resize( nInt ) ;
     _floatVec.resize( nFloat ) ;
     _doubleVec.resize( nDouble ) ;
