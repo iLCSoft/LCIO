@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <set>
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
 // #include "EVENT/LCRelation.h"
@@ -12,11 +13,12 @@
 #include "LCParametersImpl.h"
 
 namespace IMPL{
-
+  
   //class  EVENT::LCCollection ;
- 
+  
   typedef std::map<std::string,EVENT::LCCollection*> LCCollectionMap ; 
-//   typedef std::map<std::string,EVENT::LCRelation*> LCRelationMap ; 
+  typedef std::set<EVENT::LCCollection*> LCCollectionSet ;
+  //   typedef std::map<std::string,EVENT::LCRelation*> LCRelationMap ; 
   
   /**Implementation of the main event class. This is used by  
    * LCIO for reading events from file.
@@ -26,7 +28,7 @@ namespace IMPL{
    * @see LCEvent
    * @see LCCollection
    */
-class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
+  class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
   public: 
     LCEventImpl() ;
@@ -59,20 +61,22 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
      */
     virtual const std::vector<std::string>  * getCollectionNames() const;
     
-    /** Returns the collection for the given name.g
-     * Same as getCollection() except that no cast to (LCCollection) and check for 
-     * NULL pointer/reference is needed.  
+    /** Returns the collection for the given name.
      *
-     * @throws NotAvailableException
+     * @throws DataNotAvailableException
      */
-    EVENT::LCCollection * getCollection(const std::string & name) const 
-      throw (EVENT::DataNotAvailableException, std::exception) ;
+    virtual EVENT::LCCollection * getCollection(const std::string & name) const 
+     throw (EVENT::DataNotAvailableException, std::exception) ;
 
-//     /** Returns the collection for the given name - null if it doesn't exist.
-//      *  Returns the identical object as getCollection()  except for the type.
-//      */ 
-//     EVENT::LCCollection * getCollection(const std::string & name) const ;
-
+    /** Returns the collection for the given name and transfers the ownership of the collection
+     *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
+     *  deleted. The collection is still in the event after the call returns.<br>
+     *  This is usefull when you want to keep the collection for the next events.<br>
+     *  Use with care!
+     * @throws DataNotAvailableException
+     */
+    virtual EVENT::LCCollection * takeCollection(const std::string & name) const 
+      throw (EVENT::DataNotAvailableException, std::exception ) ;
 
     /** Adds a collection with the given name. Throws an exception if the name already
      * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
@@ -157,13 +161,13 @@ class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     // map has to be defined mutable in order to use _map[]  for const methods ...
     mutable LCCollectionMap _colMap ;
     mutable std::vector<std::string> _colNames ;
-
-//     mutable LCRelationMap _relMap ;
-//     mutable std::vector<std::string> _relNames ;
-
+    
     LCParametersImpl _params ;
     
+    // set of collections that are not owned by the event anymore
+    mutable LCCollectionSet _notOwned ;
     
+
   }; // class
 
 }; // namespace IMPL

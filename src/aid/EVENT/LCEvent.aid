@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version $Id: LCEvent.aid,v 1.9 2005-02-03 14:10:59 gaede Exp $
+ * @version $Id: LCEvent.aid,v 1.10 2005-02-03 16:20:15 gaede Exp $
  * @see LCCollection
  */
 
@@ -43,6 +43,16 @@ public interface LCEvent {
      */
      public LCCollection* getCollection(const String& name) const throws DataNotAvailableException ;
 
+@ifdef cpp
+    /** Returns the collection for the given name and transfers the ownership of the collection
+     *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
+     *  deleted. The collection is still in the event after the call returns.<br>
+     *  This is usefull when you want to keep the collection for the next events.<br>
+     *  Use with care!
+     * @throws DataNotAvailableException
+     */
+     public LCCollection* takeCollection(const String& name) const throws DataNotAvailableException ;
+@endif
 
     /** Adds a collection with the given name. Throws an exception if the name already
      * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
