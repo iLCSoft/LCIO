@@ -34,7 +34,7 @@ int     lctrkgetsubdetectorhitnumbers( PTRTYPE trk, int* intv, int* nintv) ;
 PTRTYPE lctrkgettracks( PTRTYPE trk ) ;
 PTRTYPE lctrkgettrackerhits( PTRTYPE trk ) ;
 
-int     lctrksettypebit( PTRTYPE trk, int index ) ;
+int     lctrksettypebit( PTRTYPE trk, int index, int val ) ;
 int     lctrksetomega( PTRTYPE trk, float omega ) ;
 int     lctrksettanlambda( PTRTYPE trk, float tanlambda ) ;
 int     lctrksetphi( PTRTYPE trk, float phi ) ;
@@ -83,7 +83,7 @@ FCALLSCFUN1(CFORTRANPNTR, lctrkgettracks,  LCTRKGETTRACKS, lctrkgettracks, CFORT
 FCALLSCFUN1(CFORTRANPNTR, lctrkgettrackerhits,  LCTRKGETTRACKERHITS, lctrkgettrackerhits, CFORTRANPNTR) ;
 
 
-FCALLSCFUN2(INT, lctrksettypebit, LCTRKSETTYPEBIT, lctrksettypebit, CFORTRANPNTR, INT) ;
+FCALLSCFUN3(INT, lctrksettypebit, LCTRKSETTYPEBIT, lctrksettypebit, CFORTRANPNTR, INT, INT) ;
 FCALLSCFUN2(INT, lctrksetomega, LCTRKSETOMEGA, lctrksetomega, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lctrksettanlambda, LCTRKSETTANLAMBDA, lctrksettanlambda, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lctrksetphi, LCTRKSETPHI, lctrksetphi, CFORTRANPNTR, FLOAT) ;

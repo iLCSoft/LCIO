@@ -121,9 +121,9 @@ namespace IMPL{
     _weights.push_back( contribution ) ;
   }
   
-  void  ClusterImpl::setTypeBit( int  index){  
+  void  ClusterImpl::setTypeBit( int  index, bool val){  
     checkAccess("ClusterImpl::setTypeBit") ;
-    _type.set( index )  ;
+    _type.set( index, val  )  ;
   }
 
   EVENT::FloatVec& ClusterImpl::subdetectorEnergies(){

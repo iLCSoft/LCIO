@@ -224,7 +224,7 @@ c---- read file names from command line arguments
       ntracks  = 10
       do  i = 1, ntracks
         trkp    = lctrkcreate ()
-        status  = lctrksettypebit ( trkp, 7 )
+        status  = lctrksettypebit ( trkp, 7, 1 )
         status  = lctrksetomega (  trkp, i*1.1 )
         status  = lctrksettanlambda ( trkp, real (i*m_pi/10.) )
         status  = lctrksetphi ( trkp, real (i*m_pi/5.) )
@@ -360,9 +360,9 @@ ccFG      status   = lcevtaddrelation ( eventi, scRelp, colname3 )
 ***   set type bits to "Cluster::COMBINED << 16 | Cluster::CHARGED"
 ccc          type    = ior (ishft ( COMBINED, 16), CHARGED ) ! obsolete
 ccc          status  = lcclusettype ( clusp, type )          ! obsolete
-          status  = lcclusettypebit ( clusp, 1 )
-          status  = lcclusettypebit ( clusp, 7 )
-          status  = lcclusettypebit ( clusp, 11 )
+          status  = lcclusettypebit ( clusp, 1 , 1 )
+          status  = lcclusettypebit ( clusp, 7 , 1 )
+          status  = lcclusettypebit ( clusp, 11, 1 )
 
           status  = lcclusetenergy ( clusp, i*1.1)
           posv(1) = 12.

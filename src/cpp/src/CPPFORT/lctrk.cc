@@ -154,9 +154,9 @@ PTRTYPE lctrkgettrackerhits( PTRTYPE track ) {
 //   return LCIO::SUCCESS ;
 // }
 
-int lctrksettypebit( PTRTYPE track, int index ) {
+int lctrksettypebit( PTRTYPE track, int index , int val) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  trk->setTypeBit( index ) ;
+  trk->setTypeBit( index , val ) ;
   return LCIO::SUCCESS ;
 }
 

@@ -144,10 +144,15 @@ public class ITrack extends ILCObject implements Track
       checkAccess();
       this.type = type;
    }
+
    public void setTypeBit(int bit)
    {
-      checkAccess();
-      bitSet(type,bit,true);
+	 setTypeBit(bit,true) ;
+   }
+   public void setTypeBit(int bit, boolean val)
+   {
+	  checkAccess();
+	  bitSet(type,bit,val);
    }
    
    public void setZ0(float z0)

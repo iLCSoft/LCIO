@@ -29,7 +29,7 @@ PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
 int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
 PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
 
-int     lcclusettypebit( PTRTYPE clu, int bit ) ;
+int     lcclusettypebit( PTRTYPE clu, int index, int val ) ;
 int     lcclusetenergy( PTRTYPE clu, float energy ) ;
 int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
 int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
@@ -69,8 +69,7 @@ FCALLSCFUN1(CFORTRANPNTR, lcclugetcalorimeterhits, LCCLUGETCALORIMETERHITS, lccl
 FCALLSCFUN1(CFORTRANPNTR, lcclugetsubdetectorenergies, LCCLUGETSUBDETECTORENERGIES, lcclugetsubdetectorenergies, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lcclugethitcontributions, LCCLUGETHITCONTRIBUTIONS, lcclugethitcontributions, CFORTRANPNTR, FLOATV, INTV) ;
 
-  //FCALLSCFUN2(INT, lcclusettype, LCCLUSETTYPE, lcclusettype, CFORTRANPNTR, INT) ;
-FCALLSCFUN2(INT, lcclusettypebit, LCCLUSETTYPEBIT, lcclusettypebit, CFORTRANPNTR, INT) ;
+FCALLSCFUN3(INT, lcclusettypebit, LCCLUSETTYPEBIT, lcclusettypebit, CFORTRANPNTR, INT, INT) ;
 FCALLSCFUN2(INT, lcclusetenergy, LCCLUSETENERGY, lcclusetenergy, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetposition, LCCLUSETPOSITION, lcclusetposition, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN2(INT, lcclusetpositionerror, LCCLUSETPOSITIONERROR, lcclusetpositionerror, CFORTRANPNTR, FLOATV) ;

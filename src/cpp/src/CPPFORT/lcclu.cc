@@ -122,9 +122,9 @@ int lcclugethitcontributions( PTRTYPE cluster, float* weights, int* nweights ) {
 //   clu->setType( type ) ;
 //   return LCIO::SUCCESS ;
 // }
-int lcclusettypebit( PTRTYPE cluster, int bit ) {
+int lcclusettypebit( PTRTYPE cluster, int bit , int val) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setTypeBit( bit ) ;
+  clu->setTypeBit( bit , val ) ;
   return LCIO::SUCCESS ;
 }
 

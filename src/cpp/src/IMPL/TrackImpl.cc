@@ -72,9 +72,9 @@ namespace IMPL {
     return _tracks ;
   } 
   
-  void  TrackImpl::setTypeBit( int  index){  
+  void  TrackImpl::setTypeBit( int  index, bool val){  
     checkAccess("TrackImpl::setTypeBit") ;
-    _type.set( index )  ;
+    _type.set( index, val  )  ;
   }
 
   //  void  TrackImpl::setType( const std::string&  type ){  

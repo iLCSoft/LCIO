@@ -166,12 +166,16 @@ public class ICluster extends ILCObject implements Cluster
       checkAccess();
       this.type = type;
    }
-   // TODO: Is this really whats meant? No way to clear bit?
    public void setTypeBit(int bit)
    {
-      checkAccess();
-      bitSet(type,bit,true);
-   }  
+	 setTypeBit(bit,true) ;
+   }
+   public void setTypeBit(int bit, boolean val)
+   {
+	  checkAccess();
+	  bitSet(type,bit,val);
+   }
+
    public float[] getSubdetectorEnergies()
    {
       return subdetectorEnergies ;

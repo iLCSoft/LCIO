@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version Mar 6, 2003
+ * @version $Id: TrackImpl.h,v 1.9 2004-07-23 09:15:05 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -136,8 +136,7 @@ namespace IMPL {
     
 
     // setters 
-    //    virtual void  setType( const std::string&  type ) ;
-    virtual void  setTypeBit( int index ) ;
+    virtual void  setTypeBit( int index , bool val=true) ;
 
     virtual void  setD0( float d0 ) ;
     virtual void  setPhi( float phi ) ;

@@ -120,7 +120,7 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getSubdetectorEnergies() const ;
 
     //setters 
-    void setTypeBit( int index ) ;
+    void setTypeBit( int index , bool val=true) ;
     void setEnergy(float energy ) ;
     void setPosition(float* position) ;
     void setPositionError(const EVENT::FloatVec &errpos) ;

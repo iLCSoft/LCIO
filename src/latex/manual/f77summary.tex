@@ -207,7 +207,7 @@ class Track:
 
 create                 -> ptrk    = lctrkcreate()
 delete                 -> status  = lctrkdelete( ptrk )
-setTypeBit             -> status  = lctrksettypebit( ptrk, ibit)
+setTypeBit             -> status  = lctrksettypebit( ptrk, ibit, ival)
 setOmega               -> status  = lctrksetomega ( ptrk, omega )
 setTanLambda           -> status  = lctrksettanlambda( ptrk, tanlambda )
 setPhi                 -> status  = lctrksetphi( ptrk, phi )
@@ -250,7 +250,7 @@ class Cluster:
 
 create                 -> pclu    = lcclucreate()
 delete                 -> status  = lccludelete( pclu )
-setTypeBit             -> status  = lcclusettypebit( pclu, ibit)
+setTypeBit             -> status  = lcclusettypebit( pclu, ibit, ival)
 setEnergy              -> status  = lcclusetenergy( pclu, energy )
 setPosition            -> status  = lcclusetposition( pclu, posv )
 setPositionError       -> status  = lcclusetpositionerror( pclu, poserrv )
