@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.3 2003-05-14 15:10:13 gaede Exp $
+// CVS $Id: SIO_functions.cc,v 1.4 2004-05-14 16:00:47 hvogt Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -32,13 +32,14 @@
 // AIX           PPC(?)        _AIX          GNU compiler  Big
 // OSF1          Alpha         __alpha__     GNU compiler  Little
 // Linux         x86           __i386__      GNU compiler  Little
+// Linux         Opteron       __x86_64__    GNU compiler  Little
 // SunOS         Sparc         __sparc__     GNU compiler  Big
 // Windows/NT    Alpha         _M_ALPHA      VC  compiler  Little
 // Windows/NT    x86           _M_IX86       VC  compiler  Little
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  ?
 // Windows/NT    PPC           _M_PPC        VC  compiler  Big
 // ----------------------------------------------------------------------------
-#if defined(__alpha__) ||   defined(__i386__)  ||   defined(_M_ALPHA)  ||   defined(_M_IX86)
+#if defined(__alpha__) ||   defined(__i386__)  ||   defined(_M_ALPHA)  ||   defined(_M_IX86) || defined(__x86_64__)
 #define SIO_LITTLE_ENDIAN
 #endif
 

@@ -20,15 +20,25 @@ ifeq ($(COMPILER_VERSION),3)
  endif
 endif
 
-CXX = g++ 
-FC = g77 -g
+# check for private compiler definitions
+ifdef MY_CXX
+  CXX = $(MY_CXX)
+else
+  CXX = g++
+endif
+ifdef MY_FC
+  FC = $(MY_FC)
+else
+  FC = g77
+endif
+
 
 BINDIR = $(LCIOBASE)/bin
 BINS := $(patsubst %.F,$(BINDIR)/%_F,$(wildcard *.F))
 
 INSTALL = $(LCIOBASE)/lib
 #LIBG2CPATH = /products/gcc-2.95/lib/gcc-lib/i686-pc-linux-gnu/2.95.3
-LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -L$(LIBG2CPATH) -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c -llcio -lsio
+LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -L$(LIBG2CPATH) -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c -llcio -lsio -lz
 
 
 
@@ -40,15 +50,16 @@ clean:
 
 
 $(BINDIR)/simjob_F: simjob.o $(INSTALL)/liblcio.a
-	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
+# 	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
 	$(CXX) -o $(BINDIR)/simjob_F simjob.o  $(LIBS)
 
+$(BINDIR)/recjob_F: recjob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/recjob_F recjob.o  $(LIBS)
+
 $(BINDIR)/anajob_F: anajob.o $(INSTALL)/liblcio.a
-	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
 	$(CXX) -o $(BINDIR)/anajob_F anajob.o  $(LIBS)
 
 $(BINDIR)/simjob_chain_F: simjob_chain.o $(INSTALL)/liblcio.a
-	@echo COMPILER_VERSION and COMPILER_MINOR_VERSION are $(COMPILER_VERSION) $(COMPILER_MINOR_VERSION)
 	$(CXX) -o $(BINDIR)/simjob_chain_F simjob_chain.o  $(LIBS)
 
 

@@ -8,7 +8,13 @@
 
 SIOINSTALL = $(LCIOBASE)/sio
 
-CXX = g++ 
+# check for private compiler definition
+ifdef MY_CXX
+  CXX = $(MY_CXX)
+else
+  CXX = g++
+endif
+
 AR = ar
 
 

@@ -17,7 +17,7 @@ PTRTYPE lcwrtcreate(){
   return reinterpret_cast<PTRTYPE>(lcWriter) ;
 }
 
-PTRTYPE lcwrtdelete(PTRTYPE writer){
+int lcwrtdelete(PTRTYPE writer){
   LCWRITER_PNTR( writer )  ;
   delete lcWriter ;
   return LCIO::SUCCESS ;

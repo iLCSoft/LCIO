@@ -10,8 +10,8 @@
 #include "IMPL/LCTOOLS.h"
 
 #include "CPPFORT/HEPEVT.h"
-#include "EVENT/LCIntVec.h"
-#include "EVENT/LCFloatVec.h"
+#include "DATA/LCIntVec.h"
+#include "DATA/LCFloatVec.h"
 
 //#include "CPPFORT/lcvec.h"
 #include <string>
@@ -33,7 +33,7 @@ int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const 
 
   try {
     int elemlen = nchfilename +1 ;
-    int stringpos = reinterpret_cast<int>( filenamesv ) ;
+    PTRTYPE stringpos = reinterpret_cast<PTRTYPE>( filenamesv ) ;
     for (int j=0;j < nfiles;j++)
     {
       char* filename = reinterpret_cast<char*>( stringpos ) ;
@@ -49,7 +49,7 @@ int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const 
   }
 }
 
-PTRTYPE lcwriterunheader( PTRTYPE writer , const int irun , const char* detname , 
+int lcwriterunheader( PTRTYPE writer , const int irun , const char* detname ,
 			  const char* description , void* sdnamevec , const int nsubd, 
 			  const int nchsd){
 
@@ -61,7 +61,7 @@ PTRTYPE lcwriterunheader( PTRTYPE writer , const int irun , const char* detname 
     runHdr->setDescription( description ) ;
 
     int elemlen = nchsd + 1 ;
-    int stringpos = reinterpret_cast<int>( sdnamevec ) ;
+    PTRTYPE stringpos = reinterpret_cast<PTRTYPE>( sdnamevec ) ;
     for (int j=0;j < nsubd;j++)
     {
         char* subdetectorname = reinterpret_cast<char*>( stringpos ) ;
@@ -85,12 +85,12 @@ PTRTYPE lcreadnextrunheader(PTRTYPE reader , int* irun , void* detname , void* d
     LCRunHeader* runHdr = lcReader->readNextRunHeader() ;
     *irun = runHdr->getRunNumber() ;
 
-    int stringpos ;
-    stringpos = reinterpret_cast<int>( detname ) ;
+    PTRTYPE stringpos ;
+    stringpos = reinterpret_cast<PTRTYPE>( detname ) ;
     char* detname = reinterpret_cast<char*>( stringpos ) ;
     const char* detectorname = runHdr->getDetectorName().c_str() ;
     strcpy(detname,detectorname) ;
-    stringpos = reinterpret_cast<int>( description ) ;
+    stringpos = reinterpret_cast<PTRTYPE>( description ) ;
     char* descr = reinterpret_cast<char*>( stringpos ) ;
     const char* rundescription = runHdr->getDescription().c_str() ;
     strcpy(descr,rundescription) ;
@@ -99,7 +99,7 @@ PTRTYPE lcreadnextrunheader(PTRTYPE reader , int* irun , void* detname , void* d
 
     int elemlen = nchsubd + 1;
     *nsubd  = strVec->size() ;
-    stringpos = reinterpret_cast<int>( sdnamevec ) ;
+    stringpos = reinterpret_cast<PTRTYPE>( sdnamevec ) ;
     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       std::string out = *name ;
       char* tmpname = reinterpret_cast<char*>( stringpos ) ;
@@ -131,20 +131,20 @@ int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, voi
   *irun = lcEvent->getRunNumber() ;
   *ievent = lcEvent->getEventNumber() ;
   *timestamp = lcEvent->getTimeStamp() ;
-  int stringpos = reinterpret_cast<int>( detname ) ;
+  PTRTYPE stringpos = reinterpret_cast<PTRTYPE>( detname ) ;
   char* detnam = reinterpret_cast<char*>( stringpos ) ;
   const char* detectorname = lcEvent->getDetectorName().c_str() ;
   strcpy(detnam,detectorname) ;
   return LCIO::SUCCESS ;
 }
 
-PTRTYPE lcdumpevent( PTRTYPE event ){
+int lcdumpevent( PTRTYPE event ){
   LCEventImpl* lcEvent = reinterpret_cast<LCEventImpl*>( (event) ) ;
   LCTOOLS::dumpEvent(  lcEvent ) ;
   return LCIO::SUCCESS ;
 }
 
-PTRTYPE lcdumpeventdetailed ( PTRTYPE event ){
+int lcdumpeventdetailed ( PTRTYPE event ){
   LCEventImpl* lcEvent = reinterpret_cast<LCEventImpl*>( (event) ) ;
   LCTOOLS::dumpEventDetailed(  lcEvent ) ;
   return LCIO::SUCCESS ;
@@ -322,8 +322,8 @@ int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int n
     *nstringv = stringVecLength ;
   }
   int elemlen = nchstringv + 1;
-  int stringpos = 0 ;
-  stringpos = reinterpret_cast<int>( stringv ) ;
+  PTRTYPE stringpos = 0 ;
+  stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
   for (int j=0;j < stringVecLength;j++) {
     char* outstring = const_cast<char*>( (*stringVec)[j].c_str() );
     char* tmpstring = reinterpret_cast<char*>( stringpos ) ;

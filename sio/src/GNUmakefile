@@ -8,8 +8,13 @@
 
 #SHELL = /bin/sh
 
+# check for private compiler definition
+ifdef MY_CXX
+  CXX = $(MY_CXX)
+else
+  CXX = g++
+endif
 
-CXX = g++ 
 AR = ar
 
 INCLUDE = ../include

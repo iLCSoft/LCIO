@@ -3,13 +3,15 @@
  * 
  * @author Vogt
  * @version Sep 30, 2003
+ * @modif   Mar 19, 2004 (PTRTYPE changed to long - 64bit compatibility
+ *
  */
 #ifndef CPOINTER_H
 #define CPOINTER_H 1
 
-typedef int PTRTYPE ;
-#define CFORTRANPNTR INT
-#define CFORTRANPNTRV INTV
+typedef long PTRTYPE ;
+#define CFORTRANPNTR LONG
+#define CFORTRANPNTRV LONGV
 
 
 /** Template for casting from integers to LCIO classes 
@@ -26,6 +28,6 @@ template<class T, class O> T* f2c_pointer(PTRTYPE ptr){
   return dynamic_cast<T*>( o_ptr ) ; 
 }
 
-#define C2F_POINTER(T,ptr) reinterpret_cast<int>( dynamic_cast<T>( (ptr) ) ) 
+#define C2F_POINTER(T,ptr) reinterpret_cast<PTRTYPE>( dynamic_cast<T>( (ptr) ) )
 
 #endif

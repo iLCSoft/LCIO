@@ -6,13 +6,16 @@
 *     fortran interface to LCIO for writing LCIO files.              *
 *                                                                    *
 *     F.Gaede 09/10/2003                                             *
+*     Bug corrected by H. Vogt  03/19/2004                           *
+*                                                                    *
 **********************************************************************
       implicit none
  
 #include "lciof77api.inc"
 
 c---- variables
-      PTRTYPE runheader, event, writer, sthcol, mcpcol, schcol, cahcol
+      PTRTYPE runheader, event, writer, sthcol
+      PTRTYPE mcpcol, schcol, cahcol
       PTRTYPE  hit, mcp, mcpm, mcpd, mcpdd
       integer status
       integer i, j, k, irun, nrun, iev, nev, itim, locf
@@ -189,7 +192,6 @@ c-----     now add everything to the event
 c------- need to delete the event as we created it
             status = lcevtdelete( event )
          enddo
-         status = lcrhddelete( runheader ) 
       enddo
       status = lcwrtclose( writer ) 
       write(*,*)
@@ -278,7 +280,7 @@ c---- first loop over runs and print information
 c     ---- event loop ------
       do 
          
-         event = lcrdrreadnextevent( reader )
+         event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
          if( event.eq.0 ) goto 11 
          
          status = lcdumpevent( event )

@@ -8,6 +8,8 @@
 *  10/30/2003
 *************************************************************
 
+#include "lciof77pointer.inc"
+
 c --------------- convenient method to open a list of files for reading (read-only)
 
 *     Opens a list of files for reading (read-only).

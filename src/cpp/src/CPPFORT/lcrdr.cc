@@ -16,7 +16,7 @@ PTRTYPE lcrdrcreate(){
   return reinterpret_cast<PTRTYPE>(lcReader) ;
 }
 
-PTRTYPE lcrdrdelete(PTRTYPE reader){
+int lcrdrdelete(PTRTYPE reader){
   LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
   delete lcReader ;
   return LCIO::SUCCESS ;

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.h,v 1.2 2003-03-17 12:54:57 gaede Exp $
+// CVS $Id: SIO_functions.h,v 1.3 2004-05-14 16:00:46 hvogt Exp $
 // ----------------------------------------------------------------------------
 // => Primitive functions for reading/writing SIO streams         
 // ----------------------------------------------------------------------------
@@ -31,13 +31,14 @@
 // AIX           PPC(?)        _AIX          GNU compiler  long long
 // OSF1          Alpha         __alpha__     GNU compiler  long long
 // Linux         x86           __i386__      GNU compiler  long long
+// Linux         Opteron       __x86_64__    GNU compiler  long long
 // SunOS         Sparc         __sparc__     GNU compiler  long long
 // Windows/NT    Alpha         _M_ALPHA      VC  compiler  __int64
 // Windows/NT    x86           _M_IX86       VC  compiler  __int64
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  __int64
 // Windows/NT    PPC           _M_PPC        VC  compiler  __int64
 // ----------------------------------------------------------------------------
-#if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__)
+#if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__) || defined(__x86_64__)
 // fg: gcc complains about long long - what to do about it ?
 // warning: ANSI C++ does not support `long long'
  #define SIO_64BITINT   long long
@@ -57,13 +58,14 @@
 // AIX           PPC(?)        _AIX          GNU compiler  4 bytes
 // OSF1          Alpha         __alpha__     GNU compiler  8 bytes
 // Linux         x86           __i386__      GNU compiler  4 bytes
+// Linux         Opteron       __x86_64__    GNU compiler  8 bytes
 // SunOS         Sparc         __sparc__     GNU compiler  4 bytes
 // Windows/NT    Alpha         _M_ALPHA      VC  compiler  8 bytes
 // Windows/NT    x86           _M_IX86       VC  compiler  4 bytes
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  ? bytes
 // Windows/NT    PPC           _M_PPC        VC  compiler  4 bytes
 // ----------------------------------------------------------------------------
-#if defined(__alpha__) || defined(_M_ALPHA)
+#if defined(__alpha__) || defined(_M_ALPHA) || defined(__x86_64__)
  #define SIO_POINTER_DECL   unsigned SIO_64BITINT
 #endif
 

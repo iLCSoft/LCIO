@@ -7,6 +7,8 @@
  * 
  * @author H. Vogt
  * @version Sep 30, 2003
+ * @modif   Mar 19, 2004 (PTRTYPE consistency)
+ *
  */
 
 #include "cfortran.h"
@@ -92,7 +94,7 @@ PTRTYPE lcaddsimcalohit( PTRTYPE col, int cellID0, int cellID1, float energy, fl
 
 /**Return the data of the specified SimCalorimeterHit in the arguments.
  */
-int lcgetsimcalohit( PTRTYPE col, int i, int* cellID0, int* cellID1, float* energy, 
+PTRTYPE lcgetsimcalohit( PTRTYPE col, int i, int* cellID0, int* cellID1, float* energy,
 			 float* pos ) ;
 
 /**Return the specified contribution of a MCParticle to the hit in the arguments.

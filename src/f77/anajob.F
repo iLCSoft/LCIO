@@ -7,13 +7,16 @@
 *
 *     H. Vogt  30/09/2003
 *     modified by F. Gaede 10/30/2003
+*     Bug corrected by H. Vogt  03/19/2004
+*
 ***********************************************************
       implicit none
 
 #include "lciof77api.inc"
 #include "lciof77apiext.inc"
 
-      PTRTYPE reader, event, runhdr, detnames, pcolnamev, pcol, pobject
+      PTRTYPE reader, event, runhdr, detnames 
+      PTRTYPE pcolnamev, pcol, pobject
       
       integer status, irun, ievent
       integer i, k, ii, nactdet, ncolname
@@ -81,7 +84,7 @@ c---- check string vector access of extended f77api
 c     ---- event loop ------
       do k = 1,10000
          
-         event = lcrdrreadnextevent( reader )
+         event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
          if( event.eq.0 ) goto 11 
 
 c        print only 1st event
