@@ -18,8 +18,8 @@ char* lccolgettypename( PTRTYPE collection ) ;
 PTRTYPE lccolgetelementat( PTRTYPE collection, int index ) ;
 int lccolgetflag(PTRTYPE collection)  ;
 
-int lccolistransient(PTRTYPE collection) ;
-int lccolsettransient(PTRTYPE collection, int value) ;
+bool lccolistransient(PTRTYPE collection) ;
+int lccolsettransient(PTRTYPE collection, bool value) ;
 
 int lccolsetflag(PTRTYPE collection, int flag) ;
 int lccoladdelement(PTRTYPE collection, PTRTYPE object) ;
@@ -35,8 +35,8 @@ FCALLSCFUN1(STRING, lccolgettypename, LCCOLGETTYPENAME, lccolgettypename, CFORTR
 FCALLSCFUN2(CFORTRANPNTR, lccolgetelementat, LCCOLGETELEMENTAT, lccolgetelementat, CFORTRANPNTR,  INT ) ;
 FCALLSCFUN1(INT, lccolgetflag, LCCOLGETFLAG, lccolgetflag, CFORTRANPNTR ) ;
 
-FCALLSCFUN1(INT, lccolistransient, LCCOLISTRANSIENT, lccolistransient, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lccolsettransient, LCCOLSETTRANSIENT, lccolsettransient, CFORTRANPNTR, INT ) ;
+FCALLSCFUN1(LOGICAL, lccolistransient, LCCOLISTRANSIENT, lccolistransient, CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lccolsettransient, LCCOLSETTRANSIENT, lccolsettransient, CFORTRANPNTR, LOGICAL ) ;
 
 FCALLSCFUN2(INT, lccolsetflag, LCCOLSETFLAG, lccolsetflag, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lccoladdelement, LCCOLADDELEMENT, lccoladdelement, CFORTRANPNTR, CFORTRANPNTR ) ;

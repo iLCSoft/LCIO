@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.24 2004-09-22 16:18:33 gaede Exp $
+*  $Id: lciof77api.inc,v 1.25 2004-09-22 20:56:12 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -45,6 +45,16 @@ c-----the LCStrVec, LCIntVec, LCFloatVec interface
       integer lcivcgetintat
       real    lcfvcgetfloatat
 
+c-----the StringVec, IntVec, FloatVec interface
+      integer      stringvectorgetlength
+      integer      intvectorgetlength
+      integer      floatvectorgetlength
+
+      character*80 stringvectorgetelement
+      integer      intvectorgetelement
+      real         floatvectorgetelement
+
+
 c-----the LCRelationNavigator interface
       PTRTYPE lcrnvcreate, lcrnvcreatefromcollection
       PTRTYPE lcrnvgetrelatedtoobjects, lcrnvgetrelatedfromobjects
@@ -65,7 +75,6 @@ c-----the LCEvent interface
       character*80 lcevtgetdetectorname
       integer*8 lcevtgettimestamp
       integer lcevtaddcollection, lcevtremovecollection
-      integer lcevtaddrelation, lcevtremoverelation
       integer lcevtsetrunnumber, lcevtseteventnumber
       integer lcevtsetdetectorname, lcevtsettimestamp
 
@@ -73,14 +82,15 @@ c-----the LCCollection interface
       PTRTYPE lccolcreate, lccolgetelementat
       integer lccoldelete, lccolgetnumberofelements
       character*80 lccolgettypename
-      integer lccolistransient, lccolsettransient
+      integer lccolsettransient
+      logical lccolistransient
       integer lccolgetflag, lccolsetflag, lccoladdelement
       integer lccolremoveelementat
 
 c-----the LCRelation interface
-      PTRTYPE lcrelcreate, lcrelgetrelation
-      integer lcreldelete, lcrelnumberofrelations
-      integer lcreladdrelation, lcrelusecaching, lcrelsettypes
+      PTRTYPE lcrelcreate0, lcrelcreate, lcrelgetfrom, lcrelgetto
+      integer lcreldelete, lcrelid
+      integer lcrelsetfrom, lcrelsetto, lcrelsetweight
       real    lcrelgetweight
 
 c-----the LCGenericObject interface
@@ -119,7 +129,7 @@ c-----the SimTrackerHit interface
 
 c-----the TPCHitImpl interface
       PTRTYPE lctphcreate
-      integer lctphdelete, lctphgetcellid, lctphgetquality
+      integer lctphid, lctphdelete, lctphgetcellid, lctphgetquality
       integer lctphgetnrawdatawords, lctphgetrawdataword
       real    lctphgettime, lctphgcharge
       integer lctphsetcellid, lctphsettime, lctphsetcharge
@@ -138,59 +148,67 @@ c-----the SimCalorimeterHit interface
 c-----the CalorimeterHit interface
       PTRTYPE lccahcreate
       integer lccahid, lccahdelete, lccahgetcellid0, lccahgetcellid1
-      real    lccahgetenergy
+      real    lccahgetenergy, lccahgettime
       integer lccahgetposition
       integer lccahsetcellid0, lccahsetcellid1, lccahsetenergy
-      integer lccahsetposition
+      integer lccahsetposition, lccahsettime
 
 c-----the Cluster interface
-      PTRTYPE lcclucreate, lcclugetclusters, lcclugetcalorimeterhits
-      PTRTYPE lcclugetsubdetectorenergies
-      integer lccludelete, lcclugetid, lcclugettype
-      integer lcclugetposition
+      PTRTYPE lcclucreate
+      integer lccludelete, lccluid
+
+      integer lcclugettype, lcclugetposition
       integer lcclugetpositionerror, lcclugetdirectionerror
-      integer lcclugetshape, lcclugetparticletype
-      integer lcclugethitcontributions
       real    lcclugetenergy, lcclugetitheta, lcclugetiphi
+      PTRTYPE lcclugetshape, lcclugetparticleids, lcclugetclusters
+      PTRTYPE lcclugetcalorimeterhits, lcclugetsubdetectorenergies
+      integer lcclugethitcontributions
+
       integer lcclusettypebit, lcclusetenergy, lcclusetposition
       integer lcclusetpositionerror,lcclusetitheta, lcclusetiphi
       integer lcclusetdirectionerror
       integer lcclusetshape
-c      integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
-c      integer lcclusethadweight, lcclusetmuonweight
+      integer lccluaddparticleid, lccluaddcluster, lccluaddhit
       integer lcclusetsubdetectorenergies
-      integer lccluaddcluster, lccluaddhit
 
 c-----the ParticleID interface
       PTRTYPE lcpidcreate
-      integer lcpiddelete, lcpidid, lcpidgettype, lcpidgetpdg
+      integer lcpiddelete, lcpidid 
+
+      integer lcpidgettype, lcpidgetpdg
+      real    lcpidgetloglikelihood
       integer lcpidgetparameters, lcpidgetalgorithmtype
-      real    lcpidgetlikelihood
-      integer lcpidsettype, lcpidsetpdg, lcpidsetlikelihood
+
+      integer lcpidsettype, lcpidsetpdg, lcpidsetloglikelihood
       integer lcpidsetalgorithmtype
       integer lcpidaddparameter
       integer unknownpdg
       parameter (unknownpdg=999999)
 
 c-----the ReconstructedParticle interface
-      PTRTYPE lcrcpcreate, lcrcpgetparticleids, lcrcpgetparticles
-      PTRTYPE lcrcpgetclusters, lcrcpgettracks
+      PTRTYPE lcrcpcreate 
+      integer lcrcpdelete, lcrcpid
+
+      logical lcrcpisprimary
       integer lcrcpgettype, lcrcpgetmomentum, lcrcpgetcovmatrix
       integer lcrcpgetreferencepoint, lcrcpgetgoodnessofpid
       real    lcrcpgetenergy, lcrcpgetmass, lcrcpgetcharge
-      logical lcrcpiscomound
-      integer lcrcpsettype, lcrcpsetmomentum, lcrcpsetgoodnessofpid
-      integer lcrcpsetenergy, lcrcpsetcovmatrix, lcrcpsetmass
-      integer lcrcpsetcharge, lcrcpsetreferencepoint, lcrcpaddparticleid
+      PTRTYPE lcrcpgetparticleids, lcrcpgetparticles
+      PTRTYPE lcrcpgetclusters, lcrcpgettracks
+
+      integer lcrcpsettype, lcrcpsetmomentum, lcrcpsetenergy
+      integer lcrcpsetcovmatrix, lcrcpsetmass, lcrcpsetcharge
+      integer lcrcpsetreferencepoint, lcrcpsetgoodnessofpid
+      integer lcrcpaddparticleid
       integer lcrcpaddparticle, lcrcpaddcluster, lcrcpaddtrack
 
 c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawhits
       integer lctrhdelete, lctrhid, lctrhgetposition, lctrhgetcovmatrix
+      integer lctrhgettype
       real    lctrhgetdedx, lctrhgettime
-      character*80 lctrhgettype
       integer lctrhsetposition, lctrhsetcovmatrix, lctrhsetdedx
-      integer lctrhsettime, lctrhaddrawhit
+      integer lctrhsettime, lctrhsettype, lctrhaddrawhit
 
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits

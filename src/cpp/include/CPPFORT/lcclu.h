@@ -31,7 +31,6 @@ PTRTYPE lcclugetshape( PTRTYPE clu ) ;
 PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
 PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
-int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
 PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
 
 int     lcclusettypebit( PTRTYPE clu, int index, int val ) ;
@@ -41,18 +40,15 @@ int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
 int     lcclusetitheta( PTRTYPE clu, float theta ) ;
 int     lcclusetiphi( PTRTYPE clu, float phi ) ;
 int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
-
-int     lcclusetshape( PTRTYPE clu, PTRTYPE vector ) ;
-int     lcclusetemweight(  PTRTYPE clu, float weight ) ;
-int     lcclusethadweight(PTRTYPE clu, float weight ) ;
-int     lcclusetmuonweight( PTRTYPE clu, float weight ) ;
+int     lcclusetshape( PTRTYPE clu, PTRTYPE pshapevec ) ;
 int     lccluaddparticleid( PTRTYPE clu, PTRTYPE pid ) ;
 int     lccluaddcluster( PTRTYPE clu, PTRTYPE clus ) ;
 int     lccluaddhit( PTRTYPE clu, PTRTYPE calohit, float weigth ) ;
 
-// fg: this method has no direct correspondence in the C++ API as there the vector is manipulated
-// directly through it's interface via getSubdetectorEnergies
-int lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) ;
+// fg: these methods have no direct correspondence in the C++ API as there the vector is manipulated
+// directly through the interface
+int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
+int     lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

@@ -12,6 +12,7 @@
 PTRTYPE lctphcreate() ;
 int lctphdelete( PTRTYPE hit ) ;
 
+int lctphid( PTRTYPE hit )  ;
 int lctphgetcellid( PTRTYPE hit )  ;
 float lctphgettime( PTRTYPE hit )  ;
 float lctphgcharge( PTRTYPE hit )  ;
@@ -33,6 +34,7 @@ extern "C"{
 FCALLSCFUN0(CFORTRANPNTR, lctphcreate, LCTPHCREATE, lctphcreate ) ;
 FCALLSCFUN1(INT, lctphdelete, LCTPHDELETE, lctphdelete, CFORTRANPNTR ) ;
 
+FCALLSCFUN1(INT, lctphid, LCTPHID, lctphdid, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lctphgetcellid,LCTPHGETCELLID,lctphgetcellid,CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctphgettime,LCTPHGETTIME,lctphgettime,CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lctphgcharge,LCTPHGCHARGE,lctphgcharge,CFORTRANPNTR) ;

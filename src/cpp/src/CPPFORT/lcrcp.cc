@@ -22,6 +22,11 @@ int lcrcpdelete( PTRTYPE recopart ){
 
 // get Methods
 
+int lcrcpid( PTRTYPE recopart ) {
+  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+  return rcp->id() ;
+}
+
 int lcrcpgettype( PTRTYPE recopart )  {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
   return rcp->getType() ;

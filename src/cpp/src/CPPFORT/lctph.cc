@@ -16,6 +16,11 @@ int lctphdelete( PTRTYPE hit ){
   return LCIO::SUCCESS ;
 }
 
+int lctphid( PTRTYPE hit )  {
+  TPCHitImpl* tph = f2c_pointer<TPCHitImpl,LCObject>( hit ) ;
+  return tph->id() ;
+}
+
 int lctphgetcellid( PTRTYPE hit ){
   TPCHitImpl* tph = f2c_pointer<TPCHitImpl,LCObject>( hit ) ;
   return tph->getCellID() ;

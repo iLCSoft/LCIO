@@ -12,6 +12,7 @@
 PTRTYPE lcrcpcreate() ;
 int     lcrcpdelete( PTRTYPE rcp ) ;
 
+int     lcrcpid( PTRTYPE rcp ) ;
 int     lcrcpgettype( PTRTYPE rcp ) ;
 bool    lcrcpiscompound( PTRTYPE rcp ) ;
 int     lcrcpgetmomentum( PTRTYPE rcp, float* p ) ;
@@ -53,6 +54,7 @@ extern "C"{
 FCALLSCFUN0(CFORTRANPNTR, lcrcpcreate, LCRCPCREATE, lcrcpcreate ) ;
 FCALLSCFUN1(INT, lcrcpdelete, LCRCPDELETE, lcrcpdelete, CFORTRANPNTR ) ;
 
+FCALLSCFUN1(INT, lcrcpid, LCRCPID, lcrcpid, CFORTRANPNTR) ;
 FCALLSCFUN1(INT, lcrcpgettype, LCRCPGETTYPE, lcrcpgettype, CFORTRANPNTR) ;
 FCALLSCFUN1(LOGICAL, lcrcpiscompound, LCRCPISCOMPOUND, lcrcpiscompound, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lcrcpgetmomentum, LCRCPGETMOMENTUM, lcrcpgetmomentum, CFORTRANPNTR, FLOATV) ;

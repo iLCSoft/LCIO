@@ -4,7 +4,7 @@
 
 using namespace EVENT ;
 
-// define an interface to read a string/int/float vector
+// define an interface to read a LC string/int/float vector
 
 int lcsvcgetlength(PTRTYPE strvec){
   LCStrVec* strVec = reinterpret_cast<LCStrVec*>(strvec) ;
@@ -33,6 +33,38 @@ int lcfvcgetlength(PTRTYPE floatvec){
 
 float lcfvcgetfloatat(PTRTYPE floatvec, int index){
   LCFloatVec* floatVec =  reinterpret_cast<LCFloatVec*>(floatvec) ;
+  return (*floatVec)[index-1] ;
+}
+
+// define an interface to read a standard string/int/float vector
+
+int stringvectorgetlength(PTRTYPE strvec){
+  StringVec* strVec = reinterpret_cast<StringVec*>(strvec) ;
+  return strVec->size() ;
+}
+
+char* stringvectorgetelement(PTRTYPE strvec, int index){
+  StringVec* strVec = reinterpret_cast<StringVec*>(strvec) ;
+  return const_cast<char*>( (*strVec)[index-1].c_str() );
+}
+
+int intvectorgetlength(PTRTYPE intvec){
+  IntVec* intVec =  reinterpret_cast<IntVec*>(intvec) ;
+  return intVec->size() ;
+}
+
+int intvectorgetelement(PTRTYPE intvec, int index){
+  IntVec* intVec =  reinterpret_cast<IntVec*>(intvec) ;
+  return (*intVec)[index-1] ;
+}
+
+int floatvectorgetlength(PTRTYPE floatvec){
+  FloatVec* floatVec =  reinterpret_cast<FloatVec*>(floatvec) ;
+  return floatVec->size() ;
+}                          \
+
+float floatvectorgetelement(PTRTYPE floatvec, int index){
+  FloatVec* floatVec =  reinterpret_cast<FloatVec*>(floatvec) ;
   return (*floatVec)[index-1] ;
 }
 
