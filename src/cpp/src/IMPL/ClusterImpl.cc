@@ -33,8 +33,8 @@ namespace IMPL{
   float ClusterImpl::getEnergy() const{ return _energy;  }
   const float* ClusterImpl::getPosition() const{ return _position ; }
   const FloatVec & ClusterImpl::getPositionError() const{ return  _errpos ;  }
-  float ClusterImpl::getTheta() const{ return _theta ;  }
-  float ClusterImpl::getPhi() const{ return _phi ;  }
+  float ClusterImpl::getITheta() const{ return _theta ;  }
+  float ClusterImpl::getIPhi() const{ return _phi ;  }
   const FloatVec & ClusterImpl::getDirectionError() const{ return _errdir ;  }
   const FloatVec & ClusterImpl::getShape() const{ return _shape ;  }
   const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
@@ -73,12 +73,12 @@ namespace IMPL{
     checkAccess("ClusterImpl::setPositionError") ;
     for(int i=0;i<NERRPOS;i++) { _errpos[i] = errpos[i]  ;  }
   }
-  void ClusterImpl::setTheta(float theta) { 
-    checkAccess("ClusterImpl::setTheta") ;
+  void ClusterImpl::setITheta(float theta) { 
+    checkAccess("ClusterImpl::setITheta") ;
     _theta = theta ;  
   }
-  void ClusterImpl::setPhi(float phi){  
-    checkAccess("ClusterImpl::setPhi") ;
+  void ClusterImpl::setIPhi(float phi){  
+    checkAccess("ClusterImpl::setIPhi") ;
     _phi = phi ;  
   }
   void ClusterImpl::setDirectionError(const FloatVec &errdir) { 

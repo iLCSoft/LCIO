@@ -908,7 +908,7 @@ namespace UTIL {
     int nPrint = nClusters > MAX_HITS ? MAX_HITS : nClusters ;
     
     std::cout << endl
-	      << " [   id   ] |  type | energy    |      position ( x,y,z)          |  theta   |  phi     | EMweight |HADweight |MUweight"
+	      << " [   id   ] |  type | energy    |      position ( x,y,z)          |  itheta   |  iphi     | EMweight |HADweight |MUweight"
 	      << endl	      
 	      << "------------|-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
 	      << endl ;
@@ -925,8 +925,8 @@ namespace UTIL {
 	     , clu->getPosition()[0]
 	     , clu->getPosition()[1]
 	     , clu->getPosition()[2]
-	     , clu->getTheta() 
-	     , clu->getPhi()
+	     , clu->getITheta() 
+	     , clu->getIPhi()
 	     , clu->getParticleType()[0] 
 	     , clu->getParticleType()[1] 
 	     , clu->getParticleType()[2] 

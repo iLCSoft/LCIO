@@ -115,8 +115,8 @@ namespace SIO{
     for(unsigned int i=0;i<errpos.size();i++){
       LCSIO_WRITE( stream, errpos[i]  ) ;
     }
-    LCSIO_WRITE( stream, cluster->getTheta()  ) ;
-    LCSIO_WRITE( stream, cluster->getPhi()  ) ;
+    LCSIO_WRITE( stream, cluster->getITheta()  ) ;
+    LCSIO_WRITE( stream, cluster->getIPhi()  ) ;
 
     const FloatVec& errdir = cluster->getDirectionError() ;
     for(unsigned int i=0;i<errdir.size();i++){

@@ -69,11 +69,11 @@ namespace IMPL {
 
     /** Intrinsic direction of cluster at position: Theta.
      */
-    virtual float getTheta() const ;
+    virtual float getITheta() const ;
 
     /** Intrinsic direction of cluster at position: Phi.
      */
-    virtual float getPhi() const ;
+    virtual float getIPhi() const ;
 
     /** Covariance matrix of the direction (3 Parameters)
      */
@@ -125,8 +125,8 @@ namespace IMPL {
     void setPosition(float* position) ;
     void setPositionError(const EVENT::FloatVec &errpos) ;
     void setPositionError(const float* errpos) ;
-    void setTheta(float theta) ;
-    void setPhi(float phi) ;
+    void setITheta(float theta) ;
+    void setIPhi(float phi) ;
     void setDirectionError(const EVENT::FloatVec &errdir) ;
     void setDirectionError(const float* errdir) ;
     void setShape(const float* shape) ;

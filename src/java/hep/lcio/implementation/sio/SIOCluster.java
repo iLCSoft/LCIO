@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.7 2004-07-15 15:40:22 gaede Exp $
+ * @version $Id: SIOCluster.java,v 1.8 2004-07-23 10:28:28 gaede Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -85,8 +85,8 @@ class SIOCluster extends ICluster
          out.writeFloat(p[3]);
          out.writeFloat(p[4]);
          out.writeFloat(p[5]);
-         out.writeFloat(cluster.getPhi());
-         out.writeFloat(cluster.getTheta());
+         out.writeFloat(cluster.getIPhi());
+         out.writeFloat(cluster.getITheta());
          p = cluster.getDirectionError();
          out.writeFloat(p[0]);
          out.writeFloat(p[1]);

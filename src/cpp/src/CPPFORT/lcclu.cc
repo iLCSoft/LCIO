@@ -54,14 +54,14 @@ int lcclugetpositionerror( PTRTYPE cluster, float poserr[6] )  {
   return LCIO::SUCCESS ;
 }
 
-float lcclugettheta( PTRTYPE cluster ) {
+float lcclugetitheta( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  return clu->getTheta() ;
+  return clu->getITheta() ;
 }
 
-float lcclugetphi( PTRTYPE cluster ) {
+float lcclugetiphi( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  return clu->getPhi() ;
+  return clu->getIPhi() ;
 }
 
 int lcclugetdirectionerror( PTRTYPE cluster, float direrr[3] )  {
@@ -147,15 +147,15 @@ int lcclusetpositionerror( PTRTYPE cluster, float errpos[3] ) {
   return LCIO::SUCCESS ;
 }
 
-int lcclusettheta( PTRTYPE cluster, float theta) {
+int lcclusetitheta( PTRTYPE cluster, float theta) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setTheta( theta ) ;
+  clu->setITheta( theta ) ;
   return LCIO::SUCCESS ;
 }
 
-int lcclusetphi( PTRTYPE cluster, float phi ) {
+int lcclusetiphi( PTRTYPE cluster, float phi ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setPhi( phi ) ;
+  clu->setIPhi( phi ) ;
   return LCIO::SUCCESS ;
 }
 

@@ -56,7 +56,7 @@ public class ICluster extends ILCObject implements Cluster
       return particleType;
    }
    
-   public float getPhi()
+   public float getIPhi()
    {
       return phi;
    }
@@ -76,7 +76,7 @@ public class ICluster extends ILCObject implements Cluster
       return shape;
    }
    
-   public float getTheta()
+   public float getITheta()
    {
       return theta;
    }
@@ -128,7 +128,7 @@ public class ICluster extends ILCObject implements Cluster
       this.particleType = particleType;
    }
    
-   public void setPhi(float phi)
+   public void setIPhi(float phi)
    {
       checkAccess();
       this.phi = phi;
@@ -155,7 +155,7 @@ public class ICluster extends ILCObject implements Cluster
       this.shape = shape;
    }
    
-   public void setTheta(float theta)
+   public void setITheta(float theta)
    {
       checkAccess();
       this.theta = theta;

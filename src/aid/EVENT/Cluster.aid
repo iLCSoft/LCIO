@@ -10,7 +10,7 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version Mar 26, 2004
+ * @version $Id: Cluster.aid,v 1.7 2004-07-23 10:28:25 gaede Exp $
  */
 
 
@@ -66,12 +66,14 @@ public interface Cluster extends LCObject {
 
 
     /** Intrinsic direction of cluster at position: Theta.
+     * Not to be confused with direction cluster is seen from IP.
      */
-    public float getTheta() const ;	
+    public float getITheta() const ;	
 
     /** Intrinsic direction of cluster at position: Phi.
+     * Not to be confused with direction cluster is seen from IP.
      */
-    public float getPhi() const ;	
+    public float getIPhi() const ;	
 
     /** Covariance matrix of the direction (3 Parameters)
      */

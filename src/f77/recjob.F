@@ -373,8 +373,8 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
             eposv(j) = j
           end do
           status  = lcclusetpositionerror ( clusp, eposv )
-          status  = lcclusettheta ( clusp, real (i*m_pi/10.) )
-          status  = lcclusetphi ( clusp, real (i*m_pi/5. ) )
+          status  = lcclusetitheta ( clusp, real (i*m_pi/10.) )
+          status  = lcclusetiphi ( clusp, real (i*m_pi/5. ) )
           do j = 1, 6
             if ( j .lt. 4 )  then
               eposv(j) = j

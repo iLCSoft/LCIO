@@ -330,8 +330,8 @@ public:
 	cluster->setPosition( pos ) ;
 	float errpos[6] = { 1.,2.,3.,4.,5.,6.} ; 
 	cluster->setPositionError( errpos ) ;
-	cluster->setTheta( (i+1)* M_PI / 10. ) ;
-	cluster->setPhi( (i+1)* M_PI / 5. ) ;
+	cluster->setITheta( (i+1)* M_PI / 10. ) ;
+	cluster->setIPhi( (i+1)* M_PI / 5. ) ;
 	float errdir[6] = { 1.,2.,3.} ;
 	cluster->setDirectionError( errdir ) ;
 
