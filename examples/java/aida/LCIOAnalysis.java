@@ -14,11 +14,11 @@ public class LCIOAnalysis implements LCEventListener
     public LCIOAnalysis() throws IOException
     {
         IAnalysisFactory analysisFactory = IAnalysisFactory.create();
-        tree = analysisFactory.createTreeFactory().create("c:\\lcio2.aida","xml",false,true);
+        tree = analysisFactory.createTreeFactory().create("lcio2.aida","xml",false,true);
 
         // Create histogram here
         IHistogramFactory histogramFactory = analysisFactory.createHistogramFactory(tree);
-        nMcHist = histogramFactory.createHistogram1D("nMc", 50, 0, 100);
+        nMcHist = histogramFactory.createHistogram1D("nMc", 50, 0, 500);
         etotCloud = histogramFactory.createCloud1D("Etot2"); 
 
         // Create tuple here
@@ -33,7 +33,7 @@ public class LCIOAnalysis implements LCEventListener
         for(int i = 0; i < nMc; i++)
         {
             MCParticle mcparticle = (MCParticle) collection.getElementAt(i);
-            if(mcparticle.getHepEvtStatus() == 1 && mcparticle.getCharge() != 0) etot += mcparticle.getEnergy();
+            if(mcparticle.getGeneratorStatus() == 1 && mcparticle.getCharge() != 0) etot += mcparticle.getEnergy();
         }
 
 
@@ -56,7 +56,12 @@ public class LCIOAnalysis implements LCEventListener
 
     public static void main(String[] args) throws Exception
     {
-       LCIOAnalysis2 analysis = new LCIOAnalysis2();
+	if( args.length < 1 ){
+          System.out.println("usage: \n ./runAnalysis.sh myLCIOFile.slcio");
+	  System.exit(1) ;
+	}
+
+       LCIOAnalysis analysis = new LCIOAnalysis();
        ILCFactory factory = LCFactory.getInstance();
        LCReader reader = factory.createLCReader();
        reader.open(args[0]);

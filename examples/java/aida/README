@@ -1,0 +1,42 @@
+********************************************************
+*
+*  LCIOAnalysis.java:   an LCIO/AIDA example
+*
+*********************************************************
+
+
+Example code that reads an LCIO file and creates an AIDA compliant outputfile
+with some histograms.
+
+It requires LCIO and an AIDA implementation installed on your system.
+
+The following environment variables have to be defined:  LCIO, AIDA, e.g.:
+
+ export LCIO=~/lcio/devel/v00-09beta
+ export AIDA=/data/gaede/JAIDA-3.2.0
+
+This uses the default Java implementation of AIDA from
+   http://java.freehep.org/jaida/index.html
+
+
+You can also use JAS3 to create (and analyze) the AIDA file, see
+   http://jas.freehep.org/jas3/index.html
+
+
+To build the example under linux use
+
+ ./build.sh
+
+and to run it:
+
+ ./runAnalysis.sh test.slcio
+
+this will create lcio2.aida from the MCParticles in test.slcio.
+
+
+For other OS use equivalent scripts to set the classpath accordingly.
+
+
+
+
+
