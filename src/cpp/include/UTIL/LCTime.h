@@ -14,11 +14,11 @@ namespace UTIL {
    *  1.1.1970 00:00:00 UTC respectively.
    * 
    * @author gaede 
-   * @version $Id: LCTime.h,v 1.1 2005-02-10 11:31:00 gaede Exp $
+   * @version $Id: LCTime.h,v 1.2 2005-02-21 13:08:38 gaede Exp $
    */
   class LCTime {
 
-  public:
+  protected:
     /** Helper struct that holds the calendar time.
      */
     struct CalendarTime{
@@ -80,7 +80,27 @@ namespace UTIL {
      */
     const CalendarTime& calendarTime() { return _d ; } 
 
-
+    /** Calendar time:  year */
+    int  year() { return  _d.year  ; }
+    
+    /** Calendar time:  month */
+    int  month() { return _d.month   ; }
+    
+    /** Calendar time:  day */
+    int  day() { return _d.day   ; }
+    
+    /** Calendar time:  hour */
+    int  hour() { return _d.hour   ; }
+    
+    /** Calendar time:  min */
+    int  min() { return _d.min   ; }
+    
+    /** Calendar time:  sec */
+    int  sec() { return _d.sec  ; }
+    
+    /** Calendar time:  ns */
+    int  ns() { return _d.ns   ; }
+    
     /** Add the specified number of ns to the time.
      */
     void operator+=(EVENT::long64 t) ;

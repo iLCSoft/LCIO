@@ -204,8 +204,7 @@ namespace UTIL{
 	<< std::setw(1) << ":"   
 	<< std::setw(2) << (int) _d.sec 
 	<< std::setw(1) << "."   
-	<< std::setw(9) << (int) _d.ns 
- 	<< std::ends ;  
+	<< std::setw(9) << (int) _d.ns  ;  
     
     return out.str() ;
   }
