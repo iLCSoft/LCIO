@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.5 2003-03-17 12:54:57 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.1 2003-02-12 23:55:36 tonyj Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -124,38 +124,6 @@
   <target name="jj.generate" depends="init.jar">
     <freehep.javacc includes="${javacc.includes}" javacchome="${javacc.home}"/>
   </target>
-    
-
-  <!-- =================================================================== -->
-  <!-- Generates cpp version of library                                    -->
-  <!-- =================================================================== -->
-
-   <target name="cpp" depends="cpp.lcio" description="&lt;cpp-target&gt; creates cpp version of lcio">
-   </target>
-   <target name="cpp.sio">
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./sio lib"/>
-     </exec>
-   </target>
-   <target name="cpp.lcio" depends="aid.generate, cpp.sio">
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./src/cpp all"/>
-     </exec>
-   </target>
-   <target name="cpp.clean">
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./sio clean"/>
-     </exec>
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./src/cpp clean"/>
-     </exec>
-   </target>
-   <target name="f77" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./src/f77"/>
-     </exec>
-   </target>
-
 
   <!-- =================================================================== -->
   <!-- Generates java and hh from aid                                      -->
@@ -166,9 +134,6 @@
   <target name="aid.generate" depends="init">
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.java.dir} -property config JavaInterfaceGenerator ${aid.includes} ${aid.java.includes} ${aid.java.interface.includes}"/>
-    </java>
-    <java classpath="${aid.classpath}" classname="${aid.class}">
-        <arg line="-directory ${aid.java.dir} -property config JavaClassGenerator ${aid.java.classes}"/>
     </java>
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.cpp.dir} -property config CPPHeaderGenerator ${aid.includes} ${aid.cpp.includes}"/>
@@ -693,7 +658,7 @@
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init, cpp.clean" description="&lt;    target&gt; cleans up the jar and class files">
+  <target name="clean" depends="init" description="&lt;    target&gt; cleans up the jar and class files">
     <freehep.defined property="jar" target="clean.jar"/>
     <freehep.not.defined property="jar" target="clean.all"/>
   </target>
