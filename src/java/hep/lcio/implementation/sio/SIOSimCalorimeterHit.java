@@ -18,7 +18,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.6 2003-09-15 21:44:32 tonyj Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.7 2003-09-16 09:50:21 gaede Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
@@ -51,7 +51,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             pdg[i] = in.readInt();
       }
-      in.readPTag(this);
+      //      in.readPTag(this);
    }
 
    public MCParticle getParticleCont(int i)
@@ -90,7 +90,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
             if (hasPDG)
                out.writeInt(hit.getPDGCont(i));
          }
-         out.writePTag(hit);
+	 //         out.writePTag(hit);
       }
    }
 
@@ -117,6 +117,6 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             out.writeInt(pdg[i]);
       }
-      out.writePTag(this);
+      //      out.writePTag(this);
    }
 }

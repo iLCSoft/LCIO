@@ -2,6 +2,16 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+ 
+   - require version >= v00-08 in C++    
+
+   - removed pointer tag from SimCalorimeterHit, CalorimeterHit and SimTrackerHit
+     [Java and C++]
+
+   - Access checked for read only mode in Java (Tony)
+
+   - scripts for building under cygwin (Norman)
+
 ============================
   ( fg20030911 ) 
 ============================

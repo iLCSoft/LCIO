@@ -37,8 +37,8 @@ namespace SIO{
       SIO_DATA( stream ,  hit->_position  , 3 ) ;
     }
 
-    // read a pointer tag for future reference to calorimeter hits
-    SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+//     // read a pointer tag for future reference to calorimeter hits
+//     SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
 	
     return ( SIO_BLOCK_SUCCESS ) ;
 	
@@ -64,8 +64,8 @@ namespace SIO{
       SIO_DATA( stream,  pos , 3 ) ;
     }
 
-    // add a pointer tag for future reference to calorimeter hits
-    SIO_PTAG( stream , hit ) ;
+//     // add a pointer tag for future reference to calorimeter hits
+//     SIO_PTAG( stream , hit ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     

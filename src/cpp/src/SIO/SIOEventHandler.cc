@@ -45,6 +45,8 @@ namespace SIO  {
 
     if( op == SIO_OP_READ ){ 
 
+      LCSIO::checkVersion(versionID) ;
+
       // delete the old event object 
       // -> for every handler there will only be one event object at any given time      
        if (*_evtP )  delete *_evtP ;

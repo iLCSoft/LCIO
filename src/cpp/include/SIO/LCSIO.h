@@ -9,10 +9,7 @@ class SIO_stream ;
 namespace SIO {
 
 
-  //fg 20030508 changing the way strings are saved - ommit the trailing '\00'
-  // for a transition period we need to give the versionID
-  // to be able to read old files transparently
-#define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt) ,(versionID) ); if( !(status & 1) ) return status;
+#define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt)  ); if( !(status & 1) ) return status;
 
 #define LCSIO_WRITE( rec, pnt ) status = LCSIO::write( (rec), (pnt)  ); if( !(status & 1) ) return status;
 
@@ -40,17 +37,22 @@ namespace SIO {
      */
     static const bool COMPRESSION = true ;
 
+
+    /**Checks the version of the file - oldefile (version < v00-08) are no longer supported
+     */
+    static void checkVersion(int versionID ) ;
+
     /** Read a string from the stream into a dummy buffer. 
      * Warning the same buffer is used for each call.
      * So the return value needs to be copied to its final memory destination.
      */
     static unsigned int read( SIO_stream* stream ,char** c ) ;
 
-    /** This version checks the versionId to be able to read 'old' files with 
-     * trailing '\00' (version <= 00-02).
-     * Remove this method after a reasonable transition period...
-     */
-    static unsigned int read( SIO_stream* stream ,char** c, int versionID) ;
+//     /** This version checks the versionId to be able to read 'old' files with 
+//      * trailing '\00' (version <= 00-02).
+//      * Remove this method after a reasonable transition period...
+//      */
+//     static unsigned int read( SIO_stream* stream ,char** c, int versionID) ;
   
     /** Write an int to the stream.
      */

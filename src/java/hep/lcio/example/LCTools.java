@@ -127,15 +127,14 @@ public class LCTools
             for (int i = 0; i < nPrint; i++)
             {
                TPCHit hit = (TPCHit) col.getElementAt(i);
-            if(raw)
-            {
-            int nRawWords = hit.getNRawDataWords();
-            System.out.println( nRawWords +" raw data words:");
-            for(int rawWord = 0; rawWord< nRawWords; ++rawWord)
-            {
-            System.out.println( "                         "+hit.getRawDataWord(rawWord) );
-            }
-            }
+	       if(raw){
+		   int nRawWords = hit.getNRawDataWords();
+		   System.out.print( nRawWords +" raw data words:");
+		   for(int rawWord = 0; rawWord< nRawWords; ++rawWord) {
+		       System.out.print( " | " + hit.getRawDataWord(rawWord) );
+		   }
+		   System.out.println(" |");
+	       }
             else
             {
                System.out.print("    hit -  id: " + hit.getCellID() + " time: " + hit.getTime()

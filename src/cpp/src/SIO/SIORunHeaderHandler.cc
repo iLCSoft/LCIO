@@ -40,6 +40,8 @@ namespace SIO  {
   unsigned int SIORunHeaderHandler::xfer( SIO_stream* stream, SIO_operation op, 
 					  unsigned int versionID){
   
+    LCSIO::checkVersion(versionID) ;
+    
     unsigned int status ; // needed by the SIO_DATA macro
   
     if( op == SIO_OP_READ ){ 

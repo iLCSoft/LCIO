@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.7 2003-09-15 21:44:32 tonyj Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.8 2003-09-16 09:50:21 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -35,7 +35,7 @@ class SIOCalorimeterHit extends ICalorimeterHit
          position[2] = in.readFloat();
       }
 
-      in.readPTag(this);
+      //      in.readPTag(this);
    }
 
    static void write(CalorimeterHitData hit, SIOOutputStream out, int flags) throws IOException
@@ -56,7 +56,7 @@ class SIOCalorimeterHit extends ICalorimeterHit
             out.writeFloat(pos[2]);
          }
 
-         out.writePTag(hit);
+	 //         out.writePTag(hit);
       }
    }
 
@@ -73,6 +73,6 @@ class SIOCalorimeterHit extends ICalorimeterHit
          out.writeFloat(position[2]);
       }
 
-      out.writePTag(this);
+      //      out.writePTag(this);
    }
 }

@@ -25,19 +25,20 @@ int main(int argc, char** argv ){
   }
   
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-
+  
   // first we read the run information
- 
+  
+  
+  lcReader->open( FILEN ) ;
+  
+  cout << " opened " << FILEN << " for reading " << endl ; 
+  
+  LCRunHeader *runHdr ;
+  
   // use a try catch block here: if sth. went wrong with reading the run data we 
   // still can try and read the event data - see below
   try{  
-    
-    lcReader->open( FILEN ) ;
-    
-    cout << " opened " << FILEN << " for reading " << endl ; 
-    
-    LCRunHeader *runHdr ;
-    
+
     // loop over all run headers
     while( ( runHdr = lcReader->readNextRunHeader() ) != 0 ){
       
@@ -46,16 +47,14 @@ int main(int argc, char** argv ){
 	   << ":  "      << runHdr->getDescription()  << endl ;
     }
     
-    cout << endl ;
-    
-    lcReader->close() ;
-
-  }
-  catch(IOException& e){
+  }catch(IOException& e){
     cout << " io error when reading run data : " << e.what() << endl ;
   }
+  cout << endl ;
   
-
+  lcReader->close() ;
+  
+  
   // now loop over the file again and dump event data
 
   lcReader->open( FILEN ) ;

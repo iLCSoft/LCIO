@@ -3,6 +3,7 @@
 #include "SIO_functions.h"
 #include "SIO_definitions.h"
 #include <cctype>
+#include "Exceptions.h"
 
 namespace SIO {
 
@@ -19,37 +20,42 @@ namespace SIO {
   const char* LCSIO::FILE_EXTENSION=".slcio" ;
 
 
-  unsigned int LCSIO::read( SIO_stream* stream ,char** c, int versionID){
-    
-    int status ;
-    int strLen ;
-    status = SIO_functions::data( stream ,  &strLen  , 1  ) ;
-    
-    if( !( status & 1 ) ) return status ;
-    
-    // make sure our string buffer is large enough 
-    while( strLen + 1 > dummy_size ){
-      dummy_size += dummy_size  ;
-      delete[] dummy ;
-      dummy = new char[ dummy_size  ] ;
-    }
-    
-    // fg20030508 old files have trailing '\00' for strings ...
-    if( SIO_VERSION_MAJOR( versionID ) < 1 && SIO_VERSION_MINOR( versionID ) < 3 ) {
-      
-      SIO_functions::data( stream ,  dummy  , strLen + 1  ) ;
-      
-    } else {
-      
-      SIO_functions::data( stream ,  dummy  , strLen ) ;
-      dummy[ strLen ] = '\0' ; // still needed for char* ...
-    }
-    
-    *c = dummy  ;
-    
-    return status ;
-    
+  void LCSIO::checkVersion(int versionID){
+    if ( SIO_VERSION_MAJOR( versionID ) < 1 && SIO_VERSION_MINOR(versionID) < 8)
+      throw IO::IOException(" Old file versions ( < v00-08 ) no longer supported !") ;    
   }
+
+//   unsigned int LCSIO::read( SIO_stream* stream ,char** c, int versionID){
+    
+//     int status ;
+//     int strLen ;
+//     status = SIO_functions::data( stream ,  &strLen  , 1  ) ;
+    
+//     if( !( status & 1 ) ) return status ;
+    
+//     // make sure our string buffer is large enough 
+//     while( strLen + 1 > dummy_size ){
+//       dummy_size += dummy_size  ;
+//       delete[] dummy ;
+//       dummy = new char[ dummy_size  ] ;
+//     }
+    
+//     // fg20030508 old files have trailing '\00' for strings ...
+//     if( SIO_VERSION_MAJOR( versionID ) < 1 && SIO_VERSION_MINOR( versionID ) < 3 ) {
+      
+//       SIO_functions::data( stream ,  dummy  , strLen + 1  ) ;
+      
+//     } else {
+      
+//       SIO_functions::data( stream ,  dummy  , strLen ) ;
+//       dummy[ strLen ] = '\0' ; // still needed for char* ...
+//     }
+    
+//     *c = dummy  ;
+    
+//     return status ;
+    
+//   }
   
   unsigned int LCSIO::read( SIO_stream* stream ,char** c){
     

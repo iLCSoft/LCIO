@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.7 2003-09-15 21:44:33 tonyj Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.8 2003-09-16 09:50:21 gaede Exp $
  */
 public class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -31,7 +31,7 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       dEdx = in.readFloat();
       time = in.readFloat();
       particle = in.readPntr();
-      in.readPTag(this);
+      //      in.readPTag(this);
    }
 
    public MCParticle getMCParticle()
@@ -56,7 +56,7 @@ public class SIOSimTrackerHit extends ISimTrackerHit
          out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
          out.writePntr(hit.getMCParticleData());
-         out.writePTag(hit);
+	 //         out.writePTag(hit);
       }
    }
 
@@ -69,6 +69,6 @@ public class SIOSimTrackerHit extends ISimTrackerHit
       out.writeFloat(dEdx);
       out.writeFloat(time);
       out.writePntr(getMCParticle());
-      out.writePTag(this);
+      //      out.writePTag(this);
    }
 }

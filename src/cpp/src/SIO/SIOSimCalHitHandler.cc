@@ -53,8 +53,8 @@ namespace SIO{
       hit->_vec.push_back(  mcCon  );
     }
 
-    // read a pointer tag for future reference to calorimeter hits
-    SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
+//     // read a pointer tag for future reference to calorimeter hits
+//     SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
 	
     return ( SIO_BLOCK_SUCCESS ) ;
 	
@@ -100,8 +100,8 @@ namespace SIO{
       
     }
     
-    // add a pointer tag for future reference to calorimeter hits
-    SIO_PTAG( stream , hit ) ;
+//     // add a pointer tag for future reference to calorimeter hits
+//     SIO_PTAG( stream , hit ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     
