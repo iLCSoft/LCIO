@@ -49,9 +49,9 @@ public class ITrackerHit extends ILCObject implements TrackerHit {
 	/* (non-Javadoc)
 	 * @see hep.lcio.event.TrackerHit#getType()
 	 */
-	public String getType() {
+	public int getType() {
 		// TODO Auto-generated method stub
-		return null;
+		return 0;
 	}
 
 	/* (non-Javadoc)
@@ -95,9 +95,8 @@ public class ITrackerHit extends ILCObject implements TrackerHit {
 	}
 
 	/* (non-Javadoc)
-	 * @see hep.lcio.event.TrackerHit#setTPCHit(hep.lcio.event.TPCHit)
 	 */
-	public void setTPCHit(TPCHit hit) {
+	public void setRawHit(TPCHit hit) {
 		// TODO Auto-generated method stub
 
 	}

@@ -17,10 +17,11 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.14 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.15 2004-09-01 16:42:57 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
+
    private List temp = new ArrayList();
    SIOMCParticle(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException
    {      

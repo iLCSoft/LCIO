@@ -1,5 +1,6 @@
 #include "IMPL/ReconstructedParticleImpl.h"
 #include <algorithm>
+#include "IMPL/ParticleIDImpl.h"
 
 
 using namespace EVENT ;

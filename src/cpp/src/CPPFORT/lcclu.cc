@@ -32,10 +32,10 @@ int lcclugettype( PTRTYPE cluster )  {
   return clu->getType() ;
 }
 
-int lcclutesttype( PTRTYPE cluster , int bit )  {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  return clu->testType( bit ) ;
-}
+// int lcclutesttype( PTRTYPE cluster , int bit )  {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   return clu->testType( bit ) ;
+// }
 
 float lcclugetenergy( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
@@ -70,16 +70,28 @@ int lcclugetdirectionerror( PTRTYPE cluster, float direrr[3] )  {
   return LCIO::SUCCESS ;
 }
 
-int lcclugetparticletype( PTRTYPE cluster, float weights[3] )  {
+// int lcclugetparticletype( PTRTYPE cluster, float weights[3] )  {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   for( int i=0 ; i<3 ;  *weights++ = clu->getParticleType()[i++]  ) ;
+//   return LCIO::SUCCESS ;
+// }
+
+// int lcclugetshape( PTRTYPE cluster, float shape[6] )  {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   for( int i=0 ; i<6 ;  *shape++ = clu->getShape()[i++]  ) ;
+//   return LCIO::SUCCESS ;
+// }
+
+PTRTYPE lcrcpgetparticleids( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  for( int i=0 ; i<3 ;  *weights++ = clu->getParticleType()[i++]  ) ;
-  return LCIO::SUCCESS ;
+  const ParticleIDVec& idvect = clu->getParticleIDs();
+  return reinterpret_cast<PTRTYPE>( &idvect );
 }
 
-int lcclugetshape( PTRTYPE cluster, float shape[6] )  {
+PTRTYPE lcclugetshape( PTRTYPE cluster )  {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  for( int i=0 ; i<6 ;  *shape++ = clu->getShape()[i++]  ) ;
-  return LCIO::SUCCESS ;
+  const FloatVec& shape = clu->getShape();
+  return reinterpret_cast<PTRTYPE>( &shape );
 }
 
 PTRTYPE lcclugetclusters( PTRTYPE cluster ) {
@@ -165,29 +177,30 @@ int lcclusetdirectionerror( PTRTYPE cluster, float errdir[3] ) {
   return LCIO::SUCCESS ;
 }
 
-int lcclusetshape( PTRTYPE cluster, float shape[6] ) {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setShape( shape ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcclusetshape( PTRTYPE cluster, float shape[6] ) {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   clu->setShape( shape ) ;
+//   return LCIO::SUCCESS ;
+// }
 
-int lcclusetemweight( PTRTYPE cluster, float weight) {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setEMWeight( weight ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcclusetemweight( PTRTYPE cluster, float weight) {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   clu->setEMWeight( weight ) ;
+//   return LCIO::SUCCESS ;
+// }
 
-int lcclusethadweight( PTRTYPE cluster, float weight) {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setHADWeight( weight ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcclusethadweight( PTRTYPE cluster, float weight) {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   clu->setHADWeight( weight ) ;
+//   return LCIO::SUCCESS ;
+// }
 
-int lcclusetmuonweight( PTRTYPE cluster, float weight) {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  clu->setMuonWeight( weight ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcclusetmuonweight( PTRTYPE cluster, float weight) {
+//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+//   clu->setMuonWeight( weight ) ;
+//   return LCIO::SUCCESS ;
+// }
+
 
 int lccluaddcluster( PTRTYPE cluster, PTRTYPE clus) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;

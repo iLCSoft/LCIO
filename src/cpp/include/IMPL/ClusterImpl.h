@@ -3,7 +3,6 @@
 
 
 #include "EVENT/Cluster.h"
-//#include "EVENT/CalorimeterHit.h"
 #include "AccessChecked.h"
 #include <map>
 #include <bitset>
@@ -28,7 +27,7 @@ namespace IMPL {
  *
  * @see Cluster
  * @author gaede
- * @version Mar 26, 2003
+ * @version $Id: ClusterImpl.h,v 1.9 2004-09-01 16:42:54 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
@@ -46,13 +45,12 @@ namespace IMPL {
     /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits to the cluster. The definition of the bits has to be done 
      *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
-     *  @see testType()
      */
     virtual int getType() const ;
 
-    /** Returns true if the corresponding bit in the type word is set.
-     */
-    virtual bool testType(int bitIndex) const ;
+//     /** Returns true if the corresponding bit in the type word is set.
+//      */
+//     virtual bool testType(int bitIndex) const ;
 
 
     /** Energy of the cluster.
@@ -79,29 +77,22 @@ namespace IMPL {
      */
     virtual const EVENT::FloatVec & getDirectionError() const ;
 
-    /** Shape parameters (6 Parameters) - TO DO: definition
+    /** Shape parameters - check/set  collection parameter
+     *  ShapeParameters for size and names of parameters.
      */
     virtual const EVENT::FloatVec & getShape() const ;
 
-    /** Type hypotheses: 3 Parameters: compatible with EM, HAD, muon cluster
+//     /** Type hypotheses: 3 Parameters: compatible with EM, HAD, muon cluster
+//      */
+//     virtual const EVENT::FloatVec & getParticleType() const ;
+
+
+    /** The particle Id's sorted by their probability.
+     * @see ParticleID
      */
-    virtual const EVENT::FloatVec & getParticleType() const ;
+    virtual const EVENT::ParticleIDVec & getParticleIDs() const ;
 
 
-//     /** Returns the names of the hit collections that have been
-//      *  used to create the cluster.
-//      */
-//     virtual const EVENT::StringVec & getHitCollectionNames() const ;
-
-//     /** Returns the hit indices for the given collection name.
-//      */
-//     virtual const EVENT::IntVec & getHitIndicesForCollection(const std::string & colName) const ;
-
-//     /** Returns the energy contribution from the hits in the given collection.
-//      * Runs parallel to the IntVec from getHitIndicesForCollection()
-//      */
-//     virtual const EVENT::FloatVec & getHitContributionsForCollection(const std::string & colName) const ;
-    
     /** The clusters that have been combined to this cluster.
      */
     virtual const EVENT::ClusterVec & getClusters() const ;
@@ -129,17 +120,18 @@ namespace IMPL {
     void setIPhi(float phi) ;
     void setDirectionError(const EVENT::FloatVec &errdir) ;
     void setDirectionError(const float* errdir) ;
-    void setShape(const float* shape) ;
+    //    void setShape(const float* shape) ;
     void setShape(const EVENT::FloatVec &shape) ;
 
-    void setEMWeight(float emWeight ) ;
-    void setHADWeight(float hadWeight ) ;
-    void setMuonWeight(float muonWeight ) ;
-    void addCluster(EVENT::Cluster* cluster) ;
+    void addParticleID( EVENT::ParticleID*  pid ) ;
 
+//     void setEMWeight(float emWeight ) ;
+//     void setHADWeight(float hadWeight ) ;
+//     void setMuonWeight(float muonWeight ) ;
+
+    void addCluster(EVENT::Cluster* cluster) ;
     void addHit(EVENT::CalorimeterHit* hit  , float contribution) ;
 
-    //    void  addHitIndex( const std::string& colName, int index , float contribution) ;
 
     /** To be used for modifying the subdetector energies, e.g.<br>
      *  clu->subdetectorEnergies().resize(3) ;
@@ -160,7 +152,7 @@ namespace IMPL {
     float _phi ;
     EVENT::FloatVec _errdir ;
     EVENT::FloatVec _shape ;
-    EVENT::FloatVec _particletype;
+    EVENT::ParticleIDVec _pid ;
     EVENT::ClusterVec _clusters ;
     EVENT::CalorimeterHitVec _hits ;
     EVENT::FloatVec _weights ;

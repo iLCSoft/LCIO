@@ -2,8 +2,8 @@ package hep.lcio.implementation.event;
 
 import hep.lcio.event.Cluster;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  *
@@ -20,11 +20,13 @@ public class ICluster extends ILCObject implements Cluster
    protected int type;
    protected float[] directionError = null3;
    protected float[] hitContributions = null3;
-   protected float[] particleType = null3;
+   //protected float[] particleType = null3;
    protected float[] position = null3;
-   protected float[] shape = null6;
+   protected float[]  shape = new float[0] ;
+   protected List  particleIDs = new ArrayList() ;
    protected float[] positionError = null6;
    protected float[] subdetectorEnergies = new float[0] ;
+   
 		   
    public List getCalorimeterHits()
    {
@@ -51,10 +53,6 @@ public class ICluster extends ILCObject implements Cluster
       return hitContributions;
    }
    
-   public float[] getParticleType()
-   {
-      return particleType;
-   }
    
    public float getIPhi()
    {
@@ -84,11 +82,6 @@ public class ICluster extends ILCObject implements Cluster
    public int getType()
    {
       return type;
-   }
-   
-   public boolean testType(int bitIndex)
-   {
-      return bitTest(type,bitIndex);
    }
    
    public void setCalorimeterHits(List calorimeterHits)
@@ -121,12 +114,12 @@ public class ICluster extends ILCObject implements Cluster
       this.hitContributions = hitContributions;
    }
    
-   public void setParticleType(float[] particleType)
-   {
-      checkAccess();
-      if (particleType.length != 3) throw new IllegalArgumentException();
-      this.particleType = particleType;
-   }
+//   public void setParticleType(float[] particleType)
+//   {
+//      checkAccess();
+//      if (particleType.length != 3) throw new IllegalArgumentException();
+//      this.particleType = particleType;
+//   }
    
    public void setIPhi(float phi)
    {
@@ -151,8 +144,8 @@ public class ICluster extends ILCObject implements Cluster
    public void setShape(float[] shape)
    {
       checkAccess();
-      if (shape.length != 6) throw new IllegalArgumentException();
-      this.shape = shape;
+     if (shape.length != 6) throw new IllegalArgumentException();
+     this.shape = shape;
    }
    
    public void setITheta(float theta)
@@ -187,4 +180,20 @@ public class ICluster extends ILCObject implements Cluster
       //if (fs.length != 3) throw new IllegalArgumentException();      
       subdetectorEnergies = fs ;
    }
+/**
+ * @return
+ */
+public List getParticleIDs() {
+	return particleIDs;
+}
+
+
+/**
+ * @param list
+ */
+public void setParticleIDs(List list) {
+	particleIDs = list;
+}
+
+
 }

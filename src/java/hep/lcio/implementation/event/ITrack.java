@@ -139,7 +139,7 @@ public class ITrack extends ILCObject implements Track
       this.referencePoint = referencePoint;
    }
    
-   protected void setType(int typeWord)
+   protected void setType(int type)
    {     
       checkAccess();
       this.type = type;
@@ -201,12 +201,6 @@ public class ITrack extends ILCObject implements Track
    public void setReferencePointPCA(boolean b)
    {
       bitSet(type,BITISREFERENCEPOINTPCA, b);
-   }
-   
-   public boolean testType(int bitIndex)
-   {
-      
-      return bitTest(type,bitIndex);
    }
    
    public void addTrack(Track track)

@@ -2,13 +2,20 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcio.event.ParticleID;
 import hep.lcio.implementation.event.ICluster;
+
+import java.util.Iterator;
+import java.util.List;
 import java.io.IOException;
+import java.util.Vector;
+
+import sun.security.x509.IPAddressName;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.8 2004-07-23 10:28:28 gaede Exp $
+ * @version $Id: SIOCluster.java,v 1.9 2004-09-01 16:42:57 gaede Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -33,17 +40,37 @@ class SIOCluster extends ICluster
       directionError[0] = in.readFloat();
       directionError[1] = in.readFloat();
       directionError[2] = in.readFloat();
-      shape = new float[6] ;
-      shape[0] = in.readFloat();
-      shape[1] = in.readFloat();
-      shape[2] = in.readFloat();
-      shape[3] = in.readFloat();
-      shape[4] = in.readFloat();
-      shape[5] = in.readFloat();
-      particleType = new float[3] ;
-      particleType[0] = in.readFloat();
-      particleType[1] = in.readFloat();
-      particleType[2] = in.readFloat();
+
+	  int nShape ;
+	  if( 1000.*major+minor > 1002.){
+        nShape = in.readInt() ;
+	  }else{
+	    nShape = 6 ;
+	  }
+      shape = new float[nShape] ;
+      for (int i = 0; i < nShape; i++) {
+		shape[i] = in.readFloat();
+	  }
+
+	  if( 1000.*major+minor > 1002.){
+         // TODO/Fixme: need IParticleID here
+         int nPID = in.readInt() ;
+         for (int i = 0; i < nPID; i++) {
+			float dummy  = in.readFloat() ;
+			dummy  = in.readInt() ;
+			dummy  = in.readInt() ;
+			dummy  = in.readFloat() ;
+		 }
+
+	  }else{
+		// read 3 dummy floats
+		float[] particleType = new float[3] ;
+		particleType[0] = in.readFloat();
+		particleType[1] = in.readFloat();
+		particleType[2] = in.readFloat();
+	  }
+
+
       int x = in.readInt(); // Fixme:
       for(int i =0 ; i<x ; i++ ){
 		in.readPntr(); // Fixme:
@@ -91,17 +118,22 @@ class SIOCluster extends ICluster
          out.writeFloat(p[0]);
          out.writeFloat(p[1]);
          out.writeFloat(p[2]);
-         p = cluster.getShape();
-         out.writeFloat(p[0]);
-         out.writeFloat(p[1]);
-         out.writeFloat(p[2]);
-         out.writeFloat(p[3]);
-         out.writeFloat(p[4]);
-         out.writeFloat(p[5]);
-         p = cluster.getParticleType();
-         out.writeFloat(p[0]);
-         out.writeFloat(p[1]);
-         out.writeFloat(p[2]);
+
+         float shapes[] = cluster.getShape();
+		 //out.writeInt( shapes.length );
+		 out.writeFloatArray(shapes) ;	
+
+         List pids = cluster.getParticleIDs() ;
+         out.writeInt( pids.size()) ;
+         for (Iterator iter = pids.iterator(); iter.hasNext();) {
+			ParticleID pid = (ParticleID) iter.next();
+			out.writeFloat( pid.getLoglikelihood() ) ;
+			out.writeInt( pid.getType() ) ;
+			out.writeInt( pid.getPDG() ) ;
+			out.writeFloat( pid.getGoodnessOfPID() ) ;
+		}
+         
+         
          out.writeInt(0); // Fixme:
          if ((flag & (1<<31)) != 0)
          {
@@ -139,15 +171,18 @@ class SIOCluster extends ICluster
       out.writeFloat(directionError[0]);
       out.writeFloat(directionError[1]);
       out.writeFloat(directionError[2]);
-      out.writeFloat(shape[0]);
-      out.writeFloat(shape[1]);
-      out.writeFloat(shape[2]);
-      out.writeFloat(shape[3]);
-      out.writeFloat(shape[4]);
-      out.writeFloat(shape[5]);
-      out.writeFloat(particleType[0]);
-      out.writeFloat(particleType[1]);
-      out.writeFloat(particleType[2]);
+
+  	  //out.writeInt( shape.length );
+	  out.writeFloatArray(shape) ;	
+	  out.writeInt( particleIDs.size()) ;
+	  for (Iterator iter = particleIDs.iterator(); iter.hasNext();) {
+	    ParticleID pid = (ParticleID) iter.next();
+	    out.writeFloat( pid.getLoglikelihood() ) ;
+	    out.writeInt( pid.getType() ) ;
+	    out.writeInt( pid.getPDG() ) ;
+	    out.writeFloat( pid.getGoodnessOfPID() ) ;
+      }
+
       out.writeInt(0); // Fixme:
       if ((flag & (1<<31)) != 0)
       {

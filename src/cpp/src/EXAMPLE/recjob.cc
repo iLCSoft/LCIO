@@ -16,6 +16,7 @@
 #include "IMPL/TrackImpl.h" 
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
+#include "IMPL/ParticleIDImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
 #include "IMPL/LCRelationImpl.h"
@@ -367,12 +368,29 @@ public:
 	float errdir[6] = { 1.,2.,3.} ;
 	cluster->setDirectionError( errdir ) ;
 
-	float shape[6] = { 1.,2.,3.,3.,2.,1.} ;
-	cluster->setShape( shape ) ;
+	float shapeArray[6] = { 1.,2.,3.,3.,2.,1.} ;
+	FloatVec shape ;
+	copy( &shapeArray[0] , &shapeArray[5] , back_inserter( shape ) ) ;
 
-	cluster->setEMWeight( .333)  ;
-	cluster->setHADWeight( .333)  ;
-	cluster->setMuonWeight( .333)  ;
+ 	cluster->setShape( shape ) ;
+// 	cluster->setEMWeight( .333)  ;
+// 	cluster->setHADWeight( .333)  ;
+// 	cluster->setMuonWeight( .333)  ;
+
+ 	// add some particle ids
+	int nPID = 5 ;
+	for(int j=0;j<nPID;j++){
+	  ParticleIDImpl* pid = new ParticleIDImpl ;
+	  pid->setLoglikelihood( (double) j / nPID ) ;
+	  pid->setType( j ) ;
+	  pid->setPDG( -11 ) ;
+	  pid->setGoodnessOfPID( 0.7 ) ;
+	  pid->setIdentifier("recojob-RunEventProcessor") ;
+	  for(int k=0;k<3;k++){
+	    pid->addParameter( k*.1 ) ;
+	  }
+	  cluster->addParticleID( pid ) ;
+	}      
 
 	// add some subdetector energies
 	cluster->subdetectorEnergies().resize( NCALORIMETER )  ;

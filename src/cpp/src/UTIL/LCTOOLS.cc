@@ -915,7 +915,8 @@ namespace UTIL {
     int nPrint = nClusters > MAX_HITS ? MAX_HITS : nClusters ;
     
     std::cout << endl
-	      << " [   id   ] |  type | energy    |      position ( x,y,z)          |  itheta   |  iphi     | EMweight |HADweight |MUweight"
+	      << " [   id   ] |  type | energy    |      position ( x,y,z)          |  itheta   |  iphi "
+//    | EMweight |HADweight |MUweight"
 	      << endl	      
 	      << "------------|-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
 	      << endl ;
@@ -925,7 +926,7 @@ namespace UTIL {
       Cluster* clu = 
       	dynamic_cast<Cluster*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] |0x%5x| %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | %4.2e | %4.2e \n"
+      printf(" [%8.8x] |0x%5x| %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e \n"// | %4.2e | %4.2e | %4.2e \n"
 	     , clu->id()
 	     , clu->getType() 
 	     , clu->getEnergy() 
@@ -934,9 +935,9 @@ namespace UTIL {
 	     , clu->getPosition()[2]
 	     , clu->getITheta() 
 	     , clu->getIPhi()
-	     , clu->getParticleType()[0] 
-	     , clu->getParticleType()[1] 
-	     , clu->getParticleType()[2] 
+// 	     , clu->getParticleType()[0] 
+// 	     , clu->getParticleType()[1] 
+// 	     , clu->getParticleType()[2] 
 	     ) ;
       cout << " errors (6 pos)/( 3 dir): (" ;
       for(int l=0;l<6;l++){

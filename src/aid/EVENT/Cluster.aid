@@ -10,7 +10,7 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.7 2004-07-23 10:28:25 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.8 2004-09-01 16:42:53 gaede Exp $
  */
 
 
@@ -44,13 +44,12 @@ public interface Cluster extends LCObject {
     /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits to the cluster. The definition of the bits has to be done 
      *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
-     *  @see testType()
      */
     public int  getType() const ;	
     
-    /** Returns true if the corresponding bit in the type word is set.
-     */
-    public boolean testType(int bitIndex ) const ; 
+//     /** Returns true if the corresponding bit in the type word is set.
+//      */
+//     public boolean testType(int bitIndex ) const ; 
 
     /** Energy of the cluster.
      */
@@ -79,13 +78,22 @@ public interface Cluster extends LCObject {
      */
     public const FloatVec& getDirectionError() const ;
 
-    /** Shape parameters (6 Parameters) - TO DO: definition
+
+    /** Shape parameters - check/set  collection parameter
+     *  ShapeParameters for size and names of parameters.
      */
     public const FloatVec& getShape() const ;
+    
+    
+//     /** Type hypotheses: 3 Parameters: compatible with EM, HAD, muon cluster
+//      */
+//     public const FloatVec& getParticleType() const ;
 
-    /** Type hypotheses: 3 Parameters: compatible with EM, HAD, muon cluster
+    /** The particle Id's sorted by their loglikelihood.
+     * @see ParticleID
      */
-    public const FloatVec& getParticleType() const ;
+    public const ParticleIDVec& getParticleIDs() const ;
+
 
     /** The clusters that have been combined to this cluster.
      */

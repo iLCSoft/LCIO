@@ -9,7 +9,7 @@ typedef std::vector<Track*> TrackVec ;
 /** The LCIO track.
  * 
  * @author gaede
- * @version $Id: Track.aid,v 1.9 2004-08-20 16:45:23 gaede Exp $
+ * @version $Id: Track.aid,v 1.10 2004-09-01 16:42:53 gaede Exp $
  */
 
 public interface Track extends LCObject {
@@ -47,14 +47,13 @@ public interface Track extends LCObject {
     /** Flagword that defines the type of track. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits used in the track fit. The definition of the bits has to be done 
      *  elsewhere, e.g. in the run header. Bits 16-31 are used internally.
-     *  @see testType()
      */
     public  int  getType() const ;	
     
 
-    /** Returns true if the corresponding bit in the type word is set.
-     */
-    public boolean testType(int bitIndex ) const ; 
+//     /** Returns true if the corresponding bit in the type word is set.
+//      */
+//     public boolean testType(int bitIndex ) const ; 
 
 
 //     /** The magnitude of the track's momentum,

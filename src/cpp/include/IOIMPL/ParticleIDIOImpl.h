@@ -6,11 +6,12 @@
 // forward declaration
 namespace SIO{ 
   class SIOParticleIDHandler ;
+  class SIOReconstructedParticleHandler ;
+  class SIOClusterHandler ;
 };
 
 namespace IOIMPL {
 
-  class SIOReconstructedParticleHandler ;
   
 /** Adding stuff needed for io (friend declarations, etc.)
  * 
@@ -22,6 +23,7 @@ namespace IOIMPL {
     // ParticleIDs are handled by the SIOReconstructedParticleHandler !!
     // -> no collections of ParticleIDs in the event
     friend class SIO::SIOReconstructedParticleHandler ;
+    friend class SIO::SIOClusterHandler ;
     
   }; // class
 

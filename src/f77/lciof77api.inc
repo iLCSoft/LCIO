@@ -122,7 +122,7 @@ c-----the CalorimeterHit interface
 c-----the Cluster interface
       PTRTYPE lcclucreate, lcclugetclusters, lcclugetcalorimeterhits
       PTRTYPE lcclugetsubdetectorenergies
-      integer lccludelete, lcclugetid, lcclugettype, lcclutesttype
+      integer lccludelete, lcclugetid, lcclugettype
       integer lcclugetposition
       integer lcclugetpositionerror, lcclugetdirectionerror
       integer lcclugetshape, lcclugetparticletype
@@ -137,11 +137,15 @@ c-----the Cluster interface
 
 c-----the ParticleID interface
       PTRTYPE lcpidcreate
-      integer lcpiddelete, lcpidid, lcpidgettypeid, lcpidgetparameters
-      real    lcpidgetprobability
+      integer lcpiddelete, lcpidid, lcpidgettype, lcpidgetpdg
+      integer lcpidgetparameters
+      real    lcpidgetloglikelihood, lcpidgetgoodnessofpid
       character*80 lcpidgetidentifier
-      integer lcpidsettypeid, lcpidsetprobability, lcpidsetidentifier
+      integer lcpidsettype, lcpidsetpdg, lcpidsetloglikelihood
+      integer lcpidsetidentifier, lcpidsetgoodnessofpid
       integer lcpidaddparameter
+      integer unknownpdg
+      parameter (unknownpdg=999999)
 
 c-----the ReconstructedParticle interface
       PTRTYPE lcrcpcreate, lcrcpgetparticleids, lcrcpgetparticles
@@ -164,12 +168,12 @@ c-----the TrackerHit interface
       real    lctrhgetdedx, lctrhgettime
       character*80 lctrhgettype
       integer lctrhsetposition, lctrhsetcovmatrix, lctrhsetdedx
-      integer lctrhsettime, lctrhsettpchit
+      integer lctrhsettime, lctrhsetrawhit
 
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits
       PTRTYPE lctrkgetsubdetectorhitnumbers
-      integer lctrkdelete, lctrkid, lctrktesttype
+      integer lctrkdelete, lctrkid
       integer lctrkgettype, lctrkgetcovmatrix
       integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
       real    lctrkgetomega, lctrkgetanlambda, lctrkgetphi, lctrkgetd0

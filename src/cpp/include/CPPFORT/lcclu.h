@@ -14,7 +14,7 @@ int     lccludelete( PTRTYPE clu ) ;
 
 int     lccluid( PTRTYPE clu ) ;
 int     lcclugettype( PTRTYPE clu ) ;
-int     lcclutesttype( PTRTYPE clu , int bit ) ;
+// int     lcclutesttype( PTRTYPE clu , int bit ) ;
 
 float   lcclugetenergy( PTRTYPE clu ) ;
 int     lcclugetposition( PTRTYPE clu, float* pos ) ;
@@ -22,8 +22,13 @@ int     lcclugetpositionerror( PTRTYPE clu, float* poserr ) ;
 float   lcclugetitheta( PTRTYPE clu ) ;
 float   lcclugetiphi( PTRTYPE clu ) ;
 int     lcclugetdirectionerror( PTRTYPE clu, float* direrr ) ;
-int     lcclugetshape( PTRTYPE clu, float* shape ) ;
-int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
+
+// int     lcclugetshape( PTRTYPE clu, float* shape ) ;
+// int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
+
+PTRTYPE lcclugetshape( PTRTYPE clu ) ;
+PTRTYPE lcrcpgetparticleids( PTRTYPE clu ) ;
+
 PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
 int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
@@ -36,7 +41,9 @@ int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
 int     lcclusetitheta( PTRTYPE clu, float theta ) ;
 int     lcclusetiphi( PTRTYPE clu, float phi ) ;
 int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
+
 int     lcclusetshape( PTRTYPE clu, float* shape ) ;
+
 int     lcclusetemweight(  PTRTYPE clu, float weight ) ;
 int     lcclusethadweight(PTRTYPE clu, float weight ) ;
 int     lcclusetmuonweight( PTRTYPE clu, float weight ) ;
@@ -55,15 +62,16 @@ FCALLSCFUN1(INT, lccludelete, LCCLUDELETE, lccludelete, CFORTRANPNTR ) ;
 
 FCALLSCFUN1(INT, lccluid, LCCLUID, lccluid, CFORTRANPNTR) ;
 FCALLSCFUN1(INT, lcclugettype, LCCLUGETTYPE, lcclugettype, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcclutesttype, LCCLUTESTTYPE,lcclutesttype, CFORTRANPNTR, INT ) ;
+// FCALLSCFUN2(INT, lcclutesttype, LCCLUTESTTYPE,lcclutesttype, CFORTRANPNTR, INT ) ;
 FCALLSCFUN1(FLOAT, lcclugetenergy, LCCLUGETENERGY, lcclugetenergy, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lcclugetposition, LCCLUGETPOSITION, lcclugetposition, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN2(INT, lcclugetpositionerror, LCCLUGETPOSITIONERROR, lcclugetpositionerror, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN1(FLOAT, lcclugetitheta, LCCLUGETITHETA, lcclugetitheta, CFORTRANPNTR) ;
 FCALLSCFUN1(FLOAT, lcclugetiphi, LCCLUGETIPHI, lcclugetiphi, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lcclugetdirectionerror, LCCLUGETDIRECTIONERROR, lcclugetdirectionerror, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcclugetshape, LCCLUGETSHAPE, lcclugetshape, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcclugetparticletype, LCCLUGETPARTICLETYPE, lcclugetparticletype, CFORTRANPNTR, FLOATV) ;
+FCALLSCFUN1(CFORTRANPNTR, lcclugetshape, LCCLUGETSHAPE, lcclugetshape, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticleids, LCRCPGETPARTICLEIDS, lcrcpgetparticleids, CFORTRANPNTR ) ;
+
 FCALLSCFUN1(CFORTRANPNTR, lcclugetclusters, LCCLUGETCLUSTERS, lcclugetclusters, CFORTRANPNTR) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetcalorimeterhits, LCCLUGETCALORIMETERHITS, lcclugetcalorimeterhits, CFORTRANPNTR) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetsubdetectorenergies, LCCLUGETSUBDETECTORENERGIES, lcclugetsubdetectorenergies, CFORTRANPNTR) ;
@@ -76,10 +84,13 @@ FCALLSCFUN2(INT, lcclusetpositionerror, LCCLUSETPOSITIONERROR, lcclusetpositione
 FCALLSCFUN2(INT, lcclusetitheta, LCCLUSETITHETA, lcclusetitheta, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetiphi, LCCLUSETIPHI, lcclusetiphi, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetdirectionerror, LCCLUSETDIRECTIONERROR, lcclusetdirectionerror, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcclusetshape, LCCLUSETSHAPE, lcclusetshape, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcclusetemweight, LCCLUSETEMWEIGHT, lcclusetemweight, CFORTRANPNTR, FLOAT) ;
-FCALLSCFUN2(INT, lcclusethadweight, LCCLUSETHADWEIGHT, lcclusethadweight, CFORTRANPNTR, FLOAT) ;
-FCALLSCFUN2(INT, lcclusetmuonweight, LCCLUSETMUONWEIGHT, lcclusetmuonweight, CFORTRANPNTR, FLOAT) ;
+
+// FCALLSCFUN2(INT, lcclusetshape, LCCLUSETSHAPE, lcclusetshape, CFORTRANPNTR, FLOATV) ;
+// FCALLSCFUN2(INT, lcclusetemweight, LCCLUSETEMWEIGHT, lcclusetemweight, CFORTRANPNTR, FLOAT) ;
+// FCALLSCFUN2(INT, lcclusethadweight, LCCLUSETHADWEIGHT, lcclusethadweight, CFORTRANPNTR, FLOAT) ;
+// FCALLSCFUN2(INT, lcclusetmuonweight, LCCLUSETMUONWEIGHT, lcclusetmuonweight, CFORTRANPNTR, FLOAT) ;
+
+
 FCALLSCFUN2(INT, lccluaddcluster, LCCLUADDCLUSTER, lccluaddcluster, CFORTRANPNTR, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lccluaddhit, LCCLUADDHIT, lccluaddhit, CFORTRANPNTR, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN3(INT, lcclusetsubdetectorenergies, LCCLUSETSUBDETECTORENERGIES, lcclusetsubdetectorenergies, CFORTRANPNTR, FLOATV, INT ) ;

@@ -1,6 +1,7 @@
 #include "SIO/SIOClusterHandler.h"
 
 #include "SIO/LCSIO.h"
+#include "IOIMPL/ParticleIDIOImpl.h"
 
 #include "EVENT/LCIO.h"
 #include "IOIMPL/ClusterIOImpl.h"
@@ -43,16 +44,59 @@ namespace SIO{
     float errdir[ NERRDIR ] ;
     SIO_DATA( stream , errdir  , NERRDIR ) ;
     cluster->setDirectionError( errdir ) ;
-  
-    float shape[NSHAPE] ;
-    SIO_DATA( stream , shape  , NSHAPE ) ;
-    cluster->setShape( shape ) ;
+    
+    int nShape ;
+    
+    if( _vers > SIO_VERSION_ENCODE(1,2) ) {
+      SIO_DATA( stream , &nShape  , 1 ) ;
+    } else {
+      nShape = NSHAPE ;
+    }
+    
+    cluster->_shape.resize( nShape )   ;
+    
+    SIO_DATA( stream , &(cluster->_shape[0])  ,nShape ) ;
+    
+    
+    if( _vers > SIO_VERSION_ENCODE(1,2) ) {
 
-    float pType[3] ;
-    SIO_DATA( stream , pType  , 3 ) ;
-    cluster->setEMWeight( pType[0] ) ;
-    cluster->setHADWeight( pType[1] ) ;
-    cluster->setMuonWeight( pType[2] ) ;
+      
+      // read PIDs
+      int nPid ;
+      SIO_DATA( stream ,  &nPid  , 1 ) ;
+      for(int i=0;i<nPid;i++){
+	// create new Pid objects
+	ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
+	
+	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
+	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
+	
+	char* dummy ; 
+	LCSIO_READ( stream,  &dummy ) ; 
+	pid->setIdentifier( dummy ) ;
+	int nPara  ;
+	SIO_DATA( stream ,  &nPara  , 1 ) ;
+	float aParameter ;
+	for(int j=0;j<nPara;j++){
+	  SIO_DATA( stream ,  &aParameter  , 1 ) ;
+	  pid->addParameter( aParameter ) ;
+	}
+	cluster->addParticleID( pid) ;
+
+      }
+      
+    } else {
+      float pType[3] ;
+      SIO_DATA( stream , pType  , 3 ) ;
+//     cluster->setEMWeight( pType[0] ) ;
+//     cluster->setHADWeight( pType[1] ) ;
+//     cluster->setMuonWeight( pType[2] ) ;
+    
+    }
+
+
     
     int nClusters ; 
     SIO_DATA( stream, &nClusters , 1  ) ;
@@ -119,15 +163,36 @@ namespace SIO{
     for(unsigned int i=0;i<errdir.size();i++){
       LCSIO_WRITE( stream, errdir[i]  ) ;
     }
+
     const FloatVec& shape = cluster->getShape() ;
+    LCSIO_WRITE( stream, shape.size() ) ;
+    
     for(unsigned int i=0;i<shape.size();i++){
       LCSIO_WRITE( stream, shape[i]  ) ;
     }
-    const FloatVec& particleType = cluster->getParticleType() ;
-    for(unsigned int i=0;i<particleType.size();i++){
-      LCSIO_WRITE( stream, particleType[i]  ) ;
-    }
 
+//     const FloatVec& particleType = cluster->getParticleType() ;
+//     for(unsigned int i=0;i<particleType.size();i++){
+//       LCSIO_WRITE( stream, particleType[i]  ) ;
+//     }
+
+    // write Pids
+    int nPid  = cluster->getParticleIDs().size() ;
+    SIO_DATA( stream ,  &nPid  , 1 ) ;
+    for(int i=0;i<nPid;i++){
+      const ParticleID* pid = cluster->getParticleIDs()[i]  ;
+      LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
+      LCSIO_WRITE( stream, pid->getType()  ) ;
+      LCSIO_WRITE( stream, pid->getPDG()  ) ;
+      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
+      LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
+      int nPara = pid->getParameters().size() ;
+      SIO_DATA( stream ,  &nPara  , 1 ) ;
+      for(int j=0;j<nPara;j++){
+	LCSIO_WRITE( stream, pid->getParameters()[j]  ) ;
+      }
+    }
+    
     const ClusterVec& clusters = cluster->getClusters() ;
     int nClusters =  clusters.size() ;
 

@@ -1,4 +1,6 @@
 #include "IMPL/ClusterImpl.h"
+#include <algorithm>
+#include "IMPL/ParticleIDImpl.h"
 
 
 using namespace EVENT ;
@@ -6,29 +8,31 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ClusterImpl::ClusterImpl() {
-    for(int i=0 ; i < NERRPOS ; i++ ) { _errpos.push_back( 0.0 ) ;  }
-    for(int i=0 ; i < NERRDIR ; i++ ) { _errdir.push_back( 0.0 ) ;  }
-    for(int i=0 ; i < NSHAPE ; i++ )  { _shape.push_back( 0.0 ) ;   }
-    for(int i=0 ; i < 3 ; i++ )  { _particletype.push_back( 0.0 ) ;   }
+  ClusterImpl::ClusterImpl() :
+    _type(0),
+    _energy(0),
+    _theta(0),
+    _phi(0) {
+
+    _errpos.resize( NERRPOS ) ;
+    _errdir.resize( NERRDIR ) ;
+//     for(int i=0 ; i < NERRPOS ; i++ ) { _errpos.push_back( 0.0 ) ;  }
+//     for(int i=0 ; i < NERRDIR ; i++ ) { _errdir.push_back( 0.0 ) ;  }
     _position[0] = 0. ;
     _position[1] = 0. ;
     _position[2] = 0. ;
   }
 
   ClusterImpl::~ClusterImpl(){
-//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-//       delete iter->second->Indices ;
-//       delete iter->second->Weights ;
-//       delete iter->second ;
-//     }
+
   }
  
   int ClusterImpl::getType() const{  return _type.to_ulong() ; //return _type ; 
   }
-  bool ClusterImpl::testType(int bitIndex) const {
-    return _type.test( bitIndex ) ;
-  }
+
+//   bool ClusterImpl::testType(int bitIndex) const {
+//     return _type.test( bitIndex ) ;
+//   }
   
   float ClusterImpl::getEnergy() const{ return _energy;  }
   const float* ClusterImpl::getPosition() const{ return _position ; }
@@ -37,7 +41,8 @@ namespace IMPL{
   float ClusterImpl::getIPhi() const{ return _phi ;  }
   const FloatVec & ClusterImpl::getDirectionError() const{ return _errdir ;  }
   const FloatVec & ClusterImpl::getShape() const{ return _shape ;  }
-  const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
+//   const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
+  const EVENT::ParticleIDVec & ClusterImpl::getParticleIDs() const { return  _pid ; }
 
   const ClusterVec & ClusterImpl::getClusters() const{
     return _clusters ;
@@ -89,27 +94,38 @@ namespace IMPL{
     checkAccess("ClusterImpl::setDirectionError") ;
     for(int i=0;i<NERRDIR;i++) { _errdir[i] = errdir[i]  ;  }
   }
-  void ClusterImpl::setShape(const float* shape) { 
-    checkAccess("ClusterImpl::setShape") ;
-    for(int i=0;i<NSHAPE;i++) { _shape[i] = shape[i]  ;  }
-  }
+//   void ClusterImpl::setShape(const float* shape) { 
+//     checkAccess("ClusterImpl::setShape") ;
+//     for(int i=0;i<NSHAPE;i++) { _shape[i] = shape[i]  ;  }
+//   }
   void ClusterImpl::setShape(const FloatVec &shape) { 
     checkAccess("ClusterImpl::setShape") ;
-    for(int i=0;i<NSHAPE;i++) { _shape[i] = shape[i]  ;  }
+
+    copy( shape.begin() , shape.end() , back_inserter( _shape ) ) ;
+//     _shape.resize( shape.size() ) ;
+//     for(unsigned int i=0;i<shape.size();i++) { _shape[i] = shape[i]  ;  }
   }
-  void ClusterImpl::setEMWeight(float emWeight ) { 
-    checkAccess("ClusterImpl::setEMWeight") ;
-    _particletype[0] = emWeight ; 
-  }
-  void ClusterImpl::setHADWeight(float hadWeight ) {
-    checkAccess("ClusterImpl::setHADWeight") ;
-    _particletype[1] = hadWeight ; 
-  }
-  void ClusterImpl::setMuonWeight(float muonWeight ) {
-    checkAccess("ClusterImpl::setMuonWeight") ;
-    _particletype[2] = muonWeight ;
-  }
+
+//   void ClusterImpl::setEMWeight(float emWeight ) { 
+//     checkAccess("ClusterImpl::setEMWeight") ;
+//     _particletype[0] = emWeight ; 
+//   }
+//   void ClusterImpl::setHADWeight(float hadWeight ) {
+//     checkAccess("ClusterImpl::setHADWeight") ;
+//     _particletype[1] = hadWeight ; 
+//   }
+//   void ClusterImpl::setMuonWeight(float muonWeight ) {
+//     checkAccess("ClusterImpl::setMuonWeight") ;
+//     _particletype[2] = muonWeight ;
+//   }
   
+  void ClusterImpl::addParticleID( ParticleID* pid ){
+    checkAccess("ClusterImpl::addParticleID" );
+    _pid.push_back( pid ) ;
+    // sort wrt. probability
+    sort( _pid.begin() , _pid.end() , PIDSort()  ) ;
+  }
+
   void ClusterImpl::addCluster(EVENT::Cluster* cluster){
     checkAccess("ClusterImpl::addCluster") ;
     _clusters.push_back( cluster ) ;

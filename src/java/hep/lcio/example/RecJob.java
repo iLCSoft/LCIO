@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.12 2004-07-23 10:28:28 gaede Exp $
+ * @version $Id: RecJob.java,v 1.13 2004-09-01 16:42:56 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -86,7 +86,6 @@ public class RecJob implements LCRunListener, LCEventListener
       int NMCPART = mcVec.getNumberOfElements();
 
       // create a new collection to be added to the event
-      // for simplicity just add some calorimeter hits (don't have cluster class yet) 
       ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
       for (int j = 0; j < NHITS; j++)

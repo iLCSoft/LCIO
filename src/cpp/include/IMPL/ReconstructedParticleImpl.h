@@ -4,7 +4,6 @@
 
 
 #include "EVENT/ReconstructedParticle.h"
-#include "IMPL/ParticleIDImpl.h"
 #include "AccessChecked.h"
 
 

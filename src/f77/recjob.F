@@ -200,7 +200,7 @@ c---- read file names from command line arguments
         dpos(2) = ishft ( iand ( cellid, 'ff00'x ) , -8 )
         dpos(3) = ishft ( iand ( cellid, 'ff0000'x ) , -16 )
         status  = lctrhsetposition ( trhitp, dpos )
-        status  = lctrhsettpchit ( trhitp, tpchit )
+        status  = lctrhsetrawhit ( trhitp, tpchit )
         do j = 1, 6
           cov(j)  = i
         end do
@@ -476,8 +476,11 @@ ccc          status  = lcclusettype ( clusp, type )          ! obsolete
         do  j = 1, npid
           pidp     = lcpidcreate ()
           prob     = dble ( (j+1)/npid )
-          status   = lcpidsetprobability (pidp, prob )
-          status   = lcpidsettypeid ( pidp, -11 )
+          status   = lcpidsetloglikelihood (pidp, prob )
+          status   = lcpidsettype ( pidp, j )
+          status   = lcpidsetpdg ( pidp, -11 )
+          status   = lcpidsetgoodnessofpid ( pidp, 0.7 )
+
           ident    = 'recojob-RunEventProcessor'
           status   = lcpidsetidentifier ( pidp, ident )
           do  k = 1, 3
