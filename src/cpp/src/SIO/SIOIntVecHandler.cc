@@ -48,12 +48,15 @@ namespace SIO{
     
     int nElements = vec->size() ;
 
-    //    cout << " >>>>> writing  LCIntVec - size : " << nElements << ": " ;
     LCSIO_WRITE( stream, nElements ) ;
-    for(int i=0;i<nElements;i++){
-      LCSIO_WRITE( stream, (*vec)[i] ) ;
-      //cout <<  (*vec)[i] <<   ", " ; 
-    }    
+
+//     for(int i=0;i<nElements;i++){
+//       LCSIO_WRITE( stream, (*vec)[i] ) ;
+//       //cout <<  (*vec)[i] <<   ", " ; 
+//     }    
+
+    SIO_DATA( stream , & ( (int) (*vec)[0] ) , nElements ) ;
+
     //    cout << endl ;
 
     SIO_PTAG( stream , vec ) ;
