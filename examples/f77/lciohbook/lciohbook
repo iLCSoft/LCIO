@@ -1,0 +1,28 @@
+#!/bin/sh
+################### script to run the lciohbook_F executable ##################
+#                                                                             #
+#                   input file : lcio.hbook (in this directory)               #
+#                   output file: lcio.hbook (in this directory)               #
+#                                                                             #
+#               paw input file : plot.kumac (in this directory)               #
+#                                                                             #
+###############################################################################
+
+# make lciohbook_F
+
+gmake
+
+# run lciohbook_F
+
+./lciohbook_F << EOF
+test.slcio
+EOF
+
+# run paw
+
+paw << EOF
+1
+exec plot.kumac
+kuip/shell 'sleep 5'
+EOF
+
