@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.6 2004-09-13 22:43:09 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.7 2004-09-14 05:38:38 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
@@ -54,10 +54,11 @@ class SIOTrack extends ITrack
       if ((flag & 1<<31) != 0)
       {
          int nHits = in.readInt();
-         for (int i = 0; i < nHits ; i++) {
-			addHit( (ITrackerHit) in.readPntr().getObject() ) ;
-			
- 		}
+         for (int i = 0; i < nHits ; i++)
+         {
+            addHit( (ITrackerHit) in.readPntr().getObject() ) ;
+            
+         }
       }
       
       in.readPTag(this);

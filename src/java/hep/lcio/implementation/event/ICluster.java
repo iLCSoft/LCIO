@@ -13,29 +13,29 @@ public class ICluster extends ILCObject implements Cluster
 {
    private static final float[] null3 = new float[3];
    private static final float[] null6 = new float[6];
-
+   
    protected float energy;
    protected float phi;
    protected float theta;
    protected int type;
    protected float[] directionError = null3;
    protected float[] hitContributions = null3;
-   //protected float[] particleType = null3;
    protected float[] position = null3;
-   protected float[]  shape = new float[0] ;
-   protected List  particleIDs = new ArrayList() ;
+   protected float[] shape = new float[0];
+   protected List particleIDs = new ArrayList();
+   protected List calorimeterHits = new ArrayList();
+   protected List clusters = new ArrayList();
    protected float[] positionError = null6;
-   protected float[] subdetectorEnergies = new float[0] ;
+   protected float[] subdetectorEnergies = new float[0];
    
-		   
    public List getCalorimeterHits()
    {
-      return null;
+      return calorimeterHits;
    }
    
    public List getClusters()
    {
-      return null;
+      return clusters;
    }
    
    public float[] getDirectionError()
@@ -52,8 +52,7 @@ public class ICluster extends ILCObject implements Cluster
    {
       return hitContributions;
    }
-   
-   
+    
    public float getIPhi()
    {
       return phi;
@@ -86,12 +85,14 @@ public class ICluster extends ILCObject implements Cluster
    
    public void setCalorimeterHits(List calorimeterHits)
    {
-      // FIXME:
+      checkAccess();
+      this.calorimeterHits = calorimeterHits;
    }
    
    public void setClusters(List clusters)
    {
-      // FIXME:
+      checkAccess();
+      this.clusters = clusters;
    }
    
    public void setDirectionError(float[] directionError)
@@ -110,16 +111,8 @@ public class ICluster extends ILCObject implements Cluster
    public void setHitContributions(float[] hitContributions)
    {
       checkAccess();
-      if (hitContributions.length != 3) throw new IllegalArgumentException();
       this.hitContributions = hitContributions;
    }
-   
-//   public void setParticleType(float[] particleType)
-//   {
-//      checkAccess();
-//      if (particleType.length != 3) throw new IllegalArgumentException();
-//      this.particleType = particleType;
-//   }
    
    public void setIPhi(float phi)
    {
@@ -144,8 +137,8 @@ public class ICluster extends ILCObject implements Cluster
    public void setShape(float[] shape)
    {
       checkAccess();
-     if (shape.length != 6) throw new IllegalArgumentException();
-     this.shape = shape;
+      if (shape.length != 6) throw new IllegalArgumentException();
+      this.shape = shape;
    }
    
    public void setITheta(float theta)
@@ -161,39 +154,32 @@ public class ICluster extends ILCObject implements Cluster
    }
    public void setTypeBit(int bit)
    {
-	 setTypeBit(bit,true) ;
+      setTypeBit(bit,true) ;
    }
    public void setTypeBit(int bit, boolean val)
    {
-	  checkAccess();
-	  bitSet(type,bit,val);
+      checkAccess();
+      bitSet(type,bit,val);
    }
-
+   
    public float[] getSubdetectorEnergies()
    {
-      return subdetectorEnergies ;
-   }  
+      return subdetectorEnergies;
+   }
    public void setSubdetectorEnergies(float[] fs)
    {
       checkAccess();
-      // subdetector energies can have arbitrary size 
-      //if (fs.length != 3) throw new IllegalArgumentException();      
-      subdetectorEnergies = fs ;
+      subdetectorEnergies = fs;
    }
-/**
- * @return
- */
-public List getParticleIDs() {
-	return particleIDs;
-}
 
-
-/**
- * @param list
- */
-public void setParticleIDs(List list) {
-	particleIDs = list;
-}
-
-
+   public List getParticleIDs()
+   {
+      return particleIDs;
+   }
+      
+   public void setParticleIDs(List list)
+   {
+      checkAccess();
+      particleIDs = list;
+   }  
 }

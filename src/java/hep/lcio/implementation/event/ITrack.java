@@ -19,7 +19,7 @@ public class ITrack extends ILCObject implements Track
    private static final int[] null0 = new int[0];
    private static final float[] null3 = new float[3];
    private static final float[] null15 = new float[15];
-
+   
    protected float chi2;
    protected float[] covMatrix = null15;
    protected float d0;
@@ -32,13 +32,12 @@ public class ITrack extends ILCObject implements Track
    protected float dEdxError;
    protected float z0;
    protected int ndf;
-   protected List tracks = new ArrayList() ;
-   protected List hits = new ArrayList() ;
-   protected float radiusOfInnermostHit ;
+   protected List tracks = new ArrayList();
+   protected List hits = new ArrayList();
+   protected float radiusOfInnermostHit;
    
    public final static int BITISREFERENCEPOINTPCA = 31;
    protected int[] subdetectorHitNumbers = null0;
-   
    
    public float getChi2()
    {
@@ -140,19 +139,19 @@ public class ITrack extends ILCObject implements Track
    }
    
    protected void setType(int type)
-   {     
+   {
       checkAccess();
       this.type = type;
    }
-
+   
    public void setTypeBit(int bit)
    {
-	 setTypeBit(bit,true) ;
+      setTypeBit(bit,true) ;
    }
    public void setTypeBit(int bit, boolean val)
    {
-	  checkAccess();
-	  bitSet(type,bit,val);
+      checkAccess();
+      bitSet(type,bit,val);
    }
    
    public void setZ0(float z0)
@@ -189,7 +188,7 @@ public class ITrack extends ILCObject implements Track
    
    public void setNdf(int i)
    {
-      checkAccess(); 
+      checkAccess();
       ndf = i;
    }
    
@@ -221,6 +220,7 @@ public class ITrack extends ILCObject implements Track
    
    public void setRadiusOfInnermostHit(float f)
    {
+      checkAccess();
       radiusOfInnermostHit = f;
    }
    
