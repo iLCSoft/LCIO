@@ -9,15 +9,18 @@
 #include "EVENT/MCParticle.h"
 #include "DATA/LCFloatVec.h"
 #include "DATA/LCIntVec.h"
-
 #include "IMPL/LCFlagImpl.h"
+#include "EVENT/Track.h"
+#include "IMPL/TrackImpl.h"
 
 #ifdef CLHEP
 #include "UTIL/LCFourVector.h"
 #endif
+#include "UTIL/LCObjectHandle.h"
 
 #include <map>
 #include <set>
+#include <cstdio>
 
 using namespace std ;
 using namespace EVENT ;
@@ -26,6 +29,7 @@ using namespace IMPL ;
 
 
 namespace UTIL {
+
 
   static int MAX_HITS = 1000 ;
 
@@ -90,6 +94,11 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
 	  
 	printLCIntVecs( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACK ){
+	  
+	printTracks( col ) ;
 
       }
 
@@ -195,7 +204,7 @@ namespace UTIL {
 	       << "  pos: " 
 	       << x[0] << ", " << x[1] << ", " << x[2] 
 	       << endl ;   
-
+	  
 	}
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
 	
@@ -212,7 +221,7 @@ namespace UTIL {
 	  for(unsigned int k=0 ; k< vec->size() ; k++ )
 	    cout <<  (*vec)[k]  << ", " ;
 	  cout << endl ;   
-
+	  
 	}
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
 	
@@ -229,28 +238,44 @@ namespace UTIL {
 	  for(unsigned int k=0 ; k< vec->size() ; k++ )
 	    cout <<  (*vec)[k]  << ", " ;
 	  cout << endl ;   
-
+	  
 	}
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::MCPARTICLE ){
-      
-      
+	
+	
 	int nHits =  col->getNumberOfElements() ;
 	cout << nHits << " particles : " ;
 	int nPrint = nHits>0 ? 1 : 0 ;
-
+	
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
 	  MCParticle* part = 
 	    dynamic_cast<MCParticle*>( col->getElementAt( i ) ) ;
-	
+	  
 	  cout << "           " << part->getPDG() << " p: " 
 	       <<  part->getMomentum()[0]  << ", "
 	       <<  part->getMomentum()[1]  << ", "
 	       <<  part->getMomentum()[2]  
 	       << endl ;	
-	
+	  
 	}
+      } else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCHIT ){
+	
+	int nHits =  col->getNumberOfElements() ;
+	cout << nHits << " hits - first : " ;
+	int nPrint = nHits>0 ? 1 : 0 ;
+	
+	if(!nPrint ) cout << endl ;
+	for( int i=0 ; i< nPrint ; i++ ){
 
+	    LCObjectHandle<TPCHit> hit( col->getElementAt( i ) )  ;
+	  
+	  cout << " id: " << hit->getCellID() 
+	       << " t: " << hit->getTime()  
+	       << " charge: " << hit->getCharge()  
+	       << " quality: " << hit->getQuality()  
+	       << endl ;	
+	}	
       } else {
 	cout << endl ;
       } 
@@ -259,6 +284,92 @@ namespace UTIL {
   }
 
 
+  void LCTOOLS::printTracks(const EVENT::LCCollection* col ){
+    if( col->getTypeName() != LCIO::TRACK ){
+      
+      cout << " collection not of type " << LCIO::TRACK << endl ;
+      return ;
+    }
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TRACK << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
+
+    int nTracks =  col->getNumberOfElements() ;
+    int nPrint = nTracks > MAX_HITS ? MAX_HITS : nTracks ;
+    
+    std::cout << endl
+	      << "type| p         | theta    | phi      | d0        | z0        |   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   "
+	      << endl 
+	      << "----|-----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- "
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      Track* trk = 
+      	dynamic_cast<Track*>( col->getElementAt( i ) ) ;
+      
+      printf(" %2d | %5.3e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n"
+	     , trk->getType() 
+	     , trk->getMomentum() 
+	     , trk->getTheta() 
+	     , trk->getPhi()
+	     , trk->getD0() 
+	     , trk->getZ0() 
+	     , trk->getReferencePoint()[0]
+	     , trk->getReferencePoint()[1]
+	     , trk->getReferencePoint()[2]
+	     , trk->getdEdx() 
+	     , trk->getdEdxError() 
+	     , trk->getChi2() 
+	     ) ;
+      cout << " errors: " ;
+      for(int l=0;l<15;l++){
+	printf("%4.2e, ", trk->getCovMatrix()[l] ) ; 
+      }
+      cout << endl << " tracks(p): " ;
+      const TrackVec& tracks = trk->getTracks() ;
+
+//       cout << hex << "[ " <<  trk << ", " << dynamic_cast<TrackData*>( trk ) << ", " 
+// 	   << dynamic_cast<TrackImpl*>( trk )  << "] " << dec ;
+      for(unsigned int l=0;l<tracks.size();l++){
+		printf("%4.2e, ",  tracks[l]->getMomentum() ) ; 
+		//		printf("%4.2e, ", reinterpret_cast<const Track*>( tracks[l] ) ->getMomentum() ) ; 
+	//		printf("%x, ", tracks[l]  ) ; 
+      }
+      cout << endl ;
+      if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
+	cout << " hits ->";
+	const StringVec& hitColNames = trk->getHitCollectionNames() ;
+	for(unsigned int j=0;j<hitColNames.size();j++){
+	  cout << " " << hitColNames[j] << ": " ;
+
+	  const IntVec& hits = trk->getHitIndicesForCollection( hitColNames[j] ) ;
+
+	  for(unsigned int k=0;k<hits.size();k++){
+	    cout << hits[k] <<"," ;
+	  }
+	}
+      }
+//       cout << trk->getType()     << " | "
+// 	   << trk->getMomentum() << " | "
+// 	   << trk->getTheta()     << " | "
+// 	   << trk->getPhi()     << " | "
+// 	   << trk->getD0()     << " | "
+// 	   << trk->getZ0()     << " | "
+// 	   << endl ;
+
+      cout << endl 
+	   << "-------------------------------------------------------------------------------- " 
+	   << endl ;
+    }
+  }
+  
   void LCTOOLS::printSimTrackerHits(const EVENT::LCCollection* col ){
     
     if( col->getTypeName() != LCIO::SIMTRACKERHIT ){

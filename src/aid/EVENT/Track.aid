@@ -1,0 +1,134 @@
+package hep.lcio.event;
+
+/** The LCIO track.
+ * Adding some convenient methods to the pure data interface.
+ * 
+ * @author gaede
+ * @version Mar 15, 2004
+ */
+
+@ifdef cpp
+@cpp{
+//namespace EVENT {
+class Track ;
+typedef std::vector< const Track*> TrackVec ;
+//};
+}
+@endif
+
+public interface Track extends TrackData {
+    
+
+
+    /** The tracks that have been combined to this track.
+     */
+    public const TrackVec& getTracks() const ; 
+    
+@ifdef overwriteDataInterface
+
+@ifdef cpp
+@cpp{
+  public:
+    static const int UNKNOWN =  0 ; 
+    static const int VTX =  1 ; 
+    static const int FTD =  2 ; 
+    static const int SIT =  3 ; 
+    static const int TPC =  4 ; 
+    static const int MUON =  5 ; 
+    static const int FULL =  6 ; 
+
+}
+@else
+    public static const int UNKNOWN =  0 ; 
+    public static const int VTX =  1 ; 
+    public static const int FTD =  2 ; 
+    public static const int SIT =  3 ; 
+    public static const int TPC =  4 ; 
+    public static const int MUON =  5 ; 
+    public static const int FULL =  6 ; 
+@endif
+
+
+    /** Type of track, i.e. the subdetector(s) used to derive the track paramters: <br>
+     *  TrackData::UNKNOWN <br> 
+     *  TrackData::VTX <br> 
+     *  TrackData::FTD <br> 
+     *  TrackData::SIT <br> 
+     *  TrackData::TPC <br> 
+     *  TrackData::MUON <br> 
+     *  TrackData::FULL <br> 
+     */
+    public int getType() const ;	
+    
+    /** The magnitude of the track's momentum,
+     *  signed by the charge.
+     */
+    public float getMomentum() const ;	
+
+    /** Theta of the  track.
+     */
+    public float getTheta() const ;	
+
+    /** Phi of the track.
+     */
+    public float getPhi() const ;	
+
+
+    /** Impact paramter of the track
+     *  in (r-phi).
+     */
+    public float getD0() const ;	
+
+
+    /** Impact paramter of the track
+     *  in (r-z).
+     */
+    public float getZ0() const ;	
+
+    /** Impact paramter of the track
+     *  in (r-z).
+     */
+    public float getZ0() const ;	
+
+ 
+
+    /** Covariance matrix of the track parameters.
+     */
+    public FloatVec getCovMatrix() const ;
+
+
+    /** Reference point of the track parameters.
+     */
+    public const float3V getReferencePoint() const;
+    
+    
+    /** Chi^2 of the track fit.
+     */
+    public float getChi2() const ;	
+
+    /** dEdx of the track.
+     */
+    public float getdEdx() const ;	
+
+    /** Error of dEdx.
+     */
+    public float getdEdxError() const ;	
+
+    
+    /** Returns the names of the hit collections that have been
+     *  used to create the track.
+     */
+    public const StringVec&  getHitCollectionNames() const ;
+    
+
+    /** Returns all hit indices for the given collection name.
+     */
+    public IntVec getHitIndicesForCollection(const String& colName ) const ;
+
+    /** The tracks (as TrackData objects) that have been combined to this track.
+     */
+    public const TrackDataVec& getTracksData() const ; 
+
+@endif
+
+}

@@ -11,5 +11,5 @@
 <!-- see http://www.oasis-open.org/committees/entity/spec.html -->
 
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">                
-    <system systemId="http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd" uri="file:sio.dtd"/>
+    <system systemId="http://lcio.desy.de/doc/sio.dtd" uri="file:sio.dtd"/>
 </catalog>

@@ -15,7 +15,7 @@ src/aid/EVENT/LCIO.aid
 
 
 src/cpp/include/lcio.h
-   /** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html">LCIO</a> (v00-09)
+   /** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v00-09)
 
 
 doc/lcio.xml

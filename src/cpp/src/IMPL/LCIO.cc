@@ -13,4 +13,8 @@ const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
 const char* LCIO::TPCHIT = "TPCHit" ;
 const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
 const char* LCIO::LCINTVEC = "LCIntVec" ;
+const char* LCIO::TRACK= "Track" ; 
+const char* LCIO::CLUSTER = "Cluster" ; 
+const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ; 
+
 };

@@ -3,6 +3,7 @@
 #include "SIO/SIOSimCalHitHandler.h" 
 #include "SIO/SIOCalHitHandler.h" 
 #include "SIO/SIOSimTrackHitHandler.h" 
+#include "SIO/SIOTrackHandler.h" 
 #include "SIO/SIOTPCHitHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
 #include "SIO/SIOFloatVecHandler.h" 
@@ -26,6 +27,7 @@ namespace SIO {
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
+    _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     // generic arrays/vectors
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;

@@ -43,6 +43,9 @@ public interface LCIO{
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
+    // Tracks
+    static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
+
     // TPCHit
     static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
 
@@ -66,6 +69,9 @@ public interface LCIO{
     static const char* TPCHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTVEC ; 
+    static const char* TRACK ; 
+    static const char* CLUSTER ; 
+    static const char* RECONSTRUCTEDPARTICLE ; 
 }
 @else
     // current version number of lcio
@@ -81,6 +87,9 @@ public interface LCIO{
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
+  // Tracks
+  public static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
+    
   // TPCHit
   public static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
 
@@ -103,6 +112,9 @@ public interface LCIO{
   public static const String TPCHIT = "TPCHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;
+  public static const String TRACK = "Track"; 
+  public static const String CLUSTER = "Cluster"; 
+  public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
 @endif
 }
 

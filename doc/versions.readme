@@ -11,6 +11,8 @@
    - added LCFourVector (CLHEP::HepLorentzvector) as handle template
      for MCParticle
 
+   - added 'chain reader' : LCReader::open(std::vector<std::string> fileNames  )   
+
 ============================
   v01-00
 ============================

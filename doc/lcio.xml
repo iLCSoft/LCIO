@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd">
+<!DOCTYPE sio SYSTEM "http://lcio.desy.de/doc/sio.dtd">
 
 <!--
     Document   : lcio.xml
@@ -170,6 +170,40 @@
 	    </if>
          </repeat>
       </block>
+
+    <block name="Track" major="1" minor="0">
+      <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
+      <data type="int" name="nTrack"/>
+      <repeat count="nTrack">
+	<data type="int" name="type">Type of Track (UNKNOWN, VTX, FTD, SIT, TPC, MUON, FULL )</data>
+	<data type="float" name="momentum"> absolute value of momentum, signed with charge</data>
+	<data type="float" name="theta"/>
+	<data type="float" name="phi"/>
+	<!--data type="float" name="charge"/-->
+	<data type="float" name="d0">Impact Parameter in r-phi</data>
+	<data type="float" name="z0">Impact Parameter in r-z</data>
+	<data type="float[15]" name="covMatrix"> Covariance matrix</data>
+	<data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
+	<data type="float" name="chi2">chi**2 of fit</data>
+	<data type="float" name="dEdx">dEdx</data>
+	<data type="float" name="dEdxError">Error of dEdx</data>
+        <data type="int" name="nTracks"></data>
+	<repeat count="nTracks">
+	  <data type="pntr" name="Track">tracks that have been combined to this track</data>
+	</repeat>
+	<if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+          <data type="int" name="nColNames"></data>
+          <repeat count="nColNames">
+            <data type="string" name="collectionName">name of hit collection</data>
+	    <data type="int" name="nHit"/>
+	    <repeat count="nHit">
+	      <data type="int" name="hitIndex">index in corresponding hit collection</data>
+	    </repeat>
+          </repeat>
+	</if>
+      <data type="ptag" name="this"></data>
+      </repeat>
+    </block>
   </record>
 </sio>
 

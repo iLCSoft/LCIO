@@ -857,7 +857,7 @@ INCLUDE_FILE_PATTERNS  =
 # or name=definition (no spaces). If the definition and the = are 
 # omitted =1 is assumed.
 
-PREDEFINED=
+PREDEFINED=CLHEP
 # by predefining the header defines we can exclude classes from documentation
 #DATA_LCFLOATVEC_H DATA_LCINTVEC_H
 

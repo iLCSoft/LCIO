@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd">
+<!DOCTYPE sio SYSTEM "http://lcio.desy.de/doc/sio.dtd">
 
 <!--
     Document   : data.xml

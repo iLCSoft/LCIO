@@ -11,11 +11,16 @@
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/SimCalorimeterHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
+#include "IMPL/TrackImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
+//#include <math.h>
+//#include <cmath>
+//#include <cstdlib>
+// M_PI is non ansi ...
+#define M_PI 3.14159265358979323846
 
-#include <cstdlib>
 #include <iostream>
 
 using namespace std ;
@@ -78,10 +83,10 @@ public:
     // this is our event loop code
     
     // read collection with MCParticles
-    LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+    //    LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+    //    int NMCPART = mcVec->getNumberOfElements() ;
     
-    int NMCPART = mcVec->getNumberOfElements() ;
-    
+
     // ---- trying to modify objects here would cause a ReadOnlyExcpetion. e.g. -----
 //         for(int i=0 ; i< NMCPART ; i++ ){
 //           MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
@@ -94,43 +99,89 @@ public:
     //     mcVec->addElement( part ) ;  // <<<<< ------- will cause ReadOnlyException ---------
     
 
-    // create a new collection to be added to the event
-    // for simplicity just add some calorimeter hits (don't have cluster class yet) 
-    
-    LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
 
-    // set flag for short format (not including position )
-    // and no PDG     
-    LCFlagImpl chFlag ;
-    chFlag.unsetBit( LCIO::CHBIT_LONG ) ;  // not really necessary - just for demonstration
-    chFlag.unsetBit( LCIO::CHBIT_PDG ) ;
-    calVec->setFlag( chFlag.getFlag()  ) ;
+    // create some tracks from dummy track hits:
+    std::string simHitName( "TPC4711" ) ;
+    std::string tpcHitName( "TPCRawFADC" ) ;
 
+    LCCollection* simHits = evt->getCollection( simHitName ) ;
+    LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
+
+
+    LCCollectionVec* trkVec = new LCCollectionVec( LCIO::TRACK )  ;
+
+    // if we want to point back to the hits we need to set the flag
+    LCFlagImpl trkFlag(0) ;
+    trkFlag.setBit( LCIO::TRBIT_HITS ) ;
+    trkVec->setFlag( trkFlag.getFlag()  ) ;
     
-    for(int j=0;j<NHITS;j++){
-      SimCalorimeterHitImpl* hit = new SimCalorimeterHitImpl ;
-      hit->setEnergy( 3.1415 * rand()/RAND_MAX   )  ;
-      float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
-      hit->setPosition( pos ) ;
-      calVec->push_back( hit ) ;
-      
-      // assign the hits randomly to MC particles
-      float rn =  1.*rand()/RAND_MAX ;
-      int mcIndx = static_cast<int>( NMCPART * rn ) ;
-      hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx )) , 
-				       0.2876 , 0.007 , 565656 ) ;
-      
+    if( simHits ){
+
+      int nSimHits = simHits->getNumberOfElements() ;
+      int nTrk = nSimHits / 10 ;
+
+      for( int i=0; i < nTrk ; i ++ ){
+
+	TrackImpl* trk = new TrackImpl ;
+	trk->setType( TrackData::TPC ) ;
+	trk->setMomentum(  (i+1)*1.1 ) ;
+	trk->setTheta( (i+1)* M_PI / 10. ) ;
+	trk->setPhi( (i+1)* M_PI / 5. ) ;
+	trk->setD0( i+1 ) ;
+	trk->setZ0( (i+1)*10. ) ;
+	trk->setChi2( 1.01 ) ;
+	trk->setdEdx( 3.14159 ) ;
+	trk->setdEdxError( 42. ) ;
+	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
+	trk->setCovMatrix( cov ) ;
+
+	// add the hits used to create this track
+	for( int j=0; j < 10  ; j ++ ){
+	  trk->addHitIndex( simHitName ,  i*10+j  ) ;   
+	}
+	trkVec->addElement( trk ) ;
+      }
     }
-    
 
-    try{
+    if( tpcHits ){
 
-      evt->addCollection( (LCCollection*) calVec , "HCALReco" ) ;
+      int nTPCHits = tpcHits->getNumberOfElements() ;
+      int nTrk = nTPCHits / 10 ;
 
-    }catch(EventException& e){
-      cout << "exception: HCALReco not added: " << e.what() << endl ;
-      // no need to exit
+      for( int i=0; i < nTrk ; i ++ ){
+
+	TrackImpl* trk = new TrackImpl ;
+	trk->setType( TrackData::TPC ) ;
+	trk->setMomentum(  (i+1)*1.1 ) ;
+	trk->setTheta( (i+1)* M_PI / 10. ) ;
+	trk->setPhi( (i+1)* M_PI / 5. ) ;
+	trk->setD0( i+1 ) ;
+	trk->setZ0( (i+1)*10. ) ;
+	trk->setChi2( 1.01 ) ;
+	trk->setdEdx( 3.14159 ) ;
+	trk->setdEdxError( 42. ) ;
+	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
+	trk->setCovMatrix( cov ) ;
+	float ref[3] = { 12. ,123456789. , .0987654321 } ;
+	trk->setReferencePoint( ref ) ;
+	// add the hits used to create this track
+	for( int j=0; j < 10  ; j ++ ){
+	  trk->addHitIndex( tpcHitName ,  i*10+j  ) ;   
+	}
+	// add tracks that where used to create this track
+	if( trkVec->size() > 1 ){
+	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
+	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 3 ] ) ) ;
+	}
+
+	trkVec->addElement( trk ) ;
+      }
     }
+
+
+
+    evt->addCollection(  trkVec , "SomeTracks" ) ;
+
 
 
     
@@ -204,6 +255,10 @@ int main(int argc, char** argv ){
       lcReader->registerLCEventListener( &evtProc ) ; 
       
       lcReader->readStream() ;
+
+//             lcReader->readStream( 5) ; // debugging: only read 4 events 
+//             lcReader->readStream( 10000 ) ; // debugging: provoke EndOfDataException
+ 
       // here we could in principle also catch the exceptions but for a small program there isn't really
       // any use as we need to exit anyhow if the readStream() had a problem
       // in a larger framework/application one might not want to abort the program but instead read the next 

@@ -1,11 +1,10 @@
-#ifndef IMPL_LCTOOLS_H
-#define IMPL_LCTOOLS_H 1
+#ifndef UTIL_LCTOOLS_H
+#define UTIL_LCTOOLS_H 1
 
 #include <iostream>
 
 #include "EVENT/LCEvent.h" 
 #include "EVENT/MCParticle.h" 
-
 
 namespace UTIL{
   
@@ -59,6 +58,9 @@ namespace UTIL{
      */
     static void printLCIntVecs( const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of all Tracks in the collection
+     */
+    static void printTracks( const EVENT::LCCollection* col ) ;
 
     /** Prints daughter particles recursively.
      */
@@ -66,7 +68,7 @@ namespace UTIL{
 
 
   }; // class
-  
-}; // namespace IMPL
 
-#endif /* ifndef IMPL_LCTOOLS_H */
+}; // namespace UTIL
+
+#endif /* ifndef UTILL_LCTOOLS_H */
