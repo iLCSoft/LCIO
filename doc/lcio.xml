@@ -8,6 +8,8 @@
     Author     : Frank Gaede, Ties Behnke, Norm Graf, Tony Johnson
     Description:
         Description of LCIO format in sio files.
+	Unless specified otherwise the default units used in LCIO files are:
+	length: mm, energy: GeV and time ns
 -->
 
 <sio>
@@ -26,7 +28,7 @@
      <block name="EventHeader" major="0" minor="8">
         <data type="int" name="runNumber"></data>
         <data type="int" name="eventNumber"></data>
-        <data type="long" name="timeStamp">TODO: format</data>
+        <data type="long" name="timeStamp"></data>
         <data type="string" name="detectorName"></data>
         <data type="int" name="nBlockNames"></data>
         <repeat count="nBlockNames">
@@ -72,9 +74,8 @@
             <data type="int" name="cellID">Detector specific</data>
             <data type="double[3]" name="position"></data>
             <data type="float" name="dedx"></data>
-            <data type="float" name="time">TODO: Definition Needed (units absolute/relative?)</data>
+            <data type="float" name="time"></data>
             <data type="pntr" name="MCParticle"></data>
-            <data type="ptag" name="hit">TODO: Was this really agreed?</data>
          </repeat>
       </block>
       <block name="SimCalorimeterHit" major="0" minor="8">
@@ -92,12 +93,11 @@
             <repeat count="nContributions">
 		<data type="pntr" name="MCParticle"></data>
 		<data type="float" name="energyContrib"></data>
-		<data type="float" name="time">TODO: Definition Needed (units absolute/relative?)</data>
+		<data type="float" name="time"></data>
 		<if condition="(flags&amp;(1&lt;&lt;28)) != 0">
 		   <data type="int" name="PDG"></data>
 		</if>
             </repeat>
-            <data type="ptag" name="hit">TODO: Was this really agreed?</data> 
          </repeat>
       </block>
       <block name="LCFloatVec" major="0" minor="8">
@@ -120,12 +120,25 @@
             </repeat>
          </repeat>
       </block>
+      <block name="CalorimeterHit" major="0" minor="8">
+         <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
+              Bit 29 +z = 1, -z = 0, rest is detector specific</data>
+         <data type="int" name="nHits"></data>
+         <repeat count="nHits">
+            <data type="int" name="cellId0">Defines cell ID in detector specific way</data>
+            <data type="int" name="cellId1">second word for cell id</data>
+            <data type="float" name="energy"></data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+		<data type="float[3]" name="position"></data>
+	    </if>
+         </repeat>
+      </block>
       <block name="TPCHit" major="0" minor="8">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, rest is detector specific</data>
          <data type="int" name="n"></data>
          <repeat count="n">
             <data type="int" name="cellID">Detector specific</data>
-            <data type="float" name="time">TODO: Definition Needed</data>
+            <data type="float" name="time"></data>
             <data type="float" name="charge"></data>
             <data type="int" name="quality"></data>
 	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
