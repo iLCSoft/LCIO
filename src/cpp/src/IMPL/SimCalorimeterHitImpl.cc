@@ -23,7 +23,7 @@ namespace IMPL{
 //   _position[1] = p[1] ;
 //   _position[2] = p[2] ;
   
-//   int nMC = hit.getNMCParticles() ;
+//   int nMC = hit.getNMCContributions() ;
   
 //   // now copy all the MCParticle contributions
 //   for(int i=0; i<nMC ;i++){
