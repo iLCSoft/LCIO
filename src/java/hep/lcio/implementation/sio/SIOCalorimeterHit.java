@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -26,23 +26,19 @@ class SIOCalorimeterHit extends ICalorimeterHit
       cellId1 = in.readInt();
       energy = in.readFloat();
 
-      //FIXME: C++ version ignores the flag!
-      //            if ((flags & LCIO.CHBIT_LONG) != 0)
-      //            {
-      //FIXME: C++ version reads float, while lcio.xml says double
-      position[0] = in.readFloat();
-      position[1] = in.readFloat();
-      position[2] = in.readFloat();
+      if ((flags & (1<<LCIO.CHBIT_LONG)) != 0)
+	  {
+	      position[0] = in.readFloat();
+	      position[1] = in.readFloat();
+	      position[2] = in.readFloat();
 
-      //            }
+	  }
       nContributions = in.readInt();
       particle = new SIORef[nContributions];
       energyContrib = new float[nContributions];
       time = new float[nContributions];
 
-      //FIXME: C++ version ignores the flag!
-      //boolean hasPDG = (flags & LCIO.CHBIT_PDG) != 0;
-      boolean hasPDG = true;
+      boolean hasPDG = (flags & (1<<LCIO.CHBIT_PDG)) != 0;
       if (hasPDG)
          pdg = new int[nContributions];
       for (int i = 0; i < nContributions; i++)
@@ -72,16 +68,15 @@ class SIOCalorimeterHit extends ICalorimeterHit
          out.writeInt(hit.getCellID1());
          out.writeFloat(hit.getEnergy());
 
-         //            if ((flags & LCIO.CHBIT_LONG) != 0)
-         //            {
-         float[] pos = hit.getPosition();
-         out.writeFloat(pos[0]);
-         out.writeFloat(pos[1]);
-         out.writeFloat(pos[2]);
+	 if ((flags & (1<<LCIO.CHBIT_LONG) ) != 0)
+	     {
+		 float[] pos = hit.getPosition();
+		 out.writeFloat(pos[0]);
+		 out.writeFloat(pos[1]);
+		 out.writeFloat(pos[2]);
 
-         //            }
-         //            boolean hasPDG = (flags & LCIO.CHBIT_PDG) != 0;
-         boolean hasPDG = true;
+	     }
+	 boolean hasPDG = (flags & (1<<LCIO.CHBIT_PDG)) != 0;
          int n = hit.getNMCParticles();
          out.writeInt(n);
          for (int i = 0; i < n; i++)
@@ -101,17 +96,14 @@ class SIOCalorimeterHit extends ICalorimeterHit
       out.writeInt(cellId1);
       out.writeFloat(energy);
 
-      //FIXME:
-      //        if ((flags & LCIO.CHBIT_LONG) != 0)
-      //        {
-      out.writeFloat(position[0]);
-      out.writeFloat(position[1]);
-      out.writeFloat(position[2]);
+      if ((flags & (1<<LCIO.CHBIT_LONG)) != 0)
+	  {
+	      out.writeFloat(position[0]);
+	      out.writeFloat(position[1]);
+	      out.writeFloat(position[2]);
+	  }
 
-      //        }
-      //FIXME:
-      //boolean hasPDG = (flags & LCIO.CHBIT_PDG) != 0;
-      boolean hasPDG = true;
+      boolean hasPDG = (flags & (1<<LCIO.CHBIT_PDG)) != 0;
       out.writeInt(nContributions);
       for (int i = 0; i < nContributions; i++)
       {

@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOLCWriter.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -65,9 +65,9 @@ class SIOLCWriter implements LCWriter
    {
       try
       {
-         writer.createRecord(SIOFactory.runRecordName, true);
+         writer.createRecord(SIOFactory.runRecordName, SIOFactory.compressionMode);
 
-         SIOOutputStream out = writer.createBlock(LCIO.LCRUNHEADER, LCIO.MAJORVERSION, LCIO.MINORVERSION);
+         SIOOutputStream out = writer.createBlock(SIOFactory.runBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
          SIORunHeader.write(hdr, out);
          return LCIO.SUCCESS;
       }

@@ -3,6 +3,7 @@ package hep.lcio.implementation.sio;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOReader;
 import hep.lcd.io.sio.SIORecord;
+import hep.lcd.io.sio.SIOBlock;
 
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOLCReader.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -100,7 +101,14 @@ class SIOLCReader implements LCReader
             String name = record.getRecordName();
             if (!name.equals(SIOFactory.runRecordName))
                continue;
-            return new SIORunHeader(record.getBlock().getData());
+
+	    SIOBlock block = record.getBlock() ;
+	    //fg 20030509 versions older than v00-03 no longer supported
+	    if( block.getMajorVersion() <1 && block.getMinorVersion() < 3)
+		throw new IOException("Sorry: files created with versions older than v00-03"
+				      +" are no longer supported !" ) ;
+	    
+            return new SIORunHeader(block.getData());
          }
       }
       catch (EOFException x)
@@ -125,7 +133,13 @@ class SIOLCReader implements LCReader
                int l = runListeners.size();
                if (l > 0)
                {
-                  SIORunHeader header = new SIORunHeader(record.getBlock().getData());
+		   SIOBlock block = record.getBlock() ;
+		   //fg 20030509 versions older than v00-03 no longer supported
+		   if( block.getMajorVersion() <1 && block.getMinorVersion() < 3)
+		       throw new IOException("Sorry: files created with versions older than v00-03"
+					     +" are no longer supported !" ) ;
+
+                  SIORunHeader header = new SIORunHeader(block.getData());
                   for (int i = 0; i < l; i++)
                      ((LCRunListener) runListeners.get(i)).analyze(header);
                }
