@@ -2,6 +2,7 @@
 #include "IMPL/MCParticleImpl.h"
 
 #include "EVENT/LCIO.h"
+#include <iostream>
 #include <stdexcept>
 #include <vector>
 #include <math.h> 
@@ -60,7 +61,7 @@ namespace IMPL {
     static bool first = true ;
     if( first ){
       std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
-		<< " - please use  MCParticleImpl::getParents().size() ! " << endl ;
+		<< " - please use  MCParticleImpl::getParents().size() ! " << std::endl ;
       first = false ;
     }
     return _parents.size() ; 
@@ -71,7 +72,7 @@ namespace IMPL {
     static bool first = true ;
     if( first ){
       std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
-		<< " - please use  MCParticleImpl::getParents()[i] ! " << endl ;
+		<< " - please use  MCParticleImpl::getParents()[i] ! " << std::endl ;
       first = false ;
     }
     try{
@@ -95,7 +96,7 @@ namespace IMPL {
     static bool first = true ;
     if( first ){
       std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
-		<< " - please use  MCParticleImpl::getDaughters().size() ! " << endl ;
+		<< " - please use  MCParticleImpl::getDaughters().size() ! " << std::endl ;
       first = false ;
     }
     return _daughters.size() ; 
@@ -106,7 +107,7 @@ namespace IMPL {
     static bool first = true ;
     if( first ){
       std::cout << " WARNING >>>>>>>  MCParticleImpl::getDaughter(i) is deprecated "
-		<< " - please use  MCParticleImpl::getDaughters()[i] ! " << endl ;
+		<< " - please use  MCParticleImpl::getDaughters()[i] ! " << std::endl ;
       first = false ;
     }
     try{
