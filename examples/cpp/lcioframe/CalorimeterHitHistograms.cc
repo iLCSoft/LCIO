@@ -47,7 +47,7 @@ void CalorimeterHitHistograms::processEvent(  LCEvent * evt ) {
       if(  col->getTypeName() == LCIO::SIMCALORIMETERHIT || 
 	   col->getTypeName() == LCIO::CALORIMETERHIT  ){
 	
-	calCols.push_back( name ) ; 
+	calCols.push_back( &(*name) ) ; 
 	
 	// make a subfolder and create histograms for every collection 
 	runDir->mkdir( name->c_str() ) ;
