@@ -138,6 +138,23 @@ public interface Track extends LCObject {
     public float getdEdxError() const ;	
 
 
+    /** The radius of the innermost hit that has been used in the track fit.
+     *  Helps to detect V0 tracks with small impact paramters or heavy mesons.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     */
+    public float getRadiusOfInnermostHit() const ;
+
+
+    /** A vector that holds the number of hits in particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     *  TODO:  Provide way to store mapping in event/run header.
+     */
+    public const IntVec& getSubdetectorHitNumbers() const ;
+
+
     /** The tracks that have been combined to this track.
      */
     public const TrackVec& getTracks() const ; 

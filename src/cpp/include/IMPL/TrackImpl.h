@@ -110,14 +110,21 @@ namespace IMPL {
      */
     virtual float getdEdxError() const;
 
-//     /** Returns the names of the hit collections that have been
-//      *  used to create the track.
-//      */
-//     virtual const EVENT::StringVec& getHitCollectionNames() const;
+    /** The radius of the innermost hit that has been used in the track fit.
+     *  Helps to detect V0 tracks with small impact paramters or haevy mesons.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     */
+    virtual float getRadiusOfInnermostHit() const  ;
 
-//     /** Returns all hit indices for the given collection name.
-//      */
-//     virtual const EVENT::IntVec& getHitIndicesForCollection(const std::string & colName) const;
+    /** A vector that holds the number of hits in particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if hits are not stored in 
+     *  the data set, e.g. DST or FastMC. 
+     *  TODO:  Provide way to store mapping in event/run header.
+     */
+    virtual const EVENT::IntVec & getSubdetectorHitNumbers() const ;
+
 
     /** The tracks (as Track objects) that have been combined to this track.
      */
@@ -152,6 +159,15 @@ namespace IMPL {
     virtual void  addTrack( EVENT::Track* trk ) ;
     virtual void  addHit( EVENT::TrackerHit* hit) ;
 
+
+    virtual void  setRadiusOfInnermostHit( float r )  ;
+
+    /** Allows modification of the subdetectorHitNumbers, e.g. <br>
+     *  track->subdetectorHitNumbers().resize(5) ; <br> 
+     *  track->subdetectorHitNumbers()[4] = 42 ;
+     */
+    virtual EVENT::IntVec & subdetectorHitNumbers() ;
+
   protected:
 
     virtual void  setType( int  type ) ;
@@ -172,7 +188,8 @@ namespace IMPL {
     int   _ndf ; 
     float _dEdx ;
     float _dEdxError ;
-    
+    float _radiusOfInnermostHit ;
+    EVENT::IntVec _subdetectorHitNumbers ;
 
     EVENT::TrackVec _tracks ;
     EVENT::TrackerHitVec _hits ;

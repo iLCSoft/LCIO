@@ -31,8 +31,11 @@ public class ITrack extends ILCObject implements Track {
 	protected BitSet type;
 	protected Vector tracks;
 	protected Vector hits;
+	protected float radiusOfInnermostHit ;
 
 	public final static int BITISREFERENCEPOINTPCA = 31;
+	protected int[] subdetectorHitNumbers ;
+
 
 	public float getChi2() {
 		return chi2;
@@ -89,8 +92,8 @@ public class ITrack extends ILCObject implements Track {
 	}
 
 	public void setCovMatrix(float[] covMatrix) {
-		if (referencePoint.length != 15)
-			throw new IllegalArgumentException("referencePoint.lenhgth != 3");
+		if (covMatrix.length != 3)
+			throw new IllegalArgumentException("covMatrix.length != 3");
 		this.covMatrix = covMatrix;
 	}
 
@@ -175,6 +178,22 @@ public class ITrack extends ILCObject implements Track {
 	public void addHit(TrackerHit hit) {
 		hits.add(hit);
 
+	}
+
+	public float getRadiusOfInnermostHit() {
+		return radiusOfInnermostHit;
+	}
+
+	public void setRadiusOfInnermostHit(float f) {
+		radiusOfInnermostHit = f;
+	}
+
+	public int[] getSubdetectorHitNumbers() {
+		return subdetectorHitNumbers ;
+	}
+
+	public void setSubdetectorHitNumbers(int[] is) {
+		subdetectorHitNumbers = is;
 	}
 
 }

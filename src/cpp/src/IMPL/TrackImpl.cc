@@ -57,6 +57,13 @@ namespace IMPL {
   float TrackImpl::getdEdxError() const { return _dEdxError ; }
 
 
+  float TrackImpl::getRadiusOfInnermostHit() const {
+    return _radiusOfInnermostHit ;
+  }
+
+  const IntVec & TrackImpl::getSubdetectorHitNumbers() const {
+    return _subdetectorHitNumbers ;
+  }
   const TrackerHitVec & TrackImpl::getTrackerHits() const {
     return _hits ;
   }
@@ -154,7 +161,17 @@ namespace IMPL {
     checkAccess("TrackImpl::addTrack") ;
     _tracks.push_back( trk ) ;
   }
-  
+
+  IntVec & TrackImpl::subdetectorHitNumbers(){
+    checkAccess("TrackImpl::subdetectorHitNumbers") ;
+    return _subdetectorHitNumbers ;
+  }
+
+  void  TrackImpl::setRadiusOfInnermostHit( float r ){
+    checkAccess("TrackImpl::setRadiusOfInnermostHit") ;
+    _radiusOfInnermostHit = r ;
+  }
+
 }; // namespace IMPL
 
 

@@ -133,13 +133,13 @@ public:
 
       trkHit->setTPCHit( tpcHit ) ; // store the original raw data hit
 
-      FloatVec cov ;
-      cov.push_back( 1. ) ;
-      cov.push_back( 2. ) ;
-      cov.push_back( 3. ) ;
-      cov.push_back( 4. ) ;
-      cov.push_back( 5. ) ;
-      cov.push_back( 6. ) ;
+      FloatVec cov(6) ;
+      cov[0] = 1. ;
+      cov[1] = 2. ;
+      cov[2] = 3. ;
+      cov[3] = 4. ;
+      cov[4] = 5. ;
+      cov[5] = 6. ;
       trkHit->setCovMatrix( cov ) ;
 
       trkhitVec->addElement( trkHit ) ;
@@ -154,6 +154,11 @@ public:
     trkFlag.setBit( LCIO::TRBIT_HITS ) ;
     trkVec->setFlag( trkFlag.getFlag()  ) ;
     
+    const int NTRACKER = 3 ; 
+    const int VTXINDEX = 0 ;
+    const int SITINDEX = 1 ;
+    const int TPCINDEX = 2 ;
+
     int nTrk = 10 ;
     for( int i=0; i < nTrk ; i ++ ){
       
@@ -165,6 +170,15 @@ public:
       trk->setD0( i+1 ) ;
       trk->setZ0( (i+1)*10. ) ;
       trk->setChi2( 1.01 ) ;
+      trk->setNdf( 42 ) ;
+
+      trk->setRadiusOfInnermostHit( 3.141592 ) ;
+
+      trk->subdetectorHitNumbers().resize( NTRACKER ) ;
+      trk->subdetectorHitNumbers()[ VTXINDEX ] = 12 ;
+      trk->subdetectorHitNumbers()[ SITINDEX ] = 24 ;
+      trk->subdetectorHitNumbers()[ TPCINDEX ] = 36 ;
+
       trk->setdEdx( 3.14159 ) ;
       trk->setdEdxError( 42. ) ;
       float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;

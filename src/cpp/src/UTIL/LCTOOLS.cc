@@ -397,6 +397,12 @@ namespace UTIL {
 	}
 	cout << endl  ;
       }
+      cout << " radius of innermost hit " << trk->getRadiusOfInnermostHit() << " / mm , "   
+	<< " subdetector Hit numbers : " ;
+      for( int i=0 ; i< trk->getSubdetectorHitNumbers().size() ; i++) {
+	cout << trk->getSubdetectorHitNumbers()[i] << ", " ;
+      }
+      cout << endl ;
 //       cout << trk->getType()     << " | "
 // 	   << trk->getMomentum() << " | "
 // 	   << trk->getTheta()     << " | "

@@ -63,14 +63,25 @@ namespace SIO{
     SIO_DATA( stream ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(trk->_dEdxError) , 1  ) ;
 
+    SIO_DATA( stream ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
+
+    int nHitNumbers ;
+    SIO_DATA( stream, &nHitNumbers , 1  ) ;
+    trk->subdetectorHitNumbers().resize( nHitNumbers ) ;
+    
+    for(int i=0;i<nHitNumbers;i++){
+      SIO_DATA( stream , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
+    }
+    
     int nTracks ;
     SIO_DATA( stream, &nTracks , 1  ) ;
 
     // fill the vector to have correct size
     // as we are using the addresses of the elements henceforth
-    for(int i=0;i<nTracks;i++){
-      trk->_tracks.push_back( 0 ) ;
-    }
+    trk->_tracks.resize( nTracks ) ;
+//     for(int i=0;i<nTracks;i++){
+//       trk->_tracks.push_back( 0 ) ;
+//     }
     for(int i=0;i<nTracks;i++){
       SIO_PNTR( stream , &(trk->_tracks[i] ) ) ;
     }
@@ -160,6 +171,15 @@ namespace SIO{
     LCSIO_WRITE( stream, trk->getdEdx()  ) ;
     LCSIO_WRITE( stream, trk->getdEdxError()  ) ;
 
+    LCSIO_WRITE( stream , trk->getRadiusOfInnermostHit()  ) ;
+
+    const IntVec& hitNums = trk->getSubdetectorHitNumbers() ;
+    int nHitNumbers = hitNums.size() ;
+    SIO_DATA( stream, &nHitNumbers , 1  ) ;
+
+    for(int i=0;i<nHitNumbers;i++){
+      LCSIO_WRITE( stream , hitNums[i]  ) ;
+    }
 
     const TrackVec& tracks = trk->getTracks() ;
     int nTracks=  tracks.size() ;

@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.2 2004-06-03 12:03:46 gaede Exp $
+ * @version $Id: SIOTrack.java,v 1.3 2004-06-04 12:20:17 gaede Exp $
  */
 class SIOTrack extends ITrack
 {
@@ -40,6 +40,13 @@ class SIOTrack extends ITrack
       ndf = in.readInt() ;
       dEdx = in.readFloat();
       dEdxError = in.readFloat();
+      radiusOfInnermostHit = in.readFloat() ;
+      int nHitNumbers = in.readInt() ;
+	  int[] hitNumbers = new int[nHitNumbers] ;
+	  for (int i = 0; i < nHitNumbers; i++) {
+        hitNumbers[i] = in.readInt() ;		
+	  }      
+      setSubdetectorHitNumbers(hitNumbers) ;      
       int nTracks = in.readInt();
       for (int i=0; i<nTracks; i++)
       {
@@ -75,7 +82,12 @@ class SIOTrack extends ITrack
 		 out.writeInt(track.getNdf());
          out.writeFloat(track.getdEdx());
          out.writeFloat(track.getdEdxError());
-         
+         out.writeFloat(track.getRadiusOfInnermostHit()) ;
+         int[] hitNumbers = track.getSubdetectorHitNumbers();
+         out.writeInt( hitNumbers.length ) ;
+         for (int i = 0; i < hitNumbers.length; i++) {
+		   out.writeInt( hitNumbers[i] ) ;	
+		 }         
          List tracks = track.getTracks() ;
 		 out.writeInt( tracks.size()  ) ;
          for (Iterator iter = tracks.iterator(); iter.hasNext();) {
@@ -106,6 +118,11 @@ class SIOTrack extends ITrack
    	  out.writeFloat(ndf);
       out.writeFloat(dEdx);
       out.writeFloat(dEdxError);
+	  out.writeFloat(radiusOfInnermostHit) ;
+	  out.writeInt( subdetectorHitNumbers.length ) ;
+	  for (int i = 0; i < subdetectorHitNumbers.length; i++) {
+	    out.writeInt( subdetectorHitNumbers[i] ) ;	
+	  }         
 	  out.writeInt( tracks.size()  ) ;
 	  for (Iterator iter = tracks.iterator(); iter.hasNext();) {
 	   out.writePntr( (Track) iter.next() );
