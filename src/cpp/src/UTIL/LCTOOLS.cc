@@ -277,7 +277,8 @@ namespace UTIL {
 	    dynamic_cast<LCFloatVec*>( col->getElementAt( i ) ) ;
 	  
 	  cout << " values(" << i << "): " ;
-	  for(unsigned int k=0 ; k< vec->size() ; k++ )
+	  unsigned int maxE = ( vec->size() > 5 ?  5 : vec->size() ) ; 
+	  for(unsigned int k=0 ; k< maxE  ; k++ )
 	    cout <<  (*vec)[k]  << ", " ;
 	  cout << endl ;   
 	  
@@ -294,7 +295,8 @@ namespace UTIL {
 	    dynamic_cast<LCIntVec*>( col->getElementAt( i ) ) ;
 	  
 	  cout << " values(" << i << "): " ;
-	  for(unsigned int k=0 ; k< vec->size() ; k++ )
+	  unsigned int maxE = ( vec->size() > 5 ?  5 : vec->size() ) ; 
+	  for(unsigned int k=0 ; k< maxE  ; k++ )
 	    cout <<  (*vec)[k]  << ", " ;
 	  cout << endl ;   
 	  
