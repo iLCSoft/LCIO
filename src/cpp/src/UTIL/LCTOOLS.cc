@@ -522,6 +522,10 @@ namespace UTIL {
       TrackerHit* hit = 
 	dynamic_cast<TrackerHit*>( col->getElementAt( i ) ) ;
       
+      int rawHitId = 0 ;
+      if( hit->getRawDataHit() != 0 ) 
+	rawHitId = hit->getRawDataHit()->id()  ;
+
       printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%8.8x] | [%d] \n" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
@@ -529,7 +533,7 @@ namespace UTIL {
 	     , hit->getPosition()[2] 
 	     , hit->getdEdx() 
 	     , hit->getTime() 
-	     , hit->getRawDataHit()->id() 
+	     , rawHitId 
 	     , hit->getType() 
 	     //	     , hit->getType().c_str() 
 	     ) ;
@@ -1027,6 +1031,12 @@ namespace UTIL {
       int compound = recP->isCompound() ;
       int type =  recP->getType() ;
 
+
+      int pidUsed = 0 ;
+
+      if(  recP->getParticleIDUsed() != 0 ) 
+	pidUsed  = recP->getParticleIDUsed()->id() ;
+      
       printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x] \n"
 	     //	     , reinterpret_cast<int> ( recP )
 	     , recP->id()
@@ -1041,7 +1051,7 @@ namespace UTIL {
 	     , recP->getReferencePoint()[0] 
 	     , recP->getReferencePoint()[1] 
 	     , recP->getReferencePoint()[2] 
-	     , recP->getParticleIDUsed()->id() 
+	     , pidUsed 
 	     ) ;
       cout << "    covariance( px,py,pz,E) : (" ;
       for(int l=0;l<10;l++){

@@ -27,10 +27,10 @@ namespace SIO{
     // create a new object :
     ReconstructedParticleIOImpl* recP  = new ReconstructedParticleIOImpl ;
     *objP = recP ;
-	
+    
     if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {
       
-
+      
       SIO_DATA( stream ,  &(recP->_type)  , 1 ) ;
       
       SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
@@ -145,6 +145,8 @@ namespace SIO{
 	recP->addParticleID( pid) ;
       }
       
+      recP->_pidUsed = 0 ;
+
       // read reconstructed particles
       int nRecP ;
       SIO_DATA( stream, &nRecP , 1  ) ;
