@@ -42,7 +42,7 @@ namespace SIO {
     // to make valgrind happy delete the handlers
     // -> doesn't work as destructor is not explicitely called at end of main  :(
     for( SIOHandlerMap::iterator iter = _map.begin() ; iter  != _map.end() ; iter++ ){
-      cout << " deleting SIOHandler : " << iter->first << endl ;
+      //     std::cout << " deleting SIOHandler : " << iter->first << std::endl ;
       delete iter->second ;
     }
   }
