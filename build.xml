@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.6 2003-05-12 16:37:31 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.7 2003-05-15 12:56:16 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -435,7 +435,6 @@
              maxmemory="${javadoc.maxmemory}">
     </freehep.javadoc>
   </target>
-
   <target name="sysdoc" depends="init" description="&lt;gen-target&gt; creates apidoc using FreeHEP doclet">
     <freehep.defined property="jar" message="Target 'sysdoc' only available without '-Djar=suffix' option"/>
     <freehep.not.defined property="doc.dst" message="Target 'sysdoc' only available with '-Dweb.dst=destination' option"/>
