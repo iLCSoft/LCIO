@@ -13,18 +13,31 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFloatVec.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOFloatVec.java,v 1.3 2003-05-06 07:10:34 tonyj Exp $
  */
 class SIOFloatVec extends ILCFloatVec
 {
-   SIOFloatVec(SIOInputStream in) throws IOException {}
+   SIOFloatVec(SIOInputStream in) throws IOException 
+   {
+      size = in.readInt();
+      data = new float[size];
+      for(int i=0; i<size; i++) data[i] = in.readFloat();
+   }
 
    static void write(LCFloatVec vec, SIOOutputStream out) throws IOException
    {
       if (vec instanceof SIOFloatVec)
          ((SIOFloatVec) vec).write(out);
-      else {}
+      else 
+      {
+         //FIXME:
+         out.writeInt(0);
+      }
    }
 
-   private void write(SIOOutputStream out) throws IOException {}
+   private void write(SIOOutputStream out) throws IOException 
+   {
+      out.writeInt(size);
+      for (int i=0; i<size; i++) out.writeFloat(data[i]);
+   }
 }
