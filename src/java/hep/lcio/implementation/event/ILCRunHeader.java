@@ -1,12 +1,13 @@
 package hep.lcio.implementation.event;
 
+import hep.lcio.event.LCParameters;
 import hep.lcio.event.LCRunHeader;
 
 
 /**
  * A default implementation of LCRunHeader
  * @author Tony Johnson
- * @version $Id: ILCRunHeader.java,v 1.4 2004-04-08 09:57:59 gaede Exp $
+ * @version $Id: ILCRunHeader.java,v 1.5 2004-06-25 12:53:20 gaede Exp $
  */
 public class ILCRunHeader extends ILCObject implements LCRunHeader
 {
@@ -14,6 +15,7 @@ public class ILCRunHeader extends ILCObject implements LCRunHeader
    protected String detectorName;
    protected String[] activeSubdetectors = new String[0];
    protected int runNumber;
+   protected ILCParameters parameters = new ILCParameters() ;
 
    public String[] getActiveSubdetectors()
    {
@@ -64,4 +66,15 @@ public class ILCRunHeader extends ILCObject implements LCRunHeader
       newActive[l] = det;
       activeSubdetectors = newActive;
    }
+
+	public LCParameters parameters() {
+		return parameters ;
+	}
+
+
+	protected void setAccess(int mode) {
+		super.setAccess(mode);
+		parameters.setAccess(mode) ;
+	}
+
 }

@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.5 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIORunHeader.java,v 1.6 2004-06-25 12:53:20 gaede Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {
@@ -27,6 +27,8 @@ class SIORunHeader extends ILCRunHeader
       activeSubdetectors = new String[n];
       for (int i = 0; i < n; i++)
          activeSubdetectors[i] = in.readString();
+   
+      parameters = new SIOLCParameters(in) ;
    }
 
    static void write(LCRunHeader header, SIOOutputStream out) throws IOException
@@ -43,6 +45,8 @@ class SIORunHeader extends ILCRunHeader
          out.writeInt(active.length);
          for (int i = 0; i < active.length; i++)
             out.writeString(active[i]);
+ 
+         SIOLCParameters.write( header.parameters() , out ) ;
       }
    }
 
@@ -54,5 +58,6 @@ class SIORunHeader extends ILCRunHeader
       out.writeInt(activeSubdetectors.length);
       for (int i = 0; i < activeSubdetectors.length; i++)
          out.writeString(activeSubdetectors[i]);
+   	  SIOLCParameters.write( parameters , out ) ;
    }
 }

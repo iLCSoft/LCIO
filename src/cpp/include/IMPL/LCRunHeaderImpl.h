@@ -6,7 +6,7 @@
 #include "EVENT/LCIO.h"
 #include "EVENT/LCRunHeader.h"
 #include "AccessChecked.h"
-
+#include "LCParametersImpl.h"
 
 namespace IMPL {
 
@@ -43,6 +43,12 @@ namespace IMPL {
      */ 
     virtual const std::vector<std::string> * getActiveSubdetectors() const ;
 
+
+    /** Parameters defined for this run.
+     */
+    virtual EVENT::LCParameters & parameters() { return _params ; } 
+
+
     // set methods
 
     /** Sets the run number.
@@ -63,11 +69,16 @@ namespace IMPL {
 
 
   protected:
+    virtual void setReadOnly( bool readOnly ) ;
+
+  protected:
     
     int _runNumber ;
     std::string _detectorName ;
     std::string _description ;
     std::vector<std::string> _activeSubdetectors ;
+
+    LCParametersImpl _params ;
 
   }; // class
 }; // namespace IMPL

@@ -24,4 +24,8 @@ public interface LCRunHeader extends LCObject {
      */ 
     public const String[]*  getActiveSubdetectors() const ;
 
+
+    /** Parameters defined for this run.
+     */
+    public LCParameters& parameters() ;
 }

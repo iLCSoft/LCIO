@@ -1324,6 +1324,66 @@ namespace UTIL {
     return index ;
 
   }
+  
+  void LCTOOLS::printParameters( EVENT::LCParameters& params ){
+
+    StringVec intKeys ;
+    int nIntParameters = params.getIntKeys( intKeys ).size() ;
+    for(int i=0; i< nIntParameters ; i++ ){
+      IntVec intVec ;
+      params.getIntVals(  intKeys[i], intVec ) ;
+      int nInt  = intVec.size()  ;   
+      if( nInt > 0 ){ 
+	cout << " parameter " << intKeys[i] << "[int]: " ; 
+	for(int j=0; j< nInt ; j++ ){
+	  cout << intVec[j] << ", " ;
+	}
+	cout << endl ;
+      }
+    }
+    StringVec floatKeys ;
+    int nFloatParameters = params.getFloatKeys( floatKeys ).size() ;
+    for(int i=0; i< nFloatParameters ; i++ ){
+      FloatVec floatVec ;
+      params.getFloatVals(  floatKeys[i], floatVec ) ;
+      int nFloat  = floatVec.size()  ;   
+      if( nFloat > 0 ){ 
+	cout << " parameter " << floatKeys[i] << "[float]: " ; 
+	for(int j=0; j< nFloat ; j++ ){
+	  cout << floatVec[j] << ", " ;
+	}
+	cout << endl ;
+      }
+    }
+    StringVec stringKeys ;
+    int nStringParameters = params.getStringKeys( stringKeys ).size() ;
+    for(int i=0; i< nStringParameters ; i++ ){
+      StringVec stringVec ;
+      params.getStringVals(  stringKeys[i], stringVec ) ;
+      int nString  = stringVec.size()  ;   
+      if( nString > 0 ){ 
+	cout << " parameter " << stringKeys[i] << "[string]: " ; 
+	for(int j=0; j< nString ; j++ ){
+	  cout << stringVec[j] << ", " ;
+	}
+	cout << endl ;
+      }
+    }
+
+  }
+
+  void LCTOOLS::dumpRunHeader(const EVENT::LCRunHeader* run) {
+    
+    //    cout  << " --------------------------------------------------------------- " << endl ;
+      
+    cout  << "  Run : " << run->getRunNumber() 
+	  << " - "      << run->getDetectorName() 
+	  << ":  "      << run->getDescription()  << endl ;
+    
+    printParameters( const_cast<EVENT::LCRunHeader*>(run)->parameters() ) ;
+    
+    cout  << " --------------------------------------------------------------- " << endl ;
+  }
 
 }; // namespace
 

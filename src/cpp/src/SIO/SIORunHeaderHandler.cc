@@ -1,4 +1,5 @@
 #include "SIO/SIORunHeaderHandler.h"
+#include "SIO/SIOLCParameters.h"
 #include "SIO/LCSIO.h"
 
 #include "EVENT/LCRunHeader.h"
@@ -82,6 +83,8 @@ namespace SIO  {
 	(*_rhP)->addActiveSubdetector( sdnTmp ) ;
       }
 
+      // read parameters
+      SIOLCParameters::read( stream ,  (*_rhP)->parameters() , versionID) ;
       
     }  else if( op == SIO_OP_WRITE ){ 
     
@@ -101,6 +104,11 @@ namespace SIO  {
 	  LCSIO_WRITE( stream, *name ) ;
 	} 
 	
+	// write parameters
+	SIOLCParameters::write( stream ,  const_cast<LCRunHeader*>(_hdr)->parameters() ) ;
+
+	
+
       } else {
 	std::cout << " SIORunHeaderHandler::xfer : run header pointer not set !  " << std::endl ;
 	return LCIO::ERROR ;

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.12 2003-11-08 03:08:50 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.13 2004-06-25 12:53:20 gaede Exp $
  */
 public class SimJob
 {
@@ -49,6 +49,10 @@ public class SimJob
          runHdr.setDescription(" these are just dummy runs for testing lcio - no physics whatsoever !");
          runHdr.addActiveSubdetector(ecalName);
          runHdr.addActiveSubdetector(tpcName);
+         
+         runHdr.parameters().setValue("SimulationProgram","SimJob.java") ;
+		 int[] idx = { 1,2,3,4,5 } ;
+         runHdr.parameters().setValues("SomeIndices",idx) ;
 
          lcWrt.writeRunHeader(runHdr);
 

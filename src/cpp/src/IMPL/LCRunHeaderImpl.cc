@@ -35,4 +35,9 @@ namespace IMPL{
   }
 
 
+  void LCRunHeaderImpl::setReadOnly( bool readOnly ) {
+    _params.setReadOnly( readOnly ) ;
+    AccessChecked::setReadOnly( readOnly ) ;
+  }
+
 }; // namespace 

@@ -5,6 +5,8 @@
 
 #include "EVENT/LCEvent.h" 
 #include "EVENT/MCParticle.h" 
+#include "EVENT/LCParameters.h"
+#include "EVENT/LCRunHeader.h"
 
 namespace UTIL{
   
@@ -18,6 +20,7 @@ namespace UTIL{
     
   public:
 
+
     /** Simple function to dump event contents to the screen.
      * Also demonstrates the access to event data through the EVENT interface.
      * This is only a short format - one line per collection.
@@ -28,6 +31,10 @@ namespace UTIL{
      * for the different collection types.
      */
     static void dumpEventDetailed(const EVENT::LCEvent* evt) ;
+
+    /** Simple function to dump the run header  to the screen.
+     */
+    static void dumpRunHeader(const EVENT::LCRunHeader* run) ;
 
     /** Complete printout of all MCParticles in the collection.
      */
@@ -52,7 +59,6 @@ namespace UTIL{
     /** Complete printout of  all CalorimeterHits in the collection.
      */
     static void printCalorimeterHits(const EVENT::LCCollection* col ) ;
-
 
     /** Print LCFloatVec user extension vectors  in the  collection
      */
@@ -82,6 +88,10 @@ namespace UTIL{
      */
     static void printRelation( const EVENT::LCRelation* rel ) ;
 
+
+    /** Print the parameters.
+     */
+    static void printParameters( EVENT::LCParameters& params );
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 

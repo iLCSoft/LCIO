@@ -54,9 +54,10 @@ int main(int argc, char** argv ){
     // loop over all run headers
     while( ( runHdr = lcReader->readNextRunHeader() ) != 0 ){
       
-      cout << "  Run : " << runHdr->getRunNumber() 
-	   << " - "      << runHdr->getDetectorName() 
-	   << ":  "      << runHdr->getDescription()  << endl ;
+      LCTOOLS::dumpRunHeader( runHdr ) ;
+//       cout << "  Run : " << runHdr->getRunNumber() 
+// 	   << " - "      << runHdr->getDetectorName() 
+// 	   << ":  "      << runHdr->getDescription()  << endl ;
     }
     
   }catch(IOException& e){

@@ -74,6 +74,18 @@ int main(int argc, char** argv ){
       string tpcName("TPC4711") ;
       runHdr->addActiveSubdetector( tpcName ) ;
       
+
+      // add some parameters to the run header 
+//       StringVec sv1 ;
+//       sv1.push_back("simjob.cc") ;
+//       runHdr->parameters().setValues( "SimulationProgram" , sv1 ) ; 
+      runHdr->parameters().setValue( "SimulationProgram" , "simjob.cc" ) ; 
+      IntVec iv(3) ;
+      iv[0] = 1 ;
+      iv[1] = 2 ;
+      iv[2] = 3 ;
+      runHdr->parameters().setValues( "SomeIndices" , iv ) ; 
+      
       lcWrt->writeRunHeader( runHdr ) ;
       
       // EventLoop - create some events and write them to the file
