@@ -15,12 +15,12 @@ package hep.lcio.event ;
 // }
 //}
 
-@cpp{ // some convinient typedefs
+@cpp{ // some convenient typedefs
    typedef std::vector<std::string> StringVec ;
 }
 
 public interface LCIO{
-
+    
     // it seems to be impossible to have one declaration for
     // static constants in Java and C++ - so we need to define
     // the same constant twice !!
@@ -28,24 +28,43 @@ public interface LCIO{
 @ifdef cpp
 @cpp{
   public:
+    // bits in flag words
+    // CalorimeterHit (CH)
+    static const int CHBIT_LONG   = 31; // long(1) - short(0), (position)
+    static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
+    static const int CHBIT_POSZ   = 29 ;  // +z(1) - -z(0)
+    static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+    // TrackerHit
+    static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
+
     static const int READ_ONLY =  0 ;
     static const int UPDATE   =  1 ;
+    // error handling
     static const int ERROR   =  0 ;
     static const int SUCCESS =  1 ;
-    static const bool COMPRESSION = false ;
+
     // type names:
-    static char* const MCPARTICLE = "MCParticle" ;
-    static char* const CALORIMETERHIT = "CalorimeterHit" ;
-    static char* const TRACKERHIT = "TrackerHit" ;
+    public static char* const MCPARTICLE = "MCParticle" ;
+    public static char* const CALORIMETERHIT = "CalorimeterHit" ;
+    public static char* const TRACKERHIT = "TrackerHit" ;
 }
 @else
-  public static int READ_ONLY =  0 ;
-  public static int UPDATE   =  1 ;
-  public static int ERROR   =  0 ;
-  public static int SUCCESS =  1 ;
-  public static  boolean COMPRESSION = false ;
-  static static String MCPARTICLE = "MCParticle" ;
-  static static String CALORIMETERHIT = "CalorimeterHit" ;
-  static static String TRACKERHIT = "TrackerHit" ;
+  // bits in flag words
+  // CalorimeterHit (CH)
+  public static const int CHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
+  public static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
+  public static const int CHBIT_POSZ   = 29 ;  // +z(1) - -z(0)
+  public static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+  // TrackerHit
+  public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
+
+  public static const int READ_ONLY =  0 ;
+  public static const int UPDATE   =  1 ;
+  public static const int ERROR   =  0 ;
+  public static const int SUCCESS =  1 ;
+
+  public static const String MCPARTICLE = "MCParticle" ;
+  public static const String CALORIMETERHIT = "CalorimeterHit" ;
+  public static const String TRACKERHIT = "TrackerHit" ;
 @endif
 }

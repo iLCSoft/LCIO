@@ -15,7 +15,7 @@ namespace IMPL{
    * LCIO for reading events from file.
    * 
    * @author gaede
-   * @version Mar 4, 2003
+   * @version Mar 5, 2003
    * @see LCEvent
    * @see LCCollection
    */

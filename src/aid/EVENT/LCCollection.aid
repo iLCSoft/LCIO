@@ -9,15 +9,15 @@ package hep.lcio.event ;
  */
 public interface LCCollection{
     
-    /**Returns the number of entries in the collection.
+    /**Returns the number of elements in the collection.
      */
-    public int getNumberOfEntries() const ;
+    public int getNumberOfElements() const ;
     
     /** Returns the type name of the collection - valid names are defined in LCIO.
      */
     public const String& getTypeName() const ;
     
-    /** Returns pointer to element at index - null if out of range.
+    /** Returns pointer to element at index - no range check, use getNumberOfEntries().
      */
     public const LCObject* getElementAt(int index) const ;
 

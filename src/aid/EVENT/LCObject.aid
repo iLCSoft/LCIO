@@ -1,11 +1,21 @@
 package hep.lcio.event ;
 
 /** The generic object that is held in an LCCollection - 
- *  just a tag - no methods. 
+ *  only method is clone() which is needed for deep copy of events. 
+ *  Every object stored in an LCCollection, i.e. in an LCEvent has to 
+ *  implement this interface.
  * 
  * @author gaede 
- * @version Mar 4, 2003
+ * @version Mar 5, 2003
  */
-public interface LCObject{
+public interface LCObject extends Cloneable {
+    
+
+@ifdef cpp
+    /** Deep copy of the object. C++ implementations should return the 
+     *  concrete type (virtual constructor). 
+     */
+    public LCObject* clone() const ;
+@endif
 
 }

@@ -1,0 +1,63 @@
+package hep.lcio.event ;
+
+/** Describes a Monte Carlo particle. Has to be implementet by user classes
+ *  that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Mar 5, 2003
+ */
+public interface MCParticle {
+    
+    /** Returns the parent of this particle. Null if the mother (beam particle).
+     */
+    public const MCParticle* getParent() const ;
+    
+    /** Returns the second parent of this particle, usually Null.
+     */
+    public const MCParticle* getSecondParent() const;
+    
+    /** Returns the daughters of this particle.
+     */
+    public const MCParticle*[] * getDaughters() const ;
+    
+    /** Returns the PDG code of the particle.
+     */
+    public int getPDG() const;
+    
+    /** Returns the status for particles from the generator (HepEvt)
+     * and for particles added in simulation:
+     * <br> 0  empty line
+     * <br> 1  undecayed particle, stable in the generator
+     * <br> 2  particle decayed in the generator
+     * <br> 3  documentation line
+     * <br> 201 stable state, but created in the tracking in the detector
+     * <br> 202 particle decayed in the tracking in the detector
+     */
+    public int getHepEvtStatus() const ;
+
+    /** Returns the production vertex of the particle.
+     */
+@ifdef cpp
+    public const double* getVertex() const;
+@else
+    public const double[] getVertex() const;
+@endif    
+    
+
+    /** Returns the particle momentum at the production vertex.
+     */
+@ifdef cpp
+    public const float* getMomentum() const;
+@else
+    public const float[] getMomentum() const;
+@endif    
+    
+    /** Returns the energy of the particle (at the vertex).
+     */
+    public float getEnergy() const;
+    
+    /** Returns the particle's charge.
+     */
+    public float getCharge() const;
+    
+}

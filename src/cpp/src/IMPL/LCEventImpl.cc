@@ -37,8 +37,6 @@ LCEventImpl::LCEventImpl(const LCEvent& evt) :
 
 }
 
-
-
 LCEventImpl::~LCEventImpl() {
 
   // here we need to delete all collections in the event

@@ -1,0 +1,62 @@
+package hep.lcio.event ;
+
+/** Describes a generic calorimeter hit. Has to be implemented by user 
+ *  classes that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Mar 5, 2003
+ */
+
+public interface CalorimeterHit extends LCObject {
+    
+    /**Returns the detector specific (geometrical) cell id.
+     */
+    public int getCellID0() const ;
+    
+    /**Returns the second detector specific (geometrical) cell id.
+     */
+    public int getCellID1() const ;
+    
+    /** Returns the energy of the hit.
+     */
+    public float getEnergy() const ;
+    
+    /** Returns the position of the hit in world coordinates.
+     *  NULL if information is not stored. Ask collection for flag, only 
+     * available if bit LCIO.CHBIT_LONG == 1.
+     */
+@ifdef cpp
+    public const float* getPosition() const ;	
+@else
+    public const float[] getPosition() const ;	
+@endif    
+    
+    /** Returns the number of MC particles that caused the hit - 0 if 
+     * information is not stored. Be aware of double counting if PDG
+     * for secondaries is stored.
+     * @see CalorimeterHit.getPDGCont
+     */
+    public int getNMCParticles() const ;
+
+    /** Returns the i-th particle that contributed to the hit.
+     */
+    public const MCParticle* getParticleCont( int i) const ;
+
+    /** Returns the energy of the i-th particle that contributed to the hit.
+     */ 
+    public float getEnergyCont(int i) const ;
+
+    /** Returns the time information of the i-th particle that contributed to the hit.
+     *  TODO : definition of time. 
+     */ 
+    public float getTimeCont(int i) const ;
+    
+    /** Returns the PDG code of the secondary type of the i-th particle that 
+     * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
+     * wether this information is available. If so, every primary will show up in 
+     * the list of contributions once for every type of secondaries.
+     */ 
+    public int  getPDGCont(int i) const ;
+    
+
+}
