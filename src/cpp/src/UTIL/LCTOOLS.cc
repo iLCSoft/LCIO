@@ -12,7 +12,9 @@
 
 #include "IMPL/LCFlagImpl.h"
 
+#ifdef CLHEP
 #include "UTIL/LCFourVector.h"
+#endif
 
 #include <map>
 #include <set>
@@ -673,10 +675,12 @@ namespace UTIL {
 // loop over collection - preserve order
     for(  int index = 0 ; index < nParticles ; index++){
       
-      //MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
+
+#ifdef CLHEP
       MCParticle4V part( col->getElementAt( index ) ) ;
-
-
+#else
+      MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
+#endif
       cout << index << " [" ;
       for(int k=0;k<part.lcObj()->getNumberOfParents();k++){
 	if(k>0) cout << "," ;
@@ -708,10 +712,12 @@ namespace UTIL {
       cout <<  part->getMass()         << " | " 
 	   <<  part->getCharge()       << " | " 
 	   <<  part->getEnergy()      
+#ifdef CLHEP
 	//---- DEBUG
 	   << " m(4V) : " << part.m()
 	   << " e(4V) : " << part.e()
 	//---- DEBUG
+#endif
 	   << endl ;	
 
 
