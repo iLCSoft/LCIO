@@ -1,5 +1,13 @@
 #include <exception> 
 #include <iostream>
+#include "IMPL/LCIOExceptionHandler.h"
+
+namespace IMPL {
+
+
+  // create one globale instance of the handler
+  LCIOExceptionHandler* LCIOExceptionHandler::_me = 0 ;
+
 
 /** Method catches any std::exception, prints the message to stdout
  * and then exits the program. 
@@ -20,21 +28,19 @@ void lcio_unexpected(){
   }
 }
 
-/** Sets the default error handling for unexpected and uncaught exceptions.
- */
-class LCIOExceptionHandler{
-
- public:
-  LCIOExceptionHandler(){
-
+  LCIOExceptionHandler::LCIOExceptionHandler(){
+      
     std::set_unexpected( lcio_unexpected ) ;
     std::set_terminate( lcio_unexpected ) ;
   }
+    
 
+  LCIOExceptionHandler* LCIOExceptionHandler::createInstance(){
 
+    if( ! _me ){
+      _me = new LCIOExceptionHandler ;
+    }
+
+    return _me ;
+  }
 };
-
-
-
-
-

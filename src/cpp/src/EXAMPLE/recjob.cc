@@ -83,10 +83,10 @@ public:
     int NMCPART = mcVec->getNumberOfElements() ;
     
     // ---- trying to modify objects here would cause a ReadOnlyExcpetion. e.g. -----
-    //     for(int i=0 ; i< NMCPART ; i++ ){
-    //       MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
-    //       part->setPDG(1234) ;      // <<<<< ------- will cause ReadOnlyException ---------
-    //     }
+//         for(int i=0 ; i< NMCPART ; i++ ){
+//           MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
+//           part->setPDG(1234) ;      // <<<<< ------- will cause ReadOnlyException ---------
+//         }
     // ---- also  adding  sth. to en existing collection is not allowed here ----
     //     MCParticleImpl* part = new MCParticleImpl ;
     //     part->setPDG( 1234 ) ;

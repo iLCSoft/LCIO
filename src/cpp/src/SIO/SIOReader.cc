@@ -12,6 +12,7 @@
 #include "SIO_blockManager.h" 
 #include "SIO_stream.h" 
 #include "SIO_record.h" 
+#include "IMPL/LCIOExceptionHandler.h"
 
 #include <iostream>
 #include <sstream>
@@ -66,6 +67,10 @@ namespace SIO {
     SIO_recordManager::setVerbosity( SIO_SILENT ) ;
     SIO_blockManager::setVerbosity( SIO_SILENT ) ;
 #endif  
+
+
+    LCIOExceptionHandler::createInstance() ;
+
 
   }
 

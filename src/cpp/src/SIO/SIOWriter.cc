@@ -15,12 +15,14 @@
 #include "SIO_blockManager.h" 
 #include "SIO_stream.h" 
 #include "SIO_record.h" 
+#include "IMPL/LCIOExceptionHandler.h"
 
 //#define DEBUG 1
 #include "IMPL/LCTOOLS.h"
 
 using namespace DATA ;
 using namespace IO ;
+using namespace IMPL ;
 
 namespace SIO {
 
@@ -37,6 +39,8 @@ namespace SIO {
 #endif
   
     //    evtP = new LCEvent* ;
+
+    LCIOExceptionHandler::createInstance() ;
 
   }
 
