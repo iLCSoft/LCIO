@@ -16,8 +16,6 @@
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
 
-#include "EVENT/LCExceptions.h"
-
 
 class SIO_record ;
 class SIO_stream ;    

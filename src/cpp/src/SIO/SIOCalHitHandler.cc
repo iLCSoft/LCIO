@@ -5,6 +5,7 @@
 #include "EVENT/MCParticle.h"
 #include "EVENT/CalorimeterHit.h"
 #include "IOIMPL/CalorimeterHitIOImpl.h"
+#include "IMPL/LCFlagImpl.h"
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
@@ -29,21 +30,14 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
-    SIO_DATA( stream ,  hit->_position  , 3 ) ;
-    
-//     cout << " reading hit from file :" 
-// 	 << hit->_cellID0 << "  " 
-// 	 << hit->_cellID1 << "  " 
-// 	 << hit->_energy << "  " 
-// 	 << hit->_position << "  "  << endl ;
 
+    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+      SIO_DATA( stream ,  hit->_position  , 3 ) ;
+    }
 
     // read MCContributions
     int nCon ;
     SIO_DATA( stream ,  &nCon , 1  ) ;
-
-//     cout << "   nCOn :  " <<  nCon << endl ;
-
 
     for(int i=0; i< nCon ; i++){
 
@@ -51,7 +45,8 @@ namespace SIO{
       SIO_PNTR( stream , &(mcCon->Particle)  ) ;
       SIO_DATA( stream , &(mcCon->Energy) , 1 ) ;
       SIO_DATA( stream , &(mcCon->Time)   , 1 ) ;
-      SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
+      if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_PDG ) )
+	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
 
       hit->_vec.push_back(  mcCon  );
     }
@@ -81,9 +76,11 @@ namespace SIO{
     LCSIO_WRITE( stream, hit->getEnergy()  ) ;
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 
-    float* pos = const_cast<float*> ( hit->getPosition() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
-    
+
+    if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+      float* pos = const_cast<float*> ( hit->getPosition() ) ; 
+      SIO_DATA( stream,  pos , 3 ) ;
+    }
     // now the MCParticle contributions
     int nMC = hit->getNMCParticles() ;
     SIO_DATA( stream,  &nMC , 1 ) ;
@@ -95,7 +92,8 @@ namespace SIO{
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;
       LCSIO_WRITE( stream, hit->getTimeCont(i)  ) ;
-      LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
+      if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_PDG ) )
+	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
       
     }
     //  SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;

@@ -11,6 +11,7 @@
 #include "IMPL/CalorimeterHitImpl.h"
 #include "IMPL/TrackerHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
+#include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
 #include <cstdlib>
@@ -94,6 +95,14 @@ int main(int argc, char** argv ){
       // now add some calorimeter hits
       LCCollectionVec* calVec = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
       
+      // set flag for long format (including position )
+      // and PDG 
+      LCFlagImpl chFlag(0) ;
+      chFlag.setBit( LCIO::CHBIT_LONG ) ;
+      chFlag.setBit( LCIO::CHBIT_PDG ) ;
+      calVec->setFlag( chFlag.getFlag()  ) ;
+
+
       for(int j=0;j<NHITS;j++){
 	
 	CalorimeterHitImpl* hit = new CalorimeterHitImpl ;
@@ -113,7 +122,7 @@ int main(int argc, char** argv ){
 	// in order to access a MCParticle,  we need a dynamic cast as the 
 	// LCCollection returns an LCIOObject - this is like vectors in Java 
 	hit->addMCParticleContribution(  dynamic_cast<const MCParticle*>(mcVec->getElementAt( mcIndx )) , 
-					 0.314159, 0.1155 , 121212 ) ;
+					 0.314159, 0.1155 ) ; // no pdg
 	
       }
       

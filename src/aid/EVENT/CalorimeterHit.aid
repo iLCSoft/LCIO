@@ -53,7 +53,8 @@ public interface CalorimeterHit extends LCObject {
     /** Returns the PDG code of the secondary type of the i-th particle that 
      * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
      * wether this information is available. If so, every primary will show up in 
-     * the list of contributions once for every type of secondaries.
+     * the list of contributions once for every type of secondaries. If not the 
+     * value returned is undefined. 
      */ 
     public int  getPDGCont(int i) const ;
     

@@ -6,6 +6,8 @@
 #include "EVENT/MCParticle.h"
 #include "EVENT/LCFloatVec.h"
 
+#include "IMPL/LCFlagImpl.h"
+
 using namespace std ;
 using namespace EVENT ;
 
@@ -40,6 +42,7 @@ namespace IMPL {
 	int nHits =  col->getNumberOfElements() ;
 	cout << nHits << " hits - first hit: " ;
 	int nPrint = nHits>0 ? 1 : 0 ;
+	int flag = col->getFlag() ;
 
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
@@ -47,11 +50,16 @@ namespace IMPL {
 	  const CalorimeterHit* hit = 
 	    dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
 	
-	  const float* x =  hit->getPosition() ;
-	  cout << "    hit -  e: " 
-	       << hit->getEnergy() << "  pos: " 
-	       << x[0] << ", " << x[1] << ", " << x[2] 
-	       << endl ;   
+	  cout << "    hit -  e: "  << hit->getEnergy() ;
+
+	  if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
+
+	    const float* x =  hit->getPosition() ;
+	    cout << "  pos: " << x[0] << ", " << x[1] << ", " << x[2] << endl ;   
+
+	  } else{
+	    cout << "  short hits: position not available! " << endl ;
+	  }
 	}
       
 	// print the MCParticle collection

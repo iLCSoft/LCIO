@@ -62,7 +62,7 @@ namespace IMPL {
     
     /** Returns the position of the hit in world coordinates.
      *  NULL if information is not stored. Ask collection for flag, only 
-     * available if bit LCIO.CHBIT_LONG == 1.
+     * available if bit LCIO.CHBIT_LONG is set.
      */
     
     virtual const float * getPosition() const ;
@@ -90,7 +90,8 @@ namespace IMPL {
     /** Returns the PDG code of the secondary type of the i-th particle that 
      * contributed to the hit. Ask the flag word (bit CHBIT_PDG) of the collection 
      * wether this information is available. If so, every primary will show up in 
-     * the list of contributions once for every type of secondaries.
+     * the list of contributions once for every type of secondaries.  If not the 
+     * value returned is undefined. 
      */ 
     virtual int getPDGCont(int i) const ;
 
@@ -107,16 +108,18 @@ namespace IMPL {
      */
     void setEnergy(float en) ;
     
-    /** Sets the position.
+    /** Sets the position. Not stored if LCIO.CHBIT_LONG isn't set.
      */
     void setPosition(float pos[3])  ;
     
-    /** Adds a MCParticle contribution to the hit.
+    /** Adds a MCParticle contribution to the hit. If you want to store
+     *  the PDG of the secondary for every hit make sure the flag word bit 
+     *  LCIO::CHBIT_PDG is set.
      */
     void addMCParticleContribution( const EVENT::MCParticle *p,
 				    float en,
 				    float t,
-				    int pdg ) ; 
+				    int pdg=0 ) ; 
 
   protected:
 

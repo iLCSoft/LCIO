@@ -6,12 +6,12 @@
 #include "IO/LCRunListener.h"
 
 #include "EVENT/LCIO.h"
-#include "EVENT/LCExceptions.h" 
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/CalorimeterHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
+#include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
 
@@ -81,6 +81,14 @@ public:
     // for simplicity just add some calorimeter hits (don't have cluster class yet) 
     
     LCCollectionVec* calVec = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
+
+    // set flag for short format (not including position )
+    // and no PDG     
+    LCFlagImpl chFlag ;
+    chFlag.unsetBit( LCIO::CHBIT_LONG ) ;  // not really necessary - just for demonstration
+    chFlag.unsetBit( LCIO::CHBIT_PDG ) ;
+    calVec->setFlag( chFlag.getFlag()  ) ;
+
     
     for(int j=0;j<NHITS;j++){
       CalorimeterHitImpl* hit = new CalorimeterHitImpl ;

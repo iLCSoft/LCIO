@@ -32,8 +32,8 @@
      <block name="EventHeader" major="1" minor="0">
         <data type="int" name="runNumber"></data>
         <data type="int" name="eventNumber"></data>
-        <data type="string" name="detectorName"></data>
         <data type="long" name="timeStamp">TODO: format</data>
+        <data type="string" name="detectorName"></data>
         <data type="int" name="nBlockNames"></data>
         <repeat count="nBlockNames">
            <data type="string" name="blockName"></data>
@@ -45,8 +45,8 @@
       <block name="Event" major="1" minor="0">
          <data type="int" name="runNumber"></data>
          <data type="int" name="eventNumber"></data>
-         <data type="string" name="detectorName"></data>
          <data type="long" name="timeStamp">TODO: format</data>
+         <data type="string" name="detectorName"></data>
          <data type="int" name="nBlockNames"></data>
          <repeat count="nBlockNames">
             <data type="string" name="blockName"></data>
@@ -98,7 +98,7 @@
             <data type="int" name="cellId1">second word for cell id</data>
             <data type="float" name="energy"></data>
 	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
-		<data type="double[3]" name="position"></data>
+		<data type="float[3]" name="position"></data>
 	    </if>
             <data type="int" name="nContributions"></data>
             <repeat count="nContributions">

@@ -1,6 +1,7 @@
 #include "CPPFORT/lcioc2f.h"
 
 #include "lcio.h" 
+#include "Exceptions.h"
 #include "IOIMPL/LCFactory.h"
 
 using namespace lcio ;
@@ -21,8 +22,15 @@ PTRTYPE lfactCreateLCReader(){
 #define LCREADER_PNTR( reader ) if(! (reader) ) return LCIO::ERROR ; LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
 
 int lrdrOpen(PTRTYPE reader, const char* filename ){
+
   LCREADER_PNTR( reader )  ;
-  return  lcReader->open( filename ) ;
+  try{
+    lcReader->open( filename ) ; 
+    return LCIO::SUCCESS ;
+  }catch(Exception& e){
+    std::cerr << "Exception in lrdrOpen: " << e.what() << endl ;
+    return LCIO::ERROR ;
+  }
 }
 
 PTRTYPE lrdrReadNextEvent(PTRTYPE reader){
