@@ -165,6 +165,16 @@
             </repeat>
          </repeat>
       </block>
+      <block name="LCStrVec" major="1" minor="1">
+         <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
+         <data type="int" name="nVectors"></data>
+         <repeat count="nVectors">
+	    <data type="int" name="nElements"></data>
+            <repeat count="nElements">
+	       <data type="string" name="value"></data>
+            </repeat>
+         </repeat>
+      </block>
       <block name="CalorimeterHit" major="1" minor="1">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0, Bits 0-15 user/detector specific</data>
