@@ -1,0 +1,67 @@
+
+---------------------------------------------------------------
+ Describes the changes for the different versions/tags of LCIO
+---------------------------------------------------------------
+ 
+
+=====================
+v00-04  (fg 20030514)
+=====================
+
+ - new sio-file extension '.slcio' (enforced by C++ version of LCReader/Writer)
+
+ - introduced append mode for writing in LCWriter::open() 
+   (constants LCIO::WRITE_NEW and LCIO::WRITE_APPEND )
+   C++ only
+
+ - SIO file buffers are flushed after each record
+   
+ - small program 'copyfix' added:
+   Copies all complete events from a file (that has incomplete  
+   records at the end due to a program crash) so the append mechanism can be used 
+   to continue the program after the crash, e.g. a long running simulation job.
+   
+ - new method LCReader::readEvent( evtN, runN ) to access 
+   given event ( demonstrating fast skip mechanism - no direct access)
+   -> see example dumpevent.cc
+
+ - duplicate event header information is not written any more (neither Java no C++)
+   -> event information always in two consecutive records of sio file:
+      LCEventHeader: runNum, evtNum, collection names and types
+      LCEvent: the data (collections)
+
+ - compression of files now controled by constants 
+   (SLCIO::compression,SIOFactory.compression) - set to tru for C++ and Java
+  
+ - the ant target cpp needs aid.generate as a prerequisite (not automatically 
+   included any more)
+
+
+
+ - added this file: please document your (major) changes to LCIO here 
+
+
+
+
+=====================
+v00-03  (fg 20030509)
+=====================
+
+ - no 0's at end of strings
+
+ - flag bits for CalorimeterHits taken into account (also Java version)
+
+ - Java version uses identical block names to C++ (as defined in lcio.xml)
+
+ - small bug fix in Java version of SIO:
+   src/java/hep/lcd/io/sio/SIOWriter.java writes record header length (as
+   opposed to the record length)
+   for this to take effect lcio.jar has to be before sio.jar in your
+   classpath - otherwise C++ won't be able to read files generated from
+   Java...
+   needs to be checked for implications on hep.lcd and (if none) applied 
+   to sio.jar
+
+ - Java writes the (duplicate) header also for the event record
+
+ - Old files cannot be read with this version !

@@ -19,13 +19,13 @@ c**********************************************************
       write(*,*) " created reader at " , reader
 
 
-      status = lrdropen( reader, 'simjob.sio' ) 
+      status = lrdropen( reader, 'simjob.slcio' ) 
 
       if( status.eq.0) then
-         write(*,*) " could not open file simjob.sio "
+         write(*,*) " could not open file simjob.slcio "
          goto 99
       else
-         write(*,*) " opened file simjob.sio "
+         write(*,*) " opened file simjob.slcio "
       endif
 
 c     ---- event loop ------

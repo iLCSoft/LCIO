@@ -33,6 +33,9 @@ $(BINDIR)/minijob: minijob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/dumpevent: dumpevent.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/dumpevent $(CPPFLAGS) dumpevent.cc  $(LIBS) 
 
+$(BINDIR)/copyfix: copyfix.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/copyfix $(CPPFLAGS) copyfix.cc  $(LIBS) 
+
 $(BINDIR)/simjob: simjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/simjob $(CPPFLAGS) simjob.cc  $(LIBS) 
 

@@ -42,7 +42,8 @@ CPPFORT:
 
 clean:
 	$(MAKE) -C ./src/IMPL clean; $(MAKE) -C ./src/SIO clean; \
-	 $(MAKE) -C ./src/IOIMPL clean ; $(MAKE) -C ./src/EXAMPLE clean;\
+	$(MAKE) -C ./src/IOIMPL clean ; $(MAKE) -C ./src/EXAMPLE clean;\
+	$(MAKE) -C ./src/CPPFORT clean ; \
 	rm -rf $(LCIOBASE)/lib/liblcio.a
 
 

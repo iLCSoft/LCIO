@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.1 2003-03-06 11:01:24 gaede Exp $
+// CVS $Id: SIO_stream.cc,v 1.2 2003-05-14 15:10:13 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -1133,7 +1133,7 @@ if( !compress )
     //
     data_length += head_length;
     bufout = fwrite( bufloc, sizeof(char), data_length, handle );
-    if( bufout != data_length )
+    if( bufout != data_length && ! fflush( handle ) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
         if( verbosity >= SIO_ERRORS )
@@ -1250,7 +1250,7 @@ else
     // Write the compressed record data.
     //
     bufout = fwrite( cmploc, sizeof(char), data_length, handle );
-    if( bufout != data_length )
+    if( bufout != data_length && ! fflush(handle) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
         if( verbosity >= SIO_ERRORS )
@@ -1271,7 +1271,7 @@ else
     if( newlen > 0 )
     {
         bufout = fwrite( pad, sizeof(char), newlen, handle );
-        if( bufout != newlen )
+        if( bufout != newlen && ! fflush(handle))// fg 20030514 - flush the record
         {
             state = SIO_STATE_ERROR;
             if( verbosity >= SIO_ERRORS )

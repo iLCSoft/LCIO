@@ -25,7 +25,7 @@ using namespace EVENT ;
 
 namespace SIO {
 
-  SIOWriter::SIOWriter() : _hdrHandler(0){
+  SIOWriter::SIOWriter() : _hdrHandler(0), _runHandler(0) {
   
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
@@ -37,13 +37,15 @@ namespace SIO {
     SIO_blockManager::setVerbosity(  SIO_SILENT ) ;
 #endif
   
-    evtP = new LCEvent* ;
+    //    evtP = new LCEvent* ;
 
   }
 
   SIOWriter::~SIOWriter(){
 
-    delete evtP ;
+    delete _hdrHandler ;
+    delete _runHandler ;
+    //delete evtP ;
 
   }
 
@@ -115,9 +117,11 @@ namespace SIO {
 
     // create a new handler for every new run 
     
-    SIORunHeaderHandler* runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
-    _runRecord->connect( runHandler );
-    runHandler->setRunHeader(  hdr ) ;
+    if( !_runHandler){
+      _runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+      _runRecord->connect( _runHandler );
+    }
+    _runHandler->setRunHeader(  hdr ) ;
 
 
     if( _stream->getState()== SIO_STATE_OPEN ){
@@ -132,8 +136,8 @@ namespace SIO {
       }
     }
 
-    _runRecord->disconnect( runHandler );
-    delete runHandler ;
+    //    _runRecord->disconnect( runHandler);
+    //    delete runHandler ;
     return LCIO::SUCCESS ;
   }
 

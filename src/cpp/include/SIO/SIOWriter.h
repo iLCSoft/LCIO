@@ -20,6 +20,7 @@ class SIO_stream ;
 namespace SIO {
 
   class SIOEventHandler ;
+  class SIORunHeaderHandler ;
   class SIOCollectionHandler ;
 
     
@@ -73,11 +74,12 @@ namespace SIO {
 
   private:
 
-    SIOEventHandler *_evtHandler ;
+     //fg20030514 obsolete    SIOEventHandler *_evtHandler ;
     SIOEventHandler *_hdrHandler ;
+    SIORunHeaderHandler *_runHandler ;
     std::vector<SIOCollectionHandler*> _colVector ;
 
-    EVENT::LCEvent **evtP ;
+    //fg20030514 obsolete EVENT::LCEvent **evtP ;
 
   }; // class
 

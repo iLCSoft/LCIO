@@ -52,7 +52,7 @@ namespace SIO  {
       *_rhP = new IMPL::LCRunHeaderImpl ;
 
       // for the run header we read all the data into temporary variables
-      // as the data is mostly strings that needd temporaries anyhow ...
+      // as the data is mostly strings that need temporaries anyhow ...
       int rnTmp ;
       SIO_DATA( stream ,  &rnTmp  , 1  ) ;
       (*_rhP)->setRunNumber( rnTmp    );

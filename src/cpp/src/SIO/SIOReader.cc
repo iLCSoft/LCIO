@@ -129,6 +129,11 @@ namespace SIO {
     // read the next record from the stream
     if( _stream->getState()== SIO_STATE_OPEN ){
       
+
+      if( SIO_blockManager::get( LCSIO::RUNBLOCKNAME ) == 0 ){ 
+	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << endl ;
+	return LCIO::ERROR ; }
+
       unsigned int status =  _stream->read( &_dummyRecord ) ;
       if( ! (status & 1)  ){
 	return LCIO::ERROR ;

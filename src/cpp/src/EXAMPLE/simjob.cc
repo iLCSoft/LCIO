@@ -16,6 +16,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <sstream>
 
 
 using namespace std ;
@@ -55,8 +56,9 @@ int main(int argc, char** argv ){
     string detName("D09TileHcal")  ;
     runHdr->setDetectorName( detName ) ;
 
-    string description(" these are just dummy runs for testing lcio - no physics whatsoever !") ;
-    runHdr->setDescription( description ) ;
+    stringstream description ; 
+    description << " run: " << rn <<" just for testing lcio  - no physics !" ;
+    runHdr->setDescription( description.str()  ) ;
     
     string ecalName("ECAL007") ;
     runHdr->addActiveSubdetector( ecalName ) ;
