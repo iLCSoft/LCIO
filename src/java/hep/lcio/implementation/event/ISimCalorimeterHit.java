@@ -1,16 +1,16 @@
 package hep.lcio.implementation.event;
 
-import hep.lcio.event.CalorimeterHit;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 
 
 /**
- * A default implementation of CalorimeterHit
+ * A default implementation of SimCalorimeterHit
  * @author Tony Johnson
- * @version $Id: ICalorimeterHit.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: ISimCalorimeterHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
  */
-public class ICalorimeterHit extends ILCObject implements CalorimeterHit
+public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 {
    protected float[] energyContrib;
    protected Object[] particle;

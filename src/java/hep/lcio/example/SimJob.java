@@ -7,13 +7,14 @@ import hep.lcio.implementation.io.LCFactory;
 
 import hep.lcio.io.*;
 
+import java.io.IOException;
 import java.util.Random;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.3 2003-05-06 06:51:50 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.4 2003-06-06 13:05:56 gaede Exp $
  */
 public class SimJob
 {
@@ -34,7 +35,14 @@ public class SimJob
       Random random = new Random();
       LCWriter lcWrt = LCFactory.getInstance().createLCWriter();
 
-      lcWrt.open(args[0]);
+      try{ 
+      	lcWrt.open(args[0]) ;
+      }
+      catch(IOException e){
+      	System.out.println( "cannot open file" +  args[0] 
+      	                    + e.getMessage() ) ;
+	    System.exit(1) ;
+      }	  
 
       // loop over runs
       for (int rn = 0; rn < NRUN; rn++)
@@ -77,11 +85,11 @@ public class SimJob
             }
 
             // now add some calorimeter hits
-            ILCCollection calVec = new ILCCollection(LCIO.CALORIMETERHIT);
+            ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
             for (int j = 0; j < NHITS; j++)
             {
-               ICalorimeterHit hit = new ICalorimeterHit();
+               ISimCalorimeterHit hit = new ISimCalorimeterHit();
                hit.setEnergy(3.1415f * random.nextFloat());
 
                float[] pos = 
@@ -105,12 +113,12 @@ public class SimJob
             // and finally some tracker hits
             // with some user extensions (4 floats) per track:
             // we just create a parallel collection of float vectors
-            ILCCollection trkVec = new ILCCollection(LCIO.TRACKERHIT);
+            ILCCollection trkVec = new ILCCollection(LCIO.SIMTRACKERHIT);
             ILCCollection extVec = new ILCCollection(LCIO.LCFLOATVEC);
 
             for (int j = 0; j < NHITS; j++)
             {
-               ITrackerHit hit = new ITrackerHit();
+               ISimTrackerHit hit = new ISimTrackerHit();
                ILCFloatVec ext = new ILCFloatVec();
 
                hit.setdEdx(30e-9f);

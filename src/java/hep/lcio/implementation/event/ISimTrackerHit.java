@@ -1,15 +1,15 @@
 package hep.lcio.implementation.event;
 
 import hep.lcio.event.MCParticle;
-import hep.lcio.event.TrackerHit;
+import hep.lcio.event.SimTrackerHit;
 
 
 /**
- * A default implementation of TrackerHit
+ * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
  */
-public class ITrackerHit extends ILCObject implements TrackerHit
+public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
    protected Object particle;
    protected double[] position = new double[3];

@@ -5,13 +5,13 @@
  */
 package hep.lcio.example;
 
-import hep.lcio.event.CalorimeterHit;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCFloatVec;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
-import hep.lcio.event.TrackerHit;
+import hep.lcio.event.SimTrackerHit;
 
 
 /**
@@ -36,8 +36,8 @@ public class LCTools
 
          LCCollection col = evt.getCollection(name);
 
-         // print CalorimeterHit collections:
-         if (evt.getCollection(name).getTypeName().equals(LCIO.CALORIMETERHIT))
+         // print SimCalorimeterHit collections:
+         if (evt.getCollection(name).getTypeName().equals(LCIO.SIMCALORIMETERHIT))
          {
             int nHits = col.getNumberOfElements();
             System.out.print(nHits + " hits - first hit: ");
@@ -48,7 +48,7 @@ public class LCTools
                System.out.println();
             for (int i = 0; i < nPrint; i++)
             {
-               CalorimeterHit hit = (CalorimeterHit) col.getElementAt(i);
+               SimCalorimeterHit hit = (SimCalorimeterHit) col.getElementAt(i);
 
                float[] x = hit.getPosition();
                System.out.println("    hit -  e: " + hit.getEnergy() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);
@@ -56,7 +56,7 @@ public class LCTools
 
             // print the MCParticle collection
          }
-         else if (evt.getCollection(name).getTypeName().equals(LCIO.TRACKERHIT))
+         else if (evt.getCollection(name).getTypeName().equals(LCIO.SIMTRACKERHIT))
          {
             int nHits = col.getNumberOfElements();
             System.out.print(nHits + " hits : ");
@@ -67,7 +67,7 @@ public class LCTools
                System.out.println();
             for (int i = 0; i < nPrint; i++)
             {
-               TrackerHit hit = (TrackerHit) col.getElementAt(i);
+               SimTrackerHit hit = (SimTrackerHit) col.getElementAt(i);
 
                double[] x = hit.getPosition();
                System.out.println("    hit -  dEdx: " + hit.getdEdx() + "  mc: " + hit.getMCParticle().getPDG() + "  pos: " + x[0] + ", " + x[1] + ", " + x[2]);

@@ -4,11 +4,11 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
-import hep.lcio.event.CalorimeterHit;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
 
-import hep.lcio.implementation.event.ICalorimeterHit;
+import hep.lcio.implementation.event.ISimCalorimeterHit;
 
 import java.io.IOException;
 
@@ -16,11 +16,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
  */
-class SIOCalorimeterHit extends ICalorimeterHit
+class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
-   SIOCalorimeterHit(SIOInputStream in, int flags) throws IOException
+   SIOSimCalorimeterHit(SIOInputStream in, int flags) throws IOException
    {
       cellId0 = in.readInt();
       cellId1 = in.readInt();
@@ -58,10 +58,10 @@ class SIOCalorimeterHit extends ICalorimeterHit
       return (MCParticle) particle[i];
    }
 
-   static void write(CalorimeterHit hit, SIOOutputStream out, int flags) throws IOException
+   static void write(SimCalorimeterHit hit, SIOOutputStream out, int flags) throws IOException
    {
-      if (hit instanceof SIOCalorimeterHit)
-         ((SIOCalorimeterHit) hit).write(out, flags);
+      if (hit instanceof SIOSimCalorimeterHit)
+         ((SIOSimCalorimeterHit) hit).write(out, flags);
       else
       {
          out.writeInt(hit.getCellID0());

@@ -6,12 +6,12 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORecord;
 import hep.lcd.io.sio.SIOWriter;
 
-import hep.lcio.event.CalorimeterHit;
+import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.MCParticle;
-import hep.lcio.event.TrackerHit;
+import hep.lcio.event.SimTrackerHit;
 
 import hep.lcio.implementation.event.ILCCollection;
 import hep.lcio.implementation.event.ILCEvent;
@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.5 2003-05-14 07:30:11 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.6 2003-06-06 13:05:57 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -87,22 +87,22 @@ class SIOEvent extends ILCEvent
                ilc.add(new SIOMCParticle(in));
             addCollection(ilc, name);
          }
-         else if (type.equals(LCIO.TRACKERHIT))
+         else if (type.equals(LCIO.SIMTRACKERHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
             ILCCollection ilc = new ILCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOTrackerHit(in));
+               ilc.add(new SIOSimTrackerHit(in));
             addCollection(ilc, name);
          }
-         else if (type.equals(LCIO.CALORIMETERHIT))
+         else if (type.equals(LCIO.SIMCALORIMETERHIT))
          {
             int flags = in.readInt();
             int n = in.readInt();
             ILCCollection ilc = new ILCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOCalorimeterHit(in, flags));
+               ilc.add(new SIOSimCalorimeterHit(in, flags));
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.LCFLOATVEC))
@@ -158,15 +158,15 @@ class SIOEvent extends ILCEvent
                for (int i = 0; i < n; i++)
                   SIOMCParticle.write((MCParticle) col.getElementAt(i), out);
             }
-            else if (type.equals(LCIO.TRACKERHIT))
+            else if (type.equals(LCIO.SIMTRACKERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOTrackerHit.write((TrackerHit) col.getElementAt(i), out);
+                  SIOSimTrackerHit.write((SimTrackerHit) col.getElementAt(i), out);
             }
-            else if (type.equals(LCIO.CALORIMETERHIT))
+            else if (type.equals(LCIO.SIMCALORIMETERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOCalorimeterHit.write((CalorimeterHit) col.getElementAt(i), out, flags);
+                  SIOSimCalorimeterHit.write((SimCalorimeterHit) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.LCFLOATVEC))
             {

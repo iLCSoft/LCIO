@@ -7,13 +7,14 @@ import hep.lcio.implementation.io.LCFactory;
 
 import hep.lcio.io.*;
 
+import java.io.IOException;
 import java.util.Random;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.3 2003-06-06 13:05:56 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -25,7 +26,14 @@ public class RecJob implements LCRunListener, LCEventListener
    private RecJob(String file)
    {
       lcWrt = LCFactory.getInstance().createLCWriter();
-      lcWrt.open(file);
+      try{ 
+	      lcWrt.open(file);
+      }
+      catch(IOException e){
+      	System.out.println( "cannot open file" +  file
+      	                    + e.getMessage() ) ;
+	    System.exit(1) ;
+      }	  
    }
 
    /**
@@ -74,11 +82,11 @@ public class RecJob implements LCRunListener, LCEventListener
 
       // create a new collection to be added to the event
       // for simplicity just add some calorimeter hits (don't have cluster class yet) 
-      ILCCollection calVec = new ILCCollection(LCIO.CALORIMETERHIT);
+      ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
       for (int j = 0; j < NHITS; j++)
       {
-         ICalorimeterHit hit = new ICalorimeterHit();
+         ISimCalorimeterHit hit = new ISimCalorimeterHit();
          hit.setEnergy(3.1415f * random.nextFloat());
 
          float[] pos = 

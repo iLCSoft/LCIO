@@ -5,9 +5,9 @@ import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 
 import hep.lcio.event.MCParticle;
-import hep.lcio.event.TrackerHit;
+import hep.lcio.event.SimTrackerHit;
 
-import hep.lcio.implementation.event.ITrackerHit;
+import hep.lcio.implementation.event.ISimTrackerHit;
 
 import java.io.IOException;
 
@@ -15,11 +15,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.4 2003-05-06 07:12:33 tonyj Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.1 2003-06-06 13:05:57 gaede Exp $
  */
-public class SIOTrackerHit extends ITrackerHit
+public class SIOSimTrackerHit extends ISimTrackerHit
 {
-   SIOTrackerHit(SIOInputStream in) throws IOException
+   SIOSimTrackerHit(SIOInputStream in) throws IOException
    {
       cellID = in.readInt();
       position[0] = in.readDouble();
@@ -37,10 +37,10 @@ public class SIOTrackerHit extends ITrackerHit
       return (MCParticle) particle;
    }
 
-   static void write(TrackerHit hit, SIOOutputStream out) throws IOException
+   static void write(SimTrackerHit hit, SIOOutputStream out) throws IOException
    {
-      if (hit instanceof SIOTrackerHit)
-         ((SIOTrackerHit) hit).write(out);
+      if (hit instanceof SIOSimTrackerHit)
+         ((SIOSimTrackerHit) hit).write(out);
       else
       {
          out.writeInt(hit.getCellID());

@@ -7,13 +7,14 @@ import hep.lcio.implementation.io.LCFactory;
 
 import hep.lcio.io.*;
 
+import java.io.IOException;
 import java.util.Random;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: MiniJob.java,v 1.1 2003-05-09 15:18:57 gaede Exp $
+ * @version $Id: MiniJob.java,v 1.2 2003-06-06 13:05:56 gaede Exp $
  */
 public class MiniJob
 {
@@ -33,7 +34,14 @@ public class MiniJob
       Random random = new Random();
       LCWriter lcWrt = LCFactory.getInstance().createLCWriter();
 
-      lcWrt.open(args[0]);
+      try{ 
+      	lcWrt.open(args[0]) ;
+      }
+      catch(IOException e){
+      	System.out.println( "cannot open file" +  args[0] 
+      	                    + e.getMessage() ) ;
+	    System.exit(1) ;
+      }	  
 
       // loop over runs
       for (int rn = 0; rn < NRUN; rn++)
@@ -75,7 +83,7 @@ public class MiniJob
             }
 
             // now add some calorimeter hits
-            ILCCollection calVec = new ILCCollection(LCIO.CALORIMETERHIT);
+            ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
 	    int flag = 1 << LCIO.CHBIT_LONG  ; //
 	    flag = flag | ( 1<< LCIO.CHBIT_PDG )  ;
@@ -83,7 +91,7 @@ public class MiniJob
 
             for (int j = 0; j < NHITS; j++)
             {
-               ICalorimeterHit hit = new ICalorimeterHit();
+               ISimCalorimeterHit hit = new ISimCalorimeterHit();
                hit.setEnergy( 3.1415f );
 
                float[] pos = 
