@@ -2,8 +2,7 @@
 #include "IMPL/LCEventImpl.h"
 #include <iostream>
 #include "IMPL/AccessChecked.h"
-
-// #include "IMPL/LCRelationImpl.h"
+#include "IMPL/LCCollectionVec.h"
 
 
 using namespace EVENT ;
@@ -107,8 +106,10 @@ LCCollection * LCEventImpl::getCollection(const std::string & name) const
 LCCollection * LCEventImpl::takeCollection(const std::string & name) const 
   throw (DataNotAvailableException, std::exception) {
 
-  LCCollection *col = getCollection( name ) ;
+  LCCollectionVec* col = dynamic_cast<LCCollectionVec*> ( getCollection( name ) ) ;
 
+  col->setTransient( true ) ;
+  
   _notOwned.insert( col ) ;
 
   return  col ;

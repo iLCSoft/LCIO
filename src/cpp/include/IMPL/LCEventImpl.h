@@ -70,7 +70,8 @@ namespace IMPL{
 
     /** Returns the collection for the given name and transfers the ownership of the collection
      *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
-     *  deleted. The collection is still in the event after the call returns.<br>
+     *  deleted. The collection is still in the event but flagged as transient 
+     *  after the call returns.<br>
      *  This is usefull when you want to keep the collection for the next events.<br>
      *  Use with care!
      * @throws DataNotAvailableException
