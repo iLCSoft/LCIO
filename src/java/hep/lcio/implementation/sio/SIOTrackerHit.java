@@ -17,13 +17,14 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.7 2004-09-15 13:29:10 gaede Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.8 2004-09-17 04:37:43 tonyj Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
    SIOTrackerHit(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
+      type = in.readInt();
       for (int i = 0; i < 3; i++)
          position[i] = in.readDouble();
       for (int i = 0; i < 6; i++)
@@ -32,30 +33,32 @@ class SIOTrackerHit extends ITrackerHit
       time = in.readFloat();
       
       int nRawHits = 1 ;
-      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2)){
-      	nRawHits = in.readInt() ;
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2))
+      {
+         nRawHits = in.readInt() ;
       }
       //FIXME: [fg] I am not sure what type is expected to be in the List
       // in C++ we have LCObjects != SIORefs  ??
-   
+      
       rawHits = new ArrayList( nRawHits ) ;
-      for (int i = 0; i < nRawHits ; i++) {
-		rawHits.add(  in.readPntr() ) ;	
-	  }
+      for (int i = 0; i < nRawHits ; i++)
+      {
+         rawHits.add(  in.readPntr() ) ;
+      }
       
       in.readPTag(this);
    }
-
-//   public LCObject getRawDataHit()
-//   {
-//      if (rawDataHit instanceof SIORef)
-//      {
-//         rawDataHit = ((SIORef) rawDataHit).getObject();
-//      }
-//
-//      return (LCObject) rawDataHit;
-//   }
-
+   
+   //   public LCObject getRawDataHit()
+   //   {
+   //      if (rawDataHit instanceof SIORef)
+   //      {
+   //         rawDataHit = ((SIORef) rawDataHit).getObject();
+   //      }
+   //
+   //      return (LCObject) rawDataHit;
+   //   }
+   
    static void write(TrackerHit hit, SIOOutputStream out) throws IOException
    {
       if (hit instanceof SIOTrackerHit)
@@ -64,38 +67,42 @@ class SIOTrackerHit extends ITrackerHit
       }
       else
       {
+         out.writeInt(hit.getType());
          double[] pos = hit.getPosition();
          for (int i = 0; i < 3; i++)
             out.writeDouble(pos[i]);
-
+         
          float[] matrix = hit.getCovMatrix();
          for (int i = 0; i < 6; i++)
             out.writeFloat(matrix[i]);
          out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
          
-         List rawHits = hit.getRawHits() ; 
+         List rawHits = hit.getRawHits() ;
          out.writeInt( rawHits.size()) ;
-         for (int i = 0; i < rawHits.size() ; i++) {
-		    out.writePntr( rawHits.get(i) );
+         for (int i = 0; i < rawHits.size() ; i++)
+         {
+            out.writePntr( rawHits.get(i) );
          }
          
          out.writePTag(hit);
       }
    }
-
+   
    private void write(SIOOutputStream out) throws IOException
    {
+      out.writeInt(type);
       for (int i = 0; i < 3; i++)
          out.writeDouble(position[i]);
       for (int i = 0; i < 6; i++)
          out.writeFloat(covMatrix[i]);
       out.writeFloat(dEdx);
       out.writeFloat(time);
-
-   	  out.writeInt( rawHits.size()) ;
-      for (int i = 0; i < rawHits.size() ; i++) {
-        out.writePntr( rawHits.get(i) );
+      
+      out.writeInt( rawHits.size()) ;
+      for (int i = 0; i < rawHits.size() ; i++)
+      {
+         out.writePntr( rawHits.get(i) );
       }
       out.writePTag(this);
    }

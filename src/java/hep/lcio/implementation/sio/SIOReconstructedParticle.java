@@ -13,7 +13,7 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.2 2004-09-16 07:15:34 gaede Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.3 2004-09-17 04:37:43 tonyj Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {
@@ -36,9 +36,10 @@ class SIOReconstructedParticle extends IReconstructedParticle
       {
          ParticleID id = new SIOParticleID(in,owner,flag,major,minor);
          particleIDs.add(id);
+         in.readPTag(id);
       }
-      this.particleIDUsed = (ParticleID) in.readPntr();
-	  goodnessOfPID = in.readFloat();
+      this.particleIDUsed = (ParticleID) in.readPntr().getObject();
+      goodnessOfPID = in.readFloat();
       int nReco = in.readInt();
       this.particles = new ArrayList(nReco);
       for (int i=0; i<nReco; i++)
@@ -56,7 +57,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
       for (int i=0; i<nClust; i++)
       {
          clusters.add(in.readPntr());
-      }   
+      }
       in.readPTag(this);
    }
    static void write(ReconstructedParticle particle, SIOOutputStream out, int flag) throws IOException
@@ -77,9 +78,14 @@ class SIOReconstructedParticle extends IReconstructedParticle
          for (int i=0; i<3; i++) out.writeFloat(ref[i]);
          List ids = particle.getParticleIDs();
          out.writeInt(ids.size());
-         for (Iterator i = ids.iterator(); i.hasNext(); ) SIOParticleID.write((ParticleID) i.next(),out);
+         for (Iterator i = ids.iterator(); i.hasNext(); )
+         { 
+            ParticleID pid = (ParticleID) i.next();
+            SIOParticleID.write(pid,out);
+            out.writePTag(pid);
+         }
          out.writePntr(particle.getParticleIDUsed());
- 		 out.writeFloat(particle.getGoodnessOfPID());
+         out.writeFloat(particle.getGoodnessOfPID());
          List particles = particle.getParticles();
          out.writeInt(particles.size());
          for (Iterator i = particles.iterator(); i.hasNext(); ) out.writePntr(i.next());
@@ -102,7 +108,12 @@ class SIOReconstructedParticle extends IReconstructedParticle
       out.writeFloat(charge);
       for (int i=0; i<3; i++) out.writeFloat(referencePoint[i]);
       out.writeInt(particleIDs.size());
-      for (Iterator i = particleIDs.iterator(); i.hasNext(); ) SIOParticleID.write((ParticleID) i.next(),out);
+      for (Iterator i = particleIDs.iterator(); i.hasNext(); ) 
+      {
+         ParticleID pid = (ParticleID) i.next();
+         SIOParticleID.write(pid,out);
+         out.writePntr(pid);
+      }
       out.writePntr(particleIDUsed);
       out.writeFloat(goodnessOfPID);
       out.writeInt(particles.size());
@@ -112,5 +123,5 @@ class SIOReconstructedParticle extends IReconstructedParticle
       out.writeInt(clusters.size());
       for (Iterator i = clusters.iterator(); i.hasNext(); ) out.writePntr(i.next());
       out.writePTag(this);
-   }   
+   }
 }

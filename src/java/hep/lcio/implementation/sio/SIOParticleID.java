@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOParticleID.java,v 1.3 2004-09-16 10:46:36 gaede Exp $
+ * @version $Id: SIOParticleID.java,v 1.4 2004-09-17 04:37:43 tonyj Exp $
  */
 class SIOParticleID extends IParticleID
 {
@@ -25,7 +25,6 @@ class SIOParticleID extends IParticleID
       int n = in.readInt();
       parameters = new float[n];
       for (int i=0; i<n; i++) parameters[i] = in.readInt();
-      in.readPTag(this);
    }
 
    static void write(ParticleID id, SIOOutputStream out) throws IOException
@@ -42,7 +41,6 @@ class SIOParticleID extends IParticleID
          out.writeInt(id.getAlgorithmType());
          float[] pars = id.getParameters();
          for (int i=0; i<pars.length; i++) out.writeFloat(pars[i]);
-         out.writePTag(id);
       }
    }
 
@@ -53,6 +51,5 @@ class SIOParticleID extends IParticleID
       out.writeInt(pdg);
       out.writeInt(algorithmType);
       for (int i=0; i<parameters.length; i++) out.writeFloat(parameters[i]);
-      out.writePTag(this);
    }
 }

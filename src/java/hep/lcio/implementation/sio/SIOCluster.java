@@ -12,7 +12,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.10 2004-09-14 05:38:38 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.11 2004-09-17 04:37:43 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -23,7 +23,7 @@ class SIOCluster extends ICluster
       position = new float[3];
       for (int i=0; i<3; i++) position[i] = in.readFloat();
       positionError = new float[6];
-      for (int i=0; i<3; i++) positionError[i] = in.readFloat();
+      for (int i=0; i<6; i++) positionError[i] = in.readFloat();
       theta = in.readFloat();
       phi = in.readFloat();
       directionError = new float[3] ;

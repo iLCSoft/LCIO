@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.25 2004-09-13 18:15:03 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.26 2004-09-17 04:37:43 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -95,6 +95,7 @@ class SIOEvent extends ILCEvent
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
+         System.out.println("name="+name+" type="+type);
          if (type == null) continue;
                  
          int flags = in.readInt();
@@ -227,6 +228,17 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc,name);
          }
+         else if (type.equals(LCIO.RECONSTRUCTEDPARTICLE))
+         {
+            //int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOReconstructedParticle(in, this, flags, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc,name);
+         }
          else if (type.equals(LCIO.LCRELATION))
          {
             //  int flags = in.readInt();
@@ -235,9 +247,10 @@ class SIOEvent extends ILCEvent
             SIORelation rel = new SIORelation(in,this,fromType, toType, flags, major, minor);
             addRelation(rel,name);
          }
-         //         else {
-         //           System.out.println("UNKNOWN collection type: " + type) ;
-         //         }
+         else 
+         {
+           System.err.println("UNKNOWN collection type: " + type) ;
+         }
          
       }
    }
@@ -347,6 +360,11 @@ class SIOEvent extends ILCEvent
                   SIOCluster.write((ICluster) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.TRACK))
+            {
+               for (int i=0; i < n; i++)
+                  SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.RECONSTRUCTEDPARTICLE))
             {
                for (int i=0; i < n; i++)
                   SIOTrack.write((ITrack) col.getElementAt(i), out, flags);
