@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_blockManager.cc,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_blockManager.cc,v 1.2 2004-04-05 13:33:11 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Manager for a list of SIO blocks.                           
 // ----------------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #endif
 
 #include <iostream>
+#include <vector>
 
 #include "SIO_recordManager.h"
 #include "SIO_blockManager.h"
@@ -160,6 +161,33 @@ return( NULL );
 // ----------------------------------------------------------------------------
 SIO_verbosity SIO_blockManager::getVerbosity() { return( verbosity ); }
 
+
+// ----------------------------------------------------------------------------
+//  remove and delete all known blocks
+// ----------------------------------------------------------------------------
+// FG 05042004: needed LCIO memory mgmt
+void SIO_blockManager::clear() {
+
+  blockMap_i iter;
+  std::vector<std::string> blockNames ;
+    
+  if( blockMap == 0 ) return ; // nothing to clear
+
+  // as the d'tor of SIO_block removes the block from the map
+  // using the map iterator is not safe, so get a list of keys first
+  for(iter = blockMap->begin() ;  iter != blockMap->end() ; iter++) {
+    blockNames.push_back( iter->first  ) ;
+  }
+
+  for(int i=0 ;i<blockNames.size() ;i++){
+    delete (*blockMap)[ blockNames[i] ] ;
+  }
+  
+  delete blockMap;
+  blockMap = NULL;
+
+}
+
 // ----------------------------------------------------------------------------
 // Given its name, remove a block.
 // ----------------------------------------------------------------------------
@@ -202,11 +230,12 @@ if( blockMap != NULL )
                       << std::endl;
         }
 
-        if( blockMap->size() == 0 )
-        {
-            delete blockMap;
-            blockMap = NULL;
-        } 
+	// fg - done in clear
+//         if( blockMap->size() == 0 )
+//         {
+//             delete blockMap;
+//             blockMap = NULL;
+//         } 
         return( SIO_BLOCK_SUCCESS );
     }
 }

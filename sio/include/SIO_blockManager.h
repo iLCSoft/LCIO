@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_blockManager.h,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_blockManager.h,v 1.2 2004-04-05 13:33:11 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Manager for a list of SIO blocks.                          
 // ----------------------------------------------------------------------------
@@ -32,6 +32,9 @@ public:
     static unsigned int    remove( const char* );
     static unsigned int    remove( SIO_block* );
     static SIO_verbosity   setVerbosity( SIO_verbosity );
+
+    //FG 05042004:  clean up needed for memory management
+    static void            clear() ;
 
 private:
     static blockMap_c*     blockMap;
