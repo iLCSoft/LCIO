@@ -1,6 +1,6 @@
 package hep.lcio.event;
 
-/* Interface for the run header. 
+/** Interface for the run header. 
  * So far just another name for LCRunHeaderData 
  * for consistency with the other data entities.
  * 

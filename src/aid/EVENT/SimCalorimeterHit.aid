@@ -16,7 +16,7 @@ public interface SimCalorimeterHit extends SimCalorimeterHitData {
      * @see MCParticle
      * @see SimCalorimeterHitData.getNMCParticles()
      */
-    public const MCParticle* getParticleCont( int i) const ;
+    public  MCParticle* getParticleCont( int i) const ;
 
 
 @ifdef overwriteDataInterface

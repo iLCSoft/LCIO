@@ -1,9 +1,3 @@
-  /**Some basic functions for dumping events.
-   * 
-   * @author gaede
-   * @version Mar 10, 2003
-   * @see LCEvent
-   */
 #ifndef IMPL_LCTOOLS_H
 #define IMPL_LCTOOLS_H 1
 
@@ -15,6 +9,12 @@
 
 namespace IMPL{
   
+  /**Provides some basic functions for printing event data.
+   * 
+   * @author gaede
+   * @version Mar 10, 2003
+   * @see LCEvent
+   */
   class LCTOOLS{
     
   public:

@@ -63,9 +63,8 @@ physics community. It is intended to be used in both simulation studies and
 analysis frameworks. Its light weight and portability makes it also suitable 
 for use in detector R\&D applications. 
 
-It provides a C++ and a Java implementation with a common interface (API) - a Fortran interface to
-the C++ implementation is under development.
-
+It provides a C++ and a Java implementation with a common interface (API).
+A Fortran interface to the C++ implementation is provided as well.
 
 This manual is intended for application developers that want to incorporate LCIO in their 
 programs. This includes e.g. simulation developers as well as  physicists that want to 
@@ -233,6 +232,11 @@ This creates the file \verb|${LCIO}/doc/doxygen_api/html/index.html|   %$
 
 \newpage
 \section{Using LCIO}
+This section gives an introduction on how to use LCIO. We describe the user interface, the data model and
+provide some code examples. For most of the section we focus on Java and C++ as these are the main 
+languages supported by LCIO. 
+The Fortran interface, implemented as a wrapper to the C++ implementation, is described 
+in \ref{f77api}. 
 
 \subsection{Java and C++ API} \label{sec_api}
 Detailed documentation of the API is provided both for Java and C++ on the 
@@ -322,18 +326,6 @@ clause basically all exceptions can be thrown by the function, as all STL-Except
 as well as all LCIO-Exceptions inherit from the base \verb$std::exception$. So the user can decide to
 catch {\em run time} exceptions for parts of the code in order to prevent an abort of the program. 
 }
-
-
-
-%\subsection{Fortran API}
-%There will be a one to one mapping of the Fortran interface to the C++ API. For every class member 
-%function there will be a Fortran function with one additional integer parameter that holds the 
-%pointer to the underlying C++ object. This Fortran function is realized by a wrapper function 
-%that calls the underlying C++ implementation.
-%There is a naming convention, that allows to find the name of 
-%the wrapper function from the C++ name and vice versa. 
-\input{f77api}
-
 
 \subsection{Data model \label{sec_datamodel}}
 
@@ -546,11 +538,7 @@ int main(int argc, char** argv ){
 \end{verbatim}
 
 A more elaborated example (C++) that defines a mini framework where you can specify analysis modules at 
-runtime can be found in \verb|${LCIO}/src/cpp/src/EXAMPLE/lcioframe| %$. 
-The example modules create a root~\cite{ref_root} file with some histograms. 
-You can use the provided main program with your own 
-analysis modules. See the \verb$README$ file for details.
-
+runtime can be found in \ref{rwlcioframe}.
 
 \subsubsection{Accessing the data}
 Check the API documentation and the examples on how to access the data in the LCIO data structures.
@@ -566,7 +554,7 @@ Mostly this is straightforward, e.g. printing run data is as easy as:
 \end{verbatim}
 
 In order to access the information stored in the event, you need to know the collection names that 
-hold the relevant data as well as the type of the objects, e.g. to access the TPC hits on could 
+hold the relevant data as well as the type of the objects, e.g. to access the TPC hits one could 
 write code like the following:
 
 \begin{verbatim}
@@ -698,7 +686,7 @@ collection and finally add the collection to the event with a unique name:
 
 The last line is of course only relevant for C++:
 
-\subsubsection{ LCIO Memory management in C++}
+\subsubsection{ LCIO Memory management in C++} \label{cppmem}
 {\em The philosophy of memory management in LCIO is: " If you created the object (using new),
 you are responsible for deleting it when it is no longer needed !".\\
 In order to make this easier the LCEvent will delete everything that has been attached to the event.
@@ -712,6 +700,33 @@ created the event/runHeader and don't use delete in all other cases.\\
 Of course if you use your own implementation of the DATA interface you are also responsible for the 
 memory management.}
  
+
+
+\input{f77api}
+
+\section{Real world examples} \label{realworld}
+All the examples described above show how to use LCIO with Java, C++ and Fortran. They are build 
+with LCIO and provided as binaries in \verb#$LCIO/bin#.
+%$
+We also provide some examples that show how to use LCIO with some common physiscs simulation
+and analysis packages, such as {\em  Pythia, Root and AIDA (JAS)} in 
+\verb#$LCIO/examples/java[cpp,f77]#.
+%$
+As these examples depend on external tools and libraries they are not build by default with LCIO.
+Please check the corresponding \verb$README$ files for instructions on how to build these examples:
+
+
+\subsection{lcioframe (C++, Root)} \label{rwlcioframe}
+
+Defines a mini framework where you can specify analysis modules at 
+runtime.
+The example modules create a root~\cite{ref_root} file with some histograms. 
+You can use the provided main program with your own analysis modules (and tools). 
+
+\subsection{pythia (Fortran, Pythia)} \label{rwpythia}
+Reads in an ASCII file generated by Pythia and creates an LCIO file from the \verb$hepevt$
+common block.
+
 
 \newpage 
 \begin{latexonly}
