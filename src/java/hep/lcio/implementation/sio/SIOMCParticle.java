@@ -18,7 +18,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.11 2004-01-14 00:03:27 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.12 2004-01-14 20:19:43 tonyj Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -28,8 +28,9 @@ class SIOMCParticle extends IMCParticle
       boolean hasEndPoint = false;
       setParent(owner);
       in.readPTag(this);
+      boolean is0Dot8 = major==0 && minor == 8;
       
-      if (major==0 && minor == 8)
+      if (is0Dot8)
       {
          in.readPntr();
          in.readPntr();
@@ -50,7 +51,7 @@ class SIOMCParticle extends IMCParticle
       }
       pdg = in.readInt();
       generatorStatus = in.readInt();
-      if ( !( major==0 && minor < 9 ) ) 
+      if (!is0Dot8) 
       {
          simulatorStatus = in.readInt();
          hasEndPoint = (simulatorStatus & (1<<31)) != 0;
@@ -72,19 +73,20 @@ class SIOMCParticle extends IMCParticle
    }
    void resolve(int major, int minor)
    {
-      if (  major==0 && minor < 9  )
+      boolean is0Dot8 = major==0 && minor == 8;
+      if (is0Dot8)
       {
-         for (int i=0; i<parents.size(); i++)
+         for (int i=0; i<temp.size(); i++)
          {
-            IMCParticle daughter = (IMCParticle) ((SIORef) parents.get(i)).getObject();
+            IMCParticle daughter = (IMCParticle) ((SIORef) temp.get(i)).getObject();
             this.addDaughter(daughter);
          }
       }
       else
       {
-         for (int i=0; i<parents.size(); i++)
+         for (int i=0; i<temp.size(); i++)
          {
-            IMCParticle parent = (IMCParticle) ((SIORef) parents.get(i)).getObject();
+            IMCParticle parent = (IMCParticle) ((SIORef) temp.get(i)).getObject();
             parent.addDaughter(this);
          }
       }
