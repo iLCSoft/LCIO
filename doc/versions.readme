@@ -3,18 +3,19 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+============================
+ v00-07beta ( fg 20030903 ) 
+============================
+
+   - first version of user manual ('ant doc.manual' -> ./doc/manual.ps)
 
    - store Mass instead of Energy for MCParticle ( v > 0.7)
-     [ C++ only ]
+     [ C++ and Java ]
 
    - added scripts (bash) to call Java examples (bin/runSimJob.sh,...)
 
-============================
- v00-06 ( fg 20030827 )    <-- Schrott !!!!!!!
-============================
-
    - added integer user extensions (LCIntVec)
-     [ C++ only ]
+     [ C++  and Java ]
 
    - removed EndOfDataException from LCReader API
      EOF is signaled by null pointers again ( while ( evt=lcRdr->readNextEvent()) != 0)
@@ -29,13 +30,10 @@
      
    - modification of build.xml ( now 'ant   '  builds everything)
 
+
 --------------------
   to do for release:
 --------------------
-
-  - store mass for MCParticle instead of energy
-    + convenient method getEnergy() in EVENT::MCParticle
-    [ Java only ]
 
   - Exceptions in LCReader 
     [Java] 
@@ -43,16 +41,12 @@
   - SimCalorimeterHit - MCParticleCont doesn't work
     Java version   -> needs debugging ...
 
-  - integer extensions in Java
-    
-  - remove const from C++ methods ?  - no 
-
-  - read-only mode with Exceptions ?  - no
-
-  - general documentation
+  - remove const from C++ methods ?  - no      <<< MAYBE !?
+  - read-only mode with Exceptions ?  - no     <<< MAYBE !?
 
   - ...
  
+
 ============================
  v00-05beta ( fg 20030613 )
 ============================
