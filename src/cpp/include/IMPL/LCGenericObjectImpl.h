@@ -12,7 +12,7 @@ namespace IMPL {
  * user data.
  * 
  * @author gaede 
- * @version $Id: LCGenericObjectImpl.h,v 1.3 2004-09-15 14:29:32 gaede Exp $
+ * @version $Id: LCGenericObjectImpl.h,v 1.4 2005-02-11 15:29:51 gaede Exp $
  */
 
 class LCGenericObjectImpl : public EVENT::LCGenericObject, public AccessChecked {
@@ -78,13 +78,14 @@ public:
 
   /** The type name of the user class (typically the class name)
    */
-  virtual const std::string & getTypeName() const ;
+  virtual const std::string getTypeName() const ;
   
   /** The description string. A comma separated list of pairs of
    *  type identifier, one of 'i','f','d' followed by ':' 
    *  and an attribute name, e.g. "i:cellId,f:offset,f:gain".
    */
-  virtual const std::string & getDataDescription() const ;
+  virtual const std::string getDataDescription() const ;
+
 
 protected:
   

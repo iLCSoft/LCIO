@@ -60,16 +60,23 @@ namespace SIO{
       }
       LCFlagImpl flag( col->getFlag() ) ;
       
-      if( _isFixedSize ) {
+      LCGenericObject* gObj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( 0 ) ) ; 
 
-	flag.setBit( LCIO::GOBIT_FIXED ) ;
-
-	LCGenericObject* gObj  =  dynamic_cast< LCGenericObject* >( col->getElementAt( 0 ) ) ; 
-
+      // if the collection doesn't have the TypeName/DataDescription parameters set,
+      //  we use the ones from the first object
+      if(  col->parameters().getStringVal( "TypeName" ).size() ==  0 )
 	col->parameters().setValue( "TypeName", gObj->getTypeName() ) ;
-	col->parameters().setValue( "DataDescription", gObj->getDataDescription() ) ;
+      
+      if( _isFixedSize ) {
 	
+	flag.setBit( LCIO::GOBIT_FIXED ) ;
+	
+	if(  col->parameters().getStringVal( "DataDescription" ).size() ==  0 )
+	  col->parameters().setValue( "DataDescription", gObj->getDataDescription() ) ;
       }
+      
+      
+
       _flag = flag.getFlag() ;
       
       LCSIO_WRITE( stream, _flag  ) ;

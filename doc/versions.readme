@@ -2,14 +2,27 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+ - API change:  Changed the return value of LCGenericObject::getTypeName() and 
+   LCGenericObject::getDataDescription() from const std::string& to 
+   const std::string to  make the implementation easier
+   -> requires a trivial change in LCGenericObject subclasses
+
+ - added UTIL::LCFixedObject template for user defined subclasses of LCGenericObjects
+   with fixed size
+   see: src/cpp/src/EXAMPLE/CalibrationConstant.h for example on how to use it
+
+ - added UTIL::LCTime: helper class to convert between time stamps and calendar time
 
  - added LCIODEBUG environment variable to control compilation
 
- - added support for multiple read/and write streams and multiple events in C++
+ - added support for multiple read/and write streams in C++
+
+ - added support for multiple events in C++
 
  - bug fixes:
      + dump only five elements of LCInt/Float/StringVecs in LCTOOLS
      + don't allow to add NULL collections to the event
+     + changed LCEvent::getTimestamp() to long long (64bit) 
 
 ======================
   v01-03-01

@@ -69,11 +69,11 @@ namespace IMPL {
     _doubleVec[ index ] = value ;
   }
 
-  const std::string & LCGenericObjectImpl::getTypeName() const {
+  const std::string  LCGenericObjectImpl::getTypeName() const {
     return _typeName ;
   }
 
-  const std::string & LCGenericObjectImpl::getDataDescription() const {
+  const std::string  LCGenericObjectImpl::getDataDescription() const {
     return _dataDescription ;
   }
 

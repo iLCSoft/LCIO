@@ -7,11 +7,12 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version $Id: lcio.h,v 1.18 2004-09-24 09:22:18 gaede Exp $ 
+ * @version $Id: lcio.h,v 1.19 2005-02-11 15:29:51 gaede Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCFactory.h"
+#include "IMPL/LCIOExceptionHandler.h"
 
 
 /** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v01-03) 
@@ -78,6 +79,12 @@ namespace IOIMPL{};
  * base interfaces defined in IO.
  */
 namespace SIO{};
+
+
+/** Use this macro to catch uncaught exceptions before aborting the program.
+ *  Only needed if LCIO is used without LCWRiter or LCReader.
+ */
+#define HANDLE_LCIO_EXCEPTIONS lcio::LCIOExceptionHandler::createInstance() ;
 
 
 #endif // LCIO_NAMESPACE_H

@@ -23,10 +23,12 @@
 #include "UTIL/LCFourVector.h"
 #endif
 #include "UTIL/LCObjectHandle.h"
+#include "UTIL/LCTime.h"
 
 #include <map>
 #include <set>
 #include <cstdio>
+
 
 typedef std::vector<std::string> LCStrVec ;
 
@@ -48,9 +50,12 @@ namespace UTIL {
 	 << "==============================================================" << endl ;
     cout << "        Event  : " << evt->getEventNumber() 
 	 << " - run:  "         << evt->getRunNumber()
-         << " - timestamp "     << evt->getTimeStamp()  << endl ;
+         << " - timestamp "     << evt->getTimeStamp()   
+	 << endl ;
     cout << "==============================================================" << endl ;    
 
+    LCTime evtTime( evt->getTimeStamp() ) ;
+    cout << " date:      "      << evtTime.getDateString() << endl ;     
     cout << " detector : "      << evt->getDetectorName() << endl ;
     
 

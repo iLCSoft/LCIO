@@ -101,7 +101,7 @@ namespace UTIL{
     }
 
     // start with unix time, i.e. seconds since 1.1.1970
-    int s = _t / NPS ; 
+    long64 s = _t / NPS ; 
     _d.ns = _t % NPS ;
 
     // total number of days 

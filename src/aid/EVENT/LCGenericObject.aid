@@ -7,9 +7,12 @@ import hep.lcio.exceptions.* ;
 /** Simple interface to store generic user data.
  * To store your own classes they have to implement
  * this interface.
- * 
+ * @ifdef cpp
+ * 2005-02-11, gaede: Changed the return value of getTypeName() and getDataDescription()
+ * from const std::string& to const std::string to  make the implementation easier
+ * @endif
  * @author gaede 
- * @version $Id: LCGenericObject.aid,v 1.4 2004-09-15 14:29:32 gaede Exp $
+ * @version $Id: LCGenericObject.aid,v 1.5 2005-02-11 15:29:51 gaede Exp $
  */
 
 public interface LCGenericObject extends LCObject 
@@ -52,14 +55,14 @@ public interface LCGenericObject extends LCObject
      * with every collection of LCGenericObject subclasses.<br>
      * 
      */
-    public const String& getTypeName() const ;
+    public const String getTypeName() const ;
 
 
     /** The description string. A comma separated list of pairs of
      *  type identifier, one of 'i','f','d' followed by ':' 
      *  and an attribute name, e.g. "i:cellId,f:offset,f:gain".
      */
-    public const String& getDataDescription() const ;
+    public const String getDataDescription() const ;
 
 
     @cpp{
