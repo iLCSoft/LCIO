@@ -26,7 +26,7 @@
 c---- read file names from command line arguments
       nargs = iargc()
       if (nargs .lt. 1)  then
-        print *, ' usage:  anajob <output-file>',
+        print *, ' usage:  recjob <output-file>',
      &           '<input-file1> [[input-file2],...]'
         print *, ' filenames must have less then 40 characters'
         print *, ' up to 20 filenames are accepted'
