@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.11 2003-09-17 11:34:45 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.12 2003-09-23 14:45:20 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -53,6 +53,7 @@
   <!-- Initialization, setup of commands, check                            -->
   <!-- =================================================================== -->
   <target name="init">
+
     <taskdef name="junit"               classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
     <taskdef name="freehep.ant"         classname="org.freehep.ant.FreeHepAnt"/>
@@ -130,19 +131,68 @@
   <!-- Generates cpp version of library                                    -->
   <!-- =================================================================== -->
 
-   <target name="cpp" depends="cpp.lcio" description="&lt;cpp-target&gt; creates cpp version of lcio">
+   <target name="cpp" depends="init,cpp.windows,cpp.linux" description="&lt;cpp-target&gt; creates cpp version of lcio">
    </target>
-   <target name="cpp.sio">
+ 
+  <!-- =================================================================== -->
+  <!-- Generates cpp version of library on linux                           -->
+  <!-- =================================================================== -->
+
+   <target name="cpp.linux" depends="cpp.lcio.linux"/>
+   <target name="cpp.sio.linux" >
      <exec dir="." executable="gmake" os="Linux">
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
-   <target name="cpp.lcio" depends="cpp.sio">
+   <target name="cpp.lcio.linux" depends="cpp.sio.linux">
      <exec dir="." executable="gmake" os="Linux">
        <arg line="-C ./src/cpp all"/>
      </exec>
    </target>
-   <target name="cpp.clean">
+  
+   <target name="f77.linux" description="&lt;cpp-target&gt; creates f77 examples">
+     <exec dir="." executable="gmake" os="Linux">
+       <arg line="-C ./src/f77"/>
+     </exec>
+   </target>
+
+  <!-- =================================================================== -->
+  <!-- Generates cpp version of library on windows                         -->
+  <!-- =================================================================== -->
+
+   <target name="cpp.windows" depends="cpp.lcio.windows"/>
+   <target name="cpp.sio.windows">
+     <exec dir="." executable="make" failonerror="true" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+       <arg line="-C ./sio lib"/>
+     </exec>
+   </target>
+   <target name="cpp.lcio.windows" depends="cpp.sio.windows">
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+       <arg line="-C ./src/cpp all"/>
+     </exec>
+   </target>
+ 
+   <target name="f77.windows" description="&lt;cpp-target&gt; creates f77 examples">
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+       <arg line="-C ./src/f77"/>
+     </exec>
+   </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Cleans cpp version of library                                    -->
+  <!-- =================================================================== -->
+
+   <target name="cpp.clean" depends="init,cpp.clean.windows,cpp.clean.linux" description="&lt;cpp-target&gt; cleans cpp version of lcio">
+   </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Cleans cpp version of library on linux                           -->
+  <!-- =================================================================== -->
+
+ 
+   <target name="cpp.clean.linux">
      <exec dir="." executable="gmake" os="Linux">
        <arg line="-C ./sio clean"/>
      </exec>
@@ -150,13 +200,29 @@
        <arg line="-C ./src/cpp clean"/>
      </exec>
    </target>
-   <target name="f77" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux">
-       <arg line="-C ./src/f77"/>
+  
+  <!-- =================================================================== -->
+  <!-- Cleans cpp version of library on windows                         -->
+  <!-- =================================================================== -->
+
+ 
+   <target name="cpp.clean.windows">
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+       <arg line="-C ./sio clean"/>
+     </exec>
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+       <arg line="-C ./src/cpp clean"/>
      </exec>
    </target>
+ 
+
+  <!-- =================================================================== -->
+  <!-- Generates cpp documentation using doxygen                           -->
+  <!-- =================================================================== -->
+
+
    <target name="cpp.doc" description="creates API doc with doxygen (required in path)">
-     <exec dir="./doc/doxygen_api" executable="doxygen" os="Linux">
+     <exec dir="./doc/doxygen_api" executable="doxygen">
      </exec>
    </target>
 

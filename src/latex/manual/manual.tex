@@ -18,17 +18,16 @@
 \newcommand{\pdfgraphics}{\ifpdf\DeclareGraphicsExtensions{.png,.jpg}\fi}
 %-------------------------------------------------------------------------
 \usepackage{graphicx}
-\usepackage{fancyhdr}
+%\usepackage{fancyhdr}
 \usepackage{verbatim}
 \usepackage{html}
-\pagestyle{fancy}
-\fancyhead{} % clear all fields
-\fancyhead[C]{\it {LCIO - Users manual}}
-\fancyhead[RO,LE]{\thepage}
-\fancyfoot{} % clear all fields
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
-\renewcommand{\sfdefault}{phv}
+%\pagestyle{fancy}
+%\fancyhead{} % clear all fields
+%\fancyhead[C]{\it {LCIO - Users manual}}
+%\fancyhead[RO,LE]{\thepage}
+%\fancyfoot{} % clear all fields
+%\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0pt}
 \renewcommand{\appendixname}{Appendix}
 
 \newcommand{\Href}[1]{\htmladdnormallink{\footnotesize {#1}}{#1}}
@@ -55,7 +54,7 @@
 \maketitle
 \tableofcontents
 
-\thispagestyle{fancy}
+%\thispagestyle{fancy}
 \section{INTRODUCTION \label{intro}}
 
 
@@ -96,34 +95,79 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 In order to build LCIO you need to have a Java VM (version 1.4 or higher) installed 
 on your platform. This is true even if you only want to install the C++ version as the 
 API-files are generated from an abstract description for Java and C++ using the 
-AID~\cite{ref_aid} tool.
+AID~\cite{ref_aid} tool. The build scripts used in LCIO also require that \verb$gcc$ and 
+\verb$gmake/make$ are installed.
+
 The C++ version of LCIO is developed under (Suse) Linux with gcc2.95.3 and tested
-as well with gcc3.2, used on common RedHat distributions. 
-As the -ansi switch is used it should be fairly easy to port it to other platforms, that have
-an ANSI compliant C++ compiler installed, e.g. Windows/Cygwin.
+as well with gcc3.2 on Linux and Windows/Cygwin. 
+As the -ansi switch is used it should be fairly easy to port it to other platforms with
+an ANSI compliant C++ compiler.
 
 \subsection {Building the library}
-A few variables have to be set, e.g. on windows:
-\begin{verbatim}
-  set LCIO=c:\tony\projects\v00-06\lcio      <-- modify as appropriate
-  set JDK_HOME=c:\java\j2sdk1.4.1            <-- modify as appropriate
-  set PATH=%LCIO%\tools;%PATH%
-\end{verbatim}
-or using {\it bash}:
-\begin{verbatim}
-  cd v00-06
-  export LCIO=$PWD
+
+A few variables have to be set depending on your development environment, e.g.
+\begin{itemize}
+\item{ {\bf Linux (and bash):} 
+\begin{verbatim} 
+  export LCIO=/lcio/v00-08                <-- modify as appropriate
+  export PATH=$LCIO/tools:$LCIO/bin:$PATH
+
   export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
-  export PATH=$LCIO/tools:$PATH
+\end{verbatim} 
+}
+%$ <- fixes syntax highlighting
+\item{ {\bf Windows/Cygwin - DOS shell:} 
+\begin{verbatim}
+  set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
+
+  set LCIO=c:/lcio/devel/v00-08            <-- modify as appropriate
+  set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
+
+  set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
 \end{verbatim}
+Note: Cygwin is only needed for gcc and make to build the C++ version.
+}
+\item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
+\begin{verbatim}
+  export LCIO=c:/lcio/devel/v00-08
+  export PATH=/cygdrive/c/lcio/devel/v00-08/tools:\
+              /cygdrive/c/lcio/devel/v00-08/bin:$PATH
+  export JDK_HOME=c:/j2sdk1.4.1_01
+\end{verbatim} %$
+}
+\end{itemize}
+
+
+%In order to build LCIO you need to have a Java VM (version 1.4 or higher) installed 
+%on your platform. This is true even if you only want to install the C++ version as the 
+%API-files are generated from an abstract description for Java and C++ using the 
+%AID~\cite{ref_aid} tool.
+%The C++ version of LCIO is developed under (Suse) Linux with gcc2.95.3 and tested
+%as well with gcc3.2 on Linux and Windows/Cygwin. 
+%As the -ansi switch is used it should be fairly easy to port it to other platforms, that have
+%an ANSI compliant C++ compiler installed.
+
+%\subsection {Building the library}
+
+%A few variables have to be set, e.g. on windows:
+%\begin{verbatim}
+%  set LCIO=c:\tony\projects\v00-06\lcio      <-- modify as appropriate
+%  set JDK_HOME=c:\java\j2sdk1.4.1            <-- modify as appropriate
+%  set PATH=%LCIO%\tools;%PATH%
+%\end{verbatim}
+%or using {\it bash}:
+%\begin{verbatim}
+%  cd v00-08
+%  export LCIO=$PWD
+%  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
+%  export PATH=$LCIO/tools:$PATH
+%\end{verbatim}
 %$ <- fixes syntax highlighting
 
-%\begin{verbatim}
-%  ant
-%\end{verbatim}
-% Or to do it step by step:
 
-To build the Java and C++ versions a few simple steps are needed
+
+To build the Java and C++ versions use the following commands\footnote{When using the Cygwin shell you need to
+call the Windows version of ant with its full name, i.e. {\em ant.bat cpp}.}:
 \begin{verbatim}
   ant aid.generate     <-- generates common API
   ant cpp              <-- creates C++
@@ -150,16 +194,21 @@ This will create the following libraries and executables:
 
 To check whether the (C++) installation was successful run the {\it simjob} program:
 \begin{verbatim}
-  ./bin/simjob simjob.slcio
+  simjob simjob.slcio
 \end{verbatim}
 This creates a simple LCIO file that you can read with 
 \begin{verbatim}
-  ./bin/anajob simjob.slcio
+  anajob simjob.slcio
 \end{verbatim}
-The same for the Java version:
+The same for the Java - Linux version:
 \begin{verbatim}
- ./bin/runSimJob.sh simjob.sclio
- ./bin/runAnalysisJob.sh simsob.sclio
+  runSimJob.sh simjob.sclio
+  runAnalysisJob.sh simsob.sclio
+\end{verbatim}
+or for the Java Windows (Cygwin) version:
+\begin{verbatim}
+  runSimJob[.bat] simjob.sclio
+  runAnalysisJob[.bat] simsob.sclio
 \end{verbatim}
 
 \subsection {Building the documentation} \label{build_doc}
