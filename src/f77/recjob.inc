@@ -3,6 +3,7 @@
 * ************************
 
 #include "lciof77api.inc"
+#include "lciof77apiext.inc"
 
 
       PTRTYPE reader, writer
@@ -11,7 +12,9 @@
       PTRTYPE tpchitcol, trackerhitcol, trhitp, tpchit, trackcol, trkp
       PTRTYPE simcalcol, cluscol, calhitcol, simcalhitp, calhitp
       PTRTYPE recopcol, recopp, pidp, recopp1, recopp2
-      PTRTYPE screlp
+
+***   temporary pointers used in several routines
+      PTRTYPE screlp, screlcol
 
       common /pointers/ 
      &        reader, writer

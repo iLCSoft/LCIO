@@ -82,16 +82,16 @@ int lcclugetdirectionerror( PTRTYPE cluster, float direrr[3] )  {
 //   return LCIO::SUCCESS ;
 // }
 
-PTRTYPE lcclugetparticleids( PTRTYPE cluster ) {
-  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-  const ParticleIDVec& idvect = clu->getParticleIDs();
-  return reinterpret_cast<PTRTYPE>( &idvect );
-}
-
 PTRTYPE lcclugetshape( PTRTYPE cluster )  {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   const FloatVec& shape = clu->getShape();
   return reinterpret_cast<PTRTYPE>( &shape );
+}
+
+PTRTYPE lcclugetparticleids( PTRTYPE cluster ) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  const ParticleIDVec& idvect = clu->getParticleIDs();
+  return reinterpret_cast<PTRTYPE>( &idvect );
 }
 
 PTRTYPE lcclugetclusters( PTRTYPE cluster ) {
@@ -177,11 +177,12 @@ int lcclusetdirectionerror( PTRTYPE cluster, float errdir[3] ) {
   return LCIO::SUCCESS ;
 }
 
-// int lcclusetshape( PTRTYPE cluster, float shape[6] ) {
-//   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
-//   clu->setShape( shape ) ;
-//   return LCIO::SUCCESS ;
-// }
+int lcclusetshape( PTRTYPE cluster, PTRTYPE vector ) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  FloatVec* shape =  reinterpret_cast<FloatVec*>(vector) ;
+  clu->setShape( *shape ) ;
+  return LCIO::SUCCESS ;
+}
 
 // int lcclusetemweight( PTRTYPE cluster, float weight) {
 //   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
@@ -201,6 +202,13 @@ int lcclusetdirectionerror( PTRTYPE cluster, float errdir[3] ) {
 //   return LCIO::SUCCESS ;
 // }
 
+
+int lccluaddparticleid( PTRTYPE cluster, PTRTYPE pid) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  ParticleID* cpid = f2c_pointer<ParticleID,LCObject>( pid ) ;
+  clu->addParticleID( cpid ) ;
+  return LCIO::SUCCESS ;
+}
 
 int lccluaddcluster( PTRTYPE cluster, PTRTYPE clus) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;

@@ -69,11 +69,12 @@ c---- loop over all run headers
       runhdr = lcrdrreadnextrunheader( reader, LCIO_READ_ONLY )
       if( runhdr .eq. 0 )  go to 10
          
-      detname = lcrhdgetdetectorname( runHdr )
-      descr   = lcrhdgetdescription( runHdr )
-      write(*,'(a,i2,4a)') '  Run :', lcrhdgetrunnumber( runHdr ),
-     &                     ' - ', detname(1:lnblnk(detname)),
-     &                     ':  ', descr(1:lnblnk(descr))
+       status = lcdumprunheader( runhdr )
+ccc      detname = lcrhdgetdetectorname( runHdr )
+ccc      descr   = lcrhdgetdescription( runHdr )
+ccc      write(*,'(a,i2,4a)') '  Run :', lcrhdgetrunnumber( runHdr ),
+ccc     &                     ' - ', detname(1:lnblnk(detname)),
+ccc     &                     ':  ', descr(1:lnblnk(descr))
          
 c---- this is additional compared to anajob.cc
 ccc      write(*,*) " active subdetectors : "

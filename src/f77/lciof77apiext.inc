@@ -48,6 +48,12 @@ c ---------------  convenient methods for the event interface
 
       integer lcgeteventheader
 
+*     Dump the run header to the stdout
+*      
+*     int lcdumprunheader( PTRTYPE runheader ) ;
+
+      integer lcdumprunheader
+
 *     Dump the event to the stdout - one line per collection.
 *      
 *     int lcdumpevent( PTRTYPE event ) ;
@@ -125,43 +131,73 @@ c ---------------  convenient methods for SimCalorimeterHits
 
 c ---------------  convenient methods for the vector interface
 
-*     Create a complete vector of Integers
+*     Create a complete LC vector of Integers
 *
 *     PTRTYPE lcintvectorcreate ( int* intv, const int nintv )
 
       PTRTYPE lcintvectorcreate
 
-*     Create a complete vector of Floats
+*     Create a complete LC vector of Floats
 *
 *     PTRTYPE lcfloatvectorcreate ( float* floatv , const int nfloatv )
 
       PTRTYPE lcfloatvectorcreate
 
-*     Create a complete vector of Strings
+*     Create a complete LC vector of Strings
 *
 *     PTRTYPE lcstringvectorcreate ( void* stringv, const int nstringv, const int nchstringv)
 
       PTRTYPE lcstringvectorcreate
 
 
-*     Get the complete vector of Integers
+*     Create a complete vector of Integers
+*
+*     PTRTYPE intvectorcreate ( int* intv, const int nintv )
+
+      PTRTYPE intvectorcreate
+
+*     Create a complete vector of Floats
+*
+*     PTRTYPE floatvectorcreate ( float* floatv , const int nfloatv )
+
+      PTRTYPE floatvectorcreate
+
+*     Create a complete vector of Strings
+*
+*     PTRTYPE stringvectorcreate ( void* stringv, const int nstringv, const int nchstringv)
+
+      PTRTYPE stringvectorcreate
+
+
+*     Get the complete LC vector of Integers
 *     
 *     int lcgetintvector( PTRTYPE vector, int* intv, int* nintv )
 
       integer lcgetintvector
 
-*     Get the complete vector of Floats
+*     Get the complete LC vector of Floats
 *     
 *     int lcgetfloatvector( PTRTYPE vector, float* floatv , int* nfloatv )
 
       integer lcgetfloatvector
 
-*     Get the complete vector of Strings
+*     Get the complete LC vector of Strings
 *     
-*     int lcgetstringvector( ( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
+*     int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
 
       integer lcgetstringvector
 
+*     Set methods for LCParameters
+*
+*     int lcsetparameters ( const char* classname, PTRTYPE classp, const char* method, const char* key, PTRTYPE vecp)
+
+      integer lcsetparameters
+
+*     Get methods for LCParameters
+*
+*     int lcgetparameters ( const char* classname, PTRTYPE classp, const char* method, const char* key, PTRTYPE vecp)
+
+      integer lcgetparameters
 
 c----  need to define the HEPEVT common block
 #include "hepevt0.inc"

@@ -15,6 +15,10 @@ int lccahdelete( PTRTYPE simcalhit ) {
   delete hit ;
   return LCIO::SUCCESS ;
 }
+int lccahid( PTRTYPE simcalhit )  {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return hit->id() ;
+}
 
 int lccahgetcellid0( PTRTYPE simcalhit )  {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
@@ -27,6 +31,10 @@ int lccahgetcellid1( PTRTYPE simcalhit )  {
 float lccahgetenergy( PTRTYPE simcalhit )  {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
   return hit->getEnergy() ;
+}
+float lccahgettime( PTRTYPE simcalhit )  {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return hit->getTime() ;
 }
 int lccahgetposition( PTRTYPE simcalhit, float *pos)  {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
@@ -47,6 +55,11 @@ int lccahsetcellid1( PTRTYPE simcalhit, int id1) {
 int lccahsetenergy( PTRTYPE simcalhit, float en) {
   CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
   hit->setEnergy( en ) ;
+  return  LCIO::SUCCESS ;
+}
+int lccahsettime( PTRTYPE simcalhit, float time) {
+  CalorimeterHitImpl* hit = f2c_pointer<CalorimeterHitImpl,LCObject>( simcalhit ) ;
+  hit->setTime( time ) ;
   return  LCIO::SUCCESS ;
 }
 int lccahsetposition( PTRTYPE simcalhit, float pos[3])  {

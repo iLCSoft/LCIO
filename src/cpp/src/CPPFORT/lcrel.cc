@@ -7,61 +7,63 @@
 
 using namespace lcio ;
 
-// PTRTYPE lcrelcreate( const char* fromType, const char* toType ){
-//   LCRelationImpl* relation = new LCRelationImpl( fromType, toType ) ;
-//   return reinterpret_cast<PTRTYPE>( relation ) ;
+PTRTYPE lcrelcreate0(){
+  LCRelationImpl* relation = new LCRelationImpl() ;
+  return reinterpret_cast<PTRTYPE>( relation ) ;
+}
 
-// }
+PTRTYPE lcrelcreate(  PTRTYPE objectfrom, PTRTYPE objectto, float weight ){
+  LCObject* objf      = f2c_pointer<LCObject,LCObject>( objectfrom ) ;
+  LCObject* objt      = f2c_pointer<LCObject,LCObject>( objectto ) ;
+  LCRelationImpl* relation = new LCRelationImpl( objf, objt, weight ) ;
+  return reinterpret_cast<PTRTYPE>( relation ) ;
+}
 
-// int lcreldelete( PTRTYPE relation ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   delete rel ;
-//   return LCIO::SUCCESS ;
+int lcreldelete( PTRTYPE relation ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  delete rel ;
+  return LCIO::SUCCESS ;
+}
 
-// }
+int lcrelid( PTRTYPE relation ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  return rel->id() ;
+}
 
-// int lcrelnumberofrelations( PTRTYPE relation,  PTRTYPE object ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   LCObject* obj       = f2c_pointer<LCObject,LCObject>( object ) ;
-//   return rel->numberOfRelations( obj )  ;
+PTRTYPE lcrelgetfrom( PTRTYPE relation ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  LCObject* object    = rel->getFrom() ;
+  return reinterpret_cast<PTRTYPE>( object ) ;
+}
 
-// }
+PTRTYPE lcrelgetto( PTRTYPE relation ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  LCObject* object    = rel->getTo() ;
+  return reinterpret_cast<PTRTYPE>( object ) ;
+}
 
-// PTRTYPE lcrelgetrelation( PTRTYPE relation, PTRTYPE object, int i ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   LCObject* obj       = f2c_pointer<LCObject,LCObject>( object ) ;
-//   LCObject* objget    = rel->getRelation( obj, i - 1 ) ;
-//   return reinterpret_cast<PTRTYPE>( objget ) ;
-// }
+float lcrelgetweight( PTRTYPE relation ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  return rel->getWeight() ;
+}
 
-// float lcrelgetweight( PTRTYPE relation, PTRTYPE object, int i ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   LCObject* obj       = f2c_pointer<LCObject,LCObject>( object ) ;
-//   return rel->getWeight( obj, i - 1 ) ;
+int lcrelsetfrom(PTRTYPE relation, PTRTYPE object ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  LCObject* obj       = f2c_pointer<LCObject,LCObject>( object ) ;
+  rel->setFrom( obj ) ;
+  return LCIO::SUCCESS ;
+}
 
-// }
+int lcrelsetto(PTRTYPE relation, PTRTYPE object ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  LCObject* obj       = f2c_pointer<LCObject,LCObject>( object ) ;
+  rel->setTo( obj ) ;
+  return LCIO::SUCCESS ;
+}
 
-// int lcreladdrelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto, float weight ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   LCObject* objf      = f2c_pointer<LCObject,LCObject>( objectfrom ) ;
-//   LCObject* objt      = f2c_pointer<LCObject,LCObject>( objectto ) ;
-//   rel->addRelation( objf, objt, weight ) ;
-//   return LCIO::SUCCESS ;
-
-// }
-
-// int lcrelusecaching(PTRTYPE relation, bool val ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   rel->useCaching( val ) ;
-//   return LCIO::SUCCESS ;
-
-// }
-
-// int lcrelsettypes(PTRTYPE relation, const char* fromType, const char* toType ){
-//   LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
-//   rel->setTypes( fromType, toType ) ;
-//   return LCIO::SUCCESS ;
-
-// }
-
+int lcrelsetweight(PTRTYPE relation, float weight ){
+  LCRelationImpl* rel = reinterpret_cast<LCRelationImpl*>( relation ) ;
+  rel->setWeight( weight ) ;
+  return LCIO::SUCCESS ;
+}
 

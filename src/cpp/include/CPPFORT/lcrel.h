@@ -11,29 +11,33 @@
 // trailing underscores on Linux
 
 // the relation interface
-PTRTYPE lcrelcreate( const char* fromType, const char* toType) ;
+PTRTYPE lcrelcreate0() ;
+PTRTYPE lcrelcreate( PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
 int lcreldelete( PTRTYPE relation ) ;
 
-int lcrelnumberofrelations( PTRTYPE relation, PTRTYPE object) ;
-PTRTYPE lcrelgetrelation( PTRTYPE relation, PTRTYPE object, int i ) ;
-float lcrelgetweight( PTRTYPE relation, PTRTYPE object, int i ) ;
-
-int lcreladdrelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
-int lcrelusecaching(PTRTYPE relation, bool val ) ;
-int lcrelsettypes(PTRTYPE relation, const char* fromType, const char* toType ) ;
+int lcrelid(PTRTYPE relation) ;
+PTRTYPE lcrelgetfrom( PTRTYPE relation ) ;
+PTRTYPE lcrelgetto( PTRTYPE relation ) ;
+float lcrelgetweight( PTRTYPE relation ) ;
+               
+int lcrelsetfrom(PTRTYPE relation, PTRTYPE object ) ;
+int lcrelsetto(PTRTYPE relation, PTRTYPE object ) ;
+int lcrelsetweight(PTRTYPE relation,float weight ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN2(CFORTRANPNTR, lcrelcreate, LCRELCREATE, lcrelcreate, STRING, STRING ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcrelcreate0, LCRELCREATE0, lcrelcreate0 ) ;
+FCALLSCFUN3(CFORTRANPNTR, lcrelcreate, LCRELCREATE, lcrelcreate, CFORTRANPNTR, CFORTRANPNTR, FLOAT ) ;
 FCALLSCFUN1(INT, lcreldelete, LCRELDELETE, lcreldelete, CFORTRANPNTR ) ;
 
-FCALLSCFUN2(INT, lcrelnumberofrelations, LCRELNUMBEROFRELATIONS, lcrelnumberofrelations, CFORTRANPNTR, CFORTRANPNTR ) ;
-FCALLSCFUN3(CFORTRANPNTR, lcrelgetrelation, LCRELGETRELATION, lcrelgetrelation, CFORTRANPNTR, CFORTRANPNTR, INT ) ;
-FCALLSCFUN3(FLOAT, lcrelgetweight, LCRELGETWEIGHT, lcrelgetweight, CFORTRANPNTR, CFORTRANPNTR, INT ) ;
+FCALLSCFUN1(INT, lcrelid, LCRELID, lcrelid, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lcrelgetfrom, LCRELGETFROM, lcrelgetfrom, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lcrelgetto, LCRELGETTO, lcrelgetto, CFORTRANPNTR ) ;
+FCALLSCFUN1(FLOAT, lcrelgetweight, LCRELGETWEIGHT, lcrelgetweight, CFORTRANPNTR ) ;
 
-FCALLSCFUN4(INT, lcreladdrelation, LCRELADDRELATION, lcreladdrelation, CFORTRANPNTR, CFORTRANPNTR, CFORTRANPNTR, FLOAT ) ;
-FCALLSCFUN2(INT, lcrelusecaching, LCRELUSECACHING, lcrelusecaching, CFORTRANPNTR, LOGICAL ) ;
-FCALLSCFUN3(INT, lcrelsettypes, LCRELSETTYPES, lcrelsettypes, CFORTRANPNTR, STRING, STRING ) ;
+FCALLSCFUN2(INT, lcrelsetfrom, LCRELSETFROM, lcrelsetfrom, CFORTRANPNTR, CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lcrelsetto, LCRELSETTO, lcrelsetto, CFORTRANPNTR, CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lcrelsetweight, LCRELSETWEIGHT, lcrelsetweight, CFORTRANPNTR, FLOAT ) ;
 
 }
    

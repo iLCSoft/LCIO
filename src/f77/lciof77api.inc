@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.20 2004-09-16 10:46:35 gaede Exp $
+*  $Id: lciof77api.inc,v 1.21 2004-09-21 15:44:50 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -39,11 +39,24 @@ c-----the LCRunHeader interface
       integer lcrhdsetrunnumber, lcrhdsetdetectorname
       integer lcrhdsetdescription, lcrhdaddactivesubdetector
 
-c-----the LCStrVec,LCIntVec,LCFloatVec interface
-      integer lcsvcgetlength,lcivcgetlength,lcfvcgetlength
+c-----the LCStrVec, LCIntVec, LCFloatVec interface
+      integer lcsvcgetlength, lcivcgetlength, lcfvcgetlength
       character*80 lcsvcgetstringat
-      integer lcivcgetintat, lcivcsetlength, lcivcsetintat
+      integer lcivcgetintat
       real    lcfvcgetfloatat
+
+c-----the LCRelationNavigator interface
+      PTRTYPE lcrnvcreate, lcrnvcreatefromcollection
+      PTRTYPE lcrnvgetrelatedtoobjects, lcrnvgetrelatedfromobjects
+      PTRTYPE lcrnvgetrelatedtoweights, lcrnvgetrelatedfromweights
+      PTRTYPE lcrnvcreatecollection
+      integer lcrnvdelete, lcrnvgaddrelation, lcrnvgremoverelation
+      character*80 lcrnvgetfromtype, lcrnvgettotype
+
+c-----the LCRelationNavigator utility interface
+      integer lcobvgetlength
+      PTRTYPE lcobvgetobjectid
+      real    lcobvgetweight
 
 c-----the LCEvent interface
       PTRTYPE lcevtcreate, lcevtgetcollection, lcevtgetcollectionnames
@@ -70,6 +83,17 @@ c-----the LCRelation interface
       integer lcreldelete, lcrelnumberofrelations
       integer lcreladdrelation, lcrelusecaching, lcrelsettypes
       real    lcrelgetweight
+
+c-----the LCGenericObject interface
+      PTRTYPE lcgobcreate, lcgobcreatefixed
+      integer lcgobdelete, lcgobid, lcgobgetintval
+      integer lcgobgetnint, lcgobgetnfloat, lcgobgetndouble
+      integer lcgobsetintval, lcgobsetfloatval, lcgobsetdoubleval
+      real    lcgobgetfloatval
+      logical lcgobisfixedsize
+      double precision lcgobgetdoubleval
+      character*80     lcgobgettypename
+      character*256    lcgobgetdatadescription
 
 c-----the MCParticle interface
       PTRTYPE lcmcpcreate
@@ -114,7 +138,7 @@ c-----the SimCalorimeterHit interface
 
 c-----the CalorimeterHit interface
       PTRTYPE lccahcreate
-      integer lccahdelete, lccahgetcellid0, lccahgetcellid1  
+      integer lccahid, lccahdelete, lccahgetcellid0, lccahgetcellid1
       real    lccahgetenergy
       integer lccahgetposition
       integer lccahsetcellid0, lccahsetcellid1, lccahsetenergy
@@ -132,6 +156,7 @@ c-----the Cluster interface
       integer lcclusettypebit, lcclusetenergy, lcclusetposition
       integer lcclusetpositionerror,lcclusetitheta, lcclusetiphi
       integer lcclusetdirectionerror
+      integer lcclusetshape
 c      integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
 c      integer lcclusethadweight, lcclusetmuonweight
       integer lcclusetsubdetectorenergies
@@ -194,12 +219,15 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_RCHBIT_LONG
       integer LCIO_RCHBIT_BARREL
       integer LCIO_RCHBIT_ID1
-      integer LCIO_RCHBIT_PTR
+      integer LCIO_RCHBIT_NO_PTR
+      integer LCIO_RCHBIT_TIME
       integer LCIO_THBIT_BARREL
       integer LCIO_TRBIT_HITS
       integer LCIO_CLBIT_HITS
       integer LCIO_TPCBIT_RAW
-      integer LCIO_TPCBIT_PTR
+      integer LCIO_TPCBIT_NO_PTR
+      integer LCIO_LCREL_WEIGHTED
+      integer LCIO_GOBIT_FIXED
       integer LCIO_READ_ONLY
       integer LCIO_UPDATE
       integer LCIO_ERROR
@@ -210,44 +238,54 @@ c---- constants as defined in EVENT::LCIO
       parameter (LCIO_CHBIT_LONG=31, LCIO_CHBIT_BARREL=30,
      &           LCIO_CHBIT_PDG=28, LCIO_CHBIT_ID1=29)
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
-     &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_PTR=28)
+     &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28)
       parameter (LCIO_THBIT_BARREL=31)
       parameter (LCIO_TRBIT_HITS=31)
       parameter (LCIO_CLBIT_HITS=31)
-      parameter (LCIO_TPCBIT_RAW=31, LCIO_TPCBIT_PTR=30)
+      parameter (LCIO_TPCBIT_RAW=31, LCIO_TPCBIT_NO_PTR=30)
+      parameter (LCIO_LCREL_WEIGHTED=31)
+      parameter (LCIO_GOBIT_FIXED=31)
       parameter (LCIO_READ_ONLY=0, LCIO_UPDATE=1)
       parameter (LCIO_ERROR=0, LCIO_SUCCESS=1)
       parameter (LCIO_WRITE_NEW=0, LCIO_WRITE_APPEND =1)
 
       character*32 LCIO_LCEVENT 
+      character*32 LCIO_LCCOLLECTION
       character*32 LCIO_LCRUNHEADER 
       character*32 LCIO_MCPARTICLE  
       character*32 LCIO_SIMCALORIMETERHIT 
+      character*32 LCIO_RAWCALORIMETERHIT
       character*32 LCIO_CALORIMETERHIT 
       character*32 LCIO_SIMTRACKERHIT  
       character*32 LCIO_TPCHIT  
       character*32 LCIO_TRACKERHIT
+      character*32 LCIO_LCSTRVEC
       character*32 LCIO_LCFLOATVEC  
       character*32 LCIO_LCINTVEC  
-      character*32 LCIO_LCSTRVEC
       character*32 LCIO_TRACK
       character*32 LCIO_CLUSTER
       character*32 LCIO_RECONSTRUCTEDPARTICLE
+      character*32 LCIO_LCRELATION
+      character*32 LCIO_LCGENERICOBJECT
 
       data LCIO_LCEVENT /'LCEvent'/
+      data LCIO_LCCOLLECTION /'LCCollection'/
       data LCIO_LCRUNHEADER /'LCRunHeader'/
       data LCIO_MCPARTICLE /'MCParticle'/ 
       data LCIO_SIMCALORIMETERHIT /'SimCalorimeterHit'/
+      data LCIO_RAWCALORIMETERHIT /'RawCalorimeterHit'/
       data LCIO_CALORIMETERHIT /'CalorimeterHit'/
       data LCIO_SIMTRACKERHIT /'SimTrackerHit'/ 
       data LCIO_TPCHIT /'TPCHit'/
       data LCIO_TRACKERHIT /'TrackerHit'/
+      data LCIO_LCSTRVEC /'LCStrVec'/
       data LCIO_LCFLOATVEC /'LCFloatVec'/ 
       data LCIO_LCINTVEC /'LCIntVec'/ 
-      data LCIO_LCSTRVEC /'LCStrVec'/
       data LCIO_TRACK /'Track'/
       data LCIO_CLUSTER /'Cluster'/
       data LCIO_RECONSTRUCTEDPARTICLE /'ReconstructedParticle'/
+      data LCIO_LCRELATION /'LCRelation'/
+      data LCIO_LCGENERICOBJECT /'LCGenericObject'/
 
 c---- bit positions for the simulation flag
 

@@ -7,6 +7,7 @@
 *     it corresponts to lcio/src/cpp/src/EXAMPLE/simjob.cc           *
 *                                                                    *
 *     H. Vogt  06/15/2004                                            *
+*     updated: 21/09/2004 (H.V.)                                     *
 *                                                                    *
 **********************************************************************
 
@@ -24,15 +25,17 @@
 
 c---- variables
       PTRTYPE runheader, event, writer, sthcol
-      PTRTYPE mcpcol, schcol, cahcol
-      PTRTYPE mom, hit, mcp, mcpm, mcpd, mcpdd, tpcHit
+      PTRTYPE mcpcol, schcol, cahcol, pvec, relnavcol
+      PTRTYPE mom, hit, mcp, mcpm, mcpd, mcpdd, tpcHit, relnav
       PTRTYPE TPCVec, trkVec, extFVec, extIVec, extF, extI
+      PTRTYPE helpp
       logical storeRawData
       integer status
       integer i, j, k, l, irun, nrun, iev, nev, itim, locf, nmcpart
       integer nhits, flag, extiv(2), tpcFlag, rawData(10), size, argc
+      integer intvec(3)
       real    p0(3), mcpp(3), schpos(3), cahpos(3), rn, extfv(4)
-      character*80 description
+      character*80 key, description
       character*30 filename
       character*11 detectorname
       character*7  ecalName,tpcName
@@ -49,10 +52,12 @@ C----- some constants
       nmcpart = 10  ! mc particles per event
       nhits   = 50  ! calorimeter hits per event
 
+* -----  Simple test program to demonstrate writing of data with lcio.
+
          argc = iargc()
          if ( argc .gt. 0 )  call getarg (1, filename)
 
-c ----- create a few runs
+c -----  loop over runs
       do  irun= 0,nrun-1
 
 c-----   create sio writer
@@ -81,6 +86,19 @@ c-----   run header
          status = lcrhdaddactivesubdetector( runheader, ecalName )
          status = lcrhdaddactivesubdetector( runheader, tpcName )
          
+c-----   add some parameters to the run header
+         description = 'simjob.cc'
+         pvec        = stringvectorcreate( description, 1,
+     &                   description(1:len_trim(description)) )
+         status      = lcsetparameters( LCIO_LCRUNHEADER, runheader,
+     &                   'setStringValues', 'SimulationProgram', pvec)
+         do  i = 1,3
+           intvec(i) = i
+         end do
+         pvec   = intvectorcreate(intvec, 3)
+         status = lcsetparameters( LCIO_LCRUNHEADER, runheader,
+     &              'setIntValues', 'SomeIndices', pvec)
+
          status = lcwrtwriterunheader( writer, runheader ) 
 
 c-----  event loop 
@@ -140,11 +158,15 @@ c--------      create and add some daughters
                     ep(2)   = 2.2222222
                     ep(3)   = 3.3333333
                     status  = lcmcpsetendpoint( mcpdd, ep )
+
                     flag    = 0
                     flag = ibset( flag, BITCreatedInSimulation )
                     flag = ibset( flag, BITBackscatter )
                     flag = ibset( flag, BITDecayedInTracker )
+                    flag = ibclr( flag, BITDecayedInCalorimeter )
+                    flag = ibclr( flag, BITLeftDetector )
                     flag = ibset( flag, BITStopped )
+
                     status  = lcmcpsetsimulatorstatus( mcpdd, flag )
                     status  = lcmcpaddparent( mcpdd , mcpd )
                     status  = lccoladdelement( mcpcol, mcpdd )
@@ -176,12 +198,14 @@ c--------   and PDG and cellid1
                hit = lcschcreate()
                status = lcschsetenergy
      &                    ( hit, 3.1415*irand( 0 )/RAND_MAX)
-               status = lcschsetcellid0( hit,  1024 )
-               status = lcschsetcellid1( hit,  65535 )
                schpos(1) = 1.1*irand( 0 )/RAND_MAX
                schpos(2) = 2.2*irand( 0 )/RAND_MAX
                schpos(3) = 3.3*irand( 0 )/RAND_MAX
                status = lcschsetposition( hit, schpos )
+
+               status = lcschsetcellid0( hit,  j -1 + 65335 )
+               status = lcschsetcellid1( hit,  65535 )
+
                status = lccoladdelement( schcol, hit )
 
 c--------      assign the hits randomly to MC particles
@@ -227,8 +251,6 @@ c--------      fill the extension vectors (4 floats, 2 ints)
                end do
                extiv(1)  = 123456789
                extiv(2)  = int( rn )
-
-c--------      create the extension vectors
                extF      = lcfloatvectorcreate( extfv, 4 )
                extI      = lcintvectorcreate( extiv, 2 )
 
@@ -251,7 +273,7 @@ c--------   add all collections to the event
      &                 event, extIVec, tpcName//'UserIntExtension' )
 
 c--------   test: add a collection for one event only:
-            if (irun .eq. 1 .and. iev .eq. 0)  then     ! first event o last run
+            if (irun .eq. 1 .and. iev .eq. 0)  then     ! first event of last run
               extFVec   = lccolcreate( LCIO_LCFLOATVEC )
               do  l = 1,4
                 extfv(l) = l
@@ -265,13 +287,22 @@ c--------   test: add a collection for one event only:
 c--------   even though this is a simjob we can store 'real data' objects :
 c--------   --- for example we can store TPC hits ------------
 
-            TPCVec       = lccolcreate( LCIO_TPCHIT )
+            TPCVec = lccolcreate( LCIO_TPCHIT )
+
+c--------   test new relation navigator object
+            relNav = lcrnvcreate( LCIO_TPCHIT, LCIO_SIMTRACKERHIT )
+
             storeRawData = .true.
             flag = 0
             if (storeRawData)  flag = ibset( flag, LCIO_TPCBIT_RAW )
             status       = lccolsetflag ( TPCVec, flag )
             do  j = 1,nhits
               tpcHit     = lctphcreate()
+
+c--------     test new relation navigator object
+              helpp  = lccolgetelementat ( trkVec, j )
+              status = lcrnvgaddrelation( relNav, tpcHit, helpp, 0.95 )
+
               status     = lctphsetcellid( tpcHit, j-1 )
               status     = lctphsettime( tpcHit, 0.1234567 )
               status     = lctphsetcharge( tpcHit, 3.14159 )
@@ -288,9 +319,15 @@ c--------   --- for example we can store TPC hits ------------
             end do
             status       = lcevtaddcollection(
      &                       event, TPCVec, 'TPCRawFADC' )
+            relNavCol    = lcrnvcreatecollection ( relNav )
+            status       = lcevtaddcollection(
+     &                       event, relNavCol, 'TPCRawFADCMCTruth' )
+
+c--------   --------------  all for TPC --------------------
 
 c--------   write the event to the file
             status = lcwrtwriteevent( writer , event )
+c--------   dump the event 
             status = lcdumpevent( event )
 
 c--------   we created the event so we need to delete it ...

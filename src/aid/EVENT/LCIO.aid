@@ -12,7 +12,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.39 2004-09-21 15:22:40 hvogt Exp $
+ * @version $Id: LCIO.aid,v 1.40 2004-09-21 15:44:47 hvogt Exp $
  * @see LCObject
  * @see LCIO
  */

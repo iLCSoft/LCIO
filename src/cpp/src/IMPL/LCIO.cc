@@ -5,6 +5,7 @@ namespace EVENT{
 // this has to be solved differently....
 //
 const char* LCIO::LCEVENT = "LCEvent" ;
+const char* LCIO::LCCOLLECTION = "LCCollection" ;
 const char* LCIO::LCRUNHEADER = "LCRunHeader" ;
 const char* LCIO::MCPARTICLE = "MCParticle" ;
 const char* LCIO::SIMCALORIMETERHIT = "SimCalorimeterHit" ;

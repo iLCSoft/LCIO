@@ -13,12 +13,13 @@
 #include "CPPFORT/HEPEVT.h"
 #include "EVENT/LCIntVec.h"
 #include "EVENT/LCFloatVec.h"
+#include "EVENT/LCStrVec.h"
 
 #include <string>
 #include <vector>
 
-typedef std::vector<std::string> LCStrVec ;
-
+// typedef std::vector<std::string> LCStrVec ;
+                                                                                           
 #include <iostream>
 
 
@@ -28,6 +29,9 @@ using namespace HEPEVTIMPL ;
 
 
 static std::vector<std::string> filenamelist ;
+
+int do_set_method (LCParameters& params, const char* method, const char* key, PTRTYPE vector);
+int do_get_method (const LCParameters& params, const char* method, const char* key, PTRTYPE vector);
 
 
 int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const int nchfilename ){
@@ -140,6 +144,11 @@ int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, voi
   char* detnam = reinterpret_cast<char*>( stringpos ) ;
   const char* detectorname = lcEvent->getDetectorName().c_str() ;
   strcpy(detnam,detectorname) ;
+  return LCIO::SUCCESS ;
+}
+int lcdumprunheader( PTRTYPE runheader ){
+  LCRunHeader* runhdr = reinterpret_cast<LCRunHeader*>( (runheader) ) ;
+  LCTOOLS::dumpRunHeader( runhdr ) ;
   return LCIO::SUCCESS ;
 }
 
@@ -282,6 +291,15 @@ int lcio2hepevt( PTRTYPE event ){
 }
 
 
+PTRTYPE lcobjectvectorcreate( PTRTYPE* objectv, const int nobjv ){
+  LCObjectVec* objVec = new LCObjectVec ;
+  for(int j=0;j<nobjv;j++) {
+    LCObject* obj = f2c_pointer<LCObject,LCObject>( objectv[j] ) ;
+    objVec->push_back( obj ) ;
+  }
+  return reinterpret_cast<PTRTYPE>( objVec ) ;
+}
+
 PTRTYPE lcintvectorcreate( int* intv, const int nintv ){
   LCIntVec* intVec = new LCIntVec ;
   for(int j=0;j<nintv;j++) intVec->push_back( intv[j] ) ;
@@ -296,6 +314,32 @@ PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ){
 
 PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv){
   LCStrVec* stringVec = new LCStrVec ;
+  int elemlen = nchstringv + 1;
+  PTRTYPE stringpos = 0 ;
+  stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
+  for(int j=0;j<nstringv;j++){
+    const std::string& mystring = reinterpret_cast<char*>( stringpos ) ;
+    stringVec->push_back( mystring ) ;
+    stringpos = stringpos + elemlen ;
+  }
+  return reinterpret_cast<PTRTYPE>( stringVec ) ;
+}
+
+
+PTRTYPE intvectorcreate( int* intv, const int nintv ){
+  IntVec* intVec = new IntVec ;
+  for(int j=0;j<nintv;j++) intVec->push_back( intv[j] ) ;
+  return reinterpret_cast<PTRTYPE>( intVec ) ;
+}
+
+PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ){
+  FloatVec* floatVec = new FloatVec ;
+  for(int j=0;j<nfloatv;j++) floatVec->push_back( floatv[j] ) ;
+  return reinterpret_cast<PTRTYPE>( floatVec ) ;
+}
+
+PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv){
+  StringVec* stringVec = new StringVec ;
   int elemlen = nchstringv + 1;
   PTRTYPE stringpos = 0 ;
   stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
@@ -364,4 +408,108 @@ int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int n
   }
   return LCIO::SUCCESS ;
 }
+
+
+int lcsetparameters (const char* class_name, PTRTYPE classp, const char* method, const char* key, PTRTYPE vecp){
+  const std::string & classname = class_name ;
+  if      (classname == LCIO::LCRUNHEADER) {
+    LCRunHeaderImpl* rhd =  reinterpret_cast<LCRunHeaderImpl*>(classp) ;
+    return do_set_method (rhd->parameters(), method, key, vecp) ;
+  }
+  else if (classname == LCIO::LCEVENT) {
+    LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(classp) ;
+    return do_set_method (evt->parameters(), method, key, vecp) ;
+  }
+  else if (classname == LCIO::LCCOLLECTION) {
+    LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(classp) ;
+    return do_set_method (col->parameters(), method, key, vecp) ;
+  }
+  else {
+    std::cerr << "Warning in lcsetparameters: unknown class name " << classname << std::endl ;
+    return LCIO::ERROR ;
+  }
+}
+
+int lcgetparameters (const char* class_name, PTRTYPE classp, const char* method, const char* key, PTRTYPE vecp){
+  const std::string & classname = class_name ;
+  if      (classname == LCIO::LCRUNHEADER) {
+    LCRunHeaderImpl* rhd =  reinterpret_cast<LCRunHeaderImpl*>(classp) ;
+    return do_get_method (rhd->getParameters(), method, key, vecp) ;
+  }
+  else if (classname == LCIO::LCEVENT) {
+    LCEventImpl* evt = reinterpret_cast<LCEventImpl*>(classp) ;
+    return do_get_method (evt->getParameters(), method, key, vecp) ;
+  }
+  else if (classname == LCIO::LCCOLLECTION) {
+    LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(classp) ;
+    return do_get_method (col->getParameters(), method, key, vecp) ;
+  }
+  else {
+    std::cerr << "Warning in lcgetparameters: unknown class name " << classname << std::endl ;
+    return LCIO::ERROR ;
+  }
+
+}
+
+int do_set_method (LCParameters& params, const char* my_method, const char* key, PTRTYPE vector) {
+  const std::string & method = my_method ;
+  if      (method == string("setIntValues")) {
+    IntVec* intVec =  reinterpret_cast<IntVec*>(vector) ;
+    params.setValues(key, *intVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("setFloatValues")) {
+    FloatVec* floatVec =  reinterpret_cast<FloatVec*>(vector) ;
+    params.setValues(key, *floatVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("setStringValues")) {
+    StringVec* stringVec = reinterpret_cast<StringVec*>(vector) ;
+    params.setValues(key, *stringVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else {
+    std::cerr << "Warning in lcsetparameters: unknown method name " << method << std::endl ;
+    return LCIO::ERROR ;
+  }
+}
+
+int do_get_method (const LCParameters& params, const char* my_method, const char* key, PTRTYPE vector) {
+  const std::string & method = my_method ;
+  if      (method == string("getIntValues")) {
+    IntVec* intVec =  f2c_pointer<IntVec,LCObject>(vector) ;
+    params.getIntVals(key, *intVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("getFloatValues")) {
+    FloatVec* floatVec =  f2c_pointer<FloatVec,LCObject>(vector) ;
+    params.getFloatVals(key, *floatVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("getStringValues")) {
+    StringVec* stringVec = f2c_pointer<StringVec,LCObject>(vector) ;
+    params.getStringVals(key, *stringVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("getIntKeys")) {
+    StringVec* stringVec = f2c_pointer<StringVec,LCObject>(vector) ;
+    params.getIntKeys(*stringVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("getFloatKeys")) {
+    StringVec* stringVec = f2c_pointer<StringVec,LCObject>(vector) ;
+    params.getFloatKeys(*stringVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else if (method == string("getStringtKeys")) {
+    StringVec* stringVec = f2c_pointer<StringVec,LCObject>(vector) ;
+    params.getStringKeys(*stringVec) ;
+    return LCIO::SUCCESS ;
+  }
+  else {
+    std::cerr << "Warning in lcgetparameters: unknown method name " << method << std::endl ;
+    return LCIO::ERROR ;
+  }
+}
+
 

@@ -27,8 +27,8 @@ int     lcclugetdirectionerror( PTRTYPE clu, float* direrr ) ;
 // int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
 
 PTRTYPE lcclugetshape( PTRTYPE clu ) ;
-PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
 
+PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
 PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
 int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
@@ -42,12 +42,11 @@ int     lcclusetitheta( PTRTYPE clu, float theta ) ;
 int     lcclusetiphi( PTRTYPE clu, float phi ) ;
 int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
 
-// FIXME:  need to implement a new version of setshape (arbitrary length array)
-//int     lcclusetshape( PTRTYPE clu, float* shape ) ;
-
+int     lcclusetshape( PTRTYPE clu, PTRTYPE vector ) ;
 int     lcclusetemweight(  PTRTYPE clu, float weight ) ;
 int     lcclusethadweight(PTRTYPE clu, float weight ) ;
 int     lcclusetmuonweight( PTRTYPE clu, float weight ) ;
+int     lccluaddparticleid( PTRTYPE clu, PTRTYPE pid ) ;
 int     lccluaddcluster( PTRTYPE clu, PTRTYPE clus ) ;
 int     lccluaddhit( PTRTYPE clu, PTRTYPE calohit, float weigth ) ;
 
@@ -85,13 +84,12 @@ FCALLSCFUN2(INT, lcclusetpositionerror, LCCLUSETPOSITIONERROR, lcclusetpositione
 FCALLSCFUN2(INT, lcclusetitheta, LCCLUSETITHETA, lcclusetitheta, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetiphi, LCCLUSETIPHI, lcclusetiphi, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lcclusetdirectionerror, LCCLUSETDIRECTIONERROR, lcclusetdirectionerror, CFORTRANPNTR, FLOATV) ;
-
-// FCALLSCFUN2(INT, lcclusetshape, LCCLUSETSHAPE, lcclusetshape, CFORTRANPNTR, FLOATV) ;
+FCALLSCFUN2(INT, lcclusetshape, LCCLUSETSHAPE, lcclusetshape, CFORTRANPNTR, CFORTRANPNTR ) ;
 // FCALLSCFUN2(INT, lcclusetemweight, LCCLUSETEMWEIGHT, lcclusetemweight, CFORTRANPNTR, FLOAT) ;
 // FCALLSCFUN2(INT, lcclusethadweight, LCCLUSETHADWEIGHT, lcclusethadweight, CFORTRANPNTR, FLOAT) ;
 // FCALLSCFUN2(INT, lcclusetmuonweight, LCCLUSETMUONWEIGHT, lcclusetmuonweight, CFORTRANPNTR, FLOAT) ;
 
-
+FCALLSCFUN2(INT, lccluaddparticleid, LCCLUADDPARTICLEID, lccluaddparticleid, CFORTRANPNTR, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lccluaddcluster, LCCLUADDCLUSTER, lccluaddcluster, CFORTRANPNTR, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lccluaddhit, LCCLUADDHIT, lccluaddhit, CFORTRANPNTR, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN3(INT, lcclusetsubdetectorenergies, LCCLUSETSUBDETECTORENERGIES, lcclusetsubdetectorenergies, CFORTRANPNTR, FLOATV, INT ) ;

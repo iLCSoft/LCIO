@@ -44,6 +44,10 @@ int lcseteventheader( PTRTYPE event, const int irun, const int ievent,
  */
 int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, void* detname );
 
+/**Dump the run header to the stdout 
+ */
+int lcdumprunheader( PTRTYPE runheader ) ;
+
 /**Dump the event to the stdout - one line per collection.
  */
 int lcdumpevent( PTRTYPE event ) ;
@@ -103,20 +107,34 @@ int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, floa
 			     int* pdg ) ;
 
 
-/**Create an int vector
+/**Create an object vector
+*/
+PTRTYPE lcobjectvectorcreate( PTRTYPE* ocjectv, const int nobjv ) ;
+
+/**Create an LC int vector
 */
 PTRTYPE lcintvectorcreate( int* intv, const int nintv ) ;
 
-
-/**Create a float vector
+/**Create a LC float vector
 */
 PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ) ;
 
-/**Create a string vector
+/**Create a LC string vector
 */
 PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
 
 
+/**Create an int vector
+*/
+PTRTYPE intvectorcreate( int* intv, const int nintv ) ;
+
+/**Create a float vector
+*/
+PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ) ;
+
+/**Create a string vector
+*/
+PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
 
 
 /**Return the content of an int vector
@@ -133,6 +151,19 @@ int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
 
 
+//---------------  convenient methods for the interface nterface to store generic named parameters 
+//---------------  of type int, float and string.
+
+/**For the set methods:
+*/
+int lcsetparameters( const char* classname, PTRTYPE classp, const char* method,
+			    const char* key, PTRTYPE vecp) ;
+
+
+/**For the get methods:
+*/
+int lcgetparameters( const char* classname, PTRTYPE classp, const char* method,
+			    const char* key, PTRTYPE vecp) ;
 
 
 // now the fortran wrappers from cfortran.h
@@ -158,6 +189,7 @@ FCALLSCFUN5(INT, lcseteventheader, LCSETEVENTHEADER, lcseteventheader, CFORTRANP
 #define lcgeteventheader_STRV_A5 NUM_ELEMS(1)
 FCALLSCFUN5(INT, lcgeteventheader, LCGETEVENTHEADER, lcgeteventheader, CFORTRANPNTR, INTV, 
 	    INTV, INTV, PSTRINGV ) ;
+FCALLSCFUN1(INT, lcdumprunheader, LCDUMPRUNHEADER, lcdumprunheader, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lcdumpevent, LCDUMPEVENT, lcdumpevent, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lcdumpeventdetailed, LCDUMPEVENTDETAILED, lcdumpeventdetailed,CFORTRANPNTR);
 
@@ -182,13 +214,22 @@ FCALLSCFUN6(CFORTRANPNTR , lcgetsimcalohit, LCGETSIMCALOHIT, lcgetsimcalohit,
 FCALLSCFUN6(INT, lcgetsimcalohitmccont, LCGETSIMCALOHITMCCONT, lcgetsimcalohitmccont,
             CFORTRANPNTR , INT , CFORTRANPNTRV, FLOATV , FLOATV , INTV ) ;
 
-
+FCALLSCFUN2(CFORTRANPNTR, lcobjectvectorcreate, LCOBJECTVECTORCREATE , lcobjectvectorcreate,
+            CFORTRANPNTRV, INT ) ;
 FCALLSCFUN2(CFORTRANPNTR, lcintvectorcreate, LCINTVECTORCREATE , lcintvectorcreate,
             INTV, INT ) ;
 FCALLSCFUN2(CFORTRANPNTR, lcfloatvectorcreate, LCFLOATVECTORCREATE , lcfloatvectorcreate,
             FLOATV, INT ) ;
 #define lcstringvectorcreate_STRV_A1 NUM_ELEM_ARG(2)
 FCALLSCFUN3(CFORTRANPNTR, lcstringvectorcreate, LCSTRINGVECTORCREATE , lcstringvectorcreate,
+            PSTRINGV, INT, INT ) ;
+
+FCALLSCFUN2(CFORTRANPNTR, intvectorcreate, INTVECTORCREATE , intvectorcreate,
+            INTV, INT ) ;
+FCALLSCFUN2(CFORTRANPNTR, floatvectorcreate, FLOATVECTORCREATE , floatvectorcreate,
+            FLOATV, INT ) ;
+#define stringvectorcreate_STRV_A1 NUM_ELEM_ARG(2)
+FCALLSCFUN3(CFORTRANPNTR, stringvectorcreate, STRINGVECTORCREATE , stringvectorcreate,
             PSTRINGV, INT, INT ) ;
 
 
@@ -200,8 +241,12 @@ FCALLSCFUN3(INT, lcgetfloatvector, LCGETFLOATVECTOR , lcgetfloatvector,
 FCALLSCFUN4(INT, lcgetstringvector, LCGETSTRINGVECTOR , lcgetstringvector,
             CFORTRANPNTR , PSTRINGV, INTV, INT ) ;
 
+
+FCALLSCFUN5(INT, lcsetparameters, LCSETPARAMETERS, lcsetparameters,
+            STRING, CFORTRANPNTR, STRING, STRING, CFORTRANPNTR ) ;
+
+FCALLSCFUN5(INT, lcgetparameters, LCGETPARAMETERS, lcgetparameters,
+            STRING, CFORTRANPNTR, STRING, STRING, CFORTRANPNTR ) ;
+
 }
-
-
-
 
