@@ -38,6 +38,14 @@ int lcrdrclose(PTRTYPE reader){
   return LCIO::SUCCESS ;
 }
 
+int lcrdrreadstream(PTRTYPE reader, int maxRecord){
+  try{
+    LCReader* lcReader = reinterpret_cast<LCReader*>(reader) ;
+    lcReader->readStream( maxRecord ) ;
+  }catch(...){ return LCIO::ERROR ; }
+  return LCIO::SUCCESS ;
+}
+
 PTRTYPE lcrdrreadnextrunheader(PTRTYPE reader, int accessMode){
   LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
   return C2F_POINTER( LCRunHeader*,  rdr->readNextRunHeader( accessMode ) ) ;

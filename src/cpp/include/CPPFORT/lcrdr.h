@@ -15,6 +15,7 @@ int     lcrdrdelete( PTRTYPE reader ) ;
 
 int   lcrdropen( PTRTYPE reader, const char* filename ) ;
 int   lcrdrclose( PTRTYPE reader ) ;
+int   lcrdrreadstream( PTRTYPE reader, int maxRecord ) ;
 
 PTRTYPE lcrdrreadnextrunheader(PTRTYPE reader, int accessMode) ;
 PTRTYPE lcrdrreadnextevent(PTRTYPE reader, int accessMode) ;
@@ -27,6 +28,7 @@ FCALLSCFUN1(INT, lcrdrdelete, LCRDRDELETE, lcrdrdelete, CFORTRANPNTR ) ;
 
 FCALLSCFUN2(INT, lcrdropen, LCRDROPEN, lcrdropen,  CFORTRANPNTR, STRING ) ;
 FCALLSCFUN1(INT, lcrdrclose, LCRDRCLOSE, lcrdrclose, CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lcrdrreadstream, LCRDRREADSTREAM, lcrdrreadstream, CFORTRANPNTR, INT ) ;
 
 FCALLSCFUN2(INT,lcrdrreadnextrunheader,LCRDRREADNEXTRUNHEADER,lcrdrreadnextrunheader,CFORTRANPNTR,INT) ;
 FCALLSCFUN2(INT,lcrdrreadnextevent,LCRDRREADNEXTEVENT,lcrdrreadnextevent,CFORTRANPNTR,INT) ;
