@@ -15,7 +15,6 @@
 #include "EVENT/LCFloatVec.h"
 #include "EVENT/LCStrVec.h"
 
-//#include "CPPFORT/lcvec.h"
 #include <string>
 #include <vector>
 
@@ -28,6 +27,7 @@ using namespace HEPEVTIMPL ;
 
 
 static std::vector<std::string> filenamelist ;
+
 
 int lcrdropenchain( PTRTYPE reader, void* filenamesv , const int nfiles , const int nchfilename ){
 
