@@ -4,7 +4,12 @@ package hep.lcio.event ;
 import hep.lcio.exceptions.* ;
 }
 
-/** Interface for relationships between LCObjects.
+/** Interface for relationships between LCObjects. 
+ *  Each relationship consists of a "from" a "to" and a "weight" (may be 1).
+ *  The list can be searched for all relationships involving a certain "from"
+ *  object, or all relationships involving a certain "to" relationship. 
+ *  New relationships can be added or removed, but doing so invalidates any
+ *  previously returned list of relationships. 
  * EXPERIMENTAL code !!
  * 
  * @author gaede 
@@ -23,37 +28,35 @@ public interface LCRelation
      */
     public const String& getToType() const ;
 
-    /** The number of stored relations for the given object. If obj==0 
-     * the total number of stored relations is returned.
+    /** The total number of stored relations. 
      */
-    public int numberOfRelations( LCObject* obj=0 ) ; 
+    public int numberOfRelations() const; 
 
-    /** The 'from object' of the given relation. Needed to analyze the relations without 
-     * knowledge of the participating objects.
+    /** The 'from' object of the given relation. 
      */
-    public LCObject* getRelation( int index ) ;
-
-
-    /** The relation with the given index.
+    public LCObject* getFrom( int index ) const;
+    
+    /** The 'to' object of the given relation. 
      */
-    public LCObject* getRelation(LCObject* obj, int index=0) ;
+    public LCObject* getTo( int index ) const;
 
-
-    /** The weight of the relation with the given index.
+    /** The weight of the given relation. 
      */
-    public float getWeight(LCObject* obj, int index=0)  ;
+    public float getWeight( int index ) const;
 
+    /** Get the list of objects involving the given "from" object
+     */
+    public IntVec getRelationsFrom(LCObject* from) const;
+
+    /** Get the list of objects involving the given "to" object
+     */
+    public IntVec getRelationsTo(LCObject* to) const;
 
     /** Add a new relation. 
      */
-    public void addRelation(LCObject* from, LCObject* to, float weight=1.0)  ;
+    public void addRelation(LCObject* from, LCObject* to, float weight=1.0);
     
-
-    /**If caching is enabled the result of numberOfRelations() is stored
-     * for subsequent calls to getRelation() and getWeight().
+    /** Remove a given relation.
      */
-    public void useCaching(boolean val) ;
-
-
+    public void removeRelation(int index);
 }
-
