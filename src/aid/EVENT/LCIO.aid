@@ -133,6 +133,7 @@ public interface LCIO{
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String TPCHIT = "TPCHit" ;
   public static const String TRACKERHIT = "TrackerHit" ;
+  public static const String LCSTRVEC = "LCStrVec" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;
   public static const String TRACK = "Track"; 

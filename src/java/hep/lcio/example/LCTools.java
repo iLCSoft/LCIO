@@ -7,6 +7,7 @@ package hep.lcio.example;
 
 import hep.lcio.event.LCFloatVec;
 import hep.lcio.event.LCIntVec;
+import hep.lcio.event.LCStrVec;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCCollection;
@@ -180,6 +181,27 @@ public class LCTools
                System.out.print(" values(" + i + "): ");
 
                int[] data = vec.toArray();
+               for (int k = 0; k < data.length; k++)
+                  System.out.print(data[k] + ", ");
+               System.out.println();
+            }            
+         }         
+         else if (evt.getCollection(name).getTypeName().equals(LCIO.LCSTRVEC))
+         {
+            int nHits = col.getNumberOfElements();
+            System.out.print(nHits + " vectors: ");
+
+            int nPrint = (nHits > 0) ? 1 : 0;
+
+            if (nPrint == 0)
+               System.out.println();
+            for (int i = 0; i < nPrint; i++)
+            {
+               LCStrVec vec = (LCStrVec) col.getElementAt(i);
+
+               System.out.print(" values(" + i + "): ");
+
+               String[] data = vec.toArray();
                for (int k = 0; k < data.length; k++)
                   System.out.print(data[k] + ", ");
                System.out.println();

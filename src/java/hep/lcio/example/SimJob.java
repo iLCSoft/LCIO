@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.13 2004-06-25 12:53:20 gaede Exp $
+ * @version $Id: SimJob.java,v 1.14 2004-07-02 08:46:45 hvogt Exp $
  */
 public class SimJob
 {
@@ -123,12 +123,14 @@ public class SimJob
             ILCCollection trkVec = new ILCCollection(LCIO.SIMTRACKERHIT);
             ILCCollection extFVec = new ILCCollection(LCIO.LCFLOATVEC);
             ILCCollection extIVec = new ILCCollection(LCIO.LCINTVEC);
+            ILCCollection extStrVec = new ILCCollection(LCIO.LCSTRVEC);
 
             for (int j = 0; j < NHITS; j++)
             {
                ISimTrackerHit hit = new ISimTrackerHit();
                ILCFloatVec   extF = new ILCFloatVec();
                ILCIntVec     extI = new ILCIntVec();
+               ILCStrVec     extS = new ILCStrVec();
 
                hit.setdEdx(30e-9f);
 
@@ -144,18 +146,22 @@ public class SimJob
 
                hit.setMCParticle((MCParticle) mcVec.getElementAt(mcIndx));
 
-               // fill the extension vectors (4 floats, 2 ints)
+               // fill the extension vectors (4 floats, 2 ints, 3 strings)
                extF.add(3.14159f);
                for (int k = 0; k < 3; k++)
                   extF.add((float) pos[k] * 0.1f);
                
                extI.add( 123456789 );
                extI.add( mcIndx );
+               extS.add("SimTrackerHit");
+               extS.add("trackhit " + j);
+               extS.add("MCParticle index " + mcIndx);
                
                // add the hit and the extensions to their corresponding collections
                trkVec.add(hit);
                extFVec.add(extF);
                extIVec.add(extI);
+               extStrVec.add(extS);
             }
 
             // add all collection to the event
@@ -165,6 +171,7 @@ public class SimJob
             evt.addCollection(trkVec, tpcName);
             evt.addCollection(extFVec, tpcName + "UserFloatExtension");
             evt.addCollection(extIVec, tpcName + "UserIntExtension");
+            evt.addCollection(extStrVec, tpcName + "UserStringExtension");
 
 
     // test: add a collection for one event only:

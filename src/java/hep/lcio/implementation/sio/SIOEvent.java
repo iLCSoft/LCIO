@@ -17,6 +17,7 @@ import hep.lcio.event.TPCHit;
 import hep.lcio.implementation.event.ICluster;
 
 import hep.lcio.implementation.event.ILCEvent;
+import hep.lcio.implementation.event.ILCStrVec;
 import hep.lcio.implementation.event.ILCFloatVec;
 import hep.lcio.implementation.event.ILCIntVec;
 import hep.lcio.implementation.event.ITrack;
@@ -29,7 +30,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.18 2004-05-24 03:37:40 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.19 2004-07-02 08:46:45 hvogt Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -137,6 +138,16 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
+         else if (type.equals(LCIO.LCSTRVEC))
+         {
+            int flags = in.readInt();
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOStrVec(in, this));
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
          else if (type.equals(LCIO.LCFLOATVEC))
          {
             int flags = in.readInt();
@@ -238,6 +249,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOCalorimeterHit.write((CalorimeterHit) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.LCSTRVEC))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOStrVec.write((ILCStrVec) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.LCFLOATVEC))
             {
