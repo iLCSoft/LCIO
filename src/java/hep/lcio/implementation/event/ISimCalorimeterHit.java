@@ -10,7 +10,7 @@ import hep.lcio.event.SimCalorimeterHit;
 /**
  * A default implementation of SimCalorimeterHit
  * @author Tony Johnson
- * @version $Id: ISimCalorimeterHit.java,v 1.4 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: ISimCalorimeterHit.java,v 1.5 2003-09-08 22:22:20 tonyj Exp $
  */
 public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 {
@@ -64,7 +64,7 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 
    public int getNMCParticles()
    {
-      return particle.length;
+      return nContributions;
    }
 
    public int getPDGCont(int i)
@@ -124,20 +124,16 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
          int size = oldSize + 10;
          Object old = particle;
          particle = new Object[size];
-         if (oldSize > 0)
-            System.arraycopy(old, 0, particle, 0, oldSize);
+         if (oldSize > 0) System.arraycopy(old, 0, particle, 0, oldSize);
          old = energyContrib;
          energyContrib = new float[size];
-         if (oldSize > 0)
-            System.arraycopy(old, 0, energyContrib, 0, oldSize);
+         if (oldSize > 0) System.arraycopy(old, 0, energyContrib, 0, oldSize);
          old = time;
          time = new float[size];
-         if (oldSize > 0)
-            System.arraycopy(old, 0, time, 0, oldSize);
+         if (oldSize > 0) System.arraycopy(old, 0, time, 0, oldSize);
          old = pdg;
          pdg = new int[size];
-         if (oldSize > 0)
-            System.arraycopy(old, 0, pdg, 0, oldSize);
+         if (oldSize > 0) System.arraycopy(old, 0, pdg, 0, oldSize);
       }
       return i;
    }
