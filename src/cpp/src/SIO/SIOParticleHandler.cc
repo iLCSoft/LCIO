@@ -8,56 +8,72 @@
 #include "SIO_block.h"
 
 
-namespace SIO {
+using namespace EVENT ;
+//using namespace IMPL ;
+using namespace IOIMPL ;
 
+namespace SIO {
+  
   unsigned int SIOParticleHandler::read(SIO_stream* stream, 
-					LCIOObject** objP, 
+					LCObject** objP, 
 					unsigned int flag,  
 					unsigned int vers ){
     unsigned int status ; 
-  
+    
     // create a new object :
     MCParticleIOImpl* particle  = new MCParticleIOImpl ;
     *objP = particle ;
-
+    
     // tell SIO the address of particle as an abstract  MCParticle ...
     // this is important, as SIO takes the bare address 
     // (int)(MCParticle*) particle != (int)particle !!!!
     SIO_PTAG( stream , dynamic_cast<const MCParticle*>(particle) ) ;
-    SIO_PNTR( stream , &(particle->_mom) ) ;
+    SIO_PNTR( stream , &(particle->_mother0) ) ;
+    SIO_PNTR( stream , &(particle->_mother1) ) ;
+    // daughters
+    int nD ; 
+    SIO_DATA( stream ,  &nD , 1  ) ;
+    const MCParticle* daughter ;
 
+    for(int i=0;i<nD;i++){
+      SIO_PNTR( stream , &daughter ) ;
+      particle->_daughters.push_back( daughter ) ;
+    }
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
+    SIO_DATA( stream ,  &(particle->_status) , 1  ) ;
+    SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
-  
+    SIO_DATA( stream ,  &(particle->_energy) , 1  ) ;
+    SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
+    
     return ( SIO_BLOCK_SUCCESS ) ;
-
   }
-
+  
   unsigned int SIOParticleHandler::write(SIO_stream* stream, 
-					 const LCIOObject* obj, 
+					 const LCObject* obj, 
 					 unsigned int flag ){
-
+    
     unsigned int status ; 
-  
-    // this is where we gave up type safety in order to
-    // simplify the API and the implementation
-    // by having a common collection of objects
-
+    
     const MCParticle* particle  = dynamic_cast<const MCParticle*>(obj)  ;
-
     SIO_PTAG( stream , particle ) ;
+    
+    const MCParticle* myMom0 = particle->getParent() ;
+    const MCParticle* myMom1 = particle->getSecondParent() ;
+    SIO_PNTR( stream , &myMom0 ) ;
+    SIO_PNTR( stream , &myMom1 ) ;
 
-    const MCParticle* myMom = particle->getMother() ;
-    // how long is myMom's address needed by SIO 
-    // - hopefully not after the next call - actually looks like  that ...
-    SIO_PNTR( stream , &myMom ) ;
-
+    const MCParticleVec* dVec =  particle->getDaughters() ;
+    MCParticleVec::const_iterator iter = dVec->begin() ;
+    while( iter != dVec->end() )  SIO_PNTR( stream ,  iter++ );
+    
     LCSIO_WRITE( stream, particle->getPDG() ) ;
-    // as SIO doesn't provide a write function with const arguments
-    // we have to cast away the constness hoping for the best 
-    float* pos = const_cast<float*> ( particle->getMomentum() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
-  
+    LCSIO_WRITE( stream, particle->getHepEvtStatus() ) ;
+    SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;
+    SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
+    LCSIO_WRITE( stream, particle->getEnergy() ) ;
+    LCSIO_WRITE( stream, particle->getCharge() ) ;
+
     return ( SIO_BLOCK_SUCCESS ) ;
 
   }

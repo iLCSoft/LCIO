@@ -6,7 +6,7 @@ package hep.lcio.event ;
  * @author gaede
  * @version Mar 5, 2003
  */
-public interface MCParticle {
+public interface MCParticle extends LCObject {
     
     /** Returns the parent of this particle. Null if the mother (beam particle).
      */

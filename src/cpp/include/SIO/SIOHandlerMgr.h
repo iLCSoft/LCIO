@@ -1,6 +1,6 @@
 // -*- C++ -*-
 /** Singleton that holds instances of all types of SIOObjectHandlers.
- * New types have o have their handler classes registered here. 
+ * New types need to have their handler classes registered here. 
  *
  * @author gaede
  * @version Mar 6, 2003

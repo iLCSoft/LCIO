@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.1 2003-02-12 23:55:36 tonyj Exp $    -->
+<!-- Version: $Id: build.xml,v 1.2 2003-03-07 16:52:21 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -134,6 +134,9 @@
   <target name="aid.generate" depends="init">
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.java.dir} -property config JavaInterfaceGenerator ${aid.includes} ${aid.java.includes} ${aid.java.interface.includes}"/>
+    </java>
+    <java classpath="${aid.classpath}" classname="${aid.class}">
+        <arg line="-directory ${aid.java.dir} -property config JavaClassGenerator ${aid.java.classes}"/>
     </java>
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.cpp.dir} -property config CPPHeaderGenerator ${aid.includes} ${aid.cpp.includes}"/>
