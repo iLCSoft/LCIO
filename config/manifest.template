@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+
+Name: @NAME@
+Specification-Title: @TITLE@
+Specification-Version: @VERSION@
+Specification-Vendor: @VENDOR@
+Implementation-Title: @TITLE@
+Implementation-Version: @DATETIME@
+Implementation-Vendor: @VENDOR@
