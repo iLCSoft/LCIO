@@ -6,6 +6,7 @@
 #include "SIO/SIOTrackHandler.h" 
 #include "SIO/SIOClusterHandler.h" 
 #include "SIO/SIOTPCHitHandler.h" 
+#include "SIO/SIOTrackerHitHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
 #include "SIO/SIOFloatVecHandler.h" 
 #include "SIO/SIOIntVecHandler.h" 
@@ -29,6 +30,7 @@ namespace SIO {
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
+    _map[ LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
     _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;

@@ -47,7 +47,7 @@ namespace IMPL{
     _energy = en ;
   }
   
-  void CalorimeterHitImpl::setPosition(float pos[3]){
+  void CalorimeterHitImpl::setPosition(const float pos[3]){
     checkAccess("CalorimeterHitImpl::setPosition") ;
     _position[0] = pos[0] ;
     _position[1] = pos[1] ;

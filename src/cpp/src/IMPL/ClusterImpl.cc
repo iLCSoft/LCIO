@@ -17,11 +17,11 @@ namespace IMPL{
   }
 
   ClusterImpl::~ClusterImpl(){
-    for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-      delete iter->second->Indices ;
-      delete iter->second->Weights ;
-      delete iter->second ;
-    }
+//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
+//       delete iter->second->Indices ;
+//       delete iter->second->Weights ;
+//       delete iter->second ;
+//     }
   }
  
   int ClusterImpl::getType() const{ return _type ; }
@@ -34,22 +34,28 @@ namespace IMPL{
   const FloatVec & ClusterImpl::getShape() const{ return _shape ;  }
   const FloatVec & ClusterImpl::getParticleType() const{ return _particletype ;  }
 
-  const StringVec & ClusterImpl::getHitCollectionNames() const{ 
-    _hitCollectionNames.clear() ;
+//   const StringVec & ClusterImpl::getHitCollectionNames() const{ 
+//     _hitCollectionNames.clear() ;
     
-    for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-      _hitCollectionNames.push_back ( iter->first ) ;
-    }
-    return _hitCollectionNames ;
-  }
-  const IntVec & ClusterImpl::getHitIndicesForCollection(const std::string & colName) const{
-    return *_indexMap[ colName ]->Indices ;
-  }
-  const FloatVec & ClusterImpl::getHitContributionsForCollection(const std::string & colName) const{
-    return *_indexMap[ colName ]->Weights ;
-  }
+//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
+//       _hitCollectionNames.push_back ( iter->first ) ;
+//     }
+//     return _hitCollectionNames ;
+//   }
+//   const IntVec & ClusterImpl::getHitIndicesForCollection(const std::string & colName) const{
+//     return *_indexMap[ colName ]->Indices ;
+//   }
+//   const FloatVec & ClusterImpl::getHitContributionsForCollection(const std::string & colName) const{
+//     return *_indexMap[ colName ]->Weights ;
+//   }
   const ClusterVec & ClusterImpl::getClusters() const{
     return _clusters ;
+  }
+  const EVENT::CalorimeterHitVec & ClusterImpl::getCalorimeterHits() const {
+    return _hits ;
+  }
+  const EVENT::FloatVec & ClusterImpl::getHitContributions() const {
+    return _weights ;
   }
 
 
@@ -115,22 +121,27 @@ namespace IMPL{
     _clusters.push_back( cluster ) ;
   }
   
-
-  void  ClusterImpl::addHitIndex( const std::string& colName, int index , float contribution){
+  
+  void ClusterImpl::addHit(EVENT::CalorimeterHit* hit  , float contribution) {
+    _hits.push_back( hit ) ;
+    _weights.push_back( contribution ) ;
+  }
+  
+//   void  ClusterImpl::addHitIndex( const std::string& colName, int index , float contribution){
      
-    checkAccess("ClusterImpl::addHitIndex") ;
+//     checkAccess("ClusterImpl::addHitIndex") ;
 
-    WeightedIndices*  wi = _indexMap[ colName ] ; 
+//     WeightedIndices*  wi = _indexMap[ colName ] ; 
     
-    if( wi == 0 ) {
-      wi = new WeightedIndices ;
-      wi->Indices  = new IntVec ;
-      wi->Weights = new FloatVec ;
-      _indexMap[ colName ] = wi ;
-    }
-    wi->Indices->push_back( index )  ;
-    wi->Weights->push_back( contribution )  ;
-  }    
+//     if( wi == 0 ) {
+//       wi = new WeightedIndices ;
+//       wi->Indices  = new IntVec ;
+//       wi->Weights = new FloatVec ;
+//       _indexMap[ colName ] = wi ;
+//     }
+//     wi->Indices->push_back( index )  ;
+//     wi->Weights->push_back( contribution )  ;
+//   }    
   
 
 }; // end namespace

@@ -18,9 +18,9 @@ namespace IMPL {
 
   TrackImpl::~TrackImpl() { 
 
-    for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-      delete iter->second ;
-    }
+//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
+//       delete iter->second ;
+//     }
 
   } 
 
@@ -38,20 +38,20 @@ namespace IMPL {
 
 
 
-  const std::vector<std::string>&  TrackImpl::getHitCollectionNames() const { 
-
-    _hitCollectionNames.clear() ;
-
-    for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
-      _hitCollectionNames.push_back ( iter->first ) ;
-    }
-    return _hitCollectionNames ;
+  const TrackerHitVec & TrackImpl::getTrackerHits() const {
+    return _hits ;
   }
 
-
-  const IntVec& TrackImpl::getHitIndicesForCollection(const std::string & colName) const { 
-    return *_indexMap[ colName ] ;
-  }
+//   const std::vector<std::string>&  TrackImpl::getHitCollectionNames() const { 
+//     _hitCollectionNames.clear() ;
+//     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
+//       _hitCollectionNames.push_back ( iter->first ) ;
+//     }
+//     return _hitCollectionNames ;
+//   }
+//   const IntVec& TrackImpl::getHitIndicesForCollection(const std::string & colName) const { 
+//     return *_indexMap[ colName ] ;
+//   }
 
   const TrackVec & TrackImpl::getTracks() const {
     return _tracks ;
@@ -112,23 +112,25 @@ namespace IMPL {
     checkAccess("TrackImpl::setdEdxError") ;
     _dEdxError = dEdxError  ;
   }   
-  void  TrackImpl::addHitIndex( const std::string& colName, int index ){   
 
-    checkAccess("TrackImpl::addHitIndex") ;
-    IntVec* vec = _indexMap[ colName ] ;
-    
-    if( vec == 0 ){
-      vec = new IntVec ;
-      _indexMap[ colName ] = vec ;
-    }
+  void TrackImpl::addHit( TrackerHit* hit) {
+    _hits.push_back( hit ) ;
+  }
 
-    vec->push_back( index )  ;
-  }    
+//   void  TrackImpl::addHitIndex( const std::string& colName, int index ){   
+//     checkAccess("TrackImpl::addHitIndex") ;
+//     IntVec* vec = _indexMap[ colName ] ;
+//     if( vec == 0 ){
+//       vec = new IntVec ;
+//       _indexMap[ colName ] = vec ;
+//     }
+//     vec->push_back( index )  ;
+//   }    
   void  TrackImpl::addTrack( EVENT::Track* trk ) {
     checkAccess("TrackImpl::addTrack") ;
     _tracks.push_back( trk ) ;
   }
-
+  
 }; // namespace IMPL
 
 

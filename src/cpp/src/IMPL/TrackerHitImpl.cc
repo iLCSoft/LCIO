@@ -6,13 +6,13 @@ using namespace EVENT ;
 namespace IMPL {
   
   TrackerHitImpl::TrackerHitImpl() :
-    _cov(NCOVMATRIX),
+    //    _cov(TRKHITNCOVMATRIX),
     _dEdx(0),
     _time(0) {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
-    for(int i=0;i<NCOVMATRIX;i++){
+    for(int i=0;i<TRKHITNCOVMATRIX;i++){
       _cov.push_back(0.0) ;
     }
   }
@@ -20,9 +20,19 @@ namespace IMPL {
   TrackerHitImpl::~TrackerHitImpl(){  
   } 
 
+  const double* TrackerHitImpl::getPosition() const {  return _pos ; } 
+
+  const FloatVec & TrackerHitImpl::getCovMatrix() const {
+    return _cov ;
+  }
+
   float TrackerHitImpl::getdEdx() const { return _dEdx ; }
 
   float TrackerHitImpl::getTime() const { return _time ; }
+
+  LCObject * TrackerHitImpl::getRawDataHit() const {
+    return _rawHit ;
+  }
 
   const std::string & TrackerHitImpl::getType() const {
 
@@ -35,13 +45,6 @@ namespace IMPL {
     else
       return unknown ;
 
-  }
-
-  const FloatVec & TrackerHitImpl::getCovMatrix() const {
-    return _cov ;
-  }
-  LCObject * TrackerHitImpl::getRawDataHit() const {
-    return _rawHit ;
   }
 
 
@@ -64,13 +67,13 @@ namespace IMPL {
 
   void TrackerHitImpl::setCovMatrix( const FloatVec& cov ){
     checkAccess("TrackerHitImpl::setCovMatrix") ;
-    for(int i=0;i<NCOVMATRIX;i++){
+    for(int i=0;i<TRKHITNCOVMATRIX;i++){
       _cov[i] = cov[i] ;
     }
   }
-  void TrackerHitImpl::setCovMatrix( float cov[NCOVMATRIX]  ){
+  void TrackerHitImpl::setCovMatrix( float cov[TRKHITNCOVMATRIX]  ){
     checkAccess("TrackerHitImpl::setCovMatrix") ;
-    for(int i=0;i<NCOVMATRIX;i++){
+    for(int i=0;i<TRKHITNCOVMATRIX;i++){
       _cov[i] = cov[i] ;
     }
   }

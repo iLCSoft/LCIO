@@ -66,36 +66,48 @@ namespace SIO{
 
     if( LCFlagImpl(flag).bitSet( LCIO::CLBIT_HITS ) ){ 
 
-      // hit collections
-      int nHitCol ;
-      SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-      for(int i=0 ; i< nHitCol ;i++){
-	
-	char* dummy ; 
-	LCSIO_READ( stream,  &dummy ) ; 
-	WeightedIndices* wi = new WeightedIndices ;
-	cluster->_indexMap[ dummy ] = wi ;
-	wi->Indices = new IntVec ;
-	wi->Weights = new FloatVec ;
-	
-	int nHits ;
-	SIO_DATA( stream, &nHits , 1  ) ;
-	
-	int* hitsArray = new int[ nHits ] ;
-	SIO_DATA( stream, hitsArray ,  nHits ) ;
-
-	float* wgtsArray = new float[ nHits ] ;
-	SIO_DATA( stream, wgtsArray ,  nHits ) ;
-	
-	for( int j=0 ; j< nHits ; j++ ){
-	  wi->Indices->push_back(  hitsArray[ j ] ) ;
-	  wi->Weights->push_back(  wgtsArray[ j ] ) ;
-	}
-	
-	delete[] hitsArray ;
-	delete[] wgtsArray ;
+      int nHits ;
+      SIO_DATA( stream, &nHits , 1  ) ;
+      for(int i=0;i<nHits;i++){
+	cluster->_hits.push_back( 0 ) ;
+	cluster->_weights.push_back( 0 ) ;
       }
+      for(int i=0;i<nHits;i++){
+	SIO_PNTR( stream , &(cluster->_hits[i] ) ) ;
+	SIO_PNTR( stream , &(cluster->_weights[i] ) ) ;
+      }
+      
+
+//       // hit collections
+//       int nHitCol ;
+//       SIO_DATA( stream, &nHitCol , 1  ) ;
+      
+//       for(int i=0 ; i< nHitCol ;i++){
+	
+// 	char* dummy ; 
+// 	LCSIO_READ( stream,  &dummy ) ; 
+// 	WeightedIndices* wi = new WeightedIndices ;
+// 	cluster->_indexMap[ dummy ] = wi ;
+// 	wi->Indices = new IntVec ;
+// 	wi->Weights = new FloatVec ;
+	
+// 	int nHits ;
+// 	SIO_DATA( stream, &nHits , 1  ) ;
+	
+// 	int* hitsArray = new int[ nHits ] ;
+// 	SIO_DATA( stream, hitsArray ,  nHits ) ;
+
+// 	float* wgtsArray = new float[ nHits ] ;
+// 	SIO_DATA( stream, wgtsArray ,  nHits ) ;
+	
+// 	for( int j=0 ; j< nHits ; j++ ){
+// 	  wi->Indices->push_back(  hitsArray[ j ] ) ;
+// 	  wi->Weights->push_back(  wgtsArray[ j ] ) ;
+// 	}
+	
+// 	delete[] hitsArray ;
+// 	delete[] wgtsArray ;
+//       }
     }
 
     // read the pointer tag 
@@ -142,7 +154,7 @@ namespace SIO{
     }
 
     const ClusterVec& clusters = cluster->getClusters() ;
-    int nClusters=  clusters.size() ;
+    int nClusters =  clusters.size() ;
 
     SIO_DATA( stream, &nClusters , 1  ) ;
     
@@ -151,27 +163,39 @@ namespace SIO{
     }
 
     if( LCFlagImpl(flag).bitSet( LCIO::CLBIT_HITS ) ){ 
-      const StringVec colNames = cluster->getHitCollectionNames() ;
-      int nHitCol =  colNames.size() ;
-      SIO_DATA( stream, &nHitCol , 1  ) ;
+
+
+      const CalorimeterHitVec& hits = cluster->getCalorimeterHits() ;
+      const FloatVec& weights = cluster->getHitContributions() ;
+      int nHits = hits.size() ;
+      SIO_DATA( stream, &nHits , 1  ) ;
       
-      for(unsigned int i=0;i<colNames.size();i++){
-	
-	LCSIO_WRITE( stream, colNames[i]  ) ;
-	
-	const IntVec& vec = cluster->getHitIndicesForCollection( colNames[i]  ) ;
-	const FloatVec& wgt = cluster->getHitContributionsForCollection( colNames[i]  ) ;
-	int nHits =  vec.size() ;
-	
-	SIO_DATA( stream, &nHits, 1 ) ;
-	
-	for( int j=0 ; j<nHits  ; j++ ){
-	  LCSIO_WRITE( stream, vec[j]  ) ;
-	}
-	for( int j=0 ; j<nHits  ; j++ ){
-	  LCSIO_WRITE( stream, wgt[j]  ) ;
-	}
+      for(int i=0;i<nHits;i++){
+	SIO_PNTR( stream , &(hits[i]) ) ;
+	SIO_PNTR( stream , &(weights[i]) ) ;
       }
+
+//       const StringVec colNames = cluster->getHitCollectionNames() ;
+//       int nHitCol =  colNames.size() ;
+//       SIO_DATA( stream, &nHitCol , 1  ) ;
+      
+//       for(unsigned int i=0;i<colNames.size();i++){
+	
+// 	LCSIO_WRITE( stream, colNames[i]  ) ;
+	
+// 	const IntVec& vec = cluster->getHitIndicesForCollection( colNames[i]  ) ;
+// 	const FloatVec& wgt = cluster->getHitContributionsForCollection( colNames[i]  ) ;
+// 	int nHits =  vec.size() ;
+	
+// 	SIO_DATA( stream, &nHits, 1 ) ;
+	
+// 	for( int j=0 ; j<nHits  ; j++ ){
+// 	  LCSIO_WRITE( stream, vec[j]  ) ;
+// 	}
+// 	for( int j=0 ; j<nHits  ; j++ ){
+// 	  LCSIO_WRITE( stream, wgt[j]  ) ;
+// 	}
+//       }
     }
     // write a ptag in order to be able to point to clusters
     SIO_PTAG( stream , cluster ) ;

@@ -351,17 +351,20 @@ namespace UTIL {
       }
       cout << endl ;
       if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
-	cout << " hits ->";
-	const StringVec& hitColNames = trk->getHitCollectionNames() ;
-	for(unsigned int j=0;j<hitColNames.size();j++){
-	  cout << " " << hitColNames[j] << ": " ;
-
-	  const IntVec& hits = trk->getHitIndicesForCollection( hitColNames[j] ) ;
-
-	  for(unsigned int k=0;k<hits.size();k++){
-	    cout << hits[k] <<"," ;
-	  }
+	cout << " hits ->" << hex;
+	// 	const StringVec& hitColNames = trk->getHitCollectionNames() ;
+	// 	for(unsigned int j=0;j<hitColNames.size();j++){
+	// 	  cout << " " << hitColNames[j] << ": " ;
+	// 	  const IntVec& hits = trk->getHitIndicesForCollection( hitColNames[j] ) ;
+	// 	  for(unsigned int k=0;k<hits.size();k++){
+	// 	    cout << hits[k] <<"," ;
+	// 	  }
+	// 	}
+	const TrackerHitVec& hits= trk->getTrackerHits() ; 
+	for(unsigned int k=0;k<hits.size();k++){
+	  cout << "0x" << hits[k] <<", " ;
 	}
+	cout << dec << endl  ;
       }
 //       cout << trk->getType()     << " | "
 // 	   << trk->getMomentum() << " | "
@@ -805,17 +808,26 @@ namespace UTIL {
       cout << endl ;
       if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
 	cout << " hits ->";
-	const StringVec& hitColNames = clu->getHitCollectionNames() ;
-	for(unsigned int j=0;j<hitColNames.size();j++){
-	  cout << " " << hitColNames[j] << ": " ;
+// 	const StringVec& hitColNames = clu->getHitCollectionNames() ;
+// 	for(unsigned int j=0;j<hitColNames.size();j++){
+// 	  cout << " " << hitColNames[j] << ": " ;
 
-	  const IntVec& hits = clu->getHitIndicesForCollection( hitColNames[j] ) ;
-	  const FloatVec& wgts = clu->getHitContributionsForCollection( hitColNames[j] ) ;
+// 	  const IntVec& hits = clu->getHitIndicesForCollection( hitColNames[j] ) ;
+// 	  const FloatVec& wgts = clu->getHitContributionsForCollection( hitColNames[j] ) ;
 
-	  for(unsigned int k=0;k<hits.size();k++){
-	    cout << hits[k] <<" ["<< wgts[k] <<"], " ;
-	  }
+// 	  for(unsigned int k=0;k<hits.size();k++){
+// 	    cout << hits[k] <<" ["<< wgts[k] <<"], " ;
+// 	  }
+// 	}
+
+	const CalorimeterHitVec& hits= clu->getCalorimeterHits() ; 
+	const FloatVec& contr = clu->getHitContributions() ; 
+	for(unsigned int k=0;k<hits.size();k++){
+	  cout << "0x" << hits[k]  << "(" << contr[k] << "), " ;
 	}
+	cout << dec << endl  ;
+
+
       }
       cout << endl 
 	   << "-------|-----------|---------------------------------|----------|----------|----------|----------|---------"

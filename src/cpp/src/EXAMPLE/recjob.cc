@@ -10,7 +10,9 @@
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/SimCalorimeterHitImpl.h"
+#include "IMPL/CalorimeterHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
+#include "IMPL/TrackerHitImpl.h" 
 #include "IMPL/TrackImpl.h" 
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
@@ -104,87 +106,127 @@ public:
 
 
     // create some tracks and add them to the event
-    std::string simHitName( "TPC4711" ) ;
+//     std::string simHitName( "TPC4711" ) ;
     std::string tpcHitName( "TPCRawFADC" ) ;
 
-    LCCollection* simHits = evt->getCollection( simHitName ) ;
+//     LCCollection* simHits = evt->getCollection( simHitName ) ;
     LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
+
+    // in order to be able to point back to hits, we need to create 
+    // generic TrackerHits from the TPCHits first
+    LCCollectionVec* trkhitVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
+    int nTPCHits = tpcHits->getNumberOfElements() ;
+    for(int j=0;j<nTPCHits;j++){
+      TrackerHitImpl* trkHit = new TrackerHitImpl ;
+      TPCHit* tpcHit =  dynamic_cast<TPCHit*> ( tpcHits->getElementAt(j)  ) ;
+      trkHit->setdEdx(   tpcHit->getCharge() ) ; // just an example !
+      trkHit->setTime(   tpcHit->getTime() ) ;
+      int cellID = tpcHit->getCellID() ;
+      double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
+      trkHit->setPosition(  pos  ) ;
+
+      FloatVec cov ;
+      cov.push_back( 1. ) ;
+      cov.push_back( 2. ) ;
+      cov.push_back( 3. ) ;
+      cov.push_back( 4. ) ;
+      cov.push_back( 5. ) ;
+      cov.push_back( 6. ) ;
+      trkHit->setCovMatrix( cov ) ;
+
+      trkhitVec->addElement( trkHit ) ;
+    }
+    evt->addCollection( trkhitVec , "TrackerHits") ;
 
 
     LCCollectionVec* trkVec = new LCCollectionVec( LCIO::TRACK )  ;
-
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl trkFlag(0) ;
     trkFlag.setBit( LCIO::TRBIT_HITS ) ;
     trkVec->setFlag( trkFlag.getFlag()  ) ;
     
-    if( simHits ){
+//     if( simHits ){
 
-      int nSimHits = simHits->getNumberOfElements() ;
-      int nTrk = nSimHits / 10 ;
+//       int nSimHits = simHits->getNumberOfElements() ;
+//       int nTrk = nSimHits / 10 ;
+    int nTrk = 10 ;
+    for( int i=0; i < nTrk ; i ++ ){
+      
+      TrackImpl* trk = new TrackImpl ;
+      trk->setType( Track::TPC ) ;
+      trk->setMomentum(  (i+1)*1.1 ) ;
+      trk->setTheta( (i+1)* M_PI / 10. ) ;
+      trk->setPhi( (i+1)* M_PI / 5. ) ;
+      trk->setD0( i+1 ) ;
+      trk->setZ0( (i+1)*10. ) ;
+      trk->setChi2( 1.01 ) ;
+      trk->setdEdx( 3.14159 ) ;
+      trk->setdEdxError( 42. ) ;
+      float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
+      trk->setCovMatrix( cov ) ;
+      float ref[3] = { 12. ,123456789. , .0987654321 } ;
+      trk->setReferencePoint( ref ) ;
 
-      for( int i=0; i < nTrk ; i ++ ){
+      // add some random hits 
+      int iHit1 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
+      int iHit2 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
+      int iHit3 = (int) ( double (trkhitVec->size()) * rand() / RAND_MAX )    ;
 
-	TrackImpl* trk = new TrackImpl ;
-	trk->setType( Track::TPC ) ;
-	trk->setMomentum(  (i+1)*1.1 ) ;
-	trk->setTheta( (i+1)* M_PI / 10. ) ;
-	trk->setPhi( (i+1)* M_PI / 5. ) ;
-	trk->setD0( i+1 ) ;
-	trk->setZ0( (i+1)*10. ) ;
-	trk->setChi2( 1.01 ) ;
-	trk->setdEdx( 3.14159 ) ;
-	trk->setdEdxError( 42. ) ;
-	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
-	trk->setCovMatrix( cov ) ;
+      trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit1] ) ) ;
+      trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit2] ) ) ;
+      trk->addHit( dynamic_cast<TrackerHit*>( (*trkhitVec)[iHit3] ) ) ;
 
-	// add the hits used to create this track
-	for( int j=0; j < 10  ; j ++ ){
-	  trk->addHitIndex( simHitName ,  i*10+j  ) ;   
-	}
-	trkVec->addElement( trk ) ;
+//       for( int j=0; j < 10  ; j ++ ){
+// 	trk->addHitIndex( simHitName ,  i*10+j  ) ;   
+//       }
+
+      // add tracks that where used to create this track
+      if( trkVec->size() > 1 ){
+	trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
+	trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
       }
+      
+      trkVec->addElement( trk ) ;
     }
+//   }
 
-    if( tpcHits ){
+//     if( tpcHits ){
 
-      int nTPCHits = tpcHits->getNumberOfElements() ;
-      int nTrk = nTPCHits / 10 ;
+//       int nTrk = nTPCHits / 10 ;
 
-      for( int i=0; i < nTrk ; i ++ ){
+//       for( int i=0; i < nTrk ; i ++ ){
 
-	TrackImpl* trk = new TrackImpl ;
-	trk->setType( Track::TPC ) ;
-	trk->setMomentum(  (i+1)*1.1 ) ;
-	trk->setTheta( (i+1)* M_PI / 10. ) ;
-	trk->setPhi( (i+1)* M_PI / 5. ) ;
-	trk->setD0( i+1 ) ;
-	trk->setZ0( (i+1)*10. ) ;
-	trk->setChi2( 1.01 ) ;
-	trk->setdEdx( 3.14159 ) ;
-	trk->setdEdxError( 42. ) ;
-	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
-	trk->setCovMatrix( cov ) ;
-	float ref[3] = { 12. ,123456789. , .0987654321 } ;
-	trk->setReferencePoint( ref ) ;
-	// add the hits used to create this track
-	for( int j=0; j < 10  ; j ++ ){
-	  trk->addHitIndex( tpcHitName ,  i*10+j  ) ;   
-	}
-	// add tracks that where used to create this track
-	if( trkVec->size() > 1 ){
-	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
-	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
-	}
+// 	TrackImpl* trk = new TrackImpl ;
+// 	trk->setType( Track::TPC ) ;
+// 	trk->setMomentum(  (i+1)*1.1 ) ;
+// 	trk->setTheta( (i+1)* M_PI / 10. ) ;
+// 	trk->setPhi( (i+1)* M_PI / 5. ) ;
+// 	trk->setD0( i+1 ) ;
+// 	trk->setZ0( (i+1)*10. ) ;
+// 	trk->setChi2( 1.01 ) ;
+// 	trk->setdEdx( 3.14159 ) ;
+// 	trk->setdEdxError( 42. ) ;
+// 	float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
+// 	trk->setCovMatrix( cov ) ;
+// 	float ref[3] = { 12. ,123456789. , .0987654321 } ;
+// 	trk->setReferencePoint( ref ) ;
+// 	// add the hits used to create this track
+// 	for( int j=0; j < 10  ; j ++ ){
+// 	  trk->addHitIndex( tpcHitName ,  i*10+j  ) ;   
+// 	}
+// 	// add tracks that where used to create this track
+// 	if( trkVec->size() > 1 ){
+// 	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 1 ] ) ) ;
+// 	  trk->addTrack( dynamic_cast<TrackImpl*> ( (*trkVec)[ trkVec->size() - 2 ] ) ) ;
+// 	}
 
-	trkVec->addElement( trk ) ;
-      }
-    }
+// 	trkVec->addElement( trk ) ;
+//       }
+//     }
 
 
 
     evt->addCollection(  trkVec , "SomeTracks" ) ;
-
 
 
     // create some clusters and add them to the event
@@ -194,16 +236,36 @@ public:
 
 
     LCCollectionVec* clusterVec = new LCCollectionVec( LCIO::CLUSTER )  ;
+    LCCollectionVec* calHits = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
+    // in order to be able to point back to hits, we need to create 
+    // generic CalorimeterHits from the SimCalorimeterHits first
+
+    int nSimHits = simcalHits->getNumberOfElements() ;
+    for(int j=0;j<nSimHits;j++){
+
+      CalorimeterHitImpl* calHit = new CalorimeterHitImpl ;
+      SimCalorimeterHit* simcalHit =  dynamic_cast<SimCalorimeterHit*> ( simcalHits->getElementAt(j)  ) ;
+
+      calHit->setEnergy(   simcalHit->getEnergy()  ) ;
+      calHit->setCellID0(  simcalHit->getCellID0() ) ;
+      calHit->setPosition( simcalHit->getPosition()) ;
+
+      calHits->addElement( calHit ) ;
+    }
+    evt->addCollection( calHits , "CalorimeterHits") ;
+
+
+
 
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl clusterFlag(0) ;
     clusterFlag.setBit( LCIO::CLBIT_HITS ) ;
     clusterVec->setFlag( clusterFlag.getFlag()  ) ;
     
-    if( simcalHits ){
+    if( calHits ){
       
-      int nSimHits = simcalHits->getNumberOfElements() ;
-      int nCluster = nSimHits / 10 ;
+      int nHits = calHits->getNumberOfElements() ;
+      int nCluster = nHits / 10 ;
       
       for( int i=0; i < nCluster ; i ++ ){
 	
@@ -230,10 +292,18 @@ public:
 	cluster->setMuonWeight( .333)  ;
 
 	// add the hits used to create this cluster
-	for( int j=0; j < 10  ; j ++ ){
-	  cluster->addHitIndex( simcalHitName ,  i*10+j ,  1. ) ;   
-	}
-
+// 	for( int j=0; j < 10  ; j ++ ){
+// 	  cluster->addHitIndex( calHitName ,  i*10+j ,  1. ) ;   
+// 	}
+	// add some random hits 
+	int iHit1 = (int) ( double (calHits->size()) * rand() / RAND_MAX )    ;
+	int iHit2 = (int) ( double (calHits->size()) * rand() / RAND_MAX )    ;
+	int iHit3 = (int) ( double (calHits->size()) * rand() / RAND_MAX )    ;
+	
+	cluster->addHit( dynamic_cast<CalorimeterHit*>( (*calHits)[iHit1] ) , 1.0 ) ;
+	cluster->addHit( dynamic_cast<CalorimeterHit*>( (*calHits)[iHit2] ) , 2.0 ) ;
+	cluster->addHit( dynamic_cast<CalorimeterHit*>( (*calHits)[iHit3] ) , 3.0 ) ;
+	
 	// add clusters that where used to create this cluster
 	if( clusterVec->size() > 1 ){
 	  cluster->addCluster( dynamic_cast<ClusterImpl*> 

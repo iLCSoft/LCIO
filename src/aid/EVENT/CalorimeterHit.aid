@@ -1,5 +1,20 @@
 package hep.lcio.event ;
 
+@ifdef cpp
+@cpp{
+#include <vector>
+}
+@endif
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
+
+@ifdef cpp
+@cpp{
+class CalorimeterHit ;
+typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
+}
+@endif
+
 /** The generic calorimeter hit for real data. 
  * 
  * @author gaede

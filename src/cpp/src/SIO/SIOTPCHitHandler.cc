@@ -42,6 +42,16 @@ namespace SIO{
       SIO_DATA( stream ,  hit->_rawArray  , hit->_rawSize  ) ;
 
     }
+
+//     // read a pointer tag for reference to TPC hits from generic hits
+    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_PTR )  &&
+	( SIO_VERSION_MAJOR(vers)>1 || 
+	  ( SIO_VERSION_MAJOR(vers)==1 && SIO_VERSION_MINOR(vers)>0)  ) 
+	){
+      
+      SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
+    }
+    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
     
@@ -68,6 +78,11 @@ namespace SIO{
       }
     }
 
+    //  add a pointer tag for reference to TPC hits from generic hits
+    if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_PTR ) ){
+      SIO_PTAG( stream , hit ) ;
+    }
+    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   

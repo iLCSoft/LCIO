@@ -1,6 +1,13 @@
 package hep.lcio.event;
 
-/** A generic tracker hit. 
+@ifdef cpp
+@cpp{
+class TrackerHit ;
+typedef std::vector<TrackerHit*> TrackerHitVec ;
+}
+@endif
+
+/** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
  * @version Apr 7, 2004

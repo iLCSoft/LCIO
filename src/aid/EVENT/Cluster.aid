@@ -93,21 +93,29 @@ public interface Cluster extends LCObject {
      */
     public const ClusterVec& getClusters() const ; 
 
-    /** Returns the names of the hit collections that have been
-     *  used to create the cluster.
+    /** The hits that have been combined to this cluster.
      */
-    public const StringVec&  getHitCollectionNames() const ;
+    public const CalorimeterHitVec& getCalorimeterHits() const ;
+
+    /** Returns the energy contribution of the hits 
+     * Runs parallel to the CalorimeterHitVec from getCalorimeterHits()
+     */
+    public const FloatVec& getHitContributions() const ;
+
+
+//     /** Returns the names of the hit collections that have been
+//      *  used to create the cluster.
+//      */
+//     public const StringVec&  getHitCollectionNames() const ;
     
+//     /** Returns the hit indices for the given collection name.
+//      */
+//     public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
 
-    /** Returns the hit indices for the given collection name.
-     */
-    public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
-
-
-    /** Returns the energy contribution from the hits in the given collection.
-     * Runs parallel to the IntVec from getHitIndicesForCollection()
-     */
-    public const FloatVec& getHitContributionsForCollection(const String& colName ) const ;
+//     /** Returns the energy contribution from the hits in the given collection.
+//      * Runs parallel to the IntVec from getHitIndicesForCollection()
+//      */
+//     public const FloatVec& getHitContributionsForCollection(const String& colName ) const ;
 
 
 

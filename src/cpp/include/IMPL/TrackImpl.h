@@ -86,19 +86,24 @@ namespace IMPL {
      */
     virtual float getdEdxError() const;
 
-    /** Returns the names of the hit collections that have been
-     *  used to create the track.
-     */
-    virtual const EVENT::StringVec& getHitCollectionNames() const;
+//     /** Returns the names of the hit collections that have been
+//      *  used to create the track.
+//      */
+//     virtual const EVENT::StringVec& getHitCollectionNames() const;
 
-    /** Returns all hit indices for the given collection name.
-     */
-    virtual const EVENT::IntVec& getHitIndicesForCollection(const std::string & colName) const;
+//     /** Returns all hit indices for the given collection name.
+//      */
+//     virtual const EVENT::IntVec& getHitIndicesForCollection(const std::string & colName) const;
 
     /** The tracks (as Track objects) that have been combined to this track.
      */
     virtual const EVENT::TrackVec & getTracks() const ;
+
+    /** The hits that have been used to create this track.
+     */
+    virtual const EVENT::TrackerHitVec & getTrackerHits() const ;
     
+
     // setters 
     virtual void  setType( int type ) ;
     virtual void  setMomentum( float momentum ) ;
@@ -114,8 +119,9 @@ namespace IMPL {
     virtual void  setChi2( float chi2 ) ;
     virtual void  setdEdx( float dEdx ) ;
     virtual void  setdEdxError( float dEdxError ) ;
-    virtual void  addHitIndex( const std::string& colName, int index ) ;   
+//     virtual void  addHitIndex( const std::string& colName, int index ) ;   
     virtual void  addTrack( EVENT::Track* trk ) ;
+    virtual void  addHit( EVENT::TrackerHit* hit) ;
 
   protected:
     int _type ;
@@ -129,10 +135,10 @@ namespace IMPL {
     float _chi2 ;
     float _dEdx ;
     float _dEdxError ;
-    mutable  EVENT::StringVec _hitCollectionNames ;
-    mutable IndexMap _indexMap ;
+//     mutable  EVENT::StringVec _hitCollectionNames ;
+//     mutable IndexMap _indexMap ;
     EVENT::TrackVec _tracks ;
-
+    EVENT::TrackerHitVec _hits ;
 }; // class
 
 

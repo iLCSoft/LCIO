@@ -103,15 +103,17 @@ public interface Track extends LCObject {
     public const TrackVec& getTracks() const ; 
 
 
-    /** Returns the names of the hit collections that have been
-     *  used to create the track.
+    /** The hits that have been used to create this track.
      */
-    public const StringVec&  getHitCollectionNames() const ;
+    public const TrackerHitVec& getTrackerHits() const ;
     
-
-    /** Returns all hit indices for the given collection name.
-     */
-    public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
+//     /** Returns the names of the hit collections that have been
+//      *  used to create the track.
+//      */
+//     public const StringVec&  getHitCollectionNames() const ;
+//     /** Returns all hit indices for the given collection name.
+//      */
+//     public const IntVec& getHitIndicesForCollection(const String& colName ) const ;
 
 
 

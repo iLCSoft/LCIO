@@ -8,7 +8,7 @@
 #include "IMPL/AccessChecked.h"
 #include "EVENT/TPCHit.h"
 
-#define NCOVMATRIX 6
+#define TRKHITNCOVMATRIX 6
 
 namespace IMPL {
 
@@ -59,7 +59,7 @@ namespace IMPL {
     // setters 
     void setPosition( double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
-    void setCovMatrix( float cov[NCOVMATRIX]  );
+    void setCovMatrix( float cov[TRKHITNCOVMATRIX]  );
     void setdEdx( float dedx ) ;
     void setTime( float t ) ;
     void setTPCHit( EVENT::TPCHit* hit) ;
@@ -68,7 +68,7 @@ namespace IMPL {
 
 protected:
   
-  float _pos[3] ;
+  double _pos[3] ;
   EVENT::FloatVec _cov ;
   float _dEdx ;
   float _time ;

@@ -68,7 +68,7 @@ namespace IMPL {
     
     /** Sets the position. Not stored if LCIO.CHBIT_LONG isn't set.
      */
-    void setPosition(float pos[3])  ;
+    void setPosition(const float pos[3])  ;
     
 
   protected:

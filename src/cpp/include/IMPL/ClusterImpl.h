@@ -3,6 +3,7 @@
 
 
 #include "EVENT/Cluster.h"
+//#include "EVENT/CalorimeterHit.h"
 #include "AccessChecked.h"
 #include <map>
 
@@ -14,14 +15,13 @@
 namespace IMPL {
 
 
-  /**Interbal helper struct to store indices and weights in map
-   */
-  struct WeightedIndices {
-    EVENT::IntVec* Indices ;
-    EVENT::FloatVec* Weights ;
-  } ;
-
-  typedef std::map< std::string , WeightedIndices* > IndexMap ; 
+//   /**Internal helper struct to store indices and weights in map
+//    */
+//   struct WeightedIndices {
+//     EVENT::IntVec* Indices ;
+//     EVENT::FloatVec* Weights ;
+//   } ;
+//   typedef std::map< std::string , WeightedIndices* > IndexMap ; 
 
 
 /** Implementation of Cluster.
@@ -88,24 +88,34 @@ namespace IMPL {
      */
     virtual const EVENT::FloatVec & getParticleType() const ;
 
-    /** Returns the names of the hit collections that have been
-     *  used to create the cluster.
-     */
-    virtual const EVENT::StringVec & getHitCollectionNames() const ;
 
-    /** Returns the hit indices for the given collection name.
-     */
-    virtual const EVENT::IntVec & getHitIndicesForCollection(const std::string & colName) const ;
+//     /** Returns the names of the hit collections that have been
+//      *  used to create the cluster.
+//      */
+//     virtual const EVENT::StringVec & getHitCollectionNames() const ;
 
-    /** Returns the energy contribution from the hits in the given collection.
-     * Runs parallel to the IntVec from getHitIndicesForCollection()
-     */
-    virtual const EVENT::FloatVec & getHitContributionsForCollection(const std::string & colName) const ;
+//     /** Returns the hit indices for the given collection name.
+//      */
+//     virtual const EVENT::IntVec & getHitIndicesForCollection(const std::string & colName) const ;
+
+//     /** Returns the energy contribution from the hits in the given collection.
+//      * Runs parallel to the IntVec from getHitIndicesForCollection()
+//      */
+//     virtual const EVENT::FloatVec & getHitContributionsForCollection(const std::string & colName) const ;
     
     /** The clusters that have been combined to this cluster.
      */
     virtual const EVENT::ClusterVec & getClusters() const ;
 
+
+    /** The hits that have been combined to this cluster.
+     */
+    virtual const EVENT::CalorimeterHitVec & getCalorimeterHits() const ;
+
+    /** Returns the energy contribution of the hits 
+     * Runs parallel to the CalorimeterHitVec from getCalorimeterHits()
+     */
+    virtual const EVENT::FloatVec & getHitContributions() const ;
 
     //setters 
     void setType(int type ) ; 
@@ -123,11 +133,11 @@ namespace IMPL {
     void setEMWeight(float emWeight ) ;
     void setHADWeight(float hadWeight ) ;
     void setMuonWeight(float muonWeight ) ;
-    
     void addCluster(EVENT::Cluster* cluster) ;
-    
 
-    void  addHitIndex( const std::string& colName, int index , float contribution) ;
+    void addHit(EVENT::CalorimeterHit* hit  , float contribution) ;
+
+    //    void  addHitIndex( const std::string& colName, int index , float contribution) ;
 
 
   protected:
@@ -140,9 +150,11 @@ namespace IMPL {
     EVENT::FloatVec _errdir ;
     EVENT::FloatVec _shape ;
     EVENT::FloatVec _particletype;
-    mutable  EVENT::StringVec _hitCollectionNames ;
-    mutable IndexMap _indexMap ;
+//     mutable  EVENT::StringVec _hitCollectionNames ;
+//     mutable IndexMap _indexMap ;
     EVENT::ClusterVec _clusters ;
+    EVENT::CalorimeterHitVec _hits ;
+    EVENT::FloatVec _weights ;
 
 }; // class
 

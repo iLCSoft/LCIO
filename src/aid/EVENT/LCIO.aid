@@ -26,6 +26,10 @@ public interface LCIO{
     static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
     static const int CHBIT_ID1    = 29 ;  // cellid1 stored
     static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+
+    // (raw) calorimeter hit 
+    static const int RCHBIT_PTR = 31 ; // 1: pointer tag added (needed for TrackerHit) 
+    
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
@@ -37,6 +41,7 @@ public interface LCIO{
 
     // TPCHit
     static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
+    static const int TPCBIT_PTR = 30 ; // 1: pointer tag added (needed for TrackerHit) 
 
     static const int READ_ONLY =  0 ;
     static const int UPDATE   =  1 ;
@@ -56,6 +61,7 @@ public interface LCIO{
     static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
     static const char* TPCHIT ; 
+    static const char* TRACKERHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTVEC ; 
     static const char* TRACK ; 
@@ -73,6 +79,10 @@ public interface LCIO{
   public static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
   public static const int CHBIT_ID1    = 29 ;  // cellid1 stored
   public static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
+
+    // (raw) calorimeter hit 
+  public static const int RCHBIT_PTR = 31 ; // 1: pointer tag added (needed for TrackerHit) 
+
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
@@ -84,6 +94,7 @@ public interface LCIO{
 
   // TPCHit
   public static const int TPCBIT_RAW = 31 ; // raw data stored(1) - not stored(0) 
+  public static const int TPCBIT_PTR = 30 ; // 1: pointer tag added (needed for TrackerHit) 
 
   public static const int READ_ONLY =  0 ;
   public static const int UPDATE   =  1 ;
@@ -102,6 +113,7 @@ public interface LCIO{
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String TPCHIT = "TPCHit" ;
+  public static const String TRACKERHIT = "TrackerHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;
   public static const String TRACK = "Track"; 

@@ -46,7 +46,7 @@ namespace SIO{
     SIO_DATA( stream ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(trk->_dEdxError) , 1  ) ;
 
-    int nTracks=  trk->_tracks.size() ;
+    int nTracks ;
     SIO_DATA( stream, &nTracks , 1  ) ;
 
     // fill the vector to have correct size
@@ -61,29 +61,41 @@ namespace SIO{
 
     if( LCFlagImpl(flag).bitSet( LCIO::TRBIT_HITS ) ){ 
 
-      // hit collections
-      int nHitCol ;
-      SIO_DATA( stream, &nHitCol , 1  ) ;
+      int nHits ;
+      SIO_DATA( stream, &nHits , 1  ) ;
       
-      for(int i=0 ; i< nHitCol ;i++){
-	
-	char* dummy ; 
-	LCSIO_READ( stream,  &dummy ) ; 
-	trk->_indexMap[ dummy ] = new IntVec ;
-	
-	int nHits ;
-	SIO_DATA( stream, &nHits , 1  ) ;
-	
-	int* hitsArray = new int[ nHits ] ;
-	
-	SIO_DATA( stream, hitsArray ,  nHits ) ;
-	
-	for( int j=0 ; j< nHits ; j++ ){
-	  trk->_indexMap[ dummy ]->push_back(  hitsArray[ j ] ) ;
-	}
-	
-	delete[] hitsArray ;
+      // fill the vector to have correct size
+      // as we are using the addresses of the elements henceforth
+      for(int i=0;i<nHits;i++){
+	trk->_hits.push_back( 0 ) ;
       }
+      for(int i=0;i<nHits;i++){
+	SIO_PNTR( stream , &(trk->_hits[i] ) ) ;
+      }
+      
+//       // hit collections
+//       int nHitCol ;
+//       SIO_DATA( stream, &nHitCol , 1  ) ;
+      
+//       for(int i=0 ; i< nHitCol ;i++){
+	
+// 	char* dummy ; 
+// 	LCSIO_READ( stream,  &dummy ) ; 
+// 	trk->_indexMap[ dummy ] = new IntVec ;
+	
+// 	int nHits ;
+// 	SIO_DATA( stream, &nHits , 1  ) ;
+	
+// 	int* hitsArray = new int[ nHits ] ;
+	
+// 	SIO_DATA( stream, hitsArray ,  nHits ) ;
+	
+// 	for( int j=0 ; j< nHits ; j++ ){
+// 	  trk->_indexMap[ dummy ]->push_back(  hitsArray[ j ] ) ;
+// 	}
+	
+// 	delete[] hitsArray ;
+//       }
     }
 
     // read the pointer tag 
@@ -138,23 +150,33 @@ namespace SIO{
 
 
     if( LCFlagImpl(flag).bitSet( LCIO::TRBIT_HITS ) ){ 
-      const StringVec colNames = trk->getHitCollectionNames() ;
-      int nHitCol =  colNames.size() ;
-      SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-      for(unsigned int i=0;i<colNames.size();i++){
-	
-	LCSIO_WRITE( stream, colNames[i]  ) ;
-	
-	const IntVec& vec = trk->getHitIndicesForCollection( colNames[i]  ) ;
-	int nHits =  vec.size() ;
-	
-	SIO_DATA( stream, &nHits, 1 ) ;
-	
-	for( int j=0 ; j<nHits  ; j++ ){
-	  LCSIO_WRITE( stream, vec[j]  ) ;
-	}
+
+      const TrackerHitVec& hits = trk->getTrackerHits() ;
+      int nHits=  hits.size() ;
+      SIO_DATA( stream, &nHits , 1  ) ;
+    
+      for(int i=0;i<nHits;i++){
+	SIO_PNTR( stream , &(hits[i]) ) ;
       }
+
+
+//       const StringVec colNames = trk->getHitCollectionNames() ;
+//       int nHitCol =  colNames.size() ;
+//       SIO_DATA( stream, &nHitCol , 1  ) ;
+      
+//       for(unsigned int i=0;i<colNames.size();i++){
+	
+// 	LCSIO_WRITE( stream, colNames[i]  ) ;
+	
+// 	const IntVec& vec = trk->getHitIndicesForCollection( colNames[i]  ) ;
+// 	int nHits =  vec.size() ;
+	
+// 	SIO_DATA( stream, &nHits, 1 ) ;
+	
+// 	for( int j=0 ; j<nHits  ; j++ ){
+// 	  LCSIO_WRITE( stream, vec[j]  ) ;
+// 	}
+//       }
     }
     // write a ptag in order to be able to point to tracks
     SIO_PTAG( stream , trk ) ;

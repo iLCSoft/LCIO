@@ -11,6 +11,7 @@ const char* LCIO::SIMCALORIMETERHIT = "SimCalorimeterHit" ;
 const char* LCIO::CALORIMETERHIT = "CalorimeterHit" ;
 const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
 const char* LCIO::TPCHIT = "TPCHit" ;
+const char* LCIO::TRACKERHIT = "TrackerHit" ;
 const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
 const char* LCIO::LCINTVEC = "LCIntVec" ;
 const char* LCIO::TRACK= "Track" ; 

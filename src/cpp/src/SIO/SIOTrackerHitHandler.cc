@@ -29,8 +29,8 @@ namespace SIO{
 	
     SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 
-    float cov[NCOVMATRIX] ;
-    SIO_DATA( stream ,  cov  ,  NCOVMATRIX ) ;
+    float cov[TRKHITNCOVMATRIX] ;
+    SIO_DATA( stream ,  cov  ,  TRKHITNCOVMATRIX ) ;
     hit->setCovMatrix( cov ) ;
 
     SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
