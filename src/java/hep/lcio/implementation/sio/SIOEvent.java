@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.13 2003-09-16 12:38:11 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.14 2003-11-08 03:08:51 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -80,10 +80,11 @@ class SIOEvent extends ILCEvent
       for (;;)
       {
          SIOBlock block = record.getBlock();
-         if (block == null)
-            break;
+         if (block == null) break;
+         int major = block.getMajorVersion();
+         int minor = block.getMinorVersion();
 
-         if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
+         if ((major < 1) && (minor < 8))
             throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
          SIOInputStream in = block.getData();
@@ -97,7 +98,9 @@ class SIOEvent extends ILCEvent
             int nMC = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nMC);
             for (int i = 0; i < nMC; i++)
-               ilc.add(new SIOMCParticle(in, this));
+               ilc.add(new SIOMCParticle(in, this, major, minor));
+            for (int i = 0; i < nMC; i++)
+               ((SIOMCParticle) ilc.get(i)).resolve(major, minor); 
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -127,7 +130,7 @@ class SIOEvent extends ILCEvent
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOSimCalorimeterHit(in, flags, this));
+               ilc.add(new SIOSimCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -137,7 +140,7 @@ class SIOEvent extends ILCEvent
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOCalorimeterHit(in, flags, this));
+               ilc.add(new SIOCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }

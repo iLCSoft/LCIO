@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.8 2003-09-15 21:44:31 tonyj Exp $
+ * @version $Id: RecJob.java,v 1.9 2003-11-08 03:08:50 tonyj Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -112,7 +112,7 @@ public class RecJob implements LCRunListener, LCEventListener
       IMCParticle part = new IMCParticle();
 
       part.setPDG(1234);
-      part.setParent((MCParticle) colVec.getElementAt(0));
+      ((IMCParticle) colVec.getElementAt(0)).addDaughter(part);
 
       colVec.add(part);
       evt.addCollection(calVec, "HCALReco");

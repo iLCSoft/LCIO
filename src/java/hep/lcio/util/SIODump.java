@@ -15,7 +15,6 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
-
 /**
  *
  * @author tonyj
@@ -32,6 +31,7 @@ public class SIODump
    private int nWarnings = 0;
    private List output = new LinkedList();
    private int global = 0;
+   private Set versionAlreadyWarned = new HashSet();
    /**
     * @param args the command line arguments
     */
@@ -129,20 +129,36 @@ public class SIODump
       String version = block.getMajorVersion()+"."+block.getMinorVersion();
       dump(2,"   Block: "+blockName+" (v"+version+")");
       String expectedVersion = root.getAttributeValue("major")+"."+root.getAttributeValue("minor");
-      if (!version.equals(expectedVersion)) warn("For block "+blockName+" expected v"+expectedVersion+" got v"+version);
+      String key = blockName+":"+version;
+      if (!version.equals(expectedVersion) && !versionAlreadyWarned.contains(key)) 
+      {
+         warn("For block "+blockName+" expected v"+expectedVersion+" got v"+version);
+         versionAlreadyWarned.add(key);
+      }
       Map values = new HashMap();
+      values.put("major", new Integer(block.getMajorVersion()));
+      values.put("minor", new Integer(block.getMinorVersion()));
       SIOInputStream data = block.getData();
       dumpValues(data,root,"      ",values);
       if (data.available() != 0) warn(data.available()+" unread bytes in block "+blockName);
    }
    private void dumpValues(SIOInputStream data, Element root, String indent, Map values) throws IOException, JDOMException
    {
+      dumpValues(data,root,indent, values,false);
+   }
+   private void dumpValues(SIOInputStream data, Element root, String indent, Map values, boolean skip) throws IOException, JDOMException
+   {
       Iterator it = root.getChildren().iterator();
       while (it.hasNext())
       {
          Element node = (Element) it.next();
          String nodeName = node.getName();
-         if (nodeName.equals("data"))
+         if (nodeName.equals("else"))
+         {
+            skip = !skip;
+         }
+         else if (skip) { }
+         else if (nodeName.equals("data"))
          {
             String type = node.getAttributeValue("type");
             String name = node.getAttributeValue("name");
@@ -168,7 +184,7 @@ public class SIODump
          {
             String condition = node.getAttributeValue("condition");
             boolean booleanCondition = evaluateBoolean(condition,values,node);
-            if (booleanCondition) dumpValues(data,node,indent,values);
+            dumpValues(data,node,indent,values,!booleanCondition);
          }
          else warn("Ignoring element: "+node.getName());
       }

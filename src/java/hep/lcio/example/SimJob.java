@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.11 2003-09-15 21:49:52 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.12 2003-11-08 03:08:50 tonyj Exp $
  */
 public class SimJob
 {
@@ -71,14 +71,7 @@ public class SimJob
                IMCParticle mcp = new IMCParticle();
 
                mcp.setPDG(101 + (j * 100));
-               if (mom != null)
-               {
-                  mcp.setParent(mom);
-
-                  MCParticle[] daughters = new MCParticle[1];
-                  daughters[0] = mcp;
-                  mom.setDaughters(daughters);
-               }
+               if (mom != null) mom.addDaughter(mcp);
 
                float[] p = { 2.f / 1024.f, 4.f / 1024.f, 8.f / 1024.f };
                mcp.setMomentum(p);
@@ -100,7 +93,8 @@ public class SimJob
             {
                ISimCalorimeterHit hit = new ISimCalorimeterHit();
                hit.setEnergy(3.1415f * random.nextFloat());
-
+               hit.setCellID0(random.nextInt());
+               
                float[] pos = 
                {
                   1.1f * random.nextFloat(), 2.2f * random.nextFloat(),

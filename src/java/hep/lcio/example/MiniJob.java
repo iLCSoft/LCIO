@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: MiniJob.java,v 1.4 2003-09-04 04:26:59 tonyj Exp $
+ * @version $Id: MiniJob.java,v 1.5 2003-11-08 03:08:50 tonyj Exp $
  */
 public class MiniJob
 {
@@ -81,7 +81,7 @@ public class MiniJob
                IMCParticle mcp = new IMCParticle();
 
                mcp.setPDG(101 + (j * 100));
-               mcp.setParent(mom);
+               mom.addDaughter(mcp);
 
                float[] p = { 2.f * 1024.f, 4.f * 1024.f, 8.f * 1024.f };
                mcp.setMomentum(p);

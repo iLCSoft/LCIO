@@ -18,15 +18,16 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimCalorimeterHit.java,v 1.7 2003-09-16 09:50:21 gaede Exp $
+ * @version $Id: SIOSimCalorimeterHit.java,v 1.8 2003-11-08 03:08:51 tonyj Exp $
  */
 class SIOSimCalorimeterHit extends ISimCalorimeterHit
 {
-   SIOSimCalorimeterHit(SIOInputStream in, int flags, SIOEvent owner) throws IOException
+   SIOSimCalorimeterHit(SIOInputStream in, int flags, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
       cellId0 = in.readInt();
-      cellId1 = in.readInt();
+      if ((flags & LCIO.CHBIT_ID1) != 0 || minor == 8)  cellId1 = in.readInt();
+      else cellId1 = 0;
       energy = in.readFloat();
 
       if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
@@ -51,7 +52,6 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             pdg[i] = in.readInt();
       }
-      //      in.readPTag(this);
    }
 
    public MCParticle getParticleCont(int i)
@@ -68,7 +68,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       else
       {
          out.writeInt(hit.getCellID0());
-         out.writeInt(hit.getCellID1());
+         if ((flags & LCIO.CHBIT_ID1) != 0) out.writeInt(hit.getCellID1());
          out.writeFloat(hit.getEnergy());
 
          if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
@@ -90,14 +90,13 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
             if (hasPDG)
                out.writeInt(hit.getPDGCont(i));
          }
-	 //         out.writePTag(hit);
       }
    }
 
    private void write(SIOOutputStream out, int flags) throws IOException
    {
       out.writeInt(cellId0);
-      out.writeInt(cellId1);
+      if ((flags & LCIO.CHBIT_ID1) != 0) out.writeInt(cellId1);
       out.writeFloat(energy);
 
       if ((flags & (1 << LCIO.CHBIT_LONG)) != 0)
@@ -117,6 +116,5 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG)
             out.writeInt(pdg[i]);
       }
-      //      out.writePTag(this);
    }
 }
