@@ -4,31 +4,45 @@
 #
 # @author Frank Gaede
 # @date   Feb 11,2003
+# @mod    Sep  4,2003  (Harald Vogt)
 ######################################################
-SIOINSTALL = $(LCIOBASE)/sio
 
 #LCIOBASE = /afs/desy.de/user/g/gaede/lcio/devel/lcio-v00-01/
 LCIOBASE = $(LCIO)
+SIOINSTALL = $(LCIOBASE)/sio
+
+# check the gcc compiler version if libfrtbegin.a has to be included
+COMPILER_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 )
+ifeq ($(COMPILER_VERSION),3)
+  FTN_START_LIB = -lfrtbegin
+endif
 
 CXX = g++ 
-F77 = g77
+FC = g77 -g
 
-#g++  -o anajob anajob.o -L ../../lib -llcio -L ../../sio/lib/  -lsio -lz -lg2c 
+BINDIR = $(LCIOBASE)/bin
+BINS := $(patsubst %.F,$(BINDIR)/%_F,$(wildcard *.F))
 
 INSTALL = $(LCIOBASE)/lib
-BINDIR = $(LCIOBASE)/bin
-
-LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -llcio -lsio -lz -lg2c
-
-BINS := $(patsubst %.f,$(BINDIR)/%_f,$(wildcard *.f))
+LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -llcio -lsio -lz -lg2c $(FTN_START_LIB)
 
 
 bin: $(BINS)
+
 
 clean:
 	rm -f $(BINS) *.o
 
 
-$(BINDIR)/anajob_f: anajob.o $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/anajob_f anajob.o  $(LIBS) 
+$(BINDIR)/anajob_F: anajob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/anajob_F anajob.o  $(LIBS)
+
+$(BINDIR)/pyanajob_F: pyanajob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/pyanajob_F pyanajob.o  $(LIBS)
+
+$(BINDIR)/pysimjob_F: pysimjob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/pysimjob_F pysimjob.o  $(LIBS)
+
+$(BINDIR)/test_F: test.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/test_F test.o  $(LIBS)
 

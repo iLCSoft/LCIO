@@ -1,0 +1,122 @@
+
+==========================================================================
+This directory contains examples for the Fortran interface to LCIO
+
+anajob.F:
+a simple program to read a file 'simjob.slcio' written by simjob.cc
+(in $LCIO/src/cpp/src/EXAMPLE)
+
+pysimjob.F:
+a probram to handle input written by lcwrite which writes the content
+of the HEPEVT common to an output file.
+The file is read into the HEPEVT common and its content is written
+to a LCIO output file 'pysimjob.slcio' .
+The file is closed an read again using the utility 'levtdumpevent'
+(in $LCIO/src/cpp/src/IMPL/LCTOOLS.cc) to dump the LCIO content.
+
+pyanajob.F
+a probram which analyzes the LCIO output file of pysimjob.F
+assuming that the LCIO file 'pysimjob.slcio' exists.
+
+There are also 2 scripts in $LCIO/bin to support the programs
+of this directory.
+
+pythiahepevt.sh:
+a bourne shell script to run a PYTHIA job that creates
+an output file 'pythia.data' using lcwrite and a lof file 'pythiahepevt.log'
+which lists the common HEPEVT content of generated events.
+Remarks:
+lcwrite is modified to include charge information of the generated
+MC particles but the output structure is still consistent with
+the "standard" lcwrite routine.
+pythiahepevt.sh requires the cernlib 2002 or newer given by the environment
+variable CERN_ROOT (default: /cern/pro)
+
+runPysimjob.sh:
+a script to run the pysimjob_F executable
+
+==========================================================================
+
+The Fortran LCIO interface:
+===========================
+
+This interface is preliminary and has to be extended.
+
+Access methods (Fortran functions) to the LCIO data entinities are provided
+to enable access to all attributes of a class in DATA namespace by one call but
+for LCObject vector collections seperate access methods are available
+(except for ActiveSubdetectors in LCRunHeader).
+How to use them is shown in the fortran programs of this directory.
+
+Common areas for the Fortran StdHep interface to LCIO used herein (.inc files) and in
+$LCIO/src/cpp/include/CPPFORT (.h files)
+COMMON /HEPEVT/  NEVHEP, NHEP, ISTHEP, IDHEP, JMOHEP, JDAHEP, PHEP, VHEP (-> hepevt.inc) (-> hepevt.h)
+COMMON /HEPEVT1/ MCPOINTERV, CHHEP                                       (-> hepevt1.inc) (-> hepevt1.h)
+
+Methods for the Fortran interface to LCIO (name starting with p means pointer to):
+
+class LCReader:
+LCCreateReader         -> preader = lccreatereader()
+LCDeleteReader         -> status  = lcdeletereader( preader )
+LCReaderOpen           -> status  = lcreaderopen( preader , filename )
+LCReaderClose          -> status  = lcreaderclose( preader )
+
+class LCWriter:
+LCCreateWriter         -> pwriter = lccreatewriter()
+LCDeleteWriter         -> status  = lcdeletewriter( pwriter )
+LCWriterOpen           -> status  = lcwriteropen( pwriter , filename )
+LCWriterClose          -> status  = lcwriterclose( pwriter )
+
+class LCRunHeader:
+LCWriteRunHeader       -> status  = lcwriterunheader( pwriter ,  irun , detname , descript , subdv , nsubd , chlensubd )
+LCReadNextRunHeader    -> pheader = lcreadnextrunheader( preader , irun , detname , descript , subdv , nsubd , chlensubd )
+
+class LCEvent:      
+LCCreateEvent          -> pevent  = lccreateevent()
+LCDeleteEvent          -> status  = lcdeleteevent( pevent )
+LCSetEventHeader       -> status  = lcseteventheader ( pevent , irun , ievt , itim ,detname )
+LCAddCollection        -> status  = lcaddcollection( pevent , pcolvec , colname )
+LCWriteEvent           -> status  = lcwriteevent( pwriter , pevent )
+LCReadNextEvent        -> pevent  = lcreadnextevent( preader )
+LCGetEventHeader       -> status  = lcgeteventheader ( pevent , irun , ievt , itim , detname )
+LCGetCollection        -> pcol    = lcgetcollection( pevent , colname )
+LCDumpEvent            -> status  = lcdumpevent ( pevent )
+LCDumpEventDetailed    -> status  = lcdumpeventdetailed ( pevent )
+
+lcgetcollectionnames
+
+class LCCollection:
+LCCreateCollectionVec  -> pcolvec = lccreatecollectionvec( typename )
+LCAddElement           -> status  = lcaddelement ( pcol, pobject )
+LCGetElement           -> pobject = lcgetelement ( pcol , nelem )
+LCGetNumberOfElements  -> nelem   = lcgetnumberofelements ( pcol )
+LCGetTypeName          -> name    = lcgettypename ( pcol )
+LCGetName              -> name    = lcgetname ( typename )
+
+Accepted LCCollection typenames are defined in ./src/IMPL/LCIO.cc :
+const char* LCIO::MCPARTICLE = "MCParticle" ;
+const char* LCIO::SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+const char* LCIO::CALORIMETERHIT = "CalorimeterHit" ;
+const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
+const char* LCIO::TPCHIT = "TPCHit" ;
+const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
+const char* LCIO::LCINTVEC = "LCIntVec" ;
+
+class SimTrackerHit:
+LCSetSimTrackerHit     -> status  = lcsetsimtrackerhit( pcolhitt , cellid , posv , dedx , time , pmcp )
+LCGetSimTrackerHit     -> status  = lcgetsimtrackerhit( pcolhitt , i , cellid , posv , dedx , time , pmcp )
+
+class SimCalorimeterHit:
+LCSetSimCaloHit        -> phit    = lcsetsimcalohit( cellid0 , cellid1 , energy , posv )
+LCSetSimCaloHitCmcp    -> status  = lcsetsimcalohitcmcp (phit , pmcp , energy , time , pdg )
+LCGetSimCaloHit        -> phit    = lcgetsimcalohit( pcol , i , cellid0 , cellid1, energy , posv )
+LCGetSimCaloHitNmcp    -> number  = lcgetsimcalohitnmcp( phit )
+LCGetSimCaloHitCmcp    -> status  = lcgetsimcalohitcmpc ( phit , i , pmcp , energy , time , pdg )
+
+class MCParticle:
+LCGetMCParticleCont    -> status  = lcgetmcparticlecont ( pdg , hepevtst , pvtxv , momv , mass , ndaughters )
+
+!!!!!!!! Fortran interface  to COMMON /HEPEVT/ !!!!!!!!!!!
+LCSetHepEvt            -> status  = lcsethepevt( pevent )
+LCGetHepEvt            -> status  = lcgethepevt( pevent )
+    
