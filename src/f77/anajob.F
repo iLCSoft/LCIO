@@ -18,77 +18,113 @@
       PTRTYPE reader, event, runhdr, detnames 
       PTRTYPE pcolnamev, pcol, pobject
       
+      integer nargs, nFiles, nEvents
       integer status, irun, ievent
       integer i, k, ii, nactdet, ncolname
-      character*80 detname
+      character*80 detname, descr
 
-      character*40 colname, colnamev(20)
+      character*40 colname, colnamev(20), filenames(20)
       character*40 colname1, colname2
       integer nintv, nfloatv, nelem, ncolnames
       integer intv(10)
       real    floatv(10)
 
+
+c---- read file names from command line (only argument)
+      nargs = iargc()
+      if (nargs .lt. 1)  then
+        print *, ' usage:  anajob <input-file1> [[input-file2],...]'
+        stop
+      else if (nargs .gt. 20)  then
+        print *, ' usage: more than max = 20 file names given'
+        stop
+      end if
+      do  i = 1, nargs
+        call getarg (i, filenames(i))
+      end do
+      nFiles = nargs
+
       reader = lcrdrcreate()
-c      write(*,*) " created reader at " , reader
+
+c---- first we read the run information
+
+c---- for reading from one file only use sth. like:
+c---- filename = 'recjob.slcio'
+c---- status = lcrdropen( reader, filename )
+      status = lcrdropenchain( reader, filenames(1), nFiles,
+     &           len(filenames(1)) )
       
-      status = lcrdropen( reader, 'simjob.slcio' )
-      
-      if( status.eq.LCIO_ERROR) then
-         write(*,*) " could not open file simjob.slcio "
-         write(*,*) " first one has to run simjob (c++ executable) "
-         goto 99
+      if( status .eq. LCIO_ERROR ) then
+         write(*,*) ' could not open files '
+         stop
       else
-         write(*,*) " opened file simjob.slcio "
+         write(*,*) 'will open and read from files: '
+         write(*,'(5x,a)')
+     &              ( filenames(i)(1:lnblnk(filenames(i)) ),i=1,nFiles)
       endif
       
 
-c---- first loop over runs and print information
-      do  k = 1,10000
-         runhdr = lcrdrreadnextrunheader( reader, LCIO_READ_ONLY )
-         if( runhdr.eq.0 ) goto 9
+c---- loop over all run headers
+    1 continue
+      runhdr = lcrdrreadnextrunheader( reader, LCIO_READ_ONLY )
+      if( runhdr .eq. 0 )  go to 10
          
-         write(*,*) "  Run : ",lcrhdgetrunnumber( runHdr )
-     $        ,lcrhdgetdetectorname( runHdr )
-     $        ,lcrhdgetdescription( runHdr )
+      detname = lcrhdgetdetectorname( runHdr )
+      descr   = lcrhdgetdescription( runHdr )
+      write(*,'(a,i2,4a)') '  Run : ', lcrhdgetrunnumber( runHdr ),
+     &                     ' - ', detname(1:lnblnk(detname)),
+     &                     ':  ', descr(1:lnblnk(descr))
          
-         write(*,*) " active subdetectors : "
-         detnames = lcrhdgetactivesubdetectors( runHdr ) 
-         nactdet = lcsvcgetlength( detnames  ) 
-         do i=1,nactdet
-            write(*,*) lcsvcgetstringat( detnames, i ) 
-         enddo
-c---- check string vector access of extended f77api
-         ncolnames = 20
-         status    = lcgetstringvector
-     &               ( detnames, colnamev, ncolnames, len(colnamev(1)) )
-         write(*,*) 'testing lcgetstringvector'
-         write(*,*) 'subdetectors found: ', ncolnames
-         write(*,*) (colnamev(i),i=1,ncolnames)
+c---- this is additional compared to anajob.cc
+ccc      write(*,*) " active subdetectors : "
+ccc      detnames = lcrhdgetactivesubdetectors( runHdr )
+ccc      nactdet = lcsvcgetlength( detnames  )
+ccc      do i=1,nactdet
+ccc        write(*,*) lcsvcgetstringat( detnames, i )
+ccc      end do
+c---- check string vector access of extended f77api (additional compared to anajob.cc)
+ccc      ncolnames = 20
+ccc      status    = lcgetstringvector
+ccc     &               ( detnames, colnamev, ncolnames, len(colnamev(1)) )
+ccc      write(*,*) 'testing lcgetstringvector'
+ccc      write(*,*) 'subdetectors found: ', ncolnames
+ccc      write(*,*) (colnamev(i),i=1,ncolnames)
 
-      enddo
- 9    continue
+        go  to  1
+
+   10 continue
 
       status = lcrdrclose( reader ) 
 
-      write(*,*) "-----------------------------------------------------"
-      status = lcrdropen( reader, 'simjob.slcio' )
-      
-      if( status.eq.0) then
-         write(*,*) " could not reopen file simjob.slcio "
-         goto 99
+c---- now loop over the file(s) again and dump event data
+
+      status = lcrdropenchain( reader, filenames(1), nFiles,
+     &           len(filenames(1)) )
+      write(*,*)
+      if ( status .eq. 0 ) then
+        write(*,*) " could not reopen files "
+        stop
       else
-         write(*,*) " reopened file simjob.slcio "
+         write(*,*) 'will reopen and read from files: '
+         write(*,'(5x,a)')
+     &              ( filenames(i)(1:lnblnk(filenames(i)) ),i=1,nFiles)
       endif
 
+      nEvents = 0
 
-c     ---- event loop ------
-      do k = 1,10000
-         
-         event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
-         if( event.eq.0 ) goto 11 
+c---- ---- event loop ------
+   20 continue
+      event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
+      if( event .eq. 0 )  go to 30
 
+      status = lcdumpevent( event )
+      nEvents = nEvents + 1
+        go  to  20
+
+c----    the following is scipped but may be used for methods tests
 c        print only 1st event
-         if (k .ne. 1)   go to 10
+
+         if (k .ne. 1)   go to 110
 
 *        get collection names
          pcolnamev = lcevtgetcollectionnames( event )
@@ -130,16 +166,19 @@ c        check access to vectors (int, float)
      &              (intv(ii),ii=1,nintv)
          end do
 
-         status = lcdumpevent( event )
+  110    continue
 
- 10     enddo
- 11   continue
-c     ---- end event loop ------
+c---- -------- end of event loop -----------
+   30 continue
+      write(*,*)
+      write(*,*) '', nEvents, ' events read from files: '
+      write(*,'(5x,a)') 
+     &              ( filenames(i)(1:lnblnk(filenames(i)) ),i=1,nFiles)
+
 
 
       status = lcrdrclose( reader )
-      write(*,*) " closed file simjob.sio - status : " , status
+      status = lcrdrdelete( reader )
 
- 99   continue
       end
 
