@@ -2,11 +2,14 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcd.io.sio.SIORef;
 import hep.lcio.event.Track;
 import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
 import hep.lcio.implementation.event.ITrackerHit;
+import hep.lcio.test.LCIO;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,10 +17,12 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.8 2004-09-17 06:30:38 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.9 2004-09-24 13:21:23 tonyj Exp $
  */
 class SIOTrack extends ITrack
 {
+   private List tempHits;
+   private List tempTracks;
    SIOTrack(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
       int typeWord = in.readInt();
@@ -47,17 +52,20 @@ class SIOTrack extends ITrack
       }
       setSubdetectorHitNumbers(hitNumbers) ;
       int nTracks = in.readInt();
+      tempTracks = new ArrayList(nTracks);
+      tracks = null;
       for (int i=0; i<nTracks; i++)
       {
-         addTrack( (ITrack) in.readPntr().getObject() ) ;
+         tempTracks.add(in.readPntr());
       }
-      if ((flag & 1<<31) != 0)
+      if (bitTest(flag,LCIO.TRBIT_HITS))
       {
          int nHits = in.readInt();
-         for (int i = 0; i < nHits ; i++)
+         tempHits = new ArrayList(nHits);
+         hits = null;
+         for (int i = 0; i < nHits; i++)
          {
-            addHit( (ITrackerHit) in.readPntr().getObject() ) ;
-            
+            tempHits.add(in.readPntr());
          }
       }
       
@@ -98,9 +106,10 @@ class SIOTrack extends ITrack
          {
             out.writePntr( (Track) iter.next() );
          }
-         if( (flag & 1<<31) != 0 )
+         if(bitTest(flag,LCIO.TRBIT_HITS))
          {
-            List hits = track.getTrackerHits() ;
+            List hits = track.getTrackerHits();
+            out.writeInt(hits.size());
             for (Iterator iter = hits.iterator(); iter.hasNext();)
             {
                out.writePntr( (TrackerHit) iter.next() ) ;
@@ -136,13 +145,42 @@ class SIOTrack extends ITrack
       {
          out.writePntr( (Track) iter.next() );
       }
-      if( (flag & 1<<31) != 0 )
+      if(bitTest(flag,LCIO.TRBIT_HITS))
       {
+         out.writeInt(hits.size());
          for (Iterator iter = hits.iterator(); iter.hasNext();)
          {
-            out.writePntr( (TrackerHit) iter.next() ) ;
+            out.writePntr(iter.next());
          }
       }
       out.writePTag(this);
    }
+   
+   public List getTrackerHits()
+   {
+      if (hits == null && tempHits != null)
+      {
+         hits = new ArrayList(tempHits.size());
+         for (Iterator i = tempHits.iterator(); i.hasNext();)
+         {
+            hits.add(((SIORef) i.next()).getObject());
+         }
+         tempHits = null;
+      }
+      return super.getTrackerHits();
+   }
+   
+   public List getTracks()
+   {
+      if (tracks == null && tempTracks != null)
+      {
+         tracks = new ArrayList(tempTracks.size());
+         for (Iterator i = tempTracks.iterator(); i.hasNext();)
+         {
+            tracks.add(((SIORef) i.next()).getObject());
+         }
+         tempTracks = null;
+      }
+      return super.getTracks();
+   } 
 }

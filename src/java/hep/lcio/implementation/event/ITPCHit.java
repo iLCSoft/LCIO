@@ -6,7 +6,7 @@ import hep.lcio.event.TPCHit;
 /**
  * A default implementation of TPCHit
  * @author Frank Gaede
- * @version $Id: ITPCHit.java,v 1.3 2004-09-24 10:39:30 tonyj Exp $
+ * @version $Id: ITPCHit.java,v 1.4 2004-09-24 13:21:22 tonyj Exp $
  */
 public class ITPCHit extends ILCObject implements TPCHit
 {
@@ -14,7 +14,7 @@ public class ITPCHit extends ILCObject implements TPCHit
    protected float time;
    protected float charge;
    protected int quality;
-   protected int[] rawDataArray ;
+   protected int[] rawDataArray;
    
    public void setCellID(int cellID)
    {
@@ -60,7 +60,7 @@ public class ITPCHit extends ILCObject implements TPCHit
    
    public int getNRawDataWords()
    {
-      return rawDataArray.length ;
+      return rawDataArray == null ? 0 : rawDataArray.length ;
    }
    
    public void setRawDataWords(int rawData[])

@@ -3,6 +3,7 @@ package hep.lcio.test;
 import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
+import hep.lcio.event.LCObject;
 import hep.lcio.implementation.event.*;
 import hep.lcio.implementation.io.LCFactory;
 import hep.lcio.io.ILCFactory;
@@ -15,8 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -30,7 +33,7 @@ public class RandomEvent extends ILCEvent
    public RandomEvent()
    {
       randomize(this);
-      addCollection(LCIO.TRACK,ITrack.class);
+      addCollection(LCIO.TRACK,ITrack.class,1<<LCIO.TRBIT_HITS);
       addCollection(LCIO.CLUSTER,ICluster.class);
       addCollection(LCIO.RECONSTRUCTEDPARTICLE,IReconstructedParticle.class);
       addCollection(LCIO.CALORIMETERHIT,ICalorimeterHit.class,1<<LCIO.RCHBIT_ID1 | 1<<LCIO.RCHBIT_LONG | 1<<LCIO.RCHBIT_TIME);
@@ -44,6 +47,55 @@ public class RandomEvent extends ILCEvent
       addCollection(LCIO.SIMCALORIMETERHIT,ISimCalorimeterHit.class,1<<LCIO.CHBIT_ID1 | 1<<LCIO.CHBIT_LONG);
       addCollection(LCIO.SIMTRACKERHIT,ISimTrackerHit.class);
       addCollection(LCIO.TRACKERHIT,ITrackerHit.class);
+      addCollection(LCIO.TPCHIT,ITPCHit.class);
+      
+      // Put in some links between objects, has to be done by hand for now
+      LCCollection collection = this.getCollection(LCIO.TRACKERHIT);
+      LCCollection target = this.getCollection(LCIO.TPCHIT);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         List l = new ArrayList();
+         for (int ii=0; ii<5; ii++)
+         {
+            l.add(target.get(r.nextInt(target.size())));
+         }
+         ITrackerHit hit = (ITrackerHit) i.next();
+         hit.setRawHits(l);
+      }
+      
+      collection = this.getCollection(LCIO.CALORIMETERHIT);
+      target = this.getCollection(LCIO.RAWCALORIMETERHIT);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         ICalorimeterHit hit = (ICalorimeterHit) i.next();
+         hit.setRawHit((LCObject) target.get(r.nextInt(target.size())));
+      }
+      
+      collection = this.getCollection(LCIO.TRACK);
+      target = this.getCollection(LCIO.TRACKERHIT);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         List l = new ArrayList();
+         for (int ii=0; ii<5; ii++)
+         {
+            l.add(target.get(r.nextInt(target.size())));
+         }
+         ITrack track = (ITrack) i.next();
+         track.setTrackerHits(l);
+      }
+      
+      collection = this.getCollection(LCIO.CLUSTER);
+      target = this.getCollection(LCIO.CALORIMETERHIT);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         List l = new ArrayList();
+         for (int ii=0; ii<5; ii++)
+         {
+            l.add(target.get(r.nextInt(target.size())));
+         }
+         ICluster cluster = (ICluster) i.next();
+         cluster.setCalorimeterHits(l);
+      }
    }
    private void addCollection(String type, Class klass)
    {
@@ -67,7 +119,7 @@ public class RandomEvent extends ILCEvent
             throw new RuntimeException("Could not create new instance of "+klass,t);
          }
       }
-      this.addCollection(collection, "Test"+type);
+      this.addCollection(collection, type);
    }
    private static void randomize(Object obj)
    {
@@ -87,7 +139,7 @@ public class RandomEvent extends ILCEvent
                if (type == double.class)  args[0] = new Double(r.nextDouble());
                if (type == long.class)    args[0] = new Long(r.nextLong());
                if (type == boolean.class) args[0] = r.nextDouble() >= .5 ? Boolean.TRUE : Boolean.FALSE;
-               if (type == String.class)  args[0] = gobledygook();
+               if (type == String.class)  args[0] = gobbledygook();
             }
             if (args[0] != null) m.invoke(obj,args);
          }
@@ -171,10 +223,10 @@ public class RandomEvent extends ILCEvent
       }
       catch (Throwable t)
       {
-         throw new RuntimeException("Could not compare "+o1.getClass()+" "+o2.getClass(),t);
+         throw new RuntimeException("Could not compare "+o1+" "+o2,t);
       }
    }
-   private static String gobledygook()
+   private static String gobbledygook()
    {
       StringBuffer buffer = new StringBuffer(10);
       for (int i=0; i<10; i++) buffer.append((char) ('a'+r.nextInt(26)));

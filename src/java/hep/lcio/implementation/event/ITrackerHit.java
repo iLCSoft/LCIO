@@ -7,7 +7,7 @@ import hep.lcio.event.TrackerHit;
 
 /**
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.7 2004-09-15 13:29:10 gaede Exp $
+ * @version $Id: ITrackerHit.java,v 1.8 2004-09-24 13:21:22 tonyj Exp $
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
@@ -75,8 +75,15 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    }
    
 
-   public List getRawHits() {
+   public List getRawHits() 
+   {
      return rawHits ;
+   }
+   
+   public void setRawHits(List rawHits)
+   {
+      checkAccess();
+      this.rawHits = rawHits; 
    }
 
 }

@@ -2,6 +2,7 @@ package hep.lcio.implementation.sio;
 
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcd.io.sio.SIORef;
 import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.implementation.event.ICluster;
@@ -13,10 +14,13 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.13 2004-09-24 10:39:32 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.14 2004-09-24 13:21:23 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
+   private List tempHits;
+   private List tempClusters;
+   
    SIOCluster(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
       type = in.readInt();
@@ -27,19 +31,19 @@ class SIOCluster extends ICluster
       for (int i=0; i<6; i++) positionError[i] = in.readFloat();
       theta = in.readFloat();
       phi = in.readFloat();
-      directionError = new float[3] ;
+      directionError = new float[3];
       for (int i=0; i<3; i++) directionError[i] = in.readFloat();
       
-      int nShape ;
+      int nShape;
       if( 1000*major+minor > 1002)
       {
-         nShape = in.readInt() ;
+         nShape = in.readInt();
       }
       else
       {
-         nShape = 6 ;
+         nShape = 6;
       }
-      shape = new float[nShape] ;
+      shape = new float[nShape];
       for (int i = 0; i < nShape; i++)
       {
          shape[i] = in.readFloat();
@@ -65,19 +69,21 @@ class SIOCluster extends ICluster
       }
          
       int nClust = in.readInt();
-      this.clusters = new ArrayList(nClust);
+      tempClusters = new ArrayList(nClust);
+      clusters = null;
       for (int i =0 ; i<nClust ; i++ )
       {
-         clusters.add(in.readPntr());
+         tempClusters.add(in.readPntr());
       }
       if ((flag & (1<<31)) != 0)
       {
          int n = in.readInt();
-         this.calorimeterHits = new ArrayList(n);
+         tempHits = new ArrayList(n);
+         calorimeterHits = null;
          this.hitContributions = new float[n];
          for (int i=0; i<n; i++)
          {
-            calorimeterHits.add(in.readPntr());
+            tempHits.add(in.readPntr());
             hitContributions[i] = in.readFloat();
          }
       }
@@ -177,4 +183,33 @@ class SIOCluster extends ICluster
       out.writeFloatArray( subdetectorEnergies ) ;
       out.writePTag(this);
    }
+   
+   public List getClusters()
+   {
+      if (clusters == null && tempClusters != null)
+      {
+         clusters = new ArrayList(tempClusters.size());
+         for (Iterator i = tempClusters.iterator(); i.hasNext();)
+         {
+            clusters.add(((SIORef) i.next()).getObject());
+         }
+         tempClusters = null;
+      }
+      return super.getClusters();
+   }
+   
+   public List getCalorimeterHits()
+   {
+      if (calorimeterHits == null && tempHits != null)
+      {
+         calorimeterHits = new ArrayList(tempHits.size());
+         for (Iterator i = tempHits.iterator(); i.hasNext();)
+         {
+            calorimeterHits.add(((SIORef) i.next()).getObject());
+         }
+         tempHits = null;         
+      }
+      return super.getCalorimeterHits();
+   }
+   
 }

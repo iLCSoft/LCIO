@@ -3,6 +3,7 @@ package hep.lcio.implementation.sio;
 import hep.lcio.event.ParticleID;
 import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
+import hep.lcd.io.sio.SIORef;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.implementation.event.IReconstructedParticle;
 import java.io.IOException;
@@ -13,16 +14,19 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.3 2004-09-17 04:37:43 tonyj Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.4 2004-09-24 13:21:23 tonyj Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {
+   private List tempParticles;
+   private List tempTracks;
+   private List tempClusters;
    
    /** Creates a new instance of SIOReconstructedParticle */
    public SIOReconstructedParticle(SIOInputStream in, SIOEvent owner, int flag, int major, int minor) throws IOException
    {
       // Note, I have not bothered with supporting intermediate "beta" formats.
-      // This could be added later if necessarty.
+      // This could be added later if necessary.
       this.type = in.readInt();
       for (int i=0; i<3; i++) this.momentum[i] = in.readFloat();
       this.energy = in.readFloat();
@@ -41,22 +45,25 @@ class SIOReconstructedParticle extends IReconstructedParticle
       this.particleIDUsed = (ParticleID) in.readPntr().getObject();
       goodnessOfPID = in.readFloat();
       int nReco = in.readInt();
-      this.particles = new ArrayList(nReco);
+      tempParticles = new ArrayList(nReco);
+      this.particles = null;
       for (int i=0; i<nReco; i++)
       {
-         particles.add(in.readPntr());
+         tempParticles.add(in.readPntr());
       }
       int nTracks = in.readInt();
-      this.tracks = new ArrayList(nTracks);
+      tempTracks = new ArrayList(nTracks);
+      this.tracks = null;
       for (int i=0; i<nTracks; i++)
       {
-         tracks.add(in.readPntr());
+         tempTracks.add(in.readPntr());
       }
       int nClust = in.readInt();
-      this.clusters = new ArrayList(nClust);
+      tempClusters = new ArrayList(nClust);
+      this.clusters = null;
       for (int i=0; i<nClust; i++)
       {
-         clusters.add(in.readPntr());
+         tempClusters.add(in.readPntr());
       }
       in.readPTag(this);
    }
@@ -124,4 +131,47 @@ class SIOReconstructedParticle extends IReconstructedParticle
       for (Iterator i = clusters.iterator(); i.hasNext(); ) out.writePntr(i.next());
       out.writePTag(this);
    }
+   
+   public List getClusters()
+   {      
+      if (clusters == null && tempClusters != null)
+      {
+         clusters = new ArrayList(tempClusters.size());
+         for (Iterator i = tempClusters.iterator(); i.hasNext();)
+         {
+            clusters.add(((SIORef) i.next()).getObject());
+         }
+         tempClusters = null;
+      }
+      return super.getClusters();
+   }
+   
+   public List getTracks()
+   {
+      if (tracks == null && tempTracks != null)
+      {
+         tracks = new ArrayList(tempTracks.size());
+         for (Iterator i = tempTracks.iterator(); i.hasNext();)
+         {
+            tracks.add(((SIORef) i.next()).getObject());
+         }
+         tempTracks = null;
+      }
+      return super.getTracks();
+   }
+   
+   public List getParticles()
+   {
+      if (particles == null && tempParticles != null)
+      {
+         particles = new ArrayList(tempTracks.size());
+         for (Iterator i = tempParticles.iterator(); i.hasNext();)
+         {
+            particles.add(((SIORef) i.next()).getObject());
+         }
+         tempParticles = null;
+      }
+      return super.getParticles();
+   }
+   
 }

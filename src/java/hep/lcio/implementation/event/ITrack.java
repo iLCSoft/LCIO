@@ -198,15 +198,16 @@ public class ITrack extends ILCObject implements Track
       checkAccess();
       type = bitSet(type,bit,val);
    }  
-   public void addTrack(Track track)
+   public void setTracks(List tracks)
    {
-      tracks.add(track);
+      checkAccess();
+      this.tracks = tracks;
    }
    
-   public void addHit(TrackerHit hit)
+   public void setTrackerHits(List hits)
    {
-      hits.add(hit);
-      
+      checkAccess();
+      this.hits = hits;
    }
    
    public float getRadiusOfInnermostHit()

@@ -15,10 +15,11 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.17 2004-09-24 10:39:32 tonyj Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.18 2004-09-24 13:21:23 tonyj Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
+   private SIORef tempHit;
    SIOCalorimeterHit(SIOInputStream in, int flags, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
@@ -40,7 +41,8 @@ class SIOCalorimeterHit extends ICalorimeterHit
       if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2))
       {
          type = in.readInt() ;
-         rawHit =  (LCObject) ((SIORef) in.readPntr()).getObject();
+         tempHit = in.readPntr();
+         rawHit = null;
          
          // the logic has been reverted in v1.3 !
          if ( (flags & (1 << LCIO.RCHBIT_NO_PTR)) == 0 )  in.readPTag(this) ;
@@ -96,4 +98,15 @@ class SIOCalorimeterHit extends ICalorimeterHit
       if ((flags & (1 << LCIO.RCHBIT_NO_PTR)) == 0)
          out.writePTag(this) ;
    }
+   
+   public LCObject getRawHit()
+   {
+      if (rawHit == null && tempHit != null)
+      {
+         rawHit = (LCObject) tempHit.getObject();
+         tempHit = null;
+      }
+      return super.getRawHit();
+   }
+   
 }
