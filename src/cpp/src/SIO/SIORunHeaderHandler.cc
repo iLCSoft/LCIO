@@ -29,6 +29,7 @@ namespace SIO  {
 
 
   SIORunHeaderHandler::~SIORunHeaderHandler(){
+//     if (*_rhP != 0 )  delete *_rhP ;
   }
 
   

@@ -42,6 +42,11 @@ namespace SIO {
     SIO_recordManager::setVerbosity( SIO_SILENT ) ;
     SIO_blockManager::setVerbosity(  SIO_SILENT ) ;
 #endif
+//     SIO_streamManager::setVerbosity( SIO_ERRORS ) ;
+//     SIO_recordManager::setVerbosity( SIO_ERRORS ) ;
+//     SIO_blockManager::setVerbosity(  SIO_ERRORS ) ;
+
+
   
     //    evtP = new LCEvent* ;
 
@@ -51,15 +56,18 @@ namespace SIO {
 
   SIOWriter::~SIOWriter(){
 
-    typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-    for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
-      _evtRecord->disconnect( *ch );
-      delete *ch ;
-    }
-
-    delete _hdrHandler ;
-    delete _runHandler ;
-    //delete evtP ;
+//     // delete and disconnect all existing handlers (SIO_blocks)
+//     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
+//     for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+//       _evtRecord->disconnect( *ch );
+//       delete *ch ;
+//     }
+//     _runRecord->disconnect( _runHandler ) ;
+//     _hdrRecord->disconnect( _hdrHandler ) ;
+//     delete _hdrHandler ;
+//     delete _runHandler ;
+//     //delete evtP ;
+    SIO_blockManager::clear();
 
   }
 
@@ -128,29 +136,16 @@ namespace SIO {
       throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " 
 				      +  sioFilename ) ) ;
       
-//     // tell SIO the record names if not yet known 
-//     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
-//     _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
+     // tell SIO the record names if not yet known 
+     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
+     _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
 
-//     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
-//     _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
+     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
+     _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
 
-//     if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
-//     _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
+     if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
+     _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
 
-    if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) != 0 )
-      SIO_recordManager::remove( LCSIO::RUNRECORDNAME ) ;
-    _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
-
-    if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) != 0 )
-      SIO_recordManager::remove( LCSIO::HEADERRECORDNAME ) ;
-    _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
-
-    if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) !=0 ) 
-      SIO_recordManager::remove( LCSIO::EVENTRECORDNAME ) ;
-    _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
-
-    
 
     _hdrRecord->setCompress( LCSIO::COMPRESSION ) ;
     _evtRecord->setCompress( LCSIO::COMPRESSION ) ;
@@ -164,16 +159,21 @@ namespace SIO {
     // create a new handler for every new run 
     
     if( !_runHandler){
-      _runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+      _runHandler = dynamic_cast<SIORunHeaderHandler*> 
+	( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
+      
+      if( _runHandler == 0 ) 
+	_runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+      
       _runRecord->connect( _runHandler );
     }
     _runHandler->setRunHeader(  hdr ) ;
-
+    
     if( _stream->getState()== SIO_STATE_OPEN ){
       
       // write LCRunHeader record
       unsigned int status =  _stream->write( LCSIO::RUNRECORDNAME    ) ;
-   
+      
       if( !(status & 1)  )
 	throw IOException( std::string( "[SIOWriter::writeRunHeader] couldn't write run header to stream: "
 					+  *_stream->getName() ) ) ;
@@ -192,22 +192,25 @@ namespace SIO {
    */
   void SIOWriter::setUpHandlers(const LCEventData * evt){
   
-    // create SIOHandler for event 
-    // and connect it to the sio record
-
+    // connect handlers to the record
+    // create them if needed, i.e. they are not already in SIO_blockManager !
+    
     if( ! _hdrHandler ){
-      _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
+      _hdrHandler = dynamic_cast<SIOEventHandler*> 
+	( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
+      
+      if( ! _hdrHandler )
+	_hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
+      
       _hdrRecord->connect( _hdrHandler ) ;
     } 
 
-
-    // now create handlers for all collections in the event
-    // and connect them to the record
-    // disconnect and delete old block handlers first 
+    // disconnect old handlers from last event first 
     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
     for( CHI ch = _colVector.begin() ; ch !=  _colVector.end() ; ch++){
+
       _evtRecord->disconnect( *ch );
-      delete *ch ;
+
     }
     _colVector.clear() ;
     
@@ -215,15 +218,19 @@ namespace SIO {
     const std::vector<std::string>* strVec = evt->getCollectionNames() ;
     
     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-
-      const LCCollectionData* col = evt->getCollectionData( *name ) ;
-
-      SIOCollectionHandler* ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
       
-      ch->setCollection( col ) ; 
-
-      _colVector.push_back( ch ) ;  
+      
+      SIOCollectionHandler* ch = dynamic_cast<SIOCollectionHandler*> 
+	( SIO_blockManager::get( name->c_str() )  ) ;
+      
+      LCCollectionData* col = evt->getCollectionData( *name ) ;
+      
+      if( ch == 0 ) {
+	ch = new SIOCollectionHandler( *name, col->getTypeName() ) ;
+      }
       _evtRecord->connect( ch ) ;
+      _colVector.push_back( ch ) ;  
+      ch->setCollection( col ) ; 
     } 
     
   }
@@ -244,7 +251,7 @@ namespace SIO {
       // need to set the event in event header handler
       _hdrHandler->setEvent( evt ) ;
 
-      unsigned int status ;
+      unsigned int  status = 0  ;
 
       // write LCEventHeader record
       status =  _stream->write( LCSIO::HEADERRECORDNAME    ) ;

@@ -20,6 +20,8 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
+#include <algorithm>
 //#include <limits>
 
 using namespace EVENT ;
@@ -86,8 +88,13 @@ namespace SIO {
   }
 
   SIOReader::~SIOReader(){
+    
+    delete *_evtP ;
+    delete *_runP ;    
     delete _evtP ;
     delete _runP ;    
+
+    SIO_blockManager::clear() ;
   }
 
 
@@ -137,11 +144,18 @@ namespace SIO {
     if( (SIOWriter::_runRecord  = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) ==0 )
       SIOWriter::_runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;   
 
-    // create SIOHandlers for event and header and tell SIO about it
-    //    SIO_blockManager::add( new SIOEventHandler( LCSIO::EVENTBLOCKNAME, _evtP ) ) ;
-    SIO_blockManager::add( new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ) ;
-    SIO_blockManager::add( new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ) ;
 
+    SIORunHeaderHandler* rh   = dynamic_cast<SIORunHeaderHandler*> 
+      ( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
+    if( rh == 0 ) 
+      rh = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME, _runP ) ;
+
+    SIOEventHandler* eh  = dynamic_cast<SIOEventHandler*> 
+      ( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
+    if( eh == 0 ) 
+      eh = new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ;
+
+    
   }
 
 
@@ -213,41 +227,29 @@ namespace SIO {
     const std::vector<std::string>* strVec = (*_evtP)->getCollectionNames() ;
     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       
-      // remove any old handler of the same name  
-      // these handlers are static - so if we write at the same time (e.g. in a recojob)
-      // we remove the hanlders needed there ....
-      // this needs more thought ...
-      //SIO_blockManager::remove( name->c_str()  ) ;
-
       const LCCollection* col = (*_evtP)->getCollection( *name ) ;
 
-      // create a collection handler, using the default event to attach the data
-      // as the real event might not exist at the time the corresponding block is read
-      // (order of blocks in the SIO record is undefined) 
-      // collections have to be moved from the default event to the current event 
-      // after the LCEvent record has been read in total (see readRecord() )
-    //      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_defaultEvt   )  ;
 
-    //SIO_blockManager::add( ch  )  ; 
-      
       // check if block handler exists in manager
-      SIO_block* oldCH = SIO_blockManager::get( name->c_str() ) ;
-      if( oldCH != NULL) {
-	// remove and then delete old collection handler
-	//SIO_blockManager::remove( name->c_str()  ) ;
-	// the d'tor of SIo_block calls remove ....
-	delete oldCH ; 
-      }
+      SIOCollectionHandler* ch = dynamic_cast<SIOCollectionHandler*> 
+	( SIO_blockManager::get( name->c_str() )  ) ;
+      
+      // if not, create a new block handler
+      if( ch == 0 ) {
+	
+	// create collection handler for event
+	try{
+	  ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
+	  // calls   SIO_blockManager::add( ch )  in the c'tor !
+	}
+	catch(Exception& ex){   // unsuported type !
+	  delete ch ;
+	  ch =  0 ;
+	}
 
-      // create collection handler for event
-      SIOCollectionHandler* ch = 0 ;
-      try{
-	ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
-	SIO_blockManager::add( ch  )  ; 
-      }
-      catch(Exception& ex){
-	// unsuported type
-	delete ch ;
+      } else { // handler already exists
+	if( ch != 0 )
+	  ch->setEvent( _evtP ) ; 
       }
     }
   }

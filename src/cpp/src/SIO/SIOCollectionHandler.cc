@@ -5,7 +5,6 @@
 #include "EVENT/LCIO.h"
 
 #include "IOIMPL/LCCollectionIOVec.h"
-#include "IOIMPL/LCEventIOImpl.h" 
 
 #include "SIO/SIOHandlerMgr.h"
 #include "SIO/SIOObjectHandler.h"
@@ -32,30 +31,28 @@ namespace SIO {
     // here we need to get the handler for our type
     _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
     if( ! _myHandler ){
-      // FIXME - this is inconsistent - is this an exception or not ???
-      // don't print a warning - just ignore unknown types ....
-      //      std::cerr << "WARNING:  SIOCollectionHandler no handler for type : " 
-      //		<< _myType << std::endl ;
+      // throw an exception that is caught in the SIOReader 
       throw Exception("SIOCollectionHandler: unsuported type") ;
     }
-
+    //    std::cout << " creating SIOCollectionHandler " << _myType << std::endl ;
   }
 
   SIOCollectionHandler::~SIOCollectionHandler(){
+//     std::cout << " deleteing SIOCollectionHandler " << _myType << std::endl ;
   }
   
   void SIOCollectionHandler::setCollection(const LCCollectionData *col){
     _col = col ;
   } 
-  
+  void SIOCollectionHandler::setEvent(LCEventIOImpl**  anEvtP){
+    _evtP = anEvtP ;
+  }  
   
   unsigned int SIOCollectionHandler::xfer( SIO_stream* stream, SIO_operation op, 
 					   unsigned int versionID){
     
     // if we don't have a handler we don't do anything ...
     if( !_myHandler) {
-      //      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " 
-      //		<< _myType << std::endl ;
       return LCIO::SUCCESS ;
     }
     
@@ -91,21 +88,21 @@ namespace SIO {
       
     } else if( op == SIO_OP_WRITE ){ 
       
-      const LCCollectionData* vec = _col ;
+//       const LCCollectionData* vec = _col ;
       
-      if( vec  != 0 ){
+      if( _col  != 0 ){
 	
-	LCSIO_WRITE( stream, vec->getFlag()  ) ;
-	int nObj = vec->getNumberOfElements() ;
+	LCSIO_WRITE( stream, _col->getFlag()  ) ;
+	int nObj = _col->getNumberOfElements() ;
 	SIO_DATA( stream,  &nObj , 1  ) ;
 	
 	
 	//  now write all the objects :
 	for( int i=0 ; i< nObj ; i ++ ){
 	  
-	  const LCObject* obj = vec->getElementAt(i)  ;
+	  const LCObject* obj = _col->getElementAt(i)  ;
 	  
-	  status  =  _myHandler->write( stream , obj , vec->getFlag() ) ; 
+	  status  =  _myHandler->write( stream , obj , _col->getFlag() ) ; 
 	  if( !( status & 1 ) ) return status ;
 	  
 	}

@@ -10,7 +10,6 @@
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 
-
 class SIO_record ;
 class SIO_stream ;    
 

@@ -44,6 +44,7 @@ namespace SIO {
     virtual unsigned int   version() ;
     
     void setCollection(const DATA::LCCollectionData *col) ; 
+    void setEvent(IOIMPL::LCEventIOImpl**  anEvtP) ; 
     
     
   private: 

@@ -29,6 +29,7 @@ namespace SIO  {
 
 
   SIOEventHandler::~SIOEventHandler(){
+//     if (*_evtP )  delete *_evtP ; 
   }
 
   

@@ -151,7 +151,7 @@ namespace SIO{
       SIO_PNTR( stream , &(clusters[i]) ) ;
     }
 
-    if( LCFlagImpl(flag).bitSet( LCIO::TRBIT_HITS ) ){ 
+    if( LCFlagImpl(flag).bitSet( LCIO::CLBIT_HITS ) ){ 
       const StringVec colNames = cluster->getHitCollectionNames() ;
       int nHitCol =  colNames.size() ;
       SIO_DATA( stream, &nHitCol , 1  ) ;
