@@ -43,11 +43,9 @@
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
             <data type="ptag" name="this"></data>
-            <data type="pntr" name="parent"></data>
-	    <data type="pntr" name="secondParent"></data>
-	    <data type="int" name="nDaughter"></data>
-	    <repeat count="nDaughter">
-	       <data type="pntr" name="daughter"></data>
+	    <data type="int" name="nParent"></data>
+	    <repeat count="nParent">
+	       <data type="pntr" name="parent"></data>
 	    </repeat>   
             <data type="int" name="PDG"></data>
             <data type="int" name="hepEvtStatus">
@@ -62,9 +60,9 @@
             <data type="float[3]" name="momentum">Momentum at production vertex</data>
             <data type="float" name="mass"></data>
             <data type="float" name="charge"></data>
-            <if condition="nDaughter==0">
+            <!-- if condition="nDaughter==0">
                <data type="double[3]" name="endpoint"/>
-            </if>
+            </if -->
          </repeat>
       </block>
       <block name="SimTrackerHit" major="0" minor="8">

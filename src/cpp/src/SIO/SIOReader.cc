@@ -4,6 +4,7 @@
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h"
 #include "SIO/SIORunHeaderHandler.h"
+#include "SIO/SIOParticleHandler.h"
 
 #include "EVENT/LCIO.h"
 
@@ -257,6 +258,9 @@ namespace SIO {
       // set the proper acces mode before returning the event
       (*_evtP)->setAccessMode( accessMode ) ;
       
+      // restore the daughter relations from the parent relations
+      SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+      
       return *_evtP ;      
     }
   }
@@ -314,6 +318,9 @@ namespace SIO {
       // (*_evtP)->setAccessMode( accessMode ) ;
       (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
       
+      // restore the daughter relations from the parent relations
+      SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+
       return *_evtP ;      
     }
 
@@ -406,6 +413,8 @@ namespace SIO {
 	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
 	while( iter != _evtListeners.end() ){
 
+	  // restore the daughter relations from the parent relations
+	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
 	  
 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
 	  (*iter)->processEvent( *_evtP ) ;

@@ -41,7 +41,7 @@ char* lccolgettypename( PTRTYPE collection ){
 
 PTRTYPE lccolgetelementat( PTRTYPE collection, int index ){
   LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
-  return  reinterpret_cast<PTRTYPE>( col->getElementAt( index - 1 ) ) ;
+  return  reinterpret_cast<PTRTYPE>( col->getElementAt( index - 1 )  ) ;
 }
 
 int lccolgetflag(PTRTYPE collection){

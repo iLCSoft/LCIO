@@ -78,7 +78,7 @@ c     ---- event loop ------
 c     --------- use only final state particles
                   if( (lcmcpgetnumberofdaughters( mcp ).eq.0).and.
      $                 ( lcmcpgetpdg( mcp).gt.100 ).and.
-     $                 ( lcmcpgetparent( mcp ).ne.0) ) then
+     $                 ( lcmcpgetnumberofparents( mcp ).ne.0) ) then
                      continue
                   else
                      goto 10

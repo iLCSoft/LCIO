@@ -1,0 +1,19 @@
+
+
+To change the version of LCIO the following file have to be modified:
+
+
+config/lcio.properties
+  version=0.9
+  dist.version=v00-09
+
+src/aid/EVENT/LCIO.aid
+  static const int MAJORVERSION  = 9 ;
+  static const int MINORVERSION  = 9 ;
+
+  public static const int MAJORVERSION  = 0 ; 
+  public static const int MINORVERSION  = 9 ; 
+
+
+src/cpp/include/lcio.h
+   /** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html">LCIO</a> (v00-09)

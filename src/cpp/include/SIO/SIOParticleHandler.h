@@ -3,6 +3,7 @@
 
 #include "SIO/SIOObjectHandler.h"
 
+#include "EVENT/LCEvent.h"
 
 namespace SIO {
     
@@ -30,7 +31,23 @@ namespace SIO {
     virtual unsigned int write(SIO_stream* stream, 
 			       const DATA::LCObject* obj,
 			       unsigned int flag) ;
+
+
+    static void restoreParentDaughterRelations( EVENT::LCEvent* evt) ;
+
+  protected:
+
+    /** Reads lcio MCParticle objects from an SIO stream created with v00-08
+     */
+    virtual unsigned int readv00_08(SIO_stream* stream, 
+				    DATA::LCObject** objP, 
+				    unsigned int flag,  
+				    unsigned int vers ) ;
 	
+
+
+
+
   }; // class
     
 }; //namespace

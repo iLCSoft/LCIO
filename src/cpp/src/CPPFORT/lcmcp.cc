@@ -24,14 +24,18 @@ int lcmcpdelete( PTRTYPE mcparticle ){
   delete mcp ;
   return LCIO::SUCCESS ;
 }
-PTRTYPE lcmcpgetparent( PTRTYPE mcparticle ) {
+int lcmcpgetnumberofparents( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return C2F_POINTER(LCObject*,  mcp->getParent()  ) ;  
+  return mcp->getNumberOfParents() ;  
 }
-PTRTYPE lcmcpgetsecondparent( PTRTYPE mcparticle ) {
+PTRTYPE lcmcpgetparent( PTRTYPE mcparticle, int i ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return C2F_POINTER(LCObject*,  mcp->getSecondParent()  ) ;  
+  return C2F_POINTER(LCObject*,  mcp->getParent(i)  ) ;  
 }
+// PTRTYPE lcmcpgetsecondparent( PTRTYPE mcparticle ) {
+//   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+//   return C2F_POINTER(LCObject*,  mcp->getSecondParent()  ) ;  
+// }
 PTRTYPE lcmcpgetdaughter( PTRTYPE mcparticle, int i ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return C2F_POINTER(LCObject*,  mcp->getDaughter( i )  ) ;  
@@ -49,9 +53,13 @@ int lcmcpgetpdg( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return mcp->getPDG() ;  
 }
-int lcmcpgethepevtstatus( PTRTYPE mcparticle )  {
+int lcmcpgetgeneratorstatus( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  return mcp->getHepEvtStatus() ;  
+  return mcp->getGeneratorStatus() ;  
+}
+int lcmcpgetsimulatorstatus( PTRTYPE mcparticle )  {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  return mcp->getSimulatorStatus() ;  
 }
 int lcmcpgetvertex( PTRTYPE mcparticle, double* vtx )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
@@ -76,32 +84,37 @@ float lcmcpgetenergy( PTRTYPE mcparticle )  {
   return mcp->getEnergy() ;  
 }
 
-int lcmcpsetparent(  PTRTYPE mcparticle, PTRTYPE parent ) {
+int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   MCParticle* mom = f2c_pointer<MCParticle,LCObject>( parent ) ;
-  mcp->setParent( mom ) ;
+  mcp->addParent( mom ) ;
   return LCIO::SUCCESS ;
 }
-int lcmcpsetsecondparent(  PTRTYPE mcparticle, PTRTYPE parent ) {
-  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  MCParticle* mom = f2c_pointer<MCParticle,LCObject>( parent ) ;
-  mcp->setSecondParent( mom ) ;
-  return LCIO::SUCCESS ;
-}
-int lcmcpadddaughter(  PTRTYPE mcparticle, PTRTYPE daughter ) {
-  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  MCParticle* dgh = f2c_pointer<MCParticle,LCObject>( daughter ) ;
-  mcp->addDaughter( dgh ) ;
-  return LCIO::SUCCESS ;
-}
+// int lcmcpsetsecondparent(  PTRTYPE mcparticle, PTRTYPE parent ) {
+//   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+//   MCParticle* mom = f2c_pointer<MCParticle,LCObject>( parent ) ;
+//   mcp->setSecondParent( mom ) ;
+//   return LCIO::SUCCESS ;
+// }
+// int lcmcpadddaughter(  PTRTYPE mcparticle, PTRTYPE daughter ) {
+//   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+//   MCParticle* dgh = f2c_pointer<MCParticle,LCObject>( daughter ) ;
+//   mcp->addDaughter( dgh ) ;
+//   return LCIO::SUCCESS ;
+// }
 int lcmcpsetpdg( PTRTYPE mcparticle, int pdg ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   mcp->setPDG( pdg ) ;
   return LCIO::SUCCESS ;
 }
-int lcmcpsethepevtstatus( PTRTYPE mcparticle, int status ) {
+int lcmcpsetgeneratorstatus( PTRTYPE mcparticle, int status ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
-  mcp->setHepEvtStatus( status ) ;
+  mcp->setGeneratorStatus( status ) ;
+  return LCIO::SUCCESS ;
+}
+int lcmcpsetsimulatorstatus( PTRTYPE mcparticle, int status ) {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  mcp->setSimulatorStatus( status ) ;
   return LCIO::SUCCESS ;
 }
 int lcmcpsetvertex( PTRTYPE mcparticle, double vtx[3] ) {

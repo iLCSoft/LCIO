@@ -9,15 +9,19 @@ package hep.lcio.event ;
  */
 public interface MCParticle extends MCParticleData {
     
-    /** Returns the parent of this particle. Null if the mother (beam particle).
+
+
+    /** Returns the i-th parent of this particle.
      * Same as getParentData() except for return type.
+     *
+     * @see MCParticleData.getNumberOfParents()
      */
-    public MCParticle* getParent() const ;
+    public MCParticle* getParent( int i ) const ;
     
-    /** Returns the second parent of this particle. Null if not available. 
-     * Same as getSecondParentData() except for return type.
-     */
-    public MCParticle* getSecondParent() const ;
+//     /** Returns the second parent of this particle. Null if not available. 
+//      * Same as getSecondParentData() except for return type.
+//      */
+//     public MCParticle* getSecondParent() const ;
     
 
     /** Returns the i-th daughter of this particle.
@@ -41,13 +45,17 @@ public interface MCParticle extends MCParticleData {
 
 @ifdef overwriteDataInterface
 
-    /** Returns the parent of this particle. Null if the mother (beam particle).
+    /** Returns the number of parents of this particle - 0 if mother.
      */
-    public MCParticleData* getParentData() const ;
-    
-    /** Returns the second parent of this particle, usually Null.
+    public MCParticleData* getNumberOfParents() const ;
+
+    /** Returns the i-th parent of this particle.
      */
-    public MCParticleData* getSecondParentData() const;
+    public MCParticleData* getParentData(int i) const ;
+
+//     /** Returns the second parent of this particle, usually Null.
+//      */
+//     public MCParticleData* getSecondParentData() const;
     
     /** Returns the number of daughters of this particle.
      */

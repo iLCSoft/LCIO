@@ -129,7 +129,7 @@ C ***   Write event header
      &                             'Tesla Detector' )
 
 C ***   Convert hepevt common content to LCIO MCParticle collection
-        status = lcio2hepevt( event )
+        status = hepevt2lcio( event )
 
         IF (status .eq. 0)  THEN
           print *, 'PYSIMJOB: error - can not write hepevt common'
@@ -140,13 +140,15 @@ C ***    Check on MCParticle collection
          col = lcevtgetcollection ( event , LCIO_MCPARTICLE )
 
          if (col .ne. 0)  then
-           status = hepevt2lcio( event )
+
+           status = lcio2hepevt( event )
            if (status .eq. 0)  then
              print '(a,a,i5)'
      &             , 'PYSIMJOB: error - can not set '
      &             , 'hepevt common content for event ', i
              stop
            endif
+
            status = lccolgetnumberofelements ( col )
            print '(a,i5,a,z8,a,i5,a)' ,
      &           'Event ', iev , ' at pointer ' , event ,
@@ -252,7 +254,7 @@ C ***    Get event header
 C ***    Check on MCParticle collection
          col = lcevtgetcollection ( event , 'MCParticle'//char(0) )
          if (col .ne. 0)  then
-           status = hepevt2lcio( event )
+           status = lcio2hepevt( event )
            if (status .eq. 0)  then
              print '(a,a,i5)'
      &             , 'PYSIMJOB: error - can not set '
@@ -333,11 +335,11 @@ C
         READ (LUN, 11, IOSTAT=ICHECK, END=999) (VHEP(L,I),L=1,4),
      +                                         CHHEP(I)
 
-c        write(*,1234) i,ISTHEP(I),IDHEP(I),(JMOHEP(J,I),J=1,2),
-c     $       (JDAHEP(L,I),L=1,2)
+c$$$        write(*,1234) i,ISTHEP(I),IDHEP(I),(JMOHEP(J,I),J=1,2),
+c$$$     $       (JDAHEP(L,I),L=1,2)
       END DO
 
-c 1234 FORMAT(I3,I5,I9,4I5)
+c$$$ 1234 FORMAT(I3,I5,I9,4I5)
 
       RETURN
 *

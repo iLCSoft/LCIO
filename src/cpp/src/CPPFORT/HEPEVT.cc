@@ -22,48 +22,13 @@ namespace HEPEVTIMPL{
       LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 
       // create a particle instance for each HEPEVT entry
-
+      // and add it to the collection - leave parent relations empty
       int* NMCPART = &FTNhep.nhep;
       for(int j=0;j < *NMCPART;j++)
       {
         MCParticleImpl* mcp = new MCParticleImpl ;
         mcp->setPDG( FTNhep.idhep[j] ) ;
-        mcp->setHepEvtStatus( FTNhep.isthep[j] ) ;
-
-        // now get parents if required and set daughter if parent1 is defined
-        int* parent1 = &FTNhep.jmohep[j][0] ;
-        int* parent2 = &FTNhep.jmohep[j][1] ;
-
-        if( *parent1 > 0 )
-        {
-          MCParticle* mmcp =
-          dynamic_cast<MCParticle*>(mcVec->getElementAt( *parent1 - 1 ) ) ;
-          mcp->setParent( mmcp ) ;
-
-          if ( FTNhep.jdahep[*parent1-1][0] > 0 )
-          {
-              LCCollectionVec* col = mcVec ;
-              MCParticleImpl* mcporig = dynamic_cast<MCParticleImpl*>( (*col)[*parent1 - 1] ) ;
-              mcporig->addDaughter ( mcp ) ;
-          }
-        }
-        if( *parent2 > 0 )
-        {
-          for(int jp= *parent1+1; jp <= *parent2; jp++)
-          {
-            MCParticle* mmcp =
-            dynamic_cast<MCParticle*>(mcVec->getElementAt( jp - 1 ) ) ;
-            mcp->setSecondParent ( mmcp ) ;
-
-            if ( FTNhep.jdahep[jp-1][0] > 0 )
-            {
-              LCCollectionVec* col = mcVec ;
-              MCParticleImpl* mcporig = dynamic_cast<MCParticleImpl*>( (*col)[jp - 1] ) ;
-              mcporig->addDaughter ( mcp ) ;
-            }
-          }
-        }
-
+        mcp->setGeneratorStatus( FTNhep.isthep[j] ) ;
 
         // now momentum, vertex, charge
         for(int k=0;k<3;k++)  p[k] = (float)FTNhep.phep[j][k];
@@ -76,6 +41,28 @@ namespace HEPEVTIMPL{
         mcp->setCharge( FTNhep1.mcchargev[j] ) ;
 
         mcVec->push_back( mcp ) ;
+      }
+
+      // now loop one more time and add parent relations
+      // NB: this assumes that the parent relations are consistent, i.e. any particle
+      // referred to as daughter in the hepevt common block refers to the corresponding 
+      // particle as mother
+      for(int j=0;j < *NMCPART;j++) {
+	MCParticleImpl* mcp = dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( j ) ) ;
+	
+        // now get parents if required and set daughter if parent1 is defined
+        int parent1 = FTNhep.jmohep[j][0] ;
+        int parent2 = FTNhep.jmohep[j][1] ;
+
+	if( parent1 > 0 ) {
+	  MCParticle* mom = dynamic_cast<MCParticle*>( mcVec->getElementAt( parent1-1 ) ) ;
+	  mcp->addParent( mom ) ;
+	  if( parent2 > 0 )
+	    for(int i = parent1 ; i < parent2 ; i++ ){ 
+	      MCParticle* mom = dynamic_cast<MCParticle*>( mcVec->getElementAt( i ) ) ;
+	      mcp->addParent( mom ) ;
+	    }
+        }
       }
 
       // add all collection to the event
@@ -107,18 +94,20 @@ namespace HEPEVTIMPL{
         dynamic_cast<const MCParticle*>( mcVec->getElementAt( j ) ) ;
 
         FTNhep.idhep[j] = mcp->getPDG() ;
-        FTNhep.isthep[j] = mcp->getHepEvtStatus() ;
+        FTNhep.isthep[j] = mcp->getGeneratorStatus() ;
 
         // store mother indices
-        const MCParticle* mcpp  = mcp->getParent() ;
+        const MCParticle* mcpp  = 0 ;
+	if(  mcp->getNumberOfParents() > 0 ) mcpp = mcp->getParent(0) ;
+	
         try{
           for(int jjm=0;jjm < *NMCPART;jjm++)
-          {
-            if (mcpp  == dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjm )) ){
-              FTNhep.jmohep[j][0] = jjm + 1 ;
-              break ;
-            }
-          }
+	    {
+	      if (mcpp  == dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjm )) ){
+		FTNhep.jmohep[j][0] = jjm + 1 ;
+		break ;
+	      }
+	    }
         }catch(exception& e){
           FTNhep.jmohep[j][0] = 0 ;
           FTNhep.jmohep[j][1] = 0 ;
@@ -126,7 +115,9 @@ namespace HEPEVTIMPL{
         if (  FTNhep.jmohep[j][0] > 0 )
         {
           try{
-            const MCParticle* mcpsp = mcp->getSecondParent() ;
+	    const MCParticle* mcpsp  = 0 ;
+	    if(  mcp->getNumberOfParents() > 1 ) mcpsp = mcp->getParent(1) ;
+
             for(int jjj=0;jjj < *NMCPART;jjj++)
             {
               if (mcpsp  == dynamic_cast<const MCParticle*>(mcVec->getElementAt( jjj )) ){

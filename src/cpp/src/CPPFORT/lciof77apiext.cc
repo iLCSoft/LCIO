@@ -122,13 +122,15 @@ PTRTYPE lcdumpeventdetailed ( PTRTYPE event ){
 }
 
 
-int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* hepevtstatus, double* prodvtx,
-                         float* momentum, float* mass, float* charge, int* ndaughters ){
+int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* simstatus
+			 , double* prodvtx, float* momentum, float* mass, float* charge, 
+			 int* ndaughters ){
 
   MCParticle* lcMCParticle = f2c_pointer<MCParticle,LCObject>( mcparticle ) ;
 
   *pdg               = lcMCParticle->getPDG() ;
-  *hepevtstatus      = lcMCParticle->getHepEvtStatus() ;
+  *genstatus         = lcMCParticle->getGeneratorStatus() ;
+  *simstatus         = lcMCParticle->getSimulatorStatus() ;
   const double* dtmp = lcMCParticle->getVertex() ;
   for(int k=0;k<3;k++)  *prodvtx++  = dtmp[k] ;
   const float*  tmp  = lcMCParticle->getMomentum() ;

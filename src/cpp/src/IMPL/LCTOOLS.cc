@@ -11,6 +11,9 @@
 
 #include "IMPL/LCFlagImpl.h"
 
+#include <map>
+#include <set>
+
 using namespace std ;
 using namespace EVENT ;
 using namespace DATA ;
@@ -636,54 +639,138 @@ namespace IMPL {
     
     int nParticles =  col->getNumberOfElements() ;
 
-    // get a list of all mother particles
-    std::vector<MCParticle*> moms ; 
+
+
+    // fill map with particle pointers and collection indices
+    typedef std::map< MCParticle*, int > PointerToIndexMap ;
+    PointerToIndexMap p2i_map ;
+    std::vector<MCParticle*> moms ;
+
     for( int k=0; k<nParticles; k++){
 
-      // get the particle from the collection - needs a cast !
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( k ) ) ;
-      
-      if( part->getParent() == 0 )
-	moms.push_back( part ) ;
+      p2i_map[ part ] = k ; 
+
+      moms.push_back( part ) ;
     }
 
     std::cout << endl
-	      << " index [motherIndex] | (px, py, pz) | HepEvtStatus | vertex (x,y,z) | endpoint(x,y,z)" 
+	      << " index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" 
 	      << " | mass | charge | energy"
 	      << endl 
 	      << endl ;
 
 
-    // now loop over mothers and print daughters recursively
-    int index = 0 ;
-    std::vector<MCParticle*>::const_iterator  mom ; 
-    for( mom = moms.begin() ; mom != moms.end() ; mom++){
+//    // now loop over mothers and print daughters recursively
+//     int index = 0 ;
+//     std::vector<MCParticle*>::const_iterator  mom ; 
+//     for( mom = moms.begin() ; mom != moms.end() ; mom++){
 
-      cout << index++ << " [-] "
-	   <<  (*mom)->getPDG() << " | ("
-	   <<  (*mom)->getMomentum()[0]  << ", "
-	   <<  (*mom)->getMomentum()[1]  << ", "
-	   <<  (*mom)->getMomentum()[2]  << ") | "
-	   <<  (*mom)->getHepEvtStatus() << " | ("
-	   <<  (*mom)->getVertex()[0]    << ", "
-	   <<  (*mom)->getVertex()[1]    << ", "
-	   <<  (*mom)->getVertex()[2]    << ") | ("
-	   <<  (*mom)->getEndpoint()[0]  << ", "
-	   <<  (*mom)->getEndpoint()[1]  << ", "
-	   <<  (*mom)->getEndpoint()[2]  << ") | "
-	   <<  (*mom)->getMass()         << " | " 
-	   <<  (*mom)->getCharge()       << " | " 
-	   <<  (*mom)->getEnergy()      
+// loop over collection - preserve order
+    for(  int index = 0 ; index < nParticles ; index++){
+      
+      MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
+      
+      cout << index << " [" ;
+      for(int k=0;k<part->getNumberOfParents();k++){
+	if(k>0) cout << "," ;
+	cout << p2i_map[ part->getParent(k) ]  ;
+      }
+      cout << "] | [" ;
+      for(int k=0;k<part->getNumberOfDaughters();k++){
+	if(k>0) cout << "," ;
+	cout << p2i_map[ part->getDaughter(k) ]  ;
+      }
+      cout << "] | " ;
+      cout <<  part->getPDG() << " | ("
+	   <<  part->getMomentum()[0]  << ", "
+	   <<  part->getMomentum()[1]  << ", "
+	   <<  part->getMomentum()[2]  << ") | "
+	   <<  part->getGeneratorStatus() << " | "
+	   <<  part->getSimulatorStatus() << " | ("
+	   <<  part->getVertex()[0]    << ", "
+	   <<  part->getVertex()[1]    << ", "
+	   <<  part->getVertex()[2]    << ") | ("
+	   <<  part->getEndpoint()[0]  << ", "
+	   <<  part->getEndpoint()[1]  << ", "
+	   <<  part->getEndpoint()[2]  << ") | "
+	   <<  part->getMass()         << " | " 
+	   <<  part->getCharge()       << " | " 
+	   <<  part->getEnergy()      
 	   << endl ;	
 
 
-      index  = printDaughterParticles( *mom, index ) ;
     }
 
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 
 	 << endl ;
   }
+//   void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
+    
+//     if( col->getTypeName() != LCIO::MCPARTICLE ){
+      
+//       cout << " collection not of type " << LCIO::MCPARTICLE << endl ;
+//       return ;
+//     }
+    
+//     cout << endl 
+// 	 << "--------------- " << "print out of "  << LCIO::MCPARTICLE << " collection "
+// 	 << "--------------- " << endl ;
+    
+//     cout << endl 
+// 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+//     int nParticles =  col->getNumberOfElements() ;
+
+//     // get a list of all mother particles
+//     std::vector<MCParticle*> moms ; 
+//     for( int k=0; k<nParticles; k++){
+
+//       // get the particle from the collection - needs a cast !
+//       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( k ) ) ;
+      
+//       if( part->getNumberOfParents() == 0 )
+// 	moms.push_back( part ) ;
+//     }
+
+//     std::cout << endl
+// 	      << " index [motherIndex] | (px, py, pz) | HepEvtStatus | vertex (x,y,z) | endpoint(x,y,z)" 
+// 	      << " | mass | charge | energy"
+// 	      << endl 
+// 	      << endl ;
+
+
+//     // now loop over mothers and print daughters recursively
+//     int index = 0 ;
+//     std::vector<MCParticle*>::const_iterator  mom ; 
+//     for( mom = moms.begin() ; mom != moms.end() ; mom++){
+
+//       cout << index++ << " [-] "
+// 	   <<  (*mom)->getPDG() << " | ("
+// 	   <<  (*mom)->getMomentum()[0]  << ", "
+// 	   <<  (*mom)->getMomentum()[1]  << ", "
+// 	   <<  (*mom)->getMomentum()[2]  << ") | "
+// 	   <<  (*mom)->getHepEvtStatus() << " | ("
+// 	   <<  (*mom)->getVertex()[0]    << ", "
+// 	   <<  (*mom)->getVertex()[1]    << ", "
+// 	   <<  (*mom)->getVertex()[2]    << ") | ("
+// 	   <<  (*mom)->getEndpoint()[0]  << ", "
+// 	   <<  (*mom)->getEndpoint()[1]  << ", "
+// 	   <<  (*mom)->getEndpoint()[2]  << ") | "
+// 	   <<  (*mom)->getMass()         << " | " 
+// 	   <<  (*mom)->getCharge()       << " | " 
+// 	   <<  (*mom)->getEnergy()      
+// 	   << endl ;	
+
+
+//       index  = printDaughterParticles( *mom, index ) ;
+//     }
+
+//     cout << endl 
+// 	 << "-------------------------------------------------------------------------------- " 
+// 	 << endl ;
+//   }
 
 
   int LCTOOLS::printDaughterParticles(const MCParticle* part, int index){
@@ -699,7 +786,8 @@ namespace IMPL {
 	   <<  d->getMomentum()[0]  << ", "
 	   <<  d->getMomentum()[1]  << ", "
 	   <<  d->getMomentum()[2]  << ") | "
-	   <<  d->getHepEvtStatus() << " | ("
+	   <<  part->getGeneratorStatus() << " | "
+	   <<  part->getSimulatorStatus() << " | ("
 	   <<  d->getVertex()[0]    << ", "
 	   <<  d->getVertex()[1]    << ", "
 	   <<  d->getVertex()[2]    << ") | ("

@@ -118,17 +118,14 @@ int main(int argc, char** argv ){
 	      d2->setMomentum( pd2 ) ;
 	      d2->setMass( .135 ) ;
 
-	      d2->setParent( d1 );
-	      d1->addDaughter( d2 ) ;
+	      d2->addParent( d1 );
 	      mcVec->push_back( d2 ) ;
 	    }
-	    d1->setParent( mcp );
-	    mcp->addDaughter( d1 ) ;
+	    d1->addParent( mcp );
 	    mcVec->push_back( d1 ) ;
 	  }
 	  
-	  mcp->setParent( mom );
-	  mom->addDaughter( mcp ) ;
+	  mcp->addParent( mom );
 	  mcVec->push_back( mcp ) ;
 	}
 	mcVec->push_back( mom ) ;

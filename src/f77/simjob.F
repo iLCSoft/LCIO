@@ -85,8 +85,8 @@ c-------- create some monte carlo particles
                   mcpp(3) = j*3.
                   status = lcmcpsetmomentum( mcpd, mcpp ) 
 
-                  status = lcmcpsetparent( mcpd , mcp ) 
-                  status = lcmcpadddaughter( mcp, mcpd ) 
+                  status = lcmcpaddparent( mcpd , mcp ) 
+
 
                   status = lccoladdelement( mcpcol, mcpd ) 
 
@@ -98,8 +98,7 @@ c-------- create some monte carlo particles
                      mcpp(3) = k*3.
                      status = lcmcpsetmomentum( mcpdd, mcpp ) 
                      
-                     status = lcmcpsetparent( mcpdd , mcpd ) 
-                     status = lcmcpadddaughter( mcpd, mcpdd ) 
+                     status = lcmcpaddparent( mcpdd , mcpd ) 
                      
                      status = lccoladdelement( mcpcol, mcpdd ) 
                   enddo

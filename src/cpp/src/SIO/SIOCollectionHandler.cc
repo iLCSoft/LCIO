@@ -32,6 +32,7 @@ namespace SIO {
     // here we need to get the handler for our type
     _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
     if( ! _myHandler ){
+      // FIXME - this is inconsistent - is this an exception or not ???
       // don't print a warning - just ignore unknown types ....
       //      std::cerr << "WARNING:  SIOCollectionHandler no handler for type : " 
       //		<< _myType << std::endl ;
@@ -82,7 +83,7 @@ namespace SIO {
 	
 	LCObject* obj ;
 	
-	status  = _myHandler->read( stream , &obj , ioCol->_flag , 1 ) ;
+	status  = _myHandler->read( stream , &obj , ioCol->_flag , versionID ) ;
 	if( !( status & 1 ) ) return status ;
 	
 	ioCol->push_back( obj ) ;

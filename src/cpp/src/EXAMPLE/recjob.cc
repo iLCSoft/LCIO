@@ -134,9 +134,6 @@ public:
 
 
     
-    LCTOOLS::dumpEvent( evt ) ;
-    
-    lcWrt->writeEvent( evt ) ;
     nEvent ++ ;
 
   }
@@ -155,9 +152,12 @@ public:
     // or we could add sth. to existing collections
     MCParticleImpl* part = new MCParticleImpl ;
     part->setPDG( 1234 ) ;
-    part->setParent( dynamic_cast<MCParticle*>( mcVec->getElementAt(0) )) ;
+    part->addParent( dynamic_cast<MCParticle*>( mcVec->getElementAt(0) )) ;
     mcVec->addElement( part ) ;  // <<<< adding to collections
 
+    LCTOOLS::dumpEvent( evt ) ;
+    
+    lcWrt->writeEvent( evt ) ;
    }
   
 

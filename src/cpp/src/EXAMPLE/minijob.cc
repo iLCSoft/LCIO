@@ -1,4 +1,3 @@
-
 #include "lcio.h"
 
 #include "IO/LCWriter.h"
@@ -85,7 +84,7 @@ int main(int argc, char** argv ){
 	MCParticleImpl* mcp = new MCParticleImpl ;
 	
 	mcp->setPDG( 101 + j*100 ) ;
-	mcp->setParent(  mom  );
+	mcp->addParent(  mom  );
 	
 	float p[3] = { 2.*1024. , 4.*1024. , 8.*1024. } ;
 	mcp->setMomentum( p ) ;

@@ -28,16 +28,23 @@ namespace IMPL {
     /// Destructor.
     virtual ~MCParticleImpl() ;
 
-    /** Returns the parent of this particle. Returns Null if the mother (
-     * beam particle). 
+    /** Returns the i-th parent of this particle.
      * Same as getParentData() except for return type.
+     *
+     * @see MCParticleData.getNumberOfParents()
      */
-    virtual EVENT::MCParticle * getParent() const ;
+    virtual MCParticle * getParent(int i) const ;
 
-    /** Returns the second parent of this particle. 
-     * Same as getSecondParentData() except for return type.
-     */
-    virtual EVENT::MCParticle * getSecondParent() const ; 
+//     /** Returns the parent of this particle. Returns Null if the mother (
+//      * beam particle). 
+//      * Same as getParentData() except for return type.
+//      */
+//     virtual EVENT::MCParticle * getParent() const ;
+
+//     /** Returns the second parent of this particle. 
+//      * Same as getSecondParentData() except for return type.
+//      */
+//     virtual EVENT::MCParticle * getSecondParent() const ; 
 
     /** Returns the i-th daughter of this particle.
      * Same as getDaughterData() except for return type.
@@ -47,13 +54,21 @@ namespace IMPL {
     virtual EVENT::MCParticle * getDaughter(int i) const ;
 
 
-    /** Returns the parent of this particle. Null if the mother (beam particle).
+    /** Returns the number of parents of this particle - 0 if mother.
      */
-    virtual DATA::MCParticleData * getParentData() const ;
+    virtual int getNumberOfParents() const ;
 
-    /** Returns the second parent of this particle, usually Null.
+    /** Returns the i-th parent of this particle.
      */
-    virtual DATA::MCParticleData * getSecondParentData() const ;
+    virtual MCParticleData * getParentData(int i) const ;
+
+//     /** Returns the parent of this particle. Null if the mother (beam particle).
+//      */
+//     virtual DATA::MCParticleData * getParentData() const ;
+
+//     /** Returns the second parent of this particle, usually Null.
+//      */
+//     virtual DATA::MCParticleData * getSecondParentData() const ;
 
 
     /** Returns the i-th daughter of this particle.
@@ -79,16 +94,20 @@ namespace IMPL {
      */
     virtual int getPDG() const ;
 
-    /** Returns the status for particles from the generator (HepEvt)
-     * and for particles added in simulation:
+    /** Returns the status for particles from the generator
      * <br> 0  empty line
      * <br> 1  undecayed particle, stable in the generator
      * <br> 2  particle decayed in the generator
      * <br> 3  documentation line
-     * <br> 201 stable state, but created in the tracking in the detector
-     * <br> 202 particle decayed in the tracking in the detector
      */
-    virtual int getHepEvtStatus() const ;
+    virtual int getGeneratorStatus() const ;
+
+    /** Returns the status for particles from the simulation, e.g.
+     * decayed in flight.
+     * FIXME: Needs to be defined.
+     */
+    virtual int getSimulatorStatus() const ;
+
 
     /** Returns the production vertex of the particle.
      */
@@ -115,27 +134,31 @@ namespace IMPL {
     virtual float getEnergy() const ;
 
     // set methods
-    /** Sets the parent. 
+    /** Adds a parent particle. 
      */
-    void setParent(  EVENT::MCParticle *mom0 ) ;
+    void addParent(  EVENT::MCParticle *mom ) ;
 
-    /** Sets a second parent.
-     */
-    void setSecondParent(  EVENT::MCParticle *mom1 ) ;
+//     // set methods
+//     /** Sets the parent. 
+//      */
+//     void setParent(  EVENT::MCParticle *mom0 ) ;
 
-    /** Adds a daughter particle.
-     */
+//     /** Sets a second parent.
+//      */
+//     void setSecondParent(  EVENT::MCParticle *mom1 ) ;
 
-    void addDaughter(  EVENT::MCParticle* daughter) ;
 
     /** Sets the PDG code.
      */
     void setPDG(int pdg ) ;
 
-    /** Sets the HepEvt status.
-     * @see MCParticle::getHepEvtStatus
+    /** Sets the Generator status.
      */
-    void setHepEvtStatus( int status ) ;
+    void setGeneratorStatus( int status ) ;
+
+    /** Sets the Simulator status.
+     */
+    void setSimulatorStatus( int status ) ;
 
      /** Sets the production vertex.
      */
@@ -160,24 +183,24 @@ namespace IMPL {
 
 
   protected:
-    /** Initializes an array of pointers for reading daughters.
-     * 
-     */
-    //void prepareArrayOfDaughters(int i) ;
 
-    EVENT::MCParticle* _mother0 ;
-    EVENT::MCParticle* _mother1 ;
+    /** Adds a daughter particle - only called from addParent().
+     */
+    void addDaughter(  EVENT::MCParticle* daughter) ;
+
+//     EVENT::MCParticle* _mother0 ;
+//     EVENT::MCParticle* _mother1 ;
     int _pdg ;
-    int _status ;
+    int _genstatus ;
+    int _simstatus ;
     double _vertex[3] ;
     double _endpoint[3] ;
     float _p[3] ;
     float _mass ;
     float _charge ;
+    MCParticlePVec _parentsP ;
     MCParticlePVec _daughtersP ;
     
-    //    MCParticle** _readDaughters ;
-
 }; // class
 }; // namespace IMPL
 #endif /* ifndef IMPL_MCPARTICLEIMPL_H */

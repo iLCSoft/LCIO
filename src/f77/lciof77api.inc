@@ -53,14 +53,17 @@ c-----the LCCollection interface
       integer lccolgetflag, lccolsetflag, lccoladdelement
       integer lccolremoveelementat
 c-----the MCParticle interface
-      PTRTYPE lcmcpcreate, lcmcpgetparent, lcmcpgetsecondparent
-      PTRTYPE lcmcpgetdaughter 
-      integer lcmcpdelete, lcmcpgetendpoint, lcmcpgetnumberofdaughters
-      integer lcmcpgetpdg, lcmcpgethepevtstatus 
+      PTRTYPE lcmcpcreate
+      integer lcmcpgetnumberofparents, lcmcpgetnumberofdaughters
+      PTRTYPE lcmcpgetparent, lcmcpgetdaughter 
+      integer lcmcpdelete, lcmcpgetendpoint
+      integer lcmcpgetpdg, lcmcpgetgeneratorstatus
+      integer lcmcpgetsimulatorstatus
       integer lcmcpgetvertex, lcmcpgetmomentum
       real lcmcpgetmass, lcmcpgetcharge, lcmcpgetenergy
-      integer lcmcpsetparent, lcmcpsetsecondparent, lcmcpadddaughter 
-      integer lcmcpsetpdg, lcmcpsethepevtstatus, lcmcpsetvertex 
+      integer lcmcpaddparent, lcmcpadddaughter 
+      integer lcmcpsetpdg, lcmcpsetgeneratorstatus
+      integer lcmcpsetsimulatorstatus, lcmcpsetvertex 
       integer lcmcpsetendpoint, lcmcpsetmomentum, lcmcpsetmass 
       integer lcmcpsetcharge
 c-----the SimTrackerHit interface
