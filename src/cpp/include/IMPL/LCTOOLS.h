@@ -30,19 +30,23 @@ namespace IMPL{
      */
     static void dumpEventDetailed(const EVENT::LCEvent* evt) ;
 
-    /** Completely prints all MCParticles in the collection.
+    /** Complete printout of all MCParticles in the collection.
      */
     static void printMCParticles(const EVENT::LCCollection* col ) ;
 
-    /** Completely prints all SimTrackerHits in the collection.
+    /** Complete printout of all SimTrackerHits in the collection.
      */
     static void printSimTrackerHits(const EVENT::LCCollection* col ) ;
 
-    /** Completely prints all SimCalorimeterHits in the collection.
+    /** Complete printout of all TPCHits in the collection.
+     */
+    static void printTPCHits(const EVENT::LCCollection* col ) ;
+
+    /** Complete printout of all SimCalorimeterHits in the collection.
      */
     static void printSimCalorimeterHits(const EVENT::LCCollection* col ) ;
 
-    /** Completely prints all CalorimeterHits in the collection.
+    /** Complete printout of  all CalorimeterHits in the collection.
      */
     static void printCalorimeterHits(const EVENT::LCCollection* col ) ;
 
@@ -54,6 +58,7 @@ namespace IMPL{
     /** Print LCIntVecs user extension vectors in the collection
      */
     static void printLCIntVecs( const EVENT::LCCollection* col ) ;
+
 
     /** Prints daughter particles recursively.
      */

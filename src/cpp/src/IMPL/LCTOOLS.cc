@@ -3,6 +3,7 @@
 #include "EVENT/SimCalorimeterHit.h"
 #include "EVENT/CalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
+#include "EVENT/TPCHit.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "DATA/LCFloatVec.h"
@@ -55,6 +56,11 @@ namespace IMPL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::SIMTRACKERHIT ){
 	  
 	printSimTrackerHits( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCHIT ){
+	  
+	printTPCHits( col ) ;
 
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::SIMCALORIMETERHIT ){
@@ -238,19 +244,209 @@ namespace IMPL {
 
 
   void LCTOOLS::printSimTrackerHits(const EVENT::LCCollection* col ){
+    
+    if( col->getTypeName() != LCIO::SIMTRACKERHIT ){
+      
+      cout << " collection not of type " << LCIO::SIMTRACKERHIT << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::SIMTRACKERHIT << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+    
+    
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " cellID(bytes)| position | dEdx | time (x,y,z) | PDG of MCParticle" 
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      SimTrackerHit* hit = 
+	dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
+      
+      int id0 = hit->getCellID() ;
+      
+      cout << i << ": "
+	// 	   << hit->getCellID() << " | "
+	   << ((id0& 0xff000000)>>24) << "/" 
+	   << ((id0& 0x00ff0000)>>16) << "/" 
+	   << ((id0& 0x0000ff00)>> 8) << "/" 
+	   << ((id0& 0x000000ff)>> 0) << " | "
+	   << hit->getPosition()[0] << ", "
+	   << hit->getPosition()[1]<< ", "
+	   << hit->getPosition()[2] << ") | " 
+	   << hit->getdEdx () << " | "
+	   << hit->getTime () << " | "
+  	   << hit->getMCParticle()->getPDG()  
+	   << endl ;
+      
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+    
+  }
+  
+  void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {
+    
+    if( col->getTypeName() != LCIO::TPCHIT ){
+      
+      cout << " collection not of type " << LCIO::TPCHIT << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TPCHIT << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "  -> LCIO::TPCBIT_RAW   : " << flag.bitSet( LCIO::TPCBIT_RAW ) << endl ;
+    
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " cellId0 | time | charge | quality " 
+	      << endl << "  -> raw data (bytes) : "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      TPCHit* hit = 
+	dynamic_cast<TPCHit*>( col->getElementAt( i ) ) ;
+      
+      int id0 = hit->getCellID()  ;
+      //      std::cout << hit->getCellID() << " | " 
+      std::cout	<< ((id0& 0xff000000)>>24) << "/" 
+		<< ((id0& 0x00ff0000)>>16) << "/" 
+		<< ((id0& 0x0000ff00)>> 8) << "/" 
+		<< ((id0& 0x000000ff)>> 0) << " | "
+		<< hit->getTime() << " | "
+		<< hit->getCharge() << " | ["
+		<< hit->getQuality() << "] "
+		<< std::endl ;
+      if( flag.bitSet( LCIO::TPCBIT_RAW ) ){
 
-    cout << "  SimTrackerHits not implemented yet  " << endl ;
+	int nWords = hit->getNRawDataWords() ;
+	std::cout << "  ->  " ;
+
+	for(int  j=0;j<nWords;j++){
+	  int rawData = hit->getRawDataWord( j ) ;
+	  std::cout << ((rawData& 0xff000000)>>24) << ", " 
+		    << ((rawData& 0x00ff0000)>>16) << ", " 
+		    << ((rawData& 0x0000ff00)>> 8) << ", " 
+		    << ((rawData& 0x000000ff)>> 0)  ;
+	  if( j < nWords-1) std::cout << ", " ;
+	}
+
+	std::cout << std::endl ;
+
+      }
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
   }
 
   void LCTOOLS::printLCFloatVecs( const EVENT::LCCollection* col ) {
 
-    cout << "  LCFloatVecs not implemented yet  " << endl ;
+    if( col->getTypeName() != LCIO::LCFLOATVEC ){
+
+      cout << " collection not of type " << LCIO::LCFLOATVEC << endl ;
+      return ;
+    }
+
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::LCFLOATVEC << " collection (user extension) "
+	 << "--------------- " << endl ;
+
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " element index: val0, val1, ..." 
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      LCFloatVec* vec = 
+	dynamic_cast<LCFloatVec*>( col->getElementAt( i ) ) ;
+      
+      std::cout << i << ": " ;
+      for(unsigned int j=0;j< vec->size();j++){
+
+	std::cout << (*vec)[j] ;
+	if( j<vec->size()-1) std::cout << ", " ;
+
+	if( ! ( (j+1) % 10)  ) std::cout << endl << "     " ;
+      }
+      std::cout << std::endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
 
   }
-
   void LCTOOLS::printLCIntVecs( const EVENT::LCCollection* col ) {
 
-    cout << "  LCIntVecs not implemented yet  " << endl ;
+    if( col->getTypeName() != LCIO::LCINTVEC ){
+
+      cout << " collection not of type " << LCIO::LCINTVEC << endl ;
+      return ;
+    }
+
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::LCINTVEC << " collection (user extension) "
+	 << "--------------- " << endl ;
+
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " element index: val0, val1, ..." 
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      LCIntVec* vec = 
+	dynamic_cast<LCIntVec*>( col->getElementAt( i ) ) ;
+      
+      std::cout << i << ": " ;
+      for(unsigned int j=0;j< vec->size();j++){
+
+	std::cout << (*vec)[j] ;
+	if( j<vec->size()-1) std::cout << ", " ;
+
+	if( ! ( (j+1) % 10)  ) std::cout << endl << "     " ;
+      }
+      std::cout << std::endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
 
   }
 
@@ -286,19 +482,23 @@ namespace IMPL {
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      const SimCalorimeterHit* hit = 
-	dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+      SimCalorimeterHit* hit = 
+	dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
       
       int id0 = hit->getCellID0() ;
-      //      int id1 = hit->getCellID1() ;
+      int id1 = hit->getCellID1() ;
 	    
       cout << i << ": "
 // 	   << hit->getCellID0() << " | "
 // 	   << hit->getCellID1() << " | "
-	   << ((id0& 0xff0000)>>16) << "/" 
-	   << ((id0& 0x00ff00)>> 8) << "/" 
-	   << ((id0& 0x0000ff)>> 0) << " | "
-	   << hit->getCellID1() << " | "
+	   << ((id0& 0xff000000)>>24) << "/" 
+	   << ((id0& 0x00ff0000)>>16) << "/" 
+	   << ((id0& 0x0000ff00)>> 8) << "/" 
+	   << ((id0& 0x000000ff)>> 0) << " | "
+	   << ((id1& 0xff000000)>>24) << "/" 
+	   << ((id1& 0x00ff0000)>>16) << "/" 
+	   << ((id1& 0x0000ff00)>> 8) << "/" 
+	   << ((id1& 0x000000ff)>> 0) << " | "
 	
 	   << hit->getEnergy() << " | (" ;
       
@@ -365,13 +565,13 @@ namespace IMPL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
     std::cout << endl
-	      << " cellId0 | cellId1 | energy/amplitude | position (x,y,z) " 
+	      << " cellId0(bytes) | cellId1(bytes) | energy/amplitude | position (x,y,z) " 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      const CalorimeterHit* hit = 
-	dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
+      CalorimeterHit* hit = 
+	dynamic_cast<CalorimeterHit*>( col->getElementAt( i ) ) ;
       
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
@@ -379,11 +579,14 @@ namespace IMPL {
       cout << i << ": "
 	// 	   << hit->getCellID0() << " | "
 	// 	   << hit->getCellID1() << " | "
-	   << ((id0& 0xff0000)>>16) << "/" 
-	   << ((id0& 0x00ff00)>> 8) << "/" 
-	   << ((id0& 0x0000ff)>> 0) << " | "
-	   << hit->getCellID1() << " | "
-	
+	   << ((id0& 0xff000000)>>24) << "/" 
+	   << ((id0& 0x00ff0000)>>16) << "/" 
+	   << ((id0& 0x0000ff00)>> 8) << "/" 
+	   << ((id0& 0x000000ff)>> 0) << " | "
+	   << ((id1& 0xff000000)>>24) << "/" 
+	   << ((id1& 0x00ff0000)>>16) << "/" 
+	   << ((id1& 0x0000ff00)>> 8) << "/" 
+	   << ((id1& 0x000000ff)>> 0) << " | "
 	   << hit->getEnergy() << " | (" ;
       
       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
@@ -421,7 +624,7 @@ namespace IMPL {
     int nParticles =  col->getNumberOfElements() ;
 
     // get a list of all mother particles
-    std::vector<const MCParticle*> moms ; 
+    std::vector<MCParticle*> moms ; 
     for( int k=0; k<nParticles; k++){
 
       // get the particle from the collection - needs a cast !
@@ -440,7 +643,7 @@ namespace IMPL {
 
     // now loop over mothers and print daughters recursively
     int index = 0 ;
-    std::vector<const MCParticle*>::const_iterator  mom ; 
+    std::vector<MCParticle*>::const_iterator  mom ; 
     for( mom = moms.begin() ; mom != moms.end() ; mom++){
 
       cout << index++ << " [-] "
@@ -476,7 +679,7 @@ namespace IMPL {
     // print this particles daughters
     for(int i=0; i<part->getNumberOfDaughters();i++){
       
-      const MCParticle* d =  part->getDaughter(i) ;
+      MCParticle* d =  part->getDaughter(i) ;
 
       cout << index++ << " [" << motherIndex << "] " 
 	   <<  d->getPDG() << " | ("
