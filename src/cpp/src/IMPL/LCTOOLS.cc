@@ -60,6 +60,11 @@ namespace IMPL {
 	printSimCalorimeterHits( col ) ;
 
       }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
+	  
+	printLCFloatVecs( col ) ;
+
+      }
 
 
     }
@@ -181,29 +186,112 @@ namespace IMPL {
 
   void LCTOOLS::printSimTrackerHits(const EVENT::LCCollection* col ){
 
+    cout << "  SimTrackerHits not implemented yet  " << endl ;
+  }
+
+  void LCTOOLS::printLCFloatVecs( const EVENT::LCCollection* col ) {
+
+    cout << "  LCFloatVecs not implemented yet  " << endl ;
+
   }
 
   void LCTOOLS::printSimCalorimeterHits(const EVENT::LCCollection* col ){
 
-  }
+    if( col->getTypeName() != LCIO::SIMCALORIMETERHIT ){
 
-  void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
-
-    if( col->getTypeName() != LCIO::MCPARTICLE ){
-
-      cout << " collection not of type " << LCIO::MCPARTICLE << endl ;
+      cout << " collection not of type " << LCIO::SIMCALORIMETERHIT << endl ;
       return ;
     }
 
     cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::MCPARTICLE << " collection "
+	 << "--------------- " << "print out of "  << LCIO::SIMCALORIMETERHIT << " collection "
 	 << "--------------- " << endl ;
 
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
+    cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+    cout << "     LCIO::CHBIT_POSZ   : " << flag.bitSet( LCIO::CHBIT_POSZ ) << endl ;
+    cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
+
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " cellId0 | cellId1 | energy | position (x,y,z) | nMCParticles " 
+	      << endl << "           -> MC contribution: prim. PDG |  energy | time | sec. PDG  "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      const SimCalorimeterHit* hit = 
+	dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
+      
+	    
+      cout << i << ": "
+	   << hit->getCellID0() << " | "
+	   << hit->getCellID1() << " | "
+	
+	   << hit->getEnergy() << " | (" ;
+      
+      if( flag.bitSet( LCIO::CHBIT_LONG ) ){
+      
+	cout << *hit->getPosition() << ", "
+	     << *hit->getPosition()+1 << ", "
+	     << *hit->getPosition()+2 << ") | " ;
+      }else{
+	cout << "   no position avaliable  ) | " ;
+      }
+      cout << hit->getNMCParticles() 
+	   << endl ;
+      
+      for(int k=0;k < hit->getNMCParticles();k++){
+
+	try{
+	  cout << "           ->   " 
+	       << hit->getParticleCont( k)->getPDG() << ": " 
+	       << hit->getEnergyCont( k) << " | " 
+	       << hit->getTimeCont( k) << " | " ;
+
+	  if( flag.bitSet( LCIO::CHBIT_PDG ) )
+	    cout << hit->getPDGCont( k) << " | " << endl ;
+	  else
+	    cout << " no PDG" << endl ;
+	} 
+
+	catch(Exception& e){
+	  cout << e.what() << endl ;
+	}
+
+      }
+
+
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+  }
+
+
+  void LCTOOLS::printMCParticles(const EVENT::LCCollection* col ) {
+    
+    if( col->getTypeName() != LCIO::MCPARTICLE ){
+      
+      cout << " collection not of type " << LCIO::MCPARTICLE << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::MCPARTICLE << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
     
     int nParticles =  col->getNumberOfElements() ;
-
 
     // get a list of all mother particles
     std::vector<const MCParticle*> moms ; 
@@ -216,42 +304,36 @@ namespace IMPL {
 	moms.push_back( part ) ;
     }
 
+    std::cout << endl
+	      << " index [motherIndex] | (px, py, pz) | HepEvtStatus | vertex (x,y,z) | endpoint(x,y,z)" 
+	      << " | energy | charge "
+	      << endl 
+	      << endl ;
+
+
     // now loop over mothers and print daughters recursively
     int index = 0 ;
     std::vector<const MCParticle*>::const_iterator  mom ; 
     for( mom = moms.begin() ; mom != moms.end() ; mom++){
 
-      cout << index++ << ": "
-	   <<  (*mom)->getPDG() << " | " 
+      cout << index++ << " [-] "
+	   <<  (*mom)->getPDG() << " | ("
 	   <<  (*mom)->getMomentum()[0]  << ", "
 	   <<  (*mom)->getMomentum()[1]  << ", "
-	   <<  (*mom)->getMomentum()[2]  
+	   <<  (*mom)->getMomentum()[2]  << ") | "
+	   <<  (*mom)->getHepEvtStatus() << " | ("
+	   <<  (*mom)->getVertex()[0]    << ", "
+	   <<  (*mom)->getVertex()[1]    << ", "
+	   <<  (*mom)->getVertex()[2]    << ") | ("
+	   <<  (*mom)->getEndpoint()[0]  << ", "
+	   <<  (*mom)->getEndpoint()[1]  << ", "
+	   <<  (*mom)->getEndpoint()[2]  << ") | "
+	   <<  (*mom)->getEnergy()       << " | " 
+	   <<  (*mom)->getCharge() 
 	   << endl ;	
 
-      //      index  = printDaughterParticles( *mom, index ) ;
-    }
 
-    int nPrint = nParticles > MAX_HITS ? MAX_HITS : nParticles ;
-
-    if(!nPrint ) cout << endl ;
-    for( int i=0 ; i< nPrint ; i++ ){
-
-      // get the particle from the collection - needs a cast !
-      const MCParticle* part =  dynamic_cast<const MCParticle*>( col->getElementAt( i ) ) ;
-      
-
-
-      cout <<  part->getPDG() << " | " 
-	   <<  part->getMomentum()[0]  << ", "
-	   <<  part->getMomentum()[1]  << ", "
-	   <<  part->getMomentum()[2]   << "   "
-	   << "me: " <<  part 
-	   << " mom: " << part->getParentData() ;
-      
-      if( part->getNumberOfDaughters() > 0 ) 
-	cout <<  " - daughter: " << part->getDaughter(0) ;
-      cout    << endl ;	
-      
+      index  = printDaughterParticles( *mom, index ) ;
     }
 
     cout << endl 
@@ -259,24 +341,33 @@ namespace IMPL {
 	 << endl ;
   }
 
+
   int LCTOOLS::printDaughterParticles(const MCParticle* part, int index){
 
+    int motherIndex = index - 1 ;
     // print this particles daughters
     for(int i=0; i<part->getNumberOfDaughters();i++){
       
-      cout << index++ << ": "
-	   <<  part->getPDG() << " | " 
-	   <<  part->getMomentum()[0]  << ", "
-	   <<  part->getMomentum()[1]  << ", "
-	   <<  part->getMomentum()[2]  
+      const MCParticle* d =  part->getDaughter(i) ;
+
+      cout << index++ << " [" << motherIndex << "] " 
+	   <<  d->getPDG() << " | ("
+	   <<  d->getMomentum()[0]  << ", "
+	   <<  d->getMomentum()[1]  << ", "
+	   <<  d->getMomentum()[2]  << ") | "
+	   <<  d->getHepEvtStatus() << " | ("
+	   <<  d->getVertex()[0]    << ", "
+	   <<  d->getVertex()[1]    << ", "
+	   <<  d->getVertex()[2]    << ") | ("
+	   <<  d->getEndpoint()[0]  << ", "
+	   <<  d->getEndpoint()[1]  << ", "
+	   <<  d->getEndpoint()[2]  << ") | "
+	   <<  d->getEnergy()       << " | " 
+	   <<  d->getCharge() 
 	   << endl ;	
-    }
-    // and now the same for the grand daughters
-    for(int i=0; i<part->getNumberOfDaughters();i++){
 
       index = printDaughterParticles( part->getDaughter(i) , index ) ;
     }
-
     return index ;
 
   }

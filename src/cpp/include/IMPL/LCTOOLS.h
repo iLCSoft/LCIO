@@ -43,10 +43,17 @@ namespace IMPL{
     static void printSimCalorimeterHits(const EVENT::LCCollection* col ) ;
 
 
+    /** Print LCFloatVec user extension vectors  in the  collection
+     */
+    static void printLCFloatVecs( const EVENT::LCCollection* col ) ;
+
+    /** Print LCIntVecs user extension vectors in the collection
+     */
+    static void printLCIntVecs( const EVENT::LCCollection* col ) ;
+
     /** Prints daughter particles recursively.
      */
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
-
 
 
   }; // class

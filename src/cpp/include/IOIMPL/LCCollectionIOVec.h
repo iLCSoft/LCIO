@@ -1,9 +1,3 @@
-// -*- C++ -*-
-/** Adding stuff needed for io (friend declarations, etc.)
- * 
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef LCCOLLECTIONIOVEC_H
 #define LCCOLLECTIONIOVEC_H 1
 
@@ -15,6 +9,11 @@ namespace SIO{
 
 namespace IOIMPL {
   
+/** Adding stuff needed for io (friend declarations, etc.)
+ * 
+ * @author gaede
+ * @version Mar 6, 2003
+ */
   class LCCollectionIOVec  : public IMPL::LCCollectionVec {
     
     friend class SIO::SIOCollectionHandler ;

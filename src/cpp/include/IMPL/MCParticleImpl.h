@@ -11,7 +11,7 @@
 
 namespace IMPL {
   
-  typedef std::vector<const EVENT::MCParticle*> MCParticleVec ;
+  typedef std::vector<const EVENT::MCParticle**> MCParticlePVec ;
 
   /** Implementation of MCParticle.
    * 
@@ -158,6 +158,10 @@ namespace IMPL {
 
 
   protected:
+    /** Initializes an array of pointers for reading daughters.
+     * 
+     */
+    //void prepareArrayOfDaughters(int i) ;
 
     const EVENT::MCParticle* _mother0 ;
     const EVENT::MCParticle* _mother1 ;
@@ -168,8 +172,9 @@ namespace IMPL {
     float _p[3] ;
     float _energy ;
     float _charge ;
-    MCParticleVec _daughters ;
-
+    MCParticlePVec _daughtersP ;
+    
+    //    MCParticle** _readDaughters ;
 
 }; // class
 }; // namespace IMPL

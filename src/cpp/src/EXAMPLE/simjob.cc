@@ -22,8 +22,8 @@
 using namespace std ;
 using namespace lcio ;
 
-static const int NRUN = 1 ;
-static const int NEVENT = 1 ; // events
+static const int NRUN = 10 ;
+static const int NEVENT = 10 ; // events
 static const int NMCPART = 10 ;  // mc particles per event
 static const int NHITS = 50 ;  // calorimeter hits per event
 
@@ -88,22 +88,51 @@ int main(int argc, char** argv ){
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	
-	MCParticleImpl* mom = 0 ;
+
+
+	MCParticleImpl* mom = new MCParticleImpl ;
+	mom->setPDG( 1  ) ;
+	float p0[3] = { 0. , 0. , 1000. } ;
+	mom->setMomentum( p0 ) ;
+
+
 	for(int j=0;j<NMCPART;j++){
 
 	  MCParticleImpl* mcp = new MCParticleImpl ;
 
-	  if(mom!=0) mom->addDaughter( mcp ) ;
-	  
-	  mcp->setPDG( 101 + j*100  ) ;
-	  mcp->setParent(  mom  );
-	  
-	  float p[3] = { 2./1024. , 4./1024. , 8./1024. } ;
+	  mcp->setPDG( 1000 * (j+1)  ) ;
+	  float p[3] = { j*1. , 4./1024. , 8./1024. } ;
 	  mcp->setMomentum( p ) ;
+
+	  // create and add some daughters
+	  for(int k=0;k<3;k++){
+	    MCParticleImpl* d1 = new MCParticleImpl ;
+
+	    d1->setPDG( 1000 * (j+1) + 100 * (k+1)  ) ;
+	    float pd1[3] = { k*1. , 4.1 , 8.1 } ;
+	    d1->setMomentum( pd1 ) ;
+	    
+	    for(int l=0;l<2;l++){
+	      MCParticleImpl* d2 = new MCParticleImpl ;
+	      
+	      d2->setPDG( 1000 * (j+1) + 100 * (k+1) + 10 *  (l+1)  ) ;
+	      float pd2[3] = { l*1. , 0.41 , 4.1 } ;
+	      d2->setMomentum( pd2 ) ;
+
+	      d2->setParent( d1 );
+	      d1->addDaughter( d2 ) ;
+	      mcVec->push_back( d2 ) ;
+	    }
+	    d1->setParent( mcp );
+	    mcp->addDaughter( d1 ) ;
+	    mcVec->push_back( d1 ) ;
+	  }
 	  
-	  mom =  mcp ;  // one body decays :-)
+	  mcp->setParent( mom );
+	  mom->addDaughter( mcp ) ;
 	  mcVec->push_back( mcp ) ;
 	}
+	mcVec->push_back( mom ) ;
 	
 	// now add some calorimeter hits
 	LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
@@ -200,7 +229,7 @@ int main(int argc, char** argv ){
 	
 	// dump the event to the screen 
 	LCTOOLS::dumpEvent( evt ) ;
-	LCTOOLS::printMCParticles( mcVec ) ;
+	//	LCTOOLS::printMCParticles( mcVec ) ;
 	
 	// we created the event so we need to take care of deleting it ...
 	delete evt ;

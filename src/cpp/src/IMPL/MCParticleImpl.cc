@@ -3,6 +3,7 @@
 
 #include "EVENT/LCIO.h"
 #include <stdexcept>
+#include <vector>
 
 using namespace DATA ;
 using namespace EVENT ;
@@ -15,11 +16,18 @@ namespace IMPL {
     _pdg(0),
     _status(0),
     _energy(0),
-    _charge(0){
+    _charge(0),
+    _daughtersP(0)
+  {
   }
   
   MCParticleImpl::~MCParticleImpl(){
     // no dynamic variables
+    //    delete [] _readDaughters ;
+    for(MCParticlePVec::iterator iter = _daughtersP.begin();iter != _daughtersP.end() ;iter++){
+      delete (*iter) ;
+    }
+
   }
   
   const MCParticleData * MCParticleImpl::getParentData() const { return _mother0 ; } 
@@ -38,12 +46,19 @@ namespace IMPL {
   //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
 
 
-  int MCParticleImpl::getNumberOfDaughters() const { return _daughters.size() ; }
+  int MCParticleImpl::getNumberOfDaughters() const { return _daughtersP.size() ; }
 
   const MCParticle* MCParticleImpl::getDaughter(int i) const throw (DataNotAvailableException) { 
     // checked access
     try{
-      return _daughters.at(i) ;
+
+      //if( _readDaughters != 0 ) // we have read daughters from file - so they are in a different place
+      //return _readDaughters[i] ;
+
+      //      return _daughters.at(i) ;
+      //FIXME gcc 2.95 doesn't know at(i) ??
+
+      return *_daughtersP[i] ;
     }catch( std::out_of_range ){
       throw DataNotAvailableException(std::string("MCParticleImpl::getDaughter(): out_of_range :" + i ) );
     }
@@ -51,13 +66,15 @@ namespace IMPL {
   }
   // unchecked access
   const MCParticleData* MCParticleImpl::getDaughterData(int i) const {
-    return _daughters[i] ;
+    //    if( _readDaughters != 0 ) // we have read daughters from file - so they are in a different place
+    //	return _readDaughters[i] ;
+    return *_daughtersP[i] ;
   }
 
   const double* MCParticleImpl::getEndpoint() const { 
 
-    if( _daughters.size() > 0 )
-      return _daughters[0]->getVertex() ;
+    if( _daughtersP.size() > 0 )
+      return (*_daughtersP[0])->getVertex() ;
 
     return _endpoint ;
   }
@@ -73,7 +90,10 @@ namespace IMPL {
   void MCParticleImpl::setParent(  const  MCParticle *mom0 ) { _mother0 = mom0 ; }
   void MCParticleImpl::setSecondParent(  const  MCParticle *mom1 ) { _mother1 = mom1 ; }
   void MCParticleImpl::addDaughter( const MCParticle* daughter) { 
-    _daughters.push_back( daughter ) ;
+
+    const MCParticle** pD = new (const MCParticle*)  ;
+    *pD = daughter ;
+    _daughtersP.push_back( pD ) ;
   }
   void MCParticleImpl::setPDG(int pdg ) { _pdg = pdg ; }
   void MCParticleImpl::setHepEvtStatus( int status ) { _status = status ;} 
@@ -90,6 +110,11 @@ namespace IMPL {
   void MCParticleImpl::setEnergy( float en ) { _energy = en ; } 
   void MCParticleImpl::setCharge( float c ) { _charge = c ;  } 
 
+  
+  //  void MCParticleImpl::prepareArrayOfDaughters(int i){
+
+    //    _readDaughters = new MCParticle* [i] ;
+  //  }
 
 
 

@@ -6,7 +6,7 @@
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
-#include <iostream>
+//#include <iostream>
 
 using namespace EVENT ;
 using namespace DATA ;
@@ -33,12 +33,21 @@ namespace SIO {
     // daughters
     int numberOfDaughters ; 
     SIO_DATA( stream ,  &numberOfDaughters , 1  ) ;
-    const MCParticle* daughter ;
+
+    //    particle->prepareArrayOfDaughters( numberOfDaughters ) ;
 
     for(int i=0;i<numberOfDaughters;i++){
-      SIO_PNTR( stream , &daughter ) ;
-      particle->_daughters.push_back( daughter ) ;
+
+      // create a pointer to a pointer to a MCParticle 
+      // as SIO need the address of the pointer for pointer reallocation....
+      const MCParticle** pD = new (const MCParticle*) ;
+      SIO_PNTR( stream , pD ) ;
+      particle->_daughtersP.push_back( pD ) ;
+      //SIO_PNTR( stream , &daughter ) ;
+      //particle->_daughters.push_back( daughter ) ;
+
     }
+
     SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_status) , 1  ) ;
     SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
@@ -79,6 +88,7 @@ namespace SIO {
     for(int i=0;i<numberOfDaughters;i++){
       const MCParticleData* part = particle->getDaughterData(i) ;
       SIO_PNTR( stream ,  &part  ); 
+
     }
     LCSIO_WRITE( stream, particle->getPDG() ) ;
     LCSIO_WRITE( stream, particle->getHepEvtStatus() ) ;
