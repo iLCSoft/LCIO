@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.13 2003-11-11 16:56:12 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.14 2004-09-23 13:03:46 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -241,6 +241,14 @@
  
 
   <!-- =================================================================== -->
+  <!-- Generates documentation using                                       -->
+  <!-- javadoc, doxygen, pdflatex, latex, latex2html                       -->
+  <!-- =================================================================== -->
+
+   <target name="doc.all" depends="doc,cpp.doc,doc.manual,doc.ref" description="creates all documentation ">
+   </target>
+
+  <!-- =================================================================== -->
   <!-- Generates cpp documentation using doxygen                           -->
   <!-- =================================================================== -->
 
@@ -251,7 +259,7 @@
    </target>
 
   <!-- =================================================================== -->
-  <!-- Generates the users manual (ps and pdf)  from latex source          -->
+  <!-- Generates the users manual (ps and pdf and html)  from latex source          -->
   <!-- =================================================================== -->
    <target name="doc.manual">
      <exec dir="./src/latex/manual" executable="latex" os="Linux">
@@ -272,7 +280,34 @@
      <exec dir="./src/latex/manual" executable="cp" os="Linux">
        <arg line=" manual.pdf ../../../doc/"/>
      </exec>
+     <exec dir="./src/latex/manual" executable="latex2html" os="Linux">
+       <arg line=" -mkdir -dir ../../../doc/manual_html -info 0 -no_auto_link -split 0 -no_navigation manual.tex"/>
+     </exec>
    </target>
+
+
+  <!-- =================================================================== -->
+  <!-- Generates the reference manual                                      -->
+  <!-- =================================================================== -->
+   <target name="doc.ref">
+     <exec dir="./doc/doxygen_api/latex" executable="latex" os="Linux">
+       <arg line=" refman.tex"/>
+     </exec>
+     <exec dir="./doc/doxygen_api/latex" executable="latex" os="Linux">
+       <arg line=" refman.tex"/>
+     </exec>
+     <exec dir="./doc/doxygen_api/latex" executable="dvips" os="Linux">
+       <arg line=" refman.dvi"/>
+     </exec>
+     <exec dir="./doc/doxygen_api/latex" executable="psnup" os="Linux">
+       <arg line=" -2 refman.ps ../../lciorefman.ps"/>
+     </exec>
+     <exec dir="./doc/doxygen_api/latex" executable="rm" os="Linux">
+       <arg line=" refman.ps"/>
+     </exec>
+   </target>
+
+
 
   <!-- =================================================================== -->
   <!-- Generates java and hh from aid                                      -->

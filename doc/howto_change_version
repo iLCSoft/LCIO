@@ -18,6 +18,10 @@ src/cpp/include/lcio.h
    /** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v00-09)
 
 
+doc/index.html
+   <h1>Documentation for LCIO v01-03</h1>
+
+
 doc/lcio.xml
   <block name="...." major="0" minor="9">
   <block name="...." major="0" minor="9">
