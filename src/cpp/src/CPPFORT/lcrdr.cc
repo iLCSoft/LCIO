@@ -11,17 +11,13 @@
 using namespace lcio ;
 
 
-#define LCREADER_PNTR( reader ) if(! (reader) ) return LCIO::ERROR ; \
-LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
-
-
 PTRTYPE lcrdrcreate(){
   LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
   return reinterpret_cast<PTRTYPE>(lcReader) ;
 }
 
 PTRTYPE lcrdrdelete(PTRTYPE reader){
-  LCREADER_PNTR( reader ) ;
+  LCReader* lcReader = reinterpret_cast<LCReader*>( (reader) ) ;
   delete lcReader ;
   return LCIO::SUCCESS ;
 }

@@ -5,8 +5,18 @@
 
 using namespace lcio ;
 
+#include <iostream>
+
+
 PTRTYPE lcmcpcreate(){
   MCParticleImpl* mcp = new MCParticleImpl ;
+  
+  // uncomment to demonstrate that the addresses are different depending on the
+  // type of the pointer....
+  //   cout << "lcmcpcreate: " <<  C2F_POINTER( LCObject*, mcp ) << ", "  
+  //        << C2F_POINTER( MCParticleData*, mcp ) << ", " 
+  //        << C2F_POINTER( MCParticle*, mcp ) << ", " 
+  //        << C2F_POINTER( MCParticleImpl*, mcp ) << endl ;
   return C2F_POINTER( LCObject*, mcp ) ;
 }
 int lcmcpdelete( PTRTYPE mcparticle ){
