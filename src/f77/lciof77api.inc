@@ -88,6 +88,15 @@ c-----the CalorimeterHit interface
       integer lccahgetposition
       integer  lccahsetcellid0, lccahsetcellid1, lccahsetenergy
       integer  lccahsetposition
+c-----the TPCHit interface
+      PTRTYPE lctphcreate
+      integer lctphdelete
+      integer lctphgetcellid
+      real lctphgettime, lctphgcharge
+      integer lctphgetquality, lctphgetnrawdatawords
+      integer lctphgetrawdataword, lctphsetcellid
+      integer lctphsettime, lctphsetcharge
+      integer lctphsetquality, lctphsetrawdata
 
 c---- constants as defined in EVENT::LCIO
 
