@@ -1,0 +1,129 @@
+****************************************************
+*  Include file for the low level Fortran interface 
+*  of LCIO. There is on function for each method of
+*  al the relevenat classes in LCIO. Please include
+*  this file in your Fortran program and use the
+*  C++ API documentation and the naming convention
+*  described in the users manual to find the
+*  fortran function you need.
+*
+*  F.Gaede
+*  10/30/2003
+***************************************************
+C This may be architecture dependent
+#define PTRTYPE integer
+
+
+c----- the LCReader interface
+      PTRTYPE lcrdrcreate
+      integer lcrdrdelete, lcrdropen, lcrdrclose
+      PTRTYPE lcrdrreadnextrunheader
+      PTRTYPE lcrdrreadnextevent
+      PTRTYPE lcrdrreadevent
+c-----the LCWriter interface
+      PTRTYPE lcwrtcreate
+      integer lcwrtdelete, lcwrtopen, lcwrtclose
+      integer lcwrtwriterunheader, lcwrtwriteevent
+c-----the LCRunHeader interface
+      PTRTYPE lcrhdcreate
+      integer lcrhddelete, lcrhdgetrunnumber
+      character*80 lcrhdgetdetectorname
+      character*1024 lcrhdgetdescription
+      integer lcrhdsetrunnumber, lcrhdsetdetectorname
+      integer lcrhdsetdescription, lcrhdaddactivesubdetector
+c-----the LCEvent interface
+      PTRTYPE lcevtcreate, lcevtgetcollection
+      integer lcevtdelete
+      integer lcevtgetrunnumber, lcevtgeteventnumber
+      character*80 lcevtgetdetectorname
+      integer*8 lcevtgettimestamp
+      integer lcevtaddcollection, lcevtremovecollection
+      integer lcevtsetrunnumber, lcevtseteventnumber
+      integer lcevtsetdetectorname, lcevtsettimestamp
+c-----the LCCollection interface
+      PTRTYPE lccolcreate, lccolgetelementat
+      integer lccoldelete, lccolgetnumberofelements
+      character*80 lccolgettypename
+      integer lccolgetflag, lccolsetflag, lccoladdelement
+      integer lccolremoveelementat
+c-----the MCParticle interface
+      PTRTYPE lcmcpcreate, lcmcpgetparent, lcmcpgetsecondparent
+      PTRTYPE lcmcpgetdaughter 
+      integer lcmcpdelete, lcmcpgetendpoint, lcmcpgetnumberofdaughters
+      integer lcmcpgetpdg, lcmcpgethepevtstatus 
+      integer lcmcpgetvertex, lcmcpgetmomentum
+      real lcmcpgetmass, lcmcpgetcharge, lcmcpgetenergy
+      integer lcmcpsetparent, lcmcpsetsecondparent, lcmcpadddaughter 
+      integer lcmcpsetpdg, lcmcpsethepevtstatus, lcmcpsetvertex 
+      integer lcmcpsetendpoint, lcmcpsetmomentum, lcmcpsetmass 
+      integer lcmcpsetcharge
+c-----the SimTrackerHit interface
+      PTRTYPE lcsthcreate, lcsthgetmcparticle
+      integer lcsthdelete, lcsthgetcellid
+      double precision lcsthgetposition
+      real lcsthgetdedx, lcsthgettime
+      integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx   
+      integer lcsthsettime, lcsthsetmcparticle
+c-----the SimCalorimeterHit interface
+      PTRTYPE lcschcreate, lcschgetparticlecont
+      integer lcschdelete, lcschgetcellid0, lcschgetcellid1  
+      real lcschgetenergy, lcschgetenergycont, lcschgettimecont
+      integer lcschgetposition, lcschgetnmcparticles
+      integer lcschgetpdgcont
+      integer  lcschsetcellid0, lcschsetcellid1, lcschsetenergy
+      integer  lcschsetposition, lcschaddmcparticlecontribution
+c-----the CalorimeterHit interface
+      PTRTYPE lccahcreate
+      integer lccahdelete, lccahgetcellid0, lccahgetcellid1  
+      real lccahgetenergy
+      integer lccahgetposition
+      integer  lccahsetcellid0, lccahsetcellid1, lccahsetenergy
+      integer  lccahsetposition
+
+c---- constants as defined in EVENT::LCIO
+
+      integer LCIO_CHBIT_LONG
+      integer LCIO_CHBIT_BARREL
+      integer LCIO_CHBIT_POSZ
+      integer LCIO_CHBIT_PDG
+      integer LCIO_THBIT_BARREL
+      integer LCIO_TPCBIT_RAW
+      integer LCIO_READ_ONLY
+      integer LCIO_UPDATE
+      integer LCIO_ERROR
+      integer LCIO_SUCCESS
+      integer LCIO_WRITE_NEW
+      integer LCIO_WRITE_APPEND
+
+      parameter(LCIO_CHBIT_LONG=31,LCIO_CHBIT_BARREL=30,
+     $     LCIO_CHBIT_POSZ=29, LCIO_CHBIT_PDG=28, LCIO_THBIT_BARREL=31)
+      parameter(LCIO_TPCBIT_RAW=31,LCIO_READ_ONLY=0,LCIO_UPDATE=1)
+      parameter(LCIO_ERROR=0,LCIO_SUCCESS=1)
+      parameter(LCIO_WRITE_NEW=0,LCIO_WRITE_APPEND =1)
+
+      character*32 LCIO_LCEVENT ;
+      character*32 LCIO_LCRUNHEADER ;
+      character*32 LCIO_MCPARTICLE ; 
+      character*32 LCIO_SIMCALORIMETERHIT ;
+      character*32 LCIO_CALORIMETERHIT ;
+      character*32 LCIO_SIMTRACKERHIT ; 
+      character*32 LCIO_TPCHIT ; 
+      character*32 LCIO_LCFLOATVEC ; 
+      character*32 LCIO_LCINTVEC ; 
+
+      data LCIO_LCEVENT /'LCEvent'/
+      data LCIO_LCRUNHEADER /'LCRunHeader'/
+      data LCIO_MCPARTICLE /'MCParticle'/ 
+      data LCIO_SIMCALORIMETERHIT /'SimCalorimeterHit'/
+      data LCIO_CALORIMETERHIT /'CalorimeterHit'/
+      data LCIO_SIMTRACKERHIT /'SimTrackerHit'/ 
+      data LCIO_TPCHIT /'TPCHit'/ 
+      data LCIO_LCFLOATVEC /'LCFloatVec'/ 
+      data LCIO_LCINTVEC /'LCIntVec'/ 
+
+
+
+
+
+
+

@@ -37,19 +37,12 @@ clean:
 	rm -f $(BINS) *.o
 
 
+$(BINDIR)/simjob_F: simjob.o $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/simjob_F simjob.o  $(LIBS)
+
 $(BINDIR)/anajob_F: anajob.o $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/anajob_F anajob.o  $(LIBS)
 
-$(BINDIR)/pyanajob_F: pyanajob.o $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/pyanajob_F pyanajob.o  $(LIBS)
 
-$(BINDIR)/pysimjob_F: pysimjob.o $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/pysimjob_F pysimjob.o  $(LIBS)
-
-$(BINDIR)/test_F: test.o $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/test_F test.o  $(LIBS)
-
-$(BINDIR)/simjob_F: simjob.o $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/simjob_F simjob.o  $(LIBS)
 
 

@@ -1,4 +1,7 @@
 
+c#ifndef HEPEVT_H
+c#define HEPEVT_H 1
+
 C *** HEPEVT commonblock.
       INTEGER          NMXHEP
       PARAMETER        (NMXHEP=4000)
@@ -8,4 +11,4 @@ C *** HEPEVT commonblock.
       COMMON /HEPEVT/  NEVHEP, NHEP, ISTHEP, IDHEP, JMOHEP, JDAHEP,
      &                 PHEP, VHEP
       SAVE   /HEPEVT/
-
+c#endif

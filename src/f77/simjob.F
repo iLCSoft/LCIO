@@ -3,85 +3,13 @@
       PROGRAM SIMJOB                                                !*
 *     SIMJOB                                                         *
 *     A program to demonstrate the use of the low level              *
-*     fortran interface to LCIO                                      *
+*     fortran interface to LCIO for writing LCIO files.              *
 *                                                                    *
 *     F.Gaede 09/10/2003                                             *
 **********************************************************************
       implicit none
  
-C This may be architecture dependent
-#define PTRTYPE integer
-
-
-c---- LCIO low level interface --------------------
-c----- the LCReader interface
-      PTRTYPE lcrdrcreate
-      integer lcrdrdelete, lcrdropen, lcrdrclose
-      PTRTYPE lcrdrreadnextrunheader
-      PTRTYPE lcrdrreadnextevent
-      PTRTYPE lcrdrreadevent
-c-----the LCWriter interface
-      PTRTYPE lcwrtcreate
-      integer lcwrtdelete, lcwrtopen, lcwrtclose
-      integer lcwrtwriterunheader, lcwrtwriteevent
-c-----the LCRunHeader interface
-      PTRTYPE lcrhdcreate
-      integer lcrhddelete, lcrhdgetrunnumber
-      character*80 lcrhdgetdetectorname
-      character*1024 lcrhdgetdescription
-      integer lcrhdsetrunnumber, lcrhdsetdetectorname
-      integer lcrhdsetdescription, lcrhdaddactivesubdetector
-c-----the LCEvent interface
-      PTRTYPE lcevtcreate, lcevtgetcollection
-      integer lcevtdelete
-      integer lcevtgetrunnumber, lcevtgeteventnumber
-      character*80 lcevtgetdetectorname
-      integer*8 lcevtgettimestamp
-      integer lcevtaddcollection, lcevtremovecollection
-      integer lcevtsetrunnumber, lcevtseteventnumber
-      integer lcevtsetdetectorname, lcevtsettimestamp
-c-----the LCCollection interface
-      PTRTYPE lccolcreate, lccolgetelementat
-      integer lccoldelete, lccolgetnumberofelements
-      character*80 lccolgettypename
-      integer lccolgetflag, lccolsetflag, lccoladdelement
-      integer lccolremoveelementat
-c-----the MCParticle interface
-      PTRTYPE lcmcpcreate, lcmcpgetparent, lcmcpgetsecondparent
-      PTRTYPE lcmcpgetdaughter 
-      integer lcmcpdelete, lcmcpgetendpoint, lcmcpgetnumberofdaughters
-      integer lcmcpgetpdg, lcmcpgethepevtstatus 
-      integer lcmcpgetvertex, lcmcpgetmomentum
-      real lcmcpgetmass, lcmcpgetcharge, lcmcpgetenergy
-      integer lcmcpsetparent, lcmcpsetsecondparent, lcmcpadddaughter 
-      integer lcmcpsetpdg, lcmcpsethepevtstatus, lcmcpsetvertex 
-      integer lcmcpsetendpoint, lcmcpsetmomentum, lcmcpsetmass 
-      integer lcmcpsetcharge
-c-----the SimTrackerHit interface
-      PTRTYPE lcsthcreate, lcsthgetmcparticle
-      integer lcsthdelete, lcsthgetcellid
-      double precision lcsthgetposition
-      real lcsthgetdedx, lcsthgettime
-      integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx   
-      integer lcsthsettime, lcsthsetmcparticle
-c-----the SimCalorimeterHit interface
-      PTRTYPE lcschcreate, lcschgetparticlecont
-      integer lcschdelete, lcschgetcellid0, lcschgetcellid1  
-      real lcschgetenergy, lcschgetenergycont, lcschgettimecont
-      integer lcschgetposition, lcschgetnmcparticles
-      integer lcschgetpdgcont
-      integer  lcschsetcellid0, lcschsetcellid1, lcschsetenergy
-      integer  lcschsetposition, lcschaddmcparticlecontribution
-c-----the CalorimeterHit interface
-      PTRTYPE lccahcreate
-      integer lccahdelete, lccahgetcellid0, lccahgetcellid1  
-      real lccahgetenergy
-      integer lccahgetposition
-      integer  lccahsetcellid0, lccahsetcellid1, lccahsetenergy
-      integer  lccahsetposition
-c---- end of LCIO low level interface --------------------
-      
-
+#include "lciof77api.inc"
 
 c---- variables
       PTRTYPE runheader, event, writer, sthcol, mcpcol, schcol, cahcol
@@ -103,7 +31,7 @@ C----- some constants
 
 
       writer = lcwrtcreate()
-      status = lcwrtopen( writer, filename , 0 )
+      status = lcwrtopen( writer, filename , LCIO_WRITE_NEW )
 
 c ----- create a few runs
       do irun=0,nrun
@@ -131,11 +59,11 @@ c-----  event loop
             status = lcevtsetrunnumber( event, irun ) 
             status = lcevtseteventnumber( event,  iev ) 
             status = lcevtsettimestamp( event, itim )
-            
-            mcpcol = lccolcreate( 'MCParticle' )
-            sthcol = lccolcreate( 'SimTrackerHit' )
-            schcol = lccolcreate( 'SimCalorimeterHit' )
-            cahcol = lccolcreate( 'CalorimeterHit' )
+
+            mcpcol = lccolcreate( LCIO_MCPARTICLE )
+            sthcol = lccolcreate( LCIO_SIMTRACKERHIT )
+            schcol = lccolcreate( LCIO_SIMCALORIMETERHIT )
+            cahcol = lccolcreate( LCIO_CALORIMETERHIT )
 
 c-------- create some monte carlo particles
 
@@ -246,7 +174,7 @@ c ----      set the flag bits to store position for calorimeter hits
                status = lccoladdelement( cahcol, hit ) 
             enddo
             
-
+c-----     now add everything to the event
             status = lcevtaddcollection(event,mcpcol ,'MCParticles') 
             status = lcevtaddcollection(event,sthcol ,'MyTrackerHits') 
             status = lcevtaddcollection(event,schcol ,'MyCalHits') 
@@ -254,7 +182,7 @@ c ----      set the flag bits to store position for calorimeter hits
             
             status = lcwrtwriteevent( writer , event )
             
-            if (status .eq. 0)  then
+            if (status .eq. LCIO_ERROR )  then
                print *, 'SIMJOB: error - can not write event', iev
                stop
             end if
