@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.27 2004-09-23 10:59:25 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.28 2004-09-23 14:06:53 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -83,8 +83,8 @@ c-----the LCCollection interface
       PTRTYPE lccolcreate, lccolgetelementat
       integer lccoldelete, lccolgetnumberofelements
       character*80 lccolgettypename
-      integer lccolsettransient
-      logical lccolistransient
+      integer lccolsettransient,lccolsetdefault
+      logical lccolistransient,lccolisdefault
       integer lccolgetflag, lccolsetflag, lccoladdelement
       integer lccolremoveelementat
 

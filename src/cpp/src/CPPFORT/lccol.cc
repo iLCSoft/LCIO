@@ -60,6 +60,16 @@ int lccolsettransient(PTRTYPE collection, bool value){
   col->setTransient( value) ;
   return LCIO::SUCCESS ;
 }
+bool lccolisdefault(PTRTYPE collection){
+  LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
+  return col->isDefault() ;
+}
+
+int lccolsetdefault(PTRTYPE collection, bool value){
+  LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;
+  col->setDefault( value) ;
+  return LCIO::SUCCESS ;
+}
  
 int lccolsetflag(PTRTYPE collection, int flag){
   LCCollectionVec* col = reinterpret_cast<LCCollectionVec*>(collection) ;

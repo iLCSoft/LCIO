@@ -21,6 +21,9 @@ int lccolgetflag(PTRTYPE collection)  ;
 bool lccolistransient(PTRTYPE collection) ;
 int lccolsettransient(PTRTYPE collection, bool value) ;
 
+bool lccolisdefault(PTRTYPE collection) ;
+int lccolsetdefault(PTRTYPE collection, bool value) ;
+
 int lccolsetflag(PTRTYPE collection, int flag) ;
 int lccoladdelement(PTRTYPE collection, PTRTYPE object) ;
 int lccolremoveelementat(PTRTYPE collection, int i)  ;
@@ -37,6 +40,9 @@ FCALLSCFUN1(INT, lccolgetflag, LCCOLGETFLAG, lccolgetflag, CFORTRANPNTR ) ;
 
 FCALLSCFUN1(LOGICAL, lccolistransient, LCCOLISTRANSIENT, lccolistransient, CFORTRANPNTR ) ;
 FCALLSCFUN2(INT, lccolsettransient, LCCOLSETTRANSIENT, lccolsettransient, CFORTRANPNTR, LOGICAL ) ;
+
+FCALLSCFUN1(LOGICAL, lccolisdefault, LCCOLISDEFAULT, lccolisdefault, CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lccolsetdefault, LCCOLSETDEFAULT, lccolsetdefault, CFORTRANPNTR, LOGICAL ) ;
 
 FCALLSCFUN2(INT, lccolsetflag, LCCOLSETFLAG, lccolsetflag, CFORTRANPNTR, INT ) ;
 FCALLSCFUN2(INT, lccoladdelement, LCCOLADDELEMENT, lccoladdelement, CFORTRANPNTR, CFORTRANPNTR ) ;
