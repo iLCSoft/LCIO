@@ -315,7 +315,8 @@ int main(int argc, char** argv ){
 	delete evt ;
 	// -------------------------------------
 
-	if( ! (i%100) ) cout << ". " << flush  ;
+	//  dont use this (compatibility with Fortran simjob.F)
+	//  if( ! (i%100) ) cout << ". " << flush  ;
 	
       } // evt loop
 
