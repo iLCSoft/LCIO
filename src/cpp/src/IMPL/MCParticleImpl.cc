@@ -95,7 +95,14 @@ namespace IMPL {
       
       if( getNumberOfDaughters() == 0 ) return  _endpoint ;
       
-      return _daughtersP[0]->getVertex()  ;
+      for(int i=0;i<getNumberOfDaughters();i++)
+      {
+          if(!_daughtersP[i]->vertexIsNotEndpointOfParent())
+          return _daughtersP[i]->getVertex();
+      }
+
+
+      return _endpoint ;
 
     } else 
       return _endpoint ;

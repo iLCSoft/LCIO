@@ -135,8 +135,11 @@ public interface MCParticle extends LCObject {
     public const double3V getVertex() const;
 
 
-    /** Returns the endpoint of the particle in [mm] - returns the vertex of the first daughter
-     *  if endpoint hasn't been set explicetly. 
+    /** Returns the endpoint of the particle in [mm] if
+     *  the  endpoint has been set explicetly.
+     *  If not, the vertex of the first daughter that 
+     *  has vertexIsNotEndpointOfParent==false is returned.
+     *  If no such daughter exists (0,0,0) is returned.
      */
     public const double3V getEndpoint() const;
 
