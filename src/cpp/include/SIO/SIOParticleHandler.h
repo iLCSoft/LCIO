@@ -1,28 +1,39 @@
-#ifndef hep_lcio_event_SIOPARTICLEHANDLER_H
-#define hep_lcio_event_SIOPARTICLEHANDLER_H 1
-
-#include "SIOObjectHandler.h"
-
-/** Interface for IO of CalorimeterHit objects.
+// -*- C++ -*-
+/** Implementation of SIOObjectHandler to handle IO of MCParticles.
+ *
+ * @author gaede
+ * @version Mar 6, 2003
  */
-class SIOParticleHandler : public SIOObjectHandler {
+#ifndef SIO_SIOPARTICLEHANDLER_H
+#define SIO_SIOPARTICLEHANDLER_H 1
 
-public:
+#include "SIO/SIOObjectHandler.h"
 
-  /** Reads lcio calorimeter hit objects from an SIO stream.
+
+namespace SIO {
+    
+    
+  /** Interface for IO of CalorimeterHit objects.
    */
-  virtual unsigned int read(SIO_stream* stream, 
-			    LCIOObject** objP,
-			    unsigned int flag, 
-			    unsigned int vers)  ;
+  class SIOParticleHandler : public SIOObjectHandler {
 
-  /** Writes lcio calorimeter hit objects to an SIO stream.
-   */
-
-  virtual unsigned int write(SIO_stream* stream, 
-			     const LCIOObject* obj,
-			     unsigned int flag) ;
-
-}; // class
-
-#endif /* ifndef hep_lcio_event_SIOPARTICLEHANDLER_H */
+  public:
+	
+    /** Reads lcio calorimeter hit objects from an SIO stream.
+     */
+    virtual unsigned int read(SIO_stream* stream, 
+			      EVENT::LCObject** objP,
+			      unsigned int flag, 
+			      unsigned int vers)  ;
+	
+    /** Writes lcio calorimeter hit objects to an SIO stream.
+     */
+	
+    virtual unsigned int write(SIO_stream* stream, 
+			       const EVENT::LCObject* obj,
+			       unsigned int flag) ;
+	
+  }; // class
+    
+}; //namespace
+#endif /* ifndef SIO_SIOPARTICLEHANDLER_H */

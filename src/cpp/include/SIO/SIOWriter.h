@@ -19,16 +19,14 @@ class SIO_stream ;
 namespace SIO {
 
   class SIOEventHandler ;
-  class SIOEventHeaderHandler ;
+  //  class SIOEventHeaderHandler ;
   class SIOCollectionHandler ;
 
     
-class SIOWriter : public IO::LCWriter {
+  class SIOWriter : public IO::LCWriter {
 
 
-public:
-    static char* const EVENTRECORDNAME = "LCEvent"  ;
-    static char* const HEADERRECORDNAME = "LCEventHeader"  ;
+  public:
 
     SIOWriter() ;
     /**
@@ -36,40 +34,40 @@ public:
      */
     virtual ~SIOWriter() ;
 
-/** Opens a file for writing.
- */
+    /** Opens a file for writing.
+     */
     virtual int open(std::string filename) ;
 
-/** Writes the given event to file.
- */
+    /** Writes the given event to file.
+     */
     virtual int writeEvent(const EVENT::LCEvent * evt) ;
 
-/** Closes the output file/stream etc.
- */
+    /** Closes the output file/stream etc.
+     */
     virtual int close() ;
 
- protected:
+  protected:
 
     void setUpHandlers(const EVENT::LCEvent * evt)  ;
     
 
- protected:
+  protected:
 
     SIO_record *_evtRecord ;
     SIO_record *_hdrRecord ;
     SIO_stream *_stream ;
     
 
- private:
+  private:
 
     SIOEventHandler *_evtHandler ;
-    SIOEventHeaderHandler *_hdrHandler ;
+    SIOEventHandler *_hdrHandler ;
     std::vector<SIOCollectionHandler*> _colVector ;
 
     bool isFirstEvent ;
     EVENT::LCEvent **evtP ;
 
-}; // class
+  }; // class
 
 }; // namespace
 

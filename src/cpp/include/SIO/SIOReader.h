@@ -17,8 +17,8 @@ class SIO_stream ;
 
 namespace SIO {
   
-  class SIOEventHeaderHandler ;
-  class SIOEventHandler ;
+  //class SIOEventHeaderHandler ;
+  //class SIOEventHandler ;
   
   class SIOReader : public IO::LCReader {
     
@@ -64,8 +64,8 @@ namespace SIO {
     
   private:
     
-    SIOEventHandler *_evtHandler ;
-    SIOEventHeaderHandler *_hdrHandler ;
+    //    SIOEventHandler *_evtHandler ;
+    //    SIOEventHeaderHandler *_hdrHandler ;
     IOIMPL::LCEventIOImpl **_evtP ;
     
   }; // class

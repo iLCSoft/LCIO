@@ -20,12 +20,15 @@ namespace SIO {
   class SIOEventHandler : public SIO_block{
     
   public:
-    static char* const EVENT="Event" ;
+    //    static char* const EVENT="Event" ;
     
+  protected:
+    SIOEventHandler() : SIO_block("UNKNOWN") { /* no default c'tor*/  ;} 
+
   public:
     
-    SIOEventHandler() ;
-    SIOEventHandler(IOIMPL::LCEventIOImpl** evtP) ;
+    SIOEventHandler(const std::string& name) ;
+    SIOEventHandler(const std::string& name, IOIMPL::LCEventIOImpl** evtP) ;
     ~SIOEventHandler() ;
     
     // interface from SIO_block
