@@ -1,0 +1,23 @@
+package hep.lcio.io;
+
+/**Interface for LCWriter objects - there will be one 
+ * implementation per data format, e.g. SIO, Root, ASCII. 
+ * 
+ * @author gaede
+ * @version Mar 4, 2003
+ */
+public interface LCWriter {
+
+    /** Opens a file for writing and returns LCIO::SUCCESS if no error occured.
+     */
+    public int open(const String& filename) ;
+    
+    /** Writes the given event to file and returns LCIO::SUCCESS if no error occured.
+     */
+    public int writeEvent(const LCEvent*  evt) ;
+    
+    /** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
+     */
+    public int close() ;
+    
+}

@@ -1,0 +1,51 @@
+package hep.lcio.event ;
+
+/** Global constants used in LCIO.
+ * 
+ * @author gaede 
+ * @version Mar 4, 2003
+ * @see LCObject
+ * @see LCIO
+ */
+//@cpp{
+// // define global namespace lcio
+// namespace lcio{
+//    using namespace EVENT ;
+//    using namespace IO ;
+// }
+//}
+
+@cpp{ // some convinient typedefs
+   typedef std::vector<std::string> StringVec ;
+}
+
+public interface LCIO{
+
+    // it seems to be impossible to have one declaration for
+    // static constants in Java and C++ - so we need to define
+    // the same constant twice !!
+
+@ifdef cpp
+@cpp{
+  public:
+    static const int READ_ONLY =  0 ;
+    static const int UPDATE   =  1 ;
+    static const int ERROR   =  0 ;
+    static const int SUCCESS =  1 ;
+    static const bool COMPRESSION = false ;
+    // type names:
+    static char* const MCPARTICLE = "MCParticle" ;
+    static char* const CALORIMETERHIT = "CalorimeterHit" ;
+    static char* const TRACKERHIT = "TrackerHit" ;
+}
+@else
+  public static int READ_ONLY =  0 ;
+  public static int UPDATE   =  1 ;
+  public static int ERROR   =  0 ;
+  public static int SUCCESS =  1 ;
+  public static  boolean COMPRESSION = false ;
+  static static String MCPARTICLE = "MCParticle" ;
+  static static String CALORIMETERHIT = "CalorimeterHit" ;
+  static static String TRACKERHIT = "TrackerHit" ;
+@endif
+}

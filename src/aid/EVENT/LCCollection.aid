@@ -1,0 +1,41 @@
+package hep.lcio.event ;
+
+/** The generic collection used in LCIO. Holds objects of type LCObject.
+ * 
+ * @author gaede 
+ * @version Mar 4, 2003
+ * @see LCObject
+ * @see LCIO
+ */
+public interface LCCollection{
+    
+    /**Returns the number of entries in the collection.
+     */
+    public int getNumberOfEntries() const ;
+    
+    /** Returns the type name of the collection - valid names are defined in LCIO.
+     */
+    public const String& getTypeName() const ;
+    
+    /** Returns pointer to element at index - null if out of range.
+     */
+    public const LCObject* getElementAt(int index) const ;
+
+    /** Returns flag word for collection. Depending on the 
+     * actual type bits have different meaning, e.g. for CalorimeterHits:
+     *  Bit 31 Barrel = 0, Endcap = 1 <br>
+     *  Bit 30 long = 1, short = 0 <br>
+     *  Bit 29 PDG = 1, no PDG =0 <br>
+     *  The long format (bit 30) includes the position of the hit in
+     *  world coordinates. <br>
+     *  PDG (bit 29) means additional entries in the collection of
+     *  MCHitContributions per primary: one for every  type of secondary.
+     *  Take for example a photon that produces exactly one e+e- pair in
+     *  a given cell. In PDG mode this results in two entries, one for the e+
+     *  and one for the e-, whereas there will be only one entry if bit29==0.
+     */
+    public int getFlag() const ;
+
+
+}
+

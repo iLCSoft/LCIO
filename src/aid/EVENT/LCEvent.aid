@@ -1,0 +1,54 @@
+package hep.lcio.event;
+
+/**The main event interface. Has to  be implemented by 
+ * all user event classes that are to be made persistent.
+ * 
+ * @author gaede
+ * @version Mar 4, 2003
+ * @see LCCollection
+ */
+
+public interface LCEvent {
+    
+    /** Return the run number off this event.
+     */
+    public int getRunNumber() const ;
+    
+    /** Returns this event's number .
+     */
+    public int getEventNumber() const ;
+    
+    /** Returns the name of the detector setup used in the simulation.
+     */
+    public const String& getDetectorName() const ;
+    
+    /** Returns the time stamp of the event.
+     */
+    public long getTimeStamp() const ;
+    
+    /** Returns the names of the collections in the  event.
+     */
+    public String[]*  getCollectionNames() const ;
+    
+    /** Returns the collection for the given name - null if it doesn't exist.
+     */ 
+    public LCCollection* getCollection(const String& name) const ;
+    
+    /** Adds a collection with the given name. This method should fail if the event 
+     * is read only and return LCIO::ERROR.
+     */ 
+    public int addCollection(LCCollection* col ,const  String& name ) ;
+    
+    /** Removes (and deletes) the collection with name. 
+     * Should fail if accessMode = read_only.
+     */ 
+    /** Removes (and deletes) the collection with the given name. This method should fail if the event 
+     * is read only and return LCIO::ERROR.
+     */ 
+    public int removeCollection(const  String& name ) ;
+    
+
+    // no extension handling so far -
+    // user extension can be added through LCCollections of LCIOObject(s) ...
+
+}

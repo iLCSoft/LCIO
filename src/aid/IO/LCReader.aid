@@ -1,0 +1,28 @@
+package hep.lcio.io;
+
+/**Interface for LCWriter objects - there will be one 
+ * implementation per data format, e.g. SIO, Root, ASCII. 
+ * 
+ * @author gaede
+ * @version Mar 4, 2003
+ */
+public interface LCReader {
+
+/** Opens a file for reading and returns LCIO::SUCCESS if no error occured.
+ */
+	public int open(String filename) ;
+
+/** Reads the next event from the file. Returns null if no more 
+ * events or error occured.
+ */
+	public LCEvent* readNextEvent() ;
+
+/** Same as above allowing to set the access mode (LCIO::READ_ONLY is default) 
+ */
+	public LCEvent* readNextEvent(int accessMode) ;
+
+/** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
+ */
+	public int close() ;
+	
+}

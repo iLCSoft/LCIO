@@ -1,0 +1,11 @@
+package hep.lcio.event ;
+
+/** The generic object that is held in an LCCollection - 
+ *  just a tag - no methods. 
+ * 
+ * @author gaede 
+ * @version Mar 4, 2003
+ */
+public interface LCObject{
+
+}
