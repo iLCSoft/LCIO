@@ -5,21 +5,17 @@ import hep.lcio.event.ParticleID;
 
 /**
  * @author Tony Johnson
- * @version $Id: IParticleID.java,v 1.2 2004-09-16 07:15:33 gaede Exp $
+ * @version $Id: IParticleID.java,v 1.3 2004-09-16 10:46:36 gaede Exp $
  */
 public class IParticleID extends ILCObject implements ParticleID
 {
-   protected String identifier;
+   protected int algorithmType ;
    protected float logLikelihood;
    protected int pdg;
    protected float[] parameters;
    protected int type;
    
    
-   public String getIdentifier()
-   {
-      return identifier;
-   }
    
    public float getLoglikelihood()
    {
@@ -47,12 +43,6 @@ public class IParticleID extends ILCObject implements ParticleID
       this.pdg = PDG;
    }
    
-   public void setIdentifier(String identifier)
-   {
-      checkAccess();
-      this.identifier = identifier;
-   }
-   
    public void setLoglikelihood(float loglikelihood)
    {
       checkAccess();
@@ -71,4 +61,12 @@ public class IParticleID extends ILCObject implements ParticleID
       this.type = type;
    }
    
+   public int getAlgorithmType() {
+     return algorithmType;
+   }
+
+   public void setAlgorithmType(int i) {
+     algorithmType = i;
+   }
+
 }

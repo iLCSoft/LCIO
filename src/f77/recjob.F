@@ -446,7 +446,6 @@ c          status  = lcclusetmuonweight ( clusp, .333)
       integer ihit1, ihit2, ihit3, npid, itrk, iclu, imcp
       real    mom(3), cov(10), refp(3), prob
       character*30 colname1, colname2
-      character*40 ident
       double precision dpos(3), dhelp
 
       integer   nreccp
@@ -483,8 +482,8 @@ c        status   =  lcrcpsetprimary ( recopp, .true. )
           status   = lcpidsettype ( pidp, j )
           status   = lcpidsetpdg ( pidp, -11 )
 
-          ident    = 'recojob-RunEventProcessor'
-          status   = lcpidsetidentifier ( pidp, ident )
+
+          status   = lcpidsetalgorithmtype ( pidp, 1 )
           do  k = 1, 3
             status   = lcpidaddparameter ( pidp, (k-1)*.1 )
           end do

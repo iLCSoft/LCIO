@@ -20,8 +20,8 @@ namespace IMPL{
   float ParticleIDImpl::getLoglikelihood() const{
     return _loglikelihood ;
   }
-  const std::string& ParticleIDImpl::getIdentifier() const{
-    return _identifier ;
+  int ParticleIDImpl::getAlgorithmType() const{
+    return _algorithmType ;
   }
   const EVENT::FloatVec & ParticleIDImpl::getParameters() const{
     return _parameters ;
@@ -41,9 +41,9 @@ namespace IMPL{
     _loglikelihood = logL ; 
   }
   
-  void ParticleIDImpl::setIdentifier(std::string identifier ) {
-    checkAccess("ParticleIDImpl::setIdentifier") ;
-    _identifier = identifier ;
+  void ParticleIDImpl::setAlgorithmType(int algorithmType ) {
+    checkAccess("ParticleIDImpl::setAlgorithmType") ;
+    _algorithmType = algorithmType ;
   }
   
   void ParticleIDImpl::addParameter( float p ){

@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.19 2004-09-16 07:15:33 gaede Exp $
+*  $Id: lciof77api.inc,v 1.20 2004-09-16 10:46:35 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -140,11 +140,10 @@ c      integer lcclusethadweight, lcclusetmuonweight
 c-----the ParticleID interface
       PTRTYPE lcpidcreate
       integer lcpiddelete, lcpidid, lcpidgettype, lcpidgetpdg
-      integer lcpidgetparameters
+      integer lcpidgetparameters, lcpidgetalgorithmtype
       real    lcpidgetloglikelihood
-      character*80 lcpidgetidentifier
       integer lcpidsettype, lcpidsetpdg, lcpidsetloglikelihood
-      integer lcpidsetidentifier
+      integer lcpidsetalgorithmtype
       integer lcpidaddparameter
       integer unknownpdg
       parameter (unknownpdg=999999)

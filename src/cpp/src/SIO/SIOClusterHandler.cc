@@ -59,7 +59,7 @@ namespace SIO{
     
     
     if( _vers > SIO_VERSION_ENCODE(1,2) ) {
-
+      
       
       // read PIDs
       int nPid ;
@@ -71,11 +71,8 @@ namespace SIO{
 	SIO_DATA( stream ,  &(pid->_loglikelihood) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
 	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
-	//	SIO_DATA( stream ,  &(pid->_goodness) , 1  ) ;
-	
-	char* dummy ; 
-	LCSIO_READ( stream,  &dummy ) ; 
-	pid->setIdentifier( dummy ) ;
+	SIO_DATA( stream ,  &(pid->_algorithmType) , 1  ) ;
+
 	int nPara  ;
 	SIO_DATA( stream ,  &nPara  , 1 ) ;
 	float aParameter ;
@@ -184,8 +181,7 @@ namespace SIO{
       LCSIO_WRITE( stream, pid->getLoglikelihood()  ) ;
       LCSIO_WRITE( stream, pid->getType()  ) ;
       LCSIO_WRITE( stream, pid->getPDG()  ) ;
-      //      LCSIO_WRITE( stream, pid->getGoodnessOfPID()  ) ;
-      LCSIO_WRITE( stream, pid->getIdentifier()  ) ;
+      LCSIO_WRITE( stream, pid->getAlgorithmType()  ) ;
       int nPara = pid->getParameters().size() ;
       SIO_DATA( stream ,  &nPara  , 1 ) ;
       for(int j=0;j<nPara;j++){

@@ -350,23 +350,52 @@ public:
     clusterFlag.setBit( LCIO::CLBIT_HITS ) ;
     clusterVec->setFlag( clusterFlag.getFlag()  ) ;
     
+    StringVec shapeParams ;
+    shapeParams.push_back("Shape_trans") ;
+    shapeParams.push_back("Shape_long") ;
+    shapeParams.push_back("Shape_axis_x") ;
+    shapeParams.push_back("Shape_axis_y") ;
+    shapeParams.push_back("Shape_axis_z") ;
+    shapeParams.push_back("Shape_quality") ;
+    
+    clusterVec->parameters().setValues( "ClusterShapeParameters" , shapeParams ) ;
+    
+    IntVec algoIDs ;
+    enum {
+      RunEventProcessorID  = 1 ,
+      anotherAlgorithmID,
+      andYetAnotherAlgorithmID
+    }	;
+    
+    algoIDs.push_back( RunEventProcessorID ) ;
+    algoIDs.push_back( anotherAlgorithmID ) ;
+    algoIDs.push_back( andYetAnotherAlgorithmID ) ;
+    
+    StringVec algoNames ;
+    algoNames.push_back("recojob-RunEventProcessor") ;
+    algoNames.push_back("anotherAlgorithm") ;
+    algoNames.push_back("andYetAnotherAlgorithm") ;
+    
+    clusterVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
+    clusterVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
+    
+    
     if( calHits ){
       
       int nHits = calHits->getNumberOfElements() ;
       int nCluster = nHits / 10 ;
       
-
       
-
+      
       for( int i=0; i < nCluster ; i ++ ){
 	
 	ClusterImpl* cluster = new ClusterImpl ;
 
-// 	int type = ( Cluster::COMBINED << 16 | Cluster::CHARGED  ) ;
+	// 	int type = ( Cluster::COMBINED << 16 | Cluster::CHARGED  ) ;
 	cluster->setTypeBit( 1 ) ;
 	cluster->setTypeBit( 7 ) ;
 	cluster->setTypeBit( 11 ) ;
-
+	
 	cluster->setEnergy(  (i+1)*1.1 ) ;
 	float pos[3] = { 12. ,123456789. , .0987654321 } ;
 	cluster->setPosition( pos ) ;
@@ -381,30 +410,17 @@ public:
 	float shapeArray[6] = { 1.,2.,3.,3.,2.,1.} ;
 	FloatVec shape ;
 	copy( &shapeArray[0] , &shapeArray[5] , back_inserter( shape ) ) ;
-	StringVec shapeParams ;
-	shapeParams.push_back("Shape_trans") ;
-	shapeParams.push_back("Shape_long") ;
-	shapeParams.push_back("Shape_axis_x") ;
-	shapeParams.push_back("Shape_axis_y") ;
-	shapeParams.push_back("Shape_axis_z") ;
-	shapeParams.push_back("Shape_quality") ;
-
-	clusterVec->parameters().setValues( "ClusterShapeParameters" , shapeParams ) ;
  	cluster->setShape( shape ) ;
 
-
-// 	cluster->setEMWeight( .333)  ;
-// 	cluster->setHADWeight( .333)  ;
-// 	cluster->setMuonWeight( .333)  ;
-
- 	// add some particle ids
+	// add some particle ids
 	int nPID = 5 ;
 	for(int j=0;j<nPID;j++){
 	  ParticleIDImpl* pid = new ParticleIDImpl ;
 	  pid->setLoglikelihood( (double) j / nPID ) ;
 	  pid->setType( j ) ;
 	  pid->setPDG( -11 ) ;
-	  pid->setIdentifier("recojob-RunEventProcessor") ;
+	  pid->setAlgorithmType( RunEventProcessorID ) ;
+
 	  for(int k=0;k<3;k++){
 	    pid->addParameter( k*.1 ) ;
 	  }
@@ -454,6 +470,8 @@ public:
 
     // add some reconstructed particles
     LCCollectionVec* particleVec = new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE )  ;
+    particleVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
+    particleVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
     
     for(int i=0;i<nRecP;i++){
       ReconstructedParticleImpl * part = new ReconstructedParticleImpl ;
@@ -481,7 +499,7 @@ public:
 	pid->setLoglikelihood( (double) j / nPID ) ;
 	pid->setType( j ) ;
 	pid->setPDG( -11 ) ;
-	pid->setIdentifier("recojob-RunEventProcessor") ;
+	pid->setAlgorithmType( RunEventProcessorID ) ;
 	for(int k=0;k<3;k++){
 	  pid->addParameter( k*.1 ) ;
 	}
