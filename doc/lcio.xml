@@ -249,7 +249,7 @@
             <data type="float" name="energy"></data>
 	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
 		<data type="float[3]" name="position"></data>
-	    </if>
+	    </if> 
             <data type="int" name="nContributions"></data>
             <repeat count="nContributions">
 		<data type="pntr" name="MCParticle"></data>
@@ -300,7 +300,9 @@
             <repeat count="nElements">
 	       <data type="float" name="value"></data>
             </repeat>
-            <data type="ptag" name="this"></data>
+           <if condition="1000*major+minor&gt;1002">
+             <data type="ptag" name="this"></data>
+           </if>
          </repeat>
       </block>
       <block name="LCIntVec" major="1" minor="3">
@@ -339,7 +341,9 @@
             <repeat count="nElements">
 	       <data type="int" name="value"></data>
             </repeat>
-            <data type="ptag" name="this"></data>
+           <if condition="1000*major+minor&gt;1002">
+             <data type="ptag" name="this"></data>
+           </if>
          </repeat>
       </block>
       <block name="LCStrVec" major="1" minor="3">
@@ -369,7 +373,6 @@
              <repeat count="nVals">
 	       <data type="string" name="value"></data>
              </repeat>
-            <data type="ptag" name="this"></data>
           </repeat>
         </if>
 	<!-- end of named parameters -->
@@ -379,6 +382,9 @@
             <repeat count="nElements">
 	       <data type="string" name="value"></data>
             </repeat>
+           <if condition="1000*major+minor&gt;1002">
+             <data type="ptag" name="this"></data>
+           </if>
          </repeat>
       </block>
       <block name="RawCalorimeterHit" major="1" minor="3">
