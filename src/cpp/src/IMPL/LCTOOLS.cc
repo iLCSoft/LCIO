@@ -6,6 +6,7 @@
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "DATA/LCFloatVec.h"
+#include "DATA/LCIntVec.h"
 
 #include "IMPL/LCFlagImpl.h"
 
@@ -69,6 +70,11 @@ namespace IMPL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
 	  
 	printLCFloatVecs( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
+	  
+	printLCIntVecs( col ) ;
 
       }
 
@@ -186,6 +192,23 @@ namespace IMPL {
 	  cout << endl ;   
 
 	}
+      } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
+	
+	int nHits =  col->getNumberOfElements() ;
+	cout << nHits << " vectors: " ;
+	int nPrint = nHits>0 ? 1 : 0 ;
+	
+	if(!nPrint ) cout << endl ;
+	for( int i=0 ; i< nPrint ; i++ ){
+	  const LCIntVec* vec = 
+	    dynamic_cast<const LCIntVec*>( col->getElementAt( i ) ) ;
+	  
+	  cout << " values(" << i << "): " ;
+	  for(unsigned int k=0 ; k< vec->size() ; k++ )
+	    cout <<  (*vec)[k]  << ", " ;
+	  cout << endl ;   
+
+	}
       } else if(evt->getCollection( *name )->getTypeName() == LCIO::MCPARTICLE ){
       
       
@@ -222,6 +245,12 @@ namespace IMPL {
   void LCTOOLS::printLCFloatVecs( const EVENT::LCCollection* col ) {
 
     cout << "  LCFloatVecs not implemented yet  " << endl ;
+
+  }
+
+  void LCTOOLS::printLCIntVecs( const EVENT::LCCollection* col ) {
+
+    cout << "  LCIntVecs not implemented yet  " << endl ;
 
   }
 

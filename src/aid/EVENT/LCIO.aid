@@ -61,8 +61,7 @@ public interface LCIO{
     static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
     static const char* LCFLOATVEC ; 
-    static const char* LCINTEGERVEC ; 
-
+    static const char* LCINTVEC ; 
 }
 @else
     // current version number of lcio
@@ -95,7 +94,7 @@ public interface LCIO{
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
-  public static const String LCINTEGERVEC = "LCIntegerVec" ;
+  public static const String LCINTVEC = "LCIntVec" ;
 @endif
 }
 
