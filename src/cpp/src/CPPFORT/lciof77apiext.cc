@@ -10,6 +10,13 @@
 #include "IMPL/LCTOOLS.h"
 
 #include "CPPFORT/HEPEVT.h"
+#include "DATA/LCIntVec.h"
+#include "DATA/LCFloatVec.h"
+
+//#include "CPPFORT/lcvec.h"
+#include <string>
+#include <vector>
+typedef std::vector<std::string> LCStrVec ;
 
 #include <iostream>
 
@@ -245,5 +252,62 @@ int lcio2hepevt( PTRTYPE event ){
     std::cerr << "Exception in hepevt2lcio: " << e1.what() << std::endl ;
     return LCIO::ERROR ;
   }
+}
+
+int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ){
+  LCIntVec* intVec =  f2c_pointer<LCIntVec,LCObject>(vector) ;
+  int intVecLength = 0;
+  intVecLength = intVec->size() ;
+  if (intVecLength > *nintv) {
+    std::cerr << "Warning in lcgetintvector: vector size " << intVecLength
+              << " larger then target array size " << *nintv << std::endl ;
+    intVecLength = *nintv ;
+  }
+  else {
+    *nintv = intVecLength ;
+  }
+  for (int j=0;j < intVecLength;j++)  *intv++ = (*intVec)[j] ;
+  return LCIO::SUCCESS ;
+}
+
+int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ){
+  LCFloatVec* floatVec =  f2c_pointer<LCFloatVec,LCObject>(vector) ;
+  int floatVecLength = 0 ;
+  floatVecLength = floatVec->size() ;
+  if (floatVecLength > *nfloatv) {
+    std::cerr << "Warning in lcgetfloatvector: vector size " << floatVecLength
+              << " larger then target array size " << *nfloatv << std::endl ;
+    floatVecLength = *nfloatv ;
+  }
+  else {
+    *nfloatv = floatVecLength ;
+  }
+  for (int j=0;j < floatVecLength;j++)  *floatv++ = (*floatVec)[j] ;
+  return LCIO::SUCCESS ;
+}
+
+
+int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv){
+  LCStrVec* stringVec = reinterpret_cast<LCStrVec*>(vector) ;
+  int stringVecLength = 0 ;
+  stringVecLength = stringVec->size() ;
+  if (stringVecLength > *nstringv) {
+    std::cerr << "Warning in lcgetstringvector: vector size " << stringVecLength
+              << " larger then target array size " << *nstringv << std::endl ;
+    stringVecLength =  *nstringv ;
+  }
+  else {
+    *nstringv = stringVecLength ;
+  }
+  int elemlen = nchstringv + 1;
+  int stringpos = 0 ;
+  stringpos = reinterpret_cast<int>( stringv ) ;
+  for (int j=0;j < stringVecLength;j++) {
+    char* outstring = const_cast<char*>( (*stringVec)[j].c_str() );
+    char* tmpstring = reinterpret_cast<char*>( stringpos ) ;
+    strcpy(tmpstring,outstring) ;
+    stringpos = stringpos + elemlen ;
+  }
+  return LCIO::SUCCESS ;
 }
 

@@ -95,6 +95,20 @@ int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, floa
 			     int* pdg ) ;
 
 
+/**Return the content of an int vector
+*/
+int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
+
+
+/**Return the content of an float vector
+*/
+int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
+
+/**Return the content of an string vector
+*/
+int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+
+
 
 
 // now the fortran wrappers from cfortran.h
@@ -138,6 +152,14 @@ FCALLSCFUN6(CFORTRANPNTR , lcgetsimcalohit, LCGETSIMCALOHIT, lcgetsimcalohit,
             CFORTRANPNTR , INT , INTV ,  INTV , FLOATV , FLOATV ) ;
 FCALLSCFUN6(INT, lcgetsimcalohitmccont, LCGETSIMCALOHITMCCONT, lcgetsimcalohitmccont,
             CFORTRANPNTR , INT , CFORTRANPNTRV, FLOATV , FLOATV , INTV ) ;
+
+FCALLSCFUN3(INT, lcgetintvector, LCGETINTVECTOR , lcgetintvector,
+            CFORTRANPNTR , INTV, INTV ) ;
+FCALLSCFUN3(INT, lcgetfloatvector, LCGETFLOATVECTOR , lcgetfloatvector,
+            CFORTRANPNTR , FLOATV, INTV ) ;
+#define lcgetstringvector_STRV_A2 NUM_ELEM_ARG(3)
+FCALLSCFUN4(INT, lcgetstringvector, LCGETSTRINGVECTOR , lcgetstringvector,
+            CFORTRANPNTR , PSTRINGV, INTV, INT ) ;
 
 }
 
