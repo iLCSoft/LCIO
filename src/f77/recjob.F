@@ -16,26 +16,36 @@
 
       implicit none
  
-      integer nargs
-      character*30 fileiname, fileoname
+      integer nargs, nFiles, i
+      character*40 filenames(20),fileoname
 
+      nFiles       = 1
+      filenames(1) = 'f_recjob.slcio'
+      filenames(2) = 'f_simjob.slcio'
 
-C----- some constants
-
-      fileiname = 'f_simjob.slcio'
-      fileoname = 'f_recjob.slcio'
+c---- read file names from command line arguments
+      nargs = iargc()
+      if (nargs .lt. 1)  then
+        print *, ' usage:  anajob <output-file>',
+     &           '<input-file1> [[input-file2],...]'
+        print *, ' filenames must have less then 40 characters'
+        print *, ' up to 20 filenames are accepted'
+        print *, ' no arguments given - using default'
+        print *
+      else if (nargs .gt. 20)  then
+        print *, ' usage: more than max = 20 file names given'
+        stop
+      else
+        do  i = 1, nargs
+          call getarg (i, filenames(i))
+        end do
+        nFiles = nargs - 1
+      end if
 
       call srand ( 1234 )
 
-      nargs = iargc()
-      if (nargs .gt. 0)  call getarg (1, fileiname)
-      if (nargs .gt. 1)  call getarg (2, fileoname)
-      print *, 'RECJOB: the filenames used for I/O are: ',
-     &          fileiname(1:lnblnk(fileiname)), ', ', 
-     &          fileoname(1:lnblnk(fileoname))
-
-
-      call event_processor ( fileiname, fileoname )
+      fileoname = filenames(1)
+      call event_processor ( fileoname, filenames(2), nFiles )
 
       stop
 
@@ -43,7 +53,7 @@ C----- some constants
 
 **********************************************************************
 *                                                                    *
-      subroutine event_processor ( fileiname, fileoname )           !*
+      subroutine event_processor ( fileoname, fileinames, nifiles ) !*
 *                                                                    *
 **********************************************************************
 
@@ -51,21 +61,28 @@ C----- some constants
 
 #include "recjob.inc"
 
-      character*30 fileiname, fileoname
+      character*40 fileinames(*), fileoname
+      integer      nifiles
+
+      PTRTYPE      pstrv, lcstringvectorcreate
       integer      lcrdreventprocessor
+
+***   create LCStrvec of input file names
+      pstrv = lcstringvectorcreate ( fileinames, 
+     &                               nifiles, len (fileinames(1)) )
 
 ***   create writer, open output file
       writer = lcwrtcreate()
       status = lcwrtopen( writer, fileoname , LCIO_WRITE_NEW )
       if( status.eq.LCIO_ERROR) then
          write(*,*) ' could not open file ', 
-     &              fileoname(1:lnblnk(fileiname))
+     &              fileoname(1:lnblnk(fileoname))
          call exit (1)
       endif
 
-***   create reader, open input file, start event loop
+***   create reader, open input file chain, start event loop
       ievent = 0
-      status = lcrdreventprocessor( fileiname )
+      status = lcrdreventprocessor( pstrv )
       
 ***   end of event processing, close I/O files
       ievent = ievent
@@ -304,9 +321,7 @@ ccc       end do
 ***   the generic Clusters to the 'raw data' CalorimeterHits
 ***   -> this should be done automatically in a future release
       calflag = lccolgetflag ( calhitcol )
-        print '(a,z8)', 'calflag is= ', calflag
       calflag = ibset ( calflag, LCIO_RCHBIT_PTR )
-        print '(a,z8)', 'calflag is= ', calflag
       status  = lccolsetflag ( calhitcol, calflag )
 
       scRelp  = lcrelcreate( LCIO_CALORIMETERHIT,LCIO_SIMCALORIMETERHIT)

@@ -202,17 +202,22 @@ is provided which has to be called as:
 ...
 #include "lciof77api.inc"
       integer          lcrdreventprocessor, status
-      character*30     filenamein , filenameout
-      PTRTYPE          writer
+      character*30     filenamesin(3)
+      character*30     filenameout
+      PTRTYPE          writer, pv
       common /outinfo/ writer
 ...
-      filenamein  = 'simjob_f.slcio'
-      filenameout = 'recjob_f.slcio'
+      filenamesin(1)  = 'simjob_f1.slcio'
+      filenamesin(2)  = 'simjob_f2.slcio'
+      filenamesin(3)  = 'simjob_f3.slcio'
+      filenameout     = 'recjob_f.slcio'
 ***     create writer, open output file
       writer = lcwrtcreate()
       status = lcwrtopen( writer, filenameout , LCIO_WRITE_NEW )
-***     create reader, open input file, start event loop
-      status = lcrdreventprocessor( fileinamein )
+***     create a stringvector of input file names
+      pv = lcstringvectorcreate( filenamesin, 3, len (filenamesin(1))
+***     create reader, open input file chain, start event loop
+      status = lcrdreventprocessor( pv )
 ...
       subroutine processrunheader ( pheader )
       PTRTYPE pheader

@@ -5,12 +5,14 @@ using namespace std ;
 using namespace lcio ;
 
 #include "lcrdrrep.icc"
-int lcrdreventprocessor(const char* argv ){
+int lcrdreventprocessor( PTRTYPE filenamevec ){
   
+    LCStrVec* filenameVec = reinterpret_cast<LCStrVec*>(filenamevec);
+
     // create reader and writer for input and output streams 
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     
-    lcReader->open( argv ) ;
+    lcReader->open( *filenameVec ) ;
 
     {
       RunEventProcessor evtProc ;
