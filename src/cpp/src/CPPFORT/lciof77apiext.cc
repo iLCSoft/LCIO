@@ -123,9 +123,9 @@ PTRTYPE lcdumpeventdetailed ( PTRTYPE event ){
 
 
 int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* hepevtstatus, double* prodvtx,
-                         float* momentum, float* mass, int* ndaughters ){
+                         float* momentum, float* mass, float* charge, int* ndaughters ){
 
-  MCParticleImpl* lcMCParticle = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  MCParticle* lcMCParticle = f2c_pointer<MCParticle,LCObject>( mcparticle ) ;
 
   *pdg               = lcMCParticle->getPDG() ;
   *hepevtstatus      = lcMCParticle->getHepEvtStatus() ;
@@ -134,6 +134,7 @@ int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* hepevtstatus, double
   const float*  tmp  = lcMCParticle->getMomentum() ;
   for(int k=0;k<3;k++)  *momentum++ = tmp[k] ;
   *mass              = lcMCParticle->getMass() ;
+  *charge            = lcMCParticle->getCharge() ;
   *ndaughters        = lcMCParticle->getNumberOfDaughters() ;
   return LCIO::SUCCESS ;
 }
@@ -221,7 +222,7 @@ int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, floa
   return LCIO::SUCCESS ;
 }
 
-int lcio2hepevt( PTRTYPE evtout ){
+int hepevt2lcio( PTRTYPE evtout ){
   LCEventImpl* lcEvent = reinterpret_cast<LCEventImpl*>( evtout ) ;
   try { 
     HEPEVT::fromHepEvt(  lcEvent ) ;
@@ -233,7 +234,7 @@ int lcio2hepevt( PTRTYPE evtout ){
 }
 
 
-int hepevt2lcio( PTRTYPE event ){
+int lcio2hepevt( PTRTYPE event ){
   LCEvent* lcEvent = reinterpret_cast<LCEventImpl*>( event ) ;
   try { 
     HEPEVT::toHepEvt(  lcEvent ) ;

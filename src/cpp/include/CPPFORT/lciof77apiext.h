@@ -50,7 +50,7 @@ int lcdumpeventdetailed( PTRTYPE event ) ;
 /**Return all the data of the specified MCParticle in the arguments.
  */
 int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* hepevtstatus, double* prodvtx,
-                            float* momentum, float* mass, int* ndaughters ) ;
+                            float* momentum, float* mass, float* charge, int* ndaughters ) ;
 
 
 /**Fill the hepevt common block with the MCParicle data in the LCIO event.
@@ -118,8 +118,8 @@ FCALLSCFUN1(INT, lcdumpevent, LCDUMPEVENT, lcdumpevent, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lcdumpeventdetailed, LCDUMPEVENTDETAILED, lcdumpeventdetailed,CFORTRANPNTR);
 
 
-FCALLSCFUN7(INT, lcgetmcparticledata, LCGETMCPARTICLEDATA, lcgetmcparticledata,
-            CFORTRANPNTR , INTV , INTV , DOUBLEV , FLOATV , FLOATV , INTV ) ;
+FCALLSCFUN8(INT, lcgetmcparticledata, LCGETMCPARTICLEDATA, lcgetmcparticledata,
+            CFORTRANPNTR , INTV , INTV , DOUBLEV , FLOATV , FLOATV , FLOATV , INTV ) ;
 FCALLSCFUN1(INT, lcio2hepevt, LCIO2HEPEVT, lcio2hepevt , CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, hepevt2lcio, HEPEVT2LCIO, hepevt2lcio, CFORTRANPNTR ) ;
 

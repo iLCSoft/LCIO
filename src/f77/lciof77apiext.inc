@@ -56,7 +56,7 @@ c ---------------  convenient methods for the mcparticle interface
 *     Return all the data of the specified MCParticle in the arguments.
 *     
 *     int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* hepevtstatus, double* prodvtx,
-*     float* momentum, float* mass, int* ndaughters ) ;
+*     float* momentum, float* mass, float* charge, int* ndaughters ) ;
 
       integer lcgetmcparticledata
       

@@ -41,7 +41,8 @@ c$$$      integer lcgetmcparticlecont, hepevtst, ndaughters
       integer          ncols, ncolvec
 
       integer          cellid, cellid0, cellid1, pdg
-      real             dedx, time, energy, posv(3), momv(3), mass
+      real             dedx, time, energy, posv(3), momv(3), mass, 
+     &                 charge
       double precision dposv(3)
 
       integer      linfile
@@ -62,7 +63,7 @@ c$$$      integer lcgetmcparticlecont, hepevtst, ndaughters
       write(*,*) ' created reader at ' , reader
 
 c     ---- run loop ------
-      nrunmax = 5
+      nrunmax = 1
       do irun = 1,nrunmax
 
       status = lcrdropen( reader, infile )
@@ -108,11 +109,13 @@ C ***    Check on collections  for first event of each run
                  print '(a)' , 'MCParticle: pointer - content'
                  do  j  = 1,ncolvec
                     mcparticlev(j) = lccolgetelementat ( col, j )
-                    status  = lcgetmcparticledata ( mcparticlev(j) ,
-     &                pdg , hepevtst , dposv, momv , mass , ndaughters)
-                    print '(z10,3h - ,2i6,3d12.5,4e10.3,i3)' ,
+                    status  = lcgetmcparticledata ( mcparticlev(j),
+     &                pdg , hepevtst , dposv, momv , mass , charge, 
+     &                ndaughters)
+                    print '(z10,3h - ,2i6,3d12.5,5e10.3,i3)' ,
      &                mcparticlev(j) ,
-     &                pdg , hepevtst , dposv , momv , mass , ndaughters
+     &                pdg , hepevtst , dposv , momv , mass , charge, 
+     &                ndaughters
                  enddo
                  print '(a,a)' , 'MCParticle pointers summary: '
                  print '(8z10)'  , (mcparticlev(k),k=1,ncolvec)
