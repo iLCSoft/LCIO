@@ -941,7 +941,7 @@ namespace UTIL {
     std::cout << endl
 	      << " [   id   ] |  cellId0(bytes) | cellId1(bytes) | amplitude | time " << endl ;
     
-    for( int i=0 ; i< nPriant ; i++ ){
+    for( int i=0 ; i< nPrint ; i++ ){
       
       RawCalorimeterHit* hit = 
 	dynamic_cast<RawCalorimeterHit*>( col->getElementAt( i ) ) ;
