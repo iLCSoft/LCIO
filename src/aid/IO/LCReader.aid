@@ -8,21 +8,48 @@ package hep.lcio.io;
  */
 public interface LCReader {
 
-/** Opens a file for reading and returns LCIO::SUCCESS if no error occured.
- */
-	public int open(const String& filename) ;
+    /** Opens a file for reading and returns LCIO::SUCCESS if no error occured.
+     */
+    public int open(const String& filename) ;
 
-/** Reads the next event from the file. Returns null if no more 
- * events or error occured.
- */
-	public LCEvent* readNextEvent() ;
+    /** Reads the next run header from the file. Returns null if no more 
+     * run headers or error occured.
+     */
+    public LCRunHeader* readNextRunHeader() ;
 
-/** Same as above allowing to set the access mode (LCIO::READ_ONLY is default) 
- */
-	public LCEvent* readNextEvent(int accessMode) ;
+    /** Reads the next event from the file. Returns null if no more 
+     * events or error occured.
+     */
+    public LCEvent* readNextEvent() ;
 
-/** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
- */
-	public int close() ;
+    /** Same as above allowing to set the access mode (LCIO::READ_ONLY is default) 
+     */
+    public LCEvent* readNextEvent(int accessMode) ;
+
+    /** Closes the output file/stream etc and returns LCIO::SUCCESS if no error occured.
+     */
+    public int close() ;
 	
+    /** Registers a listener for reading LCEvents from a stream.
+     */ 
+    void registerLCEventListener(LCEventListener* ls ) ;
+    
+    /** Remove a listener for reading LCEvents from a stream.
+     */ 
+    void removeLCEventListener(LCEventListener* ls ) ;
+    
+    /** Registers a listener for reading LCEventsLCRunHeaders from a stream.
+     */ 
+    void registerLCRunListener(LCRunListener* ls ) ;
+    
+    /** Remove a listener for reading LCRunHeaders from a stream.
+     */ 
+    void removeLCRunListener(LCRunListener* ls ) ;
+    
+    /** Reads the input stream and notifies registered 
+     * listeners according to the object type 
+     * found in the stream. Returns LCIO::SUCCESS and LCIO::ERROR respectively.
+     */
+    public int readStream() ;
+
 }

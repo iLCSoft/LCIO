@@ -11,6 +11,7 @@
 #include <vector>
 #include "IO/LCWriter.h"
 #include "EVENT/LCEvent.h"
+#include "EVENT/LCRunHeader.h"
 
 class SIO_record ;
 class SIO_stream ;    
@@ -19,7 +20,6 @@ class SIO_stream ;
 namespace SIO {
 
   class SIOEventHandler ;
-  //  class SIOEventHeaderHandler ;
   class SIOCollectionHandler ;
 
     
@@ -37,6 +37,10 @@ namespace SIO {
     /** Opens a file for writing.
      */
     virtual int open(const std::string& filename) ;
+    
+    /** Writes the given run header to file and returns LCIO::SUCCESS if no error occured.
+     */
+    virtual int writeRunHeader(const EVENT::LCRunHeader * hdr) ;
 
     /** Writes the given event to file.
      */
@@ -55,6 +59,7 @@ namespace SIO {
 
     SIO_record *_evtRecord ;
     SIO_record *_hdrRecord ;
+    SIO_record *_runRecord ;
     SIO_stream *_stream ;
     
 

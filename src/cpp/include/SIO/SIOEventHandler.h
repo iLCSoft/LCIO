@@ -19,9 +19,6 @@ namespace SIO {
   
   class SIOEventHandler : public SIO_block{
     
-  public:
-    //    static char* const EVENT="Event" ;
-    
   protected:
     SIOEventHandler() : SIO_block("UNKNOWN") { /* no default c'tor*/  ;} 
 

@@ -5,6 +5,7 @@
 #include <map>
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
+#include "EVENT/LCIO.h"
 
 
 namespace IMPL{
@@ -49,7 +50,7 @@ class LCEventImpl : public EVENT::LCEvent {
     
     /** Returns the names of the collections in the  event.
      */
-    virtual std::vector<std::string>* getCollectionNames() const ;
+    virtual const EVENT::StringVec* getCollectionNames() const ;
     
     /** Returns the collection for the given name - null if it doesn't exist.
      */ 
@@ -76,7 +77,7 @@ class LCEventImpl : public EVENT::LCEvent {
     
     /** Sets the detector name.
      */
-    void setDetectorName(const char* dn ) ;
+    void setDetectorName(const std::string& dn ) ;
     
     /** Sets the event time stamp.
      */
@@ -98,6 +99,7 @@ class LCEventImpl : public EVENT::LCEvent {
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
     mutable LCCollectionMap _map ;
+    mutable EVENT::StringVec _colNames ;
     
   private:
     int _access ;   // flag for access mode 

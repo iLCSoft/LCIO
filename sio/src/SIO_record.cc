@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.cc,v 1.1 2003-03-06 11:01:24 gaede Exp $
+// CVS $Id: SIO_record.cc,v 1.2 2003-03-11 18:07:52 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO record.                          
 // ----------------------------------------------------------------------------
@@ -547,7 +547,17 @@ bool SIO_record::setUnpack
 (
     bool  i_unpack
 )
-{ bool o_unpack = unpack; unpack = i_unpack; return( o_unpack ); }
+{ 
+  bool o_unpack = unpack; 
+  unpack = i_unpack; 
+ 
+ if( verbosity >= SIO_ERRORS ){
+   std::cout << "SIO: [/"  << name << "] "
+	     << " setting unpack from " << o_unpack << " to  " << unpack << std::endl ;
+ }
+
+ return( o_unpack ); 
+}
 
 // ----------------------------------------------------------------------------
 // Set the verbosity level.

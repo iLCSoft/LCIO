@@ -55,6 +55,8 @@ public interface LCIO{
     static const int SUCCESS =  1 ;
 
     // type names:
+    static char* const LCEVENT = "LCEvent" ;
+    static char* const LCRUNHEADER = "LCRunHeader" ;
     static char* const MCPARTICLE = "MCParticle" ;
     static char* const CALORIMETERHIT = "CalorimeterHit" ;
     static char* const TRACKERHIT = "TrackerHit" ;
@@ -78,6 +80,8 @@ public interface LCIO{
   public static const int ERROR   =  0 ;
   public static const int SUCCESS =  1 ;
 
+  public static const String LCEVENT = "LCEvent" ;
+  public static const String LCRUNHEADER = "LCRunHeader" ;
   public static const String MCPARTICLE = "MCParticle" ;
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String TRACKERHIT = "TrackerHit" ;

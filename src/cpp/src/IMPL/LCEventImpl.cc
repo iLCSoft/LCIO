@@ -1,6 +1,5 @@
 #include "IMPL/LCEventImpl.h"
 
-#include "EVENT/LCIO.h"
 
 using namespace EVENT ;
 
@@ -65,18 +64,17 @@ long LCEventImpl::getTimeStamp() const {
 }
 
     
-std::vector<std::string>* LCEventImpl::getCollectionNames() const {
+const StringVec* LCEventImpl::getCollectionNames() const {
 
-  // return pointer to static vector 
+  // return pointer to updated vector _colNames 
   typedef LCCollectionMap::const_iterator LCI ;
   
-  static std::vector<std::string> names ;
-  names.clear() ;
+  _colNames.clear() ;
 
   for ( LCI i=_map.begin() ; i != _map.end() ; i++ ){
-    names.push_back( i->first  ) ; 
+    _colNames.push_back( i->first  ) ; 
   }
-  return &names ;
+  return &_colNames ;
 }
 
     
@@ -124,7 +122,7 @@ void LCEventImpl::setEventNumber( int en ) {
 }
 
     
-void LCEventImpl::setDetectorName(const char* dn ) {
+void LCEventImpl::setDetectorName(const std::string& dn ) {
   _detectorName = dn ;
 }
 

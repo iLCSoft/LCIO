@@ -1,9 +1,8 @@
-
 #include "lcio.h"
 
 #include "IO/LCReader.h"
 #include "IMPL/LCTOOLS.h"
-
+#include "EVENT/LCRunHeader.h" 
 
 static const char* FILEN = "recjob.sio" ; // default file name 
 
@@ -26,11 +25,27 @@ int main(int argc, char** argv ){
 
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
   
+  // read all run headers first :
   if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
     cout << " can't open file: " << FILEN     << endl ;
     exit(1) ;
   } 
-
+  cout << " opened " << FILEN << " for reading " << endl ; 
+  
+  LCRunHeader *runHdr ;
+  while( (runHdr = lcReader->readNextRunHeader()) != 0 ){ 
+    cout << "  Run : " << runHdr->getRunNumber() 
+     	 << " - "  <<  runHdr->getDetectorName() 
+	 << ":  "  << runHdr->getDescription()  << endl ;
+  }
+  cout << endl ;
+  // close and reopen the file
+  lcReader->close() ;
+  if( lcReader->open( FILEN )  != LCIO::SUCCESS ) {
+    cout << " can't open file: " << FILEN     << endl ;
+    exit(1) ;
+  } 
+  cout << " reopened " << FILEN << " for reading " << endl ; 
 
   LCEvent* evt ;
   

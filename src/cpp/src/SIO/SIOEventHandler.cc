@@ -84,11 +84,11 @@ namespace SIO  {
       
 	// now write a list of colection types and names
       
-	StringVec* strVec = _evt->getCollectionNames() ;
+	const StringVec* strVec = _evt->getCollectionNames() ;
 	int nCol = strVec->size() ;
 	SIO_DATA( stream, &nCol, 1 ) ;
       
-	for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	
 	  const LCCollection* col = _evt->getCollection( *name ) ;
 	  LCSIO_WRITE( stream, *name ) ;

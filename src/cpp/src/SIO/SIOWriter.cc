@@ -7,6 +7,7 @@
 #include "SIO/LCSIO.h"
 #include "SIO/SIOEventHandler.h" 
 #include "SIO/SIOCollectionHandler.h" 
+#include "SIO/SIORunHeaderHandler.h" 
 
 #include "SIO_streamManager.h" 
 #include "SIO_recordManager.h" 
@@ -58,17 +59,46 @@ namespace SIO {
     if( !(status &1) ) return LCIO::ERROR ;
   
     // tell SIO the record names if not yey known 
+    if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
+      _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
       _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
     if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
       _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
 
-
+    
     _hdrRecord->setCompress( false ) ;
     _evtRecord->setCompress( false ) ;
-
+    _runRecord->setCompress( false ) ;
+    
     return LCIO::SUCCESS ;
   }
+
+
+  int SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr){
+
+    // create a new handler for every new run 
+    
+    SIORunHeaderHandler* runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
+    _runRecord->connect( runHandler );
+    runHandler->setRunHeader(  hdr ) ;
+
+
+    if( _stream->getState()== SIO_STATE_OPEN ){
+      
+      // write LCRunHeader record
+      unsigned int status =  _stream->write( LCSIO::RUNRECORDNAME    ) ;
+      if( ! status & 1 ){
+	std::cout << "ERROR: couldn't write run header to stream : " 
+		  << _stream->getName()  
+		  <<  "  status  : " << status << std::endl ;
+      }
+    }
+
+    _runRecord->disconnect( runHandler );
+    delete runHandler ;
+  }
+
 
 
   /** Creates Handlers needed for writing the events on this stream.
@@ -87,9 +117,9 @@ namespace SIO {
     // now create handlers for all collections in the event
     // and connect them to the record
   
-    StringVec* strVec = evt->getCollectionNames() ;
+    const StringVec* strVec = evt->getCollectionNames() ;
 
-    for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
+    for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
       const LCCollection* col = evt->getCollection( *name ) ;
 
@@ -152,8 +182,11 @@ namespace SIO {
 
   int SIOWriter::close(){
   
-    _stream->close() ;
-  
+    //    _stream->close() ;
+    int status  =  SIO_streamManager::remove( _stream ) ;
+    
+    if(! (status &1) ) return LCIO::ERROR ;
+
     return LCIO::SUCCESS ; 
   }
 

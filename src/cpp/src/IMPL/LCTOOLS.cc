@@ -17,11 +17,11 @@ namespace IMPL {
 	 << " - collections  : "
 	 << endl ;
     
-    StringVec* strVec = evt->getCollectionNames() ;
+    const StringVec* strVec = evt->getCollectionNames() ;
     int nCol = strVec->size() ;
     
     // loop over collections:
-    for( StringVec::iterator name = strVec->begin() ; name != strVec->end() ; name++){
+    for( StringVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
     
       cout << "     " <<  *name <<   " " 
 	   <<   evt->getCollection( *name )->getTypeName() << " : "  ; 

@@ -26,6 +26,8 @@ namespace SIO {
   public :
   
     // define some names of records and blocks
+    static char* const RUNRECORDNAME = "LCRunHeader" ;
+    static char* const RUNBLOCKNAME = "RunHeader" ;
     static char* const EVENTRECORDNAME = "LCEvent"  ;
     static char* const EVENTBLOCKNAME="Event" ;
     static char* const HEADERRECORDNAME = "LCEventHeader"  ;

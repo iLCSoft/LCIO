@@ -1,0 +1,23 @@
+package hep.lcio.io ;
+
+/** Listener for the occurence of LCEvents (e.g. when reading a stream).
+ * User classes should implement this interface for their analysis code 
+ * and then register the listener with LCReader.
+ * 
+ * @author gaede 
+ * @version Mar 11, 2003
+ * @see LCEvent
+ * @see LCReader
+ */
+
+public interface LCEventListener{
+    
+    /** Call back for analyzing an LCEvent. 
+     */
+    public void analyze( const LCEvent* evt) ;
+    
+    /** Call back for updating an LCEvent. 
+     */
+    public void update( LCEvent* evt ) ;
+    
+}

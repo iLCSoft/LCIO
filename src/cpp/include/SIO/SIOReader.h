@@ -8,9 +8,15 @@
 #define SIO_SIOREADER_H 1
 
 #include <string>
+#include <set>
 #include "IO/LCReader.h"
-#include "EVENT/LCEvent.h"
+#include "IO/LCEventListener.h"
+#include "IO/LCRunListener.h"
+
 #include "IOIMPL/LCEventIOImpl.h"
+#include "IMPL/LCRunHeaderImpl.h"
+
+
 
 class SIO_record ;
 class SIO_stream ;    
@@ -36,6 +42,12 @@ namespace SIO {
      */
     virtual int open(const std::string& filename) ;
     
+    /** Reads the next run header from the file. Returns null if no more 
+     * run headers or error occured.
+     */
+    virtual EVENT::LCRunHeader * readNextRunHeader() ;  
+
+
     /** Reads the next event in read only mode from file - in case of error or EOF NULL is returned.
      */
     virtual EVENT::LCEvent* readNextEvent() ;
@@ -51,7 +63,30 @@ namespace SIO {
      */
     virtual int close() ;
     
-    
+    // interface for listeners
+ 
+    /** Registers a listener for reading LCEvents from a stream.
+     */ 
+    virtual void registerLCEventListener(IO::LCEventListener * ls) ;
+
+    /** Remove a listener for reading LCEvents from a stream.
+     */ 
+    virtual void removeLCEventListener(IO::LCEventListener * ls) ;
+
+    /** Registers a listener for reading LCEventsLCRunHeaders from a stream.
+     */ 
+    virtual void registerLCRunListener(IO::LCRunListener * ls) ;
+
+    /** Remove a listener for reading LCRunHeaders from a stream.
+     */ 
+    virtual void removeLCRunListener(IO::LCRunListener * ls) ;
+
+    /** Reads the input stream and notifies registered 
+     * listeners according to the object type 
+     * found in the stream. Returns LCIO::SUCCESS and LCIO::ERROR respectively.
+     */
+    virtual int readStream() ;
+
   protected:
 
     void setUpHandlers() ;
@@ -60,13 +95,17 @@ namespace SIO {
     
     SIO_record *_evtRecord ;
     SIO_record *_hdrRecord ;
+    SIO_record *_runRecord ;
+    SIO_record *_dummy ;
     SIO_stream *_stream ;
     
   private:
     
-    //    SIOEventHandler *_evtHandler ;
-    //    SIOEventHeaderHandler *_hdrHandler ;
     IOIMPL::LCEventIOImpl **_evtP ;
+    IMPL::LCRunHeaderImpl **_runP ;
+
+    std::set<IO::LCRunListener*> _runListeners ;
+    std::set<IO::LCEventListener*> _evtListeners ;
     
   }; // class
 }; // namespace

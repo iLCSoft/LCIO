@@ -28,7 +28,8 @@ public interface LCEvent {
     
     /** Returns the names of the collections in the  event.
      */
-    public String[]*  getCollectionNames() const ;
+    //    public String[]*  getCollectionNames() const ;
+    public const StringVec*  getCollectionNames() const ;
     
     /** Returns the collection for the given name - null if it doesn't exist.
      */ 

@@ -12,6 +12,10 @@ public interface LCWriter {
      */
     public int open(const String& filename) ;
     
+    /** Writes the given run header to file and returns LCIO::SUCCESS if no error occured.
+     */
+    public int writeRunHeader(const LCRunHeader*  hdr) ;
+
     /** Writes the given event to file and returns LCIO::SUCCESS if no error occured.
      */
     public int writeEvent(const LCEvent*  evt) ;
