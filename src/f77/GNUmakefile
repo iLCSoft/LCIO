@@ -13,8 +13,11 @@ SIOINSTALL = $(LCIOBASE)/sio
 
 # check the gcc compiler version if libfrtbegin.a has to be included
 COMPILER_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c1 )
+COMPILER_MINOR_VERSION := $(shell gcc -v 2>&1 | grep version | cut -d' ' -f3 | cut -c3 )
 ifeq ($(COMPILER_VERSION),3)
+ ifneq ($(COMPILER_MINOR_VERSION),0)
   FTN_START_LIB = -lfrtbegin
+ endif
 endif
 
 CXX = g++ 
