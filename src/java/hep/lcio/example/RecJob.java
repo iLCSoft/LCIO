@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.13 2004-09-01 16:42:56 gaede Exp $
+ * @version $Id: RecJob.java,v 1.14 2005-02-28 14:49:51 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -70,6 +70,17 @@ public class RecJob implements LCRunListener, LCEventListener
    public void processEvent(LCEvent evt)
    {
       // don't modify events (except for adding new collections)
+   	 
+   	// add some calibration constants (user class!) to the event
+   	 if( evt.getEventNumber()==0){
+       ILCCollection col = new ILCCollection( LCIO.LCGENERICOBJECT ) ; 
+       for (int i = 0; i < 50 ; i++) {	
+   	     CalibrationConstant cal =
+   	     	new CalibrationConstant( 65563+i,(float)(i*3.141592),(float) (0.1*i) ) ;	
+   	     col.addElement( cal ) ;
+       }
+   	   evt.addCollection( col , "Calibration" ) ;
+   	 }
    }
 
    public void modifyRunHeader(LCRunHeader run)

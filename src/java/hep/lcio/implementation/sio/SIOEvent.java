@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.30 2004-09-24 10:39:32 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.31 2005-02-28 14:49:52 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -91,6 +91,28 @@ class SIOEvent extends ILCEvent
                ilc.add(new SIOMCParticle(in, this, major, minor));
             for (int i = 0; i < nMC; i++)
                ((SIOMCParticle) ilc.get(i)).resolve(major, minor);
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.LCGENERICOBJECT))
+         {  
+         	boolean isFixedSize = (flags & (1 << LCIO.GOBIT_FIXED)) != 0 ;
+         	int nInt=0, nFloat=0, nDouble=0 ;
+            if( isFixedSize){
+               nInt = in.readInt();
+               nFloat = in.readInt();
+           	   nDouble = in.readInt();
+            }
+         	int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            if( isFixedSize){
+               for (int i = 0; i < n; i++)
+                  ilc.add(new SIOLCGenericObject(in, this, major,minor,nInt,nFloat,nDouble)) ;
+            }else{
+               for (int i = 0; i < n; i++)
+                  ilc.add(new SIOSimTrackerHit(in, this,major,minor)) ;            	
+            }
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -277,14 +299,51 @@ class SIOEvent extends ILCEvent
             LCCollection col = event.getCollection(blockName);
             String type = col.getTypeName();
             int flags = col.getFlag();
+            int n = col.getNumberOfElements();
+            
+            boolean isFixedSize = true ;
+            if ( type.equals(LCIO.LCGENERICOBJECT )){
+                // check if all objects are fixed size
+                for (int i = 0; i < n; i++){
+                   if( ! ((LCGenericObject) col.getElementAt(i) ).isFixedSize() ){
+                      isFixedSize = false ;
+                   }
+                }
+                // set the proper flag bit for isFixedSize
+                if( isFixedSize) 
+                    flags |= (1 << LCIO.GOBIT_FIXED) ;
+                  else
+                  	flags &= ~(1 << LCIO.GOBIT_FIXED) ;
+                
+                // if the collection doesn't have the TypeName/DataDescription parameters set,
+                //  we use the ones from the first object
+                LCGenericObject gObj = (LCGenericObject) col.getElementAt(0) ; 
+                if(  col.getParameters().getStringVal("TypeName").length() == 0 )
+          	       col.getParameters().setValue( "TypeName", gObj.getTypeName() ) ;
+                if(isFixedSize ) {
+          	      if(  col.getParameters().getStringVal( "DataDescription" ).length() ==  0 )
+          	        col.getParameters().setValue( "DataDescription", gObj.getDataDescription() ) ;
+                }
+            }
             out.writeInt(flags);
             
-            //if( (LCIO.MAJORVERSION<<16 | LCIO.MINORVERSION ) > (1<<16|1)  ){
             SIOLCParameters.write( col.getParameters() , out ) ;
-            //}
               
-            int n = col.getNumberOfElements();
-            out.writeInt(n);
+            if (type.equals(LCIO.LCGENERICOBJECT)){
+                if( isFixedSize){ // write the array length once for the collection
+                   LCGenericObject obj = (LCGenericObject) col.getElementAt(0) ;
+				   out.writeInt( obj.getNInt() ) ;	
+				   out.writeInt( obj.getNFloat() ) ;	
+				   out.writeInt( obj.getNDouble() ) ;	
+                }
+            	out.writeInt(n);
+               for (int i = 0; i < n; i++){
+               	SIOLCGenericObject.write((LCGenericObject) col.getElementAt(i), out, flags);
+               }
+            }
+            else        
+               out.writeInt(n);
+            
             if (type.equals(LCIO.MCPARTICLE))
             {
                for (int i = 0; i < n; i++)
