@@ -24,7 +24,7 @@ c--   LCIO interface
 
       PTRTYPE reader, event, mcp, mccol
       integer status, ievent
-      integer i,j,k, nmcp
+      integer i,j,k, nmcp, lenocc
       real costh, p(3), pxy, ptot, phi
       character*80 filename
       character*80 mcpcolname
@@ -46,9 +46,11 @@ c--   book some histograms
 
 
 c--   open LCIO file
-      write(*,*) 'Give LCIO file name:'
-      read(*,*) filename
-      
+ccc      write(*,*) 'Give LCIO file name:'
+      read(*,'(a)') filename
+      write(*,*) 'input file is: ', filename(1:lenocc(filename))
+      write(*,*) 'histo file is: ', 'lcio.hbook'
+
       reader = lcrdrcreate()
       status = lcrdropen( reader, filename )
       
