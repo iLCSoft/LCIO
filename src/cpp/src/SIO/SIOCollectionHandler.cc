@@ -77,6 +77,13 @@ namespace SIO {
       if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
 	SIOLCParameters::read( stream ,  ioCol->parameters() , versionID) ;
       
+
+      // LCGenericObjects are different in that they might have the fixed length
+      // of the attributes once in the block before the loop starts...
+      if( _myType == LCIO::LCGENERICOBJECT ){
+	//	SIOLCGenericObjectHandler.....( _ioCol->_flag ,
+      }
+
       int nObj ;
       SIO_DATA( stream ,  &nObj , 1  ) ;
 

@@ -62,7 +62,8 @@ namespace SIO{
     }
 
     // read a pointer tag for  reference to calorimeter hits
-    if( version2float( vers ) > 1.0 ) {
+
+    if( vers > SIO_VERSION_ENCODE( 1, 0) ){ 
       SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
     }
     

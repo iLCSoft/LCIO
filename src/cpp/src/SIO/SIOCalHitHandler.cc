@@ -48,8 +48,7 @@ namespace SIO{
 //     // read a pointer tag for future reference to calorimeter hits
     
 
-    if( LCFlagImpl(flag).bitSet( LCIO::RCHBIT_PTR ) && 
-	version2float( vers ) > 1.0 ) {
+    if( LCFlagImpl(flag).bitSet( LCIO::RCHBIT_PTR ) && vers > SIO_VERSION_ENCODE( 1, 0 )  ) {
       SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
     }
 

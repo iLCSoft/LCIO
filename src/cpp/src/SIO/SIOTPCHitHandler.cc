@@ -45,7 +45,7 @@ namespace SIO{
 
 //     // read a pointer tag for reference to TPC hits from generic hits
     if( LCFlagImpl(flag).bitSet( LCIO::TPCBIT_PTR )  &&
-	version2float( vers ) > 1.0 ) {
+	vers > SIO_VERSION_ENCODE( 1, 0) ) { 
       SIO_PTAG( stream , dynamic_cast<const TPCHit*>(hit) ) ;
     }
     

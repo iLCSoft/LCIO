@@ -711,6 +711,212 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
+    <block name="ReconstructedParticle" major="1" minor="2">
+      <data type="int" name="flag"></data>
+	<!-- start of named parameters -->
+        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+          <repeat count="nIntParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="int" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+          <repeat count="nFloatParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="float" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nStringParameters">number of named string parameter entries</data>
+          <repeat count="nStringParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="string" name="value"></data>
+             </repeat>
+          </repeat>
+        </if>
+	<!-- end of named parameters -->
+      <data type="int" name="nObject"/>
+      <repeat count="nObject">
+        <data type="int" name="typeFlag">flag - bit31= 0: secondary, 1: primary 
+                                         bits0-15: type: SINGLE, V0, COMPOUND, JET</data>
+	<!--data type="int" name="type">single particle, compound particle (V0,B), jet</data-->
+        <data type="float[3]" name="momentum">(px, py, pz)</data>
+        <data type="float" name="energy">E</data>
+	<data type="float[10]" name="covariance">cov matrix for 4-Vec (px,py,pz,E)</data>
+	<data type="float" name="mass">mass of object used for 4vec</data>
+	<data type="float" name="charge"/>
+	<data type="float[3]" name="reference"> reference point for 4-vec</data>
+	<data type="int" name="npid"/>
+	<repeat count="npid">
+	  <data type="float" name="probability"/>
+	  <data type="int" name="typeID"/>
+	  <data type="string" name="identifier"/>
+	  <data type="int" name="npar"/>
+	  <repeat count="npar">
+	     <data type="float" name="parameter"/>
+          </repeat>
+	</repeat>
+        <data type="int" name="nrecopart"/>
+        <repeat count="nrecopart">
+	  <data type="pntr" name="ReconstructedParticle"></data>
+	  <data type="float" name="weight">weight of contribution</data>
+        </repeat>
+	<data type="int" name="ntrk"/>
+	<repeat count="ntrk">
+	  <data type="pntr" name="Track"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+	<data type="int" name="ncal"/>
+	<repeat count="ncal">
+	  <data type="pntr" name="Cluster"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+	<data type="int" name="nmc"/>
+	<repeat count="nmc">
+	  <data type="pntr" name="MCParticle"/>
+	  <data type="float" name="weight">weight of assignment</data>
+	</repeat>
+        <data type="ptag" name="this"></data>
+      </repeat>
+    </block>
+    <block name="ReconstructedParticle" major="1" minor="2">
+      <data type="int" name="flag"></data>
+	<!-- start of named parameters -->
+        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+          <repeat count="nIntParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="int" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+          <repeat count="nFloatParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="float" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nStringParameters">number of named string parameter entries</data>
+          <repeat count="nStringParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="string" name="value"></data>
+             </repeat>
+          </repeat>
+        </if>
+	<!-- end of named parameters -->
+      <data type="int" name="nObject"/>
+      <repeat count="nObject">
+        <data type="int" name="typeFlag">flag - bit31= 0: secondary, 1: primary 
+                                         bits0-15: type: SINGLE, V0, COMPOUND, JET</data>
+	<!--data type="int" name="type">single particle, compound particle (V0,B), jet</data-->
+        <data type="float[3]" name="momentum">(px, py, pz)</data>
+        <data type="float" name="energy">E</data>
+	<data type="float[10]" name="covariance">cov matrix for 4-Vec (px,py,pz,E)</data>
+	<data type="float" name="mass">mass of object used for 4vec</data>
+	<data type="float" name="charge"/>
+	<data type="float[3]" name="reference"> reference point for 4-vec</data>
+	<data type="int" name="npid"/>
+	<repeat count="npid">
+	  <data type="float" name="probability"/>
+	  <data type="int" name="typeID"/>
+	  <data type="string" name="identifier"/>
+	  <data type="int" name="npar"/>
+	  <repeat count="npar">
+	     <data type="float" name="parameter"/>
+          </repeat>
+	</repeat>
+        <data type="int" name="nrecopart"/>
+        <repeat count="nrecopart">
+	  <data type="pntr" name="ReconstructedParticle"></data>
+	  <data type="float" name="weight">weight of contribution</data>
+        </repeat>
+	<data type="int" name="ntrk"/>
+	<repeat count="ntrk">
+	  <data type="pntr" name="Track"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+	<data type="int" name="ncal"/>
+	<repeat count="ncal">
+	  <data type="pntr" name="Cluster"/>
+	  <data type="float" name="weight">TODO: to be defined </data>
+	</repeat>
+	<data type="int" name="nmc"/>
+	<repeat count="nmc">
+	  <data type="pntr" name="MCParticle"/>
+	  <data type="float" name="weight">weight of assignment</data>
+	</repeat>
+        <data type="ptag" name="this"></data>
+      </repeat>
+    </block>
+    <block name="LCGenericObject" major="1" minor="2">
+      <data type="int" name="flag"></data>
+	<!-- start of named parameters -->
+        <if condition="major>1||(major==1&amp;&amp;minor>1)">
+          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+          <repeat count="nIntParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="int" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+          <repeat count="nFloatParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="float" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nStringParameters">number of named string parameter entries</data>
+          <repeat count="nStringParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="string" name="value"></data>
+             </repeat>
+          </repeat>
+        </if>
+	<!-- end of named parameters -->
+        <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
+	  <data type="int" name="nInt">number of ints for fixed size objects</data>
+	  <data type="int" name="nFloat">number of floats for fixed size objects</data>
+	  <data type="int" name="nDouble">number of doubles for fixed size objects</data>
+	</if>
+      <data type="int" name="nObject"/>
+      <repeat count="nObject">
+        <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
+	  <data type="int" name="nInt">number of ints for variable size objects</data>
+	</if>
+	<repeat count="nInt">
+	  <data type="int" name="intValue">integer value</data>
+	</repeat>
+        <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
+	  <data type="int" name="nFloat">number of floats for variable size objects</data>
+	</if>
+	<repeat count="nFloat">
+	  <data type="float" name="floatValue">float value</data>
+	</repeat>
+        <if condition="(flag&amp;(1&lt;&lt;31)) ==0">
+	  <data type="int" name="nDouble">number of doubles for variable size objects</data>
+	</if>
+	<repeat count="nDouble">
+	  <data type="double" name="doubleValue">double value</data>
+	</repeat>
+        <data type="ptag" name="this"></data>
+      </repeat>
+    </block>
     <block name="LCRelation" major="1" minor="2">
        <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
        <data type="int" name="nRelations"/>

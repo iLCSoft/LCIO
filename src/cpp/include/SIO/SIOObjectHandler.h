@@ -35,19 +35,22 @@ public:
 			     unsigned int flag) =0 ;
   
 
- protected:
-  
-  /**Helper method to compute the version number as float, i.e.
-   *  v_f = major + minor/10.
-   */
-  inline float version2float( unsigned int vers) {
 
-//     float major =  float(SIO_VERSION_MAJOR(vers)) ;
-//     float minor = float(SIO_VERSION_MINOR(vers)) ;
-//     return major + minor / 10. ;
-    return float(SIO_VERSION_MAJOR(vers)) + 
-      float(SIO_VERSION_MINOR(vers)) / 10. ; 
-  }
+  /**Initialize the handler based in the collection flag
+   */
+  virtual void init( unsigned int flag ) { /*no_op */ } 
+
+//  protected:
+//   /**Helper method to compute the version number as float, i.e.
+//    *  v_f = major + minor/10.
+//    */
+//   inline float version2float( unsigned int vers) {
+// //     float major =  float(SIO_VERSION_MAJOR(vers)) ;
+// //     float minor = float(SIO_VERSION_MINOR(vers)) ;
+// //     return major + minor / 10. ;
+//     return float(SIO_VERSION_MAJOR(vers)) + 
+//       float(SIO_VERSION_MINOR(vers)) / 10. ; 
+//   }
 
 }; // class
 
