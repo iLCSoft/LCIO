@@ -512,8 +512,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] | position (x,y,z)                | dEdx      | time     | [rawhitid] |  type" 
-      //              << "  [508] | (1.800e+01,0.000e+00,0.000e+00) | 3.142e+00 | 1.235e-01"
+	      << " [   id   ] | position (x,y,z)                | dEdx      | time     |  type" 
 	      << endl 
 	      << endl ;
     
@@ -522,21 +521,27 @@ namespace UTIL {
       TrackerHit* hit = 
 	dynamic_cast<TrackerHit*>( col->getElementAt( i ) ) ;
       
-      int rawHitId = 0 ;
-      if( hit->getRawDataHit() != 0 ) 
-	rawHitId = hit->getRawDataHit()->id()  ;
-
-      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%8.8x] | [%d] \n" 
+      //       int rawHitId = 0 ;
+      //       if( hit->getRawDataHit() != 0 ) 
+      // 	rawHitId = hit->getRawDataHit()->id()  ;
+      
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
 	     , hit->getPosition()[1] 
 	     , hit->getPosition()[2] 
 	     , hit->getdEdx() 
 	     , hit->getTime() 
-	     , rawHitId 
 	     , hit->getType() 
-	     //	     , hit->getType().c_str() 
 	     ) ;
+      const LCObjectVec& rawHits = hit->getRawHits() ;
+      cout << "    rawHits: " ;
+      try{
+	for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
+	  cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
+	}
+      }catch(std::exception& e){}
+      cout << endl ;
     }
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 

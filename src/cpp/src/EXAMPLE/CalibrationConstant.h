@@ -85,7 +85,7 @@ public:
     }
   }
   
-  virtual float getDoubleVal(int index) const {
+  virtual double getDoubleVal(int index) const {
     return 0.0 ;
   }
   

@@ -130,14 +130,17 @@ public:
 
     for(int j=0;j<nTPCHits;j++){
       TrackerHitImpl* trkHit = new TrackerHitImpl ;
+
       TPCHit* tpcHit =  dynamic_cast<TPCHit*> ( tpcHits->getElementAt(j)  ) ;
+
       trkHit->setdEdx(   tpcHit->getCharge() ) ; // just an example !
       trkHit->setTime(   tpcHit->getTime() ) ;
       int cellID = tpcHit->getCellID() ;
       double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
       trkHit->setPosition(  pos  ) ;
 
-      trkHit->setRawHit( tpcHit ) ; // store the original raw data hit
+      trkHit->rawHits().push_back( tpcHit ) ; // store the original raw data hit
+      trkHit->rawHits().push_back( tpcHit ) ; // for testing add the same raw hit twice
 
       FloatVec cov(6) ;
       cov[0] = 1. ;

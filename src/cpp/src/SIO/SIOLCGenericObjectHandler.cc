@@ -151,7 +151,9 @@ namespace SIO{
       LCSIO_WRITE( stream , gObj->getFloatVal( i ) ) ;
     }
     for( int i=0 ; i< _nDouble ; i++){
-      LCSIO_WRITE( stream , gObj->getDoubleVal( i ) ) ;
+      //      LCSIO_WRITE( stream , gObj->getDoubleVal( i ) ) ;
+      double dVal =  gObj->getDoubleVal( i ) ;
+      SIO_DATA( stream , &dVal  , 1  ) ;
     }
 
     SIO_PTAG( stream , gObj  ) ;

@@ -1,7 +1,7 @@
 /**Header file for the f77-wrapper functions of the Track Class.
  * 
  * @author H. Vogt
- * @version $Id: lctrh.h,v 1.3 2004-09-15 13:29:08 gaede Exp $
+ * @version $Id: lctrh.h,v 1.4 2004-09-15 14:29:32 gaede Exp $
  */
 #include "cfortran.h"
 #include "cpointer.h"
@@ -27,7 +27,7 @@ int     lctrhsetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
 int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
 int     lctrhsettime( PTRTYPE trh, float time ) ;
 int     lctrhsettype( PTRTYPE trh, int type ) ;
-int     lctrhsetrawhit( PTRTYPE trh, PTRTYPE hit ) ;
+// int     lctrhsetrawhit( PTRTYPE trh, PTRTYPE hit ) ;
 
 
 // now the fortran wrappers from cfortran.h              
@@ -50,7 +50,7 @@ FCALLSCFUN2(INT, lctrhsetcovmatrix, LCTRHSETCOVMATRIX, lctrhsetcovmatrix, CFORTR
 FCALLSCFUN2(INT, lctrhsetdedx, LCTRHSETDEDX, lctrhsetdedx, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lctrhsettime, LCTRHSETTIME, lctrhsettime, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lctrhsettype, LCTRHSETTYPE, lctrhsettype, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lctrhsetrawhit, LCTRHSETRAWHIT, lctrhsetrawhit, CFORTRANPNTR, CFORTRANPNTR) ;
+// FCALLSCFUN2(INT, lctrhsetrawhit, LCTRHSETRAWHIT, lctrhsetrawhit, CFORTRANPNTR, CFORTRANPNTR) ;
 
 }
   

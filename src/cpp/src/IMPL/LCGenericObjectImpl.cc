@@ -42,7 +42,7 @@ namespace IMPL {
     return _floatVec[ index ] ;
   }
 
-  float LCGenericObjectImpl::getDoubleVal(int index) const{
+  double LCGenericObjectImpl::getDoubleVal(int index) const{
     return _doubleVec[ index ] ;
   }
   

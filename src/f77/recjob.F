@@ -200,7 +200,10 @@ c---- read file names from command line arguments
         dpos(2) = ishft ( iand ( cellid, 'ff00'x ) , -8 )
         dpos(3) = ishft ( iand ( cellid, 'ff0000'x ) , -16 )
         status  = lctrhsetposition ( trhitp, dpos )
-        status  = lctrhsetrawhit ( trhitp, tpchit )
+
+*----- FIXME:  need way to set raw hits in f77
+*        status  = lctrhsetrawhit ( trhitp, tpchit )
+
         do j = 1, 6
           cov(j)  = i
         end do

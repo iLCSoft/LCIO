@@ -12,7 +12,7 @@ namespace IMPL {
  * user data.
  * 
  * @author gaede 
- * @version $Id: LCGenericObjectImpl.h,v 1.2 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: LCGenericObjectImpl.h,v 1.3 2004-09-15 14:29:32 gaede Exp $
  */
 
 class LCGenericObjectImpl : public EVENT::LCGenericObject, public AccessChecked {
@@ -54,7 +54,7 @@ public:
   
   /** Returns the double value for the given index.
    */
-  virtual float getDoubleVal(int index) const;
+  virtual double getDoubleVal(int index) const;
   
 
 

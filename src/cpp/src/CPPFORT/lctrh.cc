@@ -99,11 +99,11 @@ int lctrhsettype( PTRTYPE trhit, int type) {
   return LCIO::SUCCESS ;
 }
 
-int lctrhsetrawhit( PTRTYPE trhit, PTRTYPE hit ) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  TPCHit* addhit = f2c_pointer<TPCHit,LCObject>( hit ) ;
-  trh->setRawHit( addhit ) ;
-  return LCIO::SUCCESS ;
-}
+// int lctrhsetrawhit( PTRTYPE trhit, PTRTYPE hit ) {
+//   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+//   TPCHit* addhit = f2c_pointer<TPCHit,LCObject>( hit ) ;
+//   trh->setRawHit( addhit ) ;
+//   return LCIO::SUCCESS ;
+// }
 
 
