@@ -11,7 +11,12 @@ import hep.lcio.exceptions.* ;
  * @see LCObject
  * @see LCIO
  */
-public interface LCCollection extends LCCollectionData{
+@ifdef java
+public interface LCCollection extends LCCollectionData, java.util.List
+@else
+public interface LCCollection extends LCCollectionData
+@endif
+{
     
 @ifdef overwriteDataInterface
     /**Returns the number of elements in the collection.
