@@ -18,7 +18,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.9 2003-11-08 03:08:51 tonyj Exp $
+ * @version $Id: SIOMCParticle.java,v 1.10 2003-11-11 19:13:17 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -29,7 +29,7 @@ class SIOMCParticle extends IMCParticle
       setParent(owner);
       in.readPTag(this);
       
-      if (minor == 8)
+      if (major==0 && minor == 8)
       {
          in.readPntr();
          in.readPntr();
@@ -48,7 +48,7 @@ class SIOMCParticle extends IMCParticle
       }
       pdg = in.readInt();
       generatorStatus = in.readInt();
-      if (minor > 8) 
+      if ( !( major==0 && minor < 9 ) ) 
       {
          simulatorStatus = in.readInt();
          hasEndPoint = (simulatorStatus & (1<<31)) != 0;
@@ -70,7 +70,7 @@ class SIOMCParticle extends IMCParticle
    }
    void resolve(int major, int minor)
    {
-      if (minor == 8)
+      if (  major==0 && minor < 9  )
       {
          for (int i=0; i<parents.size(); i++)
          {

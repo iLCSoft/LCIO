@@ -31,8 +31,8 @@ public interface LCIO{
 @cpp{
   public:
     // current version number of lcio
-    static const int MAJORVERSION  = 0 ; 
-    static const int MINORVERSION  = 9 ; 
+    static const int MAJORVERSION  = 1 ; 
+    static const int MINORVERSION  = 0 ; 
 
     // bits in flag words
     // SimCalorimeterHit (CH)
@@ -69,8 +69,8 @@ public interface LCIO{
 }
 @else
     // current version number of lcio
-  public static const int MAJORVERSION  = 0 ; 
-  public static const int MINORVERSION  = 9 ; 
+  public static const int MAJORVERSION  = 1 ; 
+  public static const int MINORVERSION  = 0 ; 
 
   // bits in flag words
   // SimCalorimeterHit (CH)

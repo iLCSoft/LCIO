@@ -1,5 +1,5 @@
 
-To change the version of LCIO the following file have to be modified:
+To change the version of LCIO the following files have to be modified:
 
 
 config/lcio.properties
@@ -7,7 +7,7 @@ config/lcio.properties
   dist.version=v00-09
 
 src/aid/EVENT/LCIO.aid
-  static const int MAJORVERSION  = 9 ;
+  static const int MAJORVERSION  = 0 ;
   static const int MINORVERSION  = 9 ;
 
   public static const int MAJORVERSION  = 0 ; 
