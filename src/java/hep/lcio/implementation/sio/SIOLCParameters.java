@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Frank Gaede
- * @version $Id: SIOLCParameters.java,v 1.1 2004-06-25 12:56:11 gaede Exp $
+ * @version $Id: SIOLCParameters.java,v 1.2 2004-07-02 10:12:54 gaede Exp $
  */
 class SIOLCParameters extends ILCParameters
 {
@@ -37,7 +37,7 @@ class SIOLCParameters extends ILCParameters
 	  for (int j = 0; j < nFloat; j++) {
 		  fv[j] = in.readFloat() ;
 	  }
-	  _intMap.put( key , fv ) ; 
+	  _floatMap.put( key , fv ) ; 
 	}	
 
 	int nStringParameters =  in.readInt(); 
@@ -48,7 +48,7 @@ class SIOLCParameters extends ILCParameters
 	  for (int j = 0; j < nString; j++) {
 		  sv[j] = in.readString() ;
 	  }
-	  _intMap.put( key , sv ) ; 
+	  _stringMap.put( key , sv ) ; 
 	}	
 
 

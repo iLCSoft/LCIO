@@ -1334,7 +1334,7 @@ namespace UTIL {
       params.getIntVals(  intKeys[i], intVec ) ;
       int nInt  = intVec.size()  ;   
       if( nInt > 0 ){ 
-	cout << " parameter " << intKeys[i] << "[int]: " ; 
+	cout << " parameter " << intKeys[i] << " [int]: " ; 
 	for(int j=0; j< nInt ; j++ ){
 	  cout << intVec[j] << ", " ;
 	}
@@ -1348,7 +1348,7 @@ namespace UTIL {
       params.getFloatVals(  floatKeys[i], floatVec ) ;
       int nFloat  = floatVec.size()  ;   
       if( nFloat > 0 ){ 
-	cout << " parameter " << floatKeys[i] << "[float]: " ; 
+	cout << " parameter " << floatKeys[i] << " [float]: " ; 
 	for(int j=0; j< nFloat ; j++ ){
 	  cout << floatVec[j] << ", " ;
 	}
@@ -1362,7 +1362,7 @@ namespace UTIL {
       params.getStringVals(  stringKeys[i], stringVec ) ;
       int nString  = stringVec.size()  ;   
       if( nString > 0 ){ 
-	cout << " parameter " << stringKeys[i] << "[string]: " ; 
+	cout << " parameter " << stringKeys[i] << " [string]: " ; 
 	for(int j=0; j< nString ; j++ ){
 	  cout << stringVec[j] << ", " ;
 	}
