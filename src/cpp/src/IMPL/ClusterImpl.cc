@@ -24,7 +24,7 @@ namespace IMPL{
   }
 
   ClusterImpl::~ClusterImpl(){
-    // delete the pids owned by this particle
+    // delete the pids owned by this cluster
     for(  ParticleIDVec::iterator iter = _pid.begin() ; iter != _pid.end() ; iter++){
       delete *iter ;
     }
