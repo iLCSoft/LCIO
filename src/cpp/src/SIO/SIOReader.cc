@@ -188,8 +188,6 @@ namespace SIO {
 
 
     }else{
-      cout << " state : " <<  _stream->getState() << endl ;
-
       throw IOException( std::string(" stream not open: ")+ *_stream->getName() ) ;
     }
   }

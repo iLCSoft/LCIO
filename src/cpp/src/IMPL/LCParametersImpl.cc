@@ -69,32 +69,32 @@ namespace IMPL{
 
   const StringVec & LCParametersImpl::getIntKeys(StringVec & keys) const  {
 
-//     for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
-//       keys.push_back( iter->first ) ; 
-//     }
+     for( IntMap::iterator iter = _intMap.begin() ; iter !=  _intMap.end() ; iter++ ){
+       keys.push_back( iter->first ) ; 
+     }
 // fg: select1st is non-standard but widely available - use code above on machines where it is missing
-    transform( _intMap.begin() , _intMap.end() , back_inserter( keys )  , select1st< IntMap::value_type >() ) ;
+//    transform( _intMap.begin() , _intMap.end() , back_inserter( keys )  , select1st< IntMap::value_type >() ) ;
 
   return keys ;
   }
 
   const StringVec & LCParametersImpl::getFloatKeys(StringVec & keys) const  {
     
-//     for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
-//       keys.push_back( iter->first ) ; 
-//     }
+     for( FloatMap::iterator iter = _floatMap.begin() ; iter !=  _floatMap.end() ; iter++ ){
+       keys.push_back( iter->first ) ; 
+     }
 // fg: select1st is non-standard but widely available - use code above on machines where it is missing
-    transform( _floatMap.begin() , _floatMap.end() , back_inserter( keys )  , select1st< FloatMap::value_type >() ) ;
+//    transform( _floatMap.begin() , _floatMap.end() , back_inserter( keys )  , select1st< FloatMap::value_type >() ) ;
     return keys ;
   }
 
   const StringVec & LCParametersImpl::getStringKeys(StringVec & keys) const  {
 
-//     for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
-//       keys.push_back( iter->first ) ; 
-//     }
+    for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
+      keys.push_back( iter->first ) ; 
+    }
 // fg: select1st is non-standard but widely available - use code above on machines where it is missing
-    transform( _stringMap.begin() , _stringMap.end() , back_inserter( keys )  , select1st< StringMap::value_type >() ) ;
+//    transform( _stringMap.begin() , _stringMap.end() , back_inserter( keys )  , select1st< StringMap::value_type >() ) ;
     return keys ;
   }
   

@@ -1,6 +1,7 @@
 #include "IMPL/LCRelationNavigatorBaseImpl.h"
 
 #include <algorithm>
+#include <cassert>
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"
 #include "IMPL/LCWgtRelationImpl.h"
@@ -26,7 +27,7 @@ namespace IMPL{
 
   void LCRelationNavigatorBaseImpl::addRelation(EVENT::LCObject * from, 
 						EVENT::LCObject * to, 
-						float weight = 1.0) {
+						float weight) {
 
     LCObjectVec& vTo = _map[ from ].first ;
     FloatVec & vWgt = _map[ from ].second ;

@@ -28,7 +28,7 @@ namespace IMPL{
   float LCRelationImpl::getWeight(int index) const {}
   IntVec LCRelationImpl::getRelationsFrom(LCObject * from) const {}
   IntVec LCRelationImpl::getRelationsTo(LCObject * to) const {}
-  void LCRelationImpl::addRelation(LCObject * from, LCObject * to, float weight = 1.0) {}
+  void LCRelationImpl::addRelation(LCObject * from, LCObject * to, float weight) {}
   void LCRelationImpl::removeRelation(int index) {}
   
   
