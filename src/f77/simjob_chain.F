@@ -72,7 +72,7 @@ c      write(*,*) " created reader at " , reader
 
 c---- variables
       PTRTYPE runheader, event, writer, sthcol, mcpcol, schcol, cahcol
-      PTRTYPE floatvcol, intvcol, pstringv, pfloatv, pintv
+      PTRTYPE stringvcol, floatvcol, intvcol, pstringv, pfloatv, pintv
       PTRTYPE  hit, mcp, mcpm, mcpd, mcpdd
       integer status
       integer i, j, k, irun, nrun, iev, nev, itim, locf
@@ -83,9 +83,12 @@ c---- variables
       character*10 detectorname
       real mcpp(3), schpos(3), cahpos(3)
       double precision sthpos(3)
+      character*4 strvnames(10)
       integer      intvvals(10)
       real         realvvals(10)
 
+      data strvnames /'ABCD', 'BCDE', 'CDEF', 'DEFG', 'EFGH',
+     &                'abcd', 'bcde', 'cdef', 'defg', 'efgh'  /
       data intvvals  / 1234, 2345, 3456, 4567, 5678, 0, 0, 0, 0, 0 /
       data realvvals / 123.4, 234.5, 345.6, 456.7, 567.8,
      &                 0., 0., 0., 0., 0. /
@@ -133,8 +136,7 @@ c-----  event loop
             schcol = lccolcreate( LCIO_SIMCALORIMETERHIT )
             cahcol = lccolcreate( LCIO_CALORIMETERHIT )
 
-            floatvcol  = lccolcreate( LCIO_LCFLOATVEC )
-            intvcol    = lccolcreate( LCIO_LCINTVEC )
+            pstringv   = lcstringvectorcreate ( strvnames, 10, 4 )
             pfloatv    = lcfloatvectorcreate ( realvvals, 10 )
             pintv      = lcintvectorcreate ( intvvals, 10 )
 
@@ -252,14 +254,20 @@ c-----     now add everything to the event
             status = lcevtaddcollection(event,schcol ,'MyCalHits') 
             status = lcevtaddcollection(event,cahcol ,'MyRealCalHits') 
 
+            stringvcol = lccolcreate( LCIO_LCSTRVEC )
+            floatvcol  = lccolcreate( LCIO_LCFLOATVEC )
+            intvcol    = lccolcreate( LCIO_LCINTVEC )
+
+            status = lccoladdelement( stringvcol, pstringv )
             status = lccoladdelement( floatvcol, pfloatv )
             status = lccoladdelement( intvcol, pintv )
 
+            status = lcevtaddcollection(event,stringvcol,'MyStringVec')
             status = lcevtaddcollection(event,floatvcol,'MyFloatVec')
             status = lcevtaddcollection(event,intvcol,'MyIntVec')
             
             status = lcwrtwriteevent( writer , event )
-            
+
             if (status .eq. LCIO_ERROR )  then
                print *, 'SIMJOB: error - can not write event', iev
                stop
@@ -267,6 +275,7 @@ c-----     now add everything to the event
             
 c------- need to delete the event as we created it
             status = lcevtdelete( event )
+
          enddo
       enddo
       status = lcwrtclose( writer ) 
@@ -296,17 +305,18 @@ C
 #include "lciof77apiext.inc"
 
       PTRTYPE reader, event, runhdr, detnames
-      PTRTYPE pcol1, pcol2, pobject1, pobject2
+      PTRTYPE pcol1, pcol2, pcol3, pobject1, pobject2, pobject3
       
       character*(*) filename
       integer status, irun, ievent
       integer i, nactdet, ii
       character*80 detname
 
-      character*40 colname1, colname2
-      integer nfloatv, nintv
-      integer intv(20)
-      real    floatv(20)
+      character*40 colname1, colname2, colname3
+      integer      nfloatv, nintv, nstrv
+      integer      intv(20)
+      real         floatv(20)
+      character*10 strv(20)
 
       write(*,*)
       write(*,*) "----------------------------------------------------"
@@ -338,10 +348,14 @@ c---- read first event of this run and print floatvec and intvec collection
          event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
          colname1 = 'MyFloatVec'
          colname2 = 'MyIntVec'
+         colname3 = 'MyStringVec'
          pcol1    = lcevtgetcollection( event , colname1 )
          pcol2    = lcevtgetcollection( event , colname2 )
+         pcol3    = lcevtgetcollection( event , colname3 )
          pobject1 = lccolgetelementat( pcol1, 1 )
          pobject2 = lccolgetelementat( pcol2, 1 )
+         pobject3 = lccolgetelementat( pcol3, 1 )
+
          nfloatv  = 20
          status   = lcgetfloatvector( pobject1, floatv, nfloatv )
          print '(a,i3,a,i3,a,10f10.5)',
@@ -352,6 +366,12 @@ c---- read first event of this run and print floatvec and intvec collection
          print '(a,i3,a,i3,a,10i10)',
      &              'intv ', i, ' has ', nintv, ' elements: ',
      &              (intv(ii),ii=1,nintv)
+         nstrv    = 20
+         status   = lcgetstringvector
+     &                ( pobject3, strv, nstrv, len( strv(1) ) )
+         print '(a,i3,a,i3,a,10a10)',
+     &              'strv ', i, ' has ', nstrv, ' elements: ',
+     &              (strv(ii),ii=1,nstrv)
 
       end do
          
