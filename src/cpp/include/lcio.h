@@ -14,7 +14,7 @@
 #include "IOIMPL/LCFactory.h"
 
 
-/** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html" target="_blank">LCIO</a> 
+/** \mainpage <a href="http://www-it.desy.de/physics/projects/simsoft/lcio/index.html">LCIO</a> (v00-08) 
  * A persistency framework for linear collider simulation studies.
  * \section Overview
  * This is the API documentation for the C++ version of LCIO. For general documetation on 

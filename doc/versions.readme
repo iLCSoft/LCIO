@@ -3,6 +3,12 @@
 ---------------------------------------------------------------
 
  
+
+============================
+  v00-08  ( fg20030911 ) 
+============================
+
+
    - require version >= v00-08 in C++    
 
    - removed pointer tag from SimCalorimeterHit, CalorimeterHit and SimTrackerHit
@@ -13,7 +19,7 @@
    - scripts for building under cygwin (Norman)
 
 ============================
-  ( fg20030911 ) 
+ v00-08beta ( fg20030911 ) 
 ============================
   
    - added TPCHit class for real data TPC prototypes
@@ -28,13 +34,6 @@
 
    - manual.tex now able to create ps, pdf and html
 
---------------------
-  to do for release:
---------------------
-
-  - additional methods in LCReader specifying the access mode (readNextRunHeader)
-
-  - LCRunHeader::addActiveDetector no ReadOnlyExceptions....
 
 ============================
   ( fg20030909 ) 
