@@ -2,6 +2,8 @@ package hep.lcio.implementation.event;
 
 import hep.lcio.event.Track;
 import hep.lcio.event.TrackerHit;
+
+import java.util.ArrayList;
 import java.util.Collections;
 
 import java.util.List;
@@ -30,8 +32,8 @@ public class ITrack extends ILCObject implements Track
    protected float dEdxError;
    protected float z0;
    protected int ndf;
-   protected List tracks;
-   protected List hits;
+   protected List tracks = new ArrayList() ;
+   protected List hits = new ArrayList() ;
    protected float radiusOfInnermostHit ;
    
    public final static int BITISREFERENCEPOINTPCA = 31;
