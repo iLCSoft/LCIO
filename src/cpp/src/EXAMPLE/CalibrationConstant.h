@@ -1,5 +1,5 @@
 #ifndef CALIBRATIONCONSTANT_H
-#define CALIBRATIONCONSTANT 1
+#define CALIBRATIONCONSTANT_H 1
 
 #include "lcio.h"
 #include "EVENT/LCGenericObject.h"
