@@ -12,8 +12,10 @@
 PTRTYPE lcclucreate() ;
 int     lccludelete( PTRTYPE clu ) ;
 
-int     lcclugetid( PTRTYPE clu ) ;
+int     lccluid( PTRTYPE clu ) ;
 int     lcclugettype( PTRTYPE clu ) ;
+int     lcclutesttype( PTRTYPE clu , int bit ) ;
+
 float   lcclugetenergy( PTRTYPE clu ) ;
 int     lcclugetposition( PTRTYPE clu, float* pos ) ;
 int     lcclugetpositionerror( PTRTYPE clu, float* poserr ) ;
@@ -25,8 +27,8 @@ int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
 PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
 int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
+PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
 
-//int     lcclusettype( PTRTYPE clu, int type ) ;
 int     lcclusettypebit( PTRTYPE clu, int bit ) ;
 int     lcclusetenergy( PTRTYPE clu, float energy ) ;
 int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
@@ -41,14 +43,19 @@ int     lcclusetmuonweight( PTRTYPE clu, float weight ) ;
 int     lccluaddcluster( PTRTYPE clu, PTRTYPE clus ) ;
 int     lccluaddhit( PTRTYPE clu, PTRTYPE calohit, float weigth ) ;
 
+// fg: this method has no direct correspondence in the C++ API as there the vector is manipulated
+// directly through it's interface via getSubdetectorEnergies
+int lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) ;
+
 // now the fortran wrappers from cfortran.h
 extern "C"{
   
 FCALLSCFUN0(CFORTRANPNTR, lcclucreate, LCCLUCREATE, lcclucreate ) ;
 FCALLSCFUN1(INT, lccludelete, LCCLUDELETE, lccludelete, CFORTRANPNTR ) ;
 
-FCALLSCFUN1(INT, lcclugetid, LCCLUGETID, lcclugetid, CFORTRANPNTR) ;
+FCALLSCFUN1(INT, lccluid, LCCLUID, lccluid, CFORTRANPNTR) ;
 FCALLSCFUN1(INT, lcclugettype, LCCLUGETTYPE, lcclugettype, CFORTRANPNTR) ;
+FCALLSCFUN2(INT, lcclutesttype, LCCLUTESTTYPE,lcclutesttype, CFORTRANPNTR, INT ) ;
 FCALLSCFUN1(FLOAT, lcclugetenergy, LCCLUGETENERGY, lcclugetenergy, CFORTRANPNTR) ;
 FCALLSCFUN2(INT, lcclugetposition, LCCLUGETPOSITION, lcclugetposition, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN2(INT, lcclugetpositionerror, LCCLUGETPOSITIONERROR, lcclugetpositionerror, CFORTRANPNTR, FLOATV) ;
@@ -59,6 +66,7 @@ FCALLSCFUN2(INT, lcclugetshape, LCCLUGETSHAPE, lcclugetshape, CFORTRANPNTR, FLOA
 FCALLSCFUN2(INT, lcclugetparticletype, LCCLUGETPARTICLETYPE, lcclugetparticletype, CFORTRANPNTR, FLOATV) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetclusters, LCCLUGETCLUSTERS, lcclugetclusters, CFORTRANPNTR) ;
 FCALLSCFUN1(CFORTRANPNTR, lcclugetcalorimeterhits, LCCLUGETCALORIMETERHITS, lcclugetcalorimeterhits, CFORTRANPNTR) ;
+FCALLSCFUN1(CFORTRANPNTR, lcclugetsubdetectorenergies, LCCLUGETSUBDETECTORENERGIES, lcclugetsubdetectorenergies, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lcclugethitcontributions, LCCLUGETHITCONTRIBUTIONS, lcclugethitcontributions, CFORTRANPNTR, FLOATV, INTV) ;
 
   //FCALLSCFUN2(INT, lcclusettype, LCCLUSETTYPE, lcclusettype, CFORTRANPNTR, INT) ;
@@ -75,6 +83,7 @@ FCALLSCFUN2(INT, lcclusethadweight, LCCLUSETHADWEIGHT, lcclusethadweight, CFORTR
 FCALLSCFUN2(INT, lcclusetmuonweight, LCCLUSETMUONWEIGHT, lcclusetmuonweight, CFORTRANPNTR, FLOAT) ;
 FCALLSCFUN2(INT, lccluaddcluster, LCCLUADDCLUSTER, lccluaddcluster, CFORTRANPNTR, CFORTRANPNTR) ;
 FCALLSCFUN3(INT, lccluaddhit, LCCLUADDHIT, lccluaddhit, CFORTRANPNTR, CFORTRANPNTR, FLOAT) ;
+FCALLSCFUN3(INT, lcclusetsubdetectorenergies, LCCLUSETSUBDETECTORENERGIES, lcclusetsubdetectorenergies, CFORTRANPNTR, FLOATV, INT ) ;
 
 }
   

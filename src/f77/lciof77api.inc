@@ -112,7 +112,8 @@ c-----the CalorimeterHit interface
 
 c-----the Cluster interface
       PTRTYPE lcclucreate, lcclugetclusters, lcclugetcalorimeterhits
-      integer lccludelete, lcclugetid, lcclugettype
+      PTRTYPE lcclugetsubdetectorenergies
+      integer lccludelete, lcclugetid, lcclugettype, lcclutesttype
       integer lcclugetposition
       integer lcclugetpositionerror, lcclugetdirectionerror
       integer lcclugetshape, lcclugetparticletype
@@ -122,7 +123,7 @@ c-----the Cluster interface
       integer lcclusetpositionerror,lcclusettheta, lcclusetphi
       integer lcclusetdirectionerror, lcclusetshape, lcclusetemweight
       integer lcclusethadweight, lcclusetmuonweight, lccluaddcluster
-      integer lccluaddhit
+      integer lccluaddhit, lctrksetsubdetectorenergies
 
 c-----the ParticleID interface
       PTRTYPE lcpidcreate
@@ -157,16 +158,20 @@ c-----the TrackerHit interface
 
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits
+      PTRTYPE lctrkgetsubdetectorhitnumbers
       integer lctrkdelete, lctrkid, lctrkgettype, lctrkgetcovmatrix
+      integer lctrktesttype
       integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
       real    lctrkgetomega, lctrkgetanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
+      real    lctrkgetradiusofinnermosthit
       integer lctrkgetndf
       integer lctrksettypebit, lctrksetomega, lctrksettanlambda
       integer lctrksetphi, lctrksetd0, lctrksetz0, lctrksetcovmatrix
       integer lctrksetreferencepoint, lctrksetchi2, lctrksetdedx
       integer lctrksetisreferencepointpca, lctrksetndf
       integer lctrksetdedxerror, lctrkaddtrack, lctrkaddhit
+      integer lctrksetradiusofinnermosthit,lctrksetsubdetectorhitnumbers
 
 c---- constants as defined in EVENT::LCIO
 

@@ -78,9 +78,9 @@ namespace IMPL {
      */
     virtual float getTanLambda() const ;
 
-    /** Covariance matrix of the track parameters. Stored as upper triangle matrix where
+    /** Covariance matrix of the track parameters. Stored as lower triangle matrix where
      * the order of parameters is:   d0, phi, omega, z0, tan(lambda).
-     * So we have cov(d0,d0), cov( d0,phi ), cov( d0, omega), ...
+     * So we have cov(d0,d0), cov( phi, d0 ), cov( phi, phi), ...
      */
     virtual const EVENT::FloatVec & getCovMatrix() const ;
 

@@ -22,7 +22,7 @@ int lccludelete( PTRTYPE cluster ){
 
 // get Methods
 
-int lcclugetid( PTRTYPE cluster )  {
+int lccluid( PTRTYPE cluster )  {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   return clu->id() ;
 }
@@ -30,6 +30,11 @@ int lcclugetid( PTRTYPE cluster )  {
 int lcclugettype( PTRTYPE cluster )  {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   return clu->getType() ;
+}
+
+int lcclutesttype( PTRTYPE cluster , int bit )  {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  return clu->testType( bit ) ;
 }
 
 float lcclugetenergy( PTRTYPE cluster ) {
@@ -86,6 +91,12 @@ PTRTYPE lcclugetclusters( PTRTYPE cluster ) {
 PTRTYPE lcclugetcalorimeterhits( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   const CalorimeterHitVec& idvect = clu->getCalorimeterHits();
+  return reinterpret_cast<PTRTYPE>( &idvect );
+}
+
+PTRTYPE lcclugetsubdetectorenergies( PTRTYPE cluster ) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  const FloatVec& idvect = clu->getSubdetectorEnergies();
   return reinterpret_cast<PTRTYPE>( &idvect );
 }
 
@@ -192,5 +203,15 @@ int lccluaddhit( PTRTYPE cluster, PTRTYPE calohit, float weight ) {
   return LCIO::SUCCESS ;
 }
 
+int lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  FloatVec& floatvec =  clu->subdetectorEnergies() ;
+  floatvec.resize( nfloatv ) ;
+  for(int j=0;j<nfloatv;j++) {
+    floatvec[j] =  floatv[j]  ;
+  }
+  return LCIO::SUCCESS ;
+
+}
 
 

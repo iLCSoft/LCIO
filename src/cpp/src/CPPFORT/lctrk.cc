@@ -2,6 +2,7 @@
 
 #include "lcio.h" 
 #include "IMPL/TrackImpl.h"
+#include "LCIOSTLTypes.h"
 
 using namespace lcio ;
 
@@ -32,6 +33,11 @@ int lctrkid( PTRTYPE track )  {
 int lctrkgettype( PTRTYPE track )  {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   return trk->getType() ;
+}
+
+int lctrktesttype( PTRTYPE track , int bit )  {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  return trk->testType( bit ) ;
 }
 
 // float lctrkgetmomentum( PTRTYPE track )  {
@@ -104,6 +110,19 @@ float lctrkgetdedx( PTRTYPE track ) {
 float lctrkgetdedxerror( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   return trk->getdEdxError() ;
+}
+
+float lctrkgetradiusofinnermosthit( PTRTYPE track ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  return trk->getRadiusOfInnermostHit() ;
+}
+
+
+
+PTRTYPE lctrkgetsubdetectorhitnumbers( PTRTYPE track ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  const IntVec& nums = trk->getSubdetectorHitNumbers();
+  return reinterpret_cast<PTRTYPE>( &nums );
 }
 
 PTRTYPE lctrkgettracks( PTRTYPE track ) {
@@ -205,6 +224,12 @@ int lctrksetdedxerror( PTRTYPE track, float dedxerr) {
   return LCIO::SUCCESS ;
 }
 
+int lctrksetradiusofinnermosthit( PTRTYPE track, float r) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  trk->setRadiusOfInnermostHit( r ) ;
+  return LCIO::SUCCESS ;
+}
+
 int lctrkaddtrack( PTRTYPE track, PTRTYPE addtrack ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   Track* addtrk = f2c_pointer<Track,LCObject>( addtrack ) ;
@@ -219,4 +244,14 @@ int lctrkaddhit( PTRTYPE track, PTRTYPE hit ) {
   return LCIO::SUCCESS ;
 }
 
+
+int     lctrksetsubdetectorhitnumbers( PTRTYPE track, int* intv, const int nintv ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  IntVec& intVec =  trk->subdetectorHitNumbers() ;
+  intVec.resize( nintv ) ;
+  for(int j=0;j<nintv;j++) {
+    intVec[j] =  intv[j]  ;
+  }
+  return LCIO::SUCCESS ;
+}
 
