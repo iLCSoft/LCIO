@@ -3,17 +3,18 @@
 #include "IO/LCReader.h"
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCRunHeader.h" 
-//#include "CPPFORT/lcioc2f.h"
 
 static const char* FILEN = "recjob.slcio" ; // default file name 
-
 
 using namespace std ;
 using namespace lcio ;
 
 /** Example for an analysis job. No concrete implementations are needed
  *  for reading the data - just the EVENT interfaces. 
- *  See LCTOOLS::dumpEvent(const LCEvent* evt) ) for details.  
+ *  In a first loop we read the run information and then reopen the file for
+ *  event loop.
+ *  See LCTOOLS::dumpEvent(const LCEvent* evt) ) for details on how to access 
+ *  the data in the LCEvent.  
  */
 
 int main(int argc, char** argv ){
@@ -22,7 +23,6 @@ int main(int argc, char** argv ){
   if( argc > 1 ) {
     FILEN = argv[1] ;
   }
-  
   
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
 
@@ -35,26 +35,14 @@ int main(int argc, char** argv ){
     LCRunHeader *runHdr ;
     
     // loop over all run headers
-    
-    // try{  
-    //   while(1) {     // exit through (EndOfData)Exception ?
-    //      runHdr = lcReader->readNextRunHeader() ;
-	
-    //   old version without EndOfDataException:
     while( ( runHdr = lcReader->readNextRunHeader() ) != 0 ){
-      
       
       cout << "  Run : " << runHdr->getRunNumber() 
 	   << " - "      << runHdr->getDetectorName() 
 	   << ":  "      << runHdr->getDescription()  << endl ;
     }
     
-    //    }      
-    //     catch( EndOfDataException ){
-    //     } // do we realy want to handle EOF as an exception ?
-    
     cout << endl ;
-    
     
     lcReader->close() ;
   }
@@ -75,29 +63,15 @@ int main(int argc, char** argv ){
     // dump all events in the file
     int nEvents = 0 ;
     
-    //     try{
-    //       while(1){
-    
+    //----------- the event loop -----------
     while( (evt = lcReader->readNextEvent()) != 0 ) {
-      
-      // the following code will fail at runtime - event is read only !
-      // if we use " (const LCEvent*) evt " it won't even compile 
-      // so we have a twofold protection against data corruption
-      // int status = evt->addCollection( new LCCollectionVec(LCIO::SIMCALORIMETERHIT ),"NewCol" ) ; 
-      //  if( status != LCIO::SUCCESS ){
-      //    cout << " error - couldn't add new collection to the event ! " << endl ;
-      //    exit(1) ;
-      //  }
       
       LCTOOLS::dumpEvent( evt ) ;
       
       nEvents ++ ;
       
-    } // end while
-
-    //     }      
-    //     catch( EndOfDataException){
-    //     }
+    } 
+    // -------- end of event loop -----------
     
     cout << endl <<  "  " <<  nEvents << " events read from file : " << FILEN << endl << endl ;
     

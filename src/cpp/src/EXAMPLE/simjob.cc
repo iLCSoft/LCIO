@@ -217,14 +217,12 @@ int main(int argc, char** argv ){
 	}
 	
 	
-	// add all collection to the event
-	evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
-	evt->addCollection( (LCCollection*) calVec , ecalName ) ;
-	evt->addCollection( (LCCollection*) trkVec , tpcName ) ;
-	evt->addCollection( (LCCollection*) extFVec , tpcName+"UserFloatExtension" ) ;
-	evt->addCollection( (LCCollection*) extIVec , tpcName+"UserIntExtension" ) ;
-	
-	
+	// add all collections to the event
+	evt->addCollection( mcVec , "MCParticle" ) ;
+	evt->addCollection( calVec , ecalName ) ;
+	evt->addCollection( trkVec , tpcName ) ;
+	evt->addCollection( extFVec , tpcName+"UserFloatExtension" ) ;
+	evt->addCollection( extIVec , tpcName+"UserIntExtension" ) ;
 	
 	// test: add a collection for one event only:
 	if( rn == NRUN-1 && i == 0 ) { // first event o last run
@@ -252,6 +250,9 @@ int main(int argc, char** argv ){
 	if( ! (i%100) ) cout << ". " << flush  ;
 	
       } // evt loop
+
+      delete runHdr ;
+
     } // run loop
     
     cout << endl 
