@@ -337,7 +337,7 @@ ccc       end do
 #define  COMBINED      3
 #define  CHARGED       2
 
-      PTRTYPE  helpp, clusp, pvec, pstrv, vecp
+      PTRTYPE  helpp, clusp, pvec, pstrv, pobj, vecp
       PTRTYPE  simhitsvp, simhitswp, calveccol, cconp
       integer  calflag, nsimhits, cluflag, nhits, nclus, type, ncluscol
       integer  relflag, ncalhits
@@ -381,8 +381,8 @@ ccc      status  = lccolsetflag ( calhitcol, calflag )
 ccc         print *, '# of nsimhits: ',nsimhits
       do  i = 1, nsimhits
         calhitp     = lccahcreate ()
-ccc         print '(a,z10)', 'id of calhit:', lccahid (calhitp)
         simcalhitp  = lccolgetelementat ( simcalcol, i )
+ccc         print '(a,z10)', 'pointer of simcalhit:', simcalhitp
 
         energy      = lcschgetenergy ( simcalhitp )
         status      = lccahsetenergy 
@@ -409,26 +409,45 @@ ccc      status   = lcevtaddrelation ( eventi, screlcol, colname3 )
 
       if (lcevtgeteventnumber ( eventi ) .eq. 0  .and.
      &    lcevtgetrunnumber ( eventi ) .eq. 0)  then
+
 ***   the following is some example code on how to access the relation
-***   create a navigation object from a collection
+***   create a navigation object from a collection using different methods
         helpp    = lcrnvcreatefromcollection( screlcol )
         colname1 = lcrnvgetfromtype ( helpp )
         colname2 = lcrnvgettotype ( helpp )
         print *, 'Relation example for first event:  [' ,
      &            colname1(1:len_trim ( colname1 )), ' - ',
      &            colname2(1:len_trim ( colname2 )), '] '
+        print *, 'Relation are given twice using different methods'
         ncalhits = lccolgetnumberofelements( calhitcol )
         do  i = 1, ncalhits
           calhitp     = lccolgetelementat ( calhitcol , i )
-          print '(a,z4,$)', '  relations for object ', lccahid (calhitp)
           simhitsvp = lcrnvgetrelatedtoobjects ( helpp, calhitp )
           simhitswp = lcrnvgetrelatedtoweights ( helpp, calhitp )
 
+***       methods: via lcobv
+          print '(a,z4,$)', '  relations for object ', lccahid (calhitp)
           do  j = 1, lcobvgetlength ( simhitsvp )
-            print '(a,z2,a,f3.1,a,$)', ' [',
+            print '(a,z8,a,z2,a,f3.1,a,$)', ' [',
+     &               lcobvgetobject ( simhitsvp, j ),
+     &               '] [',
      &               lcobvgetobjectid ( simhitsvp, j ),
      &               '] (',
      &               lcobvgetweight ( simhitswp, j ),
+     &               ') '
+          end do
+          print *
+
+***       methods: via stl vector and lcsch 
+          print '(a,z4,$)', '  relations for object ', lccahid (calhitp)
+          do  j = 1, intvectorgetlength ( simhitsvp )
+            pobj = intvectorgetelement ( simhitsvp, j )
+            print '(a,z8,a,z2,af3.1,a,$)', ' [',
+     &               pobj,
+     &               '] [',
+     &               lcschid ( pobj ),
+     &               '] (',
+     &               floatvectorgetelement ( simhitswp, j ),
      &               ') '
           end do
           print *

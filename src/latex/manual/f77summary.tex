@@ -115,6 +115,7 @@ getTo                  -> pto     = lcrelgetto( prel )
 getWeight              -> weight  = lcrelgetweight( prel )
 
 getLength              -> nelem   = lcobvgetlength( pobjv )        (pobjv = pfrom, pto)
+getObject              -> id      = lcobvgetobject( pobjv , i )    (i=1,...,nelem)
 getObjectID            -> id      = lcobvgetobjectid( pobjv , i )  (i=1,...,nelem)
 getWeight              -> weight  = lcobvgetweight( pobjv , i )    (i=1,...,nelem)
 
@@ -177,23 +178,24 @@ getMCParticle          -> pmcp    = lcsthgetmcparticle( pthit )
 
 class SimCalorimeterHit:
 
-create                 -> pchit   = lcschcreate()
-delete                 -> status  = lcschdelete( pchit )
-setCellID0             -> status  = lcschsetcellid0( pchit , icellid0 )
-setCellID1             -> status  = lcschsetcellid1( pchit , icellid1 )
-setEnergy              -> status  = lcschsetenergy( pchit , energy )
-setPosition            -> status  = lcschsetposition( pchit , posv )
-addMCParticleContr..   -> status  = lcschaddmcparticlecontribution( pchit , pmcp , energy , time , ipdg )
+create                 -> pschit  = lcschcreate()
+delete                 -> status  = lcschdelete( pschit )
+setCellID0             -> status  = lcschsetcellid0( pschit , icellid0 )
+setCellID1             -> status  = lcschsetcellid1( pschit , icellid1 )
+setEnergy              -> status  = lcschsetenergy( pschit , energy )
+setPosition            -> status  = lcschsetposition( pschit , posv )
+addMCParticleContr..   -> status  = lcschaddmcparticlecontribution( pschit , pmcp , energy , time , ipdg )
 
-getCellID0             -> icellid0= lcschgetcellid0( pchit )
-getCellID1             -> icellid1= lcschgetcellid1( pchit )
-getEnergy              -> energy  = lcschgetenergy( pchit )
-getPosition            -> status  = lcschgetposition( pchit , posv )
-getNMCParticles        -> number  = lcschgetnmcparticles( pchit )
-getParticleCont        -> pmcp    = lcschgetparticlecont( pchit , i ) (i=1,...,number)
-getEnergyCont          -> energy  = lcschgetenergycont( pchit , i )   (i=1,...,number)
-getTimeCont            -> time    = lcschgettimecont( pchit , i )     (i=1,...,number)
-getPDGCont             -> ipdg    = lcschgetpdgcont( pchit , i )      (i=1,...,number)
+id                     -> id      = lccahid( pschit )
+getCellID0             -> icellid0= lcschgetcellid0( pschit )
+getCellID1             -> icellid1= lcschgetcellid1( pschit )
+getEnergy              -> energy  = lcschgetenergy( pschit )
+getPosition            -> status  = lcschgetposition( pschit , posv )
+getNMCParticles        -> number  = lcschgetnmcparticles( pschit )
+getParticleCont        -> pmcp    = lcschgetparticlecont( pschit , i ) (i=1,...,number)
+getEnergyCont          -> energy  = lcschgetenergycont( pschit , i )   (i=1,...,number)
+getTimeCont            -> time    = lcschgettimecont( pschit , i )     (i=1,...,number)
+getPDGCont             -> ipdg    = lcschgetpdgcont( pschit , i )      (i=1,...,number)
 
 
 class CalorimeterHit:

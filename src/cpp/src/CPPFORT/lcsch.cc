@@ -18,6 +18,13 @@ int lcschdelete( PTRTYPE simcalhit ) {
   return LCIO::SUCCESS ;
 }
 
+// get Methods
+
+int lcschid( PTRTYPE simcalhit ) {
+  SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
+  return hit->id() ;
+}
+
 int lcschgetcellid0( PTRTYPE simcalhit )  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
   return hit->getCellID0() ;
@@ -56,6 +63,8 @@ int lcschgetpdgcont( PTRTYPE simcalhit, int i)  {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;
   return hit->getPDGCont( i-1 ) ;
 }
+
+// set,add Methods
 
 int lcschsetcellid0( PTRTYPE simcalhit, int id0) {
   SimCalorimeterHitImpl* hit = f2c_pointer<SimCalorimeterHitImpl,LCObject>( simcalhit ) ;

@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.26 2004-09-22 21:27:14 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.27 2004-09-23 10:59:25 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -64,6 +64,7 @@ c-----the LCRelationNavigator interface
       character*80 lcrnvgetfromtype, lcrnvgettotype
 
 c-----the LCRelationNavigator utility interface
+      PTRTYPE lcobvgetobject
       integer lcobvgetlength, lcobvgetobjectid
       real    lcobvgetweight
 
@@ -137,10 +138,12 @@ c-----the TPCHitImpl interface
 
 
 c-----the SimCalorimeterHit interface
-      PTRTYPE lcschcreate, lcschgetparticlecont
-      integer lcschdelete, lcschgetcellid0, lcschgetcellid1  
+      PTRTYPE lcschcreate
+      integer lcschdelete, lcschid
+      integer lcschgetcellid0, lcschgetcellid1
       real    lcschgetenergy, lcschgetenergycont, lcschgettimecont
       integer lcschgetposition, lcschgetnmcparticles
+      PTRTYPE lcschgetparticlecont
       integer lcschgetpdgcont
       integer lcschsetcellid0, lcschsetcellid1, lcschsetenergy
       integer lcschsetposition, lcschaddmcparticlecontribution

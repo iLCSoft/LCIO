@@ -20,15 +20,23 @@ typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::Floa
    return  vec->size() ;
  }
 
+ PTRTYPE lcobvgetobject( PTRTYPE vector, int index){
+   const LCObjectVec* vec    = reinterpret_cast<LCObjectVec*>( vector ) ;
+   //   LCObject* obj = vec->at(index-1) ;
+   if( index < 1 || index > (int) vec->size() )
+     throw Exception("lcobvgetobject :  out_of_range " ) ;
+
+   LCObject* obj = (*vec)[ index-1 ] ;
+   return C2F_POINTER( LCObject*, obj ) ;
+ }
+
  int lcobvgetobjectid( PTRTYPE vector, int index){
    const LCObjectVec* vec    = reinterpret_cast<LCObjectVec*>( vector ) ;
-
    //   LCObject* obj = vec->at(index-1) ;
    if( index < 1 || index > (int) vec->size() )
      throw Exception("lcobvgetobjectid :  out_of_range " ) ;
 
    LCObject* obj = (*vec)[ index-1 ] ;
-
    return obj->id() ;
  }
 

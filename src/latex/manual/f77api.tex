@@ -1,7 +1,7 @@
 %-----------------------------------------
 %  LCIO fotran wrapper manual 
 %
-%  $Id: f77api.tex,v 1.14 2004-09-23 00:03:07 hvogt Exp $  $Name: not supported by cvs2svn $
+%  $Id: f77api.tex,v 1.15 2004-09-23 10:59:26 hvogt Exp $  $Name: not supported by cvs2svn $
 %
 %-----------------------------------------
 \subsection{The Fortran Interface} \label{f77api}
@@ -24,6 +24,16 @@ line as far as LCIO is concerned -- of course language specific control structur
 will have to be different. So even if you are only intereseted in using LCIO from Fortran 
 it is probably a good idea to read the above sections on Java and C++ as well to get some 
 insight into the general structure of LCIO.
+
+
+\subsubsection{ Note} \label{f77note}
+{\em The handling of pointers in Fortran {\bf\em must} be done carefully.
+One has to ensure that pointers are always used in the right context.
+Pointers of objects given back to C++ can not be checked by the language to be applicable.
+In most cases of wrong pointer usage the execution of the executable will result in a
+{\bf\em{ segmentation violation}}.
+}
+
 
 \subsubsection{Naming convention}
 The following naming convention is used for the fortran wrapper functions to the 

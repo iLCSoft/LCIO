@@ -13,6 +13,7 @@
 PTRTYPE lcschcreate() ;
 int lcschdelete( PTRTYPE simcalhit ) ;
 
+int lcschid( PTRTYPE simcalhit ) ;
 int lcschgetcellid0( PTRTYPE simcalhit )  ;
 int lcschgetcellid1( PTRTYPE simcalhit )  ;
 float lcschgetenergy( PTRTYPE simcalhit )  ;
@@ -35,6 +36,7 @@ extern "C"{
 FCALLSCFUN0(CFORTRANPNTR, lcschcreate,LCSCHCREATE, lcschcreate ) ;
 FCALLSCFUN1(INT, lcschdelete, LCSCHDELETE, lcschdelete, CFORTRANPNTR ) ;
 
+FCALLSCFUN1(INT, lcschid, LCSCHID, lcschid, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lcschgetcellid0, LCSCHGETCELLID0, lcschgetcellid0, CFORTRANPNTR ) ;
 FCALLSCFUN1(INT, lcschgetcellid1, LCSCHGETCELLID1, lcschgetcellid1, CFORTRANPNTR ) ;
 FCALLSCFUN1(FLOAT, lcschgetenergy, LCSCHGETENERGY, lcschgetenergy, CFORTRANPNTR ) ;
