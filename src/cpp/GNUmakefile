@@ -4,6 +4,7 @@
 #
 # @author Frank Gaede
 # @date   Mar 10,2003
+# @update Sep 30,2003 H. Vogt
 ######################################################
 
 
@@ -32,10 +33,14 @@ bin: lib
 
 IMPL:
 	echo $(LCIOBASE) ; $(MAKE) -C ./src/IMPL
+
 SIO:
 	$(MAKE) -C ./src/SIO
+
 IOIMPL:
-	$(MAKE) -C ./src/IOIMPL
+# on new fast pc's it is required here to wait a bit to avoid
+# that the objects (here only one!) are not added to the library
+	sleep 1 ; $(MAKE) -C ./src/IOIMPL
 
 CPPFORT:
 	$(MAKE) -C ./src/CPPFORT
