@@ -17,7 +17,8 @@
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
-#include "IMPL/LCTOOLS.h"
+#include "UTIL/LCTOOLS.h"
+#include "IMPL/LCRelationImpl.h"
 
 //#include <math.h>
 //#include <cmath>
@@ -251,6 +252,8 @@ public:
     calHits->setFlag( calFlag.getFlag()  ) ;
 
 
+    LCRelation* scRel = new LCRelationImpl ;
+
     int nSimHits = simcalHits->getNumberOfElements() ;
     for(int j=0;j<nSimHits;j++){
 
@@ -261,13 +264,28 @@ public:
       calHit->setCellID0(  simcalHit->getCellID0() ) ;
       calHit->setPosition( simcalHit->getPosition()) ;
 
+      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      
       calHits->addElement( calHit ) ;
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
 
 
-
-
+//     // --- dump the relations ----
+//     int nCalHits = calHits->getNumberOfElements() ;
+//     for(int j=0;j<nCalHits;j++){
+//       int n = scRel->numberOfRelations( calHits->getElementAt(j)  )  ; 
+//       std::cout << "Relations for object " << hex << calHits->getElementAt(j)->id()  ; // << std::endl ;
+//       for(int k=0;k<n;k++){
+// 	std::cout << "[" << scRel->getRelation( calHits->getElementAt(j) , k )->id() << "] (" 
+// 		  << scRel->getWeight( calHits->getElementAt(j) , k ) << ") "  ;
+//       }
+//       std::cout << dec << std::endl ;
+//      }
+    delete scRel ;
+    // -----------
+    
     // if we want to point back to the hits we need to set the flag
     LCFlagImpl clusterFlag(0) ;
     clusterFlag.setBit( LCIO::CLBIT_HITS ) ;

@@ -46,8 +46,8 @@
 \begin{document}
 \pdfgraphics
 
-%\title{LCIO [v1.1] -  Users manual}
-\title{{\Huge\bf LCIO  -  Users manual} \\ Version 1.1}
+%\title{LCIO [v1.1beta] -  Users manual}
+\title{{\Huge\bf LCIO  -  Users manual} \\ v1.1beta}
 
 %\author{F. Gaede \\  DESY IT}
 %\author{F. Gaede, H. Vogt \\  DESY IT, DESY Zeuthen}
@@ -60,6 +60,9 @@
 %\thispagestyle{fancy}
 \section{INTRODUCTION \label{intro}}
 
+{\bf This document is not yet fully updated to the version 1.1 that is to be released soon.
+In particular it does not yet contain the reconstruction data model (Tracks, Clusters and ReconstructedParticles). Please do not use v1.1beta for producing large amounts of data.
+}
 
 LCIO is a persistency framework that defines a data model for the linear collider 
 physics community. It is intended to be used in both simulation studies and 
@@ -90,7 +93,7 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 \begin{verbatim}
   mkdir lcio 
   cd lcio
-  cvs co -d v1.1 -r v1.1 lcio
+  cvs co -d v1.1beta -r v1.1beta lcio
 \end{verbatim}
 
 \subsection{Requirements}
@@ -111,7 +114,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
 \item{ {\bf Linux (and bash):} 
 \begin{verbatim} 
-  export LCIO=/lcio/v1.1                <-- modify as appropriate
+  export LCIO=/lcio/v1.1beta                <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
 
   export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
@@ -122,7 +125,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{verbatim}
   set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
 
-  set LCIO=c:/lcio/devel/v1.1            <-- modify as appropriate
+  set LCIO=c:/lcio/devel/v1.1beta            <-- modify as appropriate
   set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
 
   set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
@@ -131,9 +134,9 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 }
 \item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
 \begin{verbatim}
-  export LCIO=c:/lcio/devel/v1.1
-  export PATH=/cygdrive/c/lcio/devel/v1.1/tools:\
-              /cygdrive/c/lcio/devel/v1.1/bin:$PATH
+  export LCIO=c:/lcio/devel/v1.1beta
+  export PATH=/cygdrive/c/lcio/devel/v1.1beta/tools:\
+              /cygdrive/c/lcio/devel/v1.1beta/bin:$PATH
   export JDK_HOME=c:/j2sdk1.4.1_01
 \end{verbatim} %$
 }
@@ -159,7 +162,7 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 %\end{verbatim}
 %or using {\it bash}:
 %\begin{verbatim}
-%  cd v1.1
+%  cd v1.1beta
 %  export LCIO=$PWD
 %  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
 %  export PATH=$LCIO/tools:$PATH
@@ -261,21 +264,18 @@ with a well defined purpose as shown in table~\ref{tab_pkg}.
 \hline
 \rule[-5mm]{0mm}{10mm} C++ Namespace  &  Java package    &  Purpose \\ \hline \hline
 
- DATA  &  hep.lcio.data   &  The base interfaces of data entities.
- These interfaces are used to write the data, i.e. all user classes 
- that implement them can be made persistent with LCIO.\\ \hline
- EVENT  &  hep.lcio.event   & The base interfaces of the event.
- These interfaces extend the bare data interfaces with convenient 
- methods for analysis. They are used when LCIO events/data are read in. \\ \hline
+ DATA  &  hep.lcio.data   & Has been removed in v1.1\\ \hline
+ EVENT  &  hep.lcio.event   & The base interfaces of all data classes in LCIO.
+ \\ \hline
  IO  &  hep.lcio.io   &  The base interfaces for io of data.\\ \hline
- IMPL  &  hep.lcio.implementation.event   & The default implementations of
+ IMPL  &  hep.lcio.implementation.event   & The (default) implementations of
  the base interfaces that are defined in EVENT. \\ \hline
  IOIMPL  &  hep.lcio.implementation.io   &  Extensions to the default implementations
  needed for IO. With the exception of LCFactory all other classes are for internal use only.\\ \hline
  SIO  &  hep.lcio.implementation.sio   & The persistency implementation using SIO.
  Users should not use any of the classes defined here explicitly but through their
  base interfaces defined in IO. \\ \hline
- LCIO  &   n.a. & The namespace lcio combines DATA, EVENT, IO and IMPL for user convenience
+ LCIO  &   n.a. & The namespace lcio combines EVENT, IO, UTIL and IMPL for user convenience
 (\#include "lcio.h"). \\ \hline
 
 \end{tabular}
@@ -285,9 +285,9 @@ with a well defined purpose as shown in table~\ref{tab_pkg}.
 \end{table}
 So a good starting point to browse the API documentation is the package/namespace overview.
 Depending on the use case you will need mostly classes from one or two namespaces, e.g. if you need 
-to read data from an existing LCIO file, you find most of the relevant classes in EVENT.
-If you want to write data with LCIO you'll either need the implementation classes provided in IMPL
-or implement the interface from DATA.
+to read data from an existing LCIO file, you only need the classes in EVENT.
+If you want to write data with LCIO you have to instantiate the implementation classes provided in 
+IMPL (or implement the interface from EVENT).
 
 \begin{figure}
 \includegraphics[width=145mm]{cpp_api}   
@@ -341,13 +341,10 @@ Figure~\ref{fig_datamodel} shows the data entities that are currently defined by
 \begin{figure}
 %\htmlimage{flip=r270}
 \includegraphics[width=150mm]{datamodel}    
-\caption{Overview of the data model defined by LCIO (all classes in namespace DATA). 
+\caption{Overview of the data model defined by LCIO (all classes in namespace EVENT). 
 The boxes correspond to separate
 data entities (classes) and the arrows denote relationships between these entities.
 The event data is stored in 'untyped' collections of LCObject subclasses.
-Only the shown interface is used to write data, thus existing user classes can be made persistent 
-by implementing this interface.  Every get-method
-corresponds to a persistent attribute. 
 See  appendix~\ref{app_lcio} for details of how the data is stored in the files.\label{fig_datamodel}
 %\htmladdnormallink{(click here for a better quality image)}{../datamodel.jpg}
 }
@@ -643,10 +640,11 @@ Opening and closing the file is the same as described for the LCReader, e.g. in 
 \end{verbatim}
 
 \subsubsection{Writing to the file}
-As mentioned in section~\ref{sec_api} the LCWriter interface only uses the interfaces 
-in DATA/hep.lcio.data. So all classes implementing these interfaces can be written with LCIO.
-This can be used for existing classes in already existing applications. 
-If  you design a new application in either Java or C++ you should consider to use the implementation
+The LCWriter interface only uses the interfaces in EVENT/hep.lcio.event. 
+So all classes implementing these interfaces can be written with LCIO.
+This could in principle be used for existing classes in already existing applications eventhough 
+copying the data into instances of the LCIO implementation classes is more convenient.
+If  you design a new application in either Java or C++ you should use the implementation
 classes (IMPL/hep.lcio.implementation.event) that LCIO provides.
 These are also used in the following examples. The principle steps involved are: 
 create an instance of the implementation class, set the attributes and then call the corresponding
@@ -712,7 +710,7 @@ If you are reading and adding sth. to the event it is  LCIO that deletes the eve
 side.\\
 As a rule of thumb: Use \verb$delete evt/runhdr$ at the end of every event/run loop where you 
 created the event/runHeader and don't use delete in all other cases.\\
-Of course if you use your own implementation of the DATA interface you are also responsible for the 
+Of course if you use your own implementation of the EVENT interface you are also responsible for the 
 memory management.}
  
 

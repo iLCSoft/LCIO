@@ -1,0 +1,44 @@
+package hep.lcio.event ;
+
+@java{
+import hep.lcio.exceptions.* ;
+}
+
+/** Interface for relationships between LCObjects.
+ * EXPERIMENTAL code !!
+ * 
+ * @author gaede 
+ * @version Apr 15, 2004
+ * @see LCObject
+ */
+
+public interface LCRelation
+{
+
+    /** The number of stored relations for the given object.
+     */
+    public int numberOfRelations( LCObject* obj ) ; 
+
+    /** The relation with the given index.
+     */
+    public LCObject* getRelation(LCObject* obj, int index) ;
+
+
+    /** The weight of the relation with the given index.
+     */
+    public float getWeight(LCObject* obj, int index)  ;
+
+
+    /** Add a new relation. 
+     */
+    public void addRelation(LCObject* from, LCObject* to, float weight)  ;
+    
+
+    /**If caching is enabled the result of numberOfRelations() is stored
+     * for subsequent calls to getRelation() and getWeight().
+     */
+    public void useCaching(boolean val) ;
+
+
+}
+
