@@ -28,13 +28,13 @@
       reader = lcrdrcreate()
 c      write(*,*) " created reader at " , reader
       
-      status = lcrdropen( reader, 'f_simjob.slcio' )
+      status = lcrdropen( reader, 'simjob.slcio' )
       
       if( status.eq.LCIO_ERROR) then
-         write(*,*) " could not open file f_simjob.slcio "
+         write(*,*) " could not open file simjob.slcio "
          goto 99
       else
-         write(*,*) " opened file f_simjob.slcio "
+         write(*,*) " opened file simjob.slcio "
       endif
       
 
