@@ -14,6 +14,7 @@ AR = ar
 
 INCLUDE = ../include
 
+#CPPFLAGS = -O4 -I $(INCLUDE) 
 CPPFLAGS = -g -I $(INCLUDE) 
 
 

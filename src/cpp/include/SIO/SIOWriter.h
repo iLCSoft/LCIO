@@ -34,9 +34,17 @@ namespace SIO {
      */
     virtual ~SIOWriter() ;
 
-    /** Opens a file for writing.
+    /** Opens a file for writing and returns LCIO::SUCCESS if 
+     * no error occured. If file with given name exists, it will be opened in
+     * append-mode.
      */
-    virtual int open(const std::string& filename) ;
+    virtual int open(const std::string & filename) ;
+
+    /** Opens a file for writing and returns LCIO::SUCCESS if 
+     *  no error occured. Possible write modes are: LCIO::WRITE_NEW
+     * (existing files are replaced) and LCIO::WRITE_APPEND. 
+     */
+    virtual int open(const std::string & filename, int writeMode) ;
     
     /** Writes the given run header to file and returns LCIO::SUCCESS if no error occured.
      */

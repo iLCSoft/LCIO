@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.4 2003-05-13 14:28:32 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.5 2003-05-14 07:30:11 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -123,7 +123,7 @@ class SIOEvent extends ILCEvent
        // we don't duplicate the event header in the C++ implementation any more ...
       if (headerOnly)
       {
-         SIOOutputStream out = writer.createBlock(LCIO.LCEVENT, LCIO.MAJORVERSION, LCIO.MINORVERSION);
+         SIOOutputStream out = writer.createBlock(SIOFactory.eventHeaderBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
          out.writeInt(event.getRunNumber());
          out.writeInt(event.getEventNumber());
  
@@ -135,8 +135,8 @@ class SIOEvent extends ILCEvent
          for (int i = 0; i < blockNames.length; i++)
          {
             String blockName = blockNames[i];
-            hackString(out, blockName);
-            hackString(out, event.getCollection(blockName).getTypeName());
+            out.writeString( blockName);
+            out.writeString(event.getCollection(blockName).getTypeName());
          }
       }
       else

@@ -47,7 +47,7 @@ public:
     // open outputfile
     lcWrt = LCFactory::getInstance()->createLCWriter() ;
 
-    try{ lcWrt->open( OUTFILEN ) ; } 
+    try{ lcWrt->open( OUTFILEN , LCIO::WRITE_NEW ) ; } 
     
     catch(IOException& e){
       cout << "[RunEventProcessor()] Can't open file for writing -  " 

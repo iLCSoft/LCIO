@@ -49,6 +49,10 @@ public interface LCIO{
     static const int ERROR   =  0 ;
     static const int SUCCESS =  1 ;
 
+    //write modes
+    static const int WRITE_NEW = 0 ; 
+    static const int WRITE_APPEND = 1 ; 
+
     // type names:
     static const char* LCEVENT ;
     static const char* LCRUNHEADER ;
@@ -57,6 +61,7 @@ public interface LCIO{
     static const char* TRACKERHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTEGERVEC ; 
+
 }
 @else
     // current version number of lcio
@@ -77,6 +82,10 @@ public interface LCIO{
   public static const int ERROR   =  0 ;
   public static const int SUCCESS =  1 ;
 
+  //write modes
+  public static const int WRITE_NEW = 0 ; 
+  public static const int WRITE_APPEND = 1 ; 
+
     // type names:
   public static const String LCEVENT = "LCEvent" ;
   public static const String LCRUNHEADER = "LCRunHeader" ;
@@ -88,15 +97,3 @@ public interface LCIO{
 @endif
 }
 
-// @cpp{
-// namespace EVENT{
-// // ANSI-C++ requires initialization outside the class definition
-// char* const LCIO::LCEVENT = "LCEvent" ;
-// char* const LCIO::LCRUNHEADER = "LCRunHeader" ;
-// char* const LCIO::MCPARTICLE = "MCParticle" ;
-// char* const LCIO::CALORIMETERHIT = "CalorimeterHit" ;
-// char* const LCIO::TRACKERHIT = "TrackerHit" ;
-// char* const LCIO::LCFLOATVEC = "LCFloatVec" ;
-// char* const LCIO::LCINTEGERVEC = "LCIntegerVec" ;
-// };
-// }

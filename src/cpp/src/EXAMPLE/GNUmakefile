@@ -30,6 +30,9 @@ clean:
 $(BINDIR)/minijob: minijob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/minijob $(CPPFLAGS) minijob.cc  $(LIBS) 
 
+$(BINDIR)/dumpevent: dumpevent.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/dumpevent $(CPPFLAGS) dumpevent.cc  $(LIBS) 
+
 $(BINDIR)/simjob: simjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/simjob $(CPPFLAGS) simjob.cc  $(LIBS) 
 

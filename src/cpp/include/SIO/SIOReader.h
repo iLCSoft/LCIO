@@ -47,7 +47,8 @@ namespace SIO {
     virtual EVENT::LCRunHeader * readNextRunHeader() ;  
 
 
-    /** Reads the next event in read only mode from file - in case of error or EOF NULL is returned.
+    /** Reads the next event in read only mode from file - in case of error 
+     * or EOF NULL is returned.
      */
     virtual EVENT::LCEvent* readNextEvent() ;
     
@@ -57,6 +58,12 @@ namespace SIO {
      */
     virtual EVENT::LCEvent* readNextEvent( int accessMode) ;
     
+
+    /** Reads the specified event from file. Returns null if 
+     *  event doesn't exist on the current stream. Should be used 
+     *  with care: events have to be read in sequential order (no direct access yet).
+     */
+    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) ;
 
     /** Closes the output file and returns LCIO::SUCCESS.
      */

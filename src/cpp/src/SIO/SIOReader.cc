@@ -42,7 +42,7 @@ namespace SIO {
   
 
 
-//#define DEBUG 1
+  //#define DEBUG 1
 
   SIOReader::SIOReader() {
   
@@ -237,15 +237,12 @@ namespace SIO {
 
     // first, we need to read the event header 
     // to know what collections are in the event
-    { // -- scope for unpacking run header --------
+    { // -- scope for unpacking evt header --------
       
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
       if( readRecord() != LCIO::SUCCESS )   return 0 ;
       
-    }// -- end of scope for unpacking run header --
-    
-    // fg - not needed ?
-    //setUpHandlers() ;
+    }// -- end of scope for unpacking evt header --
     
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;
@@ -258,70 +255,46 @@ namespace SIO {
       return *_evtP ;      
     }
 
+  }
 
 
-//       _hdrRecord->setUnpack( true ) ;
-//       // create new event with pointer at the known address **_evtP
-//       // delete the old event first
-//       // event will be created read only
-// //        if (*_evtP != 0 )  
-// //  	delete *_evtP ;
-// //        *_evtP = new LCEventIOImpl()  ;
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) {
     
-//       // read header record first 
-//       unsigned int status =  _stream->read( &_dummyRecord ) ;
-//       if( ! (status & 1)  ){
-// 	delete *_evtP ;
-// 	_hdrRecord->setUnpack( false ) ;
-// 	return 0 ;
-//       }
-      
-//       if( strcmp( _dummyRecord->getName()->c_str() , LCSIO::HEADERRECORDNAME )  ){
-// 	std::cout << " wrong event header record : " <<  *_dummyRecord->getName() << std::endl ;
-// 	_hdrRecord->setUnpack( false ) ;
-// 	return 0 ;
-//       }
-//       _hdrRecord->setUnpack( false ) ;
-
-//       setUpHandlers() ;
-
-//       _evtRecord->setUnpack( true ) ;
-// //        delete *_evtP ;
-// //        *_evtP = new LCEventIOImpl()  ;
-      
-//       status =  _stream->read( &_dummyRecord ) ;
-//       if( ! (status & 1)  ){
-// 	delete *_evtP ;
-// 	_evtRecord->setUnpack( false ) ;
-// 	return 0 ;
-//       }
+    bool runFound = false ;
+    bool evtFound = false ;
+    // check current run - if any
+    if( *_runP != 0 ){
+      if( (*_runP)->getRunNumber() == runNumber ) runFound = true ;
+    }
+    // skip through run headers until run found or EOF
+    while (!runFound ) {
+      if( readNextRunHeader() == 0 ) break ; 
+      runFound = ( (*_runP)->getRunNumber() == runNumber ) ;
+    }
+    if( !runFound ) return 0 ; 
     
-//       if( strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
-// 	std::cout << " wrong event record : "
-// 		  <<  *_dummyRecord->getName() 
-// 		  << std::endl ;
-// 	_evtRecord->setUnpack( false ) ;
-// 	return 0 ;
-//       }
-//       // set the proper acces mode before returnning the event
-//       dynamic_cast<LCEventIOImpl*>(*_evtP)->setAccessMode( accessMode ) ;
+    { // -- scope for unpacking evt header --------
+      SIORecordUnpack hdrUnp( _hdrRecord ) ;
+      while( !evtFound ){
+	if( readRecord() != LCIO::SUCCESS ) return 0 ;
+	evtFound = ( (*_evtP)->getEventNumber() == evtNumber ) ;
+      }
+    }// -- end of scope for unpacking evt header --
+    
+    if( !evtFound ) return 0 ;
 
-
-//       // move the collections from the default event to our current event
-//       typedef LCCollectionMap::const_iterator LCI ;
-//       for ( LCI iter= _defaultEvt->_map.begin() ; iter != _defaultEvt->_map.end() ; iter++ ){
-
-// 	(*_evtP)->_map[ iter->first ] = iter->second ;  
-
-// 	_defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
-//       }
-
+    { // now read the event record
+      SIORecordUnpack evtUnp( _evtRecord ) ;
       
+      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      
+      // set the proper acces mode before returnning the event
+      // FIXME : check access mode ...
+      // (*_evtP)->setAccessMode( accessMode ) ;
+      
+      return *_evtP ;      
+    }
 
-//       _evtRecord->setUnpack( false ) ;
-//       return *_evtP ;
-//     } 
-//     return  0 ;
   }
 
 

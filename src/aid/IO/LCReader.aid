@@ -31,6 +31,12 @@ public interface LCReader {
      */
     public LCEvent* readNextEvent(int accessMode) ;
 
+    /** Reads the specified event from file. Returns null if 
+     *  event doesn't exist on the current stream. Should be used 
+     *  with care: events have to be read in sequential order (no direct access yet).
+     */
+    public LCEvent* readEvent(int runNumber, int evtNumber) ;
+
     /** Closes the output file/stream etc.
      * @throws IOException
      */

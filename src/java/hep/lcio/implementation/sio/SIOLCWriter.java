@@ -16,7 +16,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
+ * @version $Id: SIOLCWriter.java,v 1.4 2003-05-14 07:30:11 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -35,6 +35,7 @@ class SIOLCWriter implements LCWriter
       }
    }
 
+
    public int open(String filename)
    {
       try
@@ -46,6 +47,14 @@ class SIOLCWriter implements LCWriter
       {
          throw new LCIOException(x);
       }
+   }
+
+   public int open(String filename, int writeMode)
+   {
+       // FIX ME - need implementation for append mode
+       //throw new IOException("append not yet supported" );
+       System.out.println("append not yet supported" );
+       return LCIO.ERROR;
    }
 
    public int writeEvent(LCEvent evt)

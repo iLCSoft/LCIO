@@ -44,13 +44,6 @@ namespace SIO  {
   
     if( op == SIO_OP_READ ){ 
 
-
-    cout << " version : " 
-	 << SIO_VERSION_MAJOR( versionID ) << " -  " 
-	 << SIO_VERSION_MINOR( versionID ) << endl ;
-
-
-
       if(!_rhP) return LCIO::ERROR ;  // in read mode we need an address for the pointer
 
       // delete the old run header object 

@@ -48,7 +48,13 @@ namespace SIO {
   }
 
 
-  int SIOWriter::open(const std::string& filename){
+
+  int SIOWriter::open(const std::string & filename){
+    // default is append, i.e. append to existing file or create new one
+    return open( filename, LCIO::WRITE_APPEND ) ;
+  }
+
+  int SIOWriter::open(const std::string& filename, int writeMode){
 
     unsigned int status ;
     
@@ -73,7 +79,17 @@ namespace SIO {
     delete stream_name ;
     
 
-    status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_NEW ) ; 
+    switch( writeMode ) 
+      {
+      case LCIO::WRITE_NEW : 
+	status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_NEW ) ; 
+	break ;
+      case LCIO::WRITE_APPEND : 
+	status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_APPEND ) ; 
+	break ;
+      default: 
+	return LCIO::ERROR ;
+      }
 
     if( !(status &1) ) return LCIO::ERROR ;
   

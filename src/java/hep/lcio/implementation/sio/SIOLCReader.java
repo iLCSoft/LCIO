@@ -25,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.3 2003-05-09 15:16:45 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.4 2003-05-14 07:30:11 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -91,7 +91,13 @@ class SIOLCReader implements LCReader
       return readNextEvent();
    }
 
-   public LCRunHeader readNextRunHeader()
+   public LCEvent readEvent(int runNumber, int evtNumber)
+   {
+      //FIXME: need implementation
+      return readNextEvent();
+   }
+
+    public LCRunHeader readNextRunHeader()
    {
       try
       {
