@@ -4,6 +4,8 @@
  * @author Vogt
  * @version Sep 30, 2003
  */
+#ifndef CPOINTER_H
+#define CPOINTER_H 1
 
 typedef int PTRTYPE ;
 #define CFORTRANPNTR INT
@@ -25,3 +27,5 @@ template<class T, class O> T* f2c_pointer(PTRTYPE ptr){
 }
 
 #define C2F_POINTER(T,ptr) reinterpret_cast<int>( dynamic_cast<T>( (ptr) ) ) ;
+
+#endif

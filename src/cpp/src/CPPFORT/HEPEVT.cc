@@ -2,6 +2,7 @@
 #include "CPPFORT/HEPEVT.h"
 
 #include <cstdlib>
+#include <cmath>
 #include <iostream>
 using namespace std ;
 
