@@ -198,6 +198,7 @@ This will create the following libraries and executables:
       anajob
       copyfix
       dumpevent
+      readcalibration
       recjob
       simjob
  ./bin               <-- f77 examples
@@ -548,7 +549,7 @@ are provided with LCIO. To do so it is easiest to implement the interface LCGene
 concrete class. In order to write data, simply create instances of this class and add them to an LCCollection
 that in turn is added to the LCEvent. When reading back this information users are free to instantiate 
 objects of the user class' type via copy constructor or simply access the information through the LCGenericObject
-interface. 
+interface.
 
 \subsubsection{LCIntVec, LCFloatVec and LCStringVec}
 Simple user extension data can be stored in LCCollections of vectors of type of {\em float, int} and {\em string}. 
@@ -587,7 +588,7 @@ A detailed description of the data layout in the SIO files is given in \verb# $L
 %There are a number of examples in the {\em src} directory of LCIO that demonstrate
 %the usage of LCIO. Here we give a step to step introduction to the most important features.
 
-\subsection{How to read LCIO files} \label{examples} 
+\subsection{How to read LCIO files} \label{read_examples} 
 There are a number of examples in the {\em src} directory -- 
 some examples for reading and accessing data can be found in:
 \begin{verbatim}
@@ -595,6 +596,7 @@ some examples for reading and accessing data can be found in:
     anajob.cc
     dumpevent.cc
     recjob.cc
+    readcalibration.cc
   src/cpp/src/IMPL
     LCTOOLS.cc
 
