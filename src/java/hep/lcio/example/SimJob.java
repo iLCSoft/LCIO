@@ -13,7 +13,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.2 2003-05-06 06:22:11 tonyj Exp $
+ * @version $Id: SimJob.java,v 1.3 2003-05-06 06:51:50 tonyj Exp $
  */
 public class SimJob
 {
@@ -61,13 +61,13 @@ public class SimJob
             // create and add some mc particles
             ILCCollection mcVec = new ILCCollection(LCIO.MCPARTICLE);
 
-            IMCParticle mom = new IMCParticle();
+            IMCParticle mom = null;
             for (int j = 0; j < NMCPART; j++)
             {
                IMCParticle mcp = new IMCParticle();
 
                mcp.setPDG(101 + (j * 100));
-               mcp.setParent(mom);
+               if (mom != null) mcp.setParent(mom);
 
                float[] p = { 2.f / 1024.f, 4.f / 1024.f, 8.f / 1024.f };
                mcp.setMomentum(p);
@@ -128,7 +128,6 @@ public class SimJob
 
                hit.setPosition(pos);
 
-               // assign the hits randomly to MC particles
                // assign the hits randomly to MC particles
                int mcIndx = random.nextInt(NMCPART);
 

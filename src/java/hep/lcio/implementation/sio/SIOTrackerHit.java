@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.2 2003-05-06 06:22:12 tonyj Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.3 2003-05-06 06:51:50 tonyj Exp $
  */
 public class SIOTrackerHit extends ITrackerHit
 {
@@ -34,6 +34,7 @@ public class SIOTrackerHit extends ITrackerHit
    {
       if (particle instanceof SIORef)
          particle = ((SIORef) particle).getObject();
+      System.out.println("particle="+particle);
       return (MCParticle) particle;
    }
 
