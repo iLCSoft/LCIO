@@ -38,7 +38,7 @@ c-----the LCStrVec,LCIntVec,LCFloatVec interface
       integer lcsvcgetintat
       real lcsvcgetfloatgat
 c-----the LCEvent interface
-      PTRTYPE lcevtcreate, lcevtgetcollection
+      PTRTYPE lcevtcreate, lcevtgetcollection, lcevtgetcollectionnames
       integer lcevtdelete
       integer lcevtgetrunnumber, lcevtgeteventnumber
       character*80 lcevtgetdetectorname

@@ -112,6 +112,26 @@ c ---------------  convenient methods for SimCalorimeterHits
 
       integer lcgetsimcalohitmccont
 
+c ---------------  convenient methods for the vector interface
+
+*     Get the complete vector of Integers
+*     
+*     int lcgetintvector( PTRTYPE vector, int* intv, int* nintv )
+
+      integer lcgetintvector
+
+*     Get the complete vector of Floats
+*     
+*     int lcgetfloatvector( PTRTYPE vector, float* floatv , int* nfloatv )
+
+      integer lcgetfloatvector
+
+*     Get the complete vector of Strings
+*     
+*     int lcgetstringvector( ( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) 
+
+      integer lcgetstringvector
+
 
 c----  need to define the HEPEVT common block
 #include "hepevt.inc"
