@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE sio SYSTEM "sio.dtd">
+<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd">
 
 <!--
     Document   : lcio.xml
@@ -31,6 +31,7 @@
   <record name="LCEventHeader" major="1" minor="0">
      <block name="EventHeader" major="1" minor="0">
         <data type="int" name="runNumber"></data>
+        <data type="int" name="eventNumber"></data>
         <data type="string" name="detectorName"></data>
         <data type="long" name="timeStamp">TODO: format</data>
         <data type="int" name="nBlockNames"></data>
@@ -53,7 +54,7 @@
          </repeat>
       </block>
       <block name="MCParticle" major="1" minor="0">
-         <data type="int" name="flags"> not yesy used </data>
+         <data type="int" name="flags"> not yet used </data>
 	 <data type="int" name="nMC"></data>
          <repeat count="nMC">
             <data type="ptag" name="this"></data>

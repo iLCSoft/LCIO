@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics//projects/simsoft/lcio/doc/sio.dtd">
+<!DOCTYPE sio SYSTEM "http://www-it.desy.de/physics/projects/simsoft/lcio/doc/sio.dtd">
 
 <!--
     Document   : data.xml
@@ -28,7 +28,7 @@
 	definition of code</data>
       <data type="float[5]" name="4vec">4-vector of object (px, py, pz, E, M)</data>
       <data type="float[3]" name="reference"> x,y,z where object is defined</data>
-      <data type="float[18?]" name="covariance">cov matrix TODO: review this!</data>
+      <data type="float[15]" name="covariance">cov matrix TODO: review this!</data>
       <data type="int" name="nrecopart"/>
       <repeat count="nrecopart">
 	<data type="pntr" name="ReconstructedParticle">particle that contributed to the object</data>
@@ -50,7 +50,7 @@
 	<data type="int" name="nmc"/>
 	<repeat count="nmc">
 	  <data type="pntr" name="MCParticle"/>
-	  <data type="float" name="energyfraction"/>
+	  <data type="float" name="weight"/>
 	</repeat>
 	<data type="int" name="ntrk"/>
 	<repeat count="ntrk">
@@ -77,8 +77,9 @@
 	<data type="float" name="charge"/>
 	<data type="float" name="d0">Impact Parameter in r-phi</data>
 	<data type="float" name="z0">Impact Parameter in r-z</data>
-	<data type="float[3]" name="reference">Reference point (x,y,z) </data>
 	<data type="float[15]" name="covmatrix"> Covariance matrix</data>
+	<data type="float[3]" name="reference">Reference point (x,y,z) </data>
+	<data type="float" name="chi2">chi**2 of fit</data>
 	<data type="float[10]" name="dEdx">dEdx weights and
 	  probabilities</data>
 	<if condition="(flag&amp;(1>>31)) !=0">
@@ -95,7 +96,7 @@
       <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
       <data type="int" name="nCluster"/>
       <repeat count="nCluster">
-	<data type="int" name="clusterdetector"> Type of cluster: ECAL, HCAL, combined,
+	<data type="int" name="detector"> Type of cluster: ECAL, HCAL, combined,
 	  ... </data>
 	<data type="int" name="clustertype"> Neutral/ charged/ undefined cluster</data>
 	<data type="float" name="energy">Energy of the cluster </data>
@@ -104,10 +105,8 @@
 	<data type="float" name="theta">intrinsic direction: theta at position</data>
 	<data type="float" name="phi">intrinsic direction: phi at position</data>
 	<data type="float[3]" name="errdir">cov matrix of direction</data>
-	<data type="float[3-9?]" name="shape"> Shape parameters, to be defined</data>
-	<data type="float" name="emcluster">weight to be compatible with EM cluster</data>
-	<data type="float" name="muon"> weight to be compatible with a muon </data>
-	<data type="float" name="hadcluster"> weight to be compatible with HAD cluster </data>
+	<data type="float[6]" name="shape"> Shape parameters, to be defined</data>
+	<data type="float[3]" name="particletype">weight to be compatible with EM, HAD, muon cluster</data>
 	<if condition="(flag&amp;(1>>31)) !=0">
 	  <data type="int" name="n"/>
 	  <repeat count="n">

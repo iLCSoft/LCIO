@@ -32,7 +32,7 @@ public interface LCIO{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 0 ; 
-    static const int MINORVERSION  = 1 ; 
+    static const int MINORVERSION  = 2 ; 
 
     // bits in flag words
     // CalorimeterHit (CH)
