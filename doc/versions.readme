@@ -3,8 +3,14 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+
+   - store Mass instead of Energy for MCParticle ( v > 0.7)
+     [ C++ only ]
+
+   - added scripts (bash) to call Java examples (bin/runSimJob.sh,...)
+
 ============================
- v00-06 ( fg 20030827 )
+ v00-06 ( fg 20030827 )    <-- Schrott !!!!!!!
 ============================
 
    - added integer user extensions (LCIntVec)
@@ -29,6 +35,7 @@
 
   - store mass for MCParticle instead of energy
     + convenient method getEnergy() in EVENT::MCParticle
+    [ Java only ]
 
   - Exceptions in LCReader 
     [Java] 

@@ -7,7 +7,7 @@ import hep.lcio.event.MCParticle;
 /**
  * A default implementation of MCParticle
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.3 2003-06-10 10:02:07 gaede Exp $
+ * @version $Id: IMCParticle.java,v 1.4 2003-09-01 09:11:54 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -19,7 +19,7 @@ public class IMCParticle extends ILCObject implements MCParticle
    protected double[] vertex = new double[3];
    protected double[] endpoint = new double[3];
    protected float charge;
-   protected float energy;
+   protected float mass;
    protected int hepEvtStatus;
    protected int pdg;
 
@@ -52,15 +52,21 @@ public class IMCParticle extends ILCObject implements MCParticle
       return (MCParticleData) daughters[i];
    }
 
-   public void setEnergy(float energy)
+   public void setMass(float mass)
    {
       checkAccess();
-      this.energy = energy;
+      this.mass = mass;
+   }
+
+   public float getMass()
+   {
+	  return mass ;
    }
 
    public float getEnergy()
    {
-      return energy;
+      return (float) Math.sqrt( momentum[0]*momentum[0] + momentum[1]*momentum[1]
+                    + momentum[2]*momentum[2] + mass*mass ) ;
    }
 
    public void setHepEvtStatus(int status)

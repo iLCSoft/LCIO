@@ -15,7 +15,7 @@ namespace IMPL {
     _mother1(0),
     _pdg(0),
     _status(0),
-    _energy(0),
+    _mass(0),
     _charge(0),
     _daughtersP(0)
   {
@@ -79,12 +79,16 @@ namespace IMPL {
     return _endpoint ;
   }
 
+  float MCParticleImpl::getEnergy() const { 
+    return sqrt( _p[0]*_p[0] + _p[1]*_p[1] + _p[2]*_p[2] + _mass*_mass ) ;  
+  }
+
 
   int MCParticleImpl::getPDG() const { return _pdg ;}
   int MCParticleImpl::getHepEvtStatus() const { return _status ;}
   const double * MCParticleImpl::getVertex() const { return _vertex ;}
   const float * MCParticleImpl::getMomentum() const { return _p ;}
-  float MCParticleImpl::getEnergy() const { return _energy ;}
+  float MCParticleImpl::getMass() const { return _mass ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
 
   void MCParticleImpl::setParent(  const  MCParticle *mom0 ) { _mother0 = mom0 ; }
@@ -107,7 +111,7 @@ namespace IMPL {
     _p[1] = p[1] ;
     _p[2] = p[2] ;
   }
-  void MCParticleImpl::setEnergy( float en ) { _energy = en ; } 
+  void MCParticleImpl::setMass( float m ) { _mass = m ; } 
   void MCParticleImpl::setCharge( float c ) { _charge = c ;  } 
 
   void MCParticleImpl::setEndpoint( double endpoint[3] ){

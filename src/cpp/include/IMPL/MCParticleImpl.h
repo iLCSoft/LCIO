@@ -105,14 +105,19 @@ namespace IMPL {
           
     virtual const float * getMomentum() const ;
 
-    /** Returns the energy of the particle (at the vertex).
+    /** Returns the mass of the particle in [GeV].
      */
-    virtual float getEnergy() const ;
+    virtual float getMass() const ;
 
     /** Returns the particle's charge.
      */
     virtual float getCharge() const ;
 
+
+    /** Returns the energy of the particle (at the vertex) in [GeV] computed from
+     * the particle's momentum and mass.
+     */
+    virtual float getEnergy() const ;
 
     // set methods
     /** Sets the parent. 
@@ -150,9 +155,9 @@ namespace IMPL {
       */
     void setMomentum( float p[3] );
 
-    /** Sets the energy.
+    /** Sets the mass.
      */
-    void setEnergy( float en ) ;
+    void setMass( float m) ;
 
     /** Sets the charge.
      */
@@ -172,7 +177,7 @@ namespace IMPL {
     double _vertex[3] ;
     double _endpoint[3] ;
     float _p[3] ;
-    float _energy ;
+    float _mass ;
     float _charge ;
     MCParticlePVec _daughtersP ;
     

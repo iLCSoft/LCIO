@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.6 2003-06-12 08:58:54 gaede Exp $
+ * @version $Id: SimJob.java,v 1.7 2003-09-01 09:11:54 gaede Exp $
  */
 public class SimJob
 {
@@ -80,10 +80,16 @@ public class SimJob
                IMCParticle mcp = new IMCParticle();
 
                mcp.setPDG(101 + (j * 100));
-               if (mom != null) mcp.setParent(mom);
+               if (mom != null) {
+		   mcp.setParent(mom) ;
+		   MCParticle[] daughters = new MCParticle[1] ;
+		   daughters[0] = mcp ;
+		   mom.setDaughters( daughters ) ; 
+	       }
 
                float[] p = { 2.f / 1024.f, 4.f / 1024.f, 8.f / 1024.f };
                mcp.setMomentum(p);
+	       mcp.setMass( (float) 3.01 ) ;
 
                mom = mcp; // one body decays :-)
                mcVec.add(mcp);

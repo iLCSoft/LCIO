@@ -56,9 +56,9 @@ public interface MCParticleData extends LCObject {
     public const float3V getMomentum() const;
 
     
-    /** Returns the energy of the particle (at the vertex) in [GeV].
+    /** Returns the mass of the particle in [GeV].
      */
-    public float getEnergy() const;
+    public float getMass() const;
     
     /** Returns the particle's charge.
      */

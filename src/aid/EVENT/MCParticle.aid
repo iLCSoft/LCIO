@@ -44,6 +44,10 @@ public interface MCParticle extends MCParticleData {
      */
     public const double3V getEndpoint() const ;
 
+    /** Returns the energy of the particle (at the vertex) in [GeV] computed from
+     * the particle's momentum and mass.
+     */
+    public float getEnergy() const;
 
 @ifdef overwriteDataInterface
 
@@ -93,9 +97,9 @@ public interface MCParticle extends MCParticleData {
     public const float3V getMomentum() const;
 
     
-    /** Returns the energy of the particle (at the vertex) in [GeV].
+    /** Returns the mass of the particle in [GeV].
      */
-    public float getEnergy() const;
+    public float getMass() const;
     
     /** Returns the particle's charge.
      */

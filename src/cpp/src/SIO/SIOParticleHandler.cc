@@ -52,7 +52,7 @@ namespace SIO {
     SIO_DATA( stream ,  &(particle->_status) , 1  ) ;
     SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
     SIO_DATA( stream ,  particle->_p  , 3 ) ;
-    SIO_DATA( stream ,  &(particle->_energy) , 1  ) ;
+    SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
 
     // if the particles doesn't have daughters we read its endpoint
@@ -94,7 +94,7 @@ namespace SIO {
     LCSIO_WRITE( stream, particle->getHepEvtStatus() ) ;
     SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;
     SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
-    LCSIO_WRITE( stream, particle->getEnergy() ) ;
+    LCSIO_WRITE( stream, particle->getMass() ) ;
     LCSIO_WRITE( stream, particle->getCharge() ) ;
 
     // only if the particles doesn't have daughters we write its endpoint

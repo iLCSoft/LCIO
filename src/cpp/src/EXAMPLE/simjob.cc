@@ -89,7 +89,7 @@ int main(int argc, char** argv ){
 	mom->setPDG( 1  ) ;
 	float p0[3] = { 0. , 0. , 1000. } ;
 	mom->setMomentum( p0 ) ;
-
+	mom->setMass( 3.01 ) ;
 
 	for(int j=0;j<NMCPART;j++){
 
@@ -98,6 +98,7 @@ int main(int argc, char** argv ){
 	  mcp->setPDG( 1000 * (j+1)  ) ;
 	  float p[3] = { j*1. , 4./1024. , 8./1024. } ;
 	  mcp->setMomentum( p ) ;
+	  mcp->setMass( .135 ) ;
 
 	  // create and add some daughters
 	  for(int k=0;k<3;k++){
@@ -106,13 +107,15 @@ int main(int argc, char** argv ){
 	    d1->setPDG( 1000 * (j+1) + 100 * (k+1)  ) ;
 	    float pd1[3] = { k*1. , 4.1 , 8.1 } ;
 	    d1->setMomentum( pd1 ) ;
-	    
+	    d1->setMass( .135 ) ;
+
 	    for(int l=0;l<2;l++){
 	      MCParticleImpl* d2 = new MCParticleImpl ;
 	      
 	      d2->setPDG( 1000 * (j+1) + 100 * (k+1) + 10 *  (l+1)  ) ;
 	      float pd2[3] = { l*1. , 0.41 , 4.1 } ;
 	      d2->setMomentum( pd2 ) ;
+	      d2->setMass( .135 ) ;
 
 	      d2->setParent( d1 );
 	      d1->addDaughter( d2 ) ;

@@ -433,7 +433,7 @@ namespace IMPL {
 
     std::cout << endl
 	      << " index [motherIndex] | (px, py, pz) | HepEvtStatus | vertex (x,y,z) | endpoint(x,y,z)" 
-	      << " | energy | charge "
+	      << " | mass | charge | energy"
 	      << endl 
 	      << endl ;
 
@@ -455,8 +455,9 @@ namespace IMPL {
 	   <<  (*mom)->getEndpoint()[0]  << ", "
 	   <<  (*mom)->getEndpoint()[1]  << ", "
 	   <<  (*mom)->getEndpoint()[2]  << ") | "
-	   <<  (*mom)->getEnergy()       << " | " 
-	   <<  (*mom)->getCharge() 
+	   <<  (*mom)->getMass()         << " | " 
+	   <<  (*mom)->getCharge()       << " | " 
+	   <<  (*mom)->getEnergy()      
 	   << endl ;	
 
 
@@ -489,8 +490,9 @@ namespace IMPL {
 	   <<  d->getEndpoint()[0]  << ", "
 	   <<  d->getEndpoint()[1]  << ", "
 	   <<  d->getEndpoint()[2]  << ") | "
-	   <<  d->getEnergy()       << " | " 
-	   <<  d->getCharge() 
+	   <<  d->getMass()         << " | " 
+	   <<  d->getCharge()       << " | " 
+	   <<  d->getEnergy()      
 	   << endl ;	
 
       index = printDaughterParticles( part->getDaughter(i) , index ) ;
