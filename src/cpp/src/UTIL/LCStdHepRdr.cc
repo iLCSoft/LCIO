@@ -18,7 +18,7 @@ namespace UTIL{
     //
     _reader = new lStdHep(evfile,false);
     if(_reader->getError()) {
-      stringstream description ; 
+      std::stringstream description ; 
       description << "LCStdHepRdr: no stdhep file: " << evfile << std::ends ;
       throw IO::IOException( description.str() );
     }
@@ -38,7 +38,7 @@ namespace UTIL{
 	 if(_reader->more()){
 
 	   if( int errorcode = _reader->readEvent() ) {
-	     stringstream description ; 
+	     std::stringstream description ; 
 	     description << "LCStdHepRdr::readEvent: error when reading event: " << errorcode << std::ends ;
 	     throw IO::IOException( description.str() );
 	     return mcVec;
