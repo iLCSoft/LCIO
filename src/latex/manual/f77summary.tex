@@ -149,12 +149,14 @@ setCharge              -> status  = lctphsetcharge( pthit , charge )
 setQuality             -> status  = lctphsetquality( pthit , iquality )
 setRawDataWords        -> status  = lctphsetrawdata( pthit , irawv, nraw )
 
-getCellID              -> icellid = lccahgetcellid( pthit )
+getCellID              -> icellid = lctphgetcellid( pthit )
 getTime                -> time    = lctphgettime( pthit )
 getCharge              -> charge  = lctphgcharge( pthit )
 getQuality             -> iquality= lctphgetquality( pthit )
 getRawDataWords        -> nraw    = lctphgetnrawdatawords( pthit )
-                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=1,...,nraw)
+%                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=1,...,nraw)
+%FIXME: we need to hava consistent indices - either 0,n-1 as in C++ or 1,n !
+                       -> irawv(i)= lctphgetrawdataword( pthit , i ) (i=0,...,nraw-1)
 
 class MCParticle:
 
