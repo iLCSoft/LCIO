@@ -3,8 +3,13 @@
 ---------------------------------------------------------------
 
 ============================
-  ( fg 20030908 ) 
+  ( fg20030909 ) 
 ============================
+
+   - manual reviewed and updated, added section on Exceptions
+
+   - all throw clauses in C++ include std::exception now
+     -> similar behavior to Java Exceptions
 
    - implemented new 'access check' mechanism: 
      removed const methods from data entities using ReadOnlyExceptions instead
@@ -20,17 +25,9 @@
   to do for release:
 --------------------
 
-  - SimCalorimeterHit - MCParticleCont doesn't work
-    Java version   -> needs debugging ...
-
   - additional methods in LCReader specifying the access mode (readNextRunHeader)
 
-  - Exceptions:  -  remove all throw clauses ??
-                 -  user documentation 
-
-  - LCCollection::addElement() method
-  
-  - ...
+  - LCRunHeader::addActiveDetector no ReadOnlyExceptions....
 
 ============================
  v00-07beta ( fg 20030903 ) 
