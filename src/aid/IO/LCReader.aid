@@ -24,6 +24,13 @@ public interface LCReader {
      */
     public LCRunHeader* readNextRunHeader() throws IOException ;
     
+    /** Same as readNextRunHeader() but allows to set the access mode 
+     *  LCIO::READ_ONLY (default) or LCIO::Update. 
+     *
+     * @throws IOException
+     */
+    public LCRunHeader* readNextRunHeader(int accessMode) throws IOException ;
+    
     /** Reads the next event from the file. Returns NULL if
      * 'EOF' read. 
      *
@@ -31,7 +38,7 @@ public interface LCReader {
      */
     public LCEvent* readNextEvent() throws IOException ;
     
-    /** Same as readNextRunHeader() but allows to set the access mode 
+    /** Same as readNextEvent() but allows to set the access mode 
      *  LCIO::READ_ONLY (default) or LCIO::Update. 
      *
      * @throws IOException

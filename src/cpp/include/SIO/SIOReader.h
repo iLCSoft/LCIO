@@ -43,6 +43,13 @@ namespace SIO {
      */
     virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException, std::exception) ;
 
+    /** Same as readNextRunHeader() but allows to set the access mode 
+     *  LCIO::READ_ONLY (default) or LCIO::Update. 
+     *
+     * @throws IOException
+     */
+    virtual EVENT::LCRunHeader * readNextRunHeader(int accessMode) throw (IO::IOException, std::exception) ;
+
 
     /** Reads the next event from the file. 
      *

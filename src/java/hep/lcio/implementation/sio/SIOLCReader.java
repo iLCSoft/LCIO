@@ -25,7 +25,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.8 2003-09-15 21:44:32 tonyj Exp $
+ * @version $Id: SIOLCReader.java,v 1.9 2003-09-16 10:30:18 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -96,6 +96,11 @@ class SIOLCReader implements LCReader
    }
 
    public LCRunHeader readNextRunHeader() throws IOException
+    {
+	return readNextRunHeader(LCIO.READ_ONLY);
+    }
+
+   public LCRunHeader readNextRunHeader(int accessMode) throws IOException
    {
       try
       {
@@ -111,6 +116,7 @@ class SIOLCReader implements LCReader
             if ((block.getMajorVersion() < 1) && (block.getMinorVersion() < 8))
                throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
+	    // FIX ME: need to set access mode here....
             return new SIORunHeader(block.getData());
          }
       }

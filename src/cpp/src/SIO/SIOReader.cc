@@ -153,6 +153,10 @@ namespace SIO {
   
 
   LCRunHeader* SIOReader::readNextRunHeader() throw (IOException , std::exception ) {
+    return readNextRunHeader( LCIO::READ_ONLY ) ;
+  }
+
+  LCRunHeader* SIOReader::readNextRunHeader(int accessMode) throw (IOException , std::exception ) {
 
     // set the _runRecord to unpack for this scope
     SIORecordUnpack runUnp( _runRecord ) ;
@@ -165,6 +169,8 @@ namespace SIO {
       return 0 ;
     }
     
+    // set the proper acces mode before returning the event
+    (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
     return *_runP ;
   }
   

@@ -29,7 +29,8 @@ namespace IMPL{
     _description = dsc ;
   }
   void LCRunHeaderImpl::addActiveSubdetector(const std::string&  adn) { 
-    checkAccess("LCRunHeaderImpl::setDescription") ;
+    //    checkAccess("LCRunHeaderImpl::setDescription") ;
+    // allow to add aubdetectors in read only mode ...
     _activeSubdetectors.push_back( adn ) ;
   }
 
