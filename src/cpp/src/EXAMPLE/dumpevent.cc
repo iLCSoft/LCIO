@@ -32,22 +32,23 @@ int main(int argc, char** argv ){
   
   
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-  try{
+   LCEvent* evt(0) ;
+   try{
     
     lcReader->open( FILEN ) ;
 
-  } catch( Exception& e) {
-    cout << e.what() << endl ;
-    exit(1) ;
-  }
-  LCEvent* evt = lcReader->readEvent(runNumber,  evtNumber) ; 
-    
-  if( evt == 0 ){
+    evt = lcReader->readEvent(runNumber,  evtNumber) ; 
+
+  } catch( EndOfDataException& e) {
     cout << " couldn't fine event " << evtNumber << " - run " << runNumber 
 	 << " in file " << FILEN << endl ;    
     exit(1) ;
   }
-
+  catch( Exception& e) {
+    cout << e.what() << endl ;
+    exit(1) ;
+  }
+   
   LCTOOLS::dumpEventDetailed( evt ) ;
 
 

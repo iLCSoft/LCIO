@@ -38,7 +38,7 @@ namespace SIO {
 
     /** the compression mode for SIO
      */
-    static const bool COMPRESSION = false ;
+    static const bool COMPRESSION = true ;
 
     /** Read a string from the stream into a dummy buffer. 
      * Warning the same buffer is used for each call.
