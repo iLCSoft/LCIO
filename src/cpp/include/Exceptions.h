@@ -16,22 +16,24 @@ namespace EVENT {
    * @author gaede
    * @version Apr 30, 2003
    */
-  //FIXME get compatible with gcc3.2 !!!
-//gcc3.2  class Exception : public std::exception {
-  class Exception : public exception {
+
+class Exception : public std::exception {
+
     
   protected:
     std::string message ;
     
     Exception(){  /*no_op*/ ; } 
-//gcc3.2    virtual ~Exception() throw() ; 
+
+    virtual ~Exception() throw() { /*no_op*/; } 
     
   public: 
-    Exception( std::string text ){
+    Exception( const std::string& text ){
       message = "lcio::Exception: " + text ;
     }
-//gcc3.2    virtual const char* what() const  throw() { return  message.c_str() ; } 
-    virtual const char* what() const { return  message.c_str() ; } 
+
+virtual const char* what() const  throw() { return  message.c_str() ; } 
+
   };
 
   /**EventException used for errors accessing the event data.
