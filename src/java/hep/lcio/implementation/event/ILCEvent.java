@@ -4,14 +4,14 @@ import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
 /**
  * A default implementation of LCEvent
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.3 2003-05-06 06:51:50 tonyj Exp $
+ * @version $Id: ILCEvent.java,v 1.4 2003-05-06 17:15:50 tonyj Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -19,7 +19,7 @@ public class ILCEvent extends ILCObject implements LCEvent
    protected int eventNumber;
    protected int runNumber;
    protected long timeStamp;
-   private Map collections = new HashMap();
+   private Map collections = new LinkedHashMap();
 
    public LCCollection getCollection(String name)
    {
