@@ -296,9 +296,9 @@ PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ){
 PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv){
   LCStrVec* stringVec = new LCStrVec ;
   int elemlen = nchstringv + 1;
+  PTRTYPE stringpos = 0 ;
+  stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
   for(int j=0;j<nstringv;j++){
-    PTRTYPE stringpos = 0 ;
-    stringpos = reinterpret_cast<PTRTYPE>( stringv ) ;
     const std::string& mystring = reinterpret_cast<char*>( stringpos ) ;
     stringVec->push_back( mystring ) ;
     stringpos = stringpos + elemlen ;
