@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.6 2004-07-15 09:16:11 gaede Exp $
+ * @version $Id: SIOCluster.java,v 1.7 2004-07-15 15:40:22 gaede Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -45,13 +45,16 @@ class SIOCluster extends ICluster
       particleType[1] = in.readFloat();
       particleType[2] = in.readFloat();
       int x = in.readInt(); // Fixme:
+      for(int i =0 ; i<x ; i++ ){
+		in.readPntr(); // Fixme:
+      }
       if ((flag & (1<<31)) != 0)
       {
          int n = in.readInt();
          
          for (int i=0; i<n; i++)
          {
-            in.readPntr(); // Fixme:
+			in.readPntr(); // Fixme:
             in.readFloat(); // Fixme:
          }
       }
