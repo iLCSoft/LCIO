@@ -190,7 +190,15 @@ int main(int argc, char** argv ){
       lcReader->registerLCRunListener( &evtProc ) ; 
       lcReader->registerLCEventListener( &evtProc ) ; 
       
-      lcReader->readStream() ;
+      try{ 
+	lcReader->readStream() ;
+      }
+      catch(EndOfDataException){
+      }
+      catch(IOException &e){
+	cout<< " io error: " <<  e.what() << endl ;
+      }
+
     } 
     
     lcReader->close() ;

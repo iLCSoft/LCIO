@@ -39,9 +39,17 @@ PTRTYPE lrdrReadNextEvent(PTRTYPE reader){
   LCEvent* evt = lcReader->readNextEvent() ;
   return reinterpret_cast<PTRTYPE>( evt ) ;
 }
+
 int lrdrClose(PTRTYPE reader){
-  LCREADER_PNTR( reader )  ;
-  return  lcReader->close() ;
+  try{
+    LCREADER_PNTR( reader )  ;
+    lcReader->close() ;
+  }
+  catch(Exception& e){
+    std::cerr << "Exception in lrdrClose: " << e.what() << std::endl ;
+    return LCIO::ERROR ;
+  }
+  return LCIO::SUCCESS ;
 }
 
 

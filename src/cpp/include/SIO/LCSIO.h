@@ -1,10 +1,3 @@
-/** Collection of static helper  functions for reading and writing
- * data with SIO. Could go to the SIO_functions class.
- * Also defines some constant names for lcio-SIO.
- *
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef SIO_LCSIO_H
 #define SIO_LCSIO_H 1
 
@@ -23,6 +16,13 @@ namespace SIO {
 
 #define LCSIO_WRITE( rec, pnt ) status = LCSIO::write( (rec), (pnt)  ); if( !(status & 1) ) return status;
 
+/** Collection of static helper  functions for reading and writing
+ * data with SIO. Could go to the SIO_functions class.
+ * Also defines some constant names for lcio-SIO.
+ *
+ * @author gaede
+ * @version Mar 6, 2003
+ */
   class LCSIO{
   
   public :

@@ -1,22 +1,103 @@
 package hep.lcio.io;
 
-/**Interface for LCWriter objects - there will be one 
- * implementation per data format, e.g. SIO, Root, ASCII. 
+/**Interface for reading data from LCIO.
+ * Use LCFactory to instantiate a corresponding LCWriter object
+ * for the output format at hand (SIO only, so far).
+ *
+ * @see LCFactory
  * 
  * @author gaede
  * @version Mar 4, 2003
  */
 public interface LCReader {
 
+
+@ifdef cpp
     /** Opens a file for reading (read-only).
+     *
      * @throws IOException
      */
-    @ifdef cpp 
-	public void open(const String& filename) throws IOException  ;
-    @else
-	// exceptions not yet in Java ...
+    public void open(const String& filename) throws IOException  ;
+
+    /** Reads the next run header from the file. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    public LCRunHeader* readNextRunHeader() throws IOException, EndOfDataException ;
+    
+    /** Reads the next event from the file. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    public LCEvent* readNextEvent() throws IOException, EndOfDataException  ;
+    
+    /** Same as readNextRunHeader() but allows to set the access mode 
+     *  LCIO::READ_ONLY (default) or LCIO::Update
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    public LCEvent* readNextEvent(int accessMode) throws IOException, EndOfDataException  ;
+
+    /** Reads the specified event from file. 
+     *  To be used with care: events have to be read in sequential 
+     *  order (as LCIO has no direct access yet).
+     *
+     * @throws IOException
+     * @throws DataNotAvailableException
+     */
+    public LCEvent* readEvent(int runNumber, int evtNumber) throws IOException, DataNotAvailableException ;
+
+    /** Closes the output file/stream etc.
+     *
+     * @throws IOException
+     */
+    public void close() throws IOException ;
+
+    
+    /** Registers a listener for reading LCEvents from a stream.
+     */ 
+    void registerLCEventListener(LCEventListener* ls ) ;
+    
+    /** Remove a listener for reading LCEvents from a stream.
+     */ 
+    void removeLCEventListener(LCEventListener* ls ) ;
+    
+    /** Registers a listener for reading LCEventsLCRunHeaders from a stream.
+     */ 
+    void registerLCRunListener(LCRunListener* ls ) ;
+    
+    /** Remove a listener for reading LCRunHeaders from a stream.
+     */ 
+    void removeLCRunListener(LCRunListener* ls ) ;
+    
+    /** Reads the input stream and notifies registered 
+     * listeners according to the object type 
+     * found in the stream. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    public void readStream() throws IOException, EndOfDataException ;
+
+    /** Reads maxRecord from the input stream and notifies registered 
+     * listeners according to the object type found in the stream. 
+     * Throws EndOfDataException if less than maxRecord records are found in the stream. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    public void readStream(int maxRecord) throws IOException, EndOfDataException ;
+
+@else
+    // no exceptions yet
+
+    /** Opens a file for reading (read-only).
+     */
 	public int open(const String& filename) ;
-    @endif
+
 	/** Reads the next run header from the file. Returns null if no more 
      * run headers or error occured.
      */
@@ -62,17 +143,14 @@ public interface LCReader {
     /** Reads the input stream and notifies registered 
      * listeners according to the object type 
      * found in the stream. 
-     * @throws IOException
      */
-    //public void readStream() throws IOException ;
-    public int readStream() ;
+     public int readStream() ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
      * Throws EndOfDataException if less than maxRecord records are found in the stream. 
-     * @throws IOException
-     * @throws EndOfDataException
      */
     //    public void readStream(int maxRecord) throws IOException, EndOfDataException ;
 
+@endif
 }

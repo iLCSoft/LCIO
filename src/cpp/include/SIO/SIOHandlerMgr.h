@@ -1,11 +1,3 @@
-// -*- C++ -*-
-/** Singleton that holds instances of all types of SIOObjectHandlers.
- * New types need to have their handler classes registered here. 
- *
- * @author gaede
- * @version Mar 6, 2003
- */
-
 #ifndef SIO_SIOHANDLERMGR_H
 #define SIO_SIOHANDLERMGR_H 1
 
@@ -18,6 +10,12 @@ namespace SIO {
 
   typedef  std::map< std::string, SIOObjectHandler* > SIOHandlerMap ;
   
+/** Singleton that holds instances of all types of SIOObjectHandlers.
+ * New types need to have their handler classes registered here. 
+ *
+ * @author gaede
+ * @version Mar 6, 2003
+ */
   class SIOHandlerMgr {
     
   private:

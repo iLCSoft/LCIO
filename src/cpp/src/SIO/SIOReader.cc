@@ -17,6 +17,7 @@
 #include "SIO_record.h" 
 
 #include <iostream>
+#include <limits>
 
 using namespace EVENT ;
 using namespace IO ;
@@ -122,18 +123,26 @@ namespace SIO {
   }
 
 
-  int SIOReader::readRecord(){
+  void SIOReader::readRecord(){
     // read the next record from the stream
     if( _stream->getState()== SIO_STATE_OPEN ){
       
-
-      if( SIO_blockManager::get( LCSIO::RUNBLOCKNAME ) == 0 ){ 
-	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << std::endl ;
-	return LCIO::ERROR ; }
+      // what's this ??
+      //      if( SIO_blockManager::get( LCSIO::RUNBLOCKNAME ) == 0 ){ 
+      //	std::cout << LCSIO::RUNBLOCKNAME  << " not in  blockManager ! " << std::endl ;
+      //
+      //	throw IOException( std::string(" io error on stream: ") + _stream->getName() ) ;
+      //	return LCIO::ERROR ; 
+      //}
 
       unsigned int status =  _stream->read( &_dummyRecord ) ;
       if( ! (status & 1)  ){
-	return LCIO::ERROR ;
+
+	if( status & SIO_STREAM_EOF )
+	  throw EndOfDataException("EOF") ;
+
+	throw IOException( std::string(" io error on stream: ") + *_stream->getName() ) ;
+
       }
 
       // if the record was an event header, we need to set up the collection handlers
@@ -142,49 +151,23 @@ namespace SIO {
 	setUpHandlers() ;
       }
 
-      // if the record was an LCEvent record, we need to move the collections
-      // from the default event to the current event
-//       if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
 
-// 	for ( LCCollectionMap::const_iterator iter= _defaultEvt->_map.begin() ; 
-// 	      iter != _defaultEvt->_map.end() ; iter++ ){
-// 	  (*_evtP)->_map[ iter->first ] = iter->second ;  
-// 	  _defaultEvt->_map.erase( _defaultEvt->_map.find( iter->first ) ) ;
-// 	}
+    }else{
 
-//       }
-      return LCIO::SUCCESS ;
-
-    }    
-    return LCIO::ERROR ;
+      throw IOException( std::string(" stream not open: ")+ *_stream->getName() ) ;
+    }
   }
   
 
-  LCRunHeader* SIOReader::readNextRunHeader(){
+  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException, EndOfDataException) {
 
-    // _runRecord->setUnpack( true ) ;  
-    // this sets the _runRecord to unpack for this scope
+    // set the _runRecord to unpack for this scope
     SIORecordUnpack runUnp( _runRecord ) ;
     
-    if( readRecord() != LCIO::SUCCESS )   return 0 ;
-    
+    // this might throw the exceptions
+    readRecord() ;
+
     return *_runP ;
-    
-    //     if( _stream->getState()== SIO_STATE_OPEN ){
-    // //       if (*_runP != 0 )  delete *_runP ;
-    // //       *_runP = new LCRunHeaderImpl ;
-    //       // read header record
-    //       unsigned int status =  _stream->read( &_dummyRecord ) ;
-    //       if( ! (status & 1)  ){
-    // 	delete *_runP ;
-    // 	//	_runRecord->setUnpack( false ) ;  
-    // 	return 0 ;
-    //       }
-    //       //      _runRecord->setUnpack( false ) ;  
-    //       return *_runP ;
-    //     }
-    //     //    _runRecord->setUnpack( false ) ;  
-    //     return 0 ;
   }
   
   void SIOReader::setUpHandlers(){
@@ -233,13 +216,13 @@ namespace SIO {
   }
 
 
-  LCEvent* SIOReader::readNextEvent() {
+  LCEvent* SIOReader::readNextEvent() throw (IOException, EndOfDataException) {
 
     return readNextEvent( LCIO::READ_ONLY ) ;
 
   }
 
-  LCEvent* SIOReader::readNextEvent(int accessMode) {
+  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException, EndOfDataException) {
     
 
     // first, we need to read the event header 
@@ -247,14 +230,17 @@ namespace SIO {
     { // -- scope for unpacking evt header --------
       
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
-      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+
+      readRecord() ;
+      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
       
     }// -- end of scope for unpacking evt header --
     
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;
       
-      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      readRecord() ;
+      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
       
       // set the proper acces mode before returnning the event
       (*_evtP)->setAccessMode( accessMode ) ;
@@ -265,7 +251,8 @@ namespace SIO {
   }
 
 
-  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) {
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
+    throw (IOException, DataNotAvailableException) {
     
     bool runFound = false ;
     bool evtFound = false ;
@@ -278,12 +265,16 @@ namespace SIO {
       if( readNextRunHeader() == 0 ) break ; 
       runFound = ( (*_runP)->getRunNumber() == runNumber ) ;
     }
-    if( !runFound ) return 0 ; 
+    if( !runFound )
+      throw DataNotAvailableException( std::string(" run not found: " + runNumber ) ) ;
     
     { // -- scope for unpacking evt header --------
       SIORecordUnpack hdrUnp( _hdrRecord ) ;
       while( !evtFound ){
-	if( readRecord() != LCIO::SUCCESS ) return 0 ;
+
+	readRecord() ;
+	//if( readRecord() != LCIO::SUCCESS ) return 0 ;
+
 	evtFound = ( (*_evtP)->getEventNumber() == evtNumber ) ;
       }
     }// -- end of scope for unpacking evt header --
@@ -293,7 +284,8 @@ namespace SIO {
     { // now read the event record
       SIORecordUnpack evtUnp( _evtRecord ) ;
       
-      if( readRecord() != LCIO::SUCCESS )   return 0 ;
+      readRecord() ;
+      //if( readRecord() != LCIO::SUCCESS )   return 0 ;
       
       // set the proper acces mode before returning the event
       // FIXME : check access mode ...
@@ -305,13 +297,13 @@ namespace SIO {
   }
 
 
-  int SIOReader::close(){
+  void SIOReader::close() throw (IOException ){
   
     int status  =  SIO_streamManager::remove( _stream ) ;
     
-    if(! (status &1) )  return LCIO::ERROR ;
-    //throw IOException( std::string("couldn't remove stream") ) ;
-    return LCIO::SUCCESS ; 
+    if(! (status &1) ) //  return LCIO::ERROR ;
+      throw IOException( std::string("couldn't remove stream") ) ;
+    // return LCIO::SUCCESS ; 
   }
 
 
@@ -332,8 +324,14 @@ namespace SIO {
     _runListeners.erase( _runListeners.find( ls ) );
  }
 
-  int SIOReader::readStream() {
+  void SIOReader::readStream() throw (IO::IOException, IO::EndOfDataException){
+
+    int maxInt = INT_MAX ; // numeric_limits<int>::max() ;
+    readStream( maxInt ) ;
+  }
+  void SIOReader::readStream(int maxRecord) throw (IOException, EndOfDataException ){
     
+    int recordsRead = 0 ;
     // here we need to read all the records on the stream
     // and then notify the listeners depending on the type ....
     
@@ -342,36 +340,44 @@ namespace SIO {
     SIORecordUnpack hdrUnp( _hdrRecord ) ;
     SIORecordUnpack evtUnp( _evtRecord ) ;
 
-    while( readRecord() == LCIO::SUCCESS  ){
+    //    while( readRecord() == LCIO::SUCCESS  ){
 
-      // notify LCRunListeners 
-      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+    //try{
+      while( ++recordsRead ){ // exit through exception !?
 	
-	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-	while( iter != _runListeners.end() ){
-	  (*iter)->analyze( *_runP ) ;
-	  (*iter)->update( *_runP ) ;
-	  iter++ ;
+	readRecord() ;
+
+	if( recordsRead >= maxRecord )
+	  throw( EndOfDataException("max. number of records read") ) ;
+
+	// notify LCRunListeners 
+	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::RUNRECORDNAME )){
+	  
+	  std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+	  while( iter != _runListeners.end() ){
+	    (*iter)->analyze( *_runP ) ;
+	    (*iter)->update( *_runP ) ;
+	    iter++ ;
+	  }
 	}
-      }
-      // notify LCEventListeners 
-      if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
-
-	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-	while( iter != _evtListeners.end() ){
-	  // set the proper acces mode for the event
-	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
-	  (*iter)->analyze( *_evtP ) ;
-
-	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	  (*iter)->update( *_evtP ) ;
-	  iter++ ;
-
+	// notify LCEventListeners 
+	if( ! strcmp( _dummyRecord->getName()->c_str() , LCSIO::EVENTRECORDNAME )){
+	  
+	  std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+	  while( iter != _evtListeners.end() ){
+	    // set the proper acces mode for the event
+	    (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
+	    (*iter)->analyze( *_evtP ) ;
+	    
+	    (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	    (*iter)->update( *_evtP ) ;
+	    iter++ ;
+	    
+	  }
 	}
-      }
-    } 
+      } 
 
-    return LCIO::SUCCESS ;
+      //    return LCIO::SUCCESS ;
 
  }
 

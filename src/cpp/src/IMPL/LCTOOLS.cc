@@ -253,8 +253,8 @@ namespace IMPL {
 	try{
 	  cout << "           ->   " 
 	       << hit->getParticleCont( k)->getPDG() << ": " 
-	       << hit->getEnergyCont( k) << " | " 
-	       << hit->getTimeCont( k) << " | " ;
+	       << hit->getEnergyCont( k)             << " | " 
+	       << hit->getTimeCont( k)               << " | " ;
 
 	  if( flag.bitSet( LCIO::CHBIT_PDG ) )
 	    cout << hit->getPDGCont( k) << " | " << endl ;
@@ -262,7 +262,7 @@ namespace IMPL {
 	    cout << " no PDG" << endl ;
 	} 
 
-	catch(Exception& e){
+	catch(exception& e){
 	  cout << e.what() << endl ;
 	}
 

@@ -1,9 +1,3 @@
-// -*- C++ -*-
-/** Concrete implementation of LCWriter using SIO.
- * 
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef SIO_SIOREADER_H
 #define SIO_SIOREADER_H 1
 
@@ -22,9 +16,11 @@ class SIO_stream ;
 
 namespace SIO {
   
-  //class SIOEventHeaderHandler ;
-  //class SIOEventHandler ;
-  
+/** Concrete implementation of LCWriter using SIO.
+ * 
+ * @author gaede
+ * @version Mar 6, 2003
+ */
   class SIOReader : public IO::LCReader {
     
   public:
@@ -41,33 +37,45 @@ namespace SIO {
      */
     virtual void open(const std::string & filename) throw (IO::IOException) ;
     
-    /** Reads the next run header from the file. Returns null if no more 
-     * run headers or error occured.
+    /** Reads the next run header from the file. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader() ;  
+    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException, IO::EndOfDataException) ;  
 
 
-    /** Reads the next event in read only mode from file - in case of error 
-     * or EOF NULL is returned.
+    /** Reads the next event from the file. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
      */
-    virtual EVENT::LCEvent* readNextEvent() ;
+    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException, IO::EndOfDataException) ;
     
 
-    /** Reads the next event from file with the given access mode - 
-     * in case of error or EOF NULL is returned.
+    /** Same as readNextRunHeader() but allows to set the access mode 
+     *  LCIO::READ_ONLY (default) or LCIO::Update
+     *
+     * @throws IOException
+     * @throws EndOfDataException
      */
-    virtual EVENT::LCEvent* readNextEvent( int accessMode) ;
+    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException, IO::EndOfDataException) ;
     
 
-    /** Reads the specified event from file. Returns null if 
-     *  event doesn't exist on the current stream. Should be used 
-     *  with care: events have to be read in sequential order (no direct access yet).
+    /** Reads the specified event from file. 
+     *  To be used with care: events have to be read in sequential 
+     *  order (as LCIO has no direct access yet).
+     *
+     * @throws IOException
+     * @throws DataNotAvailableException
      */
-    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) ;
+    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) throw (IO::IOException, EVENT::DataNotAvailableException) ;
 
-    /** Closes the output file and returns LCIO::SUCCESS.
+    /** Closes the output file/stream etc.
+     *
+     * @throws IOException
      */
-    virtual int close() ;
+    virtual void close() throw (IO::IOException) ;
     
     // interface for listeners
  
@@ -89,14 +97,29 @@ namespace SIO {
 
     /** Reads the input stream and notifies registered 
      * listeners according to the object type 
-     * found in the stream. Returns LCIO::SUCCESS and LCIO::ERROR respectively.
+     * found in the stream. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
      */
-    virtual int readStream() ;
+    virtual void readStream() throw (IO::IOException, IO::EndOfDataException) ;
+
+    /** Reads maxRecord from the input stream and notifies registered 
+     * listeners according to the object type found in the stream. 
+     * Throws EndOfDataException if less than maxRecord records are found in the stream. 
+     *
+     * @throws IOException
+     * @throws EndOfDataException
+     */
+    virtual void readStream(int maxRecord) throw (IO::IOException, IO::EndOfDataException) ;
+
+
+
 
   protected:
 
     void setUpHandlers() ;
-    int readRecord() ;
+    void readRecord() ;
 
   protected:
     

@@ -1,9 +1,3 @@
-// -*- C++ -*-
-/** Implementation of SIOObjectHandler to handle IO of FloatVecs.
- *
- * @author gaede
- * @version Mar 12, 2003
- */
 #ifndef SIO_SIOFLOATVECHANDLER_H
 #define SIO_SIOFLOATVECHANDLER_H 1
 
@@ -13,6 +7,11 @@
 namespace SIO {
     
     
+/** Implementation of SIOObjectHandler to handle IO of FloatVecs.
+ *
+ * @author gaede
+ * @version Mar 12, 2003
+ */
   class SIOFloatVecHandler : public SIOObjectHandler {
 	
   public:

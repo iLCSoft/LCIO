@@ -1,10 +1,3 @@
-// -*- C++ -*-
-/**  Interface for all lcio object SIO-handlers, has to be implemented  
- * for all event entities (hits, tracks, clusters,...).
- * 
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef SIO_SIOOBJECTHANDLER_H
 #define SIO_SIOOBJECTHANDLER_H 1
 
@@ -15,8 +8,12 @@ class SIO_stream ;
 
 namespace SIO{
 
-/** Interface for all lcio object SIO-handlers, has to be implemented  
+
+/**  Interface for all lcio object SIO-handlers, has to be implemented  
  * for all event entities (hits, tracks, clusters,...).
+ * 
+ * @author gaede
+ * @version Mar 6, 2003
  */
 class SIOObjectHandler {
   

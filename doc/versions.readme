@@ -10,7 +10,7 @@
   - new package hep.lcio.data / namespace DATA
     defines pure data contents - this is now the interface that has to implemented
     for writing data with LCIO 
-       -> LCWriter uses only those interfaces
+       -> LCWriter uses only this interface
 
   - added pointer tag to track and calorimeter hits for future reference to those
 
@@ -35,22 +35,38 @@
   - Added some Exceptions to hep.lcio.exceptions (Java)
 
   - Exceptions in LCWriter interface
-   
+
+  - Exceptions in LCReader interface
+    [C++ only] 
+ 
   - Added new default units GeV, mm, ns to comments/documentation
 
- 
+  
+  - new method LCTOOLS::dumpEventDetailed() - prints everything in the event
+    (bin/dumpevent simjob.slcio 2 2)
+    C++ only (incomplete, TrackerHits and user extensions missing)
+
+
+  - new method SIOWriter::readStream(int maxRecord)
+    [C++ only]
+
+
 --------------------
   to do for release:
 --------------------
 
 
   - Exceptions in LCReader 
+    [Java] 
+
+  - SimCalorimeterHit - MCParticleCont doesn't work
+    Java version   -> needs debugging ...
 
   - integer extensions in C++ and Java
     
-  - remove const from C++ methods ?
+  - remove const from C++ methods ?  - no 
 
-  - read-only mode with Exceptions ?
+  - read-only mode with Exceptions ?  - no
 
   - check API doc/comments for doxygen
 
@@ -79,7 +95,7 @@ v00-04  (fg 20030514)
    given event ( demonstrating fast skip mechanism - no direct access)
    -> see example dumpevent.cc
 
- - duplicate event header information is not written any more (neither Java no C++)
+ - duplicate event header information is not written any more (neither Java nor C++)
    -> event information always in two consecutive records of sio file:
       LCEventHeader: runNum, evtNum, collection names and types
       LCEvent: the data (collections)
@@ -89,8 +105,6 @@ v00-04  (fg 20030514)
   
  - the ant target cpp needs aid.generate as a prerequisite (not automatically 
    included any more)
-
-
 
  - added this file: please document your (major) changes to LCIO here 
 
