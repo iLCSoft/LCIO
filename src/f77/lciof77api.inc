@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.29 2004-09-23 17:11:54 gaede Exp $
+*  $Id: lciof77api.inc,v 1.30 2004-09-24 10:54:58 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -45,14 +45,16 @@ c-----the LCStrVec, LCIntVec, LCFloatVec interface
       integer lcivcgetintat
       real    lcfvcgetfloatat
 
-c-----the StringVec, IntVec, FloatVec interface
+c-----the StringVec, IntVec, FloatVec PointerVec interface
       integer      stringvectorgetlength
       integer      intvectorgetlength
       integer      floatvectorgetlength
+      integer      pointervectorgetlength
 
       character*80 stringvectorgetelement
       integer      intvectorgetelement
       real         floatvectorgetelement
+      PTRTYPE      pointervectorgetelement
 
 
 c-----the LCRelationNavigator interface

@@ -58,6 +58,16 @@ int intvectorgetelement(PTRTYPE intvec, int index){
   return (*intVec)[index-1] ;
 }
 
+int pointervectorgetlength(PTRTYPE pointervec){
+  PointerVec* pointerVec =  reinterpret_cast<PointerVec*>(pointervec) ;
+  return pointerVec->size() ;
+}
+
+PTRTYPE pointervectorgetelement(PTRTYPE pointervec, int index){
+  PointerVec* pointerVec =  reinterpret_cast<PointerVec*>(pointervec) ;
+  return (*pointerVec)[index-1] ;
+}
+
 int floatvectorgetlength(PTRTYPE floatvec){
   FloatVec* floatVec =  reinterpret_cast<FloatVec*>(floatvec) ;
   return floatVec->size() ;

@@ -440,8 +440,8 @@ ccc      status   = lcevtaddrelation ( eventi, screlcol, colname3 )
 
 ***       methods: via stl vector and lcsch 
           print '(a,z4,$)', '  relations for object ', lccahid (calhitp)
-          do  j = 1, intvectorgetlength ( simhitsvp )
-            pobj = intvectorgetelement ( simhitsvp, j )
+          do  j = 1, pointervectorgetlength ( simhitsvp )
+            pobj = pointervectorgetelement ( simhitsvp, j )
             print '(a,z8,a,z2,af3.1,a,$)', ' [',
      &               pobj,
      &               '] [',

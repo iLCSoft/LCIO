@@ -12,6 +12,7 @@
 
 
 typedef std::vector<std::string> LCStrVec ;
+typedef std::vector<PTRTYPE> PointerVec ;
 
 
 // define an interface to a LC string/int/float vector
@@ -24,12 +25,15 @@ int   lcivcgetintat(PTRTYPE intvec, int index) ;
 int   lcfvcgetlength(PTRTYPE floatvec) ;
 float lcfvcgetfloatat(PTRTYPE floatvec, int index) ;
 
-// define an interface to read a standard string/int/float vector
+// define an interface to read a standard string/int/pointer/float vector
 int   stringvectorgetlength(PTRTYPE strvec) ;
 char* stringvectorgetelement(PTRTYPE strvec, int index) ;
 
 int   intvectorgetlength(PTRTYPE intvec) ;
 int   intvectorgetelement(PTRTYPE intvec, int index) ;
+
+int     pointervectorgetlength(PTRTYPE intvec) ;
+PTRTYPE pointervectorgetelement(PTRTYPE intvec, int index) ;
 
 int   floatvectorgetlength(PTRTYPE floatvec) ;
 float floatvectorgetelement(PTRTYPE floatvec, int index) ;
@@ -52,6 +56,9 @@ FCALLSCFUN2(STRING, stringvectorgetelement, STRINGVECTORGETELEMENT, stringvector
 
 FCALLSCFUN1(INT, intvectorgetlength, INTVECTORGETLENGTH, intvectorgetlength, CFORTRANPNTR ) ;
 FCALLSCFUN2(INT, intvectorgetelement, INTVECTORGETELEMENT, intvectorgetelement, CFORTRANPNTR, INT ) ;
+
+FCALLSCFUN1(INT, pointervectorgetlength, POINTERVECTORGETLENGTH, pointervectorgetlength, CFORTRANPNTR ) ;
+FCALLSCFUN2(CFORTRANPNTR, pointervectorgetelement, POINTERVECTORGETELEMENT, pointervectorgetelement, CFORTRANPNTR, INT ) ;
 
 FCALLSCFUN1(INT, floatvectorgetlength, FLOATVECTORGETLENGTH, floatvectorgetlength, CFORTRANPNTR ) ;
 FCALLSCFUN2(FLOAT, floatvectorgetelement, FLOATVECTORGETELEMENT, floatvectorgetelement, CFORTRANPNTR, INT ) ;

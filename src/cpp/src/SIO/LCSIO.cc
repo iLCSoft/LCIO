@@ -95,6 +95,17 @@ unsigned int LCSIO::write( SIO_stream* stream , unsigned int i){
   return  SIO_functions::data( stream ,  &local , 1  ) ;
  
 }
+
+// needed for AMD64 architectures
+#if defined(__x86_64__)
+unsigned int LCSIO::write( SIO_stream* stream , size_t i){
+
+  unsigned int local = i ;
+  return  SIO_functions::data( stream ,  &local , 1  ) ;
+ 
+}
+#endif
+
 unsigned int LCSIO::write( SIO_stream* stream , long i){
 
   long long local = i ;

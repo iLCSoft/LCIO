@@ -62,6 +62,11 @@ namespace SIO {
      */
     static unsigned int write( SIO_stream* stream , unsigned int i) ;
   
+    /** Write a vector size to the stream (needed for AMD64 architectures)
+     */
+#if defined(__x86_64__)
+    static unsigned int write( SIO_stream* stream , size_t i) ;
+#endif
 
     /** Write a long to the stream (in fact written as a 64-bit long long). 
      */
