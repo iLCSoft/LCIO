@@ -123,7 +123,10 @@ namespace IMPL {
     
     /** Adds a MCParticle contribution to the hit. If you want to store
      *  the PDG of the secondary for every hit make sure the flag word bit 
-     *  LCIO::CHBIT_PDG is set.
+     *  LCIO::CHBIT_PDG is set. If there is already a contribution for the
+     *  given particle and secondary PDG code (default is 0), the energy is just added.
+     *  The energy contribution is also added to the     
+     *  hit's total energy. 
      */
     void addMCParticleContribution( const EVENT::MCParticle *p,
 				    float en,

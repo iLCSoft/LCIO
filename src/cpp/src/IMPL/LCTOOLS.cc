@@ -239,9 +239,9 @@ namespace IMPL {
       
       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
       
-	cout << *hit->getPosition() << ", "
-	     << *hit->getPosition()+1 << ", "
-	     << *hit->getPosition()+2 << ") | " ;
+	cout << hit->getPosition()[0] << ", "
+	     << hit->getPosition()[1]<< ", "
+	     << hit->getPosition()[2] << ") | " ;
       }else{
 	cout << "   no position avaliable  ) | " ;
       }

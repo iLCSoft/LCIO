@@ -123,14 +123,33 @@ namespace IMPL{
 						      float en,
 						      float t,
 						      int pdg ){
-    MCParticleCont* con = new  MCParticleCont ;
+    if( p==0){
+      // just add the energy contribution
+      _energy += en ;
+    }
+    else{
+      // look for contribution from this particle
+      for( std::vector<MCParticleCont*>::iterator iter=_vec.begin() ;
+	   iter != _vec.end() ; iter++ ){
+	if( (*iter)->Particle == p  && (*iter)->PDG == pdg ){
+	  
+	  (*iter)->Energy += en ;
+	  _energy += en ;
 
-    con->Particle = p ;
-    con->Energy = en ;
-    con->Time = t ;
-    con->PDG = pdg ;
-    _vec.push_back( con ) ;
-    
+	  return ;
+	}
+      }
+
+      
+      _energy += en ;
+      MCParticleCont* con = new  MCParticleCont ;
+      
+      con->Particle = p ;
+      con->Energy = en ;
+      con->Time = t ;
+      con->PDG = pdg ;
+      _vec.push_back( con ) ;
+
+    }
   }
-  
 }; // namespace IMPL
