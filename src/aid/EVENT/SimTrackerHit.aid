@@ -3,7 +3,7 @@ package hep.lcio.event;
 /** A generic simulated tracker hit. 
  * 
  * @author gaede
- * @version $Id: SimTrackerHit.aid,v 1.5 2004-09-09 15:57:50 gaede Exp $
+ * @version $Id: SimTrackerHit.aid,v 1.6 2005-02-08 16:52:46 gaede Exp $
  */
 
 public interface SimTrackerHit extends LCObject {
@@ -28,6 +28,6 @@ public interface SimTrackerHit extends LCObject {
      *
      * @see MCParticle
      */
-    public const MCParticle* getMCParticle() const ;
+    public MCParticle* getMCParticle() const ;
 
 }
