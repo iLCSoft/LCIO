@@ -12,7 +12,7 @@ public interface LCWriter {
      * no error occured. If file with given name exists, it will be opened in
      * append-mode.
      */
-    public int open(const String& filename ) ;
+    public int open(const String& filename ) throws IOException ;
 
     /** Opens a file for writing and returns LCIO::SUCCESS if 
      *  no error occured. Possible write modes are: LCIO::WRITE_NEW

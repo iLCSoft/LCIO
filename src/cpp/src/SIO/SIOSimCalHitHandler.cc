@@ -1,10 +1,10 @@
-#include "SIO/SIOCalHitHandler.h"
+#include "SIO/SIOSimCalHitHandler.h"
 
 #include "SIO/LCSIO.h"
 
 #include "EVENT/MCParticle.h"
-#include "EVENT/CalorimeterHit.h"
-#include "IOIMPL/CalorimeterHitIOImpl.h"
+#include "EVENT/SimCalorimeterHit.h"
+#include "IOIMPL/SimCalorimeterHitIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
 #include "SIO_functions.h"
@@ -17,14 +17,14 @@ using namespace IOIMPL ;
 
 namespace SIO{
     
-  unsigned int SIOCalHitHandler::read(SIO_stream* stream, 
+  unsigned int SIOSimCalHitHandler::read(SIO_stream* stream, 
 				      LCObject** objP,
 				      unsigned int flag,
 				      unsigned int vers ){
     unsigned int status ; 
 	
     // create a new object :
-    CalorimeterHitIOImpl* hit  = new CalorimeterHitIOImpl ;
+    SimCalorimeterHitIOImpl* hit  = new SimCalorimeterHitIOImpl ;
     *objP = hit ;
 	
     SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
@@ -52,14 +52,14 @@ namespace SIO{
     }
 
     // if we want to point at calo hits we need to add a ptag:
-    //  SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+    //  SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
 	
     return ( SIO_BLOCK_SUCCESS ) ;
 	
   }
     
     
-  unsigned int SIOCalHitHandler::write(SIO_stream* stream, 
+  unsigned int SIOSimCalHitHandler::write(SIO_stream* stream, 
 				       const LCObject* obj,
 				       unsigned int flag ){
     
@@ -69,7 +69,7 @@ namespace SIO{
     // simplify the API and the implementation
     // by having a common collection of objects
     
-    const CalorimeterHit* hit = dynamic_cast<const CalorimeterHit*>(obj)  ;
+    const SimCalorimeterHit* hit = dynamic_cast<const SimCalorimeterHit*>(obj)  ;
     
     LCSIO_WRITE( stream, hit->getCellID0()  ) ;
     LCSIO_WRITE( stream, hit->getCellID1()  ) ;
@@ -96,7 +96,7 @@ namespace SIO{
 	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
       
     }
-    //  SIO_PTAG( stream , dynamic_cast<const CalorimeterHit*>(hit) ) ;
+    //  SIO_PTAG( stream , dynamic_cast<const SimCalorimeterHit*>(hit) ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
     

@@ -7,8 +7,8 @@ namespace EVENT{
 const char* LCIO::LCEVENT = "LCEvent" ;
 const char* LCIO::LCRUNHEADER = "LCRunHeader" ;
 const char* LCIO::MCPARTICLE = "MCParticle" ;
-const char* LCIO::CALORIMETERHIT = "CalorimeterHit" ;
-const char* LCIO::TRACKERHIT = "TrackerHit" ;
+const char* LCIO::SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
 const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
 const char* LCIO::LCINTEGERVEC = "LCIntegerVec" ;
 };

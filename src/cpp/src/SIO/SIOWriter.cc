@@ -21,7 +21,7 @@
 #include "IMPL/LCTOOLS.h"
 
 using namespace EVENT ;
-
+using namespace IO ;
 
 namespace SIO {
 
@@ -51,10 +51,37 @@ namespace SIO {
 
 
 
-  int SIOWriter::open(const std::string & filename){
+  int SIOWriter::open(const std::string & filename) throw(IOException ){
+
+    std::string sioFilename ;  
+    getSIOFileName( filename, sioFilename ) ;
+    // if the file exists we throw an exception
+
+    FILE* f = fopen( sioFilename.c_str() , "r") ;
+    if( f != 0 ){
+      fclose(f) ;
+      throw IOException( std::string( "[SIOWriter::open()] File already exists: " 
+    				      + sioFilename
+				      + " \n              open it in append or new mode !\n"
+				      )) ;
+    }
+
+
     // default is append, i.e. append to existing file or create new one
     return open( filename, LCIO::WRITE_APPEND ) ;
+
+
   }
+
+  void SIOWriter::getSIOFileName(const std::string& filename, 
+				 std::string& sioFilename ){
+
+    if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
+	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
+      sioFilename = filename + LCSIO::FILE_EXTENSION ;
+    else 
+      sioFilename = filename ;    
+  } 
 
   int SIOWriter::open(const std::string& filename, int writeMode){
 
@@ -62,16 +89,8 @@ namespace SIO {
     
     // make sure filename has the proper extension (.slcio) 
     std::string sioFilename ;  
-    if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
-	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
-      sioFilename = filename + LCSIO::FILE_EXTENSION ;
-    else 
-      sioFilename = filename ;
+    getSIOFileName( filename, sioFilename ) ;
 
-
-    //    std::string stream_name( filename.data() ,  filename.find(".") ) ;
-    //_stream = SIO_streamManager::add( stream_name.c_str() , 64 * SIO_KBYTE ) ;
-    
     const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
     _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
     

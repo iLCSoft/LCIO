@@ -8,8 +8,8 @@
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 
 #include "IMPL/LCCollectionVec.h"
-#include "IMPL/CalorimeterHitImpl.h"
-#include "IMPL/TrackerHitImpl.h"
+#include "IMPL/SimCalorimeterHitImpl.h"
+//#include "IMPL/SimTrackerHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
@@ -95,7 +95,7 @@ int main(int argc, char** argv ){
       }
       
       // now add some calorimeter hits
-      LCCollectionVec* calVec = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
+      LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
       
       // set flag for long format (including position )
       // and PDG 
@@ -107,7 +107,7 @@ int main(int argc, char** argv ){
 
       for(int j=0;j<NHITS;j++){
 	
-	CalorimeterHitImpl* hit = new CalorimeterHitImpl ;
+	SimCalorimeterHitImpl* hit = new SimCalorimeterHitImpl ;
 	
 	hit->setEnergy( 3.1415 )  ;
 	

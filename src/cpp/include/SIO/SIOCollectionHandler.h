@@ -11,6 +11,7 @@
 #include <string>
 #include "EVENT/LCCollection.h"
 #include "IOIMPL/LCEventIOImpl.h"
+#include "Exceptions.h"
 
 #include "SIO_block.h"
 
@@ -26,11 +27,15 @@ namespace SIO {
     
   public:
     
-    /** The default constructor needs the name, the type and a pointer the address of the collection.
+    /** The default constructor needs the name, the type and a pointer 
+     * the address of the collection. Throws an exception if handler
+     * for given type doesn't exist.
+     * @throws Exception
      */
     SIOCollectionHandler(const std::string& name, 
 			 const std::string& type, 
-			 IOIMPL::LCEventIOImpl**  anEvtP=0 ) ;
+			 IOIMPL::LCEventIOImpl**  anEvtP=0 ) 
+      throw (EVENT::Exception) ;
 
     virtual ~SIOCollectionHandler() ;
     

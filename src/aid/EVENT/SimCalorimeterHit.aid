@@ -7,7 +7,7 @@ package hep.lcio.event ;
  * @version Mar 5, 2003
  */
 
-public interface CalorimeterHit extends LCObject {
+public interface SimCalorimeterHit extends LCObject {
     
     /**Returns the detector specific (geometrical) cell id.
      */

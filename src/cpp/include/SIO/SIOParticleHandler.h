@@ -1,9 +1,3 @@
-// -*- C++ -*-
-/** Implementation of SIOObjectHandler to handle IO of MCParticles.
- *
- * @author gaede
- * @version Mar 6, 2003
- */
 #ifndef SIO_SIOPARTICLEHANDLER_H
 #define SIO_SIOPARTICLEHANDLER_H 1
 
@@ -13,20 +7,24 @@
 namespace SIO {
     
     
-  /** Interface for IO of CalorimeterHit objects.
+
+  /** Implementation of SIOObjectHandler to handle IO of MCParticles.
+   *
+   * @author gaede
+   * @version Mar 6, 2003
    */
   class SIOParticleHandler : public SIOObjectHandler {
 
   public:
 	
-    /** Reads lcio calorimeter hit objects from an SIO stream.
+    /** Reads lcio MCParticle objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
 			      EVENT::LCObject** objP,
 			      unsigned int flag, 
 			      unsigned int vers)  ;
 	
-    /** Writes lcio calorimeter hit objects to an SIO stream.
+    /** Writes lcio MCParticle objects to an SIO stream.
      */
 	
     virtual unsigned int write(SIO_stream* stream, 

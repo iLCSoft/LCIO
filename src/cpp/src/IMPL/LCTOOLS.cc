@@ -1,7 +1,7 @@
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCCollection.h"
-#include "EVENT/CalorimeterHit.h"
-#include "EVENT/TrackerHit.h"
+#include "EVENT/SimCalorimeterHit.h"
+#include "EVENT/SimTrackerHit.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "EVENT/LCFloatVec.h"
@@ -36,8 +36,8 @@ namespace IMPL {
       const LCCollection* col = evt->getCollection( *name ) ;
     
     
-      // print CalorimeterHit collections:
-      if(evt->getCollection( *name )->getTypeName() == LCIO::CALORIMETERHIT ){
+      // print SimCalorimeterHit collections:
+      if(evt->getCollection( *name )->getTypeName() == LCIO::SIMCALORIMETERHIT ){
       
 	int nHits =  col->getNumberOfElements() ;
 	cout << nHits << " hits - first hit: " ;
@@ -47,8 +47,8 @@ namespace IMPL {
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
 	
-	  const CalorimeterHit* hit = 
-	    dynamic_cast<const CalorimeterHit*>( col->getElementAt( i ) ) ;
+	  const SimCalorimeterHit* hit = 
+	    dynamic_cast<const SimCalorimeterHit*>( col->getElementAt( i ) ) ;
 	
 	  cout << "    hit -  e: "  << hit->getEnergy() ;
 
@@ -63,7 +63,7 @@ namespace IMPL {
 	}
       
 	// print the MCParticle collection
-      } else if(evt->getCollection( *name )->getTypeName() == LCIO::TRACKERHIT ){
+      } else if(evt->getCollection( *name )->getTypeName() == LCIO::SIMTRACKERHIT ){
       
 	int nHits =  col->getNumberOfElements() ;
 	cout << nHits << " hits : " ;
@@ -71,8 +71,8 @@ namespace IMPL {
 
 	if(!nPrint ) cout << endl ;
 	for( int i=0 ; i< nPrint ; i++ ){
-	  const TrackerHit* hit = 
-	    dynamic_cast<const TrackerHit*>( col->getElementAt( i ) ) ;
+	  const SimTrackerHit* hit = 
+	    dynamic_cast<const SimTrackerHit*>( col->getElementAt( i ) ) ;
 	
 	  const double* x =  hit->getPosition() ;
 	  cout << "    hit -  dEdx: " 

@@ -1,11 +1,5 @@
-// -*- C++ -*-
-/** Implementation of SIOObjectHandler to handle IO of CalorimeterHits.
- *
- * @author gaede
- * @version Mar 6, 2003
- */
-#ifndef SIO_SIOCALHITHANDLER_H
-#define SIO_SIOCALHITHANDLER_H 1
+#ifndef SIO_SIOSIMTRACKHITHANDLER_H
+#define SIO_SIOSIMTRACKHITHANDLER_H 1
 
 #include "SIO/SIOObjectHandler.h"
 
@@ -13,11 +7,17 @@
 namespace SIO {
     
     
-  class SIOCalHitHandler : public SIOObjectHandler {
+/** Implementation of SIOObjectHandler to handle IO of SimTrackerHits.
+ *
+ * @author gaede
+ * @version Mar 12, 2003
+ */
+
+  class SIOSimTrackHitHandler : public SIOObjectHandler {
 	
   public:
 	
-    /** Reads lcio calorimeter hit objects from an SIO stream.
+    /** Reads lcio tracker hit objects from an SIO stream.
      */
     virtual unsigned int read(SIO_stream* stream, 
 			      EVENT::LCObject** objP,  
@@ -33,4 +33,4 @@ namespace SIO {
   }; // class
 }; // namespace
 
-#endif /* ifndef hep_lcio_event_SIOCALHITHANDLER_H */
+#endif /* ifndef SIO_SIOSIMTRACKHITHANDLER_H */

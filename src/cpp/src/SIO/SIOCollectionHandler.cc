@@ -12,6 +12,8 @@
 
 #include "SIO_functions.h"
 
+//#include "Exceptions.h"
+
 #include <iostream>
 
 using namespace IOIMPL ;
@@ -22,15 +24,19 @@ namespace SIO {
 
   SIOCollectionHandler::SIOCollectionHandler(const std::string& name, 
 					     const std::string& type,
-					     LCEventIOImpl**  anEvtP) : 
+					     LCEventIOImpl**  anEvtP)
+    throw (Exception) : 
     SIO_block( name.c_str() ), 
     _evtP( anEvtP ) , _col(0) , 
-    _myType( type )  {
+    _myType( type )   {
     
     // here we need to get the handler for our type
     _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
     if( ! _myHandler ){
-      std::cout << "WARNING:  SIOCollectionHandler no handler for type : " << _myType << std::endl ;
+      std::cerr << "WARNING:  SIOCollectionHandler no handler for type : " 
+		<< _myType << std::endl ;
+
+      throw Exception("SIOCollectionHandler: unsuported type") ;
     }
 
   }

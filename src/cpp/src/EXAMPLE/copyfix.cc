@@ -7,13 +7,6 @@
 
 #include "EVENT/LCIO.h"
 
-// #include "IMPL/LCEventImpl.h" 
-// #include "IMPL/LCCollectionVec.h"
-// #include "IMPL/CalorimeterHitImpl.h"
-// #include "IMPL/MCParticleImpl.h" 
-// #include "IMPL/LCFlagImpl.h" 
-// #include "IMPL/LCTOOLS.h"
-
 
 #include <cstdlib>
 #include <iostream>

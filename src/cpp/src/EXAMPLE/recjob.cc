@@ -9,7 +9,7 @@
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCCollectionVec.h"
-#include "IMPL/CalorimeterHitImpl.h"
+#include "IMPL/SimCalorimeterHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
@@ -80,7 +80,7 @@ public:
     // create a new collection to be added to the event
     // for simplicity just add some calorimeter hits (don't have cluster class yet) 
     
-    LCCollectionVec* calVec = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
+    LCCollectionVec* calVec = new LCCollectionVec( LCIO::SIMCALORIMETERHIT )  ;
 
     // set flag for short format (not including position )
     // and no PDG     
@@ -91,7 +91,7 @@ public:
 
     
     for(int j=0;j<NHITS;j++){
-      CalorimeterHitImpl* hit = new CalorimeterHitImpl ;
+      SimCalorimeterHitImpl* hit = new SimCalorimeterHitImpl ;
       hit->setEnergy( 3.1415 * rand()/RAND_MAX   )  ;
       float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
       hit->setPosition( pos ) ;

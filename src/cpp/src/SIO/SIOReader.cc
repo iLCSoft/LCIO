@@ -80,16 +80,13 @@ namespace SIO {
   void SIOReader::open(const std::string& filename) throw( IOException )  {
 
 
-    // make sure filename has the proper extension (.slcio) 
     std::string sioFilename ;  
-    if( !( filename.rfind(LCSIO::FILE_EXTENSION) 
-	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ))
-      sioFilename = filename + LCSIO::FILE_EXTENSION ;
-    else 
-      sioFilename = filename ;
+    // ---- we don't require the standard file extension for reading any more
+    //if( !( filename.rfind(".") filename.length() ))
+    //  sioFilename = filename + LCSIO::FILE_EXTENSION ;
+    //else 
+    sioFilename = filename ;
     
-    //std::string stream_name( sioFilename.data() ,  sioFilename.rfind(LCSIO::FILE_EXTENSION) ) ;
-    //_stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
     const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
     _stream = SIO_streamManager::add(  stream_name , 64 * SIO_KBYTE ) ;
 
@@ -102,7 +99,7 @@ namespace SIO {
     int status = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ; 
     
     if( status != SIO_STREAM_SUCCESS ) 
-      throw IOException( std::string( "[SIOReader::open()] Can't open stream: " 
+      throw IOException( std::string( "[SIOReader::open()] Can't open stream: "
 				      + sioFilename ) ) ;
 
 
@@ -223,10 +220,15 @@ namespace SIO {
       }
 
       // create collection handler for event
-      SIOCollectionHandler* ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
-
-      SIO_blockManager::add( ch  )  ; 
-
+      SIOCollectionHandler* ch = 0 ;
+      try{
+	ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
+	SIO_blockManager::add( ch  )  ; 
+      }
+      catch(Exception& ex){
+	// unsuported type
+	delete ch ;
+      }
     }
   }
 

@@ -1,15 +1,15 @@
-#include "IMPL/CalorimeterHitImpl.h"
+#include "IMPL/SimCalorimeterHitImpl.h"
 
 namespace IMPL{
   
-  CalorimeterHitImpl::CalorimeterHitImpl() :
+  SimCalorimeterHitImpl::SimCalorimeterHitImpl() :
     _cellID0(0),
     _cellID1(0),
     _energy(0){
   }
 
-// // deep copy of the CalorimeterHit hit
-// CalorimeterHitImpl::CalorimeterHitImpl(const CalorimeterHit& hit) :
+// // deep copy of the SimCalorimeterHit hit
+// SimCalorimeterHitImpl::SimCalorimeterHitImpl(const SimCalorimeterHit& hit) :
 //   _cellID0( hit.getCellID0() ),
 //   _cellID1( hit.getCellID1() ),
 //   _energy( hit.getEnergy() ) {
@@ -35,14 +35,14 @@ namespace IMPL{
 //   }  
 // }
 
-//EVENT::CalorimeterHit* CalorimeterHitImpl::clone() const{
-  EVENT::LCObject* CalorimeterHitImpl::clone() const{
+//EVENT::SimCalorimeterHit* SimCalorimeterHitImpl::clone() const{
+  EVENT::LCObject* SimCalorimeterHitImpl::clone() const{
     // shallow copy ... more thought needed
-    return new CalorimeterHitImpl( *this ) ;
+    return new SimCalorimeterHitImpl( *this ) ;
   }
   
 
-  CalorimeterHitImpl::~CalorimeterHitImpl(){
+  SimCalorimeterHitImpl::~SimCalorimeterHitImpl(){
     // delete all MCParticle contributions
     MCParticleContVec::iterator iter = _vec.begin() ;
     
@@ -52,61 +52,61 @@ namespace IMPL{
     
   }
   
-  int CalorimeterHitImpl::getCellID0() const {
+  int SimCalorimeterHitImpl::getCellID0() const {
     return _cellID0 ;
   }
   
-  int CalorimeterHitImpl::getCellID1() const {
+  int SimCalorimeterHitImpl::getCellID1() const {
     return _cellID1 ;
   }
   
-  float CalorimeterHitImpl::getEnergy() const {
+  float SimCalorimeterHitImpl::getEnergy() const {
     return _energy ;
   }
   
-  const float* CalorimeterHitImpl::getPosition() const {
+  const float* SimCalorimeterHitImpl::getPosition() const {
     return _position ;
   }
   
-  int CalorimeterHitImpl::getNMCParticles() const {
+  int SimCalorimeterHitImpl::getNMCParticles() const {
     return _vec.size() ;
   }
   
-  const EVENT::MCParticle * CalorimeterHitImpl::getParticleCont(int i) const {
+  const EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const {
     return _vec[i]->Particle ;
   }
   
-  float CalorimeterHitImpl::getEnergyCont(int i) const {
+  float SimCalorimeterHitImpl::getEnergyCont(int i) const {
     return _vec[i]->Energy ;
   }
   
-  float CalorimeterHitImpl::getTimeCont(int i) const {
+  float SimCalorimeterHitImpl::getTimeCont(int i) const {
     return _vec[i]->Time ;
   }
   
-  int CalorimeterHitImpl::getPDGCont(int i) const{
+  int SimCalorimeterHitImpl::getPDGCont(int i) const{
     return _vec[i]->PDG ;
   }
   
-  void CalorimeterHitImpl::setCellID0(int id0){
+  void SimCalorimeterHitImpl::setCellID0(int id0){
     _cellID0 = id0 ;
   }
   
-  void CalorimeterHitImpl::setCellID1(int id1){
+  void SimCalorimeterHitImpl::setCellID1(int id1){
     _cellID1 = id1 ;
   }
   
-  void CalorimeterHitImpl::setEnergy(float en){
+  void SimCalorimeterHitImpl::setEnergy(float en){
     _energy = en ;
   }
   
-  void CalorimeterHitImpl::setPosition(float pos[3]){
+  void SimCalorimeterHitImpl::setPosition(float pos[3]){
     _position[0] = pos[0] ;
     _position[1] = pos[1] ;
     _position[2] = pos[2] ;
   }
   
-  void CalorimeterHitImpl::addMCParticleContribution( const EVENT::MCParticle *p,
+  void SimCalorimeterHitImpl::addMCParticleContribution( const EVENT::MCParticle *p,
 						      float en,
 						      float t,
 						      int pdg ){

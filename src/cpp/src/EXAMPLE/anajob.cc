@@ -85,7 +85,7 @@ int main(int argc, char** argv ){
     // the following code will fail at runtime - event is read only !
     // if we use " (const LCEvent*) evt " it won't even compile 
     // so we have a twofold protection against data corruption
-    // int status = evt->addCollection( new LCCollectionVec(LCIO::CALORIMETERHIT ),"NewCol" ) ; 
+    // int status = evt->addCollection( new LCCollectionVec(LCIO::SIMCALORIMETERHIT ),"NewCol" ) ; 
     //  if( status != LCIO::SUCCESS ){
     //    cout << " error - couldn't add new collection to the event ! " << endl ;
     //    exit(1) ;

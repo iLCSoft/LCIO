@@ -32,15 +32,15 @@ public interface LCIO{
   public:
     // current version number of lcio
     static const int MAJORVERSION  = 0 ; 
-    static const int MINORVERSION  = 4 ; 
+    static const int MINORVERSION  = 5 ; 
 
     // bits in flag words
-    // CalorimeterHit (CH)
+    // SimCalorimeterHit (CH)
     static const int CHBIT_LONG   = 31; // long(1) - short(0), (position)
     static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
     static const int CHBIT_POSZ   = 29 ;  // +z(1) - -z(0)
     static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
-    // TrackerHit
+    // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
     static const int READ_ONLY =  0 ;
@@ -57,8 +57,8 @@ public interface LCIO{
     static const char* LCEVENT ;
     static const char* LCRUNHEADER ;
     static const char* MCPARTICLE ; 
-    static const char* CALORIMETERHIT ;
-    static const char* TRACKERHIT ; 
+    static const char* SIMCALORIMETERHIT ;
+    static const char* SIMTRACKERHIT ; 
     static const char* LCFLOATVEC ; 
     static const char* LCINTEGERVEC ; 
 
@@ -66,15 +66,15 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 0 ; 
-  public static const int MINORVERSION  = 4 ; 
+  public static const int MINORVERSION  = 5 ; 
 
   // bits in flag words
-  // CalorimeterHit (CH)
+  // SimCalorimeterHit (CH)
   public static const int CHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
   public static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0) 
   public static const int CHBIT_POSZ   = 29 ;  // +z(1) - -z(0)
   public static const int CHBIT_PDG    = 28 ;  // PDG(0) - no PDG(0) of secondaries
-  // TrackerHit
+  // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
 
   public static const int READ_ONLY =  0 ;
@@ -90,8 +90,8 @@ public interface LCIO{
   public static const String LCEVENT = "LCEvent" ;
   public static const String LCRUNHEADER = "LCRunHeader" ;
   public static const String MCPARTICLE = "MCParticle" ;
-  public static const String CALORIMETERHIT = "CalorimeterHit" ;
-  public static const String TRACKERHIT = "TrackerHit" ;
+  public static const String SIMCALORIMETERHIT = "SimCalorimeterHit" ;
+  public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTEGERVEC = "LCIntegerVec" ;
 @endif

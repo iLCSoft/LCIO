@@ -1,30 +1,29 @@
-// -*- C++ -*-
 #ifndef EVENT_TRACKERHITIMPL_H
 #define EVENT_TRACKERHITIMPL_H 1
 
 
-#include "EVENT/TrackerHit.h"
+#include "EVENT/SimTrackerHit.h"
 
 namespace IMPL {
 
 
-/** Implementation of TrackerHit.
+/** Implementation of SimTrackerHit.
  *
- * @see TrackerHit
+ * @see SimTrackerHit
  * @author gaede
  * @version Mar 6, 2003
  */
 
-  class TrackerHitImpl : public EVENT::TrackerHit {
+  class SimTrackerHitImpl : public EVENT::SimTrackerHit {
     
   public: 
     
     /** Default constructor, initializes values to 0.
      */
-    TrackerHitImpl() ;
+    SimTrackerHitImpl() ;
     
     /// Destructor.
-    virtual ~TrackerHitImpl() ; 
+    virtual ~SimTrackerHitImpl() ; 
     
     /**Returns the detector specific (geometrical) cell id.
      */

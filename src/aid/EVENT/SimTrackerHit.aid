@@ -1,13 +1,14 @@
 package hep.lcio.event;
 
-/** Describes a generic tracker hit. Has to be implementet by user classes
+/** Describes a generic simulated tracker hit. 
+ *  Has to be implementet by user classes
  *  that are to be made persistent.
  * 
  * @author gaede
  * @version Mar 6, 2003
  */
 
-public interface TrackerHit extends LCObject {
+public interface SimTrackerHit extends LCObject {
     
     /**Returns the detector specific (geometrical) cell id.
      */

@@ -29,6 +29,8 @@ namespace SIO {
 
   public:
 
+    /**Default constructor.
+     */
     SIOWriter() ;
     /**
      * Destructor
@@ -39,7 +41,7 @@ namespace SIO {
      * no error occured. If file with given name exists, it will be opened in
      * append-mode.
      */
-    virtual int open(const std::string & filename) ;
+    virtual int open(const std::string & filename) throw (IO::IOException) ;
 
     /** Opens a file for writing and returns LCIO::SUCCESS if 
      *  no error occured. Possible write modes are: LCIO::WRITE_NEW
@@ -61,16 +63,22 @@ namespace SIO {
 
   protected:
 
+    /** Sets up the handlers for writing the current event.
+     */
     void setUpHandlers(const EVENT::LCEvent * evt)  ;
     
-
+    /** Creates a proper filename with extension 'slcio' 
+     * in sioFilename.
+     */
+    void getSIOFileName(const std::string& filename, 
+			std::string& sioFilename)  ; 
+    
   protected:
-
+    
     SIO_record *_evtRecord ;
     SIO_record *_hdrRecord ;
     SIO_record *_runRecord ;
     SIO_stream *_stream ;
-    
 
   private:
 
