@@ -60,6 +60,10 @@ namespace UTIL{
      */
     static void printCalorimeterHits(const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of  all RawCalorimeterHits in the collection.
+     */
+    static void printRawCalorimeterHits(const EVENT::LCCollection* col ) ;
+
     /** Print LCFloatVec user extension vectors  in the  collection
      */
     static void printLCFloatVecs( const EVENT::LCCollection* col ) ;

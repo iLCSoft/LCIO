@@ -3,6 +3,7 @@
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
 #include "EVENT/CalorimeterHit.h"
+#include "EVENT/RawCalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/TPCHit.h"
 #include "EVENT/LCIO.h"
@@ -100,6 +101,11 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::CALORIMETERHIT ){
 	  
 	printCalorimeterHits( col ) ;
+
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::RAWCALORIMETERHIT ){
+	  
+	printRawCalorimeterHits( col ) ;
 
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
@@ -901,6 +907,59 @@ namespace UTIL {
       }else{
 	cout << "   no position avaliable  ) | " ;
       }
+      cout << endl ;
+
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+  }
+  void LCTOOLS::printRawCalorimeterHits(const EVENT::LCCollection* col ){
+
+    if( col->getTypeName() != LCIO::RAWCALORIMETERHIT ){
+
+      cout << " collection not of type " << LCIO::RAWCALORIMETERHIT << endl ;
+      return ;
+    }
+
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::RAWCALORIMETERHIT << " collection "
+	 << "--------------- " << endl ;
+
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+ 
+    LCFlagImpl flag( col->getFlag() ) ;
+
+    cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
+    cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
+    cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+
+    std::cout << endl
+	      << " [   id   ] |  cellId0(bytes) | cellId1(bytes) | amplitude | time " << endl ;
+    
+    for( int i=0 ; i< nPriant ; i++ ){
+      
+      RawCalorimeterHit* hit = 
+	dynamic_cast<RawCalorimeterHit*>( col->getElementAt( i ) ) ;
+      
+      int id0 = hit->getCellID0() ;
+      int id1 = hit->getCellID1() ;
+      
+      printf( " [%8.8x] | " , hit->id() ) ;
+      cout << ((id0& 0xff000000)>>24) << "/" 
+	   << ((id0& 0x00ff0000)>>16) << "/" 
+	   << ((id0& 0x0000ff00)>> 8) << "/" 
+	   << ((id0& 0x000000ff)>> 0) << " | "
+	   << ((id1& 0xff000000)>>24) << "/" 
+	   << ((id1& 0x00ff0000)>>16) << "/" 
+	   << ((id1& 0x0000ff00)>> 8) << "/" 
+	   << ((id1& 0x000000ff)>> 0) << " | "
+	   << hit->getAmplitude() << " | "
+	   << hit->getTimeStamp() << " | ";
       cout << endl ;
 
     }
