@@ -1,0 +1,14 @@
+
+############################################
+#
+#  modules to be run with lcioframe
+#    
+############################################
+
+# MC truth
+MCParticleHistograms
+
+
+# calorimeter hits (real and sim)
+CalorimeterHitHistograms
+
