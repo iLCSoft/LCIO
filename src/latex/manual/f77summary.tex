@@ -368,14 +368,14 @@ create                 -> ppid    = lcpidcreate()
 delete                 -> status  = lcpiddelete( ppid )
 setType                -> status  = lcpidsettype( ppid, idtype )
 setPDG                 -> status  = lcpidsetpdg( ppid, ipdg )
-setLoglikelihood       -> status  = lcpidsetloglikelihood( ppid, xlogl )
+setLikelihood          -> status  = lcpidsetlikelihood( ppid, xlogl )
 setAlgorithmType       -> status  = lcpidsetalgorithmtype( ppid, itype )
 addParameter           -> status  = lcpidaddparameter( ppid, param )
 
 id                     -> id      = lcpidid( ppid )
 getType                -> idtype  = lcpidgettype( ppid )
 getPDG                 -> ipdg    = lcpidgetpdg( ppid )
-getLoglikelihood       -> xlogl   = lcpidgetloglikelihood( ppid )
+getLikelihood          -> xlogl   = lcpidgetlikelihood( ppid )
 getAlgorithmType       -> itype   = lcpidgetalgorithmtype( ppid )
 getParameters          -> status  = lcpidgetparameters( ppid, paramv, nparam)
 
@@ -510,6 +510,9 @@ IntVectorCreate        -> pveci   = intvectorcreate( intv, nintv )
 FloatVectorCreate      -> pvecf   = floatvectorcreate( floatv , nfloatv )
 StringVectorCreate     -> pvecs   = stringvectorcreate( stringsv, nstrings, len(stringsv(1)) )
 
+getIntVector           -> status  = getintvector( pvec , intv, nintv )
+getFloatVector         -> status  = getfloatvector( pvec , floatv , nfloatv )
+getStringVector        -> status  = getstringvector( pvec , stringv , nstringv, len(stringv(1)) )
 \end{verbatim}
 
 \end{scriptsize}

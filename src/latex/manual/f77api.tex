@@ -1,7 +1,7 @@
 %-----------------------------------------
 %  LCIO fotran wrapper manual 
 %
-%  $Id: f77api.tex,v 1.13 2004-09-22 20:33:07 hvogt Exp $  $Name: not supported by cvs2svn $
+%  $Id: f77api.tex,v 1.14 2004-09-23 00:03:07 hvogt Exp $  $Name: not supported by cvs2svn $
 %
 %-----------------------------------------
 \subsection{The Fortran Interface} \label{f77api}
@@ -49,37 +49,6 @@ same name prepended by {\bf 'LCIO\_'}, e.g. the type name for MCParticles define
 
 \end{itemize}
 
-Additional methods to handle string, int and float vectors from Fortran are provided\\
-
-for the user extension classes (LCIntVec, LCFloatVec, LCStringVec):\\
-{\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
-{\bf lcfvcgetlength()}, {\bf lcfvcgetfloatat()} \\
-{\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
-
-and for the stl vector class:\\
-{\bf intvectorgetlength()}, {\bf intvectorgetelement()}  \\
-{\bf floatvectorgetlength()}, {\bf floatvectorgetelement()}  \\
-{\bf stringvectorgetlength()}, {\bf stringvectorgetelement()} . \\
-
-For strings the Fortran CHARACTER* declaration has to be large enough, otherwise the original
-string is truncated.\\
-
-Methods of the extended Fortran API can be used\\
-
-to create the vectors for the user extension classes (LCIntVec, LCFloatVec, LCStringVec)\\
- {\bf lcintvectorcreate()} \\
- {\bf lcfloatvectorcreate()} \\
- {\bf lcstringvectorcreate()} \\
-
-to create the stl vectors having int, float, and string datamembers
-(e.g needed for the setShape method in the ClusterImpl Class)\\
- {\bf intvectorcreate()} \\
- {\bf floatvectorcreate()} \\
- {\bf stringvectorcreate()} \\
-
-A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
-
-
 \begin{table}
 \begin{center}
 \begin{tabular}{|c|c|}
@@ -112,6 +81,21 @@ A Summary of all functions in the basic Fortran API is given in the first part o
 \label{tab_f77}
 \end{table}
 
+Additional methods to handle string, int and float vectors from Fortran are provided\\
+for the user extension classes (LCIntVec, LCFloatVec, LCStringVec):\\
+{\bf lcivcgetlength()}, {\bf lcivcgetintat()}  \\
+{\bf lcfvcgetlength()}, {\bf lcfvcgetfloatat()} \\
+{\bf lcsvcgetlength()}, {\bf lcsvcgetstringat()}  \\
+
+and for the stl vector class:\\
+{\bf intvectorgetlength()}, {\bf intvectorgetelement()}  \\
+{\bf floatvectorgetlength()}, {\bf floatvectorgetelement()}  \\
+{\bf stringvectorgetlength()}, {\bf stringvectorgetelement()} . \\
+
+For strings the Fortran CHARACTER* declaration has to be large enough, otherwise the original
+string is truncated.\\
+A Summary of all functions in the basic Fortran API is given in the first part of {\bf Appendix~\ref{ftn_summary} }.
+
 
 \subsubsection{Extension of the Base Fortran API} \label{f77ext}
 
@@ -124,6 +108,49 @@ and are summarized in the second part of {\bf Appendix~\ref{ftn_summary} }.
 Most Fortran programs for simulation use the \verb$hepevt$ common block. 
 Conversion functions from the LCIO MCParticle collection to the \verb$hepevt$ common block and vice versa 
 are also provided in the extended interface. See the example in \ref{rwpythia}.
+
+The wrapper functions for the {\bf LCParametersImpl} class are provided in the extension of the base Fortran API.
+This class is related to the classes\\
+{\bf LCRunHeaderImpl, LCEventImpl, and LCCollectionVec}\\
+ and has the methods\\
+{\bf setIntValues, setFloatValues, setStringValues, getIntKeys, getFloatKeys, getStringtKeys,
+getIntValues, getFloatValues, and getStringValues} .\\
+
+The set/get methods are performed by the wrapper fuctions:
+\begin{verbatim}
+lcsetparameters (class_name, class_pointer, method_name, key_name, vector_pointer) 
+lcgetparameters (class_name, class_pointer, method_name, key_name, vector_pointer) 
+\end{verbatim}
+.    \\
+The vector\_pointer is given to lcsetparameters and obtained from lcgetparameters and the vector content
+may be set or obtained by the stl vector wrapper fuctions.
+
+Methods of the extended Fortran API can be used\\
+
+to create the vectors for the user extension classes (LCIntVec, LCFloatVec, LCStringVec)\\
+ {\bf lcintvectorcreate(...)} \\
+ {\bf lcfloatvectorcreate(...)} \\
+ {\bf lcstringvectorcreate(...)} \\
+
+and to fetch the content of a vector\\
+ {\bf lcgetintvector(...)} \\
+ {\bf lcgetfloatvector(...)} \\
+ {\bf lcgetstringvector(...)} \\
+
+to create the stl vectors having int, float, and string datamembers
+(e.g needed for the setShape method in the ClusterImpl Class)\\
+ {\bf intvectorcreate(...)} \\
+ {\bf floatvectorcreate(...)} \\
+ {\bf stringvectorcreate(...)} \\
+
+and to fetch the content of a vector\\
+ {\bf getintvector(...)} \\
+ {\bf getfloatvector(...)} \\
+ {\bf getstringvector(...)} \\
+
+The parameters of the functions above are explained in 
+the the second part of {\bf Appendix~\ref{ftn_summary} }
+(The extended Fortran API to LCIO).
 
 \subsubsection{Reading and writing LCIO files}
 
