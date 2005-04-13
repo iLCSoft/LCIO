@@ -430,6 +430,11 @@ long lStdHep::Event::read(lStdHep &ls)
    for (int i = 0; i < nBlocks; i++) {
       blockid = ls.readLong();
       ntot    = ls.readLong();
+
+
+      //FIXME: fg:  this fixes a memory leak as the readString allocates memory on every call !
+      delete[] version ;
+
       version = ls.readString(len);
 
       isEmpty = 0;
