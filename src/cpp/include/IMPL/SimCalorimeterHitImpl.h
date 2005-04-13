@@ -131,12 +131,17 @@ namespace IMPL {
      */
     void setPosition(float pos[3])  ;
     
-    /** Adds a MCParticle contribution to the hit. If you want to store
-     *  the PDG of the secondary for every hit make sure the flag word bit 
-     *  LCIO::CHBIT_PDG is set. If there is already a contribution for the
-     *  given particle and secondary PDG code (default is 0), the energy is just added.
-     *  The energy contribution is also added to the     
-     *  hit's total energy. 
+    /** Adds an MCParticle contribution to the hit.
+     *  There are three different ways to use this method:<br>
+     *  <ol>
+     *  <li>p==0, just add the energy to the total energy - create no MCParticleContribution.
+     *      Note: this results in non standard LCIO files - use one of the following:</li>
+     *  <li>p!=0, pdg==0, add the energy contribution for this primary MCParticle if it exists, 
+     *      create a new contribution if it doesn't</li>
+     *  <li>p!=0, pdg!=0, create a new MCParticleContribution in any case - this is used for 
+     *      the detailed mode, where every simulator step produces a contribution.</li>
+     *  </ol>
+     *  If you want to store the PDG of the secondary (case 3.) set the flag word bit LCIO::CHBIT_PDG.<br>
      */
     void addMCParticleContribution( EVENT::MCParticle *p,
 				    float en,
