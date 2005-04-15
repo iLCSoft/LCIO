@@ -6,7 +6,7 @@
 // forward declaration
 namespace SIO{ 
   class SIOReconstructedParticleHandler ;
-};
+}
 
 namespace IOIMPL {
 
@@ -23,6 +23,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_RECONSTRUCTEDPARTICLEIOIMPL_H */

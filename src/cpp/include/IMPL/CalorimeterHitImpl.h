@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
- * @version $Id: CalorimeterHitImpl.h,v 1.13 2004-09-23 17:07:38 gaede Exp $
+ * @version $Id: CalorimeterHitImpl.h,v 1.14 2005-04-15 08:37:37 gaede Exp $
  */
 
   class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
@@ -110,5 +110,5 @@ namespace IMPL {
     EVENT::LCObject* _rawHit ;
     
   }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef EVENT_CALORIMETERHITIMPL_H */

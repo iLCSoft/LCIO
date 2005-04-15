@@ -55,7 +55,11 @@ namespace SIO{
 //       //cout <<  (*vec)[i] <<   ", " ; 
 //     }    
 
-    SIO_DATA( stream , & ( (int) (*vec)[0] ) , nElements ) ;
+    int*  v_0 = const_cast<int*> ( & (*vec)[0] ) ;
+
+    SIO_DATA( stream , v_0 , nElements ) ;
+
+//     SIO_DATA( stream , & ( (int) (*vec)[0] ) , nElements ) ;
 
     //    cout << endl ;
 
@@ -65,4 +69,4 @@ namespace SIO{
     
   }
   
-}; // namespace
+} // namespace

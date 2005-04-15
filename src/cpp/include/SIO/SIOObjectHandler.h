@@ -16,7 +16,7 @@ namespace SIO{
  * for all event entities (hits, tracks, clusters,...).
  * 
  * @author gaede
- * @version $Id: SIOObjectHandler.h,v 1.8 2005-03-02 16:22:58 gaede Exp $
+ * @version $Id: SIOObjectHandler.h,v 1.9 2005-04-15 08:37:42 gaede Exp $
  */
 class SIOObjectHandler {
   
@@ -60,5 +60,5 @@ public:
   
 }; // class
 
-}; // namespace 
+} // namespace 
 #endif /* ifndef hep_lcio_event_SIOOBJECTHANDLER_H */

@@ -28,26 +28,26 @@ PTRTYPE lcrnvcreatecollection(PTRTYPE relation ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN2(CFORTRANPNTR, lcrnvcreate, LCRNVCREATE, lcrnvcreate, STRING, STRING ) ;
-FCALLSCFUN1(INT, lcrnvdelete, LCRNVDELETE, lcrnvdelete, CFORTRANPNTR ) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrnvcreatefromcollection, LCRNVCREATEFROMCOLLECTION, lcrnvcreatefromcollection, CFORTRANPNTR ) ;
+FCALLSCFUN2(CFORTRANPNTR, lcrnvcreate, LCRNVCREATE, lcrnvcreate, STRING, STRING ) 
+FCALLSCFUN1(INT, lcrnvdelete, LCRNVDELETE, lcrnvdelete, CFORTRANPNTR ) 
+FCALLSCFUN1(CFORTRANPNTR, lcrnvcreatefromcollection, LCRNVCREATEFROMCOLLECTION, lcrnvcreatefromcollection, CFORTRANPNTR ) 
 
-FCALLSCFUN1(STRING, lcrnvgetfromtype, LCRNVGETFROMTYPE, lcrnvgetfromtype, CFORTRANPNTR ) ;
-FCALLSCFUN1(STRING, lcrnvgettotype, LCRNVGETTOTYPE, lcrnvgettotype, CFORTRANPNTR ) ;
+FCALLSCFUN1(STRING, lcrnvgetfromtype, LCRNVGETFROMTYPE, lcrnvgetfromtype, CFORTRANPNTR ) 
+FCALLSCFUN1(STRING, lcrnvgettotype, LCRNVGETTOTYPE, lcrnvgettotype, CFORTRANPNTR ) 
 FCALLSCFUN2(CFORTRANPNTR, lcrnvgetrelatedtoobjects, LCRNVGETRELATEDTOOBJECTS, lcrnvgetrelatedtoobjects,
-            CFORTRANPNTR, CFORTRANPNTR ) ;
+            CFORTRANPNTR, CFORTRANPNTR ) 
 FCALLSCFUN2(CFORTRANPNTR, lcrnvgetrelatedfromobjects, LCRNVGETRELATEDFROMOBJECTS, lcrnvgetrelatedfromobjects,
-            CFORTRANPNTR, CFORTRANPNTR ) ;
+            CFORTRANPNTR, CFORTRANPNTR ) 
 FCALLSCFUN2(CFORTRANPNTR, lcrnvgetrelatedtoweights, LCRNVGETRELATEDTOWEIGHTS, lcrnvgetrelatedtoweights,
-            CFORTRANPNTR, CFORTRANPNTR ) ;
+            CFORTRANPNTR, CFORTRANPNTR ) 
 FCALLSCFUN2(CFORTRANPNTR, lcrnvgetrelatedfromweights, LCRNVGETRELATEDFROMWEIGHTS, lcrnvgetrelatedfromweights,
-            CFORTRANPNTR, CFORTRANPNTR ) ;
+            CFORTRANPNTR, CFORTRANPNTR ) 
 
 FCALLSCFUN4(INT, lcrnvgaddrelation, LCRNVGADDRELATION, lcrnvgaddrelation, 
-            CFORTRANPNTR, CFORTRANPNTR, CFORTRANPNTR, FLOAT ) ;
+            CFORTRANPNTR, CFORTRANPNTR, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN3(INT, lcrnvgremoverelation, LCRNVGREMOVERELATION, lcrnvgremoverelation, 
-            CFORTRANPNTR, CFORTRANPNTR, CFORTRANPNTR ) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrnvcreatecollection, LCRNVCREATECOLLECTION, lcrnvcreatecollection, CFORTRANPNTR ) ;
+            CFORTRANPNTR, CFORTRANPNTR, CFORTRANPNTR ) 
+FCALLSCFUN1(CFORTRANPNTR, lcrnvcreatecollection, LCRNVCREATECOLLECTION, lcrnvcreatecollection, CFORTRANPNTR ) 
 
 }
    

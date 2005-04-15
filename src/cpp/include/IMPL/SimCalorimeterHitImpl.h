@@ -158,5 +158,5 @@ namespace IMPL {
     MCParticleContVec _vec ;
     
   }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_SIMCALORIMETERHITIMPL_H */

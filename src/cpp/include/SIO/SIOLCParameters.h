@@ -11,7 +11,7 @@ namespace SIO {
 /** IO of LCParameters.
  *
  * @author gaede
- * @version $Id: SIOLCParameters.h,v 1.3 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: SIOLCParameters.h,v 1.4 2005-04-15 08:37:42 gaede Exp $
  */
   class SIOLCParameters : public IMPL::LCParametersImpl{
 	
@@ -29,6 +29,6 @@ namespace SIO {
 			      const LCParameters& params) ;
     
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOLCPARAMETERS_H */

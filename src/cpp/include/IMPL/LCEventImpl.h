@@ -171,6 +171,6 @@ namespace IMPL{
 
   }; // class
 
-}; // namespace IMPL
+} // namespace IMPL
 
 #endif /* ifndef EVENT_LCEVENTIMPL_H */

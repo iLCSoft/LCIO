@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.19 2004-09-15 13:29:08 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.20 2005-04-15 08:37:37 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -247,5 +247,5 @@ namespace IMPL {
     bool _endpointSet ;
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_MCPARTICLEIMPL_H */

@@ -581,4 +581,4 @@ namespace SIO {
 //     SIOLCRelationHandler::fillRelationMap(  *_evtP ) ;
   }
 
-}; // namespace
+} // namespace

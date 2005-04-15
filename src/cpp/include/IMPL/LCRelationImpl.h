@@ -45,5 +45,5 @@ namespace IMPL {
     float _weight ;
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef EVENT_LCRELATIONIMPL_H */

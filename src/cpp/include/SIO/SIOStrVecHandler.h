@@ -10,7 +10,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of StrVecs.
  *
  * @author vogt
- * @version $Id: SIOStrVecHandler.h,v 1.2 2004-08-20 16:45:25 gaede Exp $
+ * @version $Id: SIOStrVecHandler.h,v 1.3 2005-04-15 08:37:43 gaede Exp $
  */
   class SIOStrVecHandler : public SIOObjectHandler {
 	
@@ -27,6 +27,6 @@ namespace SIO {
 			       const EVENT::LCObject* obj) ;
 	
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOSTRVECHANDLER_H */

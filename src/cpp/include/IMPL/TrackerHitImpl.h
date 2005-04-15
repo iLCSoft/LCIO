@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version $Id: TrackerHitImpl.h,v 1.8 2004-09-15 13:29:08 gaede Exp $
+ * @version $Id: TrackerHitImpl.h,v 1.9 2005-04-15 08:37:38 gaede Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -91,5 +91,5 @@ protected:
     
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_TRACKERHITIMPL_H */

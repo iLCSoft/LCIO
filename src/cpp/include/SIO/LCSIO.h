@@ -98,5 +98,5 @@ namespace SIO {
 
   } ;
 
-}; // namespace 
+} // namespace 
 #endif // ifndef SIO_LCSIO_H

@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data RawCalorimeterHit.
  * 
  * @author gaede
- * @version $Id: RawCalorimeterHitImpl.h,v 1.1 2004-08-25 08:20:30 gaede Exp $
+ * @version $Id: RawCalorimeterHitImpl.h,v 1.2 2005-04-15 08:37:37 gaede Exp $
  */
 
   class RawCalorimeterHitImpl : public EVENT::RawCalorimeterHit , public AccessChecked {
@@ -72,5 +72,5 @@ namespace IMPL {
     int _timeStamp ;
     
   }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef EVENT_RAWCALORIMETERHITIMPL_H */

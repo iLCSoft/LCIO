@@ -7,7 +7,7 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version $Id: lcio.h,v 1.20 2005-03-07 11:19:27 gaede Exp $ 
+ * @version $Id: lcio.h,v 1.21 2005-04-15 08:37:33 gaede Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"
@@ -30,25 +30,24 @@
 
 /** The namespace DATA has been removed from LCIO all data entities are now defined in EVENT.
  */
-namespace DATA{};
-
+namespace DATA{}
 /** The namespace EVENT holds all base interfaces of the event entities.
  */
-namespace EVENT{};
+namespace EVENT{}
 
 /** The namespace IO  holds the base interfaces for io of data. 
  */
-namespace IO{};
+namespace IO{}
 
 /** The namespace IMPL holds the implementations of
  * the base interfaces that are defined in EVENT.
  */
-namespace IMPL{};
+namespace IMPL{}
 
 /** The namespace UTIL holds convenient and support classes and 
  *  methods for the LCIO objects.
  */
-namespace UTIL{};
+namespace UTIL{}
 
 
 
@@ -66,19 +65,19 @@ namespace lcio{
 
   using IOIMPL::LCFactory ;
 
-} ;
+}
 
 /** The IOIMPL namespace holds extensions to the default implementations
  * needed for IO. For internal use only - with the exception of IOIMPL::LCFactory.
  */
-namespace IOIMPL{};
+namespace IOIMPL{}
 
 
 /** The SIO namespace holds the persistency implementation using SIO.
  * Users should not use any of the classes defined here explicitly but through their
  * base interfaces defined in IO.
  */
-namespace SIO{};
+namespace SIO{}
 
 
 /** Use this macro to catch uncaught exceptions before aborting the program.

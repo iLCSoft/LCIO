@@ -31,26 +31,26 @@ int     lcpidaddparameter( PTRTYPE pid, float param ) ;
 // now the fortran wrappers from cfortran.h              
 extern "C"{
   
-FCALLSCFUN0(CFORTRANPNTR, lcpidcreate, LCPIDCREATE, lcpidcreate ) ;
-FCALLSCFUN1(INT, lcpiddelete, LCPIDDELETE, lcpiddelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcpidcreate, LCPIDCREATE, lcpidcreate ) 
+FCALLSCFUN1(INT, lcpiddelete, LCPIDDELETE, lcpiddelete, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lcpidid, LCPIDID, lcpidid, CFORTRANPNTR) ;
-FCALLSCFUN1(INT, lcpidgettype, LCPIDGETTYPE, lcpidgettype, CFORTRANPNTR) ;
-FCALLSCFUN1(INT, lcpidgetpdg, LCPIDGETPDG, lcpidgetpdg, CFORTRANPNTR) ;
+FCALLSCFUN1(INT, lcpidid, LCPIDID, lcpidid, CFORTRANPNTR) 
+FCALLSCFUN1(INT, lcpidgettype, LCPIDGETTYPE, lcpidgettype, CFORTRANPNTR) 
+FCALLSCFUN1(INT, lcpidgetpdg, LCPIDGETPDG, lcpidgetpdg, CFORTRANPNTR) 
 
-FCALLSCFUN1(FLOAT, lcpidgetlikelihood, LCPIDGETLIKELIHOOD, lcpidgetlikelihood, CFORTRANPNTR) ;
+FCALLSCFUN1(FLOAT, lcpidgetlikelihood, LCPIDGETLIKELIHOOD, lcpidgetlikelihood, CFORTRANPNTR) 
 
 
-FCALLSCFUN1(INT, lcpidgetalgorithmtype, LCPIDGETALGORITHMTYPE, lcpidgetalgorithmtype, CFORTRANPNTR ) ;
-FCALLSCFUN3(INT, lcpidgetparameters, LCPIDGETPARAMETERS, lcpidgetparameters, CFORTRANPNTR, FLOATV, INTV) ;
+FCALLSCFUN1(INT, lcpidgetalgorithmtype, LCPIDGETALGORITHMTYPE, lcpidgetalgorithmtype, CFORTRANPNTR ) 
+FCALLSCFUN3(INT, lcpidgetparameters, LCPIDGETPARAMETERS, lcpidgetparameters, CFORTRANPNTR, FLOATV, INTV) 
 
-FCALLSCFUN2(INT, lcpidsettype, LCPIDSETTYPE, lcpidsettype, CFORTRANPNTR, INT) ;
-FCALLSCFUN2(INT, lcpidsetpdg, LCPIDSETPDG, lcpidsetpdg, CFORTRANPNTR, INT) ;
+FCALLSCFUN2(INT, lcpidsettype, LCPIDSETTYPE, lcpidsettype, CFORTRANPNTR, INT) 
+FCALLSCFUN2(INT, lcpidsetpdg, LCPIDSETPDG, lcpidsetpdg, CFORTRANPNTR, INT) 
 
-FCALLSCFUN2(INT, lcpidsetlikelihood, LCPIDSETLIKELIHOOD, lcpidsetlikelihood, CFORTRANPNTR, FLOAT) ;
+FCALLSCFUN2(INT, lcpidsetlikelihood, LCPIDSETLIKELIHOOD, lcpidsetlikelihood, CFORTRANPNTR, FLOAT) 
 
-FCALLSCFUN2(INT, lcpidsetalgorithmtype, LCPIDSETALGORITHMTYPE, lcpidsetalgorithmtype, CFORTRANPNTR, INT) ;
-FCALLSCFUN2(INT, lcpidaddparameter, LCPIDADDPARAMETER, lcpidaddparameter, CFORTRANPNTR, FLOAT) ;
+FCALLSCFUN2(INT, lcpidsetalgorithmtype, LCPIDSETALGORITHMTYPE, lcpidsetalgorithmtype, CFORTRANPNTR, INT) 
+FCALLSCFUN2(INT, lcpidaddparameter, LCPIDADDPARAMETER, lcpidaddparameter, CFORTRANPNTR, FLOAT) 
 
 }
   

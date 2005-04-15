@@ -7,7 +7,7 @@ namespace SIO{
 
   class SIORawCalHitHandler ;
 
-};
+}
 
 namespace IOIMPL {
 
@@ -16,7 +16,7 @@ namespace IOIMPL {
 /** Adding stuff needed for io (friend declarations, etc.)
  * 
  * @author gaede
- * @version $Id: RawCalorimeterHitIOImpl.h,v 1.1 2004-08-25 08:20:30 gaede Exp $
+ * @version $Id: RawCalorimeterHitIOImpl.h,v 1.2 2005-04-15 08:37:40 gaede Exp $
  */
   class RawCalorimeterHitIOImpl : public IMPL::RawCalorimeterHitImpl {
     
@@ -24,6 +24,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_RAWCALORIMETERIOHITIMPL_H */

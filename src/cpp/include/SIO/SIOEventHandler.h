@@ -14,7 +14,7 @@ namespace SIO {
 /** Handler for LCEvent/LCEventIOImpl objects.
  * 
  * @author gaede
- * @version $Id: SIOEventHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: SIOEventHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
  */
   class SIOEventHandler : public SIO_block{
     
@@ -42,6 +42,6 @@ namespace SIO {
     
   }; // class
   
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOEVENTHANDLER_H */

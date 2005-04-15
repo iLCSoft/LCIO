@@ -10,7 +10,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of TPCHits.
  *
  * @author gaede
- * @version $Id: SIOTPCHitHandler.h,v 1.3 2004-08-20 16:45:25 gaede Exp $
+ * @version $Id: SIOTPCHitHandler.h,v 1.4 2005-04-15 08:37:43 gaede Exp $
  */
 
   class SIOTPCHitHandler : public SIOObjectHandler {
@@ -28,6 +28,6 @@ namespace SIO {
 			       const EVENT::LCObject* obj) ;
 	
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOTPCHITHANDLER_H */

@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version $Id: ParticleIDImpl.h,v 1.8 2004-09-22 16:18:32 gaede Exp $
+ * @version $Id: ParticleIDImpl.h,v 1.9 2005-04-15 08:37:37 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -77,5 +77,5 @@ namespace IMPL {
 
 }; // class
 
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_PARTICLEIDIMLP_H */

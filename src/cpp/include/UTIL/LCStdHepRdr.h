@@ -11,7 +11,7 @@ namespace UTIL{
    * file information.
    * 
    * @author cassell
-   * @version $Id: LCStdHepRdr.h,v 1.1 2004-09-24 08:16:19 gaede Exp $
+   * @version $Id: LCStdHepRdr.h,v 1.2 2005-04-15 08:37:45 gaede Exp $
    */
   class LCStdHepRdr{
     
@@ -36,6 +36,6 @@ namespace UTIL{
 
   }; // class
 
-}; // namespace UTIL
+} // namespace UTIL
 
 #endif /* ifndef UTIL_LCStdHepRdr_H */

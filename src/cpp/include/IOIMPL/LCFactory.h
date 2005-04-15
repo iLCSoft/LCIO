@@ -48,5 +48,5 @@ private:
   static LCFactory * _me ;
 
 }; // class
-}; // namespace IOIMPL
+} // namespace IOIMPL
 #endif /* ifndef IOIMPL_LCFACTORY_H */

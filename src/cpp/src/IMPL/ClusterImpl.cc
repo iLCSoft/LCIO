@@ -150,4 +150,4 @@ namespace IMPL{
     return _subdetectorEnergies ;
   }
 
-}; // end namespace
+} // end namespace

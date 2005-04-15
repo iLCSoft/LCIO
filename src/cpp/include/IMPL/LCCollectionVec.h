@@ -19,7 +19,7 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version $Id: LCCollectionVec.h,v 1.10 2005-03-02 16:22:58 gaede Exp $
+   * @version $Id: LCCollectionVec.h,v 1.11 2005-04-15 08:37:37 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
@@ -151,5 +151,5 @@ namespace IMPL {
     //    int _access ;
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef EVENT_LCCOLLECTIONVEC_H */

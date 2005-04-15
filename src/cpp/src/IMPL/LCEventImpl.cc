@@ -193,4 +193,4 @@ void LCEventImpl::setAccessMode( int accessMode ) {
 
 }
 
-};
+}

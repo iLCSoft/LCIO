@@ -40,4 +40,4 @@ namespace IMPL{
     AccessChecked::setReadOnly( readOnly ) ;
   }
 
-}; // namespace 
+} // namespace 

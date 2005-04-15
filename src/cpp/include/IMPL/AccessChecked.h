@@ -34,6 +34,6 @@ namespace IMPL {
     int _id ;
     
   };
-}; // namespace IMPL
+} // namespace IMPL
 
 #endif /* ifndef IMPL_ACCESSCHECKED_H */

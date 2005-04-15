@@ -5,7 +5,7 @@
 
 namespace SIO{
   class SIOCollectionHandler;
-};
+}
 
 namespace IOIMPL {
   
@@ -26,5 +26,5 @@ namespace IOIMPL {
     LCCollectionIOVec(const std::string& type) : IMPL::LCCollectionVec(type) { } 
     
   }; // class
-}; // namespace 
+} // namespace 
 #endif /* ifndef LCCOLLECTIONVEC_H */

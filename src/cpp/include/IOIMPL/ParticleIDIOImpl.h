@@ -8,7 +8,7 @@ namespace SIO{
   class SIOParticleIDHandler ;
   class SIOReconstructedParticleHandler ;
   class SIOClusterHandler ;
-};
+}
 
 namespace IOIMPL {
 
@@ -27,6 +27,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_PARTICLEIDIOIMPL_H */

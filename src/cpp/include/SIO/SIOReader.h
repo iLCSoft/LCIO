@@ -22,7 +22,7 @@ class SIOEventHandler ;
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version $Id: SIOReader.h,v 1.22 2004-12-23 13:24:09 gaede Exp $
+ * @version $Id: SIOReader.h,v 1.23 2005-04-15 08:37:42 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     
@@ -169,6 +169,6 @@ class SIOEventHandler ;
 
 
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOREADER_H */

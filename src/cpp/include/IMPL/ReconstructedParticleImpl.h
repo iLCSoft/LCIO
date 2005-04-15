@@ -138,5 +138,5 @@ namespace IMPL {
     
 }; // class
 
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_RECONSTRUCTEDPARTICLEIMLP_H */

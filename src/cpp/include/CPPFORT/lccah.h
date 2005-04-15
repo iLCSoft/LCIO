@@ -32,25 +32,25 @@ int lccahsetrawhit( PTRTYPE simcalhit, PTRTYPE rawHit ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN0(CFORTRANPNTR, lccahcreate,LCCAHCREATE, lccahcreate ) ;
-FCALLSCFUN1(INT, lccahdelete, LCCAHDELETE, lccahdelete, CFORTRANPNTR ) ;
-FCALLSCFUN1(INT, lccahid, LCCAHID, lccahid, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lccahcreate,LCCAHCREATE, lccahcreate ) 
+FCALLSCFUN1(INT, lccahdelete, LCCAHDELETE, lccahdelete, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lccahid, LCCAHID, lccahid, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lccahgetcellid0, LCCAHGETCELLID0, lccahgetcellid0, CFORTRANPNTR ) ;
-FCALLSCFUN1(INT, lccahgetcellid1, LCCAHGETCELLID1, lccahgetcellid1, CFORTRANPNTR ) ;
-FCALLSCFUN1(FLOAT, lccahgetenergy, LCCAHGETENERGY, lccahgetenergy, CFORTRANPNTR ) ;
-FCALLSCFUN1(FLOAT, lccahgettime, LCCAHGETTIME, lccahgettime, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lccahgetposition,LCCAHGETPOSITION,lccahgetposition, CFORTRANPNTR, FLOATV ) ;
-FCALLSCFUN1(INT, lccahgettype, LCCAHGETTYPE, lccahgettype, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lccahgetcellid0, LCCAHGETCELLID0, lccahgetcellid0, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lccahgetcellid1, LCCAHGETCELLID1, lccahgetcellid1, CFORTRANPNTR ) 
+FCALLSCFUN1(FLOAT, lccahgetenergy, LCCAHGETENERGY, lccahgetenergy, CFORTRANPNTR ) 
+FCALLSCFUN1(FLOAT, lccahgettime, LCCAHGETTIME, lccahgettime, CFORTRANPNTR )
+FCALLSCFUN2(INT, lccahgetposition,LCCAHGETPOSITION,lccahgetposition, CFORTRANPNTR, FLOATV ) 
+FCALLSCFUN1(INT, lccahgettype, LCCAHGETTYPE, lccahgettype, CFORTRANPNTR )
 
-FCALLSCFUN1(CFORTRANPNTR, lccahgetrawhit, LCCAHGETRAWHIT, lccahgetrawhit, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lccahgetrawhit, LCCAHGETRAWHIT, lccahgetrawhit, CFORTRANPNTR ) 
 
-FCALLSCFUN2(INT, lccahsetcellid0,LCCAHSETCELLID0,lccahsetcellid0, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lccahsetcellid1,LCCAHSETCELLID1,lccahsetcellid1, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lccahsetenergy,LCCAHSETENERGY,lccahsetenergy, CFORTRANPNTR, FLOAT ) ;
-FCALLSCFUN2(INT, lccahsettime,LCCAHSETTIME,lccahsettime, CFORTRANPNTR, FLOAT ) ;
-FCALLSCFUN2(INT, lccahsetposition,LCCAHSETPOSITION,lccahsetposition, CFORTRANPNTR, FLOATV ) ;
-FCALLSCFUN2(INT, lccahsettype, LCCAHSETTYPE, lccahsettype, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lccahsetrawhit, LCCAHSETRAWHIT, lccahsetrawhit, CFORTRANPNTR, INT ) ;
+FCALLSCFUN2(INT, lccahsetcellid0,LCCAHSETCELLID0,lccahsetcellid0, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lccahsetcellid1,LCCAHSETCELLID1,lccahsetcellid1, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lccahsetenergy,LCCAHSETENERGY,lccahsetenergy, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lccahsettime,LCCAHSETTIME,lccahsettime, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lccahsetposition,LCCAHSETPOSITION,lccahsetposition, CFORTRANPNTR, FLOATV ) 
+FCALLSCFUN2(INT, lccahsettype, LCCAHSETTYPE, lccahsettype, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lccahsetrawhit, LCCAHSETRAWHIT, lccahsetrawhit, CFORTRANPNTR, INT ) 
 }
 

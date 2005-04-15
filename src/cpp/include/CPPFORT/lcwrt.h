@@ -23,14 +23,14 @@ int   lcwrtwriteevent( PTRTYPE writer, PTRTYPE event) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN0(CFORTRANPNTR, lcwrtcreate, LCWRTCREATE, lcwrtcreate ) ;
-FCALLSCFUN1(INT, lcwrtdelete, LCWRTDELETE, lcwrtdelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcwrtcreate, LCWRTCREATE, lcwrtcreate ) 
+FCALLSCFUN1(INT, lcwrtdelete, LCWRTDELETE, lcwrtdelete, CFORTRANPNTR ) 
 
-FCALLSCFUN3(INT, lcwrtopen, LCWRTOPEN, lcwrtopen, CFORTRANPNTR, STRING ,INT ) ;
-FCALLSCFUN1(INT, lcwrtclose, LCWRTCLOSE, lcwrtclose, CFORTRANPNTR ) ;
+FCALLSCFUN3(INT, lcwrtopen, LCWRTOPEN, lcwrtopen, CFORTRANPNTR, STRING ,INT ) 
+FCALLSCFUN1(INT, lcwrtclose, LCWRTCLOSE, lcwrtclose, CFORTRANPNTR ) 
 
-FCALLSCFUN2(INT, lcwrtwriterunheader,LCWRTWRITERUNHEADER,lcwrtwriterunheader,CFORTRANPNTR,CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcwrtwriteevent,LCWRTWRITEEVENT,lcwrtwriteevent,CFORTRANPNTR,CFORTRANPNTR ) ;
+FCALLSCFUN2(INT, lcwrtwriterunheader,LCWRTWRITERUNHEADER,lcwrtwriterunheader,CFORTRANPNTR,CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcwrtwriteevent,LCWRTWRITEEVENT,lcwrtwriteevent,CFORTRANPNTR,CFORTRANPNTR ) 
 
 }
 

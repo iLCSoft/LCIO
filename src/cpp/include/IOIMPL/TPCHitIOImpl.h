@@ -6,7 +6,7 @@
 namespace SIO{
 
   class SIOTPCHitHandler ;
-};
+}
 
 namespace IOIMPL {
 
@@ -23,6 +23,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_TPCHITIOIMPL_H */

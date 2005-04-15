@@ -16,7 +16,7 @@ namespace EVENT
   //fg: this might have to be modified for other architectures, e.g. 64bit systems, or windows ?
   
   
-};
+}
 
 #include "LCIOSTLTypes.h"
 

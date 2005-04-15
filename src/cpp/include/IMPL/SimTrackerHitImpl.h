@@ -84,5 +84,5 @@ namespace IMPL {
     EVENT::MCParticle* _particle ;
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_SIMTRACKERHITIMLP_H */

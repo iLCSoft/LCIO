@@ -42,35 +42,35 @@ int lcmcpsetcharge( PTRTYPE mcparticle, float c ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN0(CFORTRANPNTR, lcmcpcreate,LCMCPCREATE, lcmcpcreate ) ;
-FCALLSCFUN1(INT, lcmcpdelete, LCMCPDELETE, lcmcpdelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcmcpcreate,LCMCPCREATE, lcmcpcreate ) 
+FCALLSCFUN1(INT, lcmcpdelete, LCMCPDELETE, lcmcpdelete, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lcmcpgetnumberofparents, LCMCPGETNUMBEROFPARENTS, lcmcpgetnumberofparents, CFORTRANPNTR ) ;
-FCALLSCFUN2(CFORTRANPNTR, lcmcpgetparent, LCMCPGETPARENT, lcmcpgetparent, CFORTRANPNTR , INT) ;
-// FCALLSCFUN1(CFORTRANPNTR, lcmcpgetsecondparent, LCMCPGETSECONDPARENT, lcmcpgetsecondparent, CFORTRANPNTR ) ;
-FCALLSCFUN2(CFORTRANPNTR, lcmcpgetdaughter,lcmcpgetdaughter,lcmcpgetdaughter, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lcmcpgetendpoint,LCMCPGETENDPOINT,lcmcpgetendpoint, CFORTRANPNTR, DOUBLEV ) ;
-FCALLSCFUN1(INT, lcmcpgetnumberofdaughters, LCMCPGETNUMBEROFDAUGHTERS, lcmcpgetnumberofdaughters, CFORTRANPNTR ) ;
-FCALLSCFUN1(INT, lcmcpgetpdg,LCMCPGETPDG, lcmcpgetpdg, CFORTRANPNTR ) ;
-FCALLSCFUN1(INT, lcmcpgetgeneratorstatus, LCMCPGETGENERATORSTATUS, lcmcpgetgeneratorstatus, CFORTRANPNTR ) ;
-FCALLSCFUN1(INT, lcmcpgetsimulatorstatus, LCMCPGETSIMULATORSTATUS, lcmcpgetsimulatorstatus, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcmcpgetvertex,LCMCPGETVERTEX,lcmcpgetvertex, CFORTRANPNTR, DOUBLEV ) ;
-FCALLSCFUN1(FLOAT, lcmcpgettime, LCMCPGETTIME, lcmcpgettime, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcmcpgetmomentum,LCMCPGETMOMENTUM,lcmcpgetmomentum, CFORTRANPNTR, FLOATV ) ;
-FCALLSCFUN1(FLOAT, lcmcpgetmass, LCMCPGETMASS, lcmcpgetmass, CFORTRANPNTR ) ;
-FCALLSCFUN1(FLOAT, lcmcpgetcharge,LCMCPGETCHARGE,lcmcpgetcharge, CFORTRANPNTR ) ;
-FCALLSCFUN1(FLOAT, lcmcpgetenergy, LCMCPGETENERGY, lcmcpgetenergy, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lcmcpgetnumberofparents, LCMCPGETNUMBEROFPARENTS, lcmcpgetnumberofparents, CFORTRANPNTR ) 
+FCALLSCFUN2(CFORTRANPNTR, lcmcpgetparent, LCMCPGETPARENT, lcmcpgetparent, CFORTRANPNTR , INT) 
+// FCALLSCFUN1(CFORTRANPNTR, lcmcpgetsecondparent, LCMCPGETSECONDPARENT, lcmcpgetsecondparent, CFORTRANPNTR ) 
+FCALLSCFUN2(CFORTRANPNTR, lcmcpgetdaughter,lcmcpgetdaughter,lcmcpgetdaughter, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcmcpgetendpoint,LCMCPGETENDPOINT,lcmcpgetendpoint, CFORTRANPNTR, DOUBLEV ) 
+FCALLSCFUN1(INT, lcmcpgetnumberofdaughters, LCMCPGETNUMBEROFDAUGHTERS, lcmcpgetnumberofdaughters, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lcmcpgetpdg,LCMCPGETPDG, lcmcpgetpdg, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lcmcpgetgeneratorstatus, LCMCPGETGENERATORSTATUS, lcmcpgetgeneratorstatus, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lcmcpgetsimulatorstatus, LCMCPGETSIMULATORSTATUS, lcmcpgetsimulatorstatus, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcmcpgetvertex,LCMCPGETVERTEX,lcmcpgetvertex, CFORTRANPNTR, DOUBLEV ) 
+FCALLSCFUN1(FLOAT, lcmcpgettime, LCMCPGETTIME, lcmcpgettime, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcmcpgetmomentum,LCMCPGETMOMENTUM,lcmcpgetmomentum, CFORTRANPNTR, FLOATV ) 
+FCALLSCFUN1(FLOAT, lcmcpgetmass, LCMCPGETMASS, lcmcpgetmass, CFORTRANPNTR ) 
+FCALLSCFUN1(FLOAT, lcmcpgetcharge,LCMCPGETCHARGE,lcmcpgetcharge, CFORTRANPNTR ) 
+FCALLSCFUN1(FLOAT, lcmcpgetenergy, LCMCPGETENERGY, lcmcpgetenergy, CFORTRANPNTR ) 
 
-FCALLSCFUN2(INT, lcmcpaddparent,LCMCPADDPARENT,lcmcpaddparent, CFORTRANPNTR, CFORTRANPNTR ) ;
-// FCALLSCFUN2(INT, lcmcpsetsecondparent,LCMCPSETSECONDPARENT,lcmcpsetsecondparent, CFORTRANPNTR, CFORTRANPNTR ) ;
-// FCALLSCFUN2(INT, lcmcpadddaughter,LCMCPADDDAUGHTER,lcmcpadddaughter, CFORTRANPNTR, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcmcpsetpdg,LCMCPSETPDG,lcmcpsetpdg, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lcmcpsetgeneratorstatus,LCMCPSETGENERATORSTATUS,lcmcpsetgeneratorstatus, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lcmcpsetsimulatorstatus,LCMCPSETSIMULATORSTATUS,lcmcpsetsimulatorstatus, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lcmcpsetvertex,LCMCPSETVERTEX,lcmcpsetvertex, CFORTRANPNTR, DOUBLEV ) ;
-FCALLSCFUN2(INT, lcmcpsetendpoint,LCMCPSETENDPOINT,lcmcpsetendpoint, CFORTRANPNTR, DOUBLEV ) ;
-FCALLSCFUN2(INT, lcmcpsetmomentum,LCMCPSETMOMENTUM,lcmcpsetmomentum, CFORTRANPNTR, FLOATV ) ;
-FCALLSCFUN2(INT, lcmcpsetmass,LCMCPSETMASS,lcmcpsetmass, CFORTRANPNTR, FLOAT ) ;
-FCALLSCFUN2(INT, lcmcpsetcharge, LCMCPSETCHARGE, lcmcpsetcharge, CFORTRANPNTR, FLOAT ) ;
+FCALLSCFUN2(INT, lcmcpaddparent,LCMCPADDPARENT,lcmcpaddparent, CFORTRANPNTR, CFORTRANPNTR ) 
+// FCALLSCFUN2(INT, lcmcpsetsecondparent,LCMCPSETSECONDPARENT,lcmcpsetsecondparent, CFORTRANPNTR, CFORTRANPNTR ) 
+// FCALLSCFUN2(INT, lcmcpadddaughter,LCMCPADDDAUGHTER,lcmcpadddaughter, CFORTRANPNTR, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcmcpsetpdg,LCMCPSETPDG,lcmcpsetpdg, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcmcpsetgeneratorstatus,LCMCPSETGENERATORSTATUS,lcmcpsetgeneratorstatus, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcmcpsetsimulatorstatus,LCMCPSETSIMULATORSTATUS,lcmcpsetsimulatorstatus, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcmcpsetvertex,LCMCPSETVERTEX,lcmcpsetvertex, CFORTRANPNTR, DOUBLEV ) 
+FCALLSCFUN2(INT, lcmcpsetendpoint,LCMCPSETENDPOINT,lcmcpsetendpoint, CFORTRANPNTR, DOUBLEV ) 
+FCALLSCFUN2(INT, lcmcpsetmomentum,LCMCPSETMOMENTUM,lcmcpsetmomentum, CFORTRANPNTR, FLOATV ) 
+FCALLSCFUN2(INT, lcmcpsetmass,LCMCPSETMASS,lcmcpsetmass, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lcmcpsetcharge, LCMCPSETCHARGE, lcmcpsetcharge, CFORTRANPNTR, FLOAT ) 
 }
 

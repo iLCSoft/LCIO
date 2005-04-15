@@ -29,6 +29,6 @@ int lcrdreventprocessor( PTRTYPE filenamevec ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN1(INT, lcrdreventprocessor, LCRDREVENTPROCESSOR, lcrdreventprocessor, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lcrdreventprocessor, LCRDREVENTPROCESSOR, lcrdreventprocessor, CFORTRANPNTR ) 
 }
 

@@ -19,7 +19,7 @@ namespace IMPL {
  *
  * @see Cluster
  * @author gaede
- * @version $Id: ClusterImpl.h,v 1.11 2004-09-10 12:41:25 gaede Exp $
+ * @version $Id: ClusterImpl.h,v 1.12 2005-04-15 08:37:37 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
@@ -156,5 +156,5 @@ namespace IMPL {
 
 }; // class
 
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_CLUSTERIMLP_H */

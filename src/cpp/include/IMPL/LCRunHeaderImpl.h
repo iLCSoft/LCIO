@@ -85,5 +85,5 @@ namespace IMPL {
     LCParametersImpl _params ;
 
   }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_LCRUNHEADERIMPL_H */

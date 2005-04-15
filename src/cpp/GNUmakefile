@@ -19,9 +19,9 @@ LCIOINCLUDE := -I $(LCIOBASE)/src/cpp/include -I $(CLHEP_INCLUDE)
 export LCIOINCLUDE
 
 ifdef LCIODEBUG
- LCIOCPPFLAGS = -g -pg -Wall -ansi 
+ LCIOCPPFLAGS = -g -pg -Wall -pedantic -Wno-long-long -ansi 
 else
- LCIOCPPFLAGS = -O3 -Wall -ansi 
+ LCIOCPPFLAGS = -O3 -Wall -pedantic -Wno-long-long -ansi 
 endif
 
 

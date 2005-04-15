@@ -14,7 +14,7 @@ namespace UTIL {
    *  1.1.1970 00:00:00 UTC respectively.
    * 
    * @author gaede 
-   * @version $Id: LCTime.h,v 1.2 2005-02-21 13:08:38 gaede Exp $
+   * @version $Id: LCTime.h,v 1.3 2005-04-15 08:37:45 gaede Exp $
    */
   class LCTime {
 
@@ -124,6 +124,6 @@ namespace UTIL {
   }; // class
 
 
-}; // namespace UTIL
+} // namespace UTIL
 
 #endif /* ifndef UTIL_LCTIME_H */

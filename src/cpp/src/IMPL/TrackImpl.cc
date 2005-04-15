@@ -173,6 +173,6 @@ namespace IMPL {
     _radiusOfInnermostHit = r ;
   }
 
-}; // namespace IMPL
+} // namespace IMPL
 
 

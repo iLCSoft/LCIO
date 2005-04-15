@@ -16,7 +16,7 @@ namespace SIO {
 /** Handler for LCCollection/LCCollectionIOVec objects for SIO.
  * 
  * @author gaede
- * @version $Id: SIOCollectionHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
+ * @version $Id: SIOCollectionHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
  */
 
   class SIOCollectionHandler : public SIO_block{
@@ -55,5 +55,5 @@ namespace SIO {
     
   }; // class
   
-}; // namespace
+} // namespace
 #endif /* ifndef SIO_SIOCOLLECTIONHANDLER_H */

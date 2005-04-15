@@ -28,19 +28,19 @@ int lcrhdaddactivesubdetector( PTRTYPE runHeader, const char* adn) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN0(CFORTRANPNTR, lcrhdcreate,LCRHDCREATE, lcrhdcreate ) ;
-FCALLSCFUN1(INT, lcrhddelete, LCRHDDELETE, lcrhddelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcrhdcreate,LCRHDCREATE, lcrhdcreate ) 
+FCALLSCFUN1(INT, lcrhddelete, LCRHDDELETE, lcrhddelete, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lcrhdgetrunnumber, LCRHDGETRUNNUMBER, lcrhdgetrunnumber, CFORTRANPNTR ) ;
-FCALLSCFUN1(STRING, lcrhdgetdetectorname, LCRHDGETDETECTORNAME, lcrhdgetdetectorname, CFORTRANPNTR ) ;
-FCALLSCFUN1(STRING, lcrhdgetdescription, LCRHDGETDESCRIPTION, lcrhdgetdescription, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lcrhdgetrunnumber, LCRHDGETRUNNUMBER, lcrhdgetrunnumber, CFORTRANPNTR ) 
+FCALLSCFUN1(STRING, lcrhdgetdetectorname, LCRHDGETDETECTORNAME, lcrhdgetdetectorname, CFORTRANPNTR ) 
+FCALLSCFUN1(STRING, lcrhdgetdescription, LCRHDGETDESCRIPTION, lcrhdgetdescription, CFORTRANPNTR ) 
 
 FCALLSCFUN1(CFORTRANPNTR, lcrhdgetactivesubdetectors, LCRHDGETACTIVESUBDETECTORS, 
-	    lcrhdgetactivesubdetectors, CFORTRANPNTR ) ;
+	    lcrhdgetactivesubdetectors, CFORTRANPNTR ) 
 
-FCALLSCFUN2(INT, lcrhdsetrunnumber, LCRHDSETRUNNUMBER, lcrhdsetrunnumber, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lcrhdsetdetectorname, LCRHDSETDETECTORNAME,lcrhdsetdetectorname, CFORTRANPNTR, STRING ) ;
-FCALLSCFUN2(INT, lcrhdsetdescription, LCRHDSETDESCRIPTION,lcrhdsetdescription, CFORTRANPNTR, STRING ) ;
-FCALLSCFUN2(INT, lcrhdaddactivesubdetector, LCRHDADDACTIVESUBDETECTOR,lcrhdaddactivesubdetector, CFORTRANPNTR, STRING ) ;
+FCALLSCFUN2(INT, lcrhdsetrunnumber, LCRHDSETRUNNUMBER, lcrhdsetrunnumber, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcrhdsetdetectorname, LCRHDSETDETECTORNAME,lcrhdsetdetectorname, CFORTRANPNTR, STRING ) 
+FCALLSCFUN2(INT, lcrhdsetdescription, LCRHDSETDESCRIPTION,lcrhdsetdescription, CFORTRANPNTR, STRING ) 
+FCALLSCFUN2(INT, lcrhdaddactivesubdetector, LCRHDADDACTIVESUBDETECTOR,lcrhdaddactivesubdetector, CFORTRANPNTR, STRING ) 
 }
 

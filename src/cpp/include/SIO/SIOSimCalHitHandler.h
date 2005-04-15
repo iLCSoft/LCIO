@@ -10,7 +10,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of SimCalorimeterHits.
    *
    * @author gaede
-   * @version $Id: SIOSimCalHitHandler.h,v 1.5 2004-08-20 16:45:25 gaede Exp $
+   * @version $Id: SIOSimCalHitHandler.h,v 1.6 2005-04-15 08:37:43 gaede Exp $
    */
   class SIOSimCalHitHandler : public SIOObjectHandler {
 	
@@ -27,6 +27,6 @@ namespace SIO {
 			       const EVENT::LCObject* obj) ;
 	
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef hep_lcio_event_SIOCALHITHANDLER_H */

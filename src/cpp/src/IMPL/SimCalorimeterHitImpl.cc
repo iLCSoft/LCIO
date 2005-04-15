@@ -171,4 +171,4 @@ namespace IMPL{
     _vec.push_back( con ) ;
     
   }
-}; // namespace IMPL
+} // namespace IMPL

@@ -30,23 +30,23 @@ int lccolremoveelementat(PTRTYPE collection, int i)  ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
-FCALLSCFUN1(CFORTRANPNTR, lccolcreate, LCCOLCREATE, lccolcreate, STRING ) ;
-FCALLSCFUN1(INT, lccoldelete, LCCOLDELETE, lccoldelete, CFORTRANPNTR ) ;
+FCALLSCFUN1(CFORTRANPNTR, lccolcreate, LCCOLCREATE, lccolcreate, STRING ) 
+FCALLSCFUN1(INT, lccoldelete, LCCOLDELETE, lccoldelete, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lccolgetnumberofelements,LCCOLGETNUMBEROFELEMENTS,lccolgetnumberofelements,CFORTRANPNTR) ;
-FCALLSCFUN1(STRING, lccolgettypename, LCCOLGETTYPENAME, lccolgettypename, CFORTRANPNTR ) ;
-FCALLSCFUN2(CFORTRANPNTR, lccolgetelementat, LCCOLGETELEMENTAT, lccolgetelementat, CFORTRANPNTR,  INT ) ;
-FCALLSCFUN1(INT, lccolgetflag, LCCOLGETFLAG, lccolgetflag, CFORTRANPNTR ) ;
+FCALLSCFUN1(INT, lccolgetnumberofelements,LCCOLGETNUMBEROFELEMENTS,lccolgetnumberofelements,CFORTRANPNTR) 
+FCALLSCFUN1(STRING, lccolgettypename, LCCOLGETTYPENAME, lccolgettypename, CFORTRANPNTR ) 
+FCALLSCFUN2(CFORTRANPNTR, lccolgetelementat, LCCOLGETELEMENTAT, lccolgetelementat, CFORTRANPNTR,  INT ) 
+FCALLSCFUN1(INT, lccolgetflag, LCCOLGETFLAG, lccolgetflag, CFORTRANPNTR ) 
 
-FCALLSCFUN1(LOGICAL, lccolistransient, LCCOLISTRANSIENT, lccolistransient, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lccolsettransient, LCCOLSETTRANSIENT, lccolsettransient, CFORTRANPNTR, LOGICAL ) ;
+FCALLSCFUN1(LOGICAL, lccolistransient, LCCOLISTRANSIENT, lccolistransient, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lccolsettransient, LCCOLSETTRANSIENT, lccolsettransient, CFORTRANPNTR, LOGICAL ) 
 
-FCALLSCFUN1(LOGICAL, lccolisdefault, LCCOLISDEFAULT, lccolisdefault, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lccolsetdefault, LCCOLSETDEFAULT, lccolsetdefault, CFORTRANPNTR, LOGICAL ) ;
+FCALLSCFUN1(LOGICAL, lccolisdefault, LCCOLISDEFAULT, lccolisdefault, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lccolsetdefault, LCCOLSETDEFAULT, lccolsetdefault, CFORTRANPNTR, LOGICAL ) 
 
-FCALLSCFUN2(INT, lccolsetflag, LCCOLSETFLAG, lccolsetflag, CFORTRANPNTR, INT ) ;
-FCALLSCFUN2(INT, lccoladdelement, LCCOLADDELEMENT, lccoladdelement, CFORTRANPNTR, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lccolremoveelementat, LCCOLREMOVEELEMENTAT, lccolremoveelementat, CFORTRANPNTR, INT ) ;
+FCALLSCFUN2(INT, lccolsetflag, LCCOLSETFLAG, lccolsetflag, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lccoladdelement, LCCOLADDELEMENT, lccoladdelement, CFORTRANPNTR, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lccolremoveelementat, LCCOLREMOVEELEMENTAT, lccolremoveelementat, CFORTRANPNTR, INT ) 
 
 
 }

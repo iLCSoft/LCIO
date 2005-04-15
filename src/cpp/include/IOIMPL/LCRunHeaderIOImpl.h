@@ -9,7 +9,7 @@
 // forward declarations of friend classes :
 namespace SIO {
   class SIOReader ;
-};
+}
 
 
 namespace IOIMPL {
@@ -26,7 +26,7 @@ namespace IOIMPL {
   
   }; // class
 
-}; // namespace
+} // namespace
 #endif /* ifndef IOIMPL_LCEVENTIOIMPL_H */
 
 

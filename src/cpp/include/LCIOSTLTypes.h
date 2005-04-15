@@ -16,6 +16,6 @@ typedef std::vector< std::string > StringVec ;
 typedef std::vector< float  > FloatVec ;
 typedef std::vector< int > IntVec ;
 
-};
+}
 
 #endif

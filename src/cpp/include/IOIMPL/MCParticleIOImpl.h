@@ -5,7 +5,7 @@
 
 namespace SIO{
  class SIOParticleHandler ;
-};
+}
 
 namespace IOIMPL {
 
@@ -19,6 +19,6 @@ class MCParticleIOImpl : public IMPL::MCParticleImpl{
   friend class SIO::SIOParticleHandler ;
 };
 
-}; // namespace
+} // namespace
 
 #endif // SIO_MCPARTICLEIOIMPL_H

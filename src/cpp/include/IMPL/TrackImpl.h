@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.11 2004-12-23 13:24:08 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.12 2005-04-15 08:37:38 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -197,5 +197,5 @@ namespace IMPL {
 
 
 
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_TRACKIMLP_H */

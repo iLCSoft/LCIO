@@ -5,7 +5,7 @@
 
 namespace SIO{
   class SIOLCGenericObjectHandler;
-};
+}
 
 
 namespace IOIMPL {
@@ -13,7 +13,7 @@ namespace IOIMPL {
 /** Adding stuff needed for io (friend declarations, etc.)
  * 
  * @author gaede
- * @version $Id: LCGenericObjectIOImpl.h,v 1.1 2004-08-16 09:42:07 gaede Exp $
+ * @version $Id: LCGenericObjectIOImpl.h,v 1.2 2005-04-15 08:37:40 gaede Exp $
  */
 
   class LCGenericObjectIOImpl  : public IMPL::LCGenericObjectImpl {
@@ -28,5 +28,5 @@ namespace IOIMPL {
 
 
   }; // class
-}; // namespace 
+} // namespace 
 #endif /* ifndef LCGENERICOBJECTIOIMPL_H */

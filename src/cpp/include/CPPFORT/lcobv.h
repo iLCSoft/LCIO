@@ -19,13 +19,13 @@ float lcobvgetweight( PTRTYPE vector, int index ) ;
 // now the fortran wrappers from cfortran.h
 extern "C"{
 FCALLSCFUN1(INT, lcobvgetlength, LCOBVGETLENGTH, lcobvgetlength, 
-            CFORTRANPNTR ) ;
+            CFORTRANPNTR ) 
 FCALLSCFUN2(CFORTRANPNTR, lcobvgetobject, LCOBVGETOBJECT, lcobvgetobject,
-            CFORTRANPNTR, INT ) ;
+            CFORTRANPNTR, INT ) 
 FCALLSCFUN2(INT, lcobvgetobjectid, LCOBVGETOBJECTID, lcobvgetobjectid,
-            CFORTRANPNTR, INT ) ;
+            CFORTRANPNTR, INT )
 FCALLSCFUN2(FLOAT, lcobvgetweight, LCOBVGETWEIGHT, lcobvgetweight,
-            CFORTRANPNTR, INT ) ;
+            CFORTRANPNTR, INT )
 
 }
    

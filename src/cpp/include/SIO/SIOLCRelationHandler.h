@@ -10,7 +10,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of CalorimeterHits.
    *
    * @author gaede
-   * @version $Id: SIOLCRelationHandler.h,v 1.1 2004-09-06 14:05:06 gaede Exp $
+   * @version $Id: SIOLCRelationHandler.h,v 1.2 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOLCRelationHandler : public SIOObjectHandler {
 	
@@ -27,6 +27,6 @@ namespace SIO {
 			       const EVENT::LCObject* obj) ;
 	
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef hep_lcio_event_SIOLCWGTRELATIONHANDLER_H */

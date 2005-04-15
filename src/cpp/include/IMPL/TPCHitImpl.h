@@ -87,5 +87,5 @@ protected:
   int* _rawArray ;
 
 }; // class
-}; // namespace IMPL
+} // namespace IMPL
 #endif /* ifndef IMPL_TPCHITIMPL_H */

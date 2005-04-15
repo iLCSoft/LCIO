@@ -51,45 +51,45 @@ int     lcrcpaddtrack( PTRTYPE rcp, PTRTYPE track) ;
 // now the fortran wrappers from cfortran.h
 extern "C"{
   
-FCALLSCFUN0(CFORTRANPNTR, lcrcpcreate, LCRCPCREATE, lcrcpcreate ) ;
-FCALLSCFUN1(INT, lcrcpdelete, LCRCPDELETE, lcrcpdelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcrcpcreate, LCRCPCREATE, lcrcpcreate ) 
+FCALLSCFUN1(INT, lcrcpdelete, LCRCPDELETE, lcrcpdelete, CFORTRANPNTR ) 
 
-FCALLSCFUN1(INT, lcrcpid, LCRCPID, lcrcpid, CFORTRANPNTR) ;
-FCALLSCFUN1(INT, lcrcpgettype, LCRCPGETTYPE, lcrcpgettype, CFORTRANPNTR) ;
-FCALLSCFUN1(LOGICAL, lcrcpiscompound, LCRCPISCOMPOUND, lcrcpiscompound, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcrcpgetmomentum, LCRCPGETMOMENTUM, lcrcpgetmomentum, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN1(FLOAT, lcrcpgetenergy, LCRCPGETENERGY, lcrcpgetenergy, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcrcpgetcovmatrix, LCRCPGETCOVMATRIX, lcrcpgetcovmatrix, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN1(FLOAT, lcrcpgetmass, LCRCPGETMASS, lcrcpgetmass, CFORTRANPNTR) ;
-FCALLSCFUN1(FLOAT, lcrcpgetcharge, LCRCPGETCHARGE, lcrcpgetcharge, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcrcpgetreferencepoint, LCRCPGETREFERENCEPOINT, lcrcpgetreferencepoint, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticleids, LCRCPGETPARTICLEIDS, lcrcpgetparticleids, CFORTRANPNTR) ;
-FCALLSCFUN1(FLOAT, lcrcpgetgoodnessofpid, LCRCPGETGOODNESSOFPID, lcrcpgetgoodnessofpid, CFORTRANPNTR) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticles,  LCRCPGETPARTICLES, lcrcpgetparticles, CFORTRANPNTR) ;
-// FCALLSCFUN3(INT, lcrcpgetparticleweights, LCRCPGETPARTICLEWEIGHTS, lcrcpgetparticleweights, CFORTRANPNTR, FLOATV, INTV) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrcpgetclusters, LCRCPGETCLUSTERS, lcrcpgetclusters, CFORTRANPNTR) ;
-// FCALLSCFUN3(INT, lcrcpgetclusterweights, LCRCPGETCLUSTERWEIGHTS, lcrcpgetclusterweights, CFORTRANPNTR, FLOATV, INTV) ;
-FCALLSCFUN1(CFORTRANPNTR, lcrcpgettracks, LCRCPGETTRACKS, lcrcpgettracks, CFORTRANPNTR) ;
-// FCALLSCFUN3(INT, lcrcpgettrackweights, LCRCPGETTRACKWEIGHTS, lcrcpgettrackweights, CFORTRANPNTR, FLOATV, INTV) ;
-// FCALLSCFUN1(CFORTRANPNTR, lcrcpgetmcparticles, LCRCPGETMCPARTICLES, lcrcpgetmcparticles, CFORTRANPNTR) ;
+FCALLSCFUN1(INT, lcrcpid, LCRCPID, lcrcpid, CFORTRANPNTR) 
+FCALLSCFUN1(INT, lcrcpgettype, LCRCPGETTYPE, lcrcpgettype, CFORTRANPNTR) 
+FCALLSCFUN1(LOGICAL, lcrcpiscompound, LCRCPISCOMPOUND, lcrcpiscompound, CFORTRANPNTR) 
+FCALLSCFUN2(INT, lcrcpgetmomentum, LCRCPGETMOMENTUM, lcrcpgetmomentum, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN1(FLOAT, lcrcpgetenergy, LCRCPGETENERGY, lcrcpgetenergy, CFORTRANPNTR) 
+FCALLSCFUN2(INT, lcrcpgetcovmatrix, LCRCPGETCOVMATRIX, lcrcpgetcovmatrix, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN1(FLOAT, lcrcpgetmass, LCRCPGETMASS, lcrcpgetmass, CFORTRANPNTR) 
+FCALLSCFUN1(FLOAT, lcrcpgetcharge, LCRCPGETCHARGE, lcrcpgetcharge, CFORTRANPNTR) 
+FCALLSCFUN2(INT, lcrcpgetreferencepoint, LCRCPGETREFERENCEPOINT, lcrcpgetreferencepoint, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticleids, LCRCPGETPARTICLEIDS, lcrcpgetparticleids, CFORTRANPNTR) 
+FCALLSCFUN1(FLOAT, lcrcpgetgoodnessofpid, LCRCPGETGOODNESSOFPID, lcrcpgetgoodnessofpid, CFORTRANPNTR) 
+FCALLSCFUN1(CFORTRANPNTR, lcrcpgetparticles,  LCRCPGETPARTICLES, lcrcpgetparticles, CFORTRANPNTR) 
+// FCALLSCFUN3(INT, lcrcpgetparticleweights, LCRCPGETPARTICLEWEIGHTS, lcrcpgetparticleweights, CFORTRANPNTR, FLOATV, INTV) 
+FCALLSCFUN1(CFORTRANPNTR, lcrcpgetclusters, LCRCPGETCLUSTERS, lcrcpgetclusters, CFORTRANPNTR) 
+// FCALLSCFUN3(INT, lcrcpgetclusterweights, LCRCPGETCLUSTERWEIGHTS, lcrcpgetclusterweights, CFORTRANPNTR, FLOATV, INTV) 
+FCALLSCFUN1(CFORTRANPNTR, lcrcpgettracks, LCRCPGETTRACKS, lcrcpgettracks, CFORTRANPNTR) 
+// FCALLSCFUN3(INT, lcrcpgettrackweights, LCRCPGETTRACKWEIGHTS, lcrcpgettrackweights, CFORTRANPNTR, FLOATV, INTV) 
+// FCALLSCFUN1(CFORTRANPNTR, lcrcpgetmcparticles, LCRCPGETMCPARTICLES, lcrcpgetmcparticles, CFORTRANPNTR) 
 // FCALLSCFUN3(INT, lcrcpgetmcparticleweights, LCRCPGETMCPARTICLEWEIGHTS, lcrcpgetmcparticleweights, 
-//             CFORTRANPNTR, FLOATV, INTV) ;
+//             CFORTRANPNTR, FLOATV, INTV) 
 
-FCALLSCFUN2(INT, lcrcpsettype, LCRCPSETTYPE, lcrcpsettype, CFORTRANPNTR, INT) ;
-// FCALLSCFUN2(INT, lcrcpsetcompound, LCRCPSETCOMPOUND, lcrcpsetcompound, CFORTRANPNTR, LOGICAL) ;
-FCALLSCFUN2(INT, lcrcpsetmomentum, LCRCPSETMOMENTUM, lcrcpsetmomentum, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcrcpsetenergy, LCRCPSETENERGY, lcrcpsetenergy, CFORTRANPNTR, FLOAT) ;
-FCALLSCFUN2(INT, lcrcpsetcovmatrix, LCRCPSETCOVMATRIX, lcrcpsetcovmatrix, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcrcpsetmass, LCRCPSETMASS, lcrcpsetmass, CFORTRANPNTR, FLOAT) ;
-FCALLSCFUN2(INT, lcrcpsetcharge, LCRCPSETCHARGE, lcrcpsetcharge, CFORTRANPNTR, FLOAT) ;
-FCALLSCFUN2(INT, lcrcpsetreferencepoint, LCRCPSETREFERENCEPOINT, lcrcpsetreferencepoint, CFORTRANPNTR, FLOATV) ;
-FCALLSCFUN2(INT, lcrcpaddparticleid, LCRCPADDPARTICLEID, lcrcpaddparticleid, CFORTRANPNTR, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcrcpsetgoodnessofpid, LCRCPSETGOODNESSOFPID, lcrcpsetgoodnessofpid, CFORTRANPNTR, FLOAT) ;
+FCALLSCFUN2(INT, lcrcpsettype, LCRCPSETTYPE, lcrcpsettype, CFORTRANPNTR, INT) 
+// FCALLSCFUN2(INT, lcrcpsetcompound, LCRCPSETCOMPOUND, lcrcpsetcompound, CFORTRANPNTR, LOGICAL) 
+FCALLSCFUN2(INT, lcrcpsetmomentum, LCRCPSETMOMENTUM, lcrcpsetmomentum, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN2(INT, lcrcpsetenergy, LCRCPSETENERGY, lcrcpsetenergy, CFORTRANPNTR, FLOAT) 
+FCALLSCFUN2(INT, lcrcpsetcovmatrix, LCRCPSETCOVMATRIX, lcrcpsetcovmatrix, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN2(INT, lcrcpsetmass, LCRCPSETMASS, lcrcpsetmass, CFORTRANPNTR, FLOAT) 
+FCALLSCFUN2(INT, lcrcpsetcharge, LCRCPSETCHARGE, lcrcpsetcharge, CFORTRANPNTR, FLOAT) 
+FCALLSCFUN2(INT, lcrcpsetreferencepoint, LCRCPSETREFERENCEPOINT, lcrcpsetreferencepoint, CFORTRANPNTR, FLOATV) 
+FCALLSCFUN2(INT, lcrcpaddparticleid, LCRCPADDPARTICLEID, lcrcpaddparticleid, CFORTRANPNTR, CFORTRANPNTR) 
+FCALLSCFUN2(INT, lcrcpsetgoodnessofpid, LCRCPSETGOODNESSOFPID, lcrcpsetgoodnessofpid, CFORTRANPNTR, FLOAT) 
 
-FCALLSCFUN2(INT, lcrcpaddparticle, LCRCPADDPARTICLE, lcrcpaddparticle, CFORTRANPNTR, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcrcpaddcluster, LCRCPADDCLUSTER, lcrcpaddcluster, CFORTRANPNTR, CFORTRANPNTR) ;
-FCALLSCFUN2(INT, lcrcpaddtrack, LCRCPADDTRACK, lcrcpaddtrack, CFORTRANPNTR, CFORTRANPNTR) ;
-// FCALLSCFUN3(INT, lcrcpaddmcparticle, LCRCPADDMCPARTICLE, lcrcpaddmcparticle, CFORTRANPNTR, CFORTRANPNTR, FLOAT) ;
+FCALLSCFUN2(INT, lcrcpaddparticle, LCRCPADDPARTICLE, lcrcpaddparticle, CFORTRANPNTR, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcrcpaddcluster, LCRCPADDCLUSTER, lcrcpaddcluster, CFORTRANPNTR, CFORTRANPNTR) 
+FCALLSCFUN2(INT, lcrcpaddtrack, LCRCPADDTRACK, lcrcpaddtrack, CFORTRANPNTR, CFORTRANPNTR) 
+// FCALLSCFUN3(INT, lcrcpaddmcparticle, LCRCPADDMCPARTICLE, lcrcpaddmcparticle, CFORTRANPNTR, CFORTRANPNTR, FLOAT) 
 
 }
   

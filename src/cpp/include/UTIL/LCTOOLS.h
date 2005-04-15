@@ -111,6 +111,6 @@ namespace UTIL{
 
   }; // class
 
-}; // namespace UTIL
+} // namespace UTIL
 
 #endif /* ifndef UTILL_LCTOOLS_H */

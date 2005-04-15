@@ -83,4 +83,4 @@ namespace IMPL{
     _rawHit = rawHit ;
   }
   
-}; // namespace IMPL
+} // namespace IMPL

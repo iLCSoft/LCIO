@@ -105,6 +105,6 @@ namespace SIO {
 
   }; // class
 
-}; // namespace.
+} // namespace.
 
 #endif /* ifndef SIO_SIOWRITER_H */

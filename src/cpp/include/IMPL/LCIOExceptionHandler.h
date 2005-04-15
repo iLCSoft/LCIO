@@ -20,6 +20,6 @@ namespace IMPL{
     static LCIOExceptionHandler* _me ;
 
   };
-}; // namespace
+} // namespace
 
 #endif

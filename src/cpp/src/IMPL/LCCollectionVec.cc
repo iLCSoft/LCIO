@@ -138,5 +138,5 @@ void LCCollectionVec::setFlag(int flag){
 
   }
 
-}; // namespace IMPL
+} // namespace IMPL
 

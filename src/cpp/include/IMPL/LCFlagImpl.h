@@ -47,5 +47,5 @@ public:
   virtual void unsetBit(int bit) ;
   
 }; // class
-}; // namespace EVENT
+} // namespace EVENT
 #endif /* ifndef EVENT_LCFLAGIMPL_H */

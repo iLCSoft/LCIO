@@ -249,4 +249,4 @@ namespace SIO {
       } // if( MCPARTICLE ) 
     } // loop over collections
   }
-}; // namespace
+} // namespace

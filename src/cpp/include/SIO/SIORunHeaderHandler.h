@@ -14,7 +14,7 @@ namespace SIO {
 /** Handler for LCRunHeader/LCRunHeaderImpl objects.
  * 
  * @author gaede
- * @version $Id: SIORunHeaderHandler.h,v 1.7 2004-08-20 16:45:25 gaede Exp $
+ * @version $Id: SIORunHeaderHandler.h,v 1.8 2005-04-15 08:37:43 gaede Exp $
  * fg 20030609 using data interface for writing
  */
   class SIORunHeaderHandler : public SIO_block{
@@ -45,6 +45,6 @@ namespace SIO {
     
   }; // class
   
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIORUNHEADERHANDLER_H */

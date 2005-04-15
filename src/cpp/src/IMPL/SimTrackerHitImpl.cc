@@ -54,4 +54,4 @@ namespace IMPL {
     _particle = particle; 
   }
 
-}; // namespace IMPL
+} // namespace IMPL

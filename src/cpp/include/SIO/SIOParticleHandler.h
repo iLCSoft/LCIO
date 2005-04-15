@@ -12,7 +12,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of MCParticles.
    *
    * @author gaede
-   * @version $Id: SIOParticleHandler.h,v 1.7 2004-08-20 16:45:24 gaede Exp $
+   * @version $Id: SIOParticleHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOParticleHandler : public SIOObjectHandler {
 
@@ -45,5 +45,5 @@ namespace SIO {
 
   }; // class
     
-}; //namespace
+} // namespace
 #endif /* ifndef SIO_SIOPARTICLEHANDLER_H */

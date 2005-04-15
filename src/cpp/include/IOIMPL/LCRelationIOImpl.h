@@ -5,7 +5,7 @@
 
 namespace SIO{
   class SIOLCRelationHandler;
-};
+}
 
 
 namespace IOIMPL {
@@ -13,7 +13,7 @@ namespace IOIMPL {
   /** Adding stuff needed for io (friend declarations, etc.)
    * 
    * @author gaede
-   * @version $Id: LCRelationIOImpl.h,v 1.3 2004-09-06 14:35:51 gaede Exp $
+   * @version $Id: LCRelationIOImpl.h,v 1.4 2005-04-15 08:37:40 gaede Exp $
    */
   
   class LCRelationIOImpl  : public IMPL::LCRelationImpl {
@@ -27,5 +27,5 @@ namespace IOIMPL {
     //    LCRelationIOImpl(const std::string& type) : IMPL::LCRelationImpl(type) { } 
 
   }; // class
-}; // namespace 
+} // namespace 
 #endif /* ifndef LCRELATIONIMPL_H */

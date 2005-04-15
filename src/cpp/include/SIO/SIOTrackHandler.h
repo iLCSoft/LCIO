@@ -10,7 +10,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of Tracks.
  *
  * @author gaede
- * @version $Id: SIOTrackHandler.h,v 1.3 2004-08-20 16:45:25 gaede Exp $
+ * @version $Id: SIOTrackHandler.h,v 1.4 2005-04-15 08:37:43 gaede Exp $
  */
 
   class SIOTrackHandler : public SIOObjectHandler {
@@ -28,6 +28,6 @@ namespace SIO {
 			       const EVENT::LCObject* obj) ;
 	
   }; // class
-}; // namespace
+} // namespace
 
 #endif /* ifndef SIO_SIOTRACKHANDLER_H */

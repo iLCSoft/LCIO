@@ -9,7 +9,7 @@ namespace SIO {
   class SIOEventHandler ;
   class SIOEventHeaderHandler ;
   class SIOReader ;
-};
+}
 
 
 namespace IOIMPL {
@@ -28,7 +28,7 @@ namespace IOIMPL {
   
   }; // class
 
-}; // namespace
+} // namespace
 #endif /* ifndef IOIMPL_LCEVENTIOIMPL_H */
 
 

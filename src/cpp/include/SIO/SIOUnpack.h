@@ -12,7 +12,7 @@ namespace SIO {
  *  read streams (event overlay).
  *
  * @author gaede
- * @version $Id: SIOUnpack.h,v 1.1 2004-12-23 13:24:09 gaede Exp $
+ * @version $Id: SIOUnpack.h,v 1.2 2005-04-15 08:37:43 gaede Exp $
  */
   class SIOUnpack{
     
@@ -33,5 +33,5 @@ namespace SIO {
     
   } ;
   
-}; // namespace 
+} // namespace 
 #endif // ifndef SIO_SIOUnpack_H

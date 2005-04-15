@@ -12,7 +12,7 @@ namespace SIO {
   /** Implementation of SIOObjectHandler to handle IO of LCGenericObjects.
    *
    * @author gaede
-   * @version $Id: SIOLCGenericObjectHandler.h,v 1.2 2004-08-20 16:45:24 gaede Exp $
+   * @version $Id: SIOLCGenericObjectHandler.h,v 1.3 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOLCGenericObjectHandler : public SIOObjectHandler {
 
@@ -41,5 +41,5 @@ namespace SIO {
 
   }; // class
     
-}; //namespace
+} // namespace
 #endif /* ifndef SIO_SIOLCGENERICOBJECTHANDLER_H */

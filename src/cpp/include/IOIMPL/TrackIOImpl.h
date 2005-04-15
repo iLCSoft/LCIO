@@ -6,7 +6,7 @@
 // forward declaration
 namespace SIO{ 
   class SIOTrackHandler ;
-};
+}
 
 namespace IOIMPL {
 
@@ -23,6 +23,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_TRACKIOIMPL_H */

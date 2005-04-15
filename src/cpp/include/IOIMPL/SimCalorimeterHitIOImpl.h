@@ -7,7 +7,7 @@ namespace SIO{
 
   class SIOSimCalHitHandler ;
 
-};
+}
 
 namespace IOIMPL {
 
@@ -24,6 +24,6 @@ namespace IOIMPL {
     
   }; // class
 
-} ; // namespace
+} // namespace
 
 #endif /* ifndef SIO_CALORIMETERIOHITIMPL_H */

@@ -191,5 +191,5 @@ std::string LCSIO::getValidSIOName(const std::string& aName ) {
 }
 
 
-}; // namespace 
+} // namespace 
  

@@ -270,4 +270,4 @@ namespace IMPL {
   void MCParticleImpl::setStopped(bool val)                     {   _simstatus[ BITStopped ]  = val;              }
 
 
-} ; /// namespace IMPl
+} /// namespace IMPl

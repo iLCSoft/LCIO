@@ -266,5 +266,5 @@ namespace UTIL{
    }
 
 
-}; // namespace UTIL
+} // namespace UTIL
 

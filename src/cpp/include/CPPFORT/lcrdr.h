@@ -23,16 +23,16 @@ PTRTYPE lcrdrreadevent(PTRTYPE reader, int runNumber, int evtNumber );
 
 extern "C"{
 
-FCALLSCFUN0(CFORTRANPNTR, lcrdrcreate, LCRDRCREATE, lcrdrcreate ) ;
-FCALLSCFUN1(INT, lcrdrdelete, LCRDRDELETE, lcrdrdelete, CFORTRANPNTR ) ;
+FCALLSCFUN0(CFORTRANPNTR, lcrdrcreate, LCRDRCREATE, lcrdrcreate ) 
+FCALLSCFUN1(INT, lcrdrdelete, LCRDRDELETE, lcrdrdelete, CFORTRANPNTR ) 
 
-FCALLSCFUN2(INT, lcrdropen, LCRDROPEN, lcrdropen,  CFORTRANPNTR, STRING ) ;
-FCALLSCFUN1(INT, lcrdrclose, LCRDRCLOSE, lcrdrclose, CFORTRANPNTR ) ;
-FCALLSCFUN2(INT, lcrdrreadstream, LCRDRREADSTREAM, lcrdrreadstream, CFORTRANPNTR, INT ) ;
+FCALLSCFUN2(INT, lcrdropen, LCRDROPEN, lcrdropen,  CFORTRANPNTR, STRING ) 
+FCALLSCFUN1(INT, lcrdrclose, LCRDRCLOSE, lcrdrclose, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcrdrreadstream, LCRDRREADSTREAM, lcrdrreadstream, CFORTRANPNTR, INT ) 
 
-FCALLSCFUN2(INT,lcrdrreadnextrunheader,LCRDRREADNEXTRUNHEADER,lcrdrreadnextrunheader,CFORTRANPNTR,INT) ;
-FCALLSCFUN2(INT,lcrdrreadnextevent,LCRDRREADNEXTEVENT,lcrdrreadnextevent,CFORTRANPNTR,INT) ;
-FCALLSCFUN3(INT,lcrdrreadevent,LCRDRREADEVENT,lcrdrreadevent,CFORTRANPNTR,INT,INT) ;
+FCALLSCFUN2(INT,lcrdrreadnextrunheader,LCRDRREADNEXTRUNHEADER,lcrdrreadnextrunheader,CFORTRANPNTR,INT) 
+FCALLSCFUN2(INT,lcrdrreadnextevent,LCRDRREADNEXTEVENT,lcrdrreadnextevent,CFORTRANPNTR,INT) 
+FCALLSCFUN3(INT,lcrdrreadevent,LCRDRREADEVENT,lcrdrreadevent,CFORTRANPNTR,INT,INT) 
 
 }
 

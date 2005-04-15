@@ -367,7 +367,7 @@ lStdHep::Event::Event() :
 lStdHep::Event::~Event()
 {
    cleanup();
-};
+}
 
 void lStdHep::Event::cleanup(void)
 {
@@ -479,7 +479,7 @@ long lStdHep::Event::read(lStdHep &ls)
       }
    }
    return(ls.getError());
-};
+}
 
 long lStdHep::Event::printHeader(FILE *fp)
 {

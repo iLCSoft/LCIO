@@ -341,5 +341,5 @@ namespace SIO {
 
   }
 
-}; // namespace
+} // namespace
 
