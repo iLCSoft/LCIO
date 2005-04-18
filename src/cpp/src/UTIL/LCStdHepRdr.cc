@@ -187,12 +187,12 @@ namespace UTIL{
 //
 			 d = dynamic_cast<MCParticleImpl*>
 				(mcVec->getElementAt(id));
-			 int np = d->getNumberOfParents();
+			 int np = d->getParents().size();
 			 bool gotit = false;
 			 for(int ip=0;ip < np;ip++)
 			 {
 			   p = dynamic_cast<MCParticleImpl*>
-				  (d->getParent(ip));
+				  (d->getParents()[ip]);
 			   if(p == mcp)gotit = true;
 			 }
 //
@@ -208,23 +208,23 @@ namespace UTIL{
 		 {
 		   d = dynamic_cast<MCParticleImpl*>
 		      (mcVec->getElementAt(fd));
-		   int np = d->getNumberOfParents();
+		   int np = d->getParents().size();
 		   bool gotit = false;
 		   for(int ip=0;ip < np;ip++)
 		   {
 			 p = dynamic_cast<MCParticleImpl*>
-				(d->getParent(ip));
+				(d->getParents()[ip]);
 			 if(p == mcp)gotit = true;
 		   }
 		   if(!gotit)d->addParent(mcp);
 		   d = dynamic_cast<MCParticleImpl*>
 		      (mcVec->getElementAt(ld));
-		   np = d->getNumberOfParents();
+		   np = d->getParents().size();
 		   gotit = false;
 		   for(int ip=0;ip < np;ip++)
 		   {
 			 p = dynamic_cast<MCParticleImpl*>
-				(d->getParent(ip));
+				(d->getParents()[ip]);
 			 if(p == mcp)gotit = true;
 		   }
 		   if(!gotit)d->addParent(mcp);
@@ -234,12 +234,12 @@ namespace UTIL{
 	   {
 		 d = dynamic_cast<MCParticleImpl*>
 		    (mcVec->getElementAt(fd));
-		 int np = d->getNumberOfParents();
+		 int np = d->getParents().size();
 		 bool gotit = false;
 		 for(int ip=0;ip < np;ip++)
 		 {
 		   p = dynamic_cast<MCParticleImpl*>
-		      (d->getParent(ip));
+		      (d->getParents()[ip]);
 		   if(p == mcp)gotit = true;
 		 }
 		 if(!gotit)d->addParent(mcp);
@@ -248,12 +248,12 @@ namespace UTIL{
 	   {
 		 d = dynamic_cast<MCParticleImpl*>
 		    (mcVec->getElementAt(ld));
-		 int np = d->getNumberOfParents();
+		 int np = d->getParents().size();
 		 bool gotit = false;
 		 for(int ip=0;ip < np;ip++)
 		 {
 		   p = dynamic_cast<MCParticleImpl*>
-		      (d->getParent(ip));
+		      (d->getParents()[ip]);
 		   if(p == mcp)gotit = true;
 		 }
 		 if(!gotit)d->addParent(mcp);
