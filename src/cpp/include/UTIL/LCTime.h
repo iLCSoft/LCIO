@@ -14,7 +14,7 @@ namespace UTIL {
    *  1.1.1970 00:00:00 UTC respectively.
    * 
    * @author gaede 
-   * @version $Id: LCTime.h,v 1.3 2005-04-15 08:37:45 gaede Exp $
+   * @version $Id: LCTime.h,v 1.4 2005-04-22 15:39:01 gaede Exp $
    */
   class LCTime {
 
@@ -23,11 +23,11 @@ namespace UTIL {
      */
     struct CalendarTime{
       short year  ;
-      unsigned char  month ;
-      unsigned char  day   ;
-      unsigned char  hour ;
-      unsigned char  min ;
-      unsigned char  sec ;
+      short  month ;
+      short  day   ;
+      short  hour ;
+      short  min ;
+      short  sec ;
       int ns ;
     } ;
 
@@ -108,12 +108,18 @@ namespace UTIL {
 
     virtual ~LCTime() { /*no_op*/; } 
     
+
+    /** Tests the LCTime class with nDates random dates 
+     *  Returns true if successful - throws Exception in case of error.
+     */
+    static bool test( int nDates ) ;
+    
   protected: 
     
     EVENT::long64 _t ;  // time stamp in ns
     CalendarTime  _d ;  // calendar date and time
-
-
+    
+    
     // internal helper methods
     void convertToCalTime() ;
 

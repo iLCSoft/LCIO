@@ -71,6 +71,15 @@ namespace UTIL{
     _d.sec = s  ;
     _d.ns = 0 ; 
     
+    // do some sanity checks on date:
+    if(  year  < YEAR0               || 
+	 month < 0     || month > 12 ||
+	 day   < 0     || day   > daysInMonth( month , year ) ){
+
+      throw Exception( "LCTime::LCTime() invalid date:"+ getDateString() ) ;
+    } 
+
+
     convertFromCalTime() ;
   }
   
@@ -109,16 +118,36 @@ namespace UTIL{
 
     int daysLeft ;
 
-    while( (daysLeft = nDays - daysInYear( _d.year ) )  > 0 ){
+    while( (daysLeft = nDays - daysInYear( _d.year ) )  >= 0 ){
       nDays = daysLeft ;
       _d.year ++ ;
     }
-    while( (daysLeft = nDays - daysInMonth( _d.month ,  _d.year ) ) > 0 ){
+    
+//     std::cout << " ---- daysLeft : " << daysLeft << "  year: " <<   _d.year << std::endl ;
+    
+    while( (daysLeft = nDays - daysInMonth( _d.month ,  _d.year ) ) >= 0 ){
       nDays = daysLeft ;
       _d.month ++ ;
     }
     
+//     std::cout << " ---- daysLeft : " << daysLeft << "  month: " <<   _d.month << std::endl ;
+    
     _d.day +=  nDays ;
+    
+//     std::cout << " ---- daysLeft : " <<  _d.day << std::endl ;
+    
+
+//     if( _d.day > daysInMonth( _d.month ,  _d.year ) ) { // happens on first day of a month
+//       if( _d.month == 12 ) {
+// 	_d.year += 1 ;
+// 	_d.month = 1 ;
+//       } else {
+// 	_d.month += 1 ; 
+//       }
+//       _d.day = 1 ;
+//     }
+
+
 
     s = s % SPD ; // the seconds of the current day
 
@@ -140,6 +169,7 @@ namespace UTIL{
       convertToCalTime() ;
     }
     
+
     // add up all days that have passed
     unsigned nDays = 0 ; 
     
@@ -207,6 +237,102 @@ namespace UTIL{
 	<< std::setw(9) << (int) _d.ns  ;  
     
     return out.str() ;
+  }
+
+
+  bool LCTime::test( int nDates ) {
+    
+    std::cout << "LCTime::test: test LCTime with " << nDates << " random dates " << std::endl ;
+
+    LCTime lcTime ;
+
+    for(int i=0; i<nDates;i++){
+
+      CalendarTime date ;
+      date.year  = int( YEAR0  +  75  * ( 1.*std::rand()/RAND_MAX )  ) ;
+      date.month = int( 1     +  12  * ( 1.*std::rand()/RAND_MAX )  ) ;
+
+      date.day   = int( 1  +  lcTime.daysInMonth( date.month, date.year) * ( 1.*std::rand()/RAND_MAX )  ) ;
+      date.hour  = int( 0  +  24 * ( 1.*std::rand()/RAND_MAX )  ) ;
+      date.min   = int( 0  +  60 * ( 1.*std::rand()/RAND_MAX )  ) ;
+      date.sec   = int( 0  +  60 * ( 1.*std::rand()/RAND_MAX )  ) ;
+      date.ns    =int(  0   ) ;
+
+
+
+      LCTime testTime0( (int) date.year, (int) date.month, (int) date.day, 
+			(int) date.hour, (int) date.min, (int) date.sec ) ;
+
+      LCTime testTime1( testTime0.timeStamp() ) ;
+
+
+//       if( date.day == lcTime.daysInMonth( date.month, date.year) ) {
+// 	std::cout << " last day in month : " << testTime0.getDateString() << std::endl ;
+//       }
+
+//       std::cout << " random date: " 
+// 		<< setfill ('0') 
+// 		<< std::setw(2) << (int) date.day 
+// 		<< std::setw(1) << "." 
+// 		<< std::setw(2) << (int) date.month 
+// 		<< std::setw(1) << "." 
+// 		<< std::setw(4) << date.year
+// 		<< std::setw(1) << "  " 
+// 		<< std::setw(2) << (int) date.hour 
+// 		<< std::setw(1) << ":"   
+// 		<< std::setw(2) << (int) date.min 
+// 		<< std::setw(1) << ":"   
+// 		<< std::setw(2) << (int) date.sec 
+// 		<< std::setw(1) << "."   
+// 		<< std::setw(9) << (int) date.ns  
+// 		<< std::endl ;
+ 
+//       std::cout << " time0 : " << testTime0.getDateString() << std::endl ;
+//       std::cout << " time1 : " << testTime1.getDateString() << std::endl ;
+//       std::cout << "--------------------------------------------------------" << std::endl ;
+
+
+      if( testTime0.getDateString() !=  testTime1.getDateString() ){
+	
+	std::cout <<  " Erorr: incompatible date strings found: " << std::endl ;
+	
+	std::cout << " time0 : " << testTime0.getDateString() << std::endl ;
+	std::cout << " time1 : " << testTime1.getDateString() << std::endl ;
+	
+      }
+      if( date.year  !=  testTime0.year()  ||  
+	  date.month !=  testTime0.month() || 
+	  date.day   !=  testTime0.day()   ||    
+	  date.hour  !=  testTime0.hour()  ||   
+	  date.min   !=  testTime0.min()   ||    
+	  date.sec   !=  testTime0.sec()   ||    
+	  date.ns    !=  testTime0.ns () ) {
+
+	std::cout <<  " Erorr: wrong date in LCTime: " << std::endl ;
+	std::cout << " random date: " 
+		  << setfill ('0') 
+		  << std::setw(2) << (int) date.day 
+		  << std::setw(1) << "." 
+		  << std::setw(2) << (int) date.month 
+		  << std::setw(1) << "." 
+		  << std::setw(4) << date.year
+		  << std::setw(1) << "  " 
+		  << std::setw(2) << (int) date.hour 
+		  << std::setw(1) << ":"   
+		  << std::setw(2) << (int) date.min 
+		  << std::setw(1) << ":"   
+		  << std::setw(2) << (int) date.sec 
+		  << std::setw(1) << "."   
+		  << std::setw(9) << (int) date.ns  
+		  << std::endl ;
+
+	std::cout << " time0 :      " << testTime0.getDateString() << std::endl ;
+	
+      }
+
+    }
+
+    return true ;
   }
 
 }
