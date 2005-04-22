@@ -2,6 +2,21 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+   - added macro to lcio.h for handling of uncaught exceptions if not Reader/Writer is used:
+     #define HANDLE_LCIO_EXCEPTIONS 
+
+   - added MACRO LCIO_PATCHVERSION_GE(  MAJV , MINV , PLEV) to check for patch level releases
+ 
+ - bug fixes and minor changes
+   - C++ version :
+    * fixed bug in LCTime ( first day of month ) and added LCTime::test(int nDates)
+    * added -pedantic to GNUmakefile and removed additional ';'s at end of namespaces and macros
+    * corrected documentation for SimCalorimeterHitImpl::addMCParticleContribution
+    * bug fix in UTIL::LCFourVector - c'tors take _const_ OBJECTTYPE* pointers now
+    * SIOReader::readStream : changed order of updateEvent/RunHeader() and processEvent/RunHeader() 
+    * removed deprecated function calls in LCStdHepRdr
+    * fixed a memory leak in lStdHep.cc
+
 ======================
   v01-04
 =======================
