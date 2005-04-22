@@ -542,11 +542,12 @@ namespace SIO {
 	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
 	while( iter != _runListeners.end() ){
 
+	  (*_runP)->setReadOnly( false ) ;
+	  (*iter)->modifyRunHeader( *_runP ) ;
+
 	  (*_runP)->setReadOnly( true ) ;
 	  (*iter)->processRunHeader( *_runP ) ;
 	  
-	  (*_runP)->setReadOnly( false ) ;
-	  (*iter)->modifyRunHeader( *_runP ) ;
 	  iter++ ;
 	}
       }
@@ -562,11 +563,14 @@ namespace SIO {
 // 	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
 	  postProcessEvent() ;
 
+	  // fg20050422 changed order of update and process (needed for 
+	  // marlin::LCIOOutputprocessor to drop collections )
+	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->modifyEvent( *_evtP ) ;
+
 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
 	  (*iter)->processEvent( *_evtP ) ;
 	  
-	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	  (*iter)->modifyEvent( *_evtP ) ;
 	  iter++ ;
 	  
 	}
