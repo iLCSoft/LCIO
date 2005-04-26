@@ -17,6 +17,7 @@
 #include "IMPL/TPCHitImpl.h"
 #include "IMPL/TPCRawDataImpl.h"
 #include "IMPL/TPCCorrectedDataImpl.h"
+#include "IMPL/TPCPulseImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
@@ -375,7 +376,7 @@ int main(int argc, char** argv ){
 	}
 	evt->addCollection( tpcRawVec , "TPCRawDataExample" ) ;
 
-	//------
+	//------ corrected data
 
 	LCCollectionVec* tpcCorrectedVec = new LCCollectionVec( LCIO::TPCCORRECTEDDATA )  ;
 	
@@ -394,6 +395,35 @@ int main(int argc, char** argv ){
 	  tpcCorrectedVec->addElement( tpcCorrected ) ;
 	}
 	evt->addCollection( tpcCorrectedVec , "TPCCorrectedDataExample" ) ;
+	
+	// ------ pulses
+
+	LCCollectionVec* tpcPulseVec = new LCCollectionVec( LCIO::TPCPULSE )  ;
+	
+	for(int j=0;j<NHITS;j++){
+
+	  TPCPulseImpl* tpcPulse = new TPCPulseImpl ;
+	  
+	  tpcPulse->setChannelID( j ) ;
+	  tpcPulse->setTime( 3.1415 + 0.1 * j  ) ;
+	  tpcPulse->setCharge( 3.1415 - 0.1 * j  ) ;
+
+
+	  if( j % 2 ) {
+	    tpcPulse->setQualityBit( TPCPulse::GOOD ) ;
+	  } else {
+
+	    tpcPulse->setQualityBit( TPCPulse::BAD ) ;
+	    
+	    TPCCorrectedData* corr = 
+	      dynamic_cast<TPCCorrectedData*> ( tpcCorrectedVec->getElementAt(j) ) ; 
+	    tpcPulse->setTPCCorrectedData( corr ) ;
+	  }
+
+	  tpcPulseVec->addElement( tpcPulse ) ;
+	}
+	evt->addCollection( tpcPulseVec , "TPCPulseExample" ) ;
+
 	//-----------------------------------------------------
 #endif // WRITE_TPCRAWDATA
 

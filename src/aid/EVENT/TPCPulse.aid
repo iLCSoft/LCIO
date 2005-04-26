@@ -6,7 +6,7 @@ package hep.lcio.event ;
  *  @see TPCCorrectedData
  * 
  * @author gaede
- * @version $Id: TPCPulse.aid,v 1.1 2005-04-26 08:14:28 gaede Exp $
+ * @version $Id: TPCPulse.aid,v 1.2 2005-04-26 09:47:25 gaede Exp $
  */
 
 public interface TPCPulse extends LCObject {
@@ -61,7 +61,7 @@ public interface TPCPulse extends LCObject {
 
     /** The quality bit flag of the pulse - use the defined constants for referring to the bits.
      */
-    public float getQuality() const ;	
+    public int getQuality() const ;	
     
     /** Optionally the TPCCorrectedData that has been uesed to create the pulse
      *  can be stored with the pulse - NULL if none. Check the quality bits for reason

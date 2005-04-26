@@ -18,7 +18,7 @@
 #include "SIO/SIOTPCHitHandler.h" 
 #include "SIO/SIOTPCRawDataHandler.h" 
 #include "SIO/SIOTPCCorrectedDataHandler.h" 
-// #include "SIO/SIOTPCPulseHandler.h" 
+#include "SIO/SIOTPCPulseHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -41,7 +41,7 @@ namespace SIO {
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
     _map[ LCIO::TPCRAWDATA ] = new SIOTPCRawDataHandler ;
     _map[ LCIO::TPCCORRECTEDDATA ] = new SIOTPCCorrectedDataHandler ;
-//     _map[ LCIO::TPCPULSE ] = new SIOTPCPulseHandler ;
+    _map[ LCIO::TPCPULSE ] = new SIOTPCPulseHandler ;
     _map[ LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;

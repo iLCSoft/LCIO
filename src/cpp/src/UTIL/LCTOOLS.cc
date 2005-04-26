@@ -688,8 +688,56 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
 
   }
 
+  void LCTOOLS::printTPCPulse(const EVENT::LCCollection* col ) {
 
-  void LCTOOLS::printTPCPulse(const EVENT::LCCollection* col ) {}
+    if( col->getTypeName() != LCIO::TPCPULSE ){
+
+      cout << " collection not of type " << LCIO::TPCPULSE << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TPCPULSE << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    printParameters( col->getParameters() ) ;
+
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " [   id   ] |  cha.id  |  time | charge| quality  | corr.Data  "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      TPCPulse* hit = 
+	dynamic_cast<TPCPulse*>( col->getElementAt( i ) ) ;
+      
+      printf(" [%8.8x] | %8.8x | %5.3f | %5.3f | %8.8x | " 
+	     , hit->id() 
+	     , hit->getChannelID()                 
+	     , hit->getTime()  
+	     , hit->getCharge()  
+	     , hit->getQuality()  
+	     ) ;
+      TPCCorrectedData* corr =  hit->getTPCCorrectedData() ;
+//       if( corr != 0 )
+// 	std::cout << corr->id() 
+
+      printf("[%8.8x] ",   ( corr != 0 ? corr->id() : 0 ) ) ;
+
+      cout << endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+    
+  }
   
   void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {
     
