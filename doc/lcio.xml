@@ -680,7 +680,46 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-
+      <block name="TPCPulse" major="1" minor="4">
+         <data type="int" name="flags">Bits 0-15 user/detector specific</data>
+	<!-- start of named parameters -->
+        <if condition="1000*major+minor&gt;1001">
+          <data type="int" name="nIntParameters">number of named integer parameter entries</data>
+          <repeat count="nIntParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="int" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nFloatParameters">number of named float parameter entries</data>
+          <repeat count="nFloatParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="float" name="value"></data>
+             </repeat>
+          </repeat>
+          <data type="int" name="nStringParameters">number of named string parameter entries</data>
+          <repeat count="nStringParameters">
+             <data type="string" name="key">key (name) of parameter</data>
+             <data type="int" name="nVals">number of values for this parameter</data>
+             <repeat count="nVals">
+	       <data type="string" name="value"></data>
+             </repeat>
+          </repeat>
+        </if>
+	<!-- end of named parameters -->
+         <data type="int" name="n"></data>
+         <repeat count="n">
+            <data type="int" name="channelID">channel Id</data>
+            <data type="float" name="time">time of pulse</data>
+            <data type="float" name="charge">charge</data>
+            <data type="int" name="quality">quality flag word</data>
+ 	    <data type="pntr" name="tpcCorrectedData">the spectrum used to create the pulse</data>
+            <data type="ptag" name="this"></data>
+         </repeat>
+      </block>
     <block name="Track" major="1" minor="4">
       <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
 	<!-- start of named parameters -->
