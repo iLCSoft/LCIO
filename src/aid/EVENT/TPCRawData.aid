@@ -1,0 +1,29 @@
+package hep.lcio.event ;
+
+/** TPCRawData is used to store the FADC spectrum as it comes out of the
+ *  DAQ. This is the lowest level of the reconstruction hierarchy.
+ *  It superseeds the old TPCHit.
+ *  @see TPCCorrectedData
+ *  @see TPCPulse
+ * 
+ * @author gaede
+ * @version $Id: TPCRawData.aid,v 1.1 2005-04-26 08:14:28 gaede Exp $
+ */
+
+public interface TPCRawData extends LCObject {
+    
+    /** Returns the detector specific channel id.
+     */
+    public int getChannelID() const ;
+    
+    /** Returns the t0 of the spectrum.
+     */
+    public int getTime0() const ;	
+    
+    /** The actual FADC spectrum.
+     */
+    public const ShortVec& getCharge() const ;
+    
+}
+
+

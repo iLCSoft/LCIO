@@ -1,0 +1,73 @@
+package hep.lcio.event ;
+
+/** TPCPulse is used to store properties of reconstructed pulses. 
+ *  It superseeds the old TPCHit.
+ *  @see TPCRawData
+ *  @see TPCCorrectedData
+ * 
+ * @author gaede
+ * @version $Id: TPCPulse.aid,v 1.1 2005-04-26 08:14:28 gaede Exp $
+ */
+
+public interface TPCPulse extends LCObject {
+    
+    /** The detector specific channel id.
+     */
+    public int getChannelID() const ;
+    
+    /** The time of the pulse.
+     */
+    public float getTime() const ;	
+
+    /** The integrated charge of the pulse // FIXME: unit ?.
+     */
+    public float getCharge() const ;	
+    
+ @ifdef cpp
+ @cpp{
+   public:
+     /* Pulse quality is good */
+     static const int GOOD        =  0 ; 
+     /* Pulse quality is bad - reason unspecified */
+     static const int BAD         =  1 ; 
+     /* Overflow or Underflow in at least one FADC time bin*/
+     static const int UNDEROROVERFLOW    =  2 ; 
+     /* Anomalous pulse shape */
+     static const int BADSHAPE    =  3 ; 
+     /* Double pulse candidate */
+     static const int DOUBLEPULSE =  4 ; 
+     /* Part of split double pulse */
+     static const int SPLITPULSE  =  5 ; 
+     /* Storage of spectrum forced */
+     static const int FORCED      =  6 ; 
+
+ }
+ @else
+     /* Pulse quality is good */
+     public static const int GOOD        =  0 ; 
+     /* Pulse quality is bad - reason unspecified */
+     public static const int BAD         =  1 ; 
+     /* Overflow or Underflow in at least one FADC time bin*/
+     public static const int UNDEROROVERFLOW    =  2 ; 
+     /* Anomalous pulse shape */
+     public static const int BADSHAPE    =  3 ; 
+     /* Double pulse candidate */
+     public static const int DOUBLEPULSE =  4 ; 
+     /* Part of split double pulse */
+     public static const int SPLITPULSE  =  5 ; 
+     /* Storage of spectrum forced */
+     public static const int FORCED      =  6 ; 
+ @endif
+
+    /** The quality bit flag of the pulse - use the defined constants for referring to the bits.
+     */
+    public float getQuality() const ;	
+    
+    /** Optionally the TPCCorrectedData that has been uesed to create the pulse
+     *  can be stored with the pulse - NULL if none. Check the quality bits for reason
+     *  why the spectrum has been stored for the pulse.
+     */
+    public TPCCorrectedData* getTPCCorrectedData() const ;	
+}
+
+

@@ -1,0 +1,28 @@
+package hep.lcio.event ;
+
+/** TPCCorrectedData contains the spectrum with calibration and pedestal
+ *  substraction applied. It superseeds the old TPCHit.
+ *  @see TPCRawData
+ *  @see TPCPulse
+ * 
+ * @author gaede
+ * @version $Id: TPCCorrectedData.aid,v 1.1 2005-04-26 08:14:28 gaede Exp $
+ */
+
+public interface TPCCorrectedData extends LCObject {
+    
+    /** Returns the detector specific channel id.
+     */
+    public int getChannelID() const ;
+    
+    /** Returns the t0 of the spectrum.
+     */
+    public float getTime0() const ;	
+    
+    /** The corrected (calibrated) FADC spectrum 
+     */
+    public const FloatVec& getCharge() const ;
+    
+}
+
+
