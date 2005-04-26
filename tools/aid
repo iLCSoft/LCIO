@@ -1,3 +1,0 @@
-#!/bin/sh
-
-java $AID_FLAGS -classpath $AIDA/tools:$AIDA/tools/freehep-base.jar:$AIDA/tools/freehep-aid.jar:$AIDA/tools/bcel.jar org.freehep.aid.Aid $*
