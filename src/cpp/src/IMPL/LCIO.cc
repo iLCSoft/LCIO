@@ -13,6 +13,9 @@ const char* LCIO::RAWCALORIMETERHIT = "RawCalorimeterHit" ;
 const char* LCIO::CALORIMETERHIT = "CalorimeterHit" ;
 const char* LCIO::SIMTRACKERHIT = "SimTrackerHit" ;
 const char* LCIO::TPCHIT = "TPCHit" ;
+const char* LCIO::TPCRAWDATA = "TPCRawData" ;
+const char* LCIO::TPCCORRECTEDDATA = "TPCCorrectedData" ;
+const char* LCIO::TPCPULSE = "TPCPulse" ;
 const char* LCIO::TRACKERHIT = "TrackerHit" ;
 const char* LCIO::LCSTRVEC = "LCStrVec" ;
 const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
@@ -22,5 +25,5 @@ const char* LCIO::CLUSTER = "Cluster" ;
 const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ; 
 const char* LCIO::LCRELATION = "LCRelation" ; 
 const char* LCIO::LCGENERICOBJECT = "LCGenericObject" ; 
-
+const char* LCIO::VTXRAWHIT = "VTXRawHit"; 
 }

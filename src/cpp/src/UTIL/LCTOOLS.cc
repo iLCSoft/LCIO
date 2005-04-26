@@ -6,6 +6,9 @@
 #include "EVENT/RawCalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/TPCHit.h"
+#include "EVENT/TPCRawData.h"
+#include "EVENT/TPCCorrectedData.h"
+#include "EVENT/TPCPulse.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "EVENT/LCFloatVec.h"
@@ -148,12 +151,23 @@ namespace UTIL {
 	printLCGenericObjects( col ) ;
 
       }
-      // relations in ordinary LCCollections
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCRELATION ){
 	  
 	printRelation( col ) ;
-
       }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCRAWDATA ){
+	  
+	printTPCRawData( col ) ;
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCCORRECTEDDATA ){
+	  
+	printTPCCorrectedData( col ) ;
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCPULSE ){
+	  
+	printTPCPulse( col ) ;
+      }
+
 
 
     }
@@ -573,6 +587,109 @@ namespace UTIL {
 	 << endl ;
     
   }
+  
+void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
+
+    if( col->getTypeName() != LCIO::TPCRAWDATA ){
+
+      cout << " collection not of type " << LCIO::TPCRAWDATA << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TPCRAWDATA << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    printParameters( col->getParameters() ) ;
+
+//     LCFlagImpl flag( col->getFlag() ) ;
+//     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+    
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " [   id   ] |  cha.id  |    time    | chargeADC "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      TPCRawData* hit = 
+	dynamic_cast<TPCRawData*>( col->getElementAt( i ) ) ;
+      
+      printf(" [%8.8x] | %8.8x | %10d | " 
+	     , hit->id() 
+	     , hit->getChannelID()                 
+	     , hit->getTime0()  
+	     ) ;
+      const ShortVec& charge = hit->getCharge() ;
+      for( unsigned j=0 ; j < charge.size() ; j++ ) {
+	cout << charge[j] << "," ;
+      }
+      cout << endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+    
+  }
+
+  void LCTOOLS::printTPCCorrectedData(const EVENT::LCCollection* col ) {
+
+    if( col->getTypeName() != LCIO::TPCCORRECTEDDATA ){
+
+      cout << " collection not of type " << LCIO::TPCCORRECTEDDATA << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::TPCCORRECTEDDATA << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    printParameters( col->getParameters() ) ;
+
+//     LCFlagImpl flag( col->getFlag() ) ;
+//     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+    
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " [   id   ] |  cha.id  |    time    | chargeADC "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      TPCCorrectedData* hit = 
+	dynamic_cast<TPCCorrectedData*>( col->getElementAt( i ) ) ;
+      
+      printf(" [%8.8x] | %8.8x | %10d | " 
+	     , hit->id() 
+	     , hit->getChannelID()                 
+	     , hit->getTime0()  
+	     ) ;
+      const FloatVec& charge = hit->getCharge() ;
+      for( unsigned j=0 ; j < charge.size() ; j++ ) {
+	cout << charge[j] << "," ;
+      }
+      cout << endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+
+  }
+
+
+  void LCTOOLS::printTPCPulse(const EVENT::LCCollection* col ) {}
   
   void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {
     

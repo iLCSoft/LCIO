@@ -6,7 +6,7 @@ package hep.lcio.event ;
  *  @see TPCPulse
  * 
  * @author gaede
- * @version $Id: TPCCorrectedData.aid,v 1.1 2005-04-26 08:14:28 gaede Exp $
+ * @version $Id: TPCCorrectedData.aid,v 1.2 2005-04-26 08:39:05 gaede Exp $
  */
 
 public interface TPCCorrectedData extends LCObject {
@@ -17,7 +17,7 @@ public interface TPCCorrectedData extends LCObject {
     
     /** Returns the t0 of the spectrum.
      */
-    public float getTime0() const ;	
+    public int getTime0() const ;	
     
     /** The corrected (calibrated) FADC spectrum 
      */

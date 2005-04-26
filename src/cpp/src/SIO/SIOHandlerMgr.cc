@@ -15,6 +15,10 @@
 #include "SIO/SIOReconstructedParticleHandler.h" 
 #include "SIO/SIOLCRelationHandler.h" 
 #include "SIO/SIOLCGenericObjectHandler.h" 
+#include "SIO/SIOTPCHitHandler.h" 
+#include "SIO/SIOTPCRawDataHandler.h" 
+#include "SIO/SIOTPCCorrectedDataHandler.h" 
+// #include "SIO/SIOTPCPulseHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -35,6 +39,9 @@ namespace SIO {
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
+    _map[ LCIO::TPCRAWDATA ] = new SIOTPCRawDataHandler ;
+    _map[ LCIO::TPCCORRECTEDDATA ] = new SIOTPCCorrectedDataHandler ;
+//     _map[ LCIO::TPCPULSE ] = new SIOTPCPulseHandler ;
     _map[ LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;

@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.43 2005-04-22 15:42:51 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.44 2005-04-26 08:39:05 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -89,6 +89,10 @@ public interface LCIO{
     static const char* CALORIMETERHIT ;
     static const char* SIMTRACKERHIT ; 
     static const char* TPCHIT ; 
+    static const char* TPCRAWDATA ; 
+    static const char* TPCCORRECTEDDATA ; 
+    static const char* TPCPULSE ; 
+    static const char* TPRAWDATA ; 
     static const char* TRACKERHIT ; 
     static const char* LCSTRVEC ;
     static const char* LCFLOATVEC ; 
@@ -98,6 +102,7 @@ public interface LCIO{
     static const char* RECONSTRUCTEDPARTICLE ; 
     static const char* LCRELATION ; 
     static const char* LCGENERICOBJECT ; 
+    static const char* VTXRAWHIT ; 
 }
 @else
     // current version number of lcio
@@ -158,6 +163,9 @@ public interface LCIO{
   public static const String CALORIMETERHIT = "CalorimeterHit" ;
   public static const String SIMTRACKERHIT = "SimTrackerHit" ;
   public static const String TPCHIT = "TPCHit" ;
+  public static const String TPCRAWDATA = "TPCRawData" ;
+  public static const String TPCCORRECTEDDATA = "TPCCorrectedData" ;
+  public static const String TPCPULSE = "TPCPulse" ;
   public static const String TRACKERHIT = "TrackerHit" ;
   public static const String LCSTRVEC = "LCStrVec" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
@@ -167,6 +175,7 @@ public interface LCIO{
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
   public static const String LCRELATION = "LCRelation" ; 
   public static const String LCGENERICOBJECT = "LCGenericObject"; 
+  public static const String VTXRAWHIT = "VTXRawHit"; 
 @endif
 }
 

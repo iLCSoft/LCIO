@@ -14,7 +14,9 @@ namespace EVENT
 {
 typedef std::vector< std::string > StringVec ;
 typedef std::vector< float  > FloatVec ;
+typedef std::vector< float  > DoubleVec ;
 typedef std::vector< int > IntVec ;
+typedef std::vector< short > ShortVec ;
 
 }
 

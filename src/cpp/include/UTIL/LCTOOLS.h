@@ -48,6 +48,18 @@ namespace UTIL{
      */
     static void printTPCHits(const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of all TPCRawData objects in the collection.
+     */
+    static void printTPCRawData(const EVENT::LCCollection* col ) ;
+
+    /** Complete printout of all TPCCorrectedData objects in the collection.
+     */
+    static void printTPCCorrectedData(const EVENT::LCCollection* col ) ;
+
+    /** Complete printout of all TPCPulse objects in the collection.
+     */
+    static void printTPCPulse(const EVENT::LCCollection* col ) ;
+
     /** Complete printout of all TrackerHits in the collection.
      */
     static void printTrackerHits(const EVENT::LCCollection* col ) ;

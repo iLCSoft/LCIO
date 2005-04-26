@@ -13,7 +13,11 @@
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
+
 #include "IMPL/TPCHitImpl.h"
+#include "IMPL/TPCRawDataImpl.h"
+#include "IMPL/TPCCorrectedDataImpl.h"
+
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
 
@@ -340,6 +344,59 @@ int main(int argc, char** argv ){
  	}
  	evt->addCollection( mcSubVec , "FinalMCParticles" ) ;
  	//-----------------------------------------------------
+
+
+#define WRITE_TPCRAWDATA 1
+#ifdef WRITE_TPCRAWDATA
+	//--- write some new TPC raw data collections to the file 
+	LCCollectionVec* tpcRawVec = new LCCollectionVec( LCIO::TPCRAWDATA )  ;
+	
+	for(int j=0;j<NHITS;j++){
+
+	  TPCRawDataImpl* tpcRaw = new TPCRawDataImpl ;
+	  
+	  tpcRaw->setChannelID( j ) ;
+	  tpcRaw->setTime0( -j  ) ;
+	  
+	  if( j % 2 ) { // test two ways of setting the charge
+	    ShortVec charge ;
+	    charge.push_back( 42 ) ;
+	    charge.push_back( 43 ) ;
+	    charge.push_back( 44 ) ;
+	    charge.push_back( 45 ) ;
+	    tpcRaw->setChargeVec( charge ) ;
+	  } else {
+	    tpcRaw->charge().push_back( 42 ) ;
+	    tpcRaw->charge().push_back( 43 ) ;
+	    tpcRaw->charge().push_back( 44 ) ;
+	    tpcRaw->charge().push_back( 45 ) ;
+	  }
+	  tpcRawVec->addElement( tpcRaw ) ;
+	}
+	evt->addCollection( tpcRawVec , "TPCRawDataExample" ) ;
+
+	//------
+
+	LCCollectionVec* tpcCorrectedVec = new LCCollectionVec( LCIO::TPCCORRECTEDDATA )  ;
+	
+	for(int j=0;j<NHITS;j++){
+
+	  TPCCorrectedDataImpl* tpcCorrected = new TPCCorrectedDataImpl ;
+	  
+	  tpcCorrected->setChannelID( j ) ;
+	  tpcCorrected->setTime0( -j  ) ;
+	  
+	  tpcCorrected->charge().push_back( 42.12345 ) ;
+	  tpcCorrected->charge().push_back( 43.09876 ) ;
+	  tpcCorrected->charge().push_back( 44.12345 ) ;
+	  tpcCorrected->charge().push_back( 45.09876 ) ;
+
+	  tpcCorrectedVec->addElement( tpcCorrected ) ;
+	}
+	evt->addCollection( tpcCorrectedVec , "TPCCorrectedDataExample" ) ;
+	//-----------------------------------------------------
+#endif // WRITE_TPCRAWDATA
+
 
 
 	// write the event to the file
