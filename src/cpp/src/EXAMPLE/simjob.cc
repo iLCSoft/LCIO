@@ -19,6 +19,8 @@
 #include "IMPL/TPCCorrectedDataImpl.h"
 #include "IMPL/TPCPulseImpl.h"
 
+#include "IMPL/VTXRawHitImpl.h"
+
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
 
@@ -426,6 +428,28 @@ int main(int argc, char** argv ){
 
 	//-----------------------------------------------------
 #endif // WRITE_TPCRAWDATA
+
+#define WRITE_VTXRAWHITS 1
+#ifdef WRITE_VTXRAWHITS
+
+	//--- write some VTX raw hits  to the file 
+	LCCollectionVec* vtxRawVec = new LCCollectionVec( LCIO::VTXRAWHIT )  ;
+	
+	for(int j=0;j<NHITS;j++){
+
+	  VTXRawHitImpl* vtxRaw = new VTXRawHitImpl ;
+	  
+	  vtxRaw->setModuleID( 123456 ) ;
+	  vtxRaw->setRow( j  ) ;
+	  vtxRaw->setColumn( j + 1  ) ;
+	  vtxRaw->setADCCounts( 42 + j  ) ;
+	  
+	  vtxRawVec->addElement( vtxRaw ) ;
+	}
+	evt->addCollection( vtxRawVec , "VTXRawHitExample" ) ;
+
+	//-----------------------------------------------------
+#endif // WRITE_VTXRAWHITS
 
 
 

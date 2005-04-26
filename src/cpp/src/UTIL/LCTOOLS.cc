@@ -18,6 +18,7 @@
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/LCGenericObject.h"
+#include "EVENT/VTXRawHit.h"
 
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
@@ -166,6 +167,10 @@ namespace UTIL {
       else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCPULSE ){
 	  
 	printTPCPulse( col ) ;
+      }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::VTXRAWHIT ){
+	  
+	printVTXRawHits( col ) ;
       }
 
 
@@ -737,6 +742,52 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
 	 << "-------------------------------------------------------------------------------- " 
 	 << endl ;
     
+  }
+  void LCTOOLS::printVTXRawHits( const EVENT::LCCollection* col ) {
+
+    if( col->getTypeName() != LCIO::VTXRAWHIT ){
+
+      cout << " collection not of type " << LCIO::VTXRAWHIT << endl ;
+      return ;
+    }
+    
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::VTXRAWHIT << " collection "
+	 << "--------------- " << endl ;
+    
+    cout << endl 
+	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+    
+    printParameters( col->getParameters() ) ;
+
+    int nHits =  col->getNumberOfElements() ;
+    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
+    
+    std::cout << endl
+	      << " [   id   ] |  module  |    row     |   column   | ADCCounts  | "
+	      << endl 
+	      << endl ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      VTXRawHit* hit = 
+	dynamic_cast<VTXRawHit*>( col->getElementAt( i ) ) ;
+      
+      printf(" [%8.8x] | %8.8x | %10d | %10d | %10d | " 
+	     , hit->id() 
+	     , hit->getModuleID()                 
+	     , hit->getRow()  
+	     , hit->getColumn()  
+	     , hit->getADCCounts()  
+	     ) ;
+
+      cout << endl ;
+    }
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
+    
+
   }
   
   void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {

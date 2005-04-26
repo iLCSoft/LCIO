@@ -1,6 +1,9 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+ 
+   - added first implementations of raw tracker hit classes (C++ only) : 
+     TPCRawData, TPCCorrectedData, TPCPulse, VTXRawHit
 
    - added macro to lcio.h for handling of uncaught exceptions if not Reader/Writer is used:
      #define HANDLE_LCIO_EXCEPTIONS 
