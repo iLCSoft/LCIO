@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.44 2005-04-26 08:39:05 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.45 2005-05-04 10:25:35 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -175,7 +175,7 @@ public interface LCIO{
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
   public static const String LCRELATION = "LCRelation" ; 
   public static const String LCGENERICOBJECT = "LCGenericObject"; 
-  public static const String VTXRAWHIT = "VTXRawHit"; 
+  public static const String VTXRAWHIT = "SiliconRawHit"; 
 @endif
 }
 

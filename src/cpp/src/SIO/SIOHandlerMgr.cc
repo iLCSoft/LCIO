@@ -19,7 +19,7 @@
 #include "SIO/SIOTPCRawDataHandler.h" 
 #include "SIO/SIOTPCCorrectedDataHandler.h" 
 #include "SIO/SIOTPCPulseHandler.h" 
-#include "SIO/SIOVTXRawHitHandler.h" 
+#include "SIO/SIOSiliconRawHitHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -53,7 +53,7 @@ namespace SIO {
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
     _map[ LCIO::LCGENERICOBJECT ] = new SIOLCGenericObjectHandler ;
-    _map[ LCIO::VTXRAWHIT ] = new SIOVTXRawHitHandler ;
+    _map[ LCIO::VTXRAWHIT ] = new SIOSiliconRawHitHandler ;
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

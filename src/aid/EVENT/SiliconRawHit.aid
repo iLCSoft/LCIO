@@ -1,0 +1,31 @@
+package hep.lcio.event ;
+
+/** Holds raw hits from silicon detectors. Two generic cellIDs can be used to 
+ *  decode the detector specific cells, e.g. in modules, row and column.
+ *  NOTE: This class is still experimental. 
+ * 
+ * @author gaede
+ * @version $Id: SiliconRawHit.aid,v 1.1 2005-05-04 10:25:35 gaede Exp $
+ */
+
+public interface SiliconRawHit extends LCObject {
+    
+    /** The id0 of the cell that recorded the hit.
+     */
+    public int getCellID0() const ;
+    
+    /** The id1 of the cell that recorded the hit.
+     */
+    public int getCellID1() const ;	
+
+    /** The detector specific time stamp of the hit.
+     */
+    public int  getTimeStamp() const ;	
+    
+    /** The ADC counts of the hit.
+     */
+    public int getADCCounts() const ;	
+
+}
+
+

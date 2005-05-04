@@ -19,7 +19,7 @@
 #include "IMPL/TPCCorrectedDataImpl.h"
 #include "IMPL/TPCPulseImpl.h"
 
-#include "IMPL/VTXRawHitImpl.h"
+#include "IMPL/SiliconRawHitImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
@@ -437,16 +437,16 @@ int main(int argc, char** argv ){
 	
 	for(int j=0;j<NHITS;j++){
 
-	  VTXRawHitImpl* vtxRaw = new VTXRawHitImpl ;
+	  SiliconRawHitImpl* vtxRaw = new SiliconRawHitImpl ;
 	  
-	  vtxRaw->setModuleID( 123456 ) ;
-	  vtxRaw->setRow( j  ) ;
-	  vtxRaw->setColumn( j + 1  ) ;
+	  vtxRaw->setCellID0( 0xBebaFeca ) ;
+	  vtxRaw->setCellID1( 0xCafeBabe ) ;
+	  vtxRaw->setTimeStamp( j  ) ;
 	  vtxRaw->setADCCounts( 42 + j  ) ;
 	  
 	  vtxRawVec->addElement( vtxRaw ) ;
 	}
-	evt->addCollection( vtxRawVec , "VTXRawHitExample" ) ;
+	evt->addCollection( vtxRawVec , "SiliconRawHitExample" ) ;
 
 	//-----------------------------------------------------
 #endif // WRITE_VTXRAWHITS

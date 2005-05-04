@@ -25,5 +25,5 @@ const char* LCIO::CLUSTER = "Cluster" ;
 const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ; 
 const char* LCIO::LCRELATION = "LCRelation" ; 
 const char* LCIO::LCGENERICOBJECT = "LCGenericObject" ; 
-const char* LCIO::VTXRAWHIT = "VTXRawHit"; 
+const char* LCIO::VTXRAWHIT = "SiliconRawHit"; 
 }

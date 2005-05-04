@@ -108,9 +108,9 @@ namespace UTIL{
      */
     static void printRelation( const EVENT::LCCollection* col ) ;
 
-    /** Print VTXRawHits.
+    /** Print SiliconRawHits.
      */
-    static void printVTXRawHits( const EVENT::LCCollection* col ) ;
+    static void printSiliconRawHits( const EVENT::LCCollection* col ) ;
 
 //     /** Print the relation.
 //      */

@@ -18,7 +18,7 @@
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/LCGenericObject.h"
-#include "EVENT/VTXRawHit.h"
+#include "EVENT/SiliconRawHit.h"
 
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
@@ -170,7 +170,7 @@ namespace UTIL {
       }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::VTXRAWHIT ){
 	  
-	printVTXRawHits( col ) ;
+	printSiliconRawHits( col ) ;
       }
 
 
@@ -743,7 +743,7 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
 	 << endl ;
     
   }
-  void LCTOOLS::printVTXRawHits( const EVENT::LCCollection* col ) {
+  void LCTOOLS::printSiliconRawHits( const EVENT::LCCollection* col ) {
 
     if( col->getTypeName() != LCIO::VTXRAWHIT ){
 
@@ -764,20 +764,20 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] |  module  |    row     |   column   | ADCCounts  | "
+	      << " [   id   ] |  cellID0 |  cellID1 |  timeStamp | ADCCounts  | "
 	      << endl 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      VTXRawHit* hit = 
-	dynamic_cast<VTXRawHit*>( col->getElementAt( i ) ) ;
+      SiliconRawHit* hit = 
+	dynamic_cast<SiliconRawHit*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | %8.8x | %10d | %10d | %10d | " 
+      printf(" [%8.8x] | %8.8x | %8.8x | %10d | %10d | " 
 	     , hit->id() 
-	     , hit->getModuleID()                 
-	     , hit->getRow()  
-	     , hit->getColumn()  
+	     , hit->getCellID0()                 
+	     , hit->getCellID1()                 
+	     , hit->getTimeStamp()  
 	     , hit->getADCCounts()  
 	     ) ;
 

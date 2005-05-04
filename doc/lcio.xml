@@ -720,7 +720,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="VTXRawHit" major="1" minor="4">
+      <block name="SiliconRawHit" major="1" minor="4">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
 	<!-- start of named parameters -->
         <if condition="1000*major+minor&gt;1001">
@@ -752,9 +752,9 @@
 	<!-- end of named parameters -->
          <data type="int" name="n"></data>
          <repeat count="n">
-            <data type="int" name="moduleID"></data>
-            <data type="int" name="row"></data>
-            <data type="int" name="column"></data>
+            <data type="int" name="cellID0"></data>
+            <data type="int" name="cellID1"></data>
+            <data type="int" name="timeStamp"></data>
             <data type="int" name="adcCounts"></data>
             <data type="ptag" name="this"></data>
          </repeat>
