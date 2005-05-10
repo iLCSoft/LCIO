@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTPCCorrectedData.java,v 1.1 2005-05-10 01:12:54 tonyj Exp $
+ * @version $Id: SIOTPCCorrectedData.java,v 1.2 2005-05-10 02:11:29 tonyj Exp $
  */
 class SIOTPCCorrectedData extends ITPCCorrectedData
 {
@@ -20,8 +20,11 @@ class SIOTPCCorrectedData extends ITPCCorrectedData
       channelID = in.readInt();
       time0 = in.readInt();
       int n = in.readInt();
-      charge = new float[n];
-      for (int i=0; i<n; i++) charge[i] = in.readFloat();
+      if (n > 0)
+      {
+         charge = new float[n];
+         for (int i=0; i<n; i++) charge[i] = in.readFloat();
+      }
       in.readPTag(this);
    }
    static void write(TPCCorrectedData hit, SIOOutputStream out, int flags) throws IOException
@@ -33,8 +36,15 @@ class SIOTPCCorrectedData extends ITPCCorrectedData
          out.writeInt(hit.getChannelID());
          out.writeInt(hit.getTime0());
          float[] c = hit.getCharge();
-         out.writeInt(c.length);
-         for (int i=0; i<c.length; i++) out.writeFloat(c[i]);
+         if (c == null)
+         {
+            out.writeInt(0);
+         }
+         else
+         {
+            out.writeInt(c.length);
+            for (int i=0; i<c.length; i++) out.writeFloat(c[i]);
+         }
          out.writePTag(hit);
       }
    }
@@ -42,8 +52,15 @@ class SIOTPCCorrectedData extends ITPCCorrectedData
    {
       out.writeInt(channelID);
       out.writeInt(time0);
-      out.writeInt(charge.length);
-      for (int i=0; i<charge.length; i++) out.writeFloat(charge[i]);
+      if (charge == null)
+      {
+         out.writeInt(0);
+      }
+      else
+      {
+         out.writeInt(charge.length);
+         for (int i=0; i<charge.length; i++) out.writeFloat(charge[i]);
+      }
       out.writePTag(this);
    }
    

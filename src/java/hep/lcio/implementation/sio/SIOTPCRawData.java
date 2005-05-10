@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTPCRawData.java,v 1.1 2005-05-10 01:12:54 tonyj Exp $
+ * @version $Id: SIOTPCRawData.java,v 1.2 2005-05-10 02:11:29 tonyj Exp $
  */
 class SIOTPCRawData extends ITPCRawData
 {
@@ -20,8 +20,11 @@ class SIOTPCRawData extends ITPCRawData
       channelID = in.readInt();
       time0 = in.readInt();
       int n = in.readInt();
-      charge = new short[n];
-      for (int i=0; i<n; i++) charge[i] = in.readShort();
+      if (n > 0)
+      {
+         charge = new short[n];
+         for (int i=0; i<n; i++) charge[i] = in.readShort();
+      }
       in.readPTag(this);
    }
    static void write(TPCRawData hit, SIOOutputStream out, int flags) throws IOException
@@ -33,8 +36,15 @@ class SIOTPCRawData extends ITPCRawData
          out.writeInt(hit.getChannelID());
          out.writeInt(hit.getTime0());
          short[] c = hit.getCharge();
-         out.writeInt(c.length);
-         for (int i=0; i<c.length; i++) out.writeShort(c[i]);
+         if (c == null)
+         {
+            out.writeInt(0);
+         }
+         else
+         {
+            out.writeInt(c.length);
+            for (int i=0; i<c.length; i++) out.writeShort(c[i]);
+         }
          out.writePTag(hit);
       }
    }
@@ -42,8 +52,15 @@ class SIOTPCRawData extends ITPCRawData
    {
       out.writeInt(channelID);
       out.writeInt(time0);
-      out.writeInt(charge.length);
-      for (int i=0; i<charge.length; i++) out.writeShort(charge[i]);
+      if (charge == null)
+      {
+         out.writeInt(0);
+      }
+      else
+      {
+         out.writeInt(charge.length);
+         for (int i=0; i<charge.length; i++) out.writeShort(charge[i]);
+      }
       out.writePTag(this);
    }
    

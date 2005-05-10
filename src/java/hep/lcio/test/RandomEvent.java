@@ -4,6 +4,7 @@ import hep.lcio.event.LCCollection;
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.LCObject;
+import hep.lcio.event.TPCCorrectedData;
 import hep.lcio.implementation.event.*;
 import hep.lcio.implementation.io.LCFactory;
 import hep.lcio.io.ILCFactory;
@@ -50,7 +51,11 @@ public class RandomEvent extends ILCEvent
       addCollection(LCIO.SIMTRACKERHIT,ISimTrackerHit.class);
       addCollection(LCIO.TRACKERHIT,ITrackerHit.class);
       addCollection(LCIO.TPCHIT,ITPCHit.class);
-      
+      addCollection(LCIO.TPCRAWDATA,ITPCRawData.class);
+      addCollection(LCIO.TPCCORRECTEDDATA,ITPCCorrectedData.class);
+      addCollection(LCIO.TPCPULSE,ITPCPulse.class);
+      addCollection(LCIO.VTXRAWHIT,ISiliconRawHit.class);
+
       // Put in some links between objects, has to be done by hand for now
       LCCollection collection = this.getCollection(LCIO.TRACKERHIT);
       LCCollection target = this.getCollection(LCIO.TPCHIT);
@@ -72,6 +77,14 @@ public class RandomEvent extends ILCEvent
       {
          ICalorimeterHit hit = (ICalorimeterHit) i.next();
          hit.setRawHit((LCObject) target.get(r.nextInt(target.size())));
+      }
+
+      collection = this.getCollection(LCIO.TPCPULSE);
+      target = this.getCollection(LCIO.TPCCORRECTEDDATA);
+      for (Iterator i = collection.iterator(); i.hasNext(); )
+      {
+         ITPCPulse hit = (ITPCPulse) i.next();
+         hit.setTPCCorrectedData((TPCCorrectedData) target.get(r.nextInt(target.size())));
       }
       
       collection = this.getCollection(LCIO.TRACK);
