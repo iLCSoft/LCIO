@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.35 2005-03-11 09:57:05 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.36 2005-05-10 01:12:54 tonyj Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -82,12 +82,13 @@ class SIOEvent extends ILCEvent
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
          if (type == null) continue;
-    	 //fg20050304 remove postfix _References for subset collections
-         if( type.endsWith( SUBSETPOSTFIX ) ) {
-    	   type = type.substring( 0 , type.indexOf( SUBSETPOSTFIX ) ) ;
-    	 }
-
-                 
+         //fg20050304 remove postfix _References for subset collections
+         if( type.endsWith( SUBSETPOSTFIX ) )
+         {
+            type = type.substring( 0 , type.indexOf( SUBSETPOSTFIX ) ) ;
+         }
+         
+         
          int flags = in.readInt();
          LCParameters colParameters = null ;
          if( (major<<16 | minor ) > (1<<16|1)  )
@@ -100,13 +101,14 @@ class SIOEvent extends ILCEvent
             int nObj = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, nObj );
             ilc.setParameters( colParameters ) ;
-            for (int i = 0; i < nObj; i++){
+            for (int i = 0; i < nObj; i++)
+            {
                ilc.addPointer( in.readPntr() );
             }
             ilc.setOwner(this);
             addCollection(ilc, name);
-            subsets.add( ilc ) ;            
-         } 
+            subsets.add( ilc ) ;
+         }
          
          else if (type.equals(LCIO.MCPARTICLE))
          {
@@ -121,23 +123,27 @@ class SIOEvent extends ILCEvent
             addCollection(ilc, name);
          }
          else if (type.equals(LCIO.LCGENERICOBJECT))
-         {  
-         	boolean isFixedSize = (flags & (1 << LCIO.GOBIT_FIXED)) != 0 ;
-         	int nInt=0, nFloat=0, nDouble=0 ;
-            if( isFixedSize){
+         {
+            boolean isFixedSize = (flags & (1 << LCIO.GOBIT_FIXED)) != 0 ;
+            int nInt=0, nFloat=0, nDouble=0 ;
+            if( isFixedSize)
+            {
                nInt = in.readInt();
                nFloat = in.readInt();
-           	   nDouble = in.readInt();
+               nDouble = in.readInt();
             }
-         	int n = in.readInt();
+            int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
-            if( isFixedSize){
+            if( isFixedSize)
+            {
                for (int i = 0; i < n; i++)
                   ilc.add(new SIOLCGenericObject(in, this, major,minor,nInt,nFloat,nDouble)) ;
-            }else{
+            }
+            else
+            {
                for (int i = 0; i < n; i++)
-                  ilc.add(new SIOLCGenericObject(in, this,major,minor)) ;            	
+                  ilc.add(new SIOLCGenericObject(in, this,major,minor)) ;
             }
             ilc.setOwner(this);
             addCollection(ilc, name);
@@ -172,6 +178,46 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
+         else if (type.equals(LCIO.TPCRAWDATA))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOTPCRawData(in,flags, this,major,minor) );
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.TPCCORRECTEDDATA))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOTPCCorrectedData(in,flags, this,major,minor) );
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.TPCPULSE))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOTPCPulse(in,flags, this,major,minor) );
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
+         else if (type.equals(LCIO.VTXRAWHIT))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOSiliconRawHit(in,flags, this,major,minor) );
+            ilc.setOwner(this);
+            addCollection(ilc, name);
+         }
          else if (type.equals(LCIO.SIMCALORIMETERHIT))
          {
             int n = in.readInt();
@@ -201,7 +247,7 @@ class SIOEvent extends ILCEvent
                ilc.add(new SIORawCalorimeterHit(in, flags, this, major, minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
-         }         
+         }
          else if (type.equals(LCIO.LCSTRVEC))
          {
             int n = in.readInt();
@@ -271,16 +317,17 @@ class SIOEvent extends ILCEvent
                ilc.add(new SIORelation(in,this, flags, major, minor));
             ilc.setOwner(this);
          }
-         else 
+         else
          {
-           System.err.println("Warning: UNKNOWN collection type: " + type) ;
+            System.err.println("Warning: UNKNOWN collection type: " + type) ;
          }
          
       }
       
       // restore the objects in subsets
-      for (Iterator iter = subsets.iterator(); iter.hasNext();) {
-         ( (SIOLCCollection) iter.next() ).resolve() ;         
+      for (Iterator iter = subsets.iterator(); iter.hasNext();)
+      {
+         ( (SIOLCCollection) iter.next() ).resolve() ;
       }
    }
    
@@ -313,12 +360,13 @@ class SIOEvent extends ILCEvent
                String blockName = blockNames[i];
                out.writeString(blockName);
                
-             // fg20050304 append _References to subset collection's type names
-               LCCollection col  = event.getCollection(blockName) ; 
+               // fg20050304 append _References to subset collection's type names
+               LCCollection col  = event.getCollection(blockName) ;
                boolean isSubset = ( (col.getFlag() & ( 1<< LCCollection.BITSubset )) != 0 ) ;
                String typeName = col.getTypeName() ;
-               if( isSubset ){
-                  typeName += SUBSETPOSTFIX ;   
+               if( isSubset )
+               {
+                  typeName += SUBSETPOSTFIX ;
                }
                
                out.writeString(  typeName );
@@ -339,65 +387,75 @@ class SIOEvent extends ILCEvent
             LCCollection col = event.getCollection(blockName);
             String type = col.getTypeName();
             int flags = col.getFlag();
-
+            
             boolean isSubset = ( (flags & ( 1<< LCCollection.BITSubset )) != 0 ) ;
-
+            
             int n = col.getNumberOfElements();
             
             boolean isFixedSize = true ;
-            if ( type.equals(LCIO.LCGENERICOBJECT )){
-                // check if all objects are fixed size
-                for (int i = 0; i < n; i++){
-                   if( ! ((LCGenericObject) col.getElementAt(i) ).isFixedSize() ){
-                      isFixedSize = false ;
-                   }
-                }
-                // set the proper flag bit for isFixedSize
-                if( isFixedSize) 
-                    flags |= (1 << LCIO.GOBIT_FIXED) ;
-		else
-		    flags &= ~(1 << LCIO.GOBIT_FIXED) ;
-                
-                // if the collection doesn't have the TypeName/DataDescription parameters set,
-                //  we use the ones from the first object
-
-		if( col.getNumberOfElements() > 0 ){
-		    LCGenericObject gObj = (LCGenericObject) col.getElementAt(0) ; 
-		    
-		    if(  col.getParameters().getStringVal("TypeName").length() == 0 )
-			col.getParameters().setValue( "TypeName", gObj.getTypeName() ) ;
-		    if(isFixedSize ) {
-			if(  col.getParameters().getStringVal( "DataDescription" ).length() ==  0 )
-			    col.getParameters().setValue( "DataDescription", gObj.getDataDescription() ) ;
-		    }
-		}
+            if ( type.equals(LCIO.LCGENERICOBJECT ))
+            {
+               // check if all objects are fixed size
+               for (int i = 0; i < n; i++)
+               {
+                  if( ! ((LCGenericObject) col.getElementAt(i) ).isFixedSize() )
+                  {
+                     isFixedSize = false ;
+                  }
+               }
+               // set the proper flag bit for isFixedSize
+               if( isFixedSize)
+                  flags |= (1 << LCIO.GOBIT_FIXED) ;
+               else
+                  flags &= ~(1 << LCIO.GOBIT_FIXED) ;
+               
+               // if the collection doesn't have the TypeName/DataDescription parameters set,
+               //  we use the ones from the first object
+               
+               if( col.getNumberOfElements() > 0 )
+               {
+                  LCGenericObject gObj = (LCGenericObject) col.getElementAt(0) ;
+                  
+                  if(  col.getParameters().getStringVal("TypeName").length() == 0 )
+                     col.getParameters().setValue( "TypeName", gObj.getTypeName() ) ;
+                  if(isFixedSize )
+                  {
+                     if(  col.getParameters().getStringVal( "DataDescription" ).length() ==  0 )
+                        col.getParameters().setValue( "DataDescription", gObj.getDataDescription() ) ;
+                  }
+               }
             }
             out.writeInt(flags);
             
             SIOLCParameters.write( col.getParameters() , out ) ;
-              
+            
 //          fg20050302 add suport for subset collections
-           
+            
             if (!isSubset && type.equals(LCIO.LCGENERICOBJECT))
             {
-               if( isFixedSize){ // write the array length once for the collection
-
-		   if( col.getNumberOfElements() > 0 ){
-		       LCGenericObject obj =  (LCGenericObject) col.getElementAt(0) ;
-		 
-		       out.writeInt( obj.getNInt() ) ;	
-		       out.writeInt( obj.getNFloat() ) ;	
-		       out.writeInt( obj.getNDouble() ) ;	
-		   }else{
-		       out.writeInt(0) ;
-		       out.writeInt(0) ;
-		       out.writeInt(0) ;
-		   }
-
+               if( isFixedSize)
+               { // write the array length once for the collection
+                  
+                  if( col.getNumberOfElements() > 0 )
+                  {
+                     LCGenericObject obj =  (LCGenericObject) col.getElementAt(0) ;
+                     
+                     out.writeInt( obj.getNInt() ) ;
+                     out.writeInt( obj.getNFloat() ) ;
+                     out.writeInt( obj.getNDouble() ) ;
+                  }
+                  else
+                  {
+                     out.writeInt(0) ;
+                     out.writeInt(0) ;
+                     out.writeInt(0) ;
+                  }
+                  
                }
                out.writeInt(n);
-               for (int i = 0; i < n; i++){
-               	SIOLCGenericObject.write((LCGenericObject) col.getElementAt(i), out, flags);
+               for (int i = 0; i < n; i++)
+               {
+                  SIOLCGenericObject.write((LCGenericObject) col.getElementAt(i), out, flags);
                }
             }
             else
@@ -410,7 +468,7 @@ class SIOEvent extends ILCEvent
                   out.writePntr( col.getElementAt(i) ) ;
                
             }
-                        
+            
             else if (type.equals(LCIO.MCPARTICLE))
             {
                for (int i = 0; i < n; i++)
@@ -425,11 +483,31 @@ class SIOEvent extends ILCEvent
             {
                for (int i = 0; i < n; i++)
                   SIOTrackerHit.write((TrackerHit) col.getElementAt(i), out);
-            }            
+            }
             else if (type.equals(LCIO.TPCHIT))
             {
                for (int i = 0; i < n; i++)
                   SIOTPCHit.write((TPCHit) col.getElementAt(i), out, flags );
+            }
+            else if (type.equals(LCIO.TPCRAWDATA))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOTPCRawData.write((TPCRawData) col.getElementAt(i), out, flags );
+            }
+            else if (type.equals(LCIO.TPCCORRECTEDDATA))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOTPCCorrectedData.write((TPCCorrectedData) col.getElementAt(i), out, flags );
+            }
+            else if (type.equals(LCIO.TPCPULSE))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOTPCPulse.write((TPCPulse) col.getElementAt(i), out, flags );
+            }
+            else if (type.equals(LCIO.VTXRAWHIT))
+            {
+               for (int i = 0; i < n; i++)
+                  SIOSiliconRawHit.write((SiliconRawHit) col.getElementAt(i), out, flags );
             }
             else if (type.equals(LCIO.SIMCALORIMETERHIT))
             {
