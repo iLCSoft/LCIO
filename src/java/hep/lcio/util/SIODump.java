@@ -48,6 +48,7 @@ public class SIODump
    private List output = new LinkedList();
    private int global = 0;
    private Set versionAlreadyWarned = new HashSet();
+   private Map subroutines = new HashMap();
    /**
     * @param args the command line arguments
     */
@@ -82,6 +83,12 @@ public class SIODump
    {
       try
       {
+         // Build subroutine list
+         for (Iterator i = root.getChildren("subroutine").iterator(); i.hasNext();)
+         {
+            Element node = (Element) i.next();
+            subroutines.put(node.getAttributeValue("name"), node);
+         }
          int n=0;
          for (;;n++)
          {
@@ -185,6 +192,13 @@ public class SIODump
             Object value = readValue(data,type,values);
             dump(3,indent+name+": ",value);
             values.put(name,value);
+         }
+         else if (nodeName.equals("include"))
+         {
+            String subroutine = node.getAttributeValue("subroutine");
+            Element subNode = (Element) subroutines.get(subroutine);
+            if (subNode == null) throw new JDOMException("Unknown subroutine "+subroutine+" included");
+            dumpValues(data,subNode,indent,values);
          }
          else if (nodeName.equals("repeat"))
          {
