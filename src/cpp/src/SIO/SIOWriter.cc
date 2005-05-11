@@ -345,5 +345,17 @@ namespace SIO {
 
   }
 
+  void SIOWriter::flush() throw (IOException, std::exception) {
+  
+    const std::string* streamName  = _stream->getName() ;
+
+    int status =  _stream->flush() ;
+    
+    if(! (status &1) ) 
+      throw IOException(  std::string("[SIOWriter::flush] couldn't flush stream  : "
+				      + *streamName  )) ;
+
+  }
+
 } // namespace
 

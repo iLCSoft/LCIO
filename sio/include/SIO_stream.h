@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.1 2003-03-06 11:01:23 gaede Exp $
+// CVS $Id: SIO_stream.h,v 1.2 2005-05-11 00:40:44 tonyj Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -36,6 +36,7 @@ class SIO_stream
 {
 public:
     unsigned int           close();
+    unsigned int           flush();
     void                   dump( unsigned int, unsigned int );
     std::string*           getName();
     std::string*           getFilename();

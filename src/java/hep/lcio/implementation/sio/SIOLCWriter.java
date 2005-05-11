@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.10 2004-04-08 09:58:02 gaede Exp $
+ * @version $Id: SIOLCWriter.java,v 1.11 2005-05-11 00:40:46 tonyj Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -53,5 +53,10 @@ class SIOLCWriter implements LCWriter
 
       SIOOutputStream out = writer.createBlock(SIOFactory.runBlockName, LCIO.MAJORVERSION, LCIO.MINORVERSION);
       SIORunHeader.write(hdr, out);
+   }
+
+   public void flush() throws IOException
+   {
+      //writer.flush();
    }
 }

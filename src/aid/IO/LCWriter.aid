@@ -47,5 +47,10 @@ public interface LCWriter {
      *@throws IOException
      */
     public void close() throws IOException ;
-    
+
+    /** Flushes the output file/stream.
+     *
+     *@throws IOException
+     */
+    public void flush() throws IOException ;    
 }

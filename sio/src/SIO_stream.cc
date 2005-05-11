@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.2 2003-05-14 15:10:13 gaede Exp $
+// CVS $Id: SIO_stream.cc,v 1.3 2005-05-11 00:40:45 tonyj Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -76,6 +76,28 @@ if( state != SIO_STATE_CLOSED )
 // That's all folks!
 //
 return;
+}
+
+// ----------------------------------------------------------------------------
+// Flush the stream.
+// ----------------------------------------------------------------------------
+unsigned int SIO_stream::flush()
+{
+//
+// Can't close what ain't open!
+//
+if( state == SIO_STATE_CLOSED )
+{
+    if( verbosity >= SIO_ERRORS )
+    {
+        std::cout << "SIO: ["  << name << "//] "
+                  << "Not open"
+                  << std::endl;
+    }
+    return( SIO_STREAM_NOTOPEN );
+}
+int rc = fflush( handle );
+return (rc == 0) ? SIO_STREAM_SUCCESS : SIO_STREAM_BADWRITE;
 }
 
 // ----------------------------------------------------------------------------

@@ -77,6 +77,12 @@ namespace SIO {
      *@throws IOException
      */
     virtual void close() throw (IO::IOException, std::exception) ;
+    
+    /** Flushes the output file/stream etc.
+     *
+     *@throws IOException
+     */
+    virtual void flush() throw (IO::IOException, std::exception) ;
 
   protected:
 
