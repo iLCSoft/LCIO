@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.11 2005-05-11 00:40:46 tonyj Exp $
+ * @version $Id: SIOLCWriter.java,v 1.12 2005-05-11 01:06:42 tonyj Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -57,6 +57,6 @@ class SIOLCWriter implements LCWriter
 
    public void flush() throws IOException
    {
-      //writer.flush();
+      writer.flush();
    }
 }
