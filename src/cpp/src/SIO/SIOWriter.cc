@@ -101,10 +101,13 @@ namespace SIO {
   void SIOWriter::getSIOFileName(const std::string& filename, 
 				 std::string& sioFilename ) {
 
-//     if( !(  filename.rfind(LCSIO::FILE_EXTENSION)
-//  	   + strlen( LCSIO::FILE_EXTENSION ) == filename.length() )) 
 
-    if( filename.find_last_of(LCSIO::FILE_EXTENSION) != filename.length() - 1  ) {
+    if( filename.rfind(LCSIO::FILE_EXTENSION) == std::string::npos ||  // .slcio not found at all
+	!(  filename.rfind(LCSIO::FILE_EXTENSION)
+	    + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ) ) {  // found, but not at end 
+      
+      // find_last_of looks for characters and not substrings !!
+//     if( filename.find_last_of(LCSIO::FILE_EXTENSION) != filename.length() - 1  ) {
 
       sioFilename = filename + LCSIO::FILE_EXTENSION ;
     } 
