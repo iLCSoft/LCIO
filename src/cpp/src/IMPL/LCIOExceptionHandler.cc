@@ -1,5 +1,6 @@
 #include <exception> 
 #include <iostream>
+#include <cstdlib>
 #include "IMPL/LCIOExceptionHandler.h"
 
 namespace IMPL {
