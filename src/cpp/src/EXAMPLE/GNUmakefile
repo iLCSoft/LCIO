@@ -19,10 +19,10 @@ AR = ar
 
 INSTALL = $(LCIOBASE)/lib
 BINDIR = $(LCIOBASE)/bin
-INCLUDE =  $(LCIOINCLUDE) -I $(SIOINSTALL)/include
+INCLUDE =  $(LCIOINCLUDE) -I$(SIOINSTALL)/include
 CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE) 
 
-LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -llcio -lsio -lz
+LIBS = -L$(INSTALL) -L$(SIOINSTALL)/lib -llcio -lsio -lz
 
 BINS := $(patsubst %.cc,$(BINDIR)/%,$(wildcard *.cc))
 
