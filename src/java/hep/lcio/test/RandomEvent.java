@@ -70,7 +70,7 @@ public class RandomEvent extends ILCEvent
          ITrackerHit hit = (ITrackerHit) i.next();
          hit.setRawHits(l);
       }
-      
+
       collection = this.getCollection(LCIO.CALORIMETERHIT);
       target = this.getCollection(LCIO.RAWCALORIMETERHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
@@ -86,7 +86,7 @@ public class RandomEvent extends ILCEvent
          ITPCPulse hit = (ITPCPulse) i.next();
          hit.setTPCCorrectedData((TPCCorrectedData) target.get(r.nextInt(target.size())));
       }
-      
+
       collection = this.getCollection(LCIO.TRACK);
       target = this.getCollection(LCIO.TRACKERHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
@@ -100,7 +100,7 @@ public class RandomEvent extends ILCEvent
          ITrack track = (ITrack) i.next();
          track.setTrackerHits(l);
       }
-      
+
       collection = this.getCollection(LCIO.CLUSTER);
       target = this.getCollection(LCIO.CALORIMETERHIT);
       for (Iterator i = collection.iterator(); i.hasNext(); )
@@ -209,115 +209,11 @@ public class RandomEvent extends ILCEvent
          throw new RuntimeException("Could not randomize "+obj.getClass(),t);
       }
    }
-   private static void checkEqual(Object o1, Object o2)
-   {
-      checkEqual(o1,o2,new HashMap());
-   }
-   private static void checkEqual(Object o1,Object o2,Map alreadyChecked)
-   {
-      if (alreadyChecked.get(o1) == o2) return;
-      alreadyChecked.put(o1,o2);
-      try
-      {
-         if (o1 == null && o2 == null) return;
-         if (o1 == null || o2 == null) throw new RuntimeException(o1+" != "+o2);
-         if (o1 instanceof Comparable) 
-         {
-            int rc = ((Comparable) o1).compareTo(o2);
-            if (rc == 0) return;
-            else throw new RuntimeException(o1+" != "+o2);
-         }
-         if (o1.getClass().isArray())
-         {
-            if (Array.getLength(o1) != Array.getLength(o2)) throw new RuntimeException(o1+" != "+o2);
-            for (int i=0; i<Array.getLength(o1);i++)
-            {
-               Object v1 = Array.get(o1, i);
-               Object v2 = Array.get(o2, i);
-               checkEqual(v1,v2,alreadyChecked);
-            }
-            return;
-         }
-         if (o1 instanceof Collection)
-         {
-            Collection c1 = (Collection) o1;
-            Collection c2 = (Collection) o2;
-            if (c1.size() != c2.size()) throw new RuntimeException(c1+" != "+c2);
-            Iterator i1 = c1.iterator();
-            Iterator i2 = c2.iterator();
-            while ( i1.hasNext() )
-            {
-               Object v1 = i1.next();
-               Object v2 = i2.next();
-               checkEqual(v1,v2,alreadyChecked);
-            }
-            return;
-         }
 
-         BeanInfo info = Introspector.getBeanInfo(o1.getClass(),Object.class);
-         PropertyDescriptor[] desc = info.getPropertyDescriptors();
-         for (int i=0; i<desc.length; i++)
-         {
-            Method m = desc[i].getReadMethod();
-            if (m != null)
-            {
-               Object v1 = m.invoke(o1,null);
-               Object v2 = m.invoke(o2,null);
-               checkEqual(v1,v2,alreadyChecked);
-            }
-         }
-         
-         if (o1 instanceof LCEvent)
-         {
-            String[] names = ((LCEvent) o1).getCollectionNames();
-            for (int i=0; i<names.length; i++)
-            {
-               Collection c1 = ((LCEvent) o1).getCollection(names[i]);
-               Collection c2 = ((LCEvent) o2).getCollection(names[i]);
-               Iterator i1 = c1.iterator();
-               Iterator i2 = c2.iterator();
-               while ( i1.hasNext() )
-               {
-                  Object v1 = i1.next();
-                  Object v2 = i2.next();
-                  checkEqual(v1,v2,alreadyChecked);
-               }
-            }
-         }
-         
-         return;
-      }
-      catch (Throwable t)
-      {
-         throw new RuntimeException("Could not compare "+o1+" "+o2,t);
-      }
-   }
    private static String gobbledygook()
    {
       StringBuffer buffer = new StringBuffer(10);
       for (int i=0; i<10; i++) buffer.append((char) ('a'+r.nextInt(26)));
       return buffer.toString();
-   }
-   public static void main(String[] args) throws IOException
-   {
-      RandomEvent e = new RandomEvent();
-      checkEqual(e,e);
-      
-      ILCFactory factory = LCFactory.getInstance();
-      LCWriter lcWrt = factory.createLCWriter();
-      File file = new File("temp.slcio");
-      file.deleteOnExit();
-      lcWrt.open(file.getAbsolutePath());
-      lcWrt.writeEvent(e);
-      lcWrt.close();
-      
-      
-//      File inFile = new File("temp.slcio"); 
-      LCReader lcRead = factory.createLCReader();
-      lcRead.open(file.getAbsolutePath());
-      LCEvent e2 = lcRead.readNextEvent();
-      lcRead.close();
-      
-      checkEqual(e,e2);
    }
 }
