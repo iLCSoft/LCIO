@@ -73,8 +73,14 @@ namespace SIO {
       SIO_DATA( stream ,  &(particle->_time)  , 1 ) ;
     }
     
-    SIO_DATA( stream ,  particle->_p  , 3 ) ;
-    SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
+    float momentum[3] ;
+    SIO_DATA( stream ,  momentum  , 3 ) ;
+    particle->setMomentum( momentum ) ;
+
+    float mass ;
+    SIO_DATA( stream , &mass , 1  ) ;
+    particle->setMass( mass )  ;
+
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
     
     if( particle->_simstatus.test( MCParticle::BITEndpoint ) )  // bit 31
@@ -122,8 +128,13 @@ namespace SIO {
 
     LCSIO_WRITE( stream, particle->getTime() ) ;
 
-    SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
-    LCSIO_WRITE( stream, particle->getMass() ) ;
+//     SIO_DATA( stream, const_cast<float*>( particle->getMomentum()), 3 ) ;
+
+    LCSIO_WRITE( stream, (float) particle->getMomentum()[0] ) ;
+    LCSIO_WRITE( stream, (float) particle->getMomentum()[1] ) ;
+    LCSIO_WRITE( stream, (float) particle->getMomentum()[2] ) ;
+
+    LCSIO_WRITE( stream, (float) particle->getMass() ) ;
     LCSIO_WRITE( stream, particle->getCharge() ) ;
 
 

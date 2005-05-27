@@ -9,18 +9,18 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.12 2004-09-24 10:39:29 tonyj Exp $
+ * @version $Id: IMCParticle.java,v 1.13 2005-05-27 07:55:55 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
    protected List daughters = new ArrayList();
    protected List parents = new ArrayList();
    protected double[] endpoint = new double[3];
-   protected float[] momentum = new float[3];
+   protected double[] momentum = new double[3];
    protected double[] vertex = new double[3];
    protected float charge;
    protected float time ;
-   protected float mass;
+   protected double mass;
    protected int generatorStatus;
    protected int pdg;
    protected int simulatorStatus;
@@ -64,7 +64,7 @@ public class IMCParticle extends ILCObject implements MCParticle
       return endpoint ;
    }
    
-   public float getEnergy()
+   public double getEnergy()
    {
       return (float) Math.sqrt((momentum[0] * momentum[0]) + (momentum[1] * momentum[1]) + (momentum[2] * momentum[2]) + (mass * mass));
    }
@@ -86,7 +86,7 @@ public class IMCParticle extends ILCObject implements MCParticle
       this.mass = mass;
    }
    
-   public float getMass()
+   public double getMass()
    {
       return mass;
    }
@@ -96,10 +96,25 @@ public class IMCParticle extends ILCObject implements MCParticle
       checkAccess();
       if (momentum.length != 3)
          throw new IllegalArgumentException();
+      setMomentum( momentum[0], momentum[1], momentum[2]) ;
+   }
+   
+   public void setMomentum(double[] momentum)
+   {
+      checkAccess();
+      if (momentum.length != 3)
+         throw new IllegalArgumentException();
       this.momentum = momentum;
    }
    
-   public float[] getMomentum()
+   public void setMomentum(double px , double py, double pz){
+      this.momentum[0] = px ;
+      this.momentum[1] = py ;
+      this.momentum[2] = pz ;
+      
+   }
+   
+   public double[] getMomentum()
    {
       return momentum;
    }

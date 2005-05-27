@@ -45,11 +45,11 @@ namespace IMPL {
 
     /** The magnitude of the reconstructed particle's momentum,
      */
-    virtual const float* getMomentum() const ;
+    virtual const double* getMomentum() const ;
 
     /** Energy of the  reconstructed particle.
      */
-    virtual float getEnergy() const ;
+    virtual double getEnergy() const ;
 
     /** Covariance matrix of the reconstructed particle's 4vector (10 parameters).
      */
@@ -57,7 +57,7 @@ namespace IMPL {
 
     /** Mass of the  reconstructed particle, set independently from four vector quantities.
      */
-    virtual float getMass() const ;
+    virtual double getMass() const ;
 
     /** Charge of the reconstructed particle.
      */
@@ -101,6 +101,7 @@ namespace IMPL {
     //     void setPrimary(bool primary) ;
     //    void setTypeFlag( int typeFlag)  ;
     void setMomentum( const float* momentum ) ;
+    void setMomentum( const double* momentum ) ;
     void setEnergy( float energy) ;
     void setCovMatrix( const float* cov ) ;
     void setCovMatrix( const EVENT::FloatVec& ) ;
@@ -118,10 +119,10 @@ namespace IMPL {
   protected:
 
     int _type ;
-    float _momentum[3] ;
-    float _energy ;
+    double _momentum[3] ;
+    double _energy ;
     EVENT::FloatVec _cov ;
-    float _mass ;
+    double _mass ;
     float _charge ;
     float _reference[3] ;
     EVENT::ParticleID* _pidUsed ;

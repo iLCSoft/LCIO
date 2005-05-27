@@ -147,7 +147,7 @@ namespace IMPL {
   }
 
 
-  float MCParticleImpl::getEnergy() const { 
+  double MCParticleImpl::getEnergy() const { 
     return sqrt( _p[0]*_p[0] + _p[1]*_p[1] + _p[2]*_p[2] + _mass*_mass ) ;  
   }
 
@@ -174,8 +174,8 @@ namespace IMPL {
 
   const double * MCParticleImpl::getVertex() const { return _vertex ;}
   float MCParticleImpl::getTime() const { return _time ; }
-  const float * MCParticleImpl::getMomentum() const { return _p ;}
-  float MCParticleImpl::getMass() const { return _mass ;}
+  const double * MCParticleImpl::getMomentum() const { return _p ;}
+  double MCParticleImpl::getMass() const { return _mass ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
 
 //   void MCParticleImpl::setParent( MCParticle *mom0 ) { 
@@ -242,6 +242,13 @@ namespace IMPL {
     _p[1] = p[1] ;
     _p[2] = p[2] ;
   }
+  void MCParticleImpl::setMomentum( double p[3] ){
+    checkAccess("MCParticleImpl::setMomentum") ;
+    _p[0] = p[0] ;
+    _p[1] = p[1] ;
+    _p[2] = p[2] ;
+  }
+
   void MCParticleImpl::setMass( float m ) { 
     checkAccess("MCParticleImpl::setMass") ;
     _mass = m ; 

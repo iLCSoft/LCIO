@@ -34,7 +34,7 @@ namespace UTIL{
     if( _lcObj == 0 )
       throw Exception("Dynamic cast failed for LCFourVector() !") ;
 
-    const float* p =  _lcObj->getMomentum() ;
+    const double* p =  _lcObj->getMomentum() ;
     setPx( p[0] ) ;
     setPy( p[1] ) ;
     setPz( p[2] ) ;
@@ -57,7 +57,7 @@ namespace UTIL{
     if( _lcObj == 0 )
       throw Exception("Dynamic cast failed for LCFourVector() !") ;
 
-    const float* p =  _lcObj->getMomentum() ;
+    const double* p =  _lcObj->getMomentum() ;
     setPx( p[0] ) ;
     setPy( p[1] ) ;
     setPz( p[2] ) ;

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.16 2004-09-15 13:29:10 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.17 2005-05-27 07:55:56 gaede Exp $
  */
 class SIOMCParticle extends IMCParticle
 {
@@ -104,12 +104,12 @@ class SIOMCParticle extends IMCParticle
       else
       {
          out.writePTag(hit);
-         int nParents = hit.getNumberOfParents();
+         int nParents = hit.getParents().size();
          out.writeInt(nParents);
 
          for (int i = 0; i < nParents; i++)
          {
-            out.writePntr(hit.getParent(i));
+            out.writePntr(hit.getParents().get(i));
          }
 
          out.writeInt(hit.getPDG());
@@ -124,11 +124,11 @@ class SIOMCParticle extends IMCParticle
  
          out.writeFloat( hit.getTime() ) ;
 
-         float[] momentum = hit.getMomentum();
-         out.writeFloat(momentum[0]);
-         out.writeFloat(momentum[1]);
-         out.writeFloat(momentum[2]);
-         out.writeFloat(hit.getMass());
+         double[] momentum = hit.getMomentum();
+         out.writeFloat((float)momentum[0]);
+         out.writeFloat((float)momentum[1]);
+         out.writeFloat((float)momentum[2]);
+         out.writeFloat((float)hit.getMass());
          out.writeFloat(hit.getCharge());
 
          if ((simulatorStatus & (1<<31)) != 0)
@@ -156,10 +156,10 @@ class SIOMCParticle extends IMCParticle
        
       out.writeFloat( time ) ;
       
-      out.writeFloat(momentum[0]);
-      out.writeFloat(momentum[1]);
-      out.writeFloat(momentum[2]);
-      out.writeFloat(mass);
+      out.writeFloat((float)momentum[0]);
+      out.writeFloat((float)momentum[1]);
+      out.writeFloat((float)momentum[2]);
+      out.writeFloat((float)mass);
       out.writeFloat(charge);
 
       if ((simulatorStatus & (1<<31)) != 0)

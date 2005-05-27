@@ -18,12 +18,12 @@ using namespace IOIMPL ;
 
 
 namespace SIO{
-    
+  
   unsigned int SIOReconstructedParticleHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
+						     LCObject** objP){
     unsigned int status ; 
-	
-
+    
+    
     // create a new object :
     ReconstructedParticleIOImpl* recP  = new ReconstructedParticleIOImpl ;
     *objP = recP ;
@@ -33,14 +33,25 @@ namespace SIO{
       
       SIO_DATA( stream ,  &(recP->_type)  , 1 ) ;
       
-      SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
-      SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
+      float momentum[3] ;
+      SIO_DATA( stream ,  momentum  , 3 ) ;
+      //     SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
+      recP->setMomentum( momentum ) ;
+      
+      float energy ;
+      SIO_DATA( stream , &energy , 1  ) ;
+      recP->setEnergy( energy )  ;
+//       SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
       
       float errpos[ NCOVARIANCE ] ;
       SIO_DATA( stream , errpos   , NCOVARIANCE ) ;
       recP->setCovMatrix( errpos ) ;
       
-      SIO_DATA( stream ,  &(recP->_mass)  , 1 ) ;
+      float mass ;
+      SIO_DATA( stream , &mass , 1  ) ;
+      recP->setMass( mass )  ;
+//       SIO_DATA( stream ,  &(recP->_mass)  , 1 ) ;
+
       SIO_DATA( stream ,  &(recP->_charge)  , 1 ) ;
       
       SIO_DATA( stream ,  recP->_reference  , 3 ) ;
@@ -108,6 +119,7 @@ namespace SIO{
 //       recP->setPrimary( (1<<31) &  typeFlag ) ;
       
       SIO_DATA( stream ,  recP->_momentum  , 3 ) ;
+
       SIO_DATA( stream ,  &(recP->_energy)  , 1 ) ;
       
       float errpos[ NCOVARIANCE ] ;
@@ -223,15 +235,20 @@ namespace SIO{
 
     LCSIO_WRITE( stream, recP->getType()  ) ;
 
-    float* mom = const_cast<float*> ( recP->getMomentum() ) ; 
-    SIO_DATA( stream,  mom , 3 ) ;
-    LCSIO_WRITE( stream, recP->getEnergy()  ) ;
+//     float* mom = const_cast<float*> ( recP->getMomentum() ) ; 
+//     SIO_DATA( stream,  mom , 3 ) ;
+    LCSIO_WRITE( stream, (float) recP->getMomentum()[0] ) ;
+    LCSIO_WRITE( stream, (float) recP->getMomentum()[1] ) ;
+    LCSIO_WRITE( stream, (float) recP->getMomentum()[2] ) ;
+    
+
+    LCSIO_WRITE( stream, (float) recP->getEnergy()  ) ;
 
     const FloatVec& cov = recP->getCovMatrix() ;
     for(unsigned int i=0;i<cov.size();i++){
       LCSIO_WRITE( stream, cov[i]  ) ;
     }
-    LCSIO_WRITE( stream, recP->getMass()  ) ;
+    LCSIO_WRITE( stream, (float) recP->getMass()  ) ;
     LCSIO_WRITE( stream, recP->getCharge()  ) ;
 
     float* ref = const_cast<float*> ( recP->getReferencePoint() ) ; 

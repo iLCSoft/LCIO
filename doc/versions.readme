@@ -1,6 +1,7 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+   - new template UTIL::LCTypedVector for creating std::vector<LCOBJECTTYPE>s  of LCCollections
  
    - added first implementations of raw tracker hit classes (C++ only) : 
      TPCRawData, TPCCorrectedData, TPCPulse, VTXRawHit

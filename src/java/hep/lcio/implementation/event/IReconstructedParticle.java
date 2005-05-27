@@ -22,11 +22,11 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    protected List particles;
    protected List tracks;
    protected float[] covMatrix = new float[10];
-   protected float[] momentum = new float[3];
+   protected double[] momentum = new double[3];
    protected float[] referencePoint = new float[3];
    protected float charge;
-   protected float energy;
-   protected float mass;
+   protected double energy;
+   protected double mass;
    protected float goodnessOfPID;
    protected int type;
    
@@ -86,7 +86,7 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       this.energy = e;
    }
    
-   public float getEnergy()
+   public double getEnergy()
    {
       return energy;
    }
@@ -96,7 +96,7 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       mass = f;
    }
    
-   public float getMass()
+   public double getMass()
    {
       return mass;
    }
@@ -105,10 +105,23 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    {
       if (fs.length != 3) throw new IllegalArgumentException();
       checkAccess();
-      momentum = fs;
+      setMomentum( momentum[0], momentum[1], momentum[2]) ;
+   }
+   public void setMomentum(double[] momentum)
+   {
+      checkAccess();
+      if (momentum.length != 3)
+         throw new IllegalArgumentException();
+      this.momentum = momentum;
    }
    
-   public float[] getMomentum()
+   public void setMomentum(double px , double py, double pz){
+      this.momentum[0] = px ;
+      this.momentum[1] = py ;
+      this.momentum[2] = pz ;
+   }
+   
+   public double[] getMomentum()
    {
       return momentum;
    }

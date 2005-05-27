@@ -176,8 +176,11 @@ int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* sims
   *simstatus         = lcMCParticle->getSimulatorStatus() ;
   const double* dtmp = lcMCParticle->getVertex() ;
   for(int k=0;k<3;k++)  *prodvtx++  = dtmp[k] ;
-  const float*  tmp  = lcMCParticle->getMomentum() ;
-  for(int k=0;k<3;k++)  *momentum++ = tmp[k] ;
+
+
+  const double*  tmp  = lcMCParticle->getMomentum() ;
+
+  for(int k=0;k<3;k++)  *momentum++ = (float) tmp[k] ;
   *mass              = lcMCParticle->getMass() ;
   *charge            = lcMCParticle->getCharge() ;
   *ndaughters        = lcMCParticle->getNumberOfDaughters() ;

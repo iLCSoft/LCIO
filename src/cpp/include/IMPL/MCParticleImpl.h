@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.20 2005-04-15 08:37:37 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.21 2005-05-27 07:55:54 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -141,11 +141,11 @@ namespace IMPL {
     /** Returns the particle momentum at the production vertex.
      */
           
-    virtual const float * getMomentum() const ;
+    virtual const double * getMomentum() const ;
 
     /** Returns the mass of the particle in [GeV].
      */
-    virtual float getMass() const ;
+    virtual double getMass() const ;
 
     /** Returns the particle's charge.
      */
@@ -155,7 +155,7 @@ namespace IMPL {
     /** Returns the energy of the particle (at the vertex) in [GeV] computed from
      * the particle's momentum and mass.
      */
-    virtual float getEnergy() const ;
+    virtual double getEnergy() const ;
 
     // set methods
     /** Adds a parent particle. 
@@ -201,6 +201,10 @@ namespace IMPL {
       */
     void setMomentum( float p[3] );
 
+    /** Sets the momentum.
+     */
+    void setMomentum( double p[3] );
+
     /** Sets the mass.
      */
     void setMass( float m) ;
@@ -238,8 +242,8 @@ namespace IMPL {
     std::bitset<32> _simstatus ;
     double _vertex[3] ;
     double _endpoint[3] ;
-    float _p[3] ;
-    float _mass ;
+    double _p[3] ;
+    double _mass ;
     float _charge ;
     float _time ;
     EVENT::MCParticleVec _parents ;

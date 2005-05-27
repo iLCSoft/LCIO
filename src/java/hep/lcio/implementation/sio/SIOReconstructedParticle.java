@@ -14,7 +14,7 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.4 2004-09-24 13:21:23 tonyj Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.5 2005-05-27 07:55:56 gaede Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {
@@ -74,12 +74,12 @@ class SIOReconstructedParticle extends IReconstructedParticle
       else
       {
          out.writeInt(particle.getType());
-         float[] mom = particle.getMomentum();
-         for (int i=0; i<3; i++) out.writeFloat(mom[i]);
-         out.writeFloat(particle.getEnergy());
+         double[] mom = particle.getMomentum();
+         for (int i=0; i<3; i++) out.writeFloat( (float) mom[i]);
+         out.writeFloat((float) particle.getEnergy());
          float[] matrix = particle.getCovMatrix();
          for (int i=0; i<10; i++) out.writeFloat(matrix[i]);
-         out.writeFloat(particle.getMass());
+         out.writeFloat((float) particle.getMass());
          out.writeFloat(particle.getCharge());
          float[] ref = particle.getReferencePoint();
          for (int i=0; i<3; i++) out.writeFloat(ref[i]);
@@ -108,10 +108,10 @@ class SIOReconstructedParticle extends IReconstructedParticle
    private void write(SIOOutputStream out, int flag) throws IOException
    {
       out.writeInt(type);
-      for (int i=0; i<3; i++) out.writeFloat(momentum[i]);
-      out.writeFloat(energy);
+      for (int i=0; i<3; i++) out.writeFloat((float)momentum[i]);
+      out.writeFloat((float)energy);
       for (int i=0; i<10; i++) out.writeFloat(covMatrix[i]);
-      out.writeFloat(mass);
+      out.writeFloat((float)mass);
       out.writeFloat(charge);
       for (int i=0; i<3; i++) out.writeFloat(referencePoint[i]);
       out.writeInt(particleIDs.size());
