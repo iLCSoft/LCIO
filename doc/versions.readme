@@ -5,6 +5,9 @@
 ======================
   v01-05
 =======================
+   - changed return values of energy, momentum and mass to double for MCParticle and 
+     ReconstructedParticle - stored are still floats
+     -> requires some trivial changes (float->double) in code where indicated by the compiler !
 
    - new template UTIL::LCTypedVector for creating std::vector<LCOBJECTTYPE>s  of LCCollections
  

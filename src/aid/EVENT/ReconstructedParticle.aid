@@ -10,7 +10,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.13 2005-05-27 07:55:53 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.14 2005-05-31 08:51:28 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -48,11 +48,11 @@ public interface ReconstructedParticle extends LCObject {
      */
     public boolean isCompound() const ;
 
-    /** The magnitude of the reconstructed particle's momentum,
+    /** The magnitude of the reconstructed particle's momentum - only float used in files,
      */
     public const double3V getMomentum() const ;	
     
-    /** Energy of the  reconstructed particle.
+    /** Energy of the  reconstructed particle - only float used in files.
      */
     public double getEnergy() const ;	
     
@@ -62,7 +62,8 @@ public interface ReconstructedParticle extends LCObject {
      */
     public const FloatVec& getCovMatrix() const ;
     
-    /** Mass of the  reconstructed particle, set independently from four vector quantities.
+    /** Mass of the  reconstructed particle, set independently from four vector quantities 
+     *  - only float used in files.
      */
     public double getMass() const ;	
 

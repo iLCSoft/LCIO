@@ -17,14 +17,14 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.22 2005-05-27 07:55:53 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.23 2005-05-31 08:51:27 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
 
     
     /** Returns the energy of the particle (at the vertex) in [GeV] computed from
-     * the particle's momentum and mass.
+     * the particle's momentum and mass - only float used in files.
      */
     public double getEnergy() const;
 
@@ -167,12 +167,12 @@ public interface MCParticle extends LCObject {
     public const double3V getEndpoint() const;
 
 
-    /** Returns the particle momentum at the production vertex in [GeV].
+    /** Returns the particle momentum at the production vertex in [GeV] - only float used in files.
      */
     public const double3V getMomentum() const;
 
     
-    /** Returns the mass of the particle in [GeV].
+    /** Returns the mass of the particle in [GeV] - only float used in files.
      */
     public double getMass() const;
     
