@@ -479,10 +479,27 @@ clustering etc. It has a float energy and optional time word. Clusters will have
 CalorimeterHit.
 
 \subsubsection{TPCHit}
-As the name suggests this class has been specifically designed for TPC-like subdetector's raw data.
-It has a cellid, time and charge of the hit after feature extraction. Optionally (LCIO.TPCBIT\_RAW=1) raw
-waveforms can be stored in the hit as well. As for RawCalorimeterHit in a pure raw data stream a 32-bit pointer tag
-per hit can be suppressed (LCIO.TPCBIT\_NO\_PTR=1).
+Deprecated. Please use the new classes for raw tracker data: TrackerRawData, TrackerData and TrackerPulse.
+%As the name suggests this class has been specifically designed for TPC-like subdetector's raw data.
+%It has a cellid, time and charge of the hit after feature extraction. Optionally (LCIO.TPCBIT\_RAW=1) raw
+%waveforms can be stored in the hit as well. As for RawCalorimeterHit in a pure raw data stream a 32-bit pointer tag
+%per hit can be suppressed (LCIO.TPCBIT\_NO\_PTR=1).
+
+\subsection{TrackerRawData}
+Generic class for raw tracker data. One or optionally two (LCIO.TRAWBIT\_ID1=1) cell ids can be used to decode the
+readout channel. Specific subdetectors will use different encodings, e.g. a silicon vertex detector might use 
+cellID0 and cellID1 to encode the module number, row and column of the hit. An arbitrary number of ADC values can be 
+stored in the hit. This can be either a complete spectrum (waveform) as for a TPC like detector or just one or two 
+consecutive ADC readout values.
+
+\subsection{TrackerData}
+Same as the TrackerRawData, except that the data has been corrected (calibrated). In particular the calibrated ADC 
+values are stored as floating point charge values with arbitrary, i.e. subdetector specific units. 
+
+\subsection{TrackerPulse}
+Tracker pulse that is typically created from TrackerData by some sort of feature extraction, e.g. for a TPC like detector
+the pulse will contain the integrated charge of the spectrum and the corresponding time.
+
 
 \subsubsection{TrackerHit}
 The TrackerHit serves as a generic hit type that can be used for pattern recognition. It allready has a space 

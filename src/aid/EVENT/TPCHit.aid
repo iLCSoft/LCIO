@@ -1,14 +1,11 @@
 package hep.lcio.event ;
 
-/** A generic TPCHit for real data. Optionaly contains an integer array
- *  with raw data that is implementation dependent, e.g. the FADC read out 
- *  of the corresponding bump. 
- *  If generic TrackerHits from reconstruction want to point back to
- *  TPCHit objects, these have to be stored in a collection
- *  with flag( bit LCIO::TPCBIT_PTR)==1.
+/** Deprecated. Please use TrackerRawData, TrackerData and TrackerPulse instead.
+ *  A future version of LCIO will not support writing of TPCHit collections anymore.
  * 
+ * @deprecated
  * @author gaede
- * @version Sep 11, 2003
+ * @version $Id: TPCHit.aid,v 1.4 2005-05-31 09:35:05 gaede Exp $
  */
 
 public interface TPCHit extends LCObject {
