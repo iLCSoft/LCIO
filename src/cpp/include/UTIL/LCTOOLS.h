@@ -48,17 +48,17 @@ namespace UTIL{
      */
     static void printTPCHits(const EVENT::LCCollection* col ) ;
 
-    /** Complete printout of all TPCRawData objects in the collection.
+    /** Complete printout of all TrackerRawData objects in the collection.
      */
-    static void printTPCRawData(const EVENT::LCCollection* col ) ;
+    static void printTrackerRawData(const EVENT::LCCollection* col ) ;
 
-    /** Complete printout of all TPCCorrectedData objects in the collection.
+    /** Complete printout of all TrackerData objects in the collection.
      */
-    static void printTPCCorrectedData(const EVENT::LCCollection* col ) ;
+    static void printTrackerData(const EVENT::LCCollection* col ) ;
 
-    /** Complete printout of all TPCPulse objects in the collection.
+    /** Complete printout of all TrackerPulse objects in the collection.
      */
-    static void printTPCPulse(const EVENT::LCCollection* col ) ;
+    static void printTrackerPulse(const EVENT::LCCollection* col ) ;
 
     /** Complete printout of all TrackerHits in the collection.
      */
@@ -107,15 +107,6 @@ namespace UTIL{
     /** Print the relation.
      */
     static void printRelation( const EVENT::LCCollection* col ) ;
-
-    /** Print SiliconRawHits.
-     */
-    static void printSiliconRawHits( const EVENT::LCCollection* col ) ;
-
-//     /** Print the relation.
-//      */
-//     static void printRelation( const EVENT::LCRelation* rel ) ;
-
 
     /** Print the parameters.
      */

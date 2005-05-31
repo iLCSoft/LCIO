@@ -3,8 +3,8 @@
 ---------------------------------------------------------------
    - new template UTIL::LCTypedVector for creating std::vector<LCOBJECTTYPE>s  of LCCollections
  
-   - added first implementations of raw tracker hit classes (C++ only) : 
-     TPCRawData, TPCCorrectedData, TPCPulse, VTXRawHit
+   - added first implementations of generic tracker raw data classes (TPC, VTX, SiliconStrip,...)
+     TrackerRawData, TrackerData, TrackerPulse
 
    - added macro to lcio.h for handling of uncaught exceptions if not Reader/Writer is used:
      #define HANDLE_LCIO_EXCEPTIONS 

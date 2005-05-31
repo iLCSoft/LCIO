@@ -1,33 +1,39 @@
-#ifndef IMPL_TPCPulseImpl_H
-#define IMPL_TPCPulseImpl_H 1
+#ifndef IMPL_TrackerPulseImpl_H
+#define IMPL_TrackerPulseImpl_H 1
 
-#include "EVENT/TPCPulse.h"
+#include "EVENT/TrackerPulse.h"
 #include "AccessChecked.h"
 
 namespace IMPL {
 
-/** Default implementation of TPCPulse.
+/** Default implementation of TrackerPulse.
  * 
  * @author gaede
- * @version $Id: TPCPulseImpl.h,v 1.1 2005-04-26 11:01:21 gaede Exp $
+ * @version $Id: TrackerPulseImpl.h,v 1.1 2005-05-31 07:43:23 gaede Exp $
  */
 
-  class TPCPulseImpl :  public EVENT::TPCPulse , public AccessChecked {
+  class TrackerPulseImpl :  public EVENT::TrackerPulse , public AccessChecked {
     
   public: 
     
     /** Default Constructor - initializes all data to 0's. 
      */
-    TPCPulseImpl() ;
+    TrackerPulseImpl() ;
     
     /// Destructor.
-    virtual ~TPCPulseImpl() ;
+    virtual ~TrackerPulseImpl() ;
     
     virtual int id() { return simpleUID() ; }
     
-    /** The detector specific channel id.
+
+    /** Returns the first detector specific (geometrical) cell id.
      */
-    virtual int getChannelID() const { return _channelID ; } 
+    virtual int getCellID0() const { return _cellID0 ; } 
+    
+    /** Returns the second detector specific (geometrical) cell id. Optional, check/set 
+     *  flag(LCIO::TRAWBIT_ID1)==1.
+     */
+    virtual int getCellID1() const { return _cellID1 ; } 
     
     /** The time of the pulse.
      */
@@ -41,29 +47,31 @@ namespace IMPL {
      */
     virtual int getQuality() const { return _quality ; }
     
-    /** Optionally the TPCCorrectedData that has been uesed to create the pulse
+    /** Optionally the TrackerData that has been uesed to create the pulse
      *  can be stored with the pulse - NULL if none. Check the quality bits for reason
      *  why the spectrum has been stored for the pulse.
      */
-    virtual EVENT::TPCCorrectedData * getTPCCorrectedData() const { return _corrData ; } 
+    virtual EVENT::TrackerData * getTrackerData() const { return _corrData ; } 
   
 
     // setter methods
-    void setChannelID( int channelID ) ; 
+    void setCellID0( int cellID0 ) ; 
+    void setCellID1( int cellID1 ) ; 
     void setTime( float time ) ; 
     void setCharge( float charge ) ; 
     void setQuality( int quality ) ; 
     void setQualityBit( int bit , bool val=true ) ; 
-    void setTPCCorrectedData( EVENT::TPCCorrectedData * corrData ) ; 
+    void setTrackerData( EVENT::TrackerData * corrData ) ; 
     
 protected:
 
-    int   _channelID ;
+    int _cellID0 ;
+    int _cellID1 ;
     float _time ;
     float _charge ;
     int   _quality ;
-    EVENT::TPCCorrectedData* _corrData ;
+    EVENT::TrackerData* _corrData ;
     
   }; // class
 } // namespace IMPL
-#endif /* ifndef IMPL_TPCPulseImpl_H */
+#endif /* ifndef IMPL_TrackerPulseImpl_H */

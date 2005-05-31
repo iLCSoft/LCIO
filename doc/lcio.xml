@@ -272,32 +272,38 @@
             </if>
          </repeat>
       </block>
-      <block name="TPCRawData" major="1" minor="4">
+      <block name="TrackerRawData" major="1" minor="4">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
-            <data type="int" name="channelID">channel Id</data>
-            <data type="int" name="time0">t0 of spectrum</data>
+            <data type="int" name="cellID0">cell id</data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+                <data type="int" name="cellID1">second word for cell id</data>
+            </if>
+            <data type="int" name="time">time</data>
 
-            <data type="int" name="nCharge"></data>
-            <repeat count="nCharge">
-		<data type="short" name="charge"></data>
+            <data type="int" name="nADC"></data>
+            <repeat count="nADC">
+		<data type="short" name="ADCValues"></data>
             </repeat>
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TPCCorrectedData" major="1" minor="4">
+      <block name="TrackerData" major="1" minor="4">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
-            <data type="int" name="channelID">channel Id</data>
-            <data type="int" name="time0">t0 of spectrum</data>
+            <data type="int" name="cellID0">cell id</data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+                <data type="int" name="cellID1">second word for cell id</data>
+            </if>
+            <data type="float" name="time">time</data>
 
             <data type="int" name="nCharge"></data>
             <repeat count="nCharge">
-		<data type="float" name="charge"></data>
+		<data type="float" name="chargeValues"></data>
             </repeat>
             <data type="ptag" name="this"></data>
          </repeat>
@@ -307,7 +313,10 @@
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
-            <data type="int" name="channelID">channel Id</data>
+            <data type="int" name="cellID0">cell id</data>
+	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+                <data type="int" name="cellID1">second word for cell id</data>
+            </if>
             <data type="float" name="time">time of pulse</data>
             <data type="float" name="charge">charge</data>
             <data type="int" name="quality">quality flag word</data>

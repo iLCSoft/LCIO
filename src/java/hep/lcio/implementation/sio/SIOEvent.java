@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.36 2005-05-10 01:12:54 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.37 2005-05-31 07:43:30 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -178,43 +178,33 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
-         else if (type.equals(LCIO.TPCRAWDATA))
+         else if (type.equals(LCIO.TRACKERRAWDATA))
          {
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOTPCRawData(in,flags, this,major,minor) );
+               ilc.add(new SIOTrackerRawData(in,flags, this,major,minor) );
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
-         else if (type.equals(LCIO.TPCCORRECTEDDATA))
+         else if (type.equals(LCIO.TRACKERDATA))
          {
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOTPCCorrectedData(in,flags, this,major,minor) );
+               ilc.add(new SIOTrackerData(in,flags, this,major,minor) );
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
-         else if (type.equals(LCIO.TPCPULSE))
+         else if (type.equals(LCIO.TRACKERPULSE))
          {
             int n = in.readInt();
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOTPCPulse(in,flags, this,major,minor) );
-            ilc.setOwner(this);
-            addCollection(ilc, name);
-         }
-         else if (type.equals(LCIO.VTXRAWHIT))
-         {
-            int n = in.readInt();
-            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
-            ilc.setParameters( colParameters ) ;
-            for (int i = 0; i < n; i++)
-               ilc.add(new SIOSiliconRawHit(in,flags, this,major,minor) );
+               ilc.add(new SIOTrackerPulse(in,flags, this,major,minor) );
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -489,25 +479,20 @@ class SIOEvent extends ILCEvent
                for (int i = 0; i < n; i++)
                   SIOTPCHit.write((TPCHit) col.getElementAt(i), out, flags );
             }
-            else if (type.equals(LCIO.TPCRAWDATA))
+            else if (type.equals(LCIO.TRACKERRAWDATA))
             {
                for (int i = 0; i < n; i++)
-                  SIOTPCRawData.write((TPCRawData) col.getElementAt(i), out, flags );
+                  SIOTrackerRawData.write((TrackerRawData) col.getElementAt(i), out, flags );
             }
-            else if (type.equals(LCIO.TPCCORRECTEDDATA))
+            else if (type.equals(LCIO.TRACKERDATA))
             {
                for (int i = 0; i < n; i++)
-                  SIOTPCCorrectedData.write((TPCCorrectedData) col.getElementAt(i), out, flags );
+                  SIOTrackerData.write((TrackerData) col.getElementAt(i), out, flags );
             }
-            else if (type.equals(LCIO.TPCPULSE))
+            else if (type.equals(LCIO.TRACKERPULSE))
             {
                for (int i = 0; i < n; i++)
-                  SIOTPCPulse.write((TPCPulse) col.getElementAt(i), out, flags );
-            }
-            else if (type.equals(LCIO.VTXRAWHIT))
-            {
-               for (int i = 0; i < n; i++)
-                  SIOSiliconRawHit.write((SiliconRawHit) col.getElementAt(i), out, flags );
+                  SIOTrackerPulse.write((TrackerPulse) col.getElementAt(i), out, flags );
             }
             else if (type.equals(LCIO.SIMCALORIMETERHIT))
             {

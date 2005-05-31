@@ -6,9 +6,9 @@
 #include "EVENT/RawCalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/TPCHit.h"
-#include "EVENT/TPCRawData.h"
-#include "EVENT/TPCCorrectedData.h"
-#include "EVENT/TPCPulse.h"
+#include "EVENT/TrackerRawData.h"
+#include "EVENT/TrackerData.h"
+#include "EVENT/TrackerPulse.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "EVENT/LCFloatVec.h"
@@ -18,7 +18,6 @@
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/LCGenericObject.h"
-#include "EVENT/SiliconRawHit.h"
 
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
@@ -156,24 +155,18 @@ namespace UTIL {
 	  
 	printRelation( col ) ;
       }
-      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCRAWDATA ){
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACKERRAWDATA ){
 	  
-	printTPCRawData( col ) ;
+	printTrackerRawData( col ) ;
       }
-      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCCORRECTEDDATA ){
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACKERDATA ){
 	  
-	printTPCCorrectedData( col ) ;
+	printTrackerData( col ) ;
       }
-      else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCPULSE ){
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::TRACKERPULSE ){
 	  
-	printTPCPulse( col ) ;
+	printTrackerPulse( col ) ;
       }
-      else if( evt->getCollection( *name )->getTypeName() == LCIO::VTXRAWHIT ){
-	  
-	printSiliconRawHits( col ) ;
-      }
-
-
 
     }
 
@@ -593,20 +586,23 @@ namespace UTIL {
     
   }
   
-void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
+void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 
-    if( col->getTypeName() != LCIO::TPCRAWDATA ){
+    if( col->getTypeName() != LCIO::TRACKERRAWDATA ){
 
-      cout << " collection not of type " << LCIO::TPCRAWDATA << endl ;
+      cout << " collection not of type " << LCIO::TRACKERRAWDATA << endl ;
       return ;
     }
     
     cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::TPCRAWDATA << " collection "
+	 << "--------------- " << "print out of "  << LCIO::TRACKERRAWDATA << " collection "
 	 << "--------------- " << endl ;
     
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
     
     printParameters( col->getParameters() ) ;
 
@@ -617,21 +613,22 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] |  cha.id  |    time    | chargeADC "
+	      << " [   id   ] |  cellid0 |  cellid1 |   time    | chargeADC "
 	      << endl 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      TPCRawData* hit = 
-	dynamic_cast<TPCRawData*>( col->getElementAt( i ) ) ;
+      TrackerRawData* hit = 
+	dynamic_cast<TrackerRawData*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | %8.8x | %10d | " 
+      printf(" [%8.8x] | %8.8x | %8.8x | %10d | " 
 	     , hit->id() 
-	     , hit->getChannelID()                 
-	     , hit->getTime0()  
+	     , hit->getCellID0()                 
+	     , hit->getCellID1()                 
+	     , hit->getTime ()  
 	     ) ;
-      const ShortVec& charge = hit->getCharge() ;
+      const ShortVec& charge = hit->getADCValues() ;
       for( unsigned j=0 ; j < charge.size() ; j++ ) {
 	cout << charge[j] << "," ;
       }
@@ -643,20 +640,23 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
     
   }
 
-  void LCTOOLS::printTPCCorrectedData(const EVENT::LCCollection* col ) {
+  void LCTOOLS::printTrackerData(const EVENT::LCCollection* col ) {
 
-    if( col->getTypeName() != LCIO::TPCCORRECTEDDATA ){
+    if( col->getTypeName() != LCIO::TRACKERDATA ){
 
-      cout << " collection not of type " << LCIO::TPCCORRECTEDDATA << endl ;
+      cout << " collection not of type " << LCIO::TRACKERDATA << endl ;
       return ;
     }
     
     cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::TPCCORRECTEDDATA << " collection "
+	 << "--------------- " << "print out of "  << LCIO::TRACKERDATA << " collection "
 	 << "--------------- " << endl ;
     
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
     
     printParameters( col->getParameters() ) ;
 
@@ -667,21 +667,22 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] |  cha.id  |    time    | chargeADC "
+	      << " [   id   ] |  cellid0 |  cellid1 |   time    | chargeADC "
 	      << endl 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      TPCCorrectedData* hit = 
-	dynamic_cast<TPCCorrectedData*>( col->getElementAt( i ) ) ;
+      TrackerData* hit = 
+	dynamic_cast<TrackerData*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | %8.8x | %10d | " 
+      printf(" [%8.8x] | %8.8x | %8.8x | %5.3f  | " 
 	     , hit->id() 
-	     , hit->getChannelID()                 
-	     , hit->getTime0()  
+	     , hit->getCellID0()                 
+	     , hit->getCellID1()                 
+	     , hit->getTime ()  
 	     ) ;
-      const FloatVec& charge = hit->getCharge() ;
+      const FloatVec& charge = hit->getChargeValues() ;
       for( unsigned j=0 ; j < charge.size() ; j++ ) {
 	cout << charge[j] << "," ;
       }
@@ -693,20 +694,23 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
 
   }
 
-  void LCTOOLS::printTPCPulse(const EVENT::LCCollection* col ) {
+  void LCTOOLS::printTrackerPulse(const EVENT::LCCollection* col ) {
 
-    if( col->getTypeName() != LCIO::TPCPULSE ){
+    if( col->getTypeName() != LCIO::TRACKERPULSE ){
 
-      cout << " collection not of type " << LCIO::TPCPULSE << endl ;
+      cout << " collection not of type " << LCIO::TRACKERPULSE << endl ;
       return ;
     }
     
     cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::TPCPULSE << " collection "
+	 << "--------------- " << "print out of "  << LCIO::TRACKERPULSE << " collection "
 	 << "--------------- " << endl ;
     
     cout << endl 
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
+
+    LCFlagImpl flag( col->getFlag() ) ;
+    cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
     
     printParameters( col->getParameters() ) ;
 
@@ -720,17 +724,19 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-      TPCPulse* hit = 
-	dynamic_cast<TPCPulse*>( col->getElementAt( i ) ) ;
+      TrackerPulse* hit = 
+	dynamic_cast<TrackerPulse*>( col->getElementAt( i ) ) ;
       
-      printf(" [%8.8x] | %8.8x | %5.3f | %5.3f | %8.8x | " 
+      printf(" [%8.8x] | %8.8x | %8.8x | %5.3f | %5.3f | %8.8x | " 
 	     , hit->id() 
-	     , hit->getChannelID()                 
+	     , hit->getCellID0()                 
+	     , hit->getCellID1()                 
 	     , hit->getTime()  
 	     , hit->getCharge()  
 	     , hit->getQuality()  
 	     ) ;
-      TPCCorrectedData* corr =  hit->getTPCCorrectedData() ;
+
+      TrackerData* corr =  hit->getTrackerData() ;
 //       if( corr != 0 )
 // 	std::cout << corr->id() 
 
@@ -743,53 +749,7 @@ void LCTOOLS::printTPCRawData(const EVENT::LCCollection* col ) {
 	 << endl ;
     
   }
-  void LCTOOLS::printSiliconRawHits( const EVENT::LCCollection* col ) {
 
-    if( col->getTypeName() != LCIO::VTXRAWHIT ){
-
-      cout << " collection not of type " << LCIO::VTXRAWHIT << endl ;
-      return ;
-    }
-    
-    cout << endl 
-	 << "--------------- " << "print out of "  << LCIO::VTXRAWHIT << " collection "
-	 << "--------------- " << endl ;
-    
-    cout << endl 
-	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
-    
-    printParameters( col->getParameters() ) ;
-
-    int nHits =  col->getNumberOfElements() ;
-    int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
-    
-    std::cout << endl
-	      << " [   id   ] |  cellID0 |  cellID1 |  timeStamp | ADCCounts  | "
-	      << endl 
-	      << endl ;
-    
-    for( int i=0 ; i< nPrint ; i++ ){
-      
-      SiliconRawHit* hit = 
-	dynamic_cast<SiliconRawHit*>( col->getElementAt( i ) ) ;
-      
-      printf(" [%8.8x] | %8.8x | %8.8x | %10d | %10d | " 
-	     , hit->id() 
-	     , hit->getCellID0()                 
-	     , hit->getCellID1()                 
-	     , hit->getTimeStamp()  
-	     , hit->getADCCounts()  
-	     ) ;
-
-      cout << endl ;
-    }
-    cout << endl 
-	 << "-------------------------------------------------------------------------------- " 
-	 << endl ;
-    
-
-  }
-  
   void LCTOOLS::printTPCHits(const EVENT::LCCollection* col ) {
     
     if( col->getTypeName() != LCIO::TPCHIT ){

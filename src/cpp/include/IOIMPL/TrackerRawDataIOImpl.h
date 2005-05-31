@@ -1,11 +1,11 @@
 #ifndef SIO_TPCHITIOIMPL_H
 #define SIO_TPCHITIOIMPL_H 1
 
-#include "IMPL/TPCRawDataImpl.h"
+#include "IMPL/TrackerRawDataImpl.h"
 
 namespace SIO{
 
-  class SIOTPCRawDataHandler ;
+  class SIOTrackerRawDataHandler ;
 }
 
 namespace IOIMPL {
@@ -17,9 +17,9 @@ namespace IOIMPL {
  * @author gaede
  * @version Sep 11, 2003
  */
-  class TPCRawDataIOImpl : public IMPL::TPCRawDataImpl {
+  class TrackerRawDataIOImpl : public IMPL::TrackerRawDataImpl {
     
-    friend class SIO::SIOTPCRawDataHandler ;
+    friend class SIO::SIOTrackerRawDataHandler ;
     
   }; // class
 

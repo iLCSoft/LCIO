@@ -1,0 +1,33 @@
+package hep.lcio.event ;
+
+/** TrackerData contains the corrected (calibrated) raw tracker data.
+ *  @see TrackerRawData
+ *  @see TrackerPulse
+ * 
+ * @author gaede
+ * @version $Id: TrackerData.aid,v 1.1 2005-05-31 07:43:22 gaede Exp $
+ */
+
+public interface TrackerData extends LCObject {
+    
+    /** Returns the first detector specific (geometrical) cell id.
+     */
+    public int getCellID0() const ;
+    
+    /** Returns the second detector specific (geometrical) cell id. Optional, check/set 
+     *  flag(LCIO::TRAWBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
+    /** Returns a time measurement associated with the adc values, e.g. the 
+     *  t0 of the spectrum for the TPC. Subdetector dependent.
+     */
+    public float getTime() const ;	
+    
+    /** The corrected (calibrated) FADC spectrum. 
+     */
+    public const FloatVec& getChargeValues() const ;
+    
+}
+
+

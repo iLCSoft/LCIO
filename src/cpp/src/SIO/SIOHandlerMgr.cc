@@ -16,10 +16,9 @@
 #include "SIO/SIOLCRelationHandler.h" 
 #include "SIO/SIOLCGenericObjectHandler.h" 
 #include "SIO/SIOTPCHitHandler.h" 
-#include "SIO/SIOTPCRawDataHandler.h" 
-#include "SIO/SIOTPCCorrectedDataHandler.h" 
-#include "SIO/SIOTPCPulseHandler.h" 
-#include "SIO/SIOSiliconRawHitHandler.h" 
+#include "SIO/SIOTrackerRawDataHandler.h" 
+#include "SIO/SIOTrackerDataHandler.h" 
+#include "SIO/SIOTrackerPulseHandler.h" 
 
 #include "EVENT/LCIO.h"
 
@@ -40,9 +39,9 @@ namespace SIO {
     _map[ LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
     _map[ LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
     _map[ LCIO::TPCHIT ] = new SIOTPCHitHandler ;
-    _map[ LCIO::TPCRAWDATA ] = new SIOTPCRawDataHandler ;
-    _map[ LCIO::TPCCORRECTEDDATA ] = new SIOTPCCorrectedDataHandler ;
-    _map[ LCIO::TPCPULSE ] = new SIOTPCPulseHandler ;
+    _map[ LCIO::TRACKERRAWDATA ] = new SIOTrackerRawDataHandler ;
+    _map[ LCIO::TRACKERDATA ] = new SIOTrackerDataHandler ;
+    _map[ LCIO::TRACKERPULSE ] = new SIOTrackerPulseHandler ;
     _map[ LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
@@ -53,7 +52,6 @@ namespace SIO {
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
     _map[ LCIO::LCINTVEC ] = new SIOIntVecHandler ;
     _map[ LCIO::LCGENERICOBJECT ] = new SIOLCGenericObjectHandler ;
-    _map[ LCIO::VTXRAWHIT ] = new SIOSiliconRawHitHandler ;
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){

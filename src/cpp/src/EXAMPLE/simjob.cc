@@ -15,11 +15,9 @@
 #include "IMPL/LCTOOLS.h"
 
 #include "IMPL/TPCHitImpl.h"
-#include "IMPL/TPCRawDataImpl.h"
-#include "IMPL/TPCCorrectedDataImpl.h"
-#include "IMPL/TPCPulseImpl.h"
-
-#include "IMPL/SiliconRawHitImpl.h"
+#include "IMPL/TrackerRawDataImpl.h"
+#include "IMPL/TrackerDataImpl.h"
+#include "IMPL/TrackerPulseImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
@@ -349,100 +347,110 @@ int main(int argc, char** argv ){
  	//-----------------------------------------------------
 
 
-#define WRITE_TPCRAWDATA 1
-#ifdef WRITE_TPCRAWDATA
+#define WRITE_TRACKERRAWDATA 1
+#ifdef WRITE_TRACKERRAWDATA
 	//--- write some new TPC raw data collections to the file 
-	LCCollectionVec* tpcRawVec = new LCCollectionVec( LCIO::TPCRAWDATA )  ;
+	LCCollectionVec* tpcRawVec = new LCCollectionVec( LCIO::TRACKERRAWDATA )  ;
 	
 	for(int j=0;j<NHITS;j++){
 
-	  TPCRawDataImpl* tpcRaw = new TPCRawDataImpl ;
+	  TrackerRawDataImpl* tpcRaw = new TrackerRawDataImpl ;
 	  
-	  tpcRaw->setChannelID( j ) ;
-	  tpcRaw->setTime0( -j  ) ;
+	  tpcRaw->setCellID0( j ) ;
+	  tpcRaw->setTime( -j  ) ;
 	  
 	  if( j % 2 ) { // test two ways of setting the charge
-	    ShortVec charge ;
-	    charge.push_back( 42 ) ;
-	    charge.push_back( 43 ) ;
-	    charge.push_back( 44 ) ;
-	    charge.push_back( 45 ) ;
-	    tpcRaw->setChargeVec( charge ) ;
+	    ShortVec adcValues ;
+	    adcValues.push_back( 42 ) ;
+	    adcValues.push_back( 43 ) ;
+	    adcValues.push_back( 44 ) ;
+	    adcValues.push_back( 45 ) ;
+	    tpcRaw->setADCValues( adcValues ) ;
 	  } else {
-	    tpcRaw->charge().push_back( 42 ) ;
-	    tpcRaw->charge().push_back( 43 ) ;
-	    tpcRaw->charge().push_back( 44 ) ;
-	    tpcRaw->charge().push_back( 45 ) ;
+	    tpcRaw->adcValues().push_back( 42 ) ;
+	    tpcRaw->adcValues().push_back( 43 ) ;
+	    tpcRaw->adcValues().push_back( 44 ) ;
+	    tpcRaw->adcValues().push_back( 45 ) ;
 	  }
 	  tpcRawVec->addElement( tpcRaw ) ;
 	}
-	evt->addCollection( tpcRawVec , "TPCRawDataExample" ) ;
+	evt->addCollection( tpcRawVec , "TrackerRawDataExample" ) ;
 
 	//------ corrected data
 
-	LCCollectionVec* tpcCorrectedVec = new LCCollectionVec( LCIO::TPCCORRECTEDDATA )  ;
+	LCCollectionVec* tpcCorrectedVec = new LCCollectionVec( LCIO::TRACKERDATA )  ;
 	
 	for(int j=0;j<NHITS;j++){
 
-	  TPCCorrectedDataImpl* tpcCorrected = new TPCCorrectedDataImpl ;
+	  TrackerDataImpl* tpcCorrected = new TrackerDataImpl ;
 	  
-	  tpcCorrected->setChannelID( j ) ;
-	  tpcCorrected->setTime0( -j  ) ;
+	  tpcCorrected->setCellID0( j ) ;
+	  tpcCorrected->setTime( -j  ) ;
 	  
-	  tpcCorrected->charge().push_back( 42.12345 ) ;
-	  tpcCorrected->charge().push_back( 43.09876 ) ;
-	  tpcCorrected->charge().push_back( 44.12345 ) ;
-	  tpcCorrected->charge().push_back( 45.09876 ) ;
+	  tpcCorrected->chargeValues().push_back( 42.12345 ) ;
+	  tpcCorrected->chargeValues().push_back( 43.09876 ) ;
+	  tpcCorrected->chargeValues().push_back( 44.12345 ) ;
+	  tpcCorrected->chargeValues().push_back( 45.09876 ) ;
 
 	  tpcCorrectedVec->addElement( tpcCorrected ) ;
 	}
-	evt->addCollection( tpcCorrectedVec , "TPCCorrectedDataExample" ) ;
+	evt->addCollection( tpcCorrectedVec , "TrackerDataExample" ) ;
 	
 	// ------ pulses
 
-	LCCollectionVec* tpcPulseVec = new LCCollectionVec( LCIO::TPCPULSE )  ;
+	LCCollectionVec* tpcPulseVec = new LCCollectionVec( LCIO::TRACKERPULSE )  ;
+	
+	IntVec qualityBits ;
+	qualityBits.push_back(0) ;
+	qualityBits.push_back(1) ;
+
+	StringVec bitNames ;
+	bitNames.push_back("GOOD") ;
+	bitNames.push_back("BAD") ;
+
+	tpcPulseVec->parameters().setValues("TrackerPulseQualityNames", bitNames ); 
+	tpcPulseVec->parameters().setValues("TrackerPulseQualityValues", qualityBits ); 
 	
 	for(int j=0;j<NHITS;j++){
 
-	  TPCPulseImpl* tpcPulse = new TPCPulseImpl ;
+	  TrackerPulseImpl* tpcPulse = new TrackerPulseImpl ;
 	  
-	  tpcPulse->setChannelID( j ) ;
+	  tpcPulse->setCellID0( j ) ;
 	  tpcPulse->setTime( 3.1415 + 0.1 * j  ) ;
 	  tpcPulse->setCharge( 3.1415 - 0.1 * j  ) ;
 
-
 	  if( j % 2 ) {
-	    tpcPulse->setQualityBit( TPCPulse::GOOD ) ;
+	    tpcPulse->setQualityBit( qualityBits[0] ) ;
 	  } else {
 
-	    tpcPulse->setQualityBit( TPCPulse::BAD ) ;
+	    tpcPulse->setQualityBit( qualityBits[1] ) ;
 	    
-	    TPCCorrectedData* corr = 
-	      dynamic_cast<TPCCorrectedData*> ( tpcCorrectedVec->getElementAt(j) ) ; 
-	    tpcPulse->setTPCCorrectedData( corr ) ;
+	    TrackerData* corr = 
+	      dynamic_cast<TrackerData*> ( tpcCorrectedVec->getElementAt(j) ) ; 
+	    tpcPulse->setTrackerData( corr ) ;
 	  }
 
 	  tpcPulseVec->addElement( tpcPulse ) ;
 	}
-	evt->addCollection( tpcPulseVec , "TPCPulseExample" ) ;
+	evt->addCollection( tpcPulseVec , "TrackerPulseExample" ) ;
 
 	//-----------------------------------------------------
-#endif // WRITE_TPCRAWDATA
+#endif // WRITE_TRACKERRAWDATA
 
 #define WRITE_VTXRAWHITS 1
 #ifdef WRITE_VTXRAWHITS
 
-	//--- write some VTX raw hits  to the file 
-	LCCollectionVec* vtxRawVec = new LCCollectionVec( LCIO::VTXRAWHIT )  ;
+	//--- write some VTX raw hits  to the file - using the TrackerPulse
+	LCCollectionVec* vtxRawVec = new LCCollectionVec( LCIO::TRACKERPULSE )  ;
 	
 	for(int j=0;j<NHITS;j++){
 
-	  SiliconRawHitImpl* vtxRaw = new SiliconRawHitImpl ;
+	  TrackerPulseImpl* vtxRaw = new TrackerPulseImpl ;
 	  
 	  vtxRaw->setCellID0( 0xBebaFeca ) ;
 	  vtxRaw->setCellID1( 0xCafeBabe ) ;
-	  vtxRaw->setTimeStamp( j  ) ;
-	  vtxRaw->setADCCounts( 42 + j  ) ;
+	  vtxRaw->setTime( j  ) ;
+	  vtxRaw->setCharge( 42 + j  ) ;
 	  
 	  vtxRawVec->addElement( vtxRaw ) ;
 	}
