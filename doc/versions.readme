@@ -1,6 +1,11 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+
+======================
+  v01-05
+=======================
+
    - new template UTIL::LCTypedVector for creating std::vector<LCOBJECTTYPE>s  of LCCollections
  
    - added first implementations of generic tracker raw data classes (TPC, VTX, SiliconStrip,...)

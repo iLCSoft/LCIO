@@ -19,11 +19,13 @@ public class RandomEventTest
 
       // self compare
       cmp.compare(e,e);
-
+      
+      System.out.print("Compare result of same random event: " );
+      
       ILCFactory factory = LCFactory.getInstance();
       LCWriter lcWrt = factory.createLCWriter();
       File file = new File("temp.slcio");
-      file.deleteOnExit();
+   //   file.deleteOnExit();
       lcWrt.open(file.getAbsolutePath());
       lcWrt.writeEvent(e);
       lcWrt.close();
@@ -37,6 +39,6 @@ public class RandomEventTest
       // compare objects
       cmp.compare(e, e2);
 
-      System.out.println("Compare result of same random event: " + cmp.getResultString() );
+      System.out.println( cmp.getResultString() );
    }
 }
