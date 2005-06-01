@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * A default implementation of MCParticle.
  * @author Tony Johnson
- * @version $Id: IMCParticle.java,v 1.13 2005-05-27 07:55:55 gaede Exp $
+ * @version $Id: IMCParticle.java,v 1.14 2005-06-01 15:10:44 gaede Exp $
  */
 public class IMCParticle extends ILCObject implements MCParticle
 {
@@ -148,7 +148,8 @@ public class IMCParticle extends ILCObject implements MCParticle
    public void setSimulatorStatus(int status)
    {
       checkAccess();
-      status |= (0x7fffffff & status); // bit 31 reserved for endpoint
+      // fg: this is inconsistent with c++ - enpoint bit is not different from other bits
+      //status |= (0x7fffffff & status); // bit 31 reserved for endpoint
       this.simulatorStatus = status;
    }
    
