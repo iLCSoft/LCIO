@@ -56,8 +56,8 @@ public:
     // just copy events to outputfiles  
     lcWrt->writeEvent( evt ) ;
     nEvent ++ ;
-    cout << "         event: " << evt->getEventNumber() 
-	 << " [run: " << evt->getRunNumber() << "] copied" << endl ;
+//     cout << "         event: " << evt->getEventNumber() 
+// 	 << " [run: " << evt->getRunNumber() << "] copied" << endl ;
   }
 
   void modifyRunHeader(LCRunHeader* run){  /*no changes to event ! */ ;}
@@ -67,8 +67,8 @@ public:
 
     // just copy run headers to the outputfile
     lcWrt->writeRunHeader( run ) ;
-    cout << "run : " << run->getRunNumber() << " [" 
-	 << run->getDescription() << "] - header copied " << endl ;
+//     cout << "run : " << run->getRunNumber() << " [" 
+// 	 << run->getDescription() << "] - header copied " << endl ;
   }
 
 } ;
