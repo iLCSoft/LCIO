@@ -208,7 +208,7 @@ namespace SIO{
       
       for(int i=0;i<nHits;i++){
 	SIO_PNTR( stream , &(hits[i]) ) ;
-	SIO_PNTR( stream , &(weights[i]) ) ;
+	LCSIO_WRITE( stream , weights[i] ) ;
       }
 
     }
