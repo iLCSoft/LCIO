@@ -35,6 +35,9 @@ public class ObjectComparator {
 
     // current result
     int m_result;
+    
+    // current method
+    Method m_method ;
 
     // dup map
     Map m_alreadyChecked;
@@ -65,7 +68,9 @@ public class ObjectComparator {
     }
 
     public void reset() {
-        m_result = NO_COMPARISON;
+//fg: should be same as c'tor
+//       m_result = NO_COMPARISON;
+       m_result = EQUAL ;
         m_alreadyChecked.clear();
     }
 
@@ -94,7 +99,7 @@ public class ObjectComparator {
                     compareObject(o1, o2);
                 }
             } catch (Throwable t) {
-                System.out.println("error comparing object");
+                System.out.println("error comparing object" );
             }
 
             // array
@@ -207,7 +212,7 @@ public class ObjectComparator {
         if (o1 instanceof Comparable) {
             int rc = ((Comparable) o1).compareTo(o2);
             if (rc != 0) {
-		System.out.println( "objects not equal: " + o1.getClass().getCanonicalName() );
+		System.out.println( "objects not equal: " + o1.getClass().getName() +  " ( last method: " + m_method + " )" );
 		System.out.println(o1 + " != " + o2);
 		setResultCode(NOT_EQUAL);
 	    }
@@ -258,6 +263,7 @@ public class ObjectComparator {
             if ( desc.length != 0 ) {
                 for (int i=0; i<desc.length; i++) {
                     Method m = desc[i].getReadMethod();
+                    m_method =  m ;
                     if (m != null) {
                         try {
                             Object v1 = m.invoke(o1,null);
