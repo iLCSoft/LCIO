@@ -25,10 +25,12 @@
     * added -pedantic to GNUmakefile and removed additional ';'s at end of namespaces and macros
     * corrected documentation for SimCalorimeterHitImpl::addMCParticleContribution
     * bug fix in UTIL::LCFourVector - c'tors take _const_ OBJECTTYPE* pointers now
-    * SIOReader::readStream : changed order of updateEvent/RunHeader() and processEvent/RunHeader() 
     * removed deprecated function calls in LCStdHepRdr
     * fixed a memory leak in lStdHep.cc
-
+    * MCParticle: proper treatment of endpoint bit (was always on)
+    * Cluster: hit weights where always 0 
+   - Java version
+    * ReconstructedParticle.getParticleIDs() now sorted wrt. likelihood
 ======================
   v01-04
 =======================
