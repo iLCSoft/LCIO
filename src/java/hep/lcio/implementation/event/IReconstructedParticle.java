@@ -6,8 +6,12 @@ import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import java.util.List;
+
+import org.apache.xalan.templates.ElemApplyImport;
 
 
 /**Implementation of ReconstructedParticle
@@ -133,7 +137,14 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    public void setParticleIDs(List ids)
    {
       checkAccess();
-      this.particleIDs = ids;
+//      this.particleIDs = ids;
+    //fg: add elmenets one by one to sort wrt. likelihood...
+      ListIterator iter = ids.listIterator();
+      while (iter.hasNext()) {
+         ParticleID element = (ParticleID) iter.next();
+         addParticleID(element) ;
+      }
+   
    }
    
    public List getParticleIDs()
@@ -201,7 +212,17 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    
    public void addParticleID(ParticleID pid)
    {
-      if (particleIDs ==  null) particles = new ArrayList();
+      if (particleIDs ==  null) particleIDs = new ArrayList();
+
+      //fg: insert pid sorted wrt. to likelihood
+      ListIterator it = particleIDs.listIterator() ;
+      while( it.hasNext() ) {
+         ParticleID aPid = (ParticleID) it.next() ;                
+         if( aPid.getLikelihood() < pid.getLikelihood() ){
+            particleIDs.add( it.nextIndex()-1  , pid ) ;
+            return ;
+         }
+      }
       particleIDs.add(pid);
    }
    
