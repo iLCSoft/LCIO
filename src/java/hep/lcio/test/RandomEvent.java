@@ -51,9 +51,9 @@ public class RandomEvent extends ILCEvent
       addCollection(LCIO.SIMTRACKERHIT,ISimTrackerHit.class);
       addCollection(LCIO.TRACKERHIT,ITrackerHit.class);
       addCollection(LCIO.TPCHIT,ITPCHit.class);
-      addCollection(LCIO.TRACKERRAWDATA,ITrackerRawData.class);
-      addCollection(LCIO.TRACKERDATA,ITrackerData.class);
-      addCollection(LCIO.TRACKERPULSE,ITrackerPulse.class);
+      addCollection(LCIO.TRACKERRAWDATA,ITrackerRawData.class, 1<<LCIO.TRAWBIT_ID1);
+      addCollection(LCIO.TRACKERDATA,ITrackerData.class, 1<<LCIO.TRAWBIT_ID1);
+      addCollection(LCIO.TRACKERPULSE,ITrackerPulse.class, 1<<LCIO.TRAWBIT_ID1);
 
       // Put in some links between objects, has to be done by hand for now
       LCCollection collection = this.getCollection(LCIO.TRACKERHIT);
