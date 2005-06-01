@@ -115,14 +115,15 @@ namespace SIO {
     LCSIO_WRITE( stream, particle->getPDG() ) ;
     LCSIO_WRITE( stream, particle->getGeneratorStatus() ) ;
 
-    if( particle->getEndpoint() != 0 ) {
-      int simstatus = particle->getSimulatorStatus()  ;
-      simstatus |= 0x80000000 ; // set bit 31
-      LCSIO_WRITE( stream, simstatus ) ;
-    } else {
-      LCSIO_WRITE( stream, particle->getSimulatorStatus() ) ;
-    }
+//     if( particle->getEndpoint() != 0 ) {
+//       int simstatus = particle->getSimulatorStatus()  ;
+//       simstatus |= 0x80000000 ; // set bit 31
+//       LCSIO_WRITE( stream, simstatus ) ;
+//     } else {
+//       LCSIO_WRITE( stream, particle->getSimulatorStatus() ) ;
+//     }
 
+    LCSIO_WRITE( stream, particle->getSimulatorStatus() ) ;
 
     SIO_DATA( stream, const_cast<double*>( particle->getVertex() ) , 3 ) ;
 
@@ -138,7 +139,8 @@ namespace SIO {
     LCSIO_WRITE( stream, particle->getCharge() ) ;
 
 
-    if( particle->getEndpoint() != 0 ) 
+//     if( particle->getEndpoint() != 0 ) 
+    if( particle->getSimulatorStatus() &  (1<<MCParticle::BITEndpoint) )  // endpoint set !
       SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
 
 
