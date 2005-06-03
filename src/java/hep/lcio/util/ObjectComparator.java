@@ -266,8 +266,8 @@ public class ObjectComparator {
                     m_method =  m ;
                     if (m != null) {
                         try {
-                            Object v1 = m.invoke(o1,null);
-                            Object v2 = m.invoke(o2,null);
+                            Object v1 = m.invoke(o1,(Object[])null);
+                            Object v2 = m.invoke(o2,(Object[])null);
                             compare(v1,v2);
                         } catch (Throwable t) {
                             /* just eat it for now */
