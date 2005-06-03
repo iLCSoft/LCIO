@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.12 2005-04-15 08:37:38 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.13 2005-06-03 10:58:34 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -130,7 +130,8 @@ namespace IMPL {
      */
     virtual const EVENT::TrackVec & getTracks() const ;
 
-    /** The hits that have been used to create this track.
+    /** Optionaly ( check/set flag(LCIO::TRBIT_HITS)==1)  return the hits that have been used 
+     *  to create this track.
      */
     virtual const EVENT::TrackerHitVec & getTrackerHits() const ;
     

@@ -24,6 +24,7 @@
     * fixed bug in LCTime ( first day of month ) and added LCTime::test(int nDates)
     * added -pedantic to GNUmakefile and removed additional ';'s at end of namespaces and macros
     * corrected documentation for SimCalorimeterHitImpl::addMCParticleContribution
+    * corrected documentation for Track::getTrackerHits - need LCIO::TRBIT_HITS==1 
     * bug fix in UTIL::LCFourVector - c'tors take _const_ OBJECTTYPE* pointers now
     * removed deprecated function calls in LCStdHepRdr
     * fixed a memory leak in lStdHep.cc
