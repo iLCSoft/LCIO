@@ -6,7 +6,7 @@ import hep.lcio.event.LCRunHeader;
 /**
  * A default implementation of LCRunHeader
  * @author Tony Johnson
- * @version $Id: ILCRunHeader.java,v 1.7 2004-09-24 10:39:29 tonyj Exp $
+ * @version $Id: ILCRunHeader.java,v 1.8 2005-06-07 12:34:30 gaede Exp $
  */
 public class ILCRunHeader extends ILCObject implements LCRunHeader
 {
@@ -74,7 +74,7 @@ public class ILCRunHeader extends ILCObject implements LCRunHeader
    protected void setAccess(int mode)
    {
       super.setAccess(mode);
-      parameters.setAccess(mode) ;
+//      parameters.setAccess(mode) ;
    }
    
 }

@@ -308,7 +308,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TPCPulse" major="1" minor="5">
+      <block name="TrackerPulse" major="1" minor="5">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
