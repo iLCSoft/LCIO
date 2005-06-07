@@ -107,6 +107,10 @@ int main(int argc, char** argv ){
 	evt->setTimeStamp( now.timeStamp()  ) ;
 	evt->setDetectorName( detName ) ;
 	
+
+	evt->parameters().setValue("Description"," event can have it's own set of parameters" ) ;
+	evt->parameters().setValue("Thrust", (float) 0.671 ) ;
+
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	

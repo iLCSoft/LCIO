@@ -61,6 +61,10 @@ namespace UTIL {
     cout << " date:      "      << evtTime.getDateString() << endl ;     
     cout << " detector : "      << evt->getDetectorName() << endl ;
     
+    cout << " event parameters: " << endl ; 
+
+    printParameters( evt->getParameters() ) ;
+
 
     const std::vector< std::string >* strVec = evt->getCollectionNames() ;
 
