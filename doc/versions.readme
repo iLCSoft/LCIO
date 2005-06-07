@@ -19,6 +19,8 @@
 
    - added MACRO LCIO_PATCHVERSION_GE(  MAJV , MINV , PLEV) to check for patch level releases
  
+   - changed printout of calorimeter hit cellids to decode M,S,I,J,K as defined in Mokka in LCTOOL::dumpEventDetailed
+
  - bug fixes and minor changes
    - C++ version :
     * fixed bug in LCTime ( first day of month ) and added LCTime::test(int nDates)
@@ -32,6 +34,7 @@
     * Cluster: hit weights where always 0 
    - Java version
     * ReconstructedParticle.getParticleIDs() now sorted wrt. likelihood
+
 ======================
   v01-04
 =======================
