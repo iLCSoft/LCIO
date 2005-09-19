@@ -9,6 +9,8 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
+#include "EVENT/LCIO.h"
+#include "IMPL/LCFlagImpl.h"
 
 using namespace EVENT ;
 using namespace IMPL ;
@@ -32,6 +34,10 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
 
     SIO_PNTR( stream , &(hit->_particle)  ) ;
+
+    if( LCFlagImpl(_flag).bitSet( LCIO::THBIT_MOMENTUM ) ){
+      SIO_DATA( stream ,    hit->_p  , 3 ) ;
+    }
 
     // read the pointer tag in case we want to point to hits
     if( _vers > SIO_VERSION_ENCODE( 1, 0) ) {
@@ -64,6 +70,11 @@ namespace SIO{
     
     const MCParticle* part = hit->getMCParticle()  ;
     SIO_PNTR( stream , &part ) ;
+
+    if( LCFlagImpl(_flag).bitSet( LCIO::THBIT_MOMENTUM ) ){
+      float* p = const_cast<float*> ( hit->getMomentum() ) ; 
+      SIO_DATA( stream , p  , 3 ) ;
+    }
 
     // write a ptag in order to be able to point to tracker hits - from v1.1
     SIO_PTAG( stream , hit ) ;

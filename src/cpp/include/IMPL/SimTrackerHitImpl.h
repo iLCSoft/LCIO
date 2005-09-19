@@ -54,6 +54,12 @@ namespace IMPL {
     virtual EVENT::MCParticle * getMCParticle() const ;
 
 
+    /** Returns the 3-momentum of the particle at the hits position in [GeV] - 
+     * optional, only if bit LCIO::THBIT_MOMENTUM is set.	
+     */ 
+    virtual const float* getMomentum() const ;
+
+
     // ---------- setters ------------------------
     /** Sets the cell id.
      */
@@ -75,6 +81,13 @@ namespace IMPL {
      */
     void setMCParticle( EVENT::MCParticle* particle)  ;
 
+    /** Sets the momentum of the particle at the hit's position.
+     */
+    void setMomentum( float p[3] ) ;
+
+    /** Sets the momentum of the particle at the hit's position.
+     */
+    void setMomentum( float px, float py, float pz )  ;
 
   protected:
     int _cellID ;
@@ -82,6 +95,7 @@ namespace IMPL {
     float _dEdx ;
     float _time ;
     EVENT::MCParticle* _particle ;
+    float _p[3] ;
 
 }; // class
 } // namespace IMPL

@@ -7,7 +7,7 @@ import hep.lcio.event.SimTrackerHit;
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.7 2004-04-08 09:58:00 gaede Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.8 2005-09-19 15:40:28 gaede Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -16,6 +16,7 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
    protected float dEdx;
    protected float time;
    protected int cellID;
+   protected float[] momentum = new float[3] ;
 
    public void setCellID(int cellID)
    {
@@ -73,4 +74,16 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       checkAccess();
       this.dEdx = dEdx;
    }
+
+public float[] getMomentum() {
+	return momentum;
+}
+
+public void setMomentum(float[] fs) {
+	checkAccess() ;
+	if (fs.length != 3)
+		throw new IllegalArgumentException();
+ 	momentum = fs;
+}
+
 }

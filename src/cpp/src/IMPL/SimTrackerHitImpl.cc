@@ -12,7 +12,10 @@ namespace IMPL {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
- }
+    _p[0] = 0. ;
+    _p[1] = 0. ;
+    _p[2] = 0. ;
+  }
 
   SimTrackerHitImpl::~SimTrackerHitImpl(){  
   } 
@@ -26,6 +29,9 @@ namespace IMPL {
   float SimTrackerHitImpl::getTime() const { return _time ; }
 
   EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const { return _particle ; }
+
+
+  const float* SimTrackerHitImpl::getMomentum() const { return _p ; }
 
   void SimTrackerHitImpl::setCellID( int id) {
     checkAccess("SimTrackerHitImpl::setCellID") ;
@@ -53,5 +59,21 @@ namespace IMPL {
     checkAccess("SimTrackerHitImpl::setMCParticle") ;
     _particle = particle; 
   }
+
+  void SimTrackerHitImpl::setMomentum( float p[3] )  { 
+
+    setMomentum( p[0], p[1], p[2] ) ; 
+  }
+
+  void SimTrackerHitImpl::setMomentum( float px, float py, float pz ) {
+
+    checkAccess("SimTrackerHitImpl::setMomentum") ;
+    _p[0] = px ;
+    _p[1] = py ;
+    _p[2] = pz ;
+
+  }
+
+
 
 } // namespace IMPL

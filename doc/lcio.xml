@@ -96,6 +96,9 @@
             <data type="float" name="dedx"></data>
             <data type="float" name="time"></data>
             <data type="pntr" name="MCParticle"></data>
+	    <if condition="(flags&amp;(1&lt;&lt;30)) != 0">
+		<data type="float[3]" name="momentum"></data>
+	    </if> 
            <if condition="1000*major+minor&gt;1000">
             <data type="ptag" name="this"></data>
            </if>

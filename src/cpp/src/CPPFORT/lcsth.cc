@@ -32,6 +32,11 @@ double lcsthgetposition( PTRTYPE hit, int index ){
   return sth->getPosition()[index] ;
 }
 
+float lcsthgetmomentum( PTRTYPE hit, int index ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  return sth->getMomentum()[index] ;
+}
+
 float lcsthgetdedx( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   return sth->getdEdx() ;
@@ -55,6 +60,12 @@ int lcsthsetcellid( PTRTYPE hit, int id ){
 int lcsthsetposition( PTRTYPE hit, double pos[3] ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   sth->setPosition( pos ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcsthsetmomentum( PTRTYPE hit, float pos[3] ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  sth->setMomentum( pos ) ;
   return LCIO::SUCCESS ;
 }
 

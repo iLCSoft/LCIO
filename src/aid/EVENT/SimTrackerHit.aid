@@ -3,7 +3,7 @@ package hep.lcio.event;
 /** A generic simulated tracker hit. 
  * 
  * @author gaede
- * @version $Id: SimTrackerHit.aid,v 1.6 2005-02-08 16:52:46 gaede Exp $
+ * @version $Id: SimTrackerHit.aid,v 1.7 2005-09-19 15:40:26 gaede Exp $
  */
 
 public interface SimTrackerHit extends LCObject {
@@ -29,5 +29,11 @@ public interface SimTrackerHit extends LCObject {
      * @see MCParticle
      */
     public MCParticle* getMCParticle() const ;
+
+
+    /** Returns the 3-momentum of the particle at the hits position in [GeV] - 
+     * optional, only if bit LCIO::THBIT_MOMENTUM is set.	
+     */ 
+    public const float3V getMomentum() const ;
 
 }

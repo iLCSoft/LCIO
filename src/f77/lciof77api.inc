@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.31 2004-11-24 14:12:19 gaede Exp $
+*  $Id: lciof77api.inc,v 1.32 2005-09-19 15:40:28 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -127,8 +127,9 @@ c-----the SimTrackerHit interface
       integer lcsthdelete, lcsthgetcellid
       real    lcsthgetdedx, lcsthgettime
       double precision lcsthgetposition
+      real lcsthgetmomentum
       integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx   
-      integer lcsthsettime, lcsthsetmcparticle
+      integer lcsthsettime, lcsthsetmcparticle, lcsthsetmomentum
 
 c-----the TPCHitImpl interface
       PTRTYPE lctphcreate

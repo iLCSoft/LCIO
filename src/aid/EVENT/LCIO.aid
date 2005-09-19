@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.47 2005-05-31 08:15:06 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.48 2005-09-19 15:40:26 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -52,6 +52,7 @@ public interface LCIO{
     
     // SimTrackerHit
     static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
+    static const int THBIT_MOMENTUM = 30 ; // momentum of particle stored(1) - not stored(0) 
 
     // Tracks
     static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 
@@ -130,6 +131,7 @@ public interface LCIO{
     
   // SimTrackerHit
   public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0) 
+  public static const int THBIT_MOMENTUM = 30 ; // momentum of particle stored(1) - not stored(0) 
 
   // Tracks
   public static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0) 

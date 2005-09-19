@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.37 2005-05-31 07:43:30 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.38 2005-09-19 15:40:28 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -154,7 +154,7 @@ class SIOEvent extends ILCEvent
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOSimTrackerHit(in, this,major,minor));
+               ilc.add(new SIOSimTrackerHit(in, flags, this,major,minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -467,7 +467,7 @@ class SIOEvent extends ILCEvent
             else if (type.equals(LCIO.SIMTRACKERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOSimTrackerHit.write((SimTrackerHit) col.getElementAt(i), out);
+                  SIOSimTrackerHit.write((SimTrackerHit) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.TRACKERHIT))
             {

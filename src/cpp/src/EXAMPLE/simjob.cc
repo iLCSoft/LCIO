@@ -235,7 +235,12 @@ int main(int argc, char** argv ){
 	LCCollectionVec* trkVec = new LCCollectionVec( LCIO::SIMTRACKERHIT )  ;
 	LCCollectionVec* extFVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
 	LCCollectionVec* extIVec = new LCCollectionVec( LCIO::LCINTVEC )  ;
+
+	LCFlagImpl thFlag(0) ;
+	thFlag.setBit( LCIO::THBIT_MOMENTUM ) ;
+	trkVec->setFlag( thFlag.getFlag()  ) ;
 	
+
 	for(int j=0;j<NHITS;j++){
 	  
 	  SimTrackerHitImpl* hit = new SimTrackerHitImpl ;
@@ -254,6 +259,7 @@ int main(int argc, char** argv ){
 	  
 	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
 	  
+	  hit->setMomentum( 1. , 2. , 3. ) ; 
 	  
 	  // fill the extension vectors (4 floats, 2 ints)
 	  extF->push_back( 3.14159 ) ;  
