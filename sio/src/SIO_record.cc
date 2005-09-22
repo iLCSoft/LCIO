@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.cc,v 1.3 2004-12-23 13:24:07 gaede Exp $
+// CVS $Id: SIO_record.cc,v 1.4 2005-09-22 12:27:19 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO record.                          
 // ----------------------------------------------------------------------------
@@ -182,17 +182,17 @@ unsigned int SIO_record::disconnectAll() {
 
   connectMap_i iter;
   
-  for( iter =  connectMap.begin() ; iter != connectMap.end() ; iter++) {
-    
-    connectMap.erase( iter );
-    
-    if( verbosity >= SIO_ALL ) {
+  if( verbosity >= SIO_ALL ) {
+    for( iter =  connectMap.begin() ; iter != connectMap.end() ; ++iter) {
+
     std::cout << "SIO: [/"  << name << "/" << iter->first << "]  "
 	      << *(iter->second->getName()) 
 	      << "  Disconnected" 
 	      << std::endl;
     }
   }
+  connectMap.erase(connectMap.begin(), connectMap.end());
+
   return( SIO_RECORD_SUCCESS );
 }
 // ----------------------------------------------------------------------------
