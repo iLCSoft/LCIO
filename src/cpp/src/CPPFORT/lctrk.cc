@@ -77,7 +77,7 @@ float lctrkgetz0( PTRTYPE track ) {
 
 int lctrkgetcovmatrix( PTRTYPE track, float cvmtx[NCOVARIANCE] ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  for( int i=0 ; i<NCOVARIANCE ;  cvmtx[i] = trk->getCovMatrix()[i++]  ) ;
+  for( int i=0 ; i<NCOVARIANCE ;  *cvmtx++ = trk->getCovMatrix()[i++]  ) ;
   return LCIO::SUCCESS ;
 }
 
