@@ -8,7 +8,7 @@ using namespace lcio ;
 
 #include <iostream>
 
-#define NCOVARIANCE 10
+#define NCOVARIANCE 15
 
 // create delete ReconstructedParticle
 

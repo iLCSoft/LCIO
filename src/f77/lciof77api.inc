@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.32 2005-09-19 15:40:28 gaede Exp $
+*  $Id: lciof77api.inc,v 1.33 2005-10-10 11:16:21 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -223,7 +223,7 @@ c-----the Track interface
       integer lctrkdelete, lctrkid
       integer lctrkgettype, lctrkgetcovmatrix
       integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
-      real    lctrkgetomega, lctrkgetanlambda, lctrkgetphi, lctrkgetd0
+      real    lctrkgetomega, lctrkgettanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
       real    lctrkgetradiusofinnermosthit
       integer lctrkgetndf
