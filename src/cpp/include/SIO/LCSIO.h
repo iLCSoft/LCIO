@@ -65,7 +65,7 @@ namespace SIO {
   
     /** Write a vector size to the stream (needed for AMD64 architectures)
      */
-#if defined(__x86_64__)
+#if defined(__x86_64__) || defined(__APPLE_CC__)
     static unsigned int write( SIO_stream* stream , size_t i) ;
 #endif
 

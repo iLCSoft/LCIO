@@ -9,7 +9,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#if defined(__linux) || defined(__CYGWIN__)
+
+#if defined(__APPLE_CC__)
+#include "/usr/include/sys/types.h"
+#endif
+
+#if defined(__linux) || defined(__CYGWIN__) || defined(__APPLE_CC__)
 #include <netinet/in.h>
 #endif
 #ifdef _MSC_VER

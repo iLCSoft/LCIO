@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.h,v 1.3 2004-05-14 16:00:46 hvogt Exp $
+// CVS $Id: SIO_functions.h,v 1.4 2005-10-20 01:46:17 jeremy Exp $
 // ----------------------------------------------------------------------------
 // => Primitive functions for reading/writing SIO streams         
 // ----------------------------------------------------------------------------
@@ -38,7 +38,7 @@
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  __int64
 // Windows/NT    PPC           _M_PPC        VC  compiler  __int64
 // ----------------------------------------------------------------------------
-#if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__) || defined(__x86_64__)
+#if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__) || defined(__x86_64__) || defined(__APPLE_CC__)
 // fg: gcc complains about long long - what to do about it ?
 // warning: ANSI C++ does not support `long long'
  #define SIO_64BITINT   long long
@@ -69,7 +69,7 @@
  #define SIO_POINTER_DECL   unsigned SIO_64BITINT
 #endif
 
-#if defined(_AIX)      || defined(__i386__)  || defined(__sparc__) || defined(_M_IX86) || defined(_M_PPC)
+#if defined(_AIX)      || defined(__i386__)  || defined(__sparc__) || defined(_M_IX86) || defined(_M_PPC) || defined(__APPLE_CC__)
  #define SIO_POINTER_DECL   unsigned int
 #endif
 

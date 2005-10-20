@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.4 2004-05-14 16:00:47 hvogt Exp $
+// CVS $Id: SIO_functions.cc,v 1.5 2005-10-20 01:46:18 jeremy Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -43,7 +43,7 @@
 #define SIO_LITTLE_ENDIAN
 #endif
 
-#if defined(_AIX)      ||   defined(__sparc__) ||   defined(_M_PPC)
+#if defined(_AIX)      ||   defined(__sparc__) ||   defined(_M_PPC) || defined(__APPLE_CC__)
 #define SIO_BIG_ENDIAN
 #endif
 

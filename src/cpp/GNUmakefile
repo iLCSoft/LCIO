@@ -20,6 +20,7 @@ export LCIOINCLUDE
 
 ifdef LCIODEBUG
  LCIOCPPFLAGS = -g -pg -Wall -pedantic -Wno-long-long -ansi 
+# -E -dM
 else
  LCIOCPPFLAGS = -O3 -Wall -pedantic -Wno-long-long -ansi 
 endif
