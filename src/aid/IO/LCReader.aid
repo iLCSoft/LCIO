@@ -56,6 +56,11 @@ public interface LCReader {
      */
     public LCEvent* readNextEvent(int accessMode) throws IOException ;
 
+
+    /** Skips the next n events from the current position.
+     */
+    public void skipNEvents(int n) ;
+    
     /** Reads the specified event from file. 
      *  To be used with care: events have to be read in sequential 
      *  order (as LCIO has no direct access yet).  Returns NULL if

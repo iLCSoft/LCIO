@@ -38,6 +38,9 @@ public class AnalysisJob
       lcReader.close();
       lcReader.open(args);
 
+       //fg: for  debugging only:
+      //lcReader.skipNEvents( 97 ) ;
+
       // dump all events in the file
       int nEvents = 0;
       for (;;)

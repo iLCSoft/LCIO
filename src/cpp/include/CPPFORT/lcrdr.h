@@ -1,3 +1,4 @@
+
 /**Header file for the f77-wrapper functions of the LCReader class.
  * 
  * @author F. Gaede
@@ -21,6 +22,8 @@ PTRTYPE lcrdrreadnextrunheader(PTRTYPE reader, int accessMode) ;
 PTRTYPE lcrdrreadnextevent(PTRTYPE reader, int accessMode) ;
 PTRTYPE lcrdrreadevent(PTRTYPE reader, int runNumber, int evtNumber );
 
+int  lcrdrskipnevents( PTRTYPE reader, int n ) ;
+
 extern "C"{
 
 FCALLSCFUN0(CFORTRANPNTR, lcrdrcreate, LCRDRCREATE, lcrdrcreate ) 
@@ -33,6 +36,8 @@ FCALLSCFUN2(INT, lcrdrreadstream, LCRDRREADSTREAM, lcrdrreadstream, CFORTRANPNTR
 FCALLSCFUN2(INT,lcrdrreadnextrunheader,LCRDRREADNEXTRUNHEADER,lcrdrreadnextrunheader,CFORTRANPNTR,INT) 
 FCALLSCFUN2(INT,lcrdrreadnextevent,LCRDRREADNEXTEVENT,lcrdrreadnextevent,CFORTRANPNTR,INT) 
 FCALLSCFUN3(INT,lcrdrreadevent,LCRDRREADEVENT,lcrdrreadevent,CFORTRANPNTR,INT,INT) 
+
+FCALLSCFUN2(INT, lcrdrskipnevents, LCRDRSKIPNEVENTS, lcrdrskipnevents, CFORTRANPNTR, INT ) 
 
 }
 

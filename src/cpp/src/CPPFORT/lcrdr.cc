@@ -60,3 +60,9 @@ PTRTYPE lcrdrreadevent(PTRTYPE reader, int runNumber, int evtNumber ){
   LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
   return C2F_POINTER( LCEvent*,  rdr->readEvent( runNumber, evtNumber ) );
 }
+
+int  lcrdrskipnevents( PTRTYPE reader, int n ) {
+  LCReader* rdr = reinterpret_cast<LCReader*>(reader) ;
+  rdr->skipNEvents( n ) ;
+  return LCIO::SUCCESS ;
+}

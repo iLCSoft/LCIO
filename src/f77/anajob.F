@@ -113,7 +113,12 @@ c---- now loop over the file(s) again and dump event data
 
       nEvents = 0
 
+
+c---- ---fg: debugging only:
+c      status = lcrdrskipnevents(  reader, 97 ) 
+
 c---- ---- event loop ------
+
    20 continue
       event = lcrdrreadnextevent( reader, LCIO_READ_ONLY )
       if( event .eq. 0 )  go to 30

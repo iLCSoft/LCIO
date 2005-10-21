@@ -401,6 +401,26 @@ namespace SIO {
     }
   }
   
+  void SIOReader::skipNEvents(int n) {
+    
+    int eventsSkipped = 0 ;
+    
+    SIOUnpack hdrUnp( SIOUnpack::EVENTHDR ) ;
+    
+    while( eventsSkipped++ < n ){
+      
+      try { 
+	
+	readRecord() ;
+
+      }
+      catch(EndOfDataException){
+
+	return ;
+      }
+    }
+    
+  }
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
     throw (IOException , std::exception) {
@@ -427,13 +447,13 @@ namespace SIO {
       SIOUnpack hdrUnp( SIOUnpack::EVENTHDR ) ;
 
       while( !evtFound ){
-
-      try{ 
-	readRecord() ;
-      }
-      catch(EndOfDataException){
-	return 0 ;
-      }
+	
+	try{ 
+	  readRecord() ;
+	}
+	catch(EndOfDataException){
+	  return 0 ;
+	}
 
 	evtFound = ( (*_evtP)->getEventNumber() == evtNumber ) ;
       }

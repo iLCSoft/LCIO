@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.33 2005-10-10 11:16:21 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.34 2005-10-21 13:53:20 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -21,6 +21,7 @@
 c----- the LCReader interface
       PTRTYPE lcrdrcreate
       integer lcrdrdelete, lcrdropen, lcrdrclose, lcrdrreadstream
+      integer lcrdrskipnevents
       PTRTYPE lcrdrreadnextrunheader
       PTRTYPE lcrdrreadnextevent
       PTRTYPE lcrdrreadevent

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.12 2004-07-14 15:50:45 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.13 2005-10-21 13:53:21 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -114,6 +114,24 @@ class SIOLCReader implements LCReader
       }
    }
 
+   public void skipNEvents(int n) 
+   {
+      int nEvents = 0 ;
+	  try
+	  {
+	     while( nEvents < n )
+	     {
+		    SIORecord record = reader.readRecord();
+		    String name = record.getRecordName();
+		    if ( ! name.equals( SIOFactory.eventHeaderRecordName) )
+			   continue;
+             ++nEvents ;
+	     }
+	  }
+	  catch (IOException x)
+	  {
+ 	  }
+   }
    public LCEvent readNextEvent() throws IOException
    {
       return readNextEvent(LCIO.READ_ONLY);
@@ -237,4 +255,5 @@ class SIOLCReader implements LCReader
    {
       runListeners.remove(ls);
    }
+
 }

@@ -4,6 +4,10 @@
 
 
    - added optional momentum[3] to SimTrackerHit (momentum of particle at position of hit)
+ 
+   - added LCReader::skipNEvents() method to skip (the first) n events in a file
+
+   - added option to dump the n-th event in a file to $LCIO/bin/dumpevent 
 
 ======================
   v01-05
