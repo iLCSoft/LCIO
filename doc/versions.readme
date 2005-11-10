@@ -2,6 +2,9 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+======================
+  v01-06-pre
+=======================
 
    - added optional momentum[3] to SimTrackerHit (momentum of particle at position of hit)
  
