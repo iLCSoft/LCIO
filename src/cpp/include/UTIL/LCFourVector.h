@@ -75,7 +75,7 @@ namespace UTIL {
     
   }; // class
 
-}; // namespace UTIL
+} // namespace UTIL
 
 
 #include "UTIL/LCFourVector.icc"

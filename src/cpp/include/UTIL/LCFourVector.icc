@@ -69,5 +69,5 @@ namespace UTIL{
     setE( _lcObj->getEnergy() )  ;
   }
   
-} ; // end namespace
+} // end namespace
 #endif
