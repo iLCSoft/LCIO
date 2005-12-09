@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.3 2005-11-29 19:55:33 jeremy Exp $
+// CVS $Id: SIO_stream.h,v 1.4 2005-12-09 19:01:47 jeremy Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -20,10 +20,7 @@
 
 #include "SIO_definitions.h"
 #include "SIO_functions.h"
-
-#ifdef __APPLE__
 #include "SIO_record.h"
-#endif
 
 typedef std::map< void*, void* >                pointedAtMap_c;
 typedef std::map< void*, void* >::iterator      pointedAtMap_i;
