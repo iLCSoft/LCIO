@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.17 2005-10-20 01:41:18 jeremy Exp $    -->
+<!-- Version: $Id: build.xml,v 1.18 2006-01-31 20:42:24 jeremy Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -114,6 +114,12 @@
 
     <!-- Check for property "packages" -->
     <freehep.not.defined property="packages" message="Property 'packages' must be defined in 'config/${projectname}-${jar}.properties'. Examples 'packages=hep.wired.dim.*, hep.atlas.wired.*'"/>
+  </target>
+
+  <target name="python" depends="init, cpp" description="&lt;python-target&lt;">
+    <exec dir="." executable="make">
+      <arg line="-C ./src/python swig" />
+    </exec>
   </target>
 
   <!-- =================================================================== -->
