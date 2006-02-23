@@ -200,8 +200,11 @@ namespace IMPL {
 
     checkAccess("MCParticleImpl::addParent") ;
 
-//     MCParticle** pD = new (MCParticle*)  ;
-//     *pD = parent ;
+
+    if(  std::find(  _parents.begin(), _parents.end(),  parent ) != _parents.end() )
+      return ; // parent already exists in list
+
+
     _parents.push_back( parent ) ;
 
     MCParticleImpl* mom = dynamic_cast<MCParticleImpl*>( parent ) ;
