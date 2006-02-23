@@ -22,7 +22,7 @@ INCLUDE = ../include
 ifdef LCIODEBUG
  CPPFLAGS = -g -pg -I $(INCLUDE)
 else
- CPPFLAGS = -O3 -I $(INCLUDE)
+ CPPFLAGS = -O3  -D _FILE_OFFSET_BITS=64 -I $(INCLUDE)
 endif
 
 
