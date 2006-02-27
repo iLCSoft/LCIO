@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.1 2006-01-31 20:42:25 jeremy Exp $
+# $Id: Makefile,v 1.2 2006-02-27 17:58:53 jeremy Exp $
 
 #
 # Makefile to build python wrappers to LCIO C++ library using Swig.
@@ -53,7 +53,7 @@ lcio_include_dirs = $(lcio_include_dir)
 lcio_include_dirs += $(shell for i in $(lcio_include_subdirs); do echo $(lcio_include_dir)/$$i; done)
 
 # swig options
-swig_opts = -Wall -c++ -python -makedefault -shadow
+swig_opts = -c++ -python -makedefault -shadow
 
 # swig include flags
 swig_include_flags = -I$(lcio_include_dir)
