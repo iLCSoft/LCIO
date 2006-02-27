@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.1 2006-01-31 20:42:25 jeremy Exp $
+// $Id: lcio_swig.i,v 1.2 2006-02-27 17:59:09 jeremy Exp $
 
 /*
  * SWIG interface file to make Python wrappers for LCIO.
@@ -527,6 +527,7 @@ namespace IMPL {
     class LCCollectionVec: public EVENT::LCCollection, public EVENT::LCObjectVec, public AccessChecked
     {
         public:
+            LCCollectionVec (const std::string &type) ;
             virtual int getNumberOfElements() const ;
             virtual const std::string & getTypeName() const ;
             virtual EVENT::LCObject * getElementAt(int index) const ;
