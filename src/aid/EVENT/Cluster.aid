@@ -10,7 +10,7 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.11 2005-09-19 15:40:25 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.12 2006-02-28 16:04:11 gaede Exp $
  */
 
 
@@ -74,8 +74,8 @@ public interface Cluster extends LCObject {
     public const ClusterVec& getClusters() const ; 
 
     /** The hits that have been combined to this cluster.
-     *  Only available if CalorimeterHit objects have not been saved with
-     *  LCIO::RCHBIT_NO_PTR==1.
+     *  Only available if collection flag bit LCIO::CLBIT_HITS==1 and if 
+     *  the CalorimeterHit objects have not been saved with LCIO::RCHBIT_NO_PTR==1.
      *  @see CalorimeterHit
      */
     public const CalorimeterHitVec& getCalorimeterHits() const ;
