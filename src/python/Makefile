@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.2 2006-02-27 17:58:53 jeremy Exp $
+# $Id: Makefile,v 1.3 2006-03-02 00:57:34 jeremy Exp $
 
 #
 # Makefile to build python wrappers to LCIO C++ library using Swig.
@@ -77,3 +77,19 @@ swig:
 
 test:
 	$(PYTHON) test.py;:
+
+# Python install
+ifndef PYTHONHOME
+  PYTHONHOME = /usr/local
+endif
+
+ifndef PYTHONVER
+  PYTHONVER = 2.4
+endif
+
+ifndef PYTHON_INSTALL_DIR
+  PYTHON_INSTALL_DIR = $(PYTHONHOME)/lib/python$(PYTHONVER)/
+endif
+
+install:
+	cp _lcio.so lcio.pyc lcio.py $(PYTHON_INSTALL_DIR)
