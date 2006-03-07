@@ -1,9 +1,14 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+   - introduced LCSplitWriter to split larger files
+
+   - fixed files size limit (2GB) in SIO C++ implementation
+
+   - python binding (Jeremy McCormick)
 
 ======================
-  v01-06-pre
+  v01-06
 =======================
 
    - added optional momentum[3] to SimTrackerHit (momentum of particle at position of hit)
