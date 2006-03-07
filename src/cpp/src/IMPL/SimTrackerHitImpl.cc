@@ -2,6 +2,7 @@
 
 using namespace EVENT ;
 
+
 namespace IMPL {
   
   SimTrackerHitImpl::SimTrackerHitImpl() :
@@ -30,6 +31,7 @@ namespace IMPL {
 
   EVENT::MCParticle * SimTrackerHitImpl::getMCParticle() const { return _particle ; }
 
+  float SimTrackerHitImpl::getPathLength() const { return _pathLength ; }
 
   const float* SimTrackerHitImpl::getMomentum() const { return _p ; }
 
@@ -72,6 +74,11 @@ namespace IMPL {
     _p[1] = py ;
     _p[2] = pz ;
 
+  }
+ 	
+  void SimTrackerHitImpl::setPathLength(float pathLength){
+    checkAccess("SimTrackerHitImpl::setPathLength") ;
+    _pathLength = pathLength ;
   }
 
 

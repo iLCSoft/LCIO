@@ -3,7 +3,7 @@ package hep.lcio.event;
 /** A generic simulated tracker hit. 
  * 
  * @author gaede
- * @version $Id: SimTrackerHit.aid,v 1.7 2005-09-19 15:40:26 gaede Exp $
+ * @version $Id: SimTrackerHit.aid,v 1.8 2006-03-07 17:42:18 gaede Exp $
  */
 
 public interface SimTrackerHit extends LCObject {
@@ -36,4 +36,9 @@ public interface SimTrackerHit extends LCObject {
      */ 
     public const float3V getMomentum() const ;
 
+
+    /** The path length of the particle in the sensitive material that resulted in this hit.
+     *  This is only stored together with momentum, i.e. if  LCIO::THBIT_MOMENTUM is set.
+     */
+    public float getPathLength() const ;
 }

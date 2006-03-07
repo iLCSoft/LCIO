@@ -17,9 +17,9 @@ int main(int argc, char** argv ){
 
 
   char* FILEN ;
-  int runNumber ;
-  int evtNumber ;
-  int nthEvent ;
+  int runNumber=0 ;
+  int evtNumber=0 ;
+  int nthEvent=1 ;
 
   // read file name from command line (only argument) 
   if( argc < 3 ) {

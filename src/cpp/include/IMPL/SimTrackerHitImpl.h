@@ -59,6 +59,10 @@ namespace IMPL {
      */ 
     virtual const float* getMomentum() const ;
 
+    /** The path length of the particle in the sensitive material that resulted in this hit.
+     *  This is only stored together with momentum, i.e. if  LCIO::THBIT_MOMENTUM is set.
+     */
+    virtual float getPathLength() const ;
 
     // ---------- setters ------------------------
     /** Sets the cell id.
@@ -89,6 +93,10 @@ namespace IMPL {
      */
     void setMomentum( float px, float py, float pz )  ;
 
+	/* Set the path length.
+	 */	
+    void setPathLength(float pathLength);
+
   protected:
     int _cellID ;
     double _pos[3] ;
@@ -96,6 +104,7 @@ namespace IMPL {
     float _time ;
     EVENT::MCParticle* _particle ;
     float _p[3] ;
+    float _pathLength ;
 
 }; // class
 } // namespace IMPL
