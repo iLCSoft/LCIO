@@ -7,7 +7,7 @@ import hep.lcio.event.SimTrackerHit;
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.8 2005-09-19 15:40:28 gaede Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.9 2006-03-08 09:57:28 gaede Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
@@ -53,6 +53,7 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       return position;
    }
 
+
    public void setTime(float time)
    {
       checkAccess();
@@ -77,6 +78,11 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 
 public float[] getMomentum() {
 	return momentum;
+}
+
+public float getPathLength() {
+    //FIXME: return attribute - just to compile java
+	return (float) 0. ;
 }
 
 public void setMomentum(float[] fs) {

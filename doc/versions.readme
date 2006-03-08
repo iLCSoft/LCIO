@@ -1,6 +1,13 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+======================
+  v01-07
+=======================
+
+   - introduced additional pathLength in SimTrackerHit for silicon tracker digitization 
+     (stored optionally together with momentum)
+
    - introduced LCSplitWriter to split larger files
 
    - fixed files size limit (2GB) in SIO C++ implementation

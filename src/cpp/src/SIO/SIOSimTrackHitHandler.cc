@@ -37,7 +37,8 @@ namespace SIO{
 
     if( LCFlagImpl(_flag).bitSet( LCIO::THBIT_MOMENTUM ) ){
       SIO_DATA( stream ,    hit->_p  , 3 ) ;
-      SIO_DATA( stream ,    &(hit->_pathLength)  , 1 ) ;
+      if( _vers  > SIO_VERSION_ENCODE( 1 , 6 ) ) 
+        SIO_DATA( stream ,    &(hit->_pathLength)  , 1 ) ;
     }
 
     // read the pointer tag in case we want to point to hits
