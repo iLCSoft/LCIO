@@ -21,6 +21,7 @@
 
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
+#include "UTIL/BitField64.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -189,6 +190,10 @@ int main(int argc, char** argv ){
 	chFlag.setBit( LCIO::CHBIT_ID1 ) ;
 	calVec->setFlag( chFlag.getFlag()  ) ;
 	
+	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6") ;// old Mokka convention
+	calVec->parameters().setValue( LCIO::CellIDEncoding , cellIDEncoding ) ;
+
+	BitField64 b( cellIDEncoding  ) ;
 	
 	for(int j=0;j<NHITS;j++){
 	  
@@ -198,9 +203,16 @@ int main(int argc, char** argv ){
 	  
 	  float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
 	  
-	  hit->setCellID0( j+65335 ) ;
-	  hit->setCellID1( 65535 ) ;
+	  // cell indices
+	  b["M"] = j % 8 ;
+	  b["S-1"] = (j+2) % 8 ;
+	  b["I"] = j % 512 ;
+	  b["J"] = (j+128) % 512 ;
+	  b["K-1"] = (j+32) % 64 ;
 
+	  hit->setCellID0( b.lowWord()  ) ;
+	  hit->setCellID1( b.highWord() ) ;
+	  
 	  hit->setPosition( pos ) ;
 	  
 	  calVec->push_back( hit ) ;

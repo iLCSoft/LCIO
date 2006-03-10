@@ -4,7 +4,12 @@
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCRunHeader.h" 
 
+#include "EVENT/SimCalorimeterHit.h" 
+#include "EVENT/CalorimeterHit.h" 
+#include "EVENT/RawCalorimeterHit.h" 
+// #include "EVENT/SimTrackerHit.h" 
 
+#include "UTIL/CellIDDecoder.h"
 
 
 using namespace std ;
@@ -55,6 +60,12 @@ int main(int argc, char** argv ){
     evtNumber = atoi( argv[3] ) ;
   }
   
+
+  // set the default encoding for cellid's according to the old Mokka convention
+  CellIDDecoder<SimCalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
+  CellIDDecoder<CalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
+  CellIDDecoder<RawCalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
+
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
   
   LCEvent* evt(0) ;

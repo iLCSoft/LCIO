@@ -27,20 +27,7 @@
 #endif
 #include "UTIL/LCObjectHandle.h"
 #include "UTIL/LCTime.h"
-
-// code copied from $MOKKA/source/Kernel/include/Control.hh
-// to be used to decode the calorimeter hit's cellids
-#define SHIFT_M 0
-#define SHIFT_S 3
-#define SHIFT_I 6
-#define SHIFT_J 15
-#define SHIFT_K 24
-#define MASK_M (unsigned int) 0x00000007
-#define MASK_S (unsigned int) 0x00000038
-#define MASK_I (unsigned int) 0x00007FC0
-#define MASK_J (unsigned int) 0x00FF8000
-#define MASK_K (unsigned int) 0x3F000000
-
+#include "UTIL/CellIDDecoder.h"
 #include <map>
 #include <set>
 #include <cstdio>
@@ -974,9 +961,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
   }
 
   void LCTOOLS::printSimCalorimeterHits(const EVENT::LCCollection* col ){
-
+    
     if( col->getTypeName() != LCIO::SIMCALORIMETERHIT ){
-
+      
       cout << " collection not of type " << LCIO::SIMCALORIMETERHIT << endl ;
       return ;
     }
@@ -999,15 +986,14 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
-//     std::cout << endl
-// 	      << " cellId0 | cellId1 | energy | position (x,y,z) | nMCParticles " 
-// 	      << endl << "           -> MC contribution: prim. PDG |  energy | time | sec. PDG  "
-// 	      << endl 
-// 	      << endl ;
     
-    std::cout << "Note: ( M, S, I, J, K) are decoded using the Mokka convention ! " << std::endl ; 
+    CellIDDecoder<SimCalorimeterHit> idDecoder( col ) ; 
+
+    // std::cout << "Note: ( M, S, I, J, K) are decoded using the Mokka convention ! " 
+    // << std::endl ; 
+
     std::cout << endl
-	      << " [   id   ] |  cellId0 ( M, S, I, J, K) | cellId1  |   energy  |        position (x,y,z)          | nMCParticles "
+	      << " [   id   ] |  cellId0 | cellId1  |   energy  |        position (x,y,z)          | nMCParticles "
 	      << endl << "           -> MC contribution: prim. PDG |  energy | time | sec. PDG  "
 	      << endl 
 	      << endl ;
@@ -1020,41 +1006,12 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
 	    
-//       cout << i << ": "
-// // 	   << hit->getCellID0() << " | "
-// // 	   << hit->getCellID1() << " | "
-// 	   << ((id0& 0xff000000)>>24) << "/" 
-// 	   << ((id0& 0x00ff0000)>>16) << "/" 
-// 	   << ((id0& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id0& 0x000000ff)>> 0) << " | "
-// 	   << ((id1& 0xff000000)>>24) << "/" 
-// 	   << ((id1& 0x00ff0000)>>16) << "/" 
-// 	   << ((id1& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id1& 0x000000ff)>> 0) << " | "
-	
-// 	   << hit->getEnergy() << " | (" ;
-      
-//       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
-      
-// 	cout << hit->getPosition()[0] << ", "
-// 	     << hit->getPosition()[1]<< ", "
-// 	     << hit->getPosition()[2] << ") | " ;
-//       }else{
-// 	cout << "   no position avaliable  ) | " ;
-//       }
-//       cout << hit->getNMCContributions() 
-// 	   << endl ;
       
       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
-	printf( " [%8.8x] | %8.8x (%1d,%1d,%3d,%3d,%2d) | %8.8x |"
+	printf( " [%8.8x] | %8.8x | %8.8x |"
 		" %5.3e | (%5.3e,%5.3e,%5.3e)| %d\n" , 
 		hit->id(), 
 		id0,
-		(  id0 & MASK_M ) >> SHIFT_M ,
-		(( id0 & MASK_S ) >> SHIFT_S ) + 1 ,
-		(  id0 & MASK_I ) >> SHIFT_I ,
-		(  id0 & MASK_J ) >> SHIFT_J ,
-		(( id0 & MASK_K ) >> SHIFT_K ) + 1 ,
 		id1,
 		hit->getEnergy() ,
 		hit->getPosition()[0] ,
@@ -1063,21 +1020,17 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 		hit->getNMCContributions()
 		) ;
       } else{
-	printf( " [%8.8x] | %8.8x (%1d,%1d,%3d,%3d,%2d) | %8.8x |"
+	printf( " [%8.8x] | %8.8x | %8.8x |"
 		" %5.3e |    no position available         | %d\n" , 
 		hit->id(), 
 		id0,
-		(  id0 & MASK_M ) >> SHIFT_M ,
-		(( id0 & MASK_S ) >> SHIFT_S ) + 1 ,
-		(  id0 & MASK_I ) >> SHIFT_I ,
-		(  id0 & MASK_J ) >> SHIFT_J ,
-		(( id0 & MASK_K ) >> SHIFT_K ) + 1 ,
 		id1,
 		hit->getEnergy() ,
 		hit->getNMCContributions()
 		) ;
        }
-
+      std::cout << "        id-fields: (" << idDecoder( hit ).valueString() << ")" << std::endl ; 
+      
       for(int k=0;k < hit->getNMCContributions();k++){
 
 	try{
@@ -1132,13 +1085,13 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
-//     std::cout << endl
-// 	      << " [   id   ] |  cellId0(bytes) | cellId1(bytes) | energy/amplitude | position (x,y,z) " 
-// 	      << endl ;
+    CellIDDecoder<CalorimeterHit> idDecoder( col ) ; 
 
-    std::cout << "Note: ( M, S, I, J, K) are decoded using the Mokka convention ! " << std::endl ; 
+//     std::cout << "Note: ( M, S, I, J, K) are decoded using the Mokka convention ! " << std::endl ; 
+
+
     std::cout << endl
-	      << " [   id   ] |  cellId0 ( M, S, I, J, K) | cellId1  |   energy  |        position (x,y,z)          |"
+	      << " [   id   ] |  cellId0 | cellId1  |   energy  |        position (x,y,z)          |"
 	      << endl ;
 
     for( int i=0 ; i< nPrint ; i++ ){
@@ -1149,40 +1102,11 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
       
-//       printf( " [%8.8x] | " , hit->id() ) ;
-// 	// 	   << hit->getCellID0() << " | "
-// 	// 	   << hit->getCellID1() << " | "
-// 	cout << ((id0& 0xff000000)>>24) << "/" 
-// 	   << ((id0& 0x00ff0000)>>16) << "/" 
-// 	   << ((id0& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id0& 0x000000ff)>> 0) << " | "
-// 	   << ((id1& 0xff000000)>>24) << "/" 
-// 	   << ((id1& 0x00ff0000)>>16) << "/" 
-// 	   << ((id1& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id1& 0x000000ff)>> 0) << " | "
-// 	   << hit->getEnergy() << " | (" ;
-      
-//       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
-	
-// 	cout << hit->getPosition()[0] << ", "
-// 	     << hit->getPosition()[1]<< ", "
-// 	     << hit->getPosition()[2] << ") | " ;
-//       }else{
-// 	cout << "   no position avaliable  ) | " ;
-//       }
-//       cout << endl ;
-
-
       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
-	printf( " [%8.8x] | %8.8x (%1d,%1d,%3d,%3d,%2d) | %8.8x |"
+	printf( " [%8.8x] | %8.8x | %8.8x |"
 		" %5.3e | (%5.3e,%5.3e,%5.3e)|\n" , 
 		hit->id(), 
 		id0,
-		(  id0 & MASK_M ) >> SHIFT_M ,
-		(( id0 & MASK_S ) >> SHIFT_S ) + 1 ,
-		(  id0 & MASK_I ) >> SHIFT_I ,
-		(  id0 & MASK_J ) >> SHIFT_J ,
-		(( id0 & MASK_K ) >> SHIFT_K ) + 1 ,
 		id1,
 		hit->getEnergy() ,
 		hit->getPosition()[0] ,
@@ -1190,19 +1114,16 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 		hit->getPosition()[2]
 		) ;
       } else{
-	printf( " [%8.8x] | %8.8x (%1d,%1d,%3d,%3d,%2d) | %8.8x |"
+	printf( " [%8.8x] | %8.8x | %8.8x |"
 		" %5.3e |    no position available         \n" , 
 		hit->id(), 
 		id0,
-		(  id0 & MASK_M ) >> SHIFT_M ,
-		(( id0 & MASK_S ) >> SHIFT_S ) + 1 ,
-		(  id0 & MASK_I ) >> SHIFT_I ,
-		(  id0 & MASK_J ) >> SHIFT_J ,
-		(( id0 & MASK_K ) >> SHIFT_K ) + 1 ,
 		id1,
 		hit->getEnergy()
 		) ;
-       }
+      }
+      std::cout << "        id-fields: (" << idDecoder( hit ).valueString() << ")" << std::endl ; 
+
 
     }
     cout << endl 
@@ -1235,9 +1156,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
 
-//     std::cout << endl
-// 	      << " [   id   ] |  cellId0(bytes) | cellId1(bytes) | amplitude | time " << endl ;
-    std::cout << "Note: ( M, S, I, J, K) are decoded using the Mokka convention ! " << std::endl ; 
+
+    CellIDDecoder<RawCalorimeterHit> idDecoder( col ) ; 
+
     std::cout << endl
 	      << " [   id   ] |  cellId0 ( M, S, I, J, K) | cellId1  | amplitude |  time  "
 	      << endl ;
@@ -1250,32 +1171,15 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
       
-//       printf( " [%8.8x] | " , hit->id() ) ;
-//       cout << ((id0& 0xff000000)>>24) << "/" 
-// 	   << ((id0& 0x00ff0000)>>16) << "/" 
-// 	   << ((id0& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id0& 0x000000ff)>> 0) << " | "
-// 	   << ((id1& 0xff000000)>>24) << "/" 
-// 	   << ((id1& 0x00ff0000)>>16) << "/" 
-// 	   << ((id1& 0x0000ff00)>> 8) << "/" 
-// 	   << ((id1& 0x000000ff)>> 0) << " | "
-// 	   << hit->getAmplitude() << " | "
-// 	   << hit->getTimeStamp() << " | ";
-//       cout << endl ;
-
-      printf( " [%8.8x] | %8.8x (%1d,%1d,%3d,%3d,%2d) | %8.8x |"
+      printf( " [%8.8x] | %8.8x | %8.8x |"
 	      " %10d |  %10d \n" , 
 	      hit->id(), 
 	      id0,
-	      (  id0 & MASK_M ) >> SHIFT_M ,
-	      (( id0 & MASK_S ) >> SHIFT_S ) + 1 ,
-	      (  id0 & MASK_I ) >> SHIFT_I ,
-	      (  id0 & MASK_J ) >> SHIFT_J ,
-	      (( id0 & MASK_K ) >> SHIFT_K ) + 1 ,
 	      id1,
 	      hit->getAmplitude() ,
 	      hit->getTimeStamp()
 	      ) ;
+      std::cout << "        id-fields: (" << idDecoder( hit ).valueString() << ")" << std::endl ; 
 
 
 
