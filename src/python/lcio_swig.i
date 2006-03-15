@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.2 2006-02-27 17:59:09 jeremy Exp $
+// $Id: lcio_swig.i,v 1.3 2006-03-15 00:32:57 jeremy Exp $
 
 /*
  * SWIG interface file to make Python wrappers for LCIO.
@@ -586,8 +586,8 @@ typedef LCCollectionWrapper<EVENT::SimCalorimeterHit*> SimCalorimeterHitCollecti
 %template(SimTrackerHitCollection) LCCollectionWrapper<EVENT::SimTrackerHit*>;
 typedef LCCollectionWrapper<EVENT::SimTrackerHit*> SimTrackerHitCollection;
 
-%template(LCGenericObjectCollection) LCCollectionWrapper<EVENT::LCGenericObject*>;
-typedef LCCollectionWrapper<EVENT::LCGenericObject*> LCGenericObjectCollection;
+%template(RawCalorimeterHitCollection) LCCollectionWrapper<EVENT::RawCalorimeterHit*>;
+typedef LCCollectionWrapper<RawCalorimeterHit*> RawCalorimeterHitCollection;
 
 %template(TPCHitCollection) LCCollectionWrapper<EVENT::TPCHit*>;
 typedef LCCollectionWrapper<TPCHit*> TPCHitCollection;
@@ -609,6 +609,9 @@ typedef LCCollectionWrapper<ReconstructedParticle*> ReconstructedParticleCollect
 
 %template(LCRelationCollection) LCCollectionWrapper<EVENT::LCRelation*>;
 typedef LCCollectionWrapper<LCRelation*> LCRelationCollection;
+
+%template(LCGenericObjectCollection) LCCollectionWrapper<EVENT::LCGenericObject*>;
+typedef LCCollectionWrapper<EVENT::LCGenericObject*> LCGenericObjectCollection;
 
 /* Add functions to LCEvent for returning typed collections. */
 %extend(python) EVENT::LCEvent {
