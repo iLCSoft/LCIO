@@ -1,7 +1,7 @@
-# $Id: Makefile,v 1.3 2006-03-02 00:57:34 jeremy Exp $
+# $Id: Makefile,v 1.4 2006-03-15 00:33:08 jeremy Exp $
 
 #
-# Makefile to build python wrappers to LCIO C++ library using Swig.
+# Makefile to build LCIO Python wrappers to the C++ library, using Swig.
 #
 # --Jeremy McCormick <jeremym@slac.stanford.edu>
 #
@@ -36,7 +36,22 @@ ifndef PYTHON_INCLUDE_DIR
   PYTHON_INCLUDE_DIR = /usr/local/include/python2.4/
 endif
 
-# End of vars we take from environment.
+# Where is Python installed?
+ifndef PYTHONHOME
+  PYTHONHOME = /usr/local
+endif
+
+# What is the Python version?
+ifndef PYTHONVER
+  PYTHONVER = 2.4
+endif
+
+# What is the Python install dir?
+ifndef PYTHON_INSTALL_DIR
+  PYTHON_INSTALL_DIR = $(PYTHONHOME)/lib/python$(PYTHONVER)/
+endif
+
+# End of vars we may take from environment.
 
 # base name for output lib and wrapper file
 module_name = lcio
@@ -53,7 +68,9 @@ lcio_include_dirs = $(lcio_include_dir)
 lcio_include_dirs += $(shell for i in $(lcio_include_subdirs); do echo $(lcio_include_dir)/$$i; done)
 
 # swig options
-swig_opts = -c++ -python -makedefault -shadow
+#swig_opts = -c++ -python -makedefault -shadow
+#swig_opts = -c++ -python -shadow -nodefaultdtor
+swig_opts = -c++ -python -nodefaultctor -nodefaultdtor
 
 # swig include flags
 swig_include_flags = -I$(lcio_include_dir)
@@ -61,7 +78,7 @@ swig_include_flags += -I$(sio_include_dir)
 swig_include_flags += -I$(SWIG_LIB_DIR)
 
 # cpp includes
-cpp_include_flags = -I$(PYTHON_INCLUDE_DIR) -I$(lcio_include_dir) -I$(sio_include_dir)
+cpp_include_flags = -I$(PYTHON_INCLUDE_DIR) -I$(lcio_include_dir) -I$(sio_include_dir) -I.
 
 # ld flags
 ldflags = -L$(LCIO)/lib -llcio -L$(sio_dir)/lib -lsio -lz
@@ -69,27 +86,25 @@ ldflags = -L$(LCIO)/lib -llcio -L$(sio_dir)/lib -lsio -lz
 # wrap file
 wrap_file = $(module_name)_wrap
 
+.DEFAULT: all
+.PHONY: all
+
+all: swig install
+
 # build target
 swig:
 	$(SWIG) $(swig_opts) -o $(wrap_file).cc $(swig_include_flags) lcio_swig.i; \
 	gcc -c $(wrap_file).cc $(cpp_include_flags) -o $(wrap_file).o; \
 	g++ -shared $(wrap_file).o -L$(LCIO)/lib $(ldflags) -o _$(module_name).so;:
 
+# run test file
 test:
 	$(PYTHON) test.py;:
 
-# Python install
-ifndef PYTHONHOME
-  PYTHONHOME = /usr/local
-endif
-
-ifndef PYTHONVER
-  PYTHONVER = 2.4
-endif
-
-ifndef PYTHON_INSTALL_DIR
-  PYTHON_INSTALL_DIR = $(PYTHONHOME)/lib/python$(PYTHONVER)/
-endif
-
+# install to PYTHONHOME
 install:
-	cp _lcio.so lcio.pyc lcio.py $(PYTHON_INSTALL_DIR)
+	python -c "import lcio" && cp _lcio.so lcio.pyc lcio.py $(PYTHON_INSTALL_DIR)
+
+# clean up
+clean:
+	@rm -rf *.o *.so *.pyc;:
