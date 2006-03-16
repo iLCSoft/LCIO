@@ -38,4 +38,5 @@ print "Collecting garbage ..."
 gc.collect()
 print "Done collecting garbage."
 
-
+nms = evt.getCollectionNames()
+print repr(nms)
