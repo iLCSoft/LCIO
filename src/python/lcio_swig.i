@@ -1,16 +1,18 @@
-// $Id: lcio_swig.i,v 1.3 2006-03-15 00:32:57 jeremy Exp $
+// $Id: lcio_swig.i,v 1.4 2006-03-16 02:12:27 jeremy Exp $
 
 /*
- * SWIG interface file to make Python wrappers for LCIO.
+ * Process this file with Swig to make a Python wrapper for LCIO.
+ *
+ * NOTE: This interface file was only tested using Swig 1.3.28.
  *
  * --Jeremy McCormick <jeremym@slac.stanford.edu>
-*/
+ */
 
 %module(docstring="Python wrapper for LCIO") lcio
 
 %feature("autodoc", "1");
 
-/* Ignore include guard symbols. */
+/* Ignore all include guard symbols. */
 %ignore EVENT_CLUSTER_H;
 %ignore EVENT_LCCOLLECTION_H;
 %ignore EVENT_LCEVENT_H;
@@ -65,7 +67,9 @@
 
 %{
 
-/* Include stl headers. */
+/*
+ * Include stl headers.
+ */
 #include <stdexcept>
 #include <iostream>
 #include <string>
@@ -74,7 +78,9 @@
 
 %}
 
-/* Handle C++ Exceptions from Python. */
+/*
+ * Handle C++ exceptions by converting to Python exceptions.
+ */
 %include "exception.i"
 
 %exception {
@@ -86,7 +92,9 @@
     }
 }
 
-/* SWIG STL wrappers. */
+/*
+ * Import the Swig STL wrappers.
+ */
 %import "std_iostream.i"
 %import "std_string.i"
 %import "std_map.i"
@@ -104,8 +112,7 @@
  *
  * FIXME: It will cause problems if double* does not point to a 3-member array!
  *
-*/
-
+ */
 namespace EVENT
 {
     /* Convert an input tuple into a double[3] */
@@ -165,7 +172,7 @@ namespace EVENT
 %{
 
 /*
- * Embed the single definition from LCIOTypes.h
+ * Embed the single definition from LCIOTypes.h instead of using the header file.
  */
 namespace EVENT
 {
@@ -173,7 +180,7 @@ namespace EVENT
 }
 
 /*
- * All the LCIO headers we will need.
+ * Now include all the LCIO headers we will need into the wrapper (don't parse yet).
  */
 #include "EVENT/LCObject.h"
 #include "EVENT/LCIO.h"
@@ -217,10 +224,12 @@ namespace EVENT
 #include "IMPL/TrackImpl.h"
 #include "IMPL/ClusterImpl.h"
 #include "IMPL/ReconstructedParticleImpl.h"
-#include "IMPL/LCCollectionVec.h" /* FIXME: ~LCCollection is causing Seg Fault. */
+#include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"
 
-/* Namespaces to use. */
+/*
+ * Use these namespaces.
+ */
 using namespace std;
 using namespace EVENT;
 using namespace IMPL;
@@ -314,7 +323,9 @@ private:
     LCCollection* _coll;
 };
 
-/* Define some typedefs using the above wrapper. */
+/*
+ * Define some typedefs to commonly used collection types using the above wrapper.
+ */
 typedef LCCollectionWrapper<MCParticle*> MCParticleCollection;
 typedef LCCollectionWrapper<SimCalorimeterHit*> SimCalorimeterHitCollection;
 typedef LCCollectionWrapper<RawCalorimeterHit*> RawCalorimeterHitCollection;
@@ -330,10 +341,14 @@ typedef LCCollectionWrapper<LCRelation*> LCRelationCollection;
 
 %}
 
-/* Parse LCObject before the EVENT classes. */
+/*
+ * Parse LCObject before the EVENT classes.
+ */
 %include "EVENT/LCObject.h"
 
-/* Fiddle with EVENT/LCIO.h instead of using include. */
+/*
+ * Fiddle with EVENT/LCIO.h instead of using include.
+ */
 namespace EVENT
 {
     class LCIO
@@ -403,8 +418,8 @@ namespace EVENT
 }
 
 /*
- * Template instantiations for std::vector types.
- * These types are not interpretted correctly unless we do this.
+ * LCIO code based on std::vector is not parsed correctly without these
+ * template instantiations.
  */
 
 %template(FloatVec) std::vector< float >;
@@ -424,19 +439,25 @@ typedef std::vector< string > StringVec;
 
 %{
 
-/* Include the LCIO headers that wrap std::vector. */
+/*
+ * Include the LCIO headers that wrap std::vector.
+ */
 #include "EVENT/LCFloatVec.h"
 #include "EVENT/LCStrVec.h"
 #include "EVENT/LCIntVec.h"
 
 %}
 
-/* Parse the LCIO headers that wrap std::vector. */
+/*
+ * Parse the LCIO headers that wrap std::vector.
+ */
 %include "EVENT/LCFloatVec.h"
 %include "EVENT/LCStrVec.h"
 %include "EVENT/LCIntVec.h"
 
-/* Template instantiations for other types based on std::vector. */
+/*
+ * Create template instantiations for vectors containing LCObject-derived objects.
+ */
 %template(_MCParticleVec) std::vector<EVENT::MCParticle*>;
 %template(_LCObjectVec) std::vector<EVENT::LCObject*>;
 %template(_ParticleIDVec) std::vector<EVENT::ParticleID*>;
@@ -480,7 +501,17 @@ typedef std::vector< string > StringVec;
 %include "EVENT/Cluster.h"
 %include "EVENT/ReconstructedParticle.h"
 %include "IMPL/LCRunHeaderImpl.h"
+
+/*
+ * The LCCollection being added to the LCEvent needs to be disowned, or Python will try
+ * to delete it later, which will cause a seg fault.
+ */
+%feature("pythonprepend") IMPL::LCEventImpl::addCollection (EVENT::LCCollection *col, const std::string &name) throw (EVENT::EventException, std::exception)
+%{
+        args[1].thisown = 0
+%}
 %include "IMPL/LCEventImpl.h"
+
 %include "IMPL/LCGenericObjectImpl.h"
 %include "IMPL/LCParametersImpl.h"
 %include "IMPL/LCRelationImpl.h"
@@ -494,7 +525,9 @@ typedef std::vector< string > StringVec;
 %include "IMPL/TrackerPulseImpl.h"
 %include "IMPL/TrackerRawDataImpl.h"
 
-/* Explicitly declare ParticleIDImpl to avoid warning messages about PIDSort. */
+/*
+ * Manually wrap ParticleIDImpl so that PIDSort isn't included.
+ */
 namespace IMPL
 {
     class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked
@@ -519,10 +552,18 @@ namespace IMPL
 %include "IMPL/ReconstructedParticleImpl.h"
 
 /*
- * Wrap LCCollectionVec, as default dtor will cause Seg Faults.
+ * Objects added to the LCCollectionVec need to be disowned, so Python doesn't try to delete them later
+ * and cause a seg fault.  Instead, LCCollectionVec takes ownership of this LCObject and deletes it
+ * when it is destroyed.
  */
-/* FIXME: Removing dtor will cause memory leak. */
-%nodefault;
+%feature("pythonprepend") IMPL::LCCollectionVec::addElement(EVENT::LCObject * obj) throw (EVENT::ReadOnlyException)
+%{
+        args[1].thisown = 0
+%}
+
+/*
+ * Wrap LCCollectionVec ...
+ */
 namespace IMPL {
     class LCCollectionVec: public EVENT::LCCollection, public EVENT::LCObjectVec, public AccessChecked
     {
@@ -543,13 +584,14 @@ namespace IMPL {
             virtual void removeElementAt(int i) throw (EVENT::ReadOnlyException) ;
             virtual const EVENT::LCParameters & getParameters() const;
             virtual EVENT::LCParameters & parameters();
-    }; // class
-} // namespace IMPL
-%makedefault;
+    };
+}
 
 %include "IMPL/LCFlagImpl.h"
 
-/* Declare the LCCollection wrapper. */
+/*
+ * Declare the LCCollection wrapper.
+ */
 template <class Element>
 class LCCollectionWrapper
 {
@@ -613,7 +655,9 @@ typedef LCCollectionWrapper<LCRelation*> LCRelationCollection;
 %template(LCGenericObjectCollection) LCCollectionWrapper<EVENT::LCGenericObject*>;
 typedef LCCollectionWrapper<EVENT::LCGenericObject*> LCGenericObjectCollection;
 
-/* Add functions to LCEvent for returning typed collections. */
+/*
+ * Add helper functions to LCEvent for returning typed collections.
+ */
 %extend(python) EVENT::LCEvent {
 
     MCParticleCollection* getMCParticleCollection(const std::string& name)
