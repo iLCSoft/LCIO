@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.13 2005-09-19 15:40:28 gaede Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.14 2006-03-20 20:05:46 tonyj Exp $
  */
 class SIOSimTrackerHit extends ISimTrackerHit
 {
@@ -32,25 +32,28 @@ class SIOSimTrackerHit extends ISimTrackerHit
       time = in.readFloat();
       particle = in.readPntr();
       
-	if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
-	  {
-		momentum[0] = in.readFloat();
-		momentum[1] = in.readFloat();
-		momentum[2] = in.readFloat();
-	  }
+      int version = SIOVersion.encode(major,minor); 
+      
+      if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
+      {
+         momentum[0] = in.readFloat();
+         momentum[1] = in.readFloat();
+         momentum[2] = in.readFloat();
+         
+         if (version > SIOVersion.encode(1,6)) pathLength = in.readFloat();
+      }
+      
 
-      double version  = (double) major + ( (double) minor ) /  10. ;
-      if( version > 1.0 )
-        in.readPTag(this);
+      if( version > SIOVersion.encode(1,0)) in.readPTag(this);
    }
-
+   
    public MCParticle getMCParticle()
    {
       if (particle instanceof SIORef)
          particle = ((SIORef) particle).getObject();
       return (MCParticle) particle;
    }
-
+   
    static void write(SimTrackerHit hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOSimTrackerHit)
@@ -58,7 +61,7 @@ class SIOSimTrackerHit extends ISimTrackerHit
       else
       {
          out.writeInt(hit.getCellID());
-
+         
          double[] pos = hit.getPosition();
          out.writeDouble(pos[0]);
          out.writeDouble(pos[1]);
@@ -66,18 +69,19 @@ class SIOSimTrackerHit extends ISimTrackerHit
          out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
          out.writePntr(hit.getMCParticle());
- 		if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
-		  {
-			float[] p = hit.getMomentum() ;
-			out.writeFloat(p[0] ) ;
-			out.writeFloat(p[1] ) ;
-			out.writeFloat(p[2] ) ;
-		  }
-
+         if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
+         {
+            float[] p = hit.getMomentum() ;
+            out.writeFloat(p[0] ) ;
+            out.writeFloat(p[1] ) ;
+            out.writeFloat(p[2] ) ;
+            out.writeFloat(hit.getPathLength());
+         }
+         
          out.writePTag(hit);
       }
    }
-
+   
    private void write(SIOOutputStream out,int flags) throws IOException
    {
       out.writeInt(cellID);
@@ -87,12 +91,13 @@ class SIOSimTrackerHit extends ISimTrackerHit
       out.writeFloat(dEdx);
       out.writeFloat(time);
       out.writePntr(getMCParticle());
-	if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
-	  {
-		out.writeFloat(momentum[0] ) ;
-		out.writeFloat(momentum[1] ) ;
-		out.writeFloat(momentum[2] ) ;
-	  }
-     out.writePTag(this);
+      if ((flags & (1 << LCIO.THBIT_MOMENTUM)) != 0)
+      {
+         out.writeFloat(momentum[0] ) ;
+         out.writeFloat(momentum[1] ) ;
+         out.writeFloat(momentum[2] ) ;
+         out.writeFloat(pathLength);
+      }
+      out.writePTag(this);
    }
 }
