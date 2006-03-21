@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.4 2006-03-16 02:12:27 jeremy Exp $
+// $Id: lcio_swig.i,v 1.5 2006-03-21 01:04:23 jeremy Exp $
 
 /*
  * Process this file with Swig to make a Python wrapper for LCIO.
@@ -658,6 +658,13 @@ typedef LCCollectionWrapper<EVENT::LCGenericObject*> LCGenericObjectCollection;
 /*
  * Add helper functions to LCEvent for returning typed collections.
  */
+// FIXME: This interface should be simplified to
+//
+//          evt.getCollection(name, type)
+//
+//        Or better yet, just the regular evt.getCollection(name), but
+//        returning a typed collection type.
+//
 %extend(python) EVENT::LCEvent {
 
     MCParticleCollection* getMCParticleCollection(const std::string& name)
