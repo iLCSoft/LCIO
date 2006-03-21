@@ -1,5 +1,5 @@
-#ifndef UTIL_LCFOURVECTOR_H
-#define UTIL_LCFOURVECTOR_H 1
+#ifndef UTIL_BitField64_H
+#define UTIL_BitField64_H 1
 
 #include <iostream>
 
