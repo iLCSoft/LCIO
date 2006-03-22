@@ -103,6 +103,19 @@ namespace UTIL{
       throw Exception(" BitFieldValue: unknown name: " + name ) ;
   }
   
+  unsigned BitField64::highestBit() {
+
+    unsigned hb(0) ;
+
+    for(unsigned i=0;i<_fields.size();i++){
+
+      if( hb < ( _fields[i]->offset() + _fields[i]->width() ) )
+	hb = _fields[i]->offset() + _fields[i]->width()  ;
+    }    
+    return hb ;
+  }
+
+
   std::string BitField64::valueString() const {
 
     std::stringstream  os ;

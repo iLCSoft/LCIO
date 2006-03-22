@@ -88,7 +88,7 @@ namespace UTIL {
     const std::string& name() const { return _name ; }
 
     /** The field's offset */
-    int offset() const { return _offset ; }
+    unsigned offset() const { return _offset ; }
 
     /** The field's width */
     unsigned width() const { return _width ; }
@@ -182,6 +182,13 @@ namespace UTIL {
     const BitFieldValue& operator[](size_t index) const { 
       return *_fields.at( index )  ; 
     }
+
+    /** Highest bit used in fields [0-63]
+     */
+    unsigned highestBit() ;
+    
+    /** Number of values */
+    size_t size() { return _fields.size() ; }
 
     /** Index for field named 'name' 
      */
