@@ -1,11 +1,16 @@
 // -*- C++ -*-
 #ifdef CLHEP  // only if CLHEP is available !
 
-#ifndef UTIL_LCFOURVECTOR_H
-#define UTIL_LCFOURVECTOR_H 1
+#ifndef UTIL_LCFourVector_H
+#define UTIL_LCFourVector_H 1
 
 #include "EVENT/LCObject.h"
 #include "CLHEP/Vector/LorentzVector.h"
+
+
+// CLHEP 1.9 and higher introduce a namespace:
+namespace CLHEP{}  
+using namespace CLHEP ;
 
 
 namespace UTIL {
