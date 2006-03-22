@@ -14,14 +14,16 @@
 #include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
-#include "IMPL/TPCHitImpl.h"
 #include "IMPL/TrackerRawDataImpl.h"
 #include "IMPL/TrackerDataImpl.h"
 #include "IMPL/TrackerPulseImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/LCTime.h"
-#include "UTIL/BitField64.h"
+//#include "UTIL/BitField64.h"
+#include "UTIL/CellIDEncoder.h"
+
+#include "UTIL/LCIOTypeInfo.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -46,6 +48,20 @@ int main(int argc, char** argv ){
   
   try{
     
+//     std::cout << lctypename<MCParticle>() << std::endl ;
+//     std::cout << lctypename<ReconstructedParticle>() << std::endl ;
+
+//     std::cout << lctypename<SimTrackerHit>() << std::endl ;
+//     SimTrackerHitImpl sth ;
+//     std::cout <<  lctypename( &sth ) << std::endl ;
+
+//     std::cout << ti1.lctypename() << std::endl ;
+//     std::cout << ti2.lctypename() << std::endl ;
+
+//     LCObject* obj =   &sth ;
+//     std::cout <<  lctypename( obj ) << std::endl ;
+    
+
     // loop over runs
     for(int rn=0;rn<NRUN;rn++){
       
@@ -187,14 +203,14 @@ int main(int argc, char** argv ){
 	LCFlagImpl chFlag(0) ;
 	chFlag.setBit( LCIO::CHBIT_LONG ) ;
 	chFlag.setBit( LCIO::CHBIT_PDG ) ;
-	chFlag.setBit( LCIO::CHBIT_ID1 ) ;
 	calVec->setFlag( chFlag.getFlag()  ) ;
 	
 	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6") ;// old Mokka convention
-	calVec->parameters().setValue( LCIO::CellIDEncoding , cellIDEncoding ) ;
 
-	BitField64 b( cellIDEncoding  ) ;
-	
+// 	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6,Bla:34:6") ;// for testing cellid1
+
+	CellIDEncoder<SimCalorimeterHitImpl> b( cellIDEncoding , calVec ) ;
+
 	for(int j=0;j<NHITS;j++){
 	  
 	  SimCalorimeterHitImpl* hit = new SimCalorimeterHitImpl ;
@@ -210,8 +226,10 @@ int main(int argc, char** argv ){
 	  b["J"] = (j+128) % 512 ;
 	  b["K-1"] = (j+32) % 64 ;
 
-	  hit->setCellID0( b.lowWord()  ) ;
-	  hit->setCellID1( b.highWord() ) ;
+	  b.setCellID( hit ) ;
+
+// 	  hit->setCellID0( b.lowWord()  ) ;
+// 	  hit->setCellID1( b.highWord() ) ;
 	  
 	  hit->setPosition( pos ) ;
 	  
@@ -253,9 +271,18 @@ int main(int argc, char** argv ){
 	trkVec->setFlag( thFlag.getFlag()  ) ;
 	
 
+	CellIDEncoder<SimTrackerHitImpl> cd( "i:8,j:8,k:8" ,trkVec )  ;
+	
 	for(int j=0;j<NHITS;j++){
 	  
 	  SimTrackerHitImpl* hit = new SimTrackerHitImpl ;
+
+	  cd["i"] = j ;
+	  cd["j"] = j + 100 ;
+	  cd["k"] = j + 200 ;
+
+	  cd.setCellID( hit ) ;
+
 	  LCFloatVec* extF = new LCFloatVec ;
 	  LCIntVec*   extI = new LCIntVec ;
 	  
@@ -310,51 +337,6 @@ int main(int argc, char** argv ){
 	  addExtVec->push_back( addExt ) ;
 	  evt->addCollection( addExtVec , "AdditionalExtension" ) ;
 	}
-
-	// even though this is a simjob we can store 'real data' objects :)
-	// --- for example we can store TPC hits ------------
-
-	LCCollectionVec* TPCVec = new LCCollectionVec( LCIO::TPCHIT )  ;
-
-	//---- test new relation navigator object
-	LCRelationNavigator relNav( LCIO::TPCHIT, LCIO::SIMTRACKERHIT ) ;
-
-	bool storeRawData = true ;
-
-	LCFlagImpl tpcFlag(0) ;
-	if(  storeRawData )  // if we want to store the raw data we need to set the flag
-	  tpcFlag.setBit( LCIO::TPCBIT_RAW ) ;
-	TPCVec->setFlag( tpcFlag.getFlag()  ) ;
-	
-	for(int j=0;j<NHITS;j++){
-	  
-	  TPCHitImpl* tpcHit = new TPCHitImpl ;
-	  
-	  //---- test new relation navigator object
-	  relNav.addRelation( tpcHit , trkVec->getElementAt(j) , 0.95  ) ;
-	  
-	  tpcHit->setCellID( j ) ;
-	  tpcHit->setTime( 0.1234567 ) ;
-	  tpcHit->setCharge( 3.14159 ) ;
-	  tpcHit->setQuality(  0xbad ) ;
-
-	  if(  storeRawData ) {
-	    int rawData[10] ;
-	    // fill some random numbers 
-	    int size =   int( (double(rand()) / RAND_MAX ) * 10 )  ;   
-	    for(int k=0;k<size;k++){
-	      rawData[k] = int( (double(rand()) / RAND_MAX ) * INT_MAX ) ;   
-	    }
-
-	    tpcHit->setRawData( rawData , size ) ;
-	  }
-
-	  TPCVec->push_back( tpcHit ) ;
-	}	
-	evt->addCollection( TPCVec , "TPCRawFADC" ) ;
-	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
-
-	
  	//---- write a subset of MCParticle to the event ------
  	LCCollectionVec* mcSubVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
  	mcSubVec->setSubset(true) ;
@@ -368,6 +350,9 @@ int main(int argc, char** argv ){
  	evt->addCollection( mcSubVec , "FinalMCParticles" ) ;
  	//-----------------------------------------------------
 
+
+
+	// even though this is a simjob we can store 'real data' objects :)
 
 #define WRITE_TRACKERRAWDATA 1
 #ifdef WRITE_TRACKERRAWDATA
@@ -398,8 +383,17 @@ int main(int argc, char** argv ){
 	}
 	evt->addCollection( tpcRawVec , "TrackerRawDataExample" ) ;
 
-	//------ corrected data
+	//---- test new relation navigator object
+	LCRelationNavigator relNav( LCIO::TRACKERRAWDATA, LCIO::SIMTRACKERHIT ) ;
+	
+	for(int j=0;j<NHITS;j++){
+	  relNav.addRelation( tpcRawVec->getElementAt(j) , trkVec->getElementAt(j) , 0.42 ) ;
+	}
+	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
+	
 
+	//------ corrected data
+	
 	LCCollectionVec* tpcCorrectedVec = new LCCollectionVec( LCIO::TRACKERDATA )  ;
 	
 	for(int j=0;j<NHITS;j++){
