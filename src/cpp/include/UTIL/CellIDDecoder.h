@@ -4,6 +4,7 @@
 //#include <vector>
 //#include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
+#include "EVENT/SimTrackerHit.h"
 #include "UTIL/BitField64.h"
 #include "lcio.h"
 #include <string>
@@ -20,7 +21,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.1 2006-03-10 16:23:15 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.2 2006-03-22 11:52:46 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
@@ -92,6 +93,26 @@ namespace UTIL{
     
     static std::string*  _defaultEncoding ;
   } ; 
+  
+  
+  /** Provides access to the bit fields, e.g. <br>
+   *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
+   * Specialization for SimTrackerHits that have only one cellID.
+   */
+  template<>
+  const BitField64 & CellIDDecoder<SimTrackerHit>::operator()( SimTrackerHit* hit ){  
+    
+    if( hit != _oldHit && hit ) {
+      
+      long64 val = long64( hit->getCellID() & 0xffffffff )  ;
+      
+      _b->setValue( val ) ;
+      
+      _oldHit = hit ;
+    }
+    
+    return  *_b ;
+  }
   
   template <class T>
   std::string* CellIDDecoder<T>::_defaultEncoding 
