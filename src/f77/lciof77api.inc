@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.34 2005-10-21 13:53:20 gaede Exp $
+*  $Id: lciof77api.inc,v 1.35 2006-03-22 16:42:38 hvogt Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -116,7 +116,8 @@ c-----the MCParticle interface
       integer lcmcpgetpdg, lcmcpgetgeneratorstatus
       integer lcmcpgetsimulatorstatus
       integer lcmcpgetvertex, lcmcpgetmomentum
-      real    lcmcpgetmass, lcmcpgettime, lcmcpgetcharge, lcmcpgetenergy
+      real    lcmcpgettime, lcmcpgetcharge
+      double precision lcmcpgetmass, lcmcpgetenergy
       integer lcmcpaddparent, lcmcpadddaughter 
       integer lcmcpsetpdg, lcmcpsetgeneratorstatus
       integer lcmcpsetsimulatorstatus, lcmcpsetvertex 

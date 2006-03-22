@@ -26,6 +26,7 @@ c--   LCIO interface
       integer status, ievent
       integer i,j,k, nmcp, lenocc
       real costh, p(3), pxy, ptot, phi
+      double precision pdouble(3)
       character*80 filename
       character*80 mcpcolname
       data mcpcolname /'MCParticle'/
@@ -86,8 +87,11 @@ c     --------- use only final state particles
                      goto 10
                   endif
                   
-                  call hfill( 10, lcmcpgetenergy( mcp ), 0. , 1. )
-                  status = lcmcpgetmomentum( mcp , p )
+                  call hfill( 10, real(lcmcpgetenergy(mcp)), 0., 1.)
+                  status = lcmcpgetmomentum( mcp , pdouble )
+                  p(1) = pdouble(1)
+                  p(2) = pdouble(2)
+                  p(3) = pdouble(3)
                   
                   pxy = sqrt( p(1)*p(1)+p(2)*p(2) ) 
                   ptot = sqrt( p(1)*p(1)+p(2)*p(2)+p(3)*p(3) )
@@ -103,7 +107,8 @@ c     --------- use only final state particles
                      write(*,*) phi, ' - ' ,lcmcpgetpdg( mcp )
                   endif
 
-                  call hfill( 30, lcmcpgetenergy( mcp )/ptot , 0. , 1. )
+                  call hfill
+     &              ( 30, real(lcmcpgetenergy(mcp))/ptot , 0., 1.)
 
                endif
  10            continue

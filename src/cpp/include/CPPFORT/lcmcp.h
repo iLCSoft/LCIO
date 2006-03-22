@@ -22,10 +22,10 @@ int lcmcpgetgeneratorstatus( PTRTYPE mcparticle )  ;
 int lcmcpgetsimulatorstatus( PTRTYPE mcparticle )  ;
 int lcmcpgetvertex( PTRTYPE mcparticle, double* vtx )  ;
 float lcmcpgettime( PTRTYPE mcparticle )  ;
-int lcmcpgetmomentum( PTRTYPE mcparticle, float* p)  ;
-float lcmcpgetmass( PTRTYPE mcparticle )  ;
+int lcmcpgetmomentum( PTRTYPE mcparticle, double* p)  ;
+double lcmcpgetmass( PTRTYPE mcparticle )  ;
 float lcmcpgetcharge( PTRTYPE mcparticle )  ;
-float lcmcpgetenergy( PTRTYPE mcparticle )  ;
+double lcmcpgetenergy( PTRTYPE mcparticle )  ;
 
 int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
 // int lcmcpsetsecondparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
@@ -56,10 +56,10 @@ FCALLSCFUN1(INT, lcmcpgetgeneratorstatus, LCMCPGETGENERATORSTATUS, lcmcpgetgener
 FCALLSCFUN1(INT, lcmcpgetsimulatorstatus, LCMCPGETSIMULATORSTATUS, lcmcpgetsimulatorstatus, CFORTRANPNTR ) 
 FCALLSCFUN2(INT, lcmcpgetvertex,LCMCPGETVERTEX,lcmcpgetvertex, CFORTRANPNTR, DOUBLEV ) 
 FCALLSCFUN1(FLOAT, lcmcpgettime, LCMCPGETTIME, lcmcpgettime, CFORTRANPNTR ) 
-FCALLSCFUN2(INT, lcmcpgetmomentum,LCMCPGETMOMENTUM,lcmcpgetmomentum, CFORTRANPNTR, FLOATV ) 
-FCALLSCFUN1(FLOAT, lcmcpgetmass, LCMCPGETMASS, lcmcpgetmass, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcmcpgetmomentum,LCMCPGETMOMENTUM,lcmcpgetmomentum, CFORTRANPNTR, DOUBLEV )
+FCALLSCFUN1(DOUBLE, lcmcpgetmass, LCMCPGETMASS, lcmcpgetmass, CFORTRANPNTR )
 FCALLSCFUN1(FLOAT, lcmcpgetcharge,LCMCPGETCHARGE,lcmcpgetcharge, CFORTRANPNTR ) 
-FCALLSCFUN1(FLOAT, lcmcpgetenergy, LCMCPGETENERGY, lcmcpgetenergy, CFORTRANPNTR ) 
+FCALLSCFUN1(DOUBLE, lcmcpgetenergy, LCMCPGETENERGY, lcmcpgetenergy, CFORTRANPNTR )
 
 FCALLSCFUN2(INT, lcmcpaddparent,LCMCPADDPARENT,lcmcpaddparent, CFORTRANPNTR, CFORTRANPNTR ) 
 // FCALLSCFUN2(INT, lcmcpsetsecondparent,LCMCPSETSECONDPARENT,lcmcpsetsecondparent, CFORTRANPNTR, CFORTRANPNTR ) 

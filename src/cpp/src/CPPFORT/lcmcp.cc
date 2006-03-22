@@ -70,12 +70,12 @@ float lcmcpgettime( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return mcp->getTime() ;  
 }
-int lcmcpgetmomentum( PTRTYPE mcparticle, float* p)  {
+int lcmcpgetmomentum( PTRTYPE mcparticle, double* p)  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   for( int i=0 ; i<3 ;  *p++ =  mcp->getMomentum()[i++]  ) ;
   return LCIO::SUCCESS ;
 }
-float lcmcpgetmass( PTRTYPE mcparticle )  {
+double lcmcpgetmass( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return mcp->getMass() ;  
 }
@@ -83,7 +83,7 @@ float lcmcpgetcharge( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return mcp->getCharge() ;  
 }
-float lcmcpgetenergy( PTRTYPE mcparticle )  {
+double lcmcpgetenergy( PTRTYPE mcparticle )  {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   return mcp->getEnergy() ;  
 }

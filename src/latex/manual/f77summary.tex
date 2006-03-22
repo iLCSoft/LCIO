@@ -411,9 +411,9 @@ getGeneratorStatus     -> istatg  = lcmcpgetgeneratorstatus( pmcp )
 getSimulatorStatus     -> istats  = lcmcpgetsimulatorstatus( pmcp )
 getVertex              -> status  = lcmcpgetvertex( pmcp , dvtxv )
 getEndpoint            -> status  = lcmcpgetendpoint( pmcp , dvtxv )
-getMomentum            -> status  = lcmcpgetmomentum( pmcp , momv )
-getEnergy              -> energy  = lcmcpgetenergy( pmcp )
-getMass                -> mass    = lcmcpgetmass( pmcp )
+getMomentum            -> status  = lcmcpgetmomentum( pmcp , dmomv )
+getEnergy              -> denergy = lcmcpgetenergy( pmcp )
+getMass                -> dmass   = lcmcpgetmass( pmcp )
 getCharge              -> charge  = lcmcpgetcharge( pmcp )
 
 
