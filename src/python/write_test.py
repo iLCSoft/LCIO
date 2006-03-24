@@ -17,7 +17,7 @@ writer.open("write_test", lcio.LCIO.WRITE_NEW)
 nevents = 10
 for i in range(0,nevents):
 
-    coll = lcio.LCCollectionVec(lcio.cvar.LCIO_SIMCALORIMETERHIT)
+    coll = lcio.LCCollectionVec(lcio.GLOBALS.LCIO_SIMCALORIMETERHIT)
 
     for i in range(0,1):
         hit = lcio.SimCalorimeterHitImpl()
