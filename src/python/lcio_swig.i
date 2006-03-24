@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.5 2006-03-21 01:04:23 jeremy Exp $
+// $Id: lcio_swig.i,v 1.6 2006-03-24 05:19:11 jeremy Exp $
 
 /*
  * Process this file with Swig to make a Python wrapper for LCIO.
@@ -16,6 +16,7 @@
 %ignore EVENT_CLUSTER_H;
 %ignore EVENT_LCCOLLECTION_H;
 %ignore EVENT_LCEVENT_H;
+%ignore EVENT_LCRUNHEADERIMPL_H;
 %ignore EVENT_LCFLAG_H;
 %ignore EVENT_LCFLOATVEC_H;
 %ignore EVENT_LCGENERICOBJECTIMPL_H;
@@ -326,18 +327,20 @@ private:
 /*
  * Define some typedefs to commonly used collection types using the above wrapper.
  */
-typedef LCCollectionWrapper<MCParticle*> MCParticleCollection;
-typedef LCCollectionWrapper<SimCalorimeterHit*> SimCalorimeterHitCollection;
-typedef LCCollectionWrapper<RawCalorimeterHit*> RawCalorimeterHitCollection;
-typedef LCCollectionWrapper<SimTrackerHit*> SimTrackerHitCollection;
-typedef LCCollectionWrapper<LCGenericObject*> LCGenericObjectCollection;
-typedef LCCollectionWrapper<TPCHit*> TPCHitCollection;
-typedef LCCollectionWrapper<TrackerPulse*> TrackerPulseCollection;
-typedef LCCollectionWrapper<ParticleID*> ParticleIDCollection;
-typedef LCCollectionWrapper<Track*> TrackCollection;
 typedef LCCollectionWrapper<Cluster*> ClusterCollection;
-typedef LCCollectionWrapper<ReconstructedParticle*> ReconstructedParticleCollection;
+typedef LCCollectionWrapper<LCGenericObject*> LCGenericObjectCollection;
 typedef LCCollectionWrapper<LCRelation*> LCRelationCollection;
+typedef LCCollectionWrapper<MCParticle*> MCParticleCollection;
+typedef LCCollectionWrapper<ParticleID*> ParticleIDCollection;
+typedef LCCollectionWrapper<RawCalorimeterHit*> RawCalorimeterHitCollection;
+typedef LCCollectionWrapper<ReconstructedParticle*> ReconstructedParticleCollection;
+typedef LCCollectionWrapper<SimCalorimeterHit*> SimCalorimeterHitCollection;
+typedef LCCollectionWrapper<SimTrackerHit*> SimTrackerHitCollection;
+typedef LCCollectionWrapper<TPCHit*> TPCHitCollection;
+typedef LCCollectionWrapper<Track*> TrackCollection;
+typedef LCCollectionWrapper<TrackerData*> TrackerDataCollection;
+typedef LCCollectionWrapper<TrackerPulse*> TrackerPulseCollection;
+typedef LCCollectionWrapper<TrackerRawData*> TrackerRawDataCollection;
 
 %}
 
@@ -360,6 +363,8 @@ namespace EVENT
  * FIXME: These are only immutable in lcio.cvar, not lcio.LCIO!
  */
 %immutable;
+            static const int MAJORVERSION;
+            static const int MINORVERSION;
             static const int CHBIT_LONG;
             static const int CHBIT_BARREL;
             static const int CHBIT_ID1;
@@ -413,15 +418,14 @@ namespace EVENT
             static const char* RECONSTRUCTEDPARTICLE = "ReconstructedParticle";
             static const char* LCRELATION = "LCRelation";
             static const char* LCGENERICOBJECT = "LCGenericObject";
+            static const char* PARTICLEID = "ParticleID";
 %mutable;
     };
 }
 
 /*
- * LCIO code based on std::vector is not parsed correctly without these
- * template instantiations.
+ * Types based on std::vector are not parsed correctly without template instantiations.
  */
-
 %template(FloatVec) std::vector< float >;
 typedef std::vector< float > FloatVec;
 
@@ -465,6 +469,8 @@ typedef std::vector< string > StringVec;
 %template(_ReconstructedParticleVec) std::vector<EVENT::ReconstructedParticle*>;
 %template(_TrackVec) std::vector<EVENT::Track*>;
 %template(_CalorimeterHitVec) std::vector<EVENT::CalorimeterHit*>;
+%template(_TrackerRawDataVec) std::vector<EVENT::TrackerRawData*>;
+%template(_TrackerDataVec) std::vector<EVENT::TrackerData*>;
 
 /*
  * Now parse the remaining LCIO headers in dependency order.
@@ -474,6 +480,14 @@ typedef std::vector< string > StringVec;
 %include "Exceptions.h"
 %include "EVENT/LCFlag.h"
 %include "EVENT/LCParameters.h"
+
+%feature("shadow") EVENT::LCEvent::getCollection (const std::string &name) const throw (DataNotAvailableException, std::exception )
+%{
+    def getCollection(*args):                    
+        coll = $action(*args)                
+        return LCEvent.LCCOLLECTION_CONVERTERS[coll.getTypeName()](*args)
+%}
+
 %include "EVENT/LCEvent.h"
 %include "EVENT/LCRunHeader.h"
 %include "IO/LCReader.h"
@@ -655,125 +669,136 @@ typedef LCCollectionWrapper<LCRelation*> LCRelationCollection;
 %template(LCGenericObjectCollection) LCCollectionWrapper<EVENT::LCGenericObject*>;
 typedef LCCollectionWrapper<EVENT::LCGenericObject*> LCGenericObjectCollection;
 
+%template(TrackerDataCollection) LCCollectionWrapper<EVENT::TrackerData*>;
+typedef TrackerDataWrapper<EVENT::TrackerData*> TrackerDataCollection;
+
+%template(TrackerRawDataCollection) LCCollectionWrapper<EVENT::TrackerRawData*>;
+typedef TrackerRawDataWrapper<EVENT::TrackerRawData*> TrackerRawDataCollection;
+
 /*
  * Add helper functions to LCEvent for returning typed collections.
  */
-// FIXME: This interface should be simplified to
-//
-//          evt.getCollection(name, type)
-//
-//        Or better yet, just the regular evt.getCollection(name), but
-//        returning a typed collection type.
-//
 %extend(python) EVENT::LCEvent {
 
     MCParticleCollection* getMCParticleCollection(const std::string& name)
     {
-        LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            MCParticleCollection* coll = new MCParticleCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        LCCollection* lccoll = self->getCollection(name);  
+        if (lccoll->getTypeName() != LCIO::MCPARTICLE) return 0;
+        return new MCParticleCollection(lccoll);
     }
 
     SimCalorimeterHitCollection* getSimCalorimeterHitCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            SimCalorimeterHitCollection* coll = new SimCalorimeterHitCollection( lccoll );
-           return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::SIMCALORIMETERHIT) return 0;
+        return new SimCalorimeterHitCollection( lccoll );
     }
 
     RawCalorimeterHitCollection* getRawCalorimeterHitCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            RawCalorimeterHitCollection* coll = new RawCalorimeterHitCollection( lccoll );
-           return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::RAWCALORIMETERHIT) return 0;
+        return new RawCalorimeterHitCollection( lccoll );
     }
 
     SimTrackerHitCollection* getSimTrackerHitCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            SimTrackerHitCollection* coll = new SimTrackerHitCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::SIMTRACKERHIT) return 0;
+        return new SimTrackerHitCollection( lccoll );
     }
 
     LCGenericObjectCollection* getLCGenericObjectCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            LCGenericObjectCollection* coll = new LCGenericObjectCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::LCGENERICOBJECT) return 0;
+        return new LCGenericObjectCollection( lccoll );
     }
 
     TPCHitCollection* getTPCHitCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            TPCHitCollection* coll = new TPCHitCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::TPCHIT) return 0;
+        return new TPCHitCollection( lccoll );
     }
 
     ParticleIDCollection* getParticleIDCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            ParticleIDCollection* coll = new ParticleIDCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::PARTICLEID) return 0;
+        return new ParticleIDCollection( lccoll );
     }
 
     TrackCollection* getTrackCollection(const std::string& name)
     {
-        LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            TrackCollection* coll = new TrackCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        LCCollection* lccoll = self->getCollection(name);\
+        if (lccoll->getTypeName() != LCIO::TRACK) return 0;
+        return new TrackCollection( lccoll );
     }
 
     ClusterCollection* getClusterCollection(const std::string& name)
     {
-        LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            ClusterCollection* coll = new ClusterCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        LCCollection* lccoll = self->getCollection(name);   
+        if (lccoll->getTypeName() != LCIO::CLUSTER) return 0;
+        return new ClusterCollection( lccoll );
     }
 
     ReconstructedParticleCollection* getReconstructedParticleCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            ReconstructedParticleCollection* coll = new ReconstructedParticleCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::RECONSTRUCTEDPARTICLE) return 0;
+        return new ReconstructedParticleCollection( lccoll );
     }
 
     LCRelationCollection* getLCRelationCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
-        if ( 0 != lccoll ) {
-            LCRelationCollection* coll = new LCRelationCollection( lccoll );
-            return coll;
-        }
-        return 0;
+        if (lccoll->getTypeName() != LCIO::LCRELATION) return 0;
+        return new LCRelationCollection( lccoll );
     }
+    
+    TrackerDataCollection* getTrackerDataCollection(const std::string& name)
+    {
+        LCCollection* lccoll = self->getCollection(name);
+        if (lccoll->getTypeName() != LCIO::TRACKERDATA) return 0;
+        return new TrackerDataCollection( lccoll );
+    }
+    
+    TrackerRawDataCollection* getTrackerRawDataCollection(const std::string& name)
+    {
+        LCCollection* lccoll = self->getCollection(name);
+        if (lccoll->getTypeName() != LCIO::TRACKERRAWDATA) return 0;
+        return new TrackerRawDataCollection( lccoll );
+    }
+    
+    TrackerPulseCollection* getTrackerPulseCollection(const std::string& name)
+    {
+        LCCollection* lccoll = self->getCollection(name);
+        if (lccoll->getTypeName() != LCIO::TRACKERPULSE) return 0;
+        return new TrackerPulseCollection( lccoll );
+    }
+}
+
+/* A map of functions in LCEvent (extended) that convert to typed collections. */
+%extend EVENT::LCEvent
+{
+%pythoncode 
+{
+LCCOLLECTION_CONVERTERS = {
+    GLOBALS.LCIO_CLUSTER : getClusterCollection,
+    GLOBALS.LCIO_LCGENERICOBJECT : getLCGenericObjectCollection,   
+    GLOBALS.LCIO_LCRELATION : getLCRelationCollection,
+    GLOBALS.LCIO_MCPARTICLE : getMCParticleCollection,    
+    GLOBALS.LCIO_PARTICLEID : getParticleIDCollection,
+    GLOBALS.LCIO_RAWCALORIMETERHIT : getRawCalorimeterHitCollection,
+    GLOBALS.LCIO_RECONSTRUCTEDPARTICLE: getReconstructedParticleCollection,    
+    GLOBALS.LCIO_SIMCALORIMETERHIT : getSimCalorimeterHitCollection,
+    GLOBALS.LCIO_SIMTRACKERHIT : getSimTrackerHitCollection,
+    GLOBALS.LCIO_TPCHIT : getTPCHitCollection,
+    GLOBALS.LCIO_TRACK : getTrackCollection,
+    GLOBALS.LCIO_TRACKERDATA : getTrackerDataCollection,
+    GLOBALS.LCIO_TRACKERPULSE : getTrackerPulseCollection,
+    GLOBALS.LCIO_TRACKERRAWDATA : getTrackerRawDataCollection    
+}
+}
 }
