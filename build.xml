@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.18 2006-01-31 20:42:24 jeremy Exp $    -->
+<!-- Version: $Id: build.xml,v 1.19 2006-03-24 13:46:37 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -117,7 +117,7 @@
   </target>
 
   <target name="python" depends="init, cpp" description="&lt;python-target&lt;">
-    <exec dir="." executable="make">
+    <exec dir="." executable="make" failOnError="true">
       <arg line="-C ./src/python swig" />
     </exec>
   </target>
@@ -146,12 +146,12 @@
 
    <target name="cpp.osx" depends="cpp.lcio.osx"/>
    <target name="cpp.sio.osx" >
-     <exec dir="." executable="make" os="Mac OS X">
+     <exec dir="." executable="make" os="Mac OS X" failOnError="true">
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
    <target name="cpp.lcio.osx" depends="cpp.sio.osx">
-     <exec dir="." executable="make" os="Mac OS X">
+     <exec dir="." executable="make" os="Mac OS X" failOnError="true">
        <arg line="-C ./src/cpp all"/>
      </exec>
    </target>
@@ -162,13 +162,13 @@
   <!-- =================================================================== -->
 
    <target name="cpp.linux" depends="cpp.lcio.linux"/>
-   <target name="cpp.sio.linux" >
-     <exec dir="." executable="gmake" os="Linux">
+   <target name="cpp.sio.linux">
+     <exec dir="." executable="gmake" os="Linux" failOnError="true">
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
    <target name="cpp.lcio.linux" depends="cpp.sio.linux">
-     <exec dir="." executable="gmake" os="Linux">
+     <exec dir="." executable="gmake" os="Linux" failOnError="true">
        <arg line="-C ./src/cpp all"/>
      </exec>
    </target>
@@ -179,12 +179,12 @@
 
    <target name="cpp.windows" depends="cpp.lcio.windows"/>
    <target name="cpp.sio.windows">
-     <exec dir="." executable="make" failonerror="true" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+     <exec dir="." executable="make" failonerror="true" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
    <target name="cpp.lcio.windows" depends="cpp.sio.windows">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
        <arg line="-C ./src/cpp all"/>
      </exec>
    </target>
@@ -199,13 +199,13 @@
 
 
    <target name="f77.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux">
+     <exec dir="." executable="gmake" os="Linux" failOnError="true">
        <arg line="-C ./src/f77"/>
      </exec>
    </target>
 
    <target name="f77.windows" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98">
+     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
        <arg line="-C ./src/f77"/>
      </exec>
    </target>
@@ -215,7 +215,7 @@
 
 
    <target name="f77.clean.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux">
+     <exec dir="." executable="gmake" os="Linux" failOnError="true">
        <arg line="-C ./src/f77 clean"/>
      </exec>
    </target>
@@ -277,7 +277,7 @@
 
 
    <target name="cpp.doc" description="creates API doc with doxygen (required in path)">
-     <exec dir="./doc/doxygen_api" executable="doxygen">
+     <exec dir="./doc/doxygen_api" executable="doxygen" failOnError="true">
      </exec>
    </target>
 
