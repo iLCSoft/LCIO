@@ -23,7 +23,7 @@
 //#include "UTIL/BitField64.h"
 #include "UTIL/CellIDEncoder.h"
 
-#include "UTIL/LCIOTypeInfo.h"
+// #include "UTIL/LCIOTypeInfo.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -48,20 +48,7 @@ int main(int argc, char** argv ){
   
   try{
     
-//     std::cout << lctypename<MCParticle>() << std::endl ;
-//     std::cout << lctypename<ReconstructedParticle>() << std::endl ;
-
-//     std::cout << lctypename<SimTrackerHit>() << std::endl ;
-//     SimTrackerHitImpl sth ;
-//     std::cout <<  lctypename( &sth ) << std::endl ;
-
-//     std::cout << ti1.lctypename() << std::endl ;
-//     std::cout << ti2.lctypename() << std::endl ;
-
-//     LCObject* obj =   &sth ;
-//     std::cout <<  lctypename( obj ) << std::endl ;
     
-
     // loop over runs
     for(int rn=0;rn<NRUN;rn++){
       
@@ -299,7 +286,8 @@ int main(int argc, char** argv ){
 	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
 	  
 	  hit->setMomentum( 1. , 2. , 3. ) ; 
-	  
+	  hit->setPathLength( .042 ) ;
+
 	  // fill the extension vectors (4 floats, 2 ints)
 	  extF->push_back( 3.14159 ) ;  
 	  for(int k=0;k<3;k++) extF->push_back(  pos[k] * 0.1  ) ;
@@ -505,7 +493,23 @@ int main(int argc, char** argv ){
 	 << endl << endl ;
     
     
+    // ----- some testing code for the lctypename template -----
+//     std::cout << lctypename<MCParticle>() << std::endl ;
+//     std::cout << lctypename<MCParticleImpl>() << std::endl ;
     
+//     std::cout << lctypename<ReconstructedParticle>() << std::endl ;
+    
+//     std::cout << lctypename<SimTrackerHit>() << std::endl ;
+//     std::cout << lctypename<SimTrackerHitImpl>() << std::endl ;
+    
+//     SimTrackerHitImpl sth ;
+//     std::cout <<  lctypename( &sth ) << std::endl ;
+    
+//     LCObject* obj =   &sth ;
+//     std::cout <<  lctypename( obj ) << std::endl ;
+    
+
+ 
   
   } catch( Exception& ex){
 
