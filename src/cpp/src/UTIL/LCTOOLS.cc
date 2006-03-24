@@ -22,7 +22,7 @@
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
 
-#ifdef CLHEP
+#ifdef USE_CLHEP
 #include "UTIL/LCFourVector.h"
 #endif
 #include "UTIL/LCObjectHandle.h"
@@ -1315,7 +1315,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-#ifdef CLHEP
+#ifdef USE_CLHEP
       ReconstructedParticle4V recP( col->getElementAt( i ) ) ;
 #else
       ReconstructedParticle* recP = 
@@ -1513,7 +1513,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     for(  int index = 0 ; index < nParticles ; index++){
       
 
-#ifdef CLHEP
+#ifdef USE_CLHEP
       MCParticle4V part( col->getElementAt( index ) ) ;
 #else
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
@@ -1550,7 +1550,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       cout <<  part->getMass()         << " | " 
 	   <<  part->getCharge()       << " | " 
 	   <<  part->getEnergy()      
-#ifdef CLHEP
+#ifdef USE_CLHEP
 	//---- DEBUG
 	   << " m(4V) : " << part.m()
 	   << " e(4V) : " << part.e()

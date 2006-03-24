@@ -1,5 +1,5 @@
 // -*- C++ -*-
-#ifdef CLHEP  // only if CLHEP is available !
+#ifdef USE_CLHEP  // only if CLHEP is available !
 
 #ifndef UTIL_LCFourVector_H
 #define UTIL_LCFourVector_H 1
@@ -87,4 +87,4 @@ namespace UTIL {
 
 
 #endif /* ifndef UTIL_LCFOURVECTOR_H */
-#endif
+#endif  // USE_CLHEP

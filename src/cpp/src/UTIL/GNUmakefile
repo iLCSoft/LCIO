@@ -23,7 +23,7 @@ INCLUDE =  $(LCIOINCLUDE)
 CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE)
 
 ifdef CLHEP
- CPPFLAGS += -DCLHEP=CLHEP -I$(CLHEP)/include
+ CPPFLAGS += -DUSE_CLHEP -I$(CLHEP)/include
 endif
 
 objects := $(patsubst %.cc,%.o,$(wildcard *.cc))
