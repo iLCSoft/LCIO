@@ -23,11 +23,19 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
  *  flag(LCIO::RCHBIT_NO_PTR)==1. 
  *  
  * @author gaede
- * @version $Id: CalorimeterHit.aid,v 1.13 2004-09-23 17:07:38 gaede Exp $
+ * @version $Id: CalorimeterHit.aid,v 1.14 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface CalorimeterHit extends LCObject {
     
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef CalorimeterHit lcobject_type ;
+
+}
+@endif
+
     /** Returns the detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;

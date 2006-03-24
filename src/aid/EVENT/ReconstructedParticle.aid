@@ -10,11 +10,19 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.14 2005-05-31 08:51:28 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.15 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
     
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef ReconstructedParticle lcobject_type ;
+
+}
+@endif
 
 // @ifdef cpp
 // @cpp{

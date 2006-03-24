@@ -1,11 +1,5 @@
 package hep.lcio.event ;
 
-// @cpp{
-// #include <vector>
-// }
-// @cpp{
-// typedef std::vector<float> FloatVec ;
-// }
 @cpp{
  #include "IMPL/AccessChecked.h" // FIXME: EVENT shouldn't  depend on IMPL ...
 }
@@ -25,6 +19,8 @@ public interface LCFloatVec extends LCObject
 {
 
 @cpp{
+    typedef LCFloatVec lcobject_type ;
+
     public:
     int id() { return _acc.simpleUID() ; } 
     protected:

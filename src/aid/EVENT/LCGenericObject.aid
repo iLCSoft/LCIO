@@ -12,12 +12,20 @@ import hep.lcio.exceptions.* ;
  * from const std::string& to const std::string to  make the implementation easier
  * @endif
  * @author gaede 
- * @version $Id: LCGenericObject.aid,v 1.5 2005-02-11 15:29:51 gaede Exp $
+ * @version $Id: LCGenericObject.aid,v 1.6 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface LCGenericObject extends LCObject 
 
 {
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef LCGenericObject lcobject_type ;
+
+}
+@endif
 
     /** Number of integer values stored in this object.
      */

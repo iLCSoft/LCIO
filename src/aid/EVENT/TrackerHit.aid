@@ -10,11 +10,19 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version $Id: TrackerHit.aid,v 1.8 2004-09-15 13:29:07 gaede Exp $
+ * @version $Id: TrackerHit.aid,v 1.9 2006-03-24 13:25:53 gaede Exp $
  */
 
 public interface TrackerHit extends LCObject {
     
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TrackerHit lcobject_type ;
+
+}
+@endif
+
     /** The hit  position in [mm].	
      */
     public const double3V getPosition() const ;

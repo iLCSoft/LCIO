@@ -11,12 +11,21 @@ import hep.lcio.exceptions.* ;
  * and 'RelationToType'
  * 
  * @author gaede 
- * @version $Id: LCRelation.aid,v 1.5 2004-09-10 12:26:18 gaede Exp $
+ * @version $Id: LCRelation.aid,v 1.6 2006-03-24 13:25:52 gaede Exp $
  * @see LCRelationNavigator
  */
 
 public interface LCRelation extends LCObject
 {
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef LCRelation lcobject_type ;
+
+}
+@endif
+
     /** The 'from' object of the given relation. 
      */
     public LCObject* getFrom() const;

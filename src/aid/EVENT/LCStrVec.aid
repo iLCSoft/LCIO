@@ -1,11 +1,5 @@
 package hep.lcio.event ;
 
-// @cpp{
-// #include <vector>
-// }
-// @cpp{
-// typedef std::vector<string> StrVec ;
-// }
 @cpp{
  #include "IMPL/AccessChecked.h" // FIXME: EVENT shouldn't  depend on IMPL ...
 }
@@ -24,6 +18,8 @@ public interface LCStrVec extends LCObject
 {
 
 @cpp{
+    typedef LCStrVec lcobject_type ;
+
     public:
     int id() { return _acc.simpleUID() ; } 
     protected:

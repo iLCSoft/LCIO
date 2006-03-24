@@ -5,11 +5,20 @@ package hep.lcio.event ;
  *  @see TrackerPulse
  * 
  * @author gaede
- * @version $Id: TrackerData.aid,v 1.1 2005-05-31 07:43:22 gaede Exp $
+ * @version $Id: TrackerData.aid,v 1.2 2006-03-24 13:25:53 gaede Exp $
  */
 
 public interface TrackerData extends LCObject {
     
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TrackerData lcobject_type ;
+
+}
+@endif
+
+
     /** Returns the first detector specific (geometrical) cell id.
      */
     public int getCellID0() const ;

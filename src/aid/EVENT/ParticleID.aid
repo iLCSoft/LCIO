@@ -12,11 +12,19 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  *  for different hypotheses on the particle type.
  * 
  * @author gaede
- * @version $Id: ParticleID.aid,v 1.8 2004-09-22 16:18:31 gaede Exp $
+ * @version $Id: ParticleID.aid,v 1.9 2006-03-24 13:25:52 gaede Exp $
  * @see ReconstructedParticle.getParticleIDs()
  * @see Cluster.getParticleIDs()
  */
 public interface ParticleID extends  LCObject {
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef ParticleID lcobject_type ;
+
+}
+@endif
 
     /** Type - userdefined.
      */

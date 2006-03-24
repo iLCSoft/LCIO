@@ -10,12 +10,21 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.12 2006-02-28 16:04:11 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.13 2006-03-24 13:25:52 gaede Exp $
  */
 
 
 public interface Cluster extends LCObject {
     
+
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef Cluster lcobject_type ;
+
+}
+@endif
 
 
     /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors

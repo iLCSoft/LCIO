@@ -17,10 +17,18 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.23 2005-05-31 08:51:27 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.24 2006-03-24 13:25:52 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef MCParticle lcobject_type ;
+
+}
+@endif
 
     
     /** Returns the energy of the particle (at the vertex) in [GeV] computed from

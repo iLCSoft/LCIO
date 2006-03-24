@@ -3,11 +3,19 @@ package hep.lcio.event ;
 /** The generic simulated calorimeter hit. 
  * 
  * @author gaede
- * @version $Id: SimCalorimeterHit.aid,v 1.7 2004-09-09 15:57:50 gaede Exp $
+ * @version $Id: SimCalorimeterHit.aid,v 1.8 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface SimCalorimeterHit extends LCObject {
     
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef SimCalorimeterHit lcobject_type ;
+
+}
+@endif
 
     /**Returns the detector specific (geometrical) cell id.
      */

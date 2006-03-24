@@ -3,11 +3,19 @@ package hep.lcio.event;
 /** A generic simulated tracker hit. 
  * 
  * @author gaede
- * @version $Id: SimTrackerHit.aid,v 1.8 2006-03-07 17:42:18 gaede Exp $
+ * @version $Id: SimTrackerHit.aid,v 1.9 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface SimTrackerHit extends LCObject {
     
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef SimTrackerHit lcobject_type ;
+
+}
+@endif
+
     /**Returns the detector specific (geometrical) cell id.
      */
     public int getCellID() const ;

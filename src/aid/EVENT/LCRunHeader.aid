@@ -3,10 +3,19 @@ package hep.lcio.event;
 /** Interface for the run header. 
  *
  * @author gaede
- * @version $Id: LCRunHeader.aid,v 1.7 2004-07-14 15:50:40 gaede Exp $
+ * @version $Id: LCRunHeader.aid,v 1.8 2006-03-24 13:25:52 gaede Exp $
  */
 public interface LCRunHeader extends LCObject {
     
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef LCRunHeader lcobject_type ;
+
+}
+@endif
+
     /** Returns the run number.
      */
     public int getRunNumber() const ;

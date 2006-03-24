@@ -9,11 +9,19 @@ typedef std::vector<Track*> TrackVec ;
 /** The LCIO track.
  * 
  * @author gaede
- * @version $Id: Track.aid,v 1.12 2005-06-03 10:58:34 gaede Exp $
+ * @version $Id: Track.aid,v 1.13 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface Track extends LCObject {
     
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef Track lcobject_type ;
+
+}
+@endif
 
     /** Flagword that defines the type of track. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits used in the track fit.  For the definition of the bits 

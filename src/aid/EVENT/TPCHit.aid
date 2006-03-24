@@ -5,11 +5,19 @@ package hep.lcio.event ;
  * 
  * @deprecated
  * @author gaede
- * @version $Id: TPCHit.aid,v 1.4 2005-05-31 09:35:05 gaede Exp $
+ * @version $Id: TPCHit.aid,v 1.5 2006-03-24 13:25:52 gaede Exp $
  */
 
 public interface TPCHit extends LCObject {
     
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TPCHit lcobject_type ;
+
+}
+@endif
+
     /** Returns the detector specific cell id.
      */
     public int getCellID() const ;
