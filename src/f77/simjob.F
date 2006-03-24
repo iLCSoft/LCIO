@@ -230,6 +230,12 @@ c--------   we just need to create parallel collections of float and int vectors
             trkVec    = lccolcreate( LCIO_SIMTRACKERHIT )
             extFVec   = lccolcreate( LCIO_LCFLOATVEC )
             extIVec   = lccolcreate( LCIO_LCINTVEC )
+
+
+            flag = 0
+            flag = ibset( flag, LCIO_THBIT_MOMENTUM )
+            status = lccolsetflag( trkVec, flag )
+
             do j = 1,nhits
                hit       = lcsthcreate()
                status    = lcsthsetdedx( hit, 30.e-9 )
@@ -237,6 +243,8 @@ c--------   we just need to create parallel collections of float and int vectors
                sthpos(2) = 2.2*irand( 0 )/RAND_MAX
                sthpos(3) = 3.3*irand( 0 )/RAND_MAX
                status    = lcsthsetposition( hit, sthpos )
+               status    = lcsthsetmomentumxyz( hit, 1., 2., 3. )
+               status    = lcsthsetpathlength( hit, .042 ) 
 
 c--------      assign the hits randomly to MC particles
                rn        = .99999*irand( 0 )/RAND_MAX

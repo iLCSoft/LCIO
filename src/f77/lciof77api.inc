@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.36 2006-03-24 13:36:44 hvogt Exp $
+*  $Id: lciof77api.inc,v 1.37 2006-03-24 14:05:43 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -249,6 +249,7 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_RCHBIT_NO_PTR
       integer LCIO_RCHBIT_TIME
       integer LCIO_THBIT_BARREL
+      integer LCIO_THBIT_MOMENTUM
       integer LCIO_TRBIT_HITS
       integer LCIO_CLBIT_HITS
       integer LCIO_TPCBIT_RAW
@@ -267,6 +268,7 @@ c---- constants as defined in EVENT::LCIO
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
      &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28)
       parameter (LCIO_THBIT_BARREL=31)
+      parameter (LCIO_THBIT_MOMENTUM=30)
       parameter (LCIO_TRBIT_HITS=31)
       parameter (LCIO_CLBIT_HITS=31)
       parameter (LCIO_TPCBIT_RAW=31, LCIO_TPCBIT_NO_PTR=30)
