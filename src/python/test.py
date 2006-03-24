@@ -16,7 +16,9 @@ evt=rdr.readNextEvent()
 # Read some collections
 hits = evt.getCollection('EcalBarrHits')
 particles = evt.getCollection("MCParticle")
-mcp = coll.getElementAt(0)
+mcp = particles.getElementAt(0)
+
+print "MCParticle energy: ", mcp.getEnergy() ;
 
 rdr.close()
 
