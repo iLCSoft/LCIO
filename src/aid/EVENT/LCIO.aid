@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.52 2006-03-24 05:03:12 jeremy Exp $
+ * @version $Id: LCIO.aid,v 1.53 2006-03-24 06:33:43 jeremy Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -187,7 +187,7 @@ public interface LCIO{
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle"; 
   public static const String LCRELATION = "LCRelation" ; 
   public static const String LCGENERICOBJECT = "LCGenericObject"; 
-  public static const String LCGENERICOBJECT = "ParticleID"; 
+  public static const String PARTICLEID = "ParticleID"; 
 
   // reserved names, e.g. name of event/collections paramaters
     
