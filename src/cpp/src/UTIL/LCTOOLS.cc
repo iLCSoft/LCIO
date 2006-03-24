@@ -484,42 +484,53 @@ namespace UTIL {
     
     LCFlagImpl flag( col->getFlag() ) ;
     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+    cout << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
     
-    
+    bool pStored = flag.bitSet( LCIO::THBIT_MOMENTUM ) ;
+
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " cellID(bytes)| position (x,y,z) | dEdx | time  | PDG of MCParticle" 
-	      << endl 
-	      << endl ;
+	      << " cellID[indices] | position (x,y,z) | dEdx | time  | PDG of MCParticle"  ;
+
+    if( pStored ) 
+      std::cout	 << " | (px, py, pz) | pathLength "  ;
+	
+    std::cout  << endl 
+	       << endl ;
     
+    CellIDDecoder<SimTrackerHit> id( col ) ;
+
     for( int i=0 ; i< nPrint ; i++ ){
       
       SimTrackerHit* hit = 
 	dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
       
-      int id0 = hit->getCellID() ;
-// 
-// Since hit may not have MCParticle, need to check that it exists
-//
-	  int pdgid = 0;
-	  if(hit->getMCParticle() > 0)pdgid = 
-		 hit->getMCParticle()->getPDG();
+//       int id0 = hit->getCellID() ;
+
+      int pdgid = 0;
+      if( hit->getMCParticle() )
+	pdgid = hit->getMCParticle()->getPDG() ;
       
       cout << i << ": "
-	// 	   << hit->getCellID() << " | "
-	   << ((id0& 0xff000000)>>24) << "/" 
-	   << ((id0& 0x00ff0000)>>16) << "/" 
-	   << ((id0& 0x0000ff00)>> 8) << "/" 
-	   << ((id0& 0x000000ff)>> 0) << " | "
+	   << hex << hit->getCellID() << dec << "[" 
+	   << id( hit ).valueString() << "] | ("
 	   << hit->getPosition()[0] << ", "
-	   << hit->getPosition()[1]<< ", "
+	   << hit->getPosition()[1] << ", "
 	   << hit->getPosition()[2] << ") | " 
 	   << hit->getdEdx () << " | "
 	   << hit->getTime () << " | "
-  	   << pdgid  
-	   << endl ;
+  	   << pdgid ; 
+
+      if( pStored ) 
+	cout << " | (" 
+	     << hit->getMomentum()[0] << ", "	
+	     << hit->getMomentum()[1] << ", "
+	     << hit->getMomentum()[2] << ") | " 
+	     << hit->getPathLength() ; 
+
+      cout << endl ;
       
     }
     cout << endl 
