@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.6 2006-03-22 01:14:29 jeremy Exp $
+# $Id: Makefile,v 1.7 2006-03-24 05:07:30 jeremy Exp $
 
 #
 # Makefile to build LCIO Python wrappers using Swig.
@@ -70,7 +70,8 @@ wrap_cc = $(wrap_file).cc
 wrap_obj = $(wrap_file).o
 
 # swig options
-swig_opts = -c++ -python -nodefaultctor -nodefaultdtor
+#swig_opts = -c++ -python -nodefaultctor -nodefaultdtor -globals GLOBALS
+swig_opts = -c++ -python -nodefaultctor -nodefaultdtor -globals GLOBALS
 
 # swig args, flags
 swig_args = -o $(wrap_cc) $(lcio_include_flags) lcio_swig.i
