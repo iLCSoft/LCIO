@@ -21,7 +21,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.2 2006-03-22 11:52:46 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.3 2006-03-27 14:11:11 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
@@ -114,10 +114,9 @@ namespace UTIL{
     return  *_b ;
   }
   
-  template <class T>
-  std::string* CellIDDecoder<T>::_defaultEncoding 
-  = new std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
-
+  template <>
+  std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
+  
 
 } // namespace
 #endif
