@@ -5,14 +5,19 @@
   v01-07
 =======================
 
+   - optional python binding (Jeremy McCormick)
+
+   - C++ utility code for encoding/decoding of cellids in hit classes:
+     UTIL::CellIDEncoder and UTIL::CellIDDecoder 
+
    - introduced additional pathLength in SimTrackerHit for silicon tracker digitization 
      (stored optionally together with momentum)
 
-   - introduced LCSplitWriter to split larger files
+   - introduced UTIL::LCSplitWriter to split larger files
 
    - fixed files size limit (2GB) in SIO C++ implementation
 
-   - python binding (Jeremy McCormick)
+   - ant does not show "BUILD SUCCESSFUL" in case of error  anymore
 
 ======================
   v01-06
