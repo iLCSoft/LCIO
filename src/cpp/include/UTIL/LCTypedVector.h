@@ -5,6 +5,7 @@
 
 #include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
+#include "Exceptions.h"
 
 #include <sstream>
 #include <typeinfo>
@@ -22,14 +23,14 @@ namespace UTIL{
    *  <p>Note that instantiating an LCTypedVector involves copying and casting of the pointers in 
    *  the collection. In a future release of LCIO this might not be neccessary any more.
    *  @author gaede
-   *  @version $Id: LCTypedVector.h,v 1.1 2005-05-27 07:55:54 gaede Exp $
+   *  @version $Id: LCTypedVector.h,v 1.2 2006-03-28 17:18:49 gaede Exp $
    */
   template <class T> 
   class LCTypedVector : public  std::vector<T*> {
     
   public:  
     
-    LCTypedVector( LCCollection* col ) : _col( col) {
+    LCTypedVector( EVENT::LCCollection* col ) : _col( col) {
       
       resize( _col->getNumberOfElements() ) ;
       
@@ -44,15 +45,15 @@ namespace UTIL{
 	  str << "LCTypedVector: cannot convert " << col->getTypeName() << " to " 
 	      << typeid(T).name()  ;
 
-	  throw Exception(  str.str() ) ; 
+	  throw EVENT::Exception(  str.str().c_str() ) ; 
 	}
       }
     }
     
-    LCCollection* col() { return _col ; }
+    EVENT::LCCollection* col() { return _col ; }
     
   protected:
-    LCCollection* _col ;
+    EVENT::LCCollection* _col ;
   } ; 
   
 } // namespace
