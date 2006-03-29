@@ -21,7 +21,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.4 2006-03-28 18:21:55 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.5 2006-03-29 13:55:09 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
@@ -60,8 +60,8 @@ namespace UTIL{
      *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
      * 
      */
-    const BitField64 & operator()( T* hit ){  
-
+    inline const BitField64 & operator()( T* hit ){  
+      
       if( hit != _oldHit && hit ) {
 	
 
@@ -94,13 +94,18 @@ namespace UTIL{
     static std::string*  _defaultEncoding ;
   } ; 
   
+  template <class T>
+  std::string* CellIDDecoder<T>::_defaultEncoding 
+  = new std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
+
   
+
   /** Provides access to the bit fields, e.g. <br>
    *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
    * Specialization for SimTrackerHits that have only one cellID.
    */
   template<>
-  const BitField64 & CellIDDecoder<SimTrackerHit>::operator()( SimTrackerHit* hit ){  
+  inline const BitField64 & CellIDDecoder<SimTrackerHit>::operator()( SimTrackerHit* hit ){  
     
     if( hit != _oldHit && hit ) {
       
@@ -114,13 +119,9 @@ namespace UTIL{
     return  *_b ;
   }
   
-  export template <class T>
-  std::string* CellIDDecoder<T>::_defaultEncoding 
-  = new std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
   
   template <>
   std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
-  
 
 } // namespace
 #endif
