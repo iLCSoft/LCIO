@@ -24,10 +24,21 @@ CPPFLAGS = $(LCIOCPPFLAGS) $(INCLUDE)
 
 LIBS = -L$(INSTALL) -L$(SIOINSTALL)/lib -llcio -lsio -lz
 
-BINS := $(patsubst %.cc,$(BINDIR)/%,$(wildcard *.cc))
+#BINS := $(patsubst %.cc,$(BINDIR)/%,$(wildcard *.cc))
+
+ifdef LCIO_TEST
+ TESTJOBS :=
+else
+ TESTJOBS := testcopy.cc
+endif
+
+#BINS = $(filter-out $(TESTJOBS),  $(patsubst %.cc,$(BINDIR)/%,$(wildcard *.cc))  ) 
+
+BINS =  $(patsubst %.cc,$(BINDIR)/%, $(filter-out $(TESTJOBS), $(wildcard *.cc))) 
 
 
 bin: $(BINS)
+
 
 clean:
 	rm -f $(BINS)
@@ -57,4 +68,7 @@ $(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
 
 $(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/stdhepjob $(CPPFLAGS) stdhepjob.cc  $(LIBS) 
+
+$(BINDIR)/testcopy: testcopy.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/testcopy $(CPPFLAGS) testcopy.cc  $(LIBS) 
 
