@@ -32,6 +32,29 @@ namespace IMPL {
     _endpoint[2] = 0.0 ;
   }
   
+//   MCParticleImpl::MCParticleImpl(const EVENT::MCParticle& p) :
+//     _pdg( p.getPDG() ),
+//     _genstatus( p.getGeneratorStatus() ),
+//     _simstatus( p.getSimulatorStatus() ),
+//     _mass( p.getMass() ),
+//     _charge( p.getCharge() ),
+//     _time( p.getTime() ),
+//     _parents( p.getParents() ),
+//     _daughters( p.getDaughters() )
+//   {
+//     _vertex[0] = p.getVertex()[0] ;
+//     _vertex[1] = p.getVertex()[1] ;
+//     _vertex[2] = p.getVertex()[2] ;
+//     _p[0] = p.getMomentum()[0] ;
+//     _p[1] = p.getMomentum()[1] ;
+//     _p[2] = p.getMomentum()[2] ;
+//     _endpoint[0] = p.getEndpoint()[0] ;
+//     _endpoint[1] = p.getEndpoint()[1] ;
+//     _endpoint[2] = p.getEndpoint()[2] ;
+//   }
+    
+
+
   MCParticleImpl::~MCParticleImpl(){
     // no dynamic variables
     //    delete [] _readDaughters ;
