@@ -13,6 +13,14 @@
 #define NDIGITS 3
 #endif
 
+#ifdef __CYGWIN__
+#define STAT64 stat
+#else
+#define STAT64 stat64
+#endif
+
+
+
 using namespace EVENT ;
 
 
@@ -94,9 +102,9 @@ namespace UTIL{
 
   long64 LCSplitWriter::file_size( const char *fname) {
     
-    struct stat64 sbuf; 
+    struct STAT64 sbuf; 
     
-    int ret = stat64(fname, &sbuf);
+    int ret = STAT64(fname, &sbuf);
     
     if( ret < 0 ) 
       return -1 ;
