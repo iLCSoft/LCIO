@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.20 2006-03-28 18:21:30 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.21 2006-04-24 22:08:33 jeremy Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -53,7 +53,7 @@
   <!-- Initialization, setup of commands, check                            -->
   <!-- =================================================================== -->
   <target name="init">
-
+    
     <taskdef name="junit"               classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
     <taskdef name="freehep.ant"         classname="org.freehep.ant.FreeHepAnt"/>
@@ -579,10 +579,18 @@
     <junit printsummary="yes" fork="no">
       <classpath>
         <pathelement path="." />
-      </classpath>
+      	<pathelement path="${test.classpath}" />
+      </classpath>    	
       <formatter type="plain" />
-      <test name="org.freehep.graphicsio.test.TestSuite" />
+      <test name="hep.lcio.test.RandomEventTest" />
+      <!--<test name="org.freehep.graphicsio.test.TestSuite" />-->
     </junit>
+    <junitreport todir="${test.output}">
+      <fileset dir="${test.output}">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="${test.format}" todir="${test.html}"/>
+    </junitreport>
   </target>
 
   <!-- =================================================================== -->
@@ -905,6 +913,6 @@
     <freehep.ant jars="${jlinks}" args="jlink.clean"/>
     <freehep.ant args="dist.clean"/>
   </target>
-
+  
 </project>
 
