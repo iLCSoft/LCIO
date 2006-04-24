@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.39 2006-04-24 23:01:24 jeremy Exp $
+ * @version $Id: SIOEvent.java,v 1.40 2006-04-24 23:07:20 jeremy Exp $
  */
 // NOTE: Changed from protected to public so that setReadOnly is
 //       accessible.  More properly, setReadOnly should be
@@ -58,7 +58,7 @@ public class SIOEvent extends ILCEvent
       }
       
    }
-   void setReadOnly(boolean mode)
+   public void setReadOnly(boolean mode)
    {
       super.setAccess(mode ? LCIO.READ_ONLY : LCIO.UPDATE);
    }
