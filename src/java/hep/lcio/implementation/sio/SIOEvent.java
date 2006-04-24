@@ -15,9 +15,12 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.38 2005-09-19 15:40:28 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.39 2006-04-24 23:01:24 jeremy Exp $
  */
-class SIOEvent extends ILCEvent
+// NOTE: Changed from protected to public so that setReadOnly is
+//       accessible.  More properly, setReadOnly should be
+//       added to the LCEvent interface.  --JM
+public class SIOEvent extends ILCEvent
 {
    private Map blockMap;
    
