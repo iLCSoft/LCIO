@@ -17,7 +17,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.24 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.25 2006-04-25 07:08:03 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     
@@ -175,7 +175,8 @@ public interface MCParticle extends LCObject {
     public const double3V getEndpoint() const;
 
 
-    /** Returns the particle momentum at the production vertex in [GeV] - only float used in files.
+    /** Returns the particle's 3-momentum at the production vertex in [GeV] 
+     *  - only float used in files.
      */
     public const double3V getMomentum() const;
 
