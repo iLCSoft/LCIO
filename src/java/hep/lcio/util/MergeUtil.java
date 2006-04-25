@@ -22,7 +22,7 @@ import java.io.IOException;
  * with possible application of time delta.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.1 2006-04-24 22:08:34 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.2 2006-04-25 21:58:16 jeremy Exp $
  */
 abstract public class MergeUtil
 {	
@@ -62,7 +62,7 @@ abstract public class MergeUtil
 			System.err.println("nevents: " + nevents);
 
 			// Check if max output events is reached.
-			if (nevents > maxEventsToWrite)
+			if (nevents >= maxEventsToWrite)
 				break;
 
 			// Create the new output event.
@@ -82,7 +82,7 @@ abstract public class MergeUtil
 				LCReader reader = readers[i];
 
 				// Merge ntoread events from this reader into target with delta time of dt.
-				int nmerged = MergeUtil.merge(target, reader, nEventsToRead, setEventHeader, dt, incrTime);
+				int nmerged = MergeUtil.mergeEvents(target, reader, nEventsToRead, setEventHeader, dt, incrTime);
 
 				// DEBUG
 				System.err.println("nmerged: " + nmerged);
@@ -127,7 +127,7 @@ abstract public class MergeUtil
 	 * @param ntoread number of events to overlay from overlayEvents
 	 * @param dt delta time to be applied to the sim types
 	 */
-	public static int merge(
+	public static int mergeEvents(
 			LCEvent targetEvent, 
 			LCReader overlayEvents, 
 			int ntoread, 			 
@@ -160,7 +160,7 @@ abstract public class MergeUtil
 		for (; nevt < ntoread && nextOverlayEvent != null; nevt++)
 		{
 			// Merge single overlay event onto targetEvent.
-			overlayEvent((ILCEvent) targetEvent, nextOverlayEvent, dt);
+			mergeSingleEvent((ILCEvent) targetEvent, nextOverlayEvent, dt);
 
 			// Get next event to merge in. (could be null)
 			nextOverlayEvent = overlayEvents.readNextEvent();
@@ -180,7 +180,7 @@ abstract public class MergeUtil
 	 * @param overlayEvent An event to be overlayed onto targetEvent.
 	 * @param dt A delta time to apply to sim types.
 	 */
-	public static void overlayEvent(ILCEvent targetEvent, LCEvent overlayEvent, float dt)
+	public static void mergeSingleEvent(ILCEvent targetEvent, LCEvent overlayEvent, float dt)
 	{
 		if (overlayEvent.getCollectionNames().length == 0)
 		{
@@ -233,7 +233,7 @@ abstract public class MergeUtil
 			}
 
 			// Handle overlay for each pair of target-overlay collections.
-			overlayCollection(tcoll, ocoll, dt);
+			mergeCollection(tcoll, ocoll, dt);
 		}
 
 		return;
@@ -245,7 +245,7 @@ abstract public class MergeUtil
 	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
 	 * @param dt A delta time parameter applied to sim types of overlayColl before merge-in.
 	 */
-	public static void overlayCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
+	public static void mergeCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
 	{
 		String colltype = targetColl.getTypeName();
 
@@ -277,6 +277,9 @@ abstract public class MergeUtil
 				// Find a matching hit in target collection.
 				ISimCalorimeterHit thit = findMatching(targetColl, ohit);
 
+				if (thit != null)
+					System.err.println("existing hit");
+				
 				// No matching hits?
 				if (thit == null)
 				{
@@ -296,13 +299,19 @@ abstract public class MergeUtil
 		// Handle an MCParticle collection.
 		else if (colltype.compareTo(LCIO.MCPARTICLE) == 0)
 		{
+			System.err.println("mcparticle");
+			
 			for (int ii = 0; ii < overlayColl.size(); ii++)
 			{
+				System.err.println("mcp #: " + ii);
+				
+				// Get the next MCParticle to add in.
 				IMCParticle p = (IMCParticle) overlayColl.getElementAt(ii);
 
-				// Apply dt.
+				// Apply dt to particle time.
 				p.setTime(p.getTime() + dt);
 
+				// Add to target collection.
 				targetColl.add(p);
 			}
 		}
@@ -368,8 +377,10 @@ abstract public class MergeUtil
 	 */
 	public static void addMCParticleContributions(ISimCalorimeterHit target, SimCalorimeterHit hit, float dt)
 	{
-
-		System.err.println("nmcp: " + hit.getNMCContributions());
+		// Get the hit energy.
+		float e = hit.getEnergy();
+		
+		//System.err.println("nmcp: " + hit.getNMCContributions());
 		for (int j = 0; j < hit.getNMCContributions(); j++)
 		{
 			// PDGID might not be set.
@@ -378,13 +389,23 @@ abstract public class MergeUtil
 			{
 				pdgid = target.getPDGCont(j);
 			}
-			catch (Exception e)
-			{
-			}
+			catch (Exception x)
+			{}
 
 			// Add this MCContrib to the existing hit, applying dt.
-			target.addMCParticleContribution(hit.getParticleCont(j), hit.getEnergyCont(j), hit.getTimeCont(j) + dt, pdgid);
+			System.err.println("mcp contrib e: " + hit.getEnergyCont(j));
+			target.addMCParticleContribution(
+					hit.getParticleCont(j), 
+					hit.getEnergyCont(j), 
+					hit.getTimeCont(j) + dt, 
+					pdgid);
+			
+			// Increment the energy by this particle contribution.
+			e += hit.getEnergyCont(j);
 		}
+		
+		// Set the energy in the new hit.
+		target.setEnergy(e);
 	}
 
 	/** 
@@ -399,6 +420,7 @@ abstract public class MergeUtil
 		newhit.setCellID0(hit.getCellID0());
 		newhit.setCellID1(hit.getCellID1());
 		newhit.setPosition(hit.getPosition());
+		System.err.println("copied calhit pos: " + hit.getPosition()[0] + hit.getPosition()[1] + hit.getPosition()[2]);
 		return newhit;
 	}
 
