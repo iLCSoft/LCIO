@@ -103,7 +103,7 @@ namespace SIO{
 
       int nInt  = intVec.size()  ;     // = params.getNInt( intKeys[i] ) ;
 
-      if( nInt > 0 ){ 
+//       if( nInt > 0 ){ 
 
 	LCSIO_WRITE( stream, intKeys[i]  ) ;
 	SIO_DATA( stream , &nInt , 1 ) ;
@@ -111,8 +111,8 @@ namespace SIO{
 
 	for(int j=0; j< nInt ; j++ ){
 	  LCSIO_WRITE( stream, intVec[j]  ) ;
-	}
-      }
+ 	}
+//       }
     }
 
     StringVec floatKeys ;
@@ -128,7 +128,7 @@ namespace SIO{
 
       int nFloat  = floatVec.size()  ;     // = params.getNFloat( floatKeys[i] ) ;
 
-      if( nFloat > 0 ){ 
+//       if( nFloat > 0 ){ 
 
 	LCSIO_WRITE( stream, floatKeys[i]  ) ;
 	SIO_DATA( stream , &nFloat , 1 ) ;
@@ -137,7 +137,7 @@ namespace SIO{
 	for(int j=0; j< nFloat ; j++ ){
 	  LCSIO_WRITE( stream, floatVec[j]  ) ;
 	}
-      }
+//       }
     }
     
     StringVec stringKeys ;
@@ -153,7 +153,7 @@ namespace SIO{
       
       int nString  = stringVec.size()  ;     // = params.getNString( stringKeys[i] ) ;
       
-      if( nString > 0 ){ 
+//       if( nString > 0 ){ 
 	
 	LCSIO_WRITE( stream, stringKeys[i]  ) ;
 	SIO_DATA( stream , &nString , 1 ) ;
@@ -162,7 +162,7 @@ namespace SIO{
 	for(int j=0; j< nString ; j++ ){
 	  LCSIO_WRITE( stream, stringVec[j]  ) ;
 	}
-      }
+//       }
     }
 
 

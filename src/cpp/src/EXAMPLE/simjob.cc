@@ -115,6 +115,12 @@ int main(int argc, char** argv ){
 	evt->parameters().setValue("Description"," event can have it's own set of parameters" ) ;
 	evt->parameters().setValue("Thrust", (float) 0.671 ) ;
 
+ 	FloatVec fv ;
+ 	fv.push_back( 1.1 ) ;
+ 	fv.push_back( 2.2 ) ;
+ 	fv.push_back( 3.3 ) ;
+	evt->parameters().setValues( "SomeNumbers" , fv ) ; 
+	
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	

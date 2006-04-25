@@ -1758,13 +1758,15 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       IntVec intVec ;
       params.getIntVals(  intKeys[i], intVec ) ;
       int nInt  = intVec.size()  ;   
-      if( nInt > 0 ){ 
-	cout << " parameter " << intKeys[i] << " [int]: " ; 
-	for(int j=0; j< nInt ; j++ ){
-	  cout << intVec[j] << ", " ;
-	}
-	cout << endl ;
+      cout << " parameter " << intKeys[i] << " [int]: " ; 
+      
+      if( nInt == 0 ){ 
+	cout << " [empty] " << std::endl ;
       }
+      for(int j=0; j< nInt ; j++ ){
+	cout << intVec[j] << ", " ;
+      }
+      cout << endl ;
     }
     StringVec floatKeys ;
     int nFloatParameters = params.getFloatKeys( floatKeys ).size() ;
@@ -1772,13 +1774,14 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       FloatVec floatVec ;
       params.getFloatVals(  floatKeys[i], floatVec ) ;
       int nFloat  = floatVec.size()  ;   
-      if( nFloat > 0 ){ 
-	cout << " parameter " << floatKeys[i] << " [float]: " ; 
-	for(int j=0; j< nFloat ; j++ ){
-	  cout << floatVec[j] << ", " ;
-	}
-	cout << endl ;
+      cout << " parameter " << floatKeys[i] << " [float]: " ; 
+      if( nFloat == 0 ){ 
+	cout << " [empty] " << std::endl ;
       }
+      for(int j=0; j< nFloat ; j++ ){
+	cout << floatVec[j] << ", " ;
+      }
+      cout << endl ;
     }
     StringVec stringKeys ;
     int nStringParameters = params.getStringKeys( stringKeys ).size() ;
@@ -1786,13 +1789,14 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       StringVec stringVec ;
       params.getStringVals(  stringKeys[i], stringVec ) ;
       int nString  = stringVec.size()  ;   
-      if( nString > 0 ){ 
-	cout << " parameter " << stringKeys[i] << " [string]: " ; 
-	for(int j=0; j< nString ; j++ ){
-	  cout << stringVec[j] << ", " ;
-	}
-	cout << endl ;
+      cout << " parameter " << stringKeys[i] << " [string]: " ; 
+      if( nString == 0 ){ 
+	cout << " [empty] " << std::endl ;
       }
+      for(int j=0; j< nString ; j++ ){
+	cout << stringVec[j] << ", " ;
+      }
+      cout << endl ;
     }
 
   }
