@@ -27,7 +27,7 @@ import java.util.Map;
  * application of a delta time.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.4 2006-04-26 19:37:05 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.5 2006-04-26 20:51:48 jeremy Exp $
  */
 abstract public class MergeUtil
 {
@@ -445,10 +445,10 @@ abstract public class MergeUtil
 	 * @param hit Hit containing MCParticle contributions to be copied.
 	 * @param dt Delta time to apply to contributions.
 	 */
-	public static void addMCParticleContributions(ISimCalorimeterHit target, SimCalorimeterHit hit, float dt)
+	public static void addMCParticleContributions(ISimCalorimeterHit targetHit, SimCalorimeterHit hit, float dt)
 	{
 		// Get the hit energy.
-		float e = hit.getEnergy();
+		float e = targetHit.getEnergy();
 
 		for (int j = 0; j < hit.getNMCContributions(); j++)
 		{
@@ -456,21 +456,21 @@ abstract public class MergeUtil
 			int pdgid = 0;
 			try
 			{
-				pdgid = target.getPDGCont(j);
+				pdgid = targetHit.getPDGCont(j);
 			}
 			catch (Exception x)
 			{
 			}
 
 			// Add this MCParticle contribution.
-			target.addMCParticleContribution(hit.getParticleCont(j), hit.getEnergyCont(j), hit.getTimeCont(j) + dt, pdgid);
+			targetHit.addMCParticleContribution(hit.getParticleCont(j), hit.getEnergyCont(j), hit.getTimeCont(j) + dt, pdgid);
 
 			// Increment the energy by this particle contribution.
 			e += hit.getEnergyCont(j);
 		}
 
 		// Set the energy in the new hit.
-		target.setEnergy(e);
+		targetHit.setEnergy(e);
 	}
 
 	/** 
@@ -504,36 +504,5 @@ abstract public class MergeUtil
 		newcoll.setTransient(coll.isTransient());
 
 		return newcoll;
-	}
-
-	/**
-	 * Create a Map of LCReader to Integer from a Map of File to Integer. 
-	 * @param fileMap Input map of File to Integer.
-	 * @return Map of LCReader to Integer (number of reads per merged event).
-	 * @throws IOException
-	 */
-	public static Map createReadMap(Map fileMap) throws IOException
-	{
-		Map readMap = new HashMap();
-
-		for (Iterator iter = fileMap.keySet().iterator(); iter.hasNext();)
-		{
-			// Create a new reader.
-			LCReader reader = LCFactory.getInstance().createLCReader();
-
-			// Get the next file.
-			File f = (File) iter.next();
-
-			// Open the reader.
-			reader.open(f.getCanonicalPath());
-
-			// Get number of events to read per merge.
-			Integer nreads = (Integer) fileMap.get(f);
-
-			// Map the reader to number of reads.
-			readMap.put(reader, (Object) nreads);
-		}
-
-		return readMap;
 	}
 }
