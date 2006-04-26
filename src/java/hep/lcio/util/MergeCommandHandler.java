@@ -20,7 +20,7 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  * 
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.2 2006-04-26 00:56:53 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.3 2006-04-26 19:37:05 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
@@ -28,12 +28,8 @@ public class MergeCommandHandler extends CommandHandler
 	Options options = new Options();
 	File outfile;
 	File[] infiles;
-	//float dt = 0;
 	int maxevents = Integer.MAX_VALUE;
-	//int ntoread = 1;
-	//boolean incrTime = false;
 	List mergeFiles;
-
 	float def_dt = 0;
 	float def_startt = 0;
 	int def_ntoread = 1;
@@ -165,9 +161,10 @@ public class MergeCommandHandler extends CommandHandler
 	}
 	
 	/**
-	 * Create a map of input files to number of reads to do per output (merged) event.
+	 * Create a list of @see MergeFileParameters objects from the
+	 * input file specified with -f.
 	 * @param lines File lines read from input file list (-f option).
-	 * @return Map of File to number of reads per merged event.
+	 * @return List of MergeFileParameters objects.
 	 */
 	public List createMergeFiles(List lines) throws IOException
 	{	
@@ -205,7 +202,7 @@ public class MergeCommandHandler extends CommandHandler
 				File f = new File(fname);
 				
 				// Create the merge file object.
-				MergeFileOptions fopt = new MergeFileOptions(f, nreads, startt, dt);
+				MergeFileParameters fopt = new MergeFileParameters(f, nreads, startt, dt);
 				
 				// Add this file with options to merge files list.
 				mfiles.add(fopt);
@@ -216,8 +213,8 @@ public class MergeCommandHandler extends CommandHandler
 	
 	/**
 	 * Create the default merge options, which is one event from the file per merged output event.
-	 * @param files An array of input Files.
-	 * @return A Map of File to Integer specifiying number of reads to do from that file per merged output event.
+	 * @param files An array of input File objects.
+	 * @return A List of MergeFileParameters.
 	 */
 	public List createDefaultMergeFiles(File[] files) throws IOException
 	{
@@ -226,7 +223,7 @@ public class MergeCommandHandler extends CommandHandler
 		{
 			for (int i=0; i<files.length;i++)
 			{
-				m.add(new MergeFileOptions(files[i], def_ntoread, def_startt, def_dt));
+				m.add(new MergeFileParameters(files[i], def_ntoread, def_startt, def_dt));
 			}			
 		}
 		return m;

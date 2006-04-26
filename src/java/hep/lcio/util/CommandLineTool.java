@@ -6,11 +6,10 @@ import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.Parser;
 import org.apache.commons.cli.PosixParser;
-//import org.apache.commons.cli.Parser;
-//import org.apache.commons.cli.PosixParser;
 
 /**
  * CommandLineTool provides a command-line interface
@@ -27,8 +26,10 @@ import org.apache.commons.cli.PosixParser;
  * @see hep.lcio.util.SioDump siodump
  * @see hep.lcio.util.Split split
  * 
+ * FIXME: Implement all of the above commands.
+ * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.2 2006-04-26 00:56:53 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.3 2006-04-26 19:37:05 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -39,41 +40,48 @@ public class CommandLineTool
 	private CommandLine cl;
 	private static CommandLineTool instance = new CommandLineTool();
 	
+	/**
+	 * Get an instance of CommandLineTool.
+	 * @return A globall unique instance of CommandLineTool.
+	 */
 	public static CommandLineTool instance()
 	{
 		return instance;
 	}
 	
+	/**
+	 * The private ctor.
+	 */
 	private CommandLineTool()
 	{
-		//System.out.println("CommandLineTool");
-
 		registerOptions();
 		registerHandlers();
 	}	
 	
+	/**
+	 * Get the global options.
+	 * @return A CommandLine object representing the global options,
+	 * e.g. the options in front of the command.
+	 */
 	public CommandLine getGlobalOptions()
 	{
 		return cl;
 	}
 	
-	// main entry point.
-	public static void main(String[] args) throws Exception
+	/**
+	 * The default main method for the CommandLineTool.
+	 * @param argv The raw input arguments from the CL.
+	 * @throws Exception
+	 */
+	public static void main(String[] argv) throws Exception
 	{
-		//System.err.println("main");
-
 		CommandLineTool cl = CommandLineTool.instance();
-
-		// try {
-		cl.parse(args);
-		// }
-		// catch (Exception e)
-		// {
-		// throw new RuntimeException("Problem parsing args.",e);
-		// }
+		cl.parse(argv);
 	}
 
-	// Register the default CommandHandlers.
+	/**
+	 * Register default command handlers with the CommandLineTool.
+	 */
 	private void registerHandlers()
 	{
 		// addCommandHandler("compare", Compare)
@@ -85,65 +93,83 @@ public class CommandLineTool
 		// addCommandHandler("split", Split);
 	}
 
-	// Register global options. Sub-commands have their own option set.
+	/**
+	 * Register the CommandLineTool's global options.
+	 */
 	private void registerOptions()
 	{
-//		Option opt = new Option("h", false, "print lcio command-line tool usage");
-//		options.addOption(opt);
+		Option opt = new Option("h", false, "Print lcio command-line tool usage.");
+		options.addOption(opt);
 
-//		opt = new Option("v", false, "set the verbosity");
-//		opt.setArgs(1);
-//		options.addOption(opt);
+		opt = new Option("v", false, "Set the verbosity.");
+		opt.setArgs(1);
+		options.addOption(opt);
 	}
 
-	// Set the name of the active sub-command.
-	public void setCommand(String command)
+	/**
+	 * Set the name of the active command.
+	 * @param command String of the command.
+	 */
+	private void setCommand(String command)
 	{
 		this.command = command;
 	}
 
-	// Get the name of the active sub-command.
+	/**
+	 * Get the name of the currently active command.
+	 * @return String of the currently active command.
+	 */
 	public String getCommand()
 	{
 		return this.command;
 	}
 
-	// Parse the command line for global options.  
-	// Then find and execute the appropriate CommandHandler.
-	public void parse(String[] args) throws Exception
+	/**
+	 * Parse the argv for global options.
+	 * Lookup the appropriate CommandHandler.
+	 * Pass command options to @see CommandHandler.parse method.
+	 * Execute the CommandHandler's execute method.
+	 * @param argv The raw input arguments from CL.
+	 * @throws Exception
+	 */
+	// FIXME: Method needs to handle quoting properly.  
+	//        FreeHep's argv package can handle this.
+	public void parse(String[] argv) throws Exception
 	{
-		int icmd = scanForCommand(args);
+		// Get the index of a command.
+		int icmd = scanForCommand(argv);
 
 		if (icmd == -1)
 		{
+			// No command was found, so print usage and exit.
 			printUsage(true);
 		}
 
 		// Set the command to execute.
-		setCommand(args[icmd]);
+		setCommand(argv[icmd]);
 
-		System.out.println("command: " + getCommand());
+		System.out.println("Executing command: " + getCommand());
 
 		// Get a command handler for this command string.
 		CommandHandler handler = getCommandHandler(getCommand());
 
 		// Global arguments.
-		int nglob = icmd - 1;
+		int nglob = icmd;
 		String[] globargv = new String[0];
 		if (nglob > 0)
 		{
 			globargv = new String[nglob];
-			System.arraycopy(args, 0, globargv, 0, nglob);
+			System.arraycopy(argv, 0, globargv, 0, nglob);
 			for (int i = 0; i < globargv.length; i++)
 			{
 				System.out.println("globargv[" + i + "]=" + globargv[i]);
 			}
 		}
 
-		// Arguments are passed verbatim to the subcommand.
-		int ncmd = args.length - (icmd + 1);
+		// Arguments are passed verbatim to the command.
+		int ncmd = argv.length - (icmd + 1);
 		String[] cmdargv = new String[ncmd];
-		System.arraycopy(args, icmd + 1, cmdargv, 0, ncmd);
+		System.arraycopy(argv, icmd + 1, cmdargv, 0, ncmd);
 		for (int i = 0; i < cmdargv.length; i++)
 		{
 			System.out.println("cmdargv[" + i + "]=" + cmdargv[i]);
@@ -152,7 +178,7 @@ public class CommandLineTool
 		// Parse global options.
 		cl = parser.parse(options, globargv);
 
-		// Pass the subcommand the command line options
+		// Pass the command the command line options
 		// with globals stripped out.
 		handler.parse(cmdargv);
 
@@ -160,33 +186,32 @@ public class CommandLineTool
 		handler.execute();
 	}
 
-	// Add a class to handle a command string.
+	/**
+	 * Add a @see CommandHandler to the CommandLineTool.
+	 * The @see CommandHandler.getName method is the command
+	 * that will be handled by this @see CommandHandler. 
+	 * @param handler The CommandHandler.
+	 */
 	public void addCommandHandler(CommandHandler handler)
 	{
 		handlers.put(handler.getName(), handler);
 	}
 
-	// Get a CommandHandler from the command string.
+	/**
+	 * Get a CommandHandler for the command.
+	 * @param command A String of the command to lookup.
+	 * @return A CommandHandler for this command.
+	 * @throws Exception
+	 */
 	public CommandHandler getCommandHandler(String command) throws Exception
 	{
 		return (CommandHandler) handlers.get(command);
 	}
 
-	// Scan the argv for an input command string, e.g. "merge", etc.
-	private int scanForCommand(String[] argv)
-	{
-		for (int i = 0; i < argv.length; i++)
-		{
-			if (handlers.get(argv[i]) != null)
-			{
-				//System.err.println("found " + argv[i] + " @ idx " + i);
-				return i;
-			}
-		}
-		return -1;
-	}
-
-	// Print usage using CLI.
+	/**
+	 * Print the lcio command usage.
+	 * @param doExit Boolean that specifies whether to exit or not.
+	 */
 	public void printUsage(boolean doExit)
 	{
 		HelpFormatter help = new HelpFormatter();
@@ -205,5 +230,23 @@ public class CommandLineTool
 		{
 			System.exit(0);
 		}
+	}
+	
+	/**
+	 * Return the index of a command string in argv.
+	 * @param argv The raw input arguments from CL.
+	 * @return The index of the first command string in argv or -1 if not found.
+	 */
+	private int scanForCommand(String[] argv)
+	{
+		for (int i = 0; i < argv.length; i++)
+		{
+			if (handlers.get(argv[i]) != null)
+			{
+				//System.err.println("found " + argv[i] + " @ idx " + i);
+				return i;
+			}
+		}
+		return -1;
 	}
 }

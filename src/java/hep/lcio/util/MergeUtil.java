@@ -22,81 +22,73 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Utility methods for merging LCIO files, events, and collections,
- * with optional application of a time delta per event.
+ * Utility methods for merging together LCIO 
+ * files, events, and collections, with optional 
+ * application of a delta time.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.3 2006-04-26 00:56:53 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.4 2006-04-26 19:37:05 jeremy Exp $
  */
 abstract public class MergeUtil
-{		
+{
 	/** 
-	 * Merge nEventsToRead events from each File in infiles into a single event in outfile,
-	 * until records in infiles are exhausted or maxevents are created. 
-	 * @return The number of combined events created.
-	 * @param outfile Output target file containing the merged events.
-	 * @param fileMap Map of File to Integer, specifying number of events to read from that file per merge.
-	 * @param maxEventsToWrite Set the maximum number of merged events that this method will create.
-	 * @param dt The time delta.
+	 * Merge events from mergeFiles into a single event in outfile,
+	 * until all the files in mergeFiles are exhausted, or maxevents 
+	 * are created. 
+	 * @return The number of merged events that were created.
+	 * @param outfile Target file that will contain the merged events.
+	 * @param A list of @see MergeFileOptions objects.
+	 * @param maxEvents Set the maximum number of merged events.
 	 */
-	public static int mergeFiles( 
-			File outfile, 
-			List mergeFiles,
-			int maxEventsToWrite) throws IOException
-	{		
-		// Create the writer.
+	public static int mergeFiles(File outfile, List mergeFiles, int maxEvents) throws IOException
+	{
+		// Create the writer for the merged events.
 		LCWriter writer = LCFactory.getInstance().createLCWriter();
-		
-		// Open the writer for the new file containing the merged events.
+
+		// Open the writer.
 		writer.open(outfile.getCanonicalPath(), LCIO.WRITE_NEW);
-		
-		// Count of total output events.
+
+		// Count of total merged events that were created.
 		int nevents = 0;
 
 		// File read loop.
 		for (;;)
-		{			
+		{
 			// Check if max output events is reached.
-			if (nevents >= maxEventsToWrite)
+			if (nevents >= maxEvents)
 				break;
 
 			// Create the new output event.
-			ILCEvent target = new ILCEvent();
+			ILCEvent targetEvent = new ILCEvent();
 
-			// First time, the event header needs to
-			// be set from the first LCEvent read.
+			// On the first time through, the event header needs to
+			// be set from the first LCEvent that is read.
 			boolean setEventHeader = true;
 
-			// Total events merged in from all sources in this pass.
+			// Total events merged in from all files.
 			int totmerged = 0;
 
-			// Loop over the readers.
-			for (Iterator iter = mergeFiles.iterator(); iter.hasNext(); )
-			{							
-				// Get the next reader.
-				MergeFileOptions mfile = (MergeFileOptions)iter.next();
-				
-				// Get number of events to read.
-				int nEventsToRead = mfile.nreads();
+			// Loop over the files to be merged in.
+			for (Iterator iter = mergeFiles.iterator(); iter.hasNext();)
+			{
+				// Get the next set of merge file parameters.
+				MergeFileParameters mfile = (MergeFileParameters) iter.next();
+
+				// Get the number of events to read.
+				int ntoread = mfile.nreads();
 
 				// Get the reader.
 				LCReader reader = mfile.reader();
 
-				// Get starting time.
+				// Get the starting time.
 				float startt = mfile.startt();
-				
-				// Get delta time.
+
+				// Get the delta time.
 				float dt = mfile.dt();
-				
+
 				// Merge ntoread events from this reader into target,
 				// using starting time of startt, delta time of dt.
-				int nmerged = MergeUtil.mergeEvents(
-						target, 
-						reader, 
-						nEventsToRead, 
-						setEventHeader,
-						startt,
-						dt);
+				int nmerged = MergeUtil.mergeEvents(targetEvent, reader, ntoread, setEventHeader, startt, dt);
 
 				// Increment total merged.
 				totmerged += nmerged;
@@ -107,8 +99,8 @@ abstract public class MergeUtil
 
 			// Write out the combined event if something got merged in.
 			if (totmerged > 0)
-			{				
-				writer.writeEvent(target);
+			{
+				writer.writeEvent(targetEvent);
 				nevents++;
 			}
 			else
@@ -119,37 +111,50 @@ abstract public class MergeUtil
 		} // file read loop
 
 		System.out.println("Created " + nevents + " merged events.");
-		
+
 		// Close the writer.
 		writer.close();
 
 		// Close the readers.
 		//closeReaders(readers);
-		for (Iterator iter = mergeFiles.iterator(); iter.hasNext(); )
-		{			
-			try { ((MergeFileOptions)iter.next()).close(); } catch (Exception x) {}
+		for (Iterator iter = mergeFiles.iterator(); iter.hasNext();)
+		{
+			try
+			{
+				((MergeFileParameters) iter.next()).close();
+			}
+			catch (Exception x)
+			{
+			}
 		}
-		
+
 		// Return number of events created.
 		return nevents;
 	}
-	
+
+	/** 
+	 * Merge nEventsToRead events from each File in mergeFiles into a single event in outfile,
+	 * until records in mergeFiles are exhausted. 
+	 * @return The number of merged events that were created.
+	 * @param outfile Output Target file containing the merged events.
+	 * @param A list of @see MergeFileOptions objects.  
+	 */
+	public static int mergeFiles(File outfile, List mergeFiles) throws IOException
+	{
+		return mergeFiles(outfile, mergeFiles, Integer.MAX_VALUE);
+	}
+
 	/**
-	 * Merge n events read from a reader into a single target event.
+	 * Merge ntoread events from a reader into a single target event, applying time
+	 * delta dt with starting time of startt.
 	 * @return Number of events overlayed from overlayEvents reader.
 	 * @param targetEvent target LCEvent to merge events into
 	 * @param overlayEvents LCReader with overlay events to read
 	 * @param ntoread number of events to overlay from overlayEvents
 	 * @param dt delta time to be applied to the sim types
 	 */
-	public static int mergeEvents(
-			LCEvent targetEvent, 
-			LCReader overlayEvents, 
-			int ntoread, 			 
-			boolean setEventHeader,
-			float startt,
-			float dt) throws IOException
-	{	
+	public static int mergeEvents(LCEvent targetEvent, LCReader overlayEvents, int ntoread, boolean setEventHeader, float startt, float dt) throws IOException
+	{
 		// Read the next event from the reader.
 		LCEvent nextEvent = overlayEvents.readNextEvent();
 
@@ -159,7 +164,7 @@ abstract public class MergeUtil
 			return 0;
 		}
 
-		// Set the event header from first event if setEventHeader flag is true.
+		// Set the event header from the first event if setEventHeader flag is true.
 		if (setEventHeader)
 		{
 			ILCEvent itargetEvent = (ILCEvent) targetEvent;
@@ -171,34 +176,34 @@ abstract public class MergeUtil
 
 		// Number of events merged in.
 		int nevt = 0;
-		
+
 		// Set starting time.
 		float time = startt;
-		
+
 		// Read loop.
 		while (nextEvent != null)
-		{	
-			// Merge single overlay event onto targetEvent.
-			mergeSingleEvent((ILCEvent) targetEvent, nextEvent, dt);		
-			
+		{
+			// Merge single overlay event into targetEvent.
+			mergeSingleEvent((ILCEvent) targetEvent, nextEvent, dt);
+
 			// Increment number of events read.
 			nevt++;
-			
+
 			// Break if read max num events.
 			if (nevt >= ntoread)
 				break;
-			
+
 			// Get next event to merge in. (could be null)
 			nextEvent = overlayEvents.readNextEvent();
-			
+
 			// Increment the time for next event.
-			time += dt;						
+			time += dt;
 		}
 
 		// Return the number of events that were overlayed.
 		return nevt;
 	}
-		
+
 	/** 
 	 * Overlay the overlay event onto target event, applying time delta.
 	 * @param targetEvent The event that will be overlayed onto from overlayEvent.
@@ -228,7 +233,7 @@ abstract public class MergeUtil
 		// Iterate over the overlay collections that will be merged into target.
 		for (int i = 0; i < ocolls.length; i++)
 		{
-			// Get name of this overlay collection.
+			// Get the name of this overlay collection.
 			String collname = ocolls[i];
 
 			// Get this overlay collection.
@@ -245,7 +250,8 @@ abstract public class MergeUtil
 			// If index is -1, there is no existing collection in the target.
 			if (tidx == -1)
 			{
-				// Create an empty target collection with the overlay collection's settings.
+				// Create an empty target collection with the overlay 
+				// collection's settings.
 				tcoll = copy(overlayEvent.getCollection(collname));
 
 				// Add the new collection to the target event.
@@ -257,15 +263,16 @@ abstract public class MergeUtil
 				tcoll = targetEvent.getCollection(collname);
 			}
 
-			// Handle overlay for each pair of target-overlay collections.
+			// Overlay overlay collection into target collection.
 			mergeCollection(tcoll, ocoll, dt);
 		}
 
 		return;
 	}
-	
+
 	/**
-	 * overlayCollection overlays the overlayColl onto the targetColl applying dt.
+	 * overlayCollection overlays the overlayColl onto the targetColl applying 
+	 * the delta time, dt.
 	 * @param targetColl The target collection to be modified.
 	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
 	 * @param dt A delta time parameter applied to sim types of overlayColl before merge-in.
@@ -277,73 +284,118 @@ abstract public class MergeUtil
 		// Handle a SimTrackerHit collection.
 		if (colltype.compareTo(LCIO.SIMTRACKERHIT) == 0)
 		{
-			// Loop over hits to merge in.
-			for (int ii = 0; ii < overlayColl.size(); ii++)
-			{
-				// Get the hit from the overlay collection.
-				ISimTrackerHit hit = (ISimTrackerHit) overlayColl.getElementAt(ii);
-
-				// Adjust time.
-				hit.setTime(hit.getTime() + dt);
-
-				// Add the hit to the target collection.
-				targetColl.add(hit);
-			}
+			mergeSimTrackerHitCollection(targetColl, overlayColl, dt);
 		}
 		// Handle a SimCalorimeterHit collection.
 		else if (colltype.compareTo(LCIO.SIMCALORIMETERHIT) == 0)
 		{
-			// Loop over the overlay hits.
-			for (int ii = 0; ii < overlayColl.size(); ii++)
-			{
-				// Get an overlay hit.
-				ISimCalorimeterHit ohit = (ISimCalorimeterHit) overlayColl.getElementAt(ii);
-
-				// Find a matching hit in target collection.
-				ISimCalorimeterHit thit = findMatching(targetColl, ohit);
-				
-				// No matching hits?
-				if (thit == null)
-				{
-					//System.out.println("new hit");
-
-					// Copy the overlay hit without MCParticle contributions.
-					thit = copy(ohit);
-
-					// Add the hit to the target collection.
-					targetColl.addElement(thit);
-				}
-
-				// Apply MCParticle contributions from overlay to target.
-				addMCParticleContributions(thit, ohit, dt);
-			}
+			mergeSimCalorimeterHitCollection(targetColl, overlayColl, dt);
 		}
 		// Handle an MCParticle collection.
 		else if (colltype.compareTo(LCIO.MCPARTICLE) == 0)
-		{		
-			for (int ii = 0; ii < overlayColl.size(); ii++)
-			{				
-				// Get the next MCParticle to add in.
-				IMCParticle p = (IMCParticle) overlayColl.getElementAt(ii);
-
-				// Apply dt to particle time.
-				p.setTime(p.getTime() + dt);
-
-				// Add to target collection.
-				targetColl.add(p);
-			}
+		{
+			mergeMCParticleCollection(targetColl, overlayColl, dt);
 		}
 		// Handle a default collection.
 		else
 		{
-			for (int ii = 0; ii < overlayColl.size(); ii++)
-			{
-				targetColl.add(overlayColl.getElementAt(ii));
-			}
+			mergeDefaultCollection(targetColl, overlayColl);
 		}
 
 	}
-	
+
+	/**
+	 * Merge overlayColl into targetColl without applying a delta time.
+	 * This is used to merge non-simulator collections.
+	 * @param targetColl The target collection to be modified.
+	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
+	 */
+	public static void mergeDefaultCollection(LCCollection targetColl, LCCollection overlayColl)
+	{
+		for (int ii = 0; ii < overlayColl.size(); ii++)
+		{
+			targetColl.add(overlayColl.getElementAt(ii));
+		}
+	}
+
+	/**
+	 * Merge MCParticle collection overlayColl into targetColl.
+	 * @param targetColl The target collection to be modified.
+	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
+	 * @param dt A delta time parameter added to the particle's production time.
+	 */
+	public static void mergeMCParticleCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
+	{
+		for (int ii = 0; ii < overlayColl.size(); ii++)
+		{
+			// Get the next MCParticle to add in.
+			IMCParticle p = (IMCParticle) overlayColl.getElementAt(ii);
+
+			// Apply dt to particle time.
+			p.setTime(p.getTime() + dt);
+
+			// Add to target collection.
+			targetColl.add(p);
+		}
+	}
+
+	/**
+	 * Merge SimCalorimeterHit collection overlayColl into targetColl.
+	 * Hits with matching cell ID's are combined.
+	 * @param targetColl The target collection to be modified.
+	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
+	 * @param dt A delta time parameter added to MCParticle contributions from overlayColl's hits.
+	 */
+	public static void mergeSimCalorimeterHitCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
+	{
+		// Loop over the overlay hits.
+		for (int ii = 0; ii < overlayColl.size(); ii++)
+		{
+			// Get an overlay hit.
+			ISimCalorimeterHit ohit = (ISimCalorimeterHit) overlayColl.getElementAt(ii);
+
+			// Find a matching hit in target collection.
+			ISimCalorimeterHit thit = findMatching(targetColl, ohit);
+
+			// No matching hits?
+			if (thit == null)
+			{
+				//System.out.println("new hit");
+
+				// Copy the overlay hit without MCParticle contributions.
+				thit = copy(ohit);
+
+				// Add the hit to the target collection.
+				targetColl.addElement(thit);
+			}
+
+			// Apply MCParticle contributions from overlay to target.
+			addMCParticleContributions(thit, ohit, dt);
+		}
+	}
+
+	/**
+	 * Merge SimTrackerHit collection overlayColl into targetColl.
+	 * @param targetColl The target collection to be modified.
+	 * @param overlayColl The overlay collection containing objects to merge into targetColl.
+	 * @param dt A delta time parameter added to the time of hits from overlayColl.
+	 */
+	public static void mergeSimTrackerHitCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
+	{
+		// Loop over hits to merge in.
+		for (int ii = 0; ii < overlayColl.size(); ii++)
+		{
+			// Get the hit from the overlay collection.
+			ISimTrackerHit hit = (ISimTrackerHit) overlayColl.getElementAt(ii);
+
+			// Adjust time.
+			hit.setTime(hit.getTime() + dt);
+
+			// Add the hit to the target collection.
+			targetColl.add(hit);
+		}
+	}
+
 	/** 
 	 * Find a SimCalorimeterHit in coll with matching cellId0, cellId1. 
 	 * @return The first match of hit in coll.
@@ -351,7 +403,7 @@ abstract public class MergeUtil
 	 * @param hit Matching hit to be searched for in coll.
 	 */
 	public static ISimCalorimeterHit findMatching(LCCollection coll, SimCalorimeterHit hit)
-	{	
+	{
 		ISimCalorimeterHit match = null;
 
 		for (int i = 0; i < coll.size(); i++)
@@ -363,7 +415,7 @@ abstract public class MergeUtil
 				break;
 			}
 		}
-		
+
 		return match;
 	}
 
@@ -397,7 +449,7 @@ abstract public class MergeUtil
 	{
 		// Get the hit energy.
 		float e = hit.getEnergy();
-		
+
 		for (int j = 0; j < hit.getNMCContributions(); j++)
 		{
 			// PDGID might not be set.
@@ -407,19 +459,16 @@ abstract public class MergeUtil
 				pdgid = target.getPDGCont(j);
 			}
 			catch (Exception x)
-			{}
+			{
+			}
 
 			// Add this MCParticle contribution.
-			target.addMCParticleContribution(
-					hit.getParticleCont(j), 
-					hit.getEnergyCont(j), 
-					hit.getTimeCont(j) + dt, 
-					pdgid);
-			
+			target.addMCParticleContribution(hit.getParticleCont(j), hit.getEnergyCont(j), hit.getTimeCont(j) + dt, pdgid);
+
 			// Increment the energy by this particle contribution.
 			e += hit.getEnergyCont(j);
 		}
-		
+
 		// Set the energy in the new hit.
 		target.setEnergy(e);
 	}
@@ -456,27 +505,7 @@ abstract public class MergeUtil
 
 		return newcoll;
 	}
-	
-	/** 
-	 * Create an array of LCReaders to be read in parallel.
-	 * @return Array of open LCReaders.
-	 * @param Array of input files. 
-	 */
-	public static LCReader[] createReaders(File[] infiles) throws IOException
-	{
-		// Make a reader for each input event.		
-		LCReader[] readers = new LCReader[infiles.length];
-		for (int i = 0; i < infiles.length; i++)
-		{
-			// Create a new reader.
-			readers[i] = LCFactory.getInstance().createLCReader();
 
-			// Open the reader for this file.
-			readers[i].open(((File) infiles[i]).getCanonicalPath());
-		}
-		return readers;
-	}
-	
 	/**
 	 * Create a Map of LCReader to Integer from a Map of File to Integer. 
 	 * @param fileMap Input map of File to Integer.
@@ -487,140 +516,24 @@ abstract public class MergeUtil
 	{
 		Map readMap = new HashMap();
 
-		for (Iterator iter=fileMap.keySet().iterator(); iter.hasNext();)
+		for (Iterator iter = fileMap.keySet().iterator(); iter.hasNext();)
 		{
 			// Create a new reader.
 			LCReader reader = LCFactory.getInstance().createLCReader();
 
 			// Get the next file.
-			File f = (File)iter.next();
+			File f = (File) iter.next();
 
 			// Open the reader.
 			reader.open(f.getCanonicalPath());
-			
+
 			// Get number of events to read per merge.
-			Integer nreads = (Integer)fileMap.get(f);
-			
+			Integer nreads = (Integer) fileMap.get(f);
+
 			// Map the reader to number of reads.
-			readMap.put(reader, (Object)nreads);
+			readMap.put(reader, (Object) nreads);
 		}
-		
+
 		return readMap;
 	}
-
-	/** 
-	 * Close all of the readers.
-	 * @param readers Array of LCReaders to be closed. 
-	 */
-	public static void closeReaders(LCReader[] readers) throws IOException
-	{
-		for (int i = 0; i < readers.length; i++)
-		{
-			try
-			{
-				readers[i].close();
-			}
-			catch (Throwable t)
-			{
-				// Ignore errors on close.
-			}
-		}
-	}
-	
-
 }
-
-/** 
- * Merge nEventsToRead events from each File in infiles into a single event in outfile,
- * until records in infiles are exhausted or maxevents are created. 
- * @return The number of combined events created.
- * @param outfile Output target file.
- * @param infiles Input events to merge in.
- * @param nEventsToRead Number of events to read at once into one output event.
- * @param maxEventsToWrite Maximum number of output events to create.
- * @param dt The time delta.
- */
-/*
-public static int mergeFiles( 
-		File outfile, 
-		File[] infiles, 
-		int nEventsToRead, 
-		int maxEventsToWrite, 
-		float dt,
-		boolean incrTime) throws IOException
-{
-	// Create the writer.
-	LCWriter writer = LCFactory.getInstance().createLCWriter();
-	
-	// Open the writer for the new file containing the merged events.
-	writer.open(outfile.getCanonicalPath(), LCIO.WRITE_NEW);
-
-	// Create the array of LCReaders.
-	LCReader[] readers = createReaders(infiles);
-
-	// Count of total output events.
-	int nevents = 0;
-
-	// File read loop.
-	for (;;)
-	{
-		System.err.println("nevents: " + nevents);
-
-		// Check if max output events is reached.
-		if (nevents >= maxEventsToWrite)
-			break;
-
-		// Create the new output event.
-		ILCEvent target = new ILCEvent();
-
-		// First time, the event header needs to
-		// be set from the first LCEvent read.
-		boolean setEventHeader = true;
-
-		// Total events merged in from all sources in this pass.
-		int totmerged = 0;
-
-		// Loop over the readers.
-		for (int i = 0; i < readers.length; i++)
-		{
-			// Get the next reader.
-			LCReader reader = readers[i];
-
-			// Merge ntoread events from this reader into target with delta time of dt.
-			int nmerged = MergeUtil.mergeEvents(target, reader, nEventsToRead, setEventHeader, dt, incrTime);
-
-			// DEBUG
-			System.err.println("nmerged: " + nmerged);
-
-			// Increment total merged.
-			totmerged += nmerged;
-
-			// Next time, don't need to set the header.
-			setEventHeader = false;
-		}
-
-		// Write out the combined event if something got merged in.
-		if (totmerged > 0)
-		{
-			//System.err.println("totmerged: " + totmerged);
-
-			writer.writeEvent(target);
-			nevents++;
-		}
-		else
-		{
-			// Done!
-			break;
-		}
-	} // file read loop
-
-	// Close the writer.
-	writer.close();
-
-	// Close the readers.
-	closeReaders(readers);
-	
-	// Return number of events created.
-	return nevents;
-}
-*/

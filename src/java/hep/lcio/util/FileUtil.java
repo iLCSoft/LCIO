@@ -10,14 +10,15 @@ import java.util.List;
 /**
  * Miscellaneous java file utilities.
  * @author jeremym
- * @version $Id: FileUtil.java,v 1.1 2006-04-26 00:56:53 jeremy Exp $
+ * @version $Id: FileUtil.java,v 1.2 2006-04-26 19:37:05 jeremy Exp $
  */
 public abstract class FileUtil
 {
 	/**
-	 * Reads a file into an ArrayList.
+	 * Reads the lines of file at path fileName into 
+	 * an ArrayList.
 	 * @param fileName Name of the input file.
-	 * @return A List with one line String per entry.
+	 * @return A List with one String file line per entry.
 	 */
 	public static List loadFile(String fileName)
 	{
@@ -49,7 +50,7 @@ public abstract class FileUtil
 	}
 	
 	/**
-	 * Return an array of files from an array of file paths.
+	 * Return an array of @see File objects from an array of paths.
 	 * @param fstr Array of file paths.
 	 * @return Array of File objects.
 	 */
