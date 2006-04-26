@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ ! $LCIO ]; then
+  echo "ERROR: set LCIO"
+  exit 1
+fi
+
+LOCALCLASSPATH=$LCIO/lib/lcio.jar:$LCIO/tools/sio.jar:$LCIO/tools/commons-cli-1.0.jar:$LCIO/tools/commons-lang-2.1.jar
+
+# OS specific support for Cygwin 
+cygwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+esac
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
+  java -cp "$LOCALCLASSPATH" hep.lcio.util.CommandLineTool $*
+else
+  java -cp $LOCALCLASSPATH hep.lcio.util.CommandLineTool $*
+fi
+
