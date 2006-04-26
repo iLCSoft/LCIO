@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-//import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
-//import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.PosixParser;
 //import org.apache.commons.cli.Parser;
 //import org.apache.commons.cli.PosixParser;
 
@@ -27,17 +28,23 @@ import org.apache.commons.cli.Options;
  * @see hep.lcio.util.Split split
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.1 2006-04-24 22:08:34 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.2 2006-04-26 00:56:53 jeremy Exp $
  */
-// TODO: Implement global options.
 public class CommandLineTool
 {
 	private Map handlers = new HashMap();
 	private String command;
-//	private Parser parser = new PosixParser();
+	private Parser parser = new PosixParser();
 	private Options options = new Options();
+	private CommandLine cl;
+	private static CommandLineTool instance = new CommandLineTool();
 	
-	public CommandLineTool()
+	public static CommandLineTool instance()
+	{
+		return instance;
+	}
+	
+	private CommandLineTool()
 	{
 		//System.out.println("CommandLineTool");
 
@@ -45,12 +52,17 @@ public class CommandLineTool
 		registerHandlers();
 	}	
 	
+	public CommandLine getGlobalOptions()
+	{
+		return cl;
+	}
+	
 	// main entry point.
 	public static void main(String[] args) throws Exception
 	{
 		//System.err.println("main");
 
-		CommandLineTool cl = new CommandLineTool();
+		CommandLineTool cl = CommandLineTool.instance();
 
 		// try {
 		cl.parse(args);
@@ -116,7 +128,6 @@ public class CommandLineTool
 		CommandHandler handler = getCommandHandler(getCommand());
 
 		// Global arguments.
-		/*
 		int nglob = icmd - 1;
 		String[] globargv = new String[0];
 		if (nglob > 0)
@@ -128,7 +139,6 @@ public class CommandLineTool
 				System.out.println("globargv[" + i + "]=" + globargv[i]);
 			}
 		}
-		*/
 
 		// Arguments are passed verbatim to the subcommand.
 		int ncmd = args.length - (icmd + 1);
@@ -140,7 +150,7 @@ public class CommandLineTool
 		}
 
 		// Parse global options.
-		//CommandLine cl = parser.parse(options, globargv);
+		cl = parser.parse(options, globargv);
 
 		// Pass the subcommand the command line options
 		// with globals stripped out.
