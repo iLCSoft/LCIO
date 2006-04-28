@@ -1,12 +1,15 @@
 package hep.lcio.util;
 
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+
 /**
  * 
  * A CommandHandler handles the command-line options for a
  * single command in the CommandLineTool.
  * 
  * @author jeremym
- * @version $Id: CommandHandler.java,v 1.1 2006-04-24 22:08:34 jeremy Exp $
+ * @version $Id: CommandHandler.java,v 1.2 2006-04-28 21:33:51 jeremy Exp $
  */
 
 public abstract class CommandHandler 
@@ -51,6 +54,22 @@ public abstract class CommandHandler
 	public String getDescription()
 	{
 		return this.description;
+	}
+	
+	/**
+	 * Print usage and (optionally) exit the program.
+	 * @param doExit Whether or not to exit after printing usage.
+	 */
+	public void printUsage(Options options, boolean doExit)
+	{
+		HelpFormatter help = new HelpFormatter();
+
+		help.printHelp(getName(), options);
+		
+		if (doExit)
+		{
+			System.exit(0);
+		}
 	}
 	
 	/** 

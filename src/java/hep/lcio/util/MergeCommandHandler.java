@@ -20,12 +20,12 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  * 
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.3 2006-04-26 19:37:05 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.4 2006-04-28 21:33:51 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
 	Parser parser = new PosixParser();
-	Options options = new Options();
+	Options options;
 	File outfile;
 	File[] infiles;
 	int maxevents = Integer.MAX_VALUE;
@@ -41,8 +41,8 @@ public class MergeCommandHandler extends CommandHandler
 	{
 		// Call CommandHandler ctor.
 		super("merge", "Merge LCIO events together.");
-
-		// Setup options for the merge command.
+		
+		// Setup merge command options.
 		options = createMergeOptions();
 	}
 
@@ -50,7 +50,7 @@ public class MergeCommandHandler extends CommandHandler
 	 * Creates the CLI options for the merge command.
 	 * @return Options for the merge command.
 	 */
-	private Options createMergeOptions()
+	private static Options createMergeOptions()
 	{
 		Options options = new Options();
 
