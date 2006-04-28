@@ -9,13 +9,14 @@ import org.apache.commons.cli.Options;
  * single command in the CommandLineTool.
  * 
  * @author jeremym
- * @version $Id: CommandHandler.java,v 1.2 2006-04-28 21:33:51 jeremy Exp $
+ * @version $Id: CommandHandler.java,v 1.3 2006-04-28 23:38:48 jeremy Exp $
  */
 
 public abstract class CommandHandler 
 {
 	String name;
 	String description;
+	Options options;
 	
 	/**
 	 * CommandHandler ctor.
@@ -57,14 +58,23 @@ public abstract class CommandHandler
 	}
 	
 	/**
+	 * Options for this command.
+	 * @return Options object for this command.
+	 */
+	public Options getOptions()
+	{
+		return options;
+	}
+	
+	/**
 	 * Print usage and (optionally) exit the program.
 	 * @param doExit Whether or not to exit after printing usage.
 	 */
-	public void printUsage(Options options, boolean doExit)
+	public void printUsage(boolean doExit)
 	{
 		HelpFormatter help = new HelpFormatter();
 
-		help.printHelp(getName(), options);
+		help.printHelp(getName(), getOptions());
 		
 		if (doExit)
 		{

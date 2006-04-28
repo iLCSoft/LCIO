@@ -26,7 +26,7 @@ public class MergeTestEvents
 		LCWriter writer = 
 			LCFactory.getInstance().createLCWriter();
 		
-		writer.open("mergetest1", LCIO.WRITE_NEW);		
+		writer.open("test1", LCIO.WRITE_NEW);		
 
 		ILCEvent event = new ILCEvent();
 		event.setDetectorName("TEST");
@@ -54,12 +54,12 @@ public class MergeTestEvents
 		writer.writeEvent(event);
 		writer.close();
 		
-		writer.open("mergetest2", LCIO.WRITE_NEW);
+		writer.open("test2", LCIO.WRITE_NEW);
 		writer.writeEvent(event);
 		writer.close();
 		
 		LCReader reader = LCFactory.getInstance().createLCReader();
-		reader.open("mergetest1.slcio");
+		reader.open("test1.slcio");
 		LCEvent checkevent = reader.readNextEvent();
 		System.out.println("read back event: " + checkevent);
 	}

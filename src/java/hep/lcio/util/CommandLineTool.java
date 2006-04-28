@@ -29,7 +29,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.4 2006-04-28 21:33:51 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.5 2006-04-28 23:38:48 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -84,13 +84,15 @@ public class CommandLineTool
 	 */
 	private void registerHandlers()
 	{
-		// addCommandHandler("compare", Compare)
-		// addCommandHandler("concat", Concat);
-		// addCommandHandler("printevent", PrintEvent);
-		// addCommandHandler("header", HeaderScan);
 		addCommandHandler(new MergeCommandHandler());
-		// addCommandHandler("siodump", SioDump);
 		addCommandHandler(new SplitCommandHandler());
+		addCommandHandler(new ConcatenateCommandHandler());
+		
+		// addCommandHandler("compare", Compare)
+		// addCommandHandler("print", PrintEvent);
+		// addCommandHandler("header", HeaderScan);
+		// addCommandHandler("siodump", SioDump);
+		// addCommandHandler("random", RandomEvent);
 	}
 
 	/**

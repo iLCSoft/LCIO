@@ -13,11 +13,10 @@ import org.apache.commons.cli.PosixParser;
  * Command-line handler for the split utility.
  * 
  * @author Jeremy McCormick
- * @version $Id: SplitCommandHandler.java,v 1.1 2006-04-28 21:33:51 jeremy Exp $
+ * @version $Id: SplitCommandHandler.java,v 1.2 2006-04-28 23:38:49 jeremy Exp $
  */
 public class SplitCommandHandler extends CommandHandler
 {
-	Options options;
 	Parser parser = new PosixParser();
 	File infile;
 	int nevents;
@@ -60,7 +59,7 @@ public class SplitCommandHandler extends CommandHandler
 		
 		if (!cl.hasOption("i") || !cl.hasOption("n"))
 		{
-			printUsage(options, true);
+			printUsage(true);
 		}
 		
 		String inputpath = null;
