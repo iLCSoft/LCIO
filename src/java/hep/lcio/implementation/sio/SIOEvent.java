@@ -15,12 +15,9 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.40 2006-04-24 23:07:20 jeremy Exp $
+ * @version $Id: SIOEvent.java,v 1.41 2006-04-28 18:46:18 jeremy Exp $
  */
-// NOTE: Changed from protected to public so that setReadOnly is
-//       accessible.  More properly, setReadOnly should be
-//       added to the LCEvent interface.  --JM
-public class SIOEvent extends ILCEvent
+class SIOEvent extends ILCEvent
 {
    private Map blockMap;
    
@@ -58,7 +55,7 @@ public class SIOEvent extends ILCEvent
       }
       
    }
-   public void setReadOnly(boolean mode)
+   void setReadOnly(boolean mode)
    {
       super.setAccess(mode ? LCIO.READ_ONLY : LCIO.UPDATE);
    }
