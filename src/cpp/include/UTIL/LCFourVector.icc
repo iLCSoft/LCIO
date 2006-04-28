@@ -22,7 +22,7 @@ namespace UTIL{
   // specializations for the different LCObjects that have 4 vector information
 
   template<>
-  LCFourVector<MCParticle>::LCFourVector( const MCParticle* mcPart ) : 
+  inline LCFourVector<MCParticle>::LCFourVector( const MCParticle* mcPart ) : 
     HepLorentzVector(mcPart->getMomentum()[0],
 		     mcPart->getMomentum()[1],
 		     mcPart->getMomentum()[2],
@@ -30,7 +30,7 @@ namespace UTIL{
   {
   }
   template<>
-  LCFourVector<MCParticle>::LCFourVector(LCObject* lcObj){
+  inline LCFourVector<MCParticle>::LCFourVector(LCObject* lcObj){
     
     _lcObj = dynamic_cast<MCParticle* >( lcObj ) ;
 
@@ -47,7 +47,7 @@ namespace UTIL{
   }
 
   template<>
-  LCFourVector<ReconstructedParticle>::LCFourVector( const ReconstructedParticle* part ) : 
+  inline LCFourVector<ReconstructedParticle>::LCFourVector( const ReconstructedParticle* part ): 
     HepLorentzVector(part->getMomentum()[0],
 		     part->getMomentum()[1],
 		     part->getMomentum()[2],
@@ -55,7 +55,7 @@ namespace UTIL{
   {
   }
   template<>
-  LCFourVector<ReconstructedParticle>::LCFourVector(LCObject* lcObj){
+  inline LCFourVector<ReconstructedParticle>::LCFourVector(LCObject* lcObj){
     
     _lcObj = dynamic_cast<ReconstructedParticle* >( lcObj ) ;
 

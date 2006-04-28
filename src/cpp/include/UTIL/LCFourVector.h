@@ -39,7 +39,7 @@ namespace UTIL {
     
     /** Constructor for templated type,e.g. LCFourVector<MCParticle>( myMCParticle ).
      */
-    LCFourVector( const TT* lcObj) : _lcObj(lcObj) {
+    inline LCFourVector( const TT* lcObj) : _lcObj(lcObj) {
     }
     
     
