@@ -10,16 +10,13 @@ import hep.lcio.implementation.event.IMCParticle;
 import hep.lcio.implementation.event.ISimCalorimeterHit;
 import hep.lcio.implementation.event.ISimTrackerHit;
 import hep.lcio.implementation.io.LCFactory;
-import hep.lcio.implementation.sio.SIOEvent;
 import hep.lcio.io.LCReader;
 import hep.lcio.io.LCWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Utility methods for merging together LCIO 
@@ -27,7 +24,7 @@ import java.util.Map;
  * application of a delta time.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.5 2006-04-26 20:51:48 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.6 2006-04-28 18:48:15 jeremy Exp $
  */
 abstract public class MergeUtil
 {
@@ -156,7 +153,7 @@ abstract public class MergeUtil
 	public static int mergeEvents(LCEvent targetEvent, LCReader overlayEvents, int ntoread, boolean setEventHeader, float startt, float dt) throws IOException
 	{
 		// Read the next event from the reader.
-		LCEvent nextEvent = overlayEvents.readNextEvent();
+		LCEvent nextEvent = overlayEvents.readNextEvent(LCIO.UPDATE);
 
 		// Return 0 if reader is exhausted.
 		if (nextEvent == null)
@@ -194,7 +191,7 @@ abstract public class MergeUtil
 				break;
 
 			// Get next event to merge in. (could be null)
-			nextEvent = overlayEvents.readNextEvent();
+			nextEvent = overlayEvents.readNextEvent(LCIO.UPDATE);
 
 			// Increment the time for next event.
 			time += dt;
@@ -216,12 +213,6 @@ abstract public class MergeUtil
 		{
 			// Empty event, nothing to do.
 			return;
-		}
-
-		if (overlayEvent instanceof SIOEvent)
-		{
-			// Turn off readonly mode on overlay event.
-			((SIOEvent) overlayEvent).setReadOnly(false);
 		}
 
 		// Get names of collections already existing in target.
