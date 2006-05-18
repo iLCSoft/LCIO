@@ -1,6 +1,9 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+
+   - bug fix in SIOReader::skipNEvents() (skipped only n-1 with readStream())
+
 ======================
   v01-07
 =======================

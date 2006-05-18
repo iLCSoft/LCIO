@@ -419,6 +419,17 @@ namespace SIO {
 	return ;
       }
     }
+
+    // now we need to also read the next  record which suposedly nis an event record
+    // in order to prevent readStream from reading this event (the last to be skipped)
+    SIOUnpack evtUnp( SIOUnpack::EVENT ) ;
+    
+    try{ 
+      readRecord() ;
+    }
+    catch(EndOfDataException){
+      return ;
+    }
     
   }
 
