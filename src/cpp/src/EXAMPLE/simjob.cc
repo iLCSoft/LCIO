@@ -252,6 +252,34 @@ int main(int argc, char** argv ){
 						  0.1, 0. ) ;
 	}
 
+// 	// ----- find the MCParticle with the largest contribution to the SimCalorimeterHits:
+// 	for(int j=0;j<NHITS;j++){
+
+// 	  SimCalorimeterHit* sh =
+// 	    dynamic_cast<SimCalorimeterHit*>( calVec->getElementAt(j) ) ; 
+
+// 	  typedef std::map<MCParticle*,double>  MCPMap ; 
+	  
+// 	  MCPMap mcpMap ;
+	  
+// 	  for( int ii=0 ;ii< sh->getNMCContributions() ; ++ii){
+// 	    mcpMap[  sh->getParticleCont(ii) ] += sh->getEnergyCont(ii) ;   
+// 	  }
+	  
+// 	  double eMax(0.) ; 
+// 	  MCParticle* mcp ;
+	  
+// 	  for( MCPMap::iterator it = mcpMap.begin() ;  it != mcpMap.end() ; ++it ){
+	    
+// 	    if( it->second > eMax ) {
+// 	      mcp = it->first ;
+// 	      eMax = it->second ;
+// 	    }
+// 	  } 
+// // 	  std::cout << " largest contribution " << eMax << " GeV from particle " 
+// // 		    << mcp << std::endl ;
+// 	}
+
 	// and finally some tracker hits
 	// with some user extensions (4 floats and 2 ints) per track:
 	// we just need to create parallel collections of float and int vectors
