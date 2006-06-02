@@ -18,18 +18,26 @@ import org.apache.commons.cli.PosixParser;
  * 
  * lcio [global_options] [command] [command_options]
  * 
- * @see hep.lcio.util.Compare compare
- * @see hep.lcio.util.Concat concat
+ * 
+ * 
+ * @see hep.lcio.util.Concat concat [X]
+ * 
+ * @see hep.lcio.util.MergeCommandHandler merge [X]
+ * 
+ * @see hep.lcio.util.Split split [X]
+ * 
+ * @see hep.lcio.util.SioDump siodump [X]
+ * 
  * @see hep.lcio.util.Headers head
- * @see hep.lcio.util.MergeCommandHandler merge
+ * 
+ * @see hep.lcio.util.Compare compare
+ * 
  * @see hep.lcio.util.PrintEvent print
- * @see hep.lcio.util.SioDump siodump
- * @see hep.lcio.util.Split split
  * 
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.5 2006-04-28 23:38:48 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.6 2006-06-02 00:22:57 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -87,12 +95,12 @@ public class CommandLineTool
 		addCommandHandler(new MergeCommandHandler());
 		addCommandHandler(new SplitCommandHandler());
 		addCommandHandler(new ConcatenateCommandHandler());
+		addCommandHandler(new SIODumpCommandHandler());
 		
-		// addCommandHandler("compare", Compare)
-		// addCommandHandler("print", PrintEvent);
-		// addCommandHandler("header", HeaderScan);
-		// addCommandHandler("siodump", SioDump);
-		// addCommandHandler("random", RandomEvent);
+		// addCommandHandler("compare", CompareCommandHandler())
+		// addCommandHandler("print", PrintEventCommandHandler());
+		// addCommandHandler("header", HeaderScanCommandHandler());		
+		// addCommandHandler("random", RandomEventCommandHandler());
 	}
 
 	/**

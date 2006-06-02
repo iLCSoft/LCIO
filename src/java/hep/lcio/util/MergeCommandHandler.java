@@ -20,11 +20,10 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  * 
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.5 2006-04-28 23:38:48 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.6 2006-06-02 00:22:57 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
-	Parser parser = new PosixParser();
 	File outfile;
 	File[] infiles;
 	int maxevents = Integer.MAX_VALUE;

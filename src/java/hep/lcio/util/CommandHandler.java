@@ -2,6 +2,8 @@ package hep.lcio.util;
 
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.Parser;
+import org.apache.commons.cli.PosixParser;
 
 /**
  * 
@@ -9,7 +11,7 @@ import org.apache.commons.cli.Options;
  * single command in the CommandLineTool.
  * 
  * @author jeremym
- * @version $Id: CommandHandler.java,v 1.3 2006-04-28 23:38:48 jeremy Exp $
+ * @version $Id: CommandHandler.java,v 1.4 2006-06-02 00:22:57 jeremy Exp $
  */
 
 public abstract class CommandHandler 
@@ -17,6 +19,7 @@ public abstract class CommandHandler
 	String name;
 	String description;
 	Options options;
+	protected static Parser parser = new PosixParser();
 	
 	/**
 	 * CommandHandler ctor.

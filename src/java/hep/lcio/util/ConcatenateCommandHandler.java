@@ -15,7 +15,7 @@ import org.apache.commons.cli.PosixParser;
  * Command-line handling for concat command.
  * 
  * @author jeremym
- * @version $Id: ConcatenateCommandHandler.java,v 1.1 2006-04-28 23:38:49 jeremy Exp $
+ * @version $Id: ConcatenateCommandHandler.java,v 1.2 2006-06-02 00:22:57 jeremy Exp $
  */
 public class ConcatenateCommandHandler extends CommandHandler
 {
@@ -69,7 +69,6 @@ public class ConcatenateCommandHandler extends CommandHandler
 	 */
 	public void parse(String[] argv) throws Exception
 	{
-		Parser parser = new PosixParser();
 		CommandLine cl = parser.parse(options, argv);
 		
 		// One of '-i' or '-f' is required.
