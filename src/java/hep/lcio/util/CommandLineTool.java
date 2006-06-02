@@ -18,26 +18,42 @@ import org.apache.commons.cli.PosixParser;
  * 
  * lcio [global_options] [command] [command_options]
  * 
- * 
- * 
  * @see hep.lcio.util.Concat concat [X]
+ * -concatenate LCIO files together
  * 
  * @see hep.lcio.util.MergeCommandHandler merge [X]
+ * -overlay events
  * 
  * @see hep.lcio.util.Split split [X]
+ * -split LCIO file into multiple output files
  * 
  * @see hep.lcio.util.SioDump siodump [X]
+ * -dump low-level SIOinfo
+ * 
+ * @see hep.lcio.util.Compare compare [X]
+ * -compare series of LCIO files
  * 
  * @see hep.lcio.util.Headers head
+ * -print header info
+ * -number of LCRunHeader
+ * -number of LCEventHeader
+ * -number of LCEvent
  * 
- * @see hep.lcio.util.Compare compare
+ * @see hep.lcio.util.PrintEvent dump
+ * -dump lcio file (similar to C++ dump cmd)
  * 
- * @see hep.lcio.util.PrintEvent print
+ * @see hep.lcio.util.Filter filter
+ * -filter out/in by coll type
+ * -filter out/in by coll name
+ * 
+ * @see hep.lcio.util.Validate validate
+ * -Is an LCIO file?
+ * -version check
  * 
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.6 2006-06-02 00:22:57 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.7 2006-06-02 23:48:34 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -96,8 +112,8 @@ public class CommandLineTool
 		addCommandHandler(new SplitCommandHandler());
 		addCommandHandler(new ConcatenateCommandHandler());
 		addCommandHandler(new SIODumpCommandHandler());
+		addCommandHandler(new CompareCommandHandler());
 		
-		// addCommandHandler("compare", CompareCommandHandler())
 		// addCommandHandler("print", PrintEventCommandHandler());
 		// addCommandHandler("header", HeaderScanCommandHandler());		
 		// addCommandHandler("random", RandomEventCommandHandler());
@@ -144,6 +160,7 @@ public class CommandLineTool
 	 */
 	// FIXME: Method needs to handle quoting properly.  
 	//        FreeHep's argv package can handle this.
+	// FIXME: Actually parse and set global options.
 	public void parse(String[] argv) throws Exception
 	{
 		// Get the index of a command.

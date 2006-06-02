@@ -11,14 +11,14 @@ import org.apache.commons.cli.PosixParser;
  * single command in the CommandLineTool.
  * 
  * @author jeremym
- * @version $Id: CommandHandler.java,v 1.4 2006-06-02 00:22:57 jeremy Exp $
+ * @version $Id: CommandHandler.java,v 1.5 2006-06-02 23:48:34 jeremy Exp $
  */
 
 public abstract class CommandHandler 
 {
 	String name;
 	String description;
-	Options options;
+	Options options = new Options();
 	protected static Parser parser = new PosixParser();
 	
 	/**
