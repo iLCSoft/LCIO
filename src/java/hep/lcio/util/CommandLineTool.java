@@ -33,7 +33,7 @@ import org.apache.commons.cli.PosixParser;
  * @see hep.lcio.util.Compare compare [X]
  * -compare series of LCIO files
  * 
- * @see hep.lcio.util.Headers head
+ * @see hep.lcio.util.Headers count
  * -print header info
  * -number of LCRunHeader
  * -number of LCEventHeader
@@ -45,6 +45,8 @@ import org.apache.commons.cli.PosixParser;
  * @see hep.lcio.util.Filter filter
  * -filter out/in by coll type
  * -filter out/in by coll name
+ * -filter out/in by event number
+ * -filter out/in by run number
  * 
  * @see hep.lcio.util.Validate validate
  * -Is an LCIO file?
@@ -53,7 +55,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.7 2006-06-02 23:48:34 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.8 2006-06-06 21:27:03 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -113,9 +115,9 @@ public class CommandLineTool
 		addCommandHandler(new ConcatenateCommandHandler());
 		addCommandHandler(new SIODumpCommandHandler());
 		addCommandHandler(new CompareCommandHandler());
-		
-		// addCommandHandler("print", PrintEventCommandHandler());
-		// addCommandHandler("header", HeaderScanCommandHandler());		
+		addCommandHandler(new HeaderCountCommandHandler());
+
+		// addCommandHandler("print", PrintEventCommandHandler());				
 		// addCommandHandler("random", RandomEventCommandHandler());
 	}
 
@@ -160,7 +162,6 @@ public class CommandLineTool
 	 */
 	// FIXME: Method needs to handle quoting properly.  
 	//        FreeHep's argv package can handle this.
-	// FIXME: Actually parse and set global options.
 	public void parse(String[] argv) throws Exception
 	{
 		// Get the index of a command.
@@ -175,7 +176,7 @@ public class CommandLineTool
 		// Set the command to execute.
 		setCommand(argv[icmd]);
 
-		System.out.println("Executing command: " + getCommand());
+		//System.out.println("Executing command: " + getCommand());
 
 		// Get a command handler for this command string.
 		CommandHandler handler = getCommandHandler(getCommand());
@@ -187,20 +188,20 @@ public class CommandLineTool
 		{
 			globargv = new String[nglob];
 			System.arraycopy(argv, 0, globargv, 0, nglob);
-			for (int i = 0; i < globargv.length; i++)
-			{
-				System.out.println("globargv[" + i + "]=" + globargv[i]);
-			}
+			//for (int i = 0; i < globargv.length; i++)
+			//{
+			//	System.out.println("globargv[" + i + "]=" + globargv[i]);
+			//}
 		}
 
 		// Arguments are passed verbatim to the command.
 		int ncmd = argv.length - (icmd + 1);
 		String[] cmdargv = new String[ncmd];
 		System.arraycopy(argv, icmd + 1, cmdargv, 0, ncmd);
-		for (int i = 0; i < cmdargv.length; i++)
-		{
-			System.out.println("cmdargv[" + i + "]=" + cmdargv[i]);
-		}
+		//for (int i = 0; i < cmdargv.length; i++)
+		//{
+		//	System.out.println("cmdargv[" + i + "]=" + cmdargv[i]);
+		//}
 
 		// Parse global options.
 		cl = parser.parse(options, globargv);
