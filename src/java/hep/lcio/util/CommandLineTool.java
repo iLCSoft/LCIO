@@ -33,13 +33,16 @@ import org.apache.commons.cli.PosixParser;
  * @see hep.lcio.util.Compare compare [X]
  * -compare series of LCIO files
  * 
- * @see hep.lcio.util.Headers count
+ * @see hep.lcio.util.Headers count [X]
  * -print header info
  * -number of LCRunHeader
  * -number of LCEventHeader
  * -number of LCEvent
  * 
- * @see hep.lcio.util.PrintEvent dump
+ * @see hep.lcio.util.RandomEvent random [X]
+ * -generate X random events
+ * 
+ * @see hep.lcio.util.PrintEvent print
  * -dump lcio file (similar to C++ dump cmd)
  * 
  * @see hep.lcio.util.Filter filter
@@ -47,7 +50,7 @@ import org.apache.commons.cli.PosixParser;
  * -filter out/in by coll name
  * -filter out/in by event number
  * -filter out/in by run number
- * 
+ *  
  * @see hep.lcio.util.Validate validate
  * -Is an LCIO file?
  * -version check
@@ -55,7 +58,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.8 2006-06-06 21:27:03 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.9 2006-06-07 22:32:34 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -85,6 +88,24 @@ public class CommandLineTool
 	}	
 	
 	/**
+	 * Register default command handlers with the CommandLineTool.
+	 */
+	private void registerHandlers()
+	{
+		addCommandHandler(new MergeCommandHandler());
+		addCommandHandler(new SplitCommandHandler());
+		addCommandHandler(new ConcatenateCommandHandler());
+		addCommandHandler(new SIODumpCommandHandler());
+		addCommandHandler(new CompareCommandHandler());
+		addCommandHandler(new HeaderCountCommandHandler());
+		addCommandHandler(new RandomEventCommandHandler());
+		
+		// addCommandHandler(new PrintEventCommandHandler());
+		// addCommandHandler(new ValidateEventCommandHandler());
+		// addCommandHandler(new FilterEventCommandHandler());
+	}
+	
+	/**
 	 * Get the global options.
 	 * @return A CommandLine object representing the global options,
 	 * e.g. the options in front of the command.
@@ -103,22 +124,6 @@ public class CommandLineTool
 	{
 		CommandLineTool cl = CommandLineTool.instance();
 		cl.parse(argv);
-	}
-
-	/**
-	 * Register default command handlers with the CommandLineTool.
-	 */
-	private void registerHandlers()
-	{
-		addCommandHandler(new MergeCommandHandler());
-		addCommandHandler(new SplitCommandHandler());
-		addCommandHandler(new ConcatenateCommandHandler());
-		addCommandHandler(new SIODumpCommandHandler());
-		addCommandHandler(new CompareCommandHandler());
-		addCommandHandler(new HeaderCountCommandHandler());
-
-		// addCommandHandler("print", PrintEventCommandHandler());				
-		// addCommandHandler("random", RandomEventCommandHandler());
 	}
 
 	/**
