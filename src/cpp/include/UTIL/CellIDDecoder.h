@@ -9,6 +9,9 @@
 #include "lcio.h"
 #include <string>
 
+// fixes problem in gcc 4.0.3
+#include "EVENT/LCParameters.h"
+
 //#include <sstream>
 //#include <typeinfo>
 
@@ -21,7 +24,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.5 2006-03-29 13:55:09 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.6 2006-06-19 08:49:32 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
