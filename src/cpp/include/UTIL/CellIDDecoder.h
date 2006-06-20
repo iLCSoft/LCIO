@@ -3,6 +3,7 @@
 
 //#include <vector>
 //#include "EVENT/LCObject.h"
+#include "EVENT/LCParameters.h"
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimTrackerHit.h"
 #include "UTIL/BitField64.h"
@@ -24,7 +25,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.6 2006-06-19 08:49:32 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.7 2006-06-20 16:36:14 jeremy Exp $
    */
   template <class T> 
   class CellIDDecoder {
