@@ -13,7 +13,7 @@
 #define NDIGITS 3
 #endif
 
-#ifdef __CYGWIN__
+#if defined(__CYGWIN__) || defined(__APPLE_CC__)
 #define STAT64 stat
 #else
 #define STAT64 stat64
