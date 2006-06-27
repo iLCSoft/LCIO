@@ -55,10 +55,13 @@ import org.apache.commons.cli.PosixParser;
  * -Is an LCIO file?
  * -version check
  * 
+ * @see hep.lcio.util.StdHepConverter stdhep
+ * -convert from stdhep file to lcio MCParticles
+ * 
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.9 2006-06-07 22:32:34 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.10 2006-06-27 21:56:46 jeremy Exp $
  */
 public class CommandLineTool
 {
