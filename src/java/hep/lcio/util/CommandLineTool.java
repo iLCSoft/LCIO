@@ -42,7 +42,7 @@ import org.apache.commons.cli.PosixParser;
  * @see hep.lcio.util.RandomEvent random [X]
  * -generate X random events
  *  
- * @see hep.lcio.util.Validate validate [x]
+ * @see hep.lcio.util.Validate validate [X]
  * -Is an LCIO file?
  * -version check
  * 
@@ -61,7 +61,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.11 2006-06-28 18:31:55 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.12 2006-06-28 23:25:17 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -103,6 +103,7 @@ public class CommandLineTool
 		addCommandHandler(new HeaderCountCommandHandler());
 		addCommandHandler(new RandomEventCommandHandler());
 		addCommandHandler(new ValidateCommandHandler());
+		addCommandHandler(new StdhepConvertCommandHandler());
 		
 		// addCommandHandler(new PrintEventCommandHandler());
 		// addCommandHandler(new FilterEventCommandHandler());
