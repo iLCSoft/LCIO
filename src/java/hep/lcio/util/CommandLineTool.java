@@ -41,6 +41,13 @@ import org.apache.commons.cli.PosixParser;
  * 
  * @see hep.lcio.util.RandomEvent random [X]
  * -generate X random events
+ *  
+ * @see hep.lcio.util.Validate validate [x]
+ * -Is an LCIO file?
+ * -version check
+ * 
+ * @see hep.lcio.util.StdHepConverter stdhep
+ * -convert from stdhep file to lcio MCParticles
  * 
  * @see hep.lcio.util.PrintEvent print
  * -dump lcio file (similar to C++ dump cmd)
@@ -50,18 +57,11 @@ import org.apache.commons.cli.PosixParser;
  * -filter out/in by coll name
  * -filter out/in by event number
  * -filter out/in by run number
- *  
- * @see hep.lcio.util.Validate validate
- * -Is an LCIO file?
- * -version check
- * 
- * @see hep.lcio.util.StdHepConverter stdhep
- * -convert from stdhep file to lcio MCParticles
- * 
+ *
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.10 2006-06-27 21:56:46 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.11 2006-06-28 18:31:55 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -102,10 +102,11 @@ public class CommandLineTool
 		addCommandHandler(new CompareCommandHandler());
 		addCommandHandler(new HeaderCountCommandHandler());
 		addCommandHandler(new RandomEventCommandHandler());
+		addCommandHandler(new ValidateCommandHandler());
 		
 		// addCommandHandler(new PrintEventCommandHandler());
-		// addCommandHandler(new ValidateEventCommandHandler());
 		// addCommandHandler(new FilterEventCommandHandler());
+		// addCommandHandler(new StdHepCommandHandler());
 	}
 	
 	/**

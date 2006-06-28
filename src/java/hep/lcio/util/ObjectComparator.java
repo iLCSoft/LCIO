@@ -15,10 +15,9 @@ import java.util.Map;
 
 /**
  *
- * @author jeremym
- *
  * Object comparison code refactored out of tonyj's old hep.lcio.test.RandomEvent .
  *
+ * @author jeremym
  */
 public class ObjectComparator
 {
