@@ -3,6 +3,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class Vertex ;
+/**Vector of (pointers to) Vertices.*/
 typedef std::vector<Vertex*> VertexVec ;
 }
 @endif
@@ -13,7 +14,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede
- * @version $Id: Vertex.aid,v 1.1 2006-05-24 15:17:09 gaede Exp $
+ * @version $Id: Vertex.aid,v 1.2 2006-08-03 16:53:35 gaede Exp $
  */
 
 public interface Vertex extends LCObject {

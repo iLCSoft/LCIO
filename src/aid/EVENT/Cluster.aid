@@ -3,6 +3,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class Cluster ;
+/**Vector of (pointers to) Clusters.*/
 typedef std::vector<Cluster*> ClusterVec ;
 }
 @endif
@@ -10,7 +11,7 @@ typedef std::vector<Cluster*> ClusterVec ;
 /** The LCIO cluster.
  * 
  * @author gaede
- * @version $Id: Cluster.aid,v 1.13 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: Cluster.aid,v 1.14 2006-08-03 16:53:34 gaede Exp $
  */
 
 

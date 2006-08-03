@@ -41,6 +41,8 @@ static const int NHITS = 50 ;  // calorimeter hits per event
 static string FILEN = "simjob.slcio" ;
 
 
+//struct MyTrackLink : public LCObjectLinkTraits< SimTrackerHit, MyTrackLink > {} ;
+
 /** Simple test program to demonstrate writing of data with lcio.
  */
 
@@ -410,6 +412,11 @@ int main(int argc, char** argv ){
 	
 	for(int j=0;j<NHITS;j++){
 	  relNav.addRelation( tpcRawVec->getElementAt(j) , trkVec->getElementAt(j) , 0.42 ) ;
+	  
+//   	  tpcRawVec->getElementAt(j)->link<MyTrackLink>() = 
+//  	  (*tpcRawVec)[j]->link< MyTrackLink >()  =
+// 	    dynamic_cast<SimTrackerHit*>( (*trkVec)[j] );
+
 	}
 	evt->addCollection( relNav.createLCCollection() , "TPCRawFADCMCTruth" ) ;
 	

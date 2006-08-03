@@ -3,6 +3,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class TrackerHit ;
+/**Vector of (pointers to) TrackerHits.*/
 typedef std::vector<TrackerHit*> TrackerHitVec ;
 }
 @endif
@@ -10,7 +11,7 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version $Id: TrackerHit.aid,v 1.9 2006-03-24 13:25:53 gaede Exp $
+ * @version $Id: TrackerHit.aid,v 1.10 2006-08-03 16:53:35 gaede Exp $
  */
 
 public interface TrackerHit extends LCObject {

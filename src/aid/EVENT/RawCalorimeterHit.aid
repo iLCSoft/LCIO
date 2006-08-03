@@ -11,6 +11,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class RawCalorimeterHit ;
+/**Vector of (pointers to) RawCalorimeterHits.*/
 typedef std::vector<RawCalorimeterHit*> RawCalorimeterHitVec ;
 }
 @endif
@@ -23,7 +24,7 @@ typedef std::vector<RawCalorimeterHit*> RawCalorimeterHitVec ;
  *  LCRelation object.</b>
  * 
  * @author gaede
- * @version $Id: RawCalorimeterHit.aid,v 1.3 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: RawCalorimeterHit.aid,v 1.4 2006-08-03 16:53:35 gaede Exp $
  */
 
 public interface RawCalorimeterHit extends LCObject {

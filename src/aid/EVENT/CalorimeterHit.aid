@@ -11,6 +11,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class CalorimeterHit ;
+/**Vector of (pointers to) CalorimeterHits.*/
 typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
 }
 @endif
@@ -23,7 +24,7 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
  *  flag(LCIO::RCHBIT_NO_PTR)==1. 
  *  
  * @author gaede
- * @version $Id: CalorimeterHit.aid,v 1.14 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: CalorimeterHit.aid,v 1.15 2006-08-03 16:53:34 gaede Exp $
  */
 
 public interface CalorimeterHit extends LCObject {

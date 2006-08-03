@@ -10,6 +10,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class LCObject ;
+/**Vector of (pointers to) LCObjects.*/
 typedef std::vector<LCObject*> LCObjectVec ;
 }
 @endif

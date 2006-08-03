@@ -2,6 +2,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class Track ;
+/**Vector of (pointers to) Tracks.*/
 typedef std::vector<Track*> TrackVec ;
 }
 @endif
@@ -9,7 +10,7 @@ typedef std::vector<Track*> TrackVec ;
 /** The LCIO track.
  * 
  * @author gaede
- * @version $Id: Track.aid,v 1.13 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: Track.aid,v 1.14 2006-08-03 16:53:35 gaede Exp $
  */
 
 public interface Track extends LCObject {

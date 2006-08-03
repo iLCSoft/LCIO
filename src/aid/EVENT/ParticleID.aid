@@ -3,6 +3,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class ParticleID ;
+/**Vector of (pointers to) ParticleIDs.*/
 typedef std::vector<ParticleID*> ParticleIDVec ;
 }
 @endif
@@ -12,7 +13,7 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  *  for different hypotheses on the particle type.
  * 
  * @author gaede
- * @version $Id: ParticleID.aid,v 1.9 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: ParticleID.aid,v 1.10 2006-08-03 16:53:35 gaede Exp $
  * @see ReconstructedParticle.getParticleIDs()
  * @see Cluster.getParticleIDs()
  */

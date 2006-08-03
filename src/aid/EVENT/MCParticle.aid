@@ -10,6 +10,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 class MCParticle ;
+/**Vector of (pointers to) MCParticles.*/
 typedef std::vector<MCParticle*> MCParticleVec ;
 }
 @endif
@@ -17,7 +18,7 @@ typedef std::vector<MCParticle*> MCParticleVec ;
 /** The LCIO Monte Carlo particle. 
  * 
  * @author gaede
- * @version $Id: MCParticle.aid,v 1.25 2006-04-25 07:08:03 gaede Exp $
+ * @version $Id: MCParticle.aid,v 1.26 2006-08-03 16:53:34 gaede Exp $
  */
 public interface MCParticle extends LCObject {
     

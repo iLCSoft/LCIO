@@ -3,6 +3,7 @@ package hep.lcio.event;
 @ifdef cpp
 @cpp{
 class ReconstructedParticle ;
+/**Vector of (pointers to) ReconstructedParticles.*/
 typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 }
 @endif
@@ -10,7 +11,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.16 2006-04-25 07:08:03 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.17 2006-08-03 16:53:35 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {

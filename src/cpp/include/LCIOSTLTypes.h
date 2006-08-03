@@ -12,10 +12,15 @@
 
 namespace EVENT
 {
+/**Vector of strings.*/
 typedef std::vector< std::string > StringVec ;
+/**Vector of floats.*/
 typedef std::vector< float  > FloatVec ;
+/**Vector of doubles.*/
 typedef std::vector< double  > DoubleVec ;
+/**Vector of ints.*/
 typedef std::vector< int > IntVec ;
+/**Vector of shorts.*/
 typedef std::vector< short > ShortVec ;
 
 }
