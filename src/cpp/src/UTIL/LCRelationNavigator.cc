@@ -7,6 +7,9 @@
 #include "IMPL/LCRelationImpl.h"
 #include "EVENT/LCIO.h"
 
+#define RELATIONFROMTYPESTR "FromType"
+#define RELATIONTOTYPESTR "ToType"
+
 using namespace EVENT ;
 using namespace IMPL ;
 
@@ -15,8 +18,8 @@ namespace UTIL{
 
   LCRelationNavigator::LCRelationNavigator( const EVENT::LCCollection* col ) :
   
-    _from( col->getParameters().getStringVal("RelationFromType") ) ,
-    _to( col->getParameters().getStringVal("RelationToType") ) { 
+    _from( col->getParameters().getStringVal( RELATIONFROMTYPESTR ) ) ,
+    _to( col->getParameters().getStringVal( RELATIONTOTYPESTR ) ) { 
     
     initialize(col) ; 
   }
@@ -141,8 +144,8 @@ namespace UTIL{
     LCCollectionVec* col = new LCCollectionVec( LCIO::LCRELATION ) ;
     
     
-    col->parameters().setValue( "FromType" , getFromType() ) ;
-    col->parameters().setValue( "ToType" , getToType() ) ;
+    col->parameters().setValue( RELATIONFROMTYPESTR , getFromType() ) ;
+    col->parameters().setValue( RELATIONTOTYPESTR , getToType() ) ;
 
 
     bool storeWeights = false ;
