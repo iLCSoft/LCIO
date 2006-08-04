@@ -28,7 +28,7 @@ public interface LCObject extends Cloneable {
 @ifdef cpp
     /** Returns an object id for internal (debugging) use in LCIO.
      */
-    public int id() ;
+    public int id() const ;
 @endif
 
 @cpp{
