@@ -6,6 +6,7 @@
 #include "IO/LCRunListener.h"
 
 #include "EVENT/LCIO.h"
+#include "EVENT/TrackerRawData.h"
 
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCCollectionVec.h"
@@ -111,36 +112,36 @@ public:
 
 
     // create some tracks and add them to the event
-    std::string tpcHitName( "TPCRawFADC" ) ;
+    std::string tpcHitName( "TrackerRawDataExample" ) ;
     
     // in order to be able to point back to hits, we need to create 
-    // generic TrackerHits from the TPCHits first
+    // generic TrackerHits from the TrackerRawDatas first
 
     LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
 
     // here we set the pointer flag bit that is needed to be able to point from
-    // the generic TrckerHit to the raw data TPCHit
+    // the generic TrckerHit to the raw data TrackerRawData
     //fg20040824 -> THE LOGIC IS REVERSED - NO NEED TO SET A BIT TO GET THE POINTER FLAG
     //     LCFlagImpl tpcFlag( tpcHits->getFlag() ) ;
     //     tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
     //     tpcHits->setFlag( tpcFlag.getFlag()  ) ;
     
     LCCollectionVec* trkhitVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
-    int nTPCHits = tpcHits->getNumberOfElements() ;
+    int nTrackerRawDatas = tpcHits->getNumberOfElements() ;
 
-    for(int j=0;j<nTPCHits;j++){
+    for(int j=0;j<nTrackerRawDatas;j++){
       TrackerHitImpl* trkHit = new TrackerHitImpl ;
 
-      TPCHit* tpcHit =  dynamic_cast<TPCHit*> ( tpcHits->getElementAt(j)  ) ;
+      TrackerRawData* tpcRawHit =  dynamic_cast<TrackerRawData*> ( tpcHits->getElementAt(j)  ) ;
 
-      trkHit->setdEdx(   tpcHit->getCharge() ) ; // just an example !
-      trkHit->setTime(   tpcHit->getTime() ) ;
-      int cellID = tpcHit->getCellID() ;
+      trkHit->setTime(   tpcRawHit->getTime() ) ;
+
+      int cellID = tpcRawHit->getCellID0() ;
       double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
       trkHit->setPosition(  pos  ) ;
 
-      trkHit->rawHits().push_back( tpcHit ) ; // store the original raw data hit
-      trkHit->rawHits().push_back( tpcHit ) ; // for testing add the same raw hit twice
+      trkHit->rawHits().push_back( tpcRawHit ) ; // store the original raw data hit
+      trkHit->rawHits().push_back( tpcRawHit ) ; // for testing add the same raw hit twice
 
       FloatVec cov(6) ;
       cov[0] = 1. ;

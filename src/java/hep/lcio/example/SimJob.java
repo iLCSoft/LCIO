@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.17 2005-03-02 16:22:59 gaede Exp $
+ * @version $Id: SimJob.java,v 1.18 2006-08-04 16:50:53 gaede Exp $
  */
 public class SimJob
 {
@@ -195,7 +195,7 @@ public class SimJob
     // even though this is a simjob we can store 'real data' objects :)
     // --- for example we can store TPC hits ------------
 
-    ILCCollection TPCVec = new ILCCollection( LCIO.TPCHIT )  ;
+    ILCCollection TPCVec = new ILCCollection( LCIO.TRACKERRAWDATA )  ;
 
     boolean storeRawData = true ;
 
@@ -206,29 +206,32 @@ public class SimJob
     
     for(int j=0;j<NHITS;j++){
       
-      ITPCHit tpcHit = new ITPCHit();
+      ITrackerRawData tpcHit = new ITrackerRawData();
       
-      tpcHit.setCellID( j ) ;
-      tpcHit.setTime( 0.1234567f ) ;
-      tpcHit.setCharge( 3.14159f ) ;
-      tpcHit.setQuality(  0xbad ) ;
+      tpcHit.setCellID0( j ) ;
+      tpcHit.setTime( 1234567 ) ;
+//       tpcHit.setCharge( 3.14159f ) ;
+//       tpcHit.setQuality(  0xbad ) ;
 
       if(  storeRawData ) {
         // generate a random number of datawords less than 10
-        int size = random.nextInt(10);
-        int[] rawData = new int[size] ;
+	  int size = 0 ; //     FIXME: there is a bug in writing the short array !!!    random.nextInt(10);
+        short[] rawData = new short[size] ;
         // fill some random numbers into the array;   
         for(int k=0;k<size;k++){
-          rawData[k] = random.nextInt() ;   
+          rawData[k] = (short) random.nextInt() ;   
         }
         // set the raw data
-        tpcHit.setRawDataWords( rawData ) ;
+        tpcHit.setADCValues( rawData ) ;
       }
 
       TPCVec.add( tpcHit ) ;
     }   
-    evt.addCollection( TPCVec , "TPCRawFADC" ) ;
+    evt.addCollection( TPCVec , "TrackerRawDataExample" ) ;
     
+
+
+
     //-------------- write example for subset collection --------------------    
     ILCCollection mcSubVec = new ILCCollection(LCIO.MCPARTICLE);
     mcSubVec.setSubset(true) ;
