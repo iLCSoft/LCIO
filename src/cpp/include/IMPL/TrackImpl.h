@@ -21,7 +21,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.13 2005-06-03 10:58:34 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.14 2006-08-04 16:52:46 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -35,7 +35,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~TrackImpl() ; 
     
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
 //     /** Type of track, i.e. the subdetector(s) used to derive the track paramters, e.g. "TPC", "COMB", etc.
 //      *  In order to save disc space working groups should try and define three to four letter acronyms for

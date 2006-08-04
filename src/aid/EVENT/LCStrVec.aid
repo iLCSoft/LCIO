@@ -21,7 +21,7 @@ public interface LCStrVec extends LCObject
     typedef LCStrVec lcobject_type ;
 
     public:
-    int id() { return _acc.simpleUID() ; } 
+    int id() const { return _acc.simpleUID() ; } 
     protected:
       IMPL::AccessChecked _acc ;
 }

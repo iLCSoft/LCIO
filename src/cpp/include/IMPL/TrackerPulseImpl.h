@@ -9,7 +9,7 @@ namespace IMPL {
 /** Default implementation of TrackerPulse.
  * 
  * @author gaede
- * @version $Id: TrackerPulseImpl.h,v 1.1 2005-05-31 07:43:23 gaede Exp $
+ * @version $Id: TrackerPulseImpl.h,v 1.2 2006-08-04 16:52:47 gaede Exp $
  */
 
   class TrackerPulseImpl :  public EVENT::TrackerPulse , public AccessChecked {
@@ -23,7 +23,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~TrackerPulseImpl() ;
     
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
     
 
     /** Returns the first detector specific (geometrical) cell id.

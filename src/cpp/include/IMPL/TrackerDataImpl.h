@@ -9,7 +9,7 @@ namespace IMPL {
 /** Default implementation of TrackerData.
  * 
  * @author gaede
- * @version $Id: TrackerDataImpl.h,v 1.1 2005-05-31 07:43:23 gaede Exp $
+ * @version $Id: TrackerDataImpl.h,v 1.2 2006-08-04 16:52:46 gaede Exp $
  */
 
 class TrackerDataImpl :  public EVENT::TrackerData , public AccessChecked {
@@ -23,7 +23,7 @@ public:
   /// Destructor.
   virtual ~TrackerDataImpl() ;
   
-  virtual int id() { return simpleUID() ; }
+  virtual int id() const { return simpleUID() ; }
   
   /** Returns the first detector specific (geometrical) cell id.
    */

@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version $Id: ParticleIDImpl.h,v 1.9 2005-04-15 08:37:37 gaede Exp $
+ * @version $Id: ParticleIDImpl.h,v 1.10 2006-08-04 16:52:46 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -37,7 +37,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~ParticleIDImpl() ; 
 
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /** Type - userdefined.
      */

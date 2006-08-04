@@ -28,7 +28,7 @@ namespace IMPL {
 											  _weight(weight) {}
     ~LCRelationImpl(){}
 
-    int id() { return simpleUID() ; }
+    int id() const { return simpleUID() ; }
 
     EVENT::LCObject * getFrom() const { return _from ; }
     EVENT::LCObject * getTo() const { return _to ; } 

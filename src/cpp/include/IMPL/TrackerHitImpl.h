@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version $Id: TrackerHitImpl.h,v 1.9 2005-04-15 08:37:38 gaede Exp $
+ * @version $Id: TrackerHitImpl.h,v 1.10 2006-08-04 16:52:46 gaede Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -28,7 +28,7 @@ namespace IMPL {
     virtual ~TrackerHitImpl() ; 
 
 
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /** The hit  position in [mm].	
      */

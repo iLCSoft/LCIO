@@ -41,7 +41,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~SimCalorimeterHitImpl() ;
     
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /** Create a deep copy of itself.
      * Overwrites return type in LCObject::clone().

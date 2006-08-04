@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.22 2006-03-29 14:11:26 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.23 2006-08-04 16:52:46 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -33,7 +33,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~MCParticleImpl() ;
 
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /** Returns the parents of this particle. 
      */

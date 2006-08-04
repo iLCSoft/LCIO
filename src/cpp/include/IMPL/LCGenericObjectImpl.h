@@ -12,7 +12,7 @@ namespace IMPL {
  * user data.
  * 
  * @author gaede 
- * @version $Id: LCGenericObjectImpl.h,v 1.4 2005-02-11 15:29:51 gaede Exp $
+ * @version $Id: LCGenericObjectImpl.h,v 1.5 2006-08-04 16:52:46 gaede Exp $
  */
 
 class LCGenericObjectImpl : public EVENT::LCGenericObject, public AccessChecked {
@@ -30,7 +30,7 @@ public:
   /// Destructor.
   virtual ~LCGenericObjectImpl() { /* nop */; }
   
-  virtual int id() { return simpleUID() ; }
+  virtual int id() const { return simpleUID() ; }
 
   /** Number of integer values stored in this object.
    */

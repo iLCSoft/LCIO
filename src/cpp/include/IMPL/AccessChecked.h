@@ -21,7 +21,7 @@ namespace IMPL {
     
   public:
     AccessChecked() ;
-    virtual int simpleUID() { return _id ; }
+    virtual int simpleUID() const { return _id ; }
 
   protected:
     virtual void setReadOnly( bool readOnly ) ;

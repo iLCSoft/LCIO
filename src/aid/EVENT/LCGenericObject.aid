@@ -12,7 +12,7 @@ import hep.lcio.exceptions.* ;
  * from const std::string& to const std::string to  make the implementation easier
  * @endif
  * @author gaede 
- * @version $Id: LCGenericObject.aid,v 1.6 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: LCGenericObject.aid,v 1.7 2006-08-04 16:52:44 gaede Exp $
  */
 
 public interface LCGenericObject extends LCObject 
@@ -76,7 +76,7 @@ public interface LCGenericObject extends LCObject
     @cpp{
 	/** Provide default implementation for id
 	 */
-	virtual int id() {  return 0 ; }  
+	virtual int id() const {  return 0 ; }  
     }
 
 }

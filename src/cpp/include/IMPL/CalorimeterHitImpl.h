@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
- * @version $Id: CalorimeterHitImpl.h,v 1.14 2005-04-15 08:37:37 gaede Exp $
+ * @version $Id: CalorimeterHitImpl.h,v 1.15 2006-08-04 16:52:46 gaede Exp $
  */
 
   class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
@@ -31,7 +31,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~CalorimeterHitImpl() ;
     
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /**Returns the detector specific (geometrical) cell id.
      */

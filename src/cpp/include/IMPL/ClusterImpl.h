@@ -19,7 +19,7 @@ namespace IMPL {
  *
  * @see Cluster
  * @author gaede
- * @version $Id: ClusterImpl.h,v 1.12 2005-04-15 08:37:37 gaede Exp $
+ * @version $Id: ClusterImpl.h,v 1.13 2006-08-04 16:52:46 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
@@ -32,7 +32,7 @@ namespace IMPL {
     /// Destructor.
     virtual ~ClusterImpl() ; 
 
-    virtual int id() { return simpleUID() ; }
+    virtual int id() const { return simpleUID() ; }
 
     /** Flagword that defines the type of cluster. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits to the cluster. The definition of the bits has to be done 
