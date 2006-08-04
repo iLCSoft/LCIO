@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.18 2006-08-04 16:50:53 gaede Exp $
+ * @version $Id: SimJob.java,v 1.19 2006-08-04 17:24:40 gaede Exp $
  */
 public class SimJob
 {
@@ -197,11 +197,11 @@ public class SimJob
 
     ILCCollection TPCVec = new ILCCollection( LCIO.TRACKERRAWDATA )  ;
 
-    boolean storeRawData = true ;
 
     int tpcFlag = 0 ;
-     if(  storeRawData )  // if we want to store the raw data we need to set the flag
-      tpcFlag = 1 << LCIO.TPCBIT_RAW ;
+
+    // store the cellId1
+    tpcFlag = 1 << LCIO.TRAWBIT_ID1
     TPCVec.setFlag( tpcFlag  ) ;
     
     for(int j=0;j<NHITS;j++){
@@ -213,17 +213,18 @@ public class SimJob
 //       tpcHit.setCharge( 3.14159f ) ;
 //       tpcHit.setQuality(  0xbad ) ;
 
-      if(  storeRawData ) {
-        // generate a random number of datawords less than 10
-	  int size = 0 ; //     FIXME: there is a bug in writing the short array !!!    random.nextInt(10);
-        short[] rawData = new short[size] ;
-        // fill some random numbers into the array;   
-        for(int k=0;k<size;k++){
+
+      // generate a random number of datawords less than 10
+      int size = 0 ; //     FIXME: there is a bug in writing the short array !!!    random.nextInt(10);
+// 	  int size = random.nextInt(10);
+      short[] rawData = new short[size] ;
+      // fill some random numbers into the array;   
+      for(int k=0;k<size;k++){
           rawData[k] = (short) random.nextInt() ;   
-        }
-        // set the raw data
-        tpcHit.setADCValues( rawData ) ;
       }
+      // set the raw data
+      tpcHit.setADCValues( rawData ) ;
+    
 
       TPCVec.add( tpcHit ) ;
     }   
