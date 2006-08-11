@@ -61,7 +61,7 @@ int main(int argc, char** argv ){
   //int nEvents = 0 ;
 
   //read an event
-  evt = lcReader->readNextEvent();
+  evt = lcReader->readNextEvent(LCIO::UPDATE);
   LCTOOLS::dumpEvent( evt ) ;
 /*
   //----------- the event loop -----------
@@ -107,7 +107,7 @@ int main(int argc, char** argv ){
   cout << "Position:\tx:" << vtx->getPosition()[0] << "\ty: " << vtx->getPosition()[1] << "\tz: " << vtx->getPosition()[2] << endl;
   cout << "Chi2:\t\t" << vtx->getChi2() << endl;
   cout << "Probability:\t" << vtx->getProbability() << endl;
-  cout << "AParticle:\t" << vtx->getAssociatedParticle()->getCharge() << endl;
+  cout << "AParticle:\t" << vtx->getAssociatedParticle()->getType() << endl;
   
   delete vtx;
 
