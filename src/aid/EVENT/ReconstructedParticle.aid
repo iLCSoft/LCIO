@@ -11,7 +11,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.17 2006-08-03 16:53:35 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.17.2.1 2006-08-14 16:10:00 engels Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -136,6 +136,13 @@ public interface ReconstructedParticle extends LCObject {
 //      */
 //     public const FloatVec& getMCParticleWeights() const ;
 
+      /** The start vertex associated to this particle
+      */
+      public Vertex * getStartVertex() const ;
+
+      /** The vertex where the particle decays
+      */
+      public Vertex * getEndVertex() const ;
 
     // set methods
 

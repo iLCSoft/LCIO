@@ -14,7 +14,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.1 2006-08-11 10:54:03 engels Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.2 2006-08-14 16:10:01 engels Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -56,6 +56,6 @@ public interface Vertex extends LCObject {
 
     /** Returns Reconstructed Particle associated to the Vertex
      */
-    public const ReconstructedParticle * getAssociatedParticle() const;
+    public ReconstructedParticle * getAssociatedParticle() const;
 }
 

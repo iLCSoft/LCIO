@@ -95,6 +95,14 @@ namespace IMPL {
      */
     virtual const EVENT::TrackVec & getTracks() const ;
 
+    /** The start vertex associated to this particle
+    */
+    virtual EVENT::Vertex * getStartVertex() const ;
+
+    /** The vertex where the particle decays
+    */
+    virtual EVENT::Vertex * getEndVertex() const ;
+
 
     // setters
     void setType(int type) ;
@@ -115,6 +123,8 @@ namespace IMPL {
     void addCluster( EVENT::Cluster* cluster) ;
     void addTrack( EVENT::Track* track) ;
 //     void addMCParticle( EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
+    void setStartVertex( EVENT::Vertex * sv ) ;
+    void setEndVertex( EVENT::Vertex * ev ) ;
 
   protected:
 
@@ -136,6 +146,9 @@ namespace IMPL {
 //     EVENT::FloatVec _trackWeights ;
 //     EVENT::MCParticleVec _mcParticles ;
 //     EVENT::FloatVec _mcParticleWeights ;
+
+    EVENT::Vertex* _sv ;
+    EVENT::Vertex* _ev ;
     
 }; // class
 

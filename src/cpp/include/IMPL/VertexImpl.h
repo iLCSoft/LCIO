@@ -61,7 +61,7 @@ namespace IMPL {
 
     /** Returns Reconstructed Particle associated to the Vertex
      */
-    virtual const EVENT::ReconstructedParticle * getAssociatedParticle() const;
+    virtual EVENT::ReconstructedParticle * getAssociatedParticle() const;
 
     // setters
     void setPrimary(bool primary) ;
@@ -73,7 +73,7 @@ namespace IMPL {
     void setCovMatrix( const EVENT::FloatVec & ) ;
     void setParameters( const float* par ) ;
     void setParameters( const EVENT::FloatVec& ) ;
-    void setAssociatedParticle( const EVENT::ReconstructedParticle * aP ) ;
+    void setAssociatedParticle( EVENT::ReconstructedParticle * aP ) ;
 
   protected:
     bool _primary ;
@@ -82,7 +82,7 @@ namespace IMPL {
     float _probability ;
     EVENT::FloatVec _cov ;
     EVENT::FloatVec _par ;
-    const EVENT::ReconstructedParticle * _aParticle ;
+    EVENT::ReconstructedParticle* _aParticle ;
    
 }; // class
 
