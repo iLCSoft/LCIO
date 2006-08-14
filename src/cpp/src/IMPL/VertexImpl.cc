@@ -8,7 +8,9 @@ namespace IMPL{
   VertexImpl::VertexImpl() :
     _primary(0),
     _chi2(0),
-    _probability(0)
+    _probability(0),
+    _par(0),
+    _aParticle(0)
   {
     _cov.resize( NCOVARIANCE ) ;
     //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
@@ -32,7 +34,7 @@ namespace IMPL{
   float VertexImpl::getChi2() const { return _chi2 ; }
   float VertexImpl::getProbability() const { return _probability ; }
   const EVENT::FloatVec & VertexImpl::getParameters() const { return _par ; }
-  const EVENT::ReconstructedParticle * VertexImpl::getAssociatedParticle() const { return _aParticle  ; }
+  EVENT::ReconstructedParticle * VertexImpl::getAssociatedParticle() const { return _aParticle  ; }
   
   bool VertexImpl::isPrimary() const { return _primary ;}
 
@@ -84,7 +86,7 @@ namespace IMPL{
     //_par = par;
   }
 
-  void VertexImpl::setAssociatedParticle( const EVENT::ReconstructedParticle *aP ){
+  void VertexImpl::setAssociatedParticle( EVENT::ReconstructedParticle *aP ){
     checkAccess("VertexImpl::setAssociatedParticle" );
     _aParticle = aP;
   }

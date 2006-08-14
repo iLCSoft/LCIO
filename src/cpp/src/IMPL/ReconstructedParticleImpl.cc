@@ -14,7 +14,9 @@ namespace IMPL{
     _mass(0) ,
     _charge(0),
     _pidUsed(0),
-    _goodnessOfPID(0) 
+    _goodnessOfPID(0),
+    _sv(0),
+    _ev(0)
   {
     _cov.resize( NCOVARIANCE ) ;
     //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
@@ -63,11 +65,27 @@ namespace IMPL{
 //   const EVENT::MCParticleVec& ReconstructedParticleImpl::getMCParticles() const { return _mcParticles  ; }
 //   const EVENT::FloatVec & ReconstructedParticleImpl::getMCParticleWeights() const { return  _mcParticleWeights ; }
   
+  EVENT::Vertex * ReconstructedParticleImpl::getStartVertex() const { return _sv  ; }
+                                                                                                                                                             
+  //TODO: Choose this alternative method?!: return _particles[0]->getStartVertex()?!?
+  EVENT::Vertex * ReconstructedParticleImpl::getEndVertex() const { return _ev  ; }
+
+                                                                                                                                                          
+  void ReconstructedParticleImpl::setStartVertex( EVENT::Vertex *sv ){
+    checkAccess("ReconstructedParticleImpl::setStartVertex" );
+    _sv = sv;
+  }
+  
+  void ReconstructedParticleImpl::setEndVertex( EVENT::Vertex *ev ){
+    checkAccess("ReconstructedParticleImpl::setEndVertex" );
+    _ev = ev;
+  }
 
   void ReconstructedParticleImpl::setType(int type){
     checkAccess("ReconstructedParticleImpl::setType" );
     _type = type ;
   }
+
 //   void ReconstructedParticleImpl::setPrimary(bool primary){
 //     checkAccess("ReconstructedParticleImpl::setPrimary" );
 //     _primary = primary ;
