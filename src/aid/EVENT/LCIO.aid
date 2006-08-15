@@ -3,7 +3,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 #define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 7
+#define LCIO_MINOR_VERSION 8
 #define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )  
@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  * 
  * @author gaede 
- * @version $Id: LCIO.aid,v 1.53.4.1 2006-08-15 13:01:09 engels Exp $
+ * @version $Id: LCIO.aid,v 1.53.4.2 2006-08-15 15:56:47 engels Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -116,7 +116,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 7 ;
+  public static const int MINORVERSION  = 8 ;
 
   // bits in flag words
   // SimCalorimeterHit (CH)
