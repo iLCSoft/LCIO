@@ -13,36 +13,26 @@ namespace IMPL{
     _aParticle(0)
   {
     _cov.resize( NCOVARIANCE ) ;
-    //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
     _vpos[0] = 0. ;
     _vpos[1] = 0. ;
     _vpos[2] = 0. ;
   }
 
-  VertexImpl::~VertexImpl(){	  
-	  
-    /*
-    // delete the pids owned by this particle
-    for(  ParticleIDVec::iterator iter = _pid.begin() ; iter != _pid.end() ; iter++){
-      delete *iter ;
-    }
-    */
-  }
+  VertexImpl::~VertexImpl(){ /*TODO*/ }
  
-  const float* VertexImpl::getPosition() const { return  _vpos ; }
-  const EVENT::FloatVec & VertexImpl::getCovMatrix() const { return _cov ; }
+  bool VertexImpl::isPrimary() const { return _primary ;}
   float VertexImpl::getChi2() const { return _chi2 ; }
   float VertexImpl::getProbability() const { return _probability ; }
+  const float* VertexImpl::getPosition() const { return  _vpos ; }
+  const EVENT::FloatVec & VertexImpl::getCovMatrix() const { return _cov ; }
   const EVENT::FloatVec & VertexImpl::getParameters() const { return _par ; }
   EVENT::ReconstructedParticle * VertexImpl::getAssociatedParticle() const { return _aParticle  ; }
-  
-  bool VertexImpl::isPrimary() const { return _primary ;}
 
 
   //setters
   void VertexImpl::setPrimary(bool primary){
     checkAccess("VertexImpl::setPrimary" );
-    _primary = primary ;
+    _primary = (primary==0?0:1);
   }
   
   void VertexImpl::setChi2(float chi2){
@@ -75,21 +65,17 @@ namespace IMPL{
     checkAccess("VertexImpl::" );
     for(int i=0;i<NCOVARIANCE;i++) _cov[i] = cov[i] ;
   }
-  
-  void VertexImpl::setParameters( const float* par ){
-    checkAccess("VertexImpl::setParameters" );
-    //_par = par;
-  }
-  
-  void VertexImpl::setParameters( const EVENT::FloatVec& par ){
-    checkAccess("VertexImpl::" );
-    //_par = par;
-  }
 
   void VertexImpl::setAssociatedParticle( EVENT::ReconstructedParticle *aP ){
     checkAccess("VertexImpl::setAssociatedParticle" );
     _aParticle = aP;
   }
+
+  void VertexImpl::addParameter( float p ){
+    checkAccess("VertexImpl::addParameter") ;
+    _par.push_back( p ) ;
+  }
+
  
 } // end namespace
 

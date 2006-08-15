@@ -14,7 +14,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.2 2006-08-14 16:10:01 engels Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.3 2006-08-15 13:01:09 engels Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -32,7 +32,15 @@ public interface Vertex extends LCObject {
      */
     public boolean isPrimary() const ;
 
-    /** Position of the cluster.
+     /** Chi squared of the vertex fit.
+     */
+    public float getChi2() const ;	
+
+    /** Probability of the vertex fit.
+     */
+    public float getProbability() const ;	
+
+    /** Position of the cluster.//TODO:cluster?
      */
     public const float3V getPosition() const;
 
@@ -40,14 +48,6 @@ public interface Vertex extends LCObject {
      *  cov(xx),cov(y,x),cov(y,y) ).
      */
     public const FloatVec & getCovMatrix() const ;
-
-    /** Chi squared of the vertex fit.
-     */
-    public float getChi2() const ;	
-
-    /** Probability of the vertex fit.
-     */
-    public float getProbability() const ;	
 
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.

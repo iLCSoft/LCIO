@@ -37,6 +37,14 @@ namespace IMPL {
      */
     virtual bool isPrimary() const ;
     
+    /** Chi squared of the vertex fit.
+     */
+    virtual float getChi2() const;
+                                                                                                         
+    /** Probability of the vertex fit.
+     */
+    virtual float getProbability() const;
+                                                                                                         
     /** Position of the vertex 
      */
     virtual const float* getPosition() const;
@@ -45,14 +53,6 @@ namespace IMPL {
      *  cov(xx),cov(y,x),cov(y,y) ).
      */
     virtual const EVENT::FloatVec & getCovMatrix() const;
-                                                                                                         
-    /** Chi squared of the vertex fit.
-     */
-    virtual float getChi2() const;
-                                                                                                         
-    /** Probability of the vertex fit.
-     */
-    virtual float getProbability() const;
                                                                                                          
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.
@@ -65,21 +65,20 @@ namespace IMPL {
 
     // setters
     void setPrimary(bool primary) ;
-    void setPosition( float vpos[3] ) ;
-    void setPosition( float px, float py, float pz ) ;
     void setChi2( float chi2 ) ;
     void setProbability( float probability ) ;
+    void setPosition( float vpos[3] ) ;
+    void setPosition( float px, float py, float pz ) ;
     void setCovMatrix( const float* cov ) ;
     void setCovMatrix( const EVENT::FloatVec & ) ;
-    void setParameters( const float* par ) ;
-    void setParameters( const EVENT::FloatVec& ) ;
     void setAssociatedParticle( EVENT::ReconstructedParticle * aP ) ;
+    void addParameter( float p );
 
   protected:
-    bool _primary ;
-    float _vpos[3] ;
+    int _primary ;
     float _chi2 ;
     float _probability ;
+    float _vpos[3] ;
     EVENT::FloatVec _cov ;
     EVENT::FloatVec _par ;
     EVENT::ReconstructedParticle* _aParticle ;
