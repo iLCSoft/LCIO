@@ -7,7 +7,7 @@
 #include "AccessChecked.h"
 
 
-#define NCOVARIANCE 10
+#define VTXCOVMATRIX 6
 
 
 namespace IMPL {

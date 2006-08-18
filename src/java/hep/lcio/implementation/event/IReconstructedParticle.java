@@ -4,6 +4,8 @@ import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+import hep.lcio.event.Vertex ;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -169,6 +171,16 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       return referencePoint;
    }
    
+
+
+    /** FIXME: empty implemetation */
+    public Vertex getStartVertex() { return null ;} 
+
+    /** FIXME: empty implemetation */
+    public Vertex getEndVertex() { return null ;} 
+
+
+
    public void setTracks(List tracks)
    {
       checkAccess();

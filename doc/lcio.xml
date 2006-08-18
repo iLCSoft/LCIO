@@ -432,6 +432,22 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
+    <block name="Vertex" major="1" minor="8">
+      <include subroutine="namedParameters"/>
+      <data type="int" name="nVertex"></data>
+      <repeat count="nVertex">
+	<data type="bool" name="primary">primary vertex of the event</data>
+	<data type="float" name="chi2">chi**2 of vertex</data>
+	<data type="float" name="probability">?probability of the fit?</data>
+	<data type="float[3]" name="position">position of the vertex (px,py,pz)</data>
+	<data type="float[6]" name="covariance">covariance matrix</data>
+	<data type="int" name="npar"/>
+	<repeat count="npar">
+	  <data type="float" name="parameter"/>
+        </repeat>
+	<data type="pntr" name="associatedParticle">reconstructed particle associated to the vertex</data>
+      </repeat>
+    </block>
     <block name="ReconstructedParticle" major="1" minor="8">
       <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
@@ -468,6 +484,10 @@
             </repeat>
 	  </if>
 	</repeat>
+	<if condition="1000*major+minor&gt;1007">
+	  <data type="pntr" name="startVertex">start vertex associated to the particle</data>
+	  <data type="pntr" name="endVertex">end vertex associated to the particle</data>
+	</if>
         <if condition="1000*major+minor&gt;1002">
           <data type="pntr" name="ParticleIDUsed"></data>
 	  <data type="float" name="goodnessOfPID">overall quality of the particle 
@@ -543,7 +563,7 @@
 	  </if>
        </repeat>
     </block>
-      <!-- generic block description for subset collections that hold references to exisitng objects -->
+      <!-- generic block description for subset collections that hold references to existing objects -->
       <block name="References" major="1" minor="8">
          <data type="int" name="flags"></data>
          <include subroutine="namedParameters"/>

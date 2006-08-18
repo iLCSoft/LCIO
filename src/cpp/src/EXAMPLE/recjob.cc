@@ -17,6 +17,7 @@
 #include "IMPL/TrackImpl.h" 
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
+#include "IMPL/VertexImpl.h" 
 #include "IMPL/ParticleIDImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
@@ -471,8 +472,33 @@ public:
 
     evt->addCollection(  clusterVec , "SomeClusters" ) ;
 
-    
+    // add some vertices
+    LCCollectionVec* vertexVec = new LCCollectionVec( LCIO::VERTEX ) ;
+    for(int i=0; i < (nRecP+1); i++){
+      VertexImpl* vtx = new VertexImpl ;
+      if(i==0){
+	vtx->setPrimary(true);
+      }else{
+	vtx->setPrimary(false);
+      }
+      vtx->setChi2(1+i*.01);
+      vtx->setProbability(0.0032+i*.01);
+      vtx->setPosition(0.3453+i*.01,.45345354+i*.01,2.345354+i*.01);
 
+      FloatVec cov(6) ;
+      cov[0] = 1. ;
+      cov[1] = 2. ;
+      cov[2] = 3. ;
+      cov[3] = 4. ;
+      cov[4] = 5. ;
+      cov[5] = 6. ;
+      vtx->setCovMatrix( cov ) ;
+      vertexVec->addElement ( vtx ) ;
+
+    }
+
+    evt->addCollection( vertexVec, "SomeVertices" ) ;
+    
     // add some reconstructed particles
     LCCollectionVec* particleVec = new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE )  ;
     particleVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
@@ -496,6 +522,13 @@ public:
       part->setCharge( -2./3. ) ;
       float x[3] = { 10.,20.,30. } ;
       part->setReferencePoint( x )  ;
+      
+      //associate vertices
+      part->setStartVertex( dynamic_cast<Vertex*>( vertexVec->getElementAt(i) )  ) ;
+      VertexImpl* v = dynamic_cast<VertexImpl*>( vertexVec->getElementAt(i+1) ) ;
+      part->setEndVertex( v ) ;
+      //associate particles to vertices
+      v->setAssociatedParticle( dynamic_cast<ReconstructedParticle*>( part ) ) ;
       
       // add some particle ids
       int nPID = 5 ;

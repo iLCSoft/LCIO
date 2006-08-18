@@ -111,7 +111,7 @@ namespace SIO{
 	SIO_PNTR( stream , &(recP->_clusters[i] ) ) ;
       }
       
-      if( _vers > SIO_VERSION_ENCODE( 1,8 )   ) {
+      if( _vers > SIO_VERSION_ENCODE( 1,7 )   ) {
 	
 	//read pointers to start/end vertices
 	SIO_PNTR( stream ,   &(recP->_sv) ) ;
@@ -324,8 +324,8 @@ namespace SIO{
 
     // write pointers to start/end vertices
     EVENT::Vertex* sv = recP->getStartVertex() ;
-    EVENT::Vertex* ev = recP->getEndVertex() ;
     SIO_PNTR( stream , &sv  ) ;
+    EVENT::Vertex* ev = recP->getEndVertex() ;
     SIO_PNTR( stream , &ev  ) ;
 
 

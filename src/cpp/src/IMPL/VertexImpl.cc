@@ -12,7 +12,7 @@ namespace IMPL{
     _par(0),
     _aParticle(0)
   {
-    _cov.resize( NCOVARIANCE ) ;
+    _cov.resize( VTXCOVMATRIX ) ;
     _vpos[0] = 0. ;
     _vpos[1] = 0. ;
     _vpos[2] = 0. ;
@@ -58,12 +58,12 @@ namespace IMPL{
                                                                                                                                         
   void VertexImpl::setCovMatrix( const float* cov ){
     checkAccess("VertexImpl::setCovMatrix" );
-    for(int i=0;i<NCOVARIANCE;i++) _cov[i] = cov[i] ;
+    for(int i=0;i<VTXCOVMATRIX;i++) _cov[i] = cov[i] ;
   }
                                                                                                                                         
   void VertexImpl::setCovMatrix( const EVENT::FloatVec& cov ){
     checkAccess("VertexImpl::" );
-    for(int i=0;i<NCOVARIANCE;i++) _cov[i] = cov[i] ;
+    for(int i=0;i<VTXCOVMATRIX;i++) _cov[i] = cov[i] ;
   }
 
   void VertexImpl::setAssociatedParticle( EVENT::ReconstructedParticle *aP ){

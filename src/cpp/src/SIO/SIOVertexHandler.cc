@@ -33,8 +33,8 @@ namespace SIO{
     SIO_DATA( stream ,  vtx->_vpos  , 3 ) ;
 
     //read covMatrix
-    float cov[NCOVARIANCE] ;
-    SIO_DATA( stream ,  cov  ,  NCOVARIANCE ) ;
+    float cov[VTXCOVMATRIX] ;
+    SIO_DATA( stream ,  cov  ,  VTXCOVMATRIX ) ;
     vtx->setCovMatrix( cov ) ;
 
     //read parameters
@@ -92,7 +92,7 @@ namespace SIO{
     SIO_PNTR( stream , &recP  ) ;
 	
     
-    // write a ptag in order to be able to point to vertexes
+    // write a ptag in order to be able to point to vertices
     SIO_PTAG( stream , vtx ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;

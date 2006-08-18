@@ -14,7 +14,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.3 2006-08-15 13:01:09 engels Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.4 2006-08-18 13:39:14 engels Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -40,7 +40,7 @@ public interface Vertex extends LCObject {
      */
     public float getProbability() const ;	
 
-    /** Position of the cluster.//TODO:cluster?
+    /** Position of the vertex
      */
     public const float3V getPosition() const;
 
