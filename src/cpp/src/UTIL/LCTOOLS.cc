@@ -1416,7 +1416,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     , recP->getReferencePoint()[2] 
 	     , pidUsed
 	     , recP->getStartVertex()->id()
-	     , recP->getEndVertex()->id()
+	     , (recP->getEndVertex()!=NULL?recP->getEndVertex()->id():0)
 	     ) ;
       cout << "    covariance( px,py,pz,E) : (" ;
       for(int l=0;l<10;l++){

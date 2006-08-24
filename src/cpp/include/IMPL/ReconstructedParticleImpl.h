@@ -124,7 +124,7 @@ namespace IMPL {
     void addTrack( EVENT::Track* track) ;
 //     void addMCParticle( EVENT::MCParticle* mcParticle , float weight = 1.0 ) ;
     void setStartVertex( EVENT::Vertex * sv ) ;
-    void setEndVertex( EVENT::Vertex * ev ) ;
+    //void setEndVertex( EVENT::Vertex * ev ) ;
 
   protected:
 
@@ -148,7 +148,7 @@ namespace IMPL {
 //     EVENT::FloatVec _mcParticleWeights ;
 
     EVENT::Vertex* _sv ;
-    EVENT::Vertex* _ev ;
+    //EVENT::Vertex* _ev ;
     
 }; // class
 

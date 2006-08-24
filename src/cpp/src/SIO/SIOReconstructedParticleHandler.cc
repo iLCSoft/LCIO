@@ -115,7 +115,7 @@ namespace SIO{
 	
 	//read pointers to start/end vertices
 	SIO_PNTR( stream ,   &(recP->_sv) ) ;
-	SIO_PNTR( stream ,   &(recP->_ev) ) ;
+	//SIO_PNTR( stream ,   &(recP->_ev) ) ;
       }
       
       
@@ -325,8 +325,8 @@ namespace SIO{
     // write pointers to start/end vertices
     EVENT::Vertex* sv = recP->getStartVertex() ;
     SIO_PNTR( stream , &sv  ) ;
-    EVENT::Vertex* ev = recP->getEndVertex() ;
-    SIO_PNTR( stream , &ev  ) ;
+    //EVENT::Vertex* ev = recP->getEndVertex() ;
+    //SIO_PNTR( stream , &ev  ) ;
 
 
     // write a ptag in order to be able to point to recPs

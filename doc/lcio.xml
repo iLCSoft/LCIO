@@ -486,7 +486,7 @@
 	</repeat>
 	<if condition="1000*major+minor&gt;1007">
 	  <data type="pntr" name="startVertex">start vertex associated to the particle</data>
-	  <data type="pntr" name="endVertex">end vertex associated to the particle</data>
+	  <!--data type="pntr" name="endVertex">end vertex associated to the particle</data-->
 	</if>
         <if condition="1000*major+minor&gt;1002">
           <data type="pntr" name="ParticleIDUsed"></data>

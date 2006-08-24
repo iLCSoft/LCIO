@@ -526,7 +526,7 @@ public:
       //associate vertices
       part->setStartVertex( dynamic_cast<Vertex*>( vertexVec->getElementAt(i) )  ) ;
       VertexImpl* v = dynamic_cast<VertexImpl*>( vertexVec->getElementAt(i+1) ) ;
-      part->setEndVertex( v ) ;
+      //part->setEndVertex( v ) ;
       //associate particles to vertices
       v->setAssociatedParticle( dynamic_cast<ReconstructedParticle*>( part ) ) ;
       
