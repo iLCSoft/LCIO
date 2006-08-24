@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.6 2006-03-24 05:19:11 jeremy Exp $
+// $Id: lcio_swig.i,v 1.7 2006-08-24 18:11:56 jeremy Exp $
 
 /*
  * Process this file with Swig to make a Python wrapper for LCIO.
@@ -44,6 +44,7 @@
 %ignore EVENT_TRACK_H;
 %ignore EVENT_LCEVENTIMPL_H;
 %ignore EVENT_RUNHEADERIMPL_H;
+%ignore EVENT_VERTEX_H;
 %ignore IMPL_ACCESSCHECKED_H;
 %ignore IMPL_CLUSTERIMPL_H;
 %ignore IMPL_MCPARTICLEIMPL_H;
@@ -207,6 +208,7 @@ namespace EVENT
 #include "EVENT/Track.h"
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
+#include "EVENT/Vertex.h"
 #include "IMPL/LCEventImpl.h"
 #include "IMPL/LCRunHeaderImpl.h"
 #include "IMPL/LCGenericObjectImpl.h"
@@ -341,6 +343,7 @@ typedef LCCollectionWrapper<Track*> TrackCollection;
 typedef LCCollectionWrapper<TrackerData*> TrackerDataCollection;
 typedef LCCollectionWrapper<TrackerPulse*> TrackerPulseCollection;
 typedef LCCollectionWrapper<TrackerRawData*> TrackerRawDataCollection;
+typedef LCCollectionWrapper<Vertex*> VertexCollection;
 
 %}
 
@@ -419,6 +422,7 @@ namespace EVENT
             static const char* LCRELATION = "LCRelation";
             static const char* LCGENERICOBJECT = "LCGenericObject";
             static const char* PARTICLEID = "ParticleID";
+	    static const char* VERTEX = "Vertex";
 %mutable;
     };
 }
@@ -471,6 +475,7 @@ typedef std::vector< string > StringVec;
 %template(_CalorimeterHitVec) std::vector<EVENT::CalorimeterHit*>;
 %template(_TrackerRawDataVec) std::vector<EVENT::TrackerRawData*>;
 %template(_TrackerDataVec) std::vector<EVENT::TrackerData*>;
+%template(_VertexVec) std::vector<EVENT::Vertex*>;
 
 /*
  * Now parse the remaining LCIO headers in dependency order.
@@ -483,8 +488,8 @@ typedef std::vector< string > StringVec;
 
 %feature("shadow") EVENT::LCEvent::getCollection (const std::string &name) const throw (DataNotAvailableException, std::exception )
 %{
-    def getCollection(*args):                    
-        coll = $action(*args)                
+    def getCollection(*args):
+        coll = $action(*args)
         return LCEvent.LCCOLLECTION_CONVERTERS[coll.getTypeName()](*args)
 %}
 
@@ -514,6 +519,7 @@ typedef std::vector< string > StringVec;
 %include "EVENT/Track.h"
 %include "EVENT/Cluster.h"
 %include "EVENT/ReconstructedParticle.h"
+%include "EVENT/Vertex.h"
 %include "IMPL/LCRunHeaderImpl.h"
 
 /*
@@ -675,6 +681,9 @@ typedef TrackerDataWrapper<EVENT::TrackerData*> TrackerDataCollection;
 %template(TrackerRawDataCollection) LCCollectionWrapper<EVENT::TrackerRawData*>;
 typedef TrackerRawDataWrapper<EVENT::TrackerRawData*> TrackerRawDataCollection;
 
+%template(VertexCollection) LCCollectionWrapper<EVENT::Vertex*>;
+typedef LCCollectionWrapper<EVENT::Vertex*> VertexCollection;
+
 /*
  * Add helper functions to LCEvent for returning typed collections.
  */
@@ -682,7 +691,7 @@ typedef TrackerRawDataWrapper<EVENT::TrackerRawData*> TrackerRawDataCollection;
 
     MCParticleCollection* getMCParticleCollection(const std::string& name)
     {
-        LCCollection* lccoll = self->getCollection(name);  
+        LCCollection* lccoll = self->getCollection(name);
         if (lccoll->getTypeName() != LCIO::MCPARTICLE) return 0;
         return new MCParticleCollection(lccoll);
     }
@@ -738,7 +747,7 @@ typedef TrackerRawDataWrapper<EVENT::TrackerRawData*> TrackerRawDataCollection;
 
     ClusterCollection* getClusterCollection(const std::string& name)
     {
-        LCCollection* lccoll = self->getCollection(name);   
+        LCCollection* lccoll = self->getCollection(name);
         if (lccoll->getTypeName() != LCIO::CLUSTER) return 0;
         return new ClusterCollection( lccoll );
     }
@@ -756,49 +765,57 @@ typedef TrackerRawDataWrapper<EVENT::TrackerRawData*> TrackerRawDataCollection;
         if (lccoll->getTypeName() != LCIO::LCRELATION) return 0;
         return new LCRelationCollection( lccoll );
     }
-    
+
     TrackerDataCollection* getTrackerDataCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
         if (lccoll->getTypeName() != LCIO::TRACKERDATA) return 0;
         return new TrackerDataCollection( lccoll );
     }
-    
+
     TrackerRawDataCollection* getTrackerRawDataCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
         if (lccoll->getTypeName() != LCIO::TRACKERRAWDATA) return 0;
         return new TrackerRawDataCollection( lccoll );
     }
-    
+
     TrackerPulseCollection* getTrackerPulseCollection(const std::string& name)
     {
         LCCollection* lccoll = self->getCollection(name);
         if (lccoll->getTypeName() != LCIO::TRACKERPULSE) return 0;
         return new TrackerPulseCollection( lccoll );
     }
+
+    VertexCollection* getVertexCollection(const std::string& name)
+    {
+        LCCollection* lccoll = self->getCollection(name);
+        if (lccoll->getTypeName() != LCIO::VERTEX) return 0;
+        return new VertexCollection(lccoll);
+    }
 }
 
 /* A map of functions in LCEvent (extended) that convert to typed collections. */
 %extend EVENT::LCEvent
 {
-%pythoncode 
+%pythoncode
 {
 LCCOLLECTION_CONVERTERS = {
     GLOBALS.LCIO_CLUSTER : getClusterCollection,
-    GLOBALS.LCIO_LCGENERICOBJECT : getLCGenericObjectCollection,   
+    GLOBALS.LCIO_LCGENERICOBJECT : getLCGenericObjectCollection,
     GLOBALS.LCIO_LCRELATION : getLCRelationCollection,
-    GLOBALS.LCIO_MCPARTICLE : getMCParticleCollection,    
+    GLOBALS.LCIO_MCPARTICLE : getMCParticleCollection,
     GLOBALS.LCIO_PARTICLEID : getParticleIDCollection,
     GLOBALS.LCIO_RAWCALORIMETERHIT : getRawCalorimeterHitCollection,
-    GLOBALS.LCIO_RECONSTRUCTEDPARTICLE: getReconstructedParticleCollection,    
+    GLOBALS.LCIO_RECONSTRUCTEDPARTICLE: getReconstructedParticleCollection,
     GLOBALS.LCIO_SIMCALORIMETERHIT : getSimCalorimeterHitCollection,
     GLOBALS.LCIO_SIMTRACKERHIT : getSimTrackerHitCollection,
     GLOBALS.LCIO_TPCHIT : getTPCHitCollection,
     GLOBALS.LCIO_TRACK : getTrackCollection,
     GLOBALS.LCIO_TRACKERDATA : getTrackerDataCollection,
     GLOBALS.LCIO_TRACKERPULSE : getTrackerPulseCollection,
-    GLOBALS.LCIO_TRACKERRAWDATA : getTrackerRawDataCollection    
+    GLOBALS.LCIO_TRACKERRAWDATA : getTrackerRawDataCollection
+    GLOBALS.LCIO_VERTEX : getVertexCollection
 }
 }
 }
