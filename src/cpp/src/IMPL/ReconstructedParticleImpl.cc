@@ -67,7 +67,6 @@ namespace IMPL{
   
   EVENT::Vertex * ReconstructedParticleImpl::getStartVertex() const { return _sv  ; }
                                                                                                                                                              
-  //TODO: Choose this alternative method?!: return _particles[0]->getStartVertex()?!?
   //EVENT::Vertex * ReconstructedParticleImpl::getEndVertex() const { return _ev  ; }
 
   EVENT::Vertex * ReconstructedParticleImpl::getEndVertex() const {

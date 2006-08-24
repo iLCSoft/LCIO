@@ -100,6 +100,7 @@ namespace IMPL {
     virtual EVENT::Vertex * getStartVertex() const ;
 
     /** The vertex where the particle decays
+     *  This method actually returns the start vertex from the first daughter particle found
     */
     virtual EVENT::Vertex * getEndVertex() const ;
 

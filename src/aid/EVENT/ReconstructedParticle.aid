@@ -11,7 +11,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.17.2.1 2006-08-14 16:10:00 engels Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.17.2.2 2006-08-24 16:22:38 engels Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -141,6 +141,7 @@ public interface ReconstructedParticle extends LCObject {
       public Vertex * getStartVertex() const ;
 
       /** The vertex where the particle decays
+       *  This method actually returns the start vertex from the first daughter particle found
       */
       public Vertex * getEndVertex() const ;
 
