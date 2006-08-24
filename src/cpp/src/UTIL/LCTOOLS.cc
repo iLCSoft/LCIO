@@ -1,4 +1,5 @@
 #include "UTIL/LCTOOLS.h"
+#include "UTIL/Operators.h"
 
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
@@ -1316,37 +1317,40 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nVertices = col->getNumberOfElements() ;
     int nPrint = nVertices > MAX_HITS ? MAX_HITS : nVertices ;
     
-    std::cout << endl
-  
-	      << " [   id   ] |pri|  chi2  | probability |          position ( x,y,z)       | [idRecP] "
-	      << endl	      
-	      << "  ----------|---|--------|-------------|----------------------------------|----------"
-	      << endl ;
+    
+    /*
+    cout << "\n    [id]    |pri|   chi2   |   prob.  |       position ( x, y, z)       |"
+	    "                   covariance matrix (px, py, pz)                 |  [idRecP] \n"
+            "------------|---|----------|----------|---------------------------------|"
+            "------------------------------------------------------------------|-----------\n";
+    */
     
     for( int i=0 ; i< nPrint ; i++ ){
       Vertex* v = dynamic_cast<Vertex*>( col->getElementAt( i ) ) ;
+      
+      if( i==0) { cout<<header(v); }
+      cout<<lcshort(v);
+      if(i==nPrint-1){ cout<<tail(v); }
+      /*
+      printf(" [%8.8x] | %1d | %4.2e | %4.2e | %5.3e, %5.3e, %5.3e | "
+	, v->id()
+	, v->isPrimary()
+        , v->getChi2()
+        , v->getProbability()
+        , v->getPosition()[0]
+	, v->getPosition()[1]
+	, v->getPosition()[2]
+      ) ;
 
-      printf(" [%8.8x] | %1d | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x] \n"
-	     , v->id()
-	     , v->isPrimary()
-	     , v->getChi2()
-	     , v->getProbability()
-	     , v->getPosition()[0] 
-	     , v->getPosition()[1] 
-	     , v->getPosition()[2] 
-	     , (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) 
-	     ) ;
-      cout << "    covariance( px,py,pz) : (" ;
-      for(int l=0;l<6;l++){
- 	printf("%4.2e, ", v->getCovMatrix()[l] ) ; 
-      }
-      cout << ")" << endl ;
+      for(int j=0; j<6; j++)
+	printf("%5.3e%s", v->getCovMatrix()[j], (j<(6-1) ? ", ":" | ") ) ;
 
-      cout  << "  ----------|---|--------|-------------|----------------------------------|----------"
-	    << endl ;
+      printf("[%8.8x]\n", (v->getAssociatedParticle()!=NULL? v->getAssociatedParticle()->id(): 0) ) ;
+
+      cout << "------------|---|----------|----------|---------------------------------|"
+	      "------------------------------------------------------------------|-----------\n";
+      */
     }
-    cout << endl << "--------------------------------------------------------------------------------------- "
-	 << endl ;
   }
 
   void LCTOOLS::printReconstructedParticles( const EVENT::LCCollection* col ){

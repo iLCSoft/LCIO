@@ -6,7 +6,6 @@
 #include "EVENT/Vertex.h"
 #include "AccessChecked.h"
 
-
 #define VTXCOVMATRIX 6
 
 
@@ -20,7 +19,8 @@ namespace IMPL {
  * @version Aug 09, 2006
  */
   class VertexImpl : public EVENT::Vertex, public AccessChecked {
-    
+  
+	  
   public: 
     
     /** Default constructor, initializes values to 0.

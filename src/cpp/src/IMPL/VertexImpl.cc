@@ -18,7 +18,7 @@ namespace IMPL{
     _vpos[2] = 0. ;
   }
 
-  VertexImpl::~VertexImpl(){ /*TODO*/ }
+  VertexImpl::~VertexImpl(){ }
  
   bool VertexImpl::isPrimary() const { return _primary ;}
   float VertexImpl::getChi2() const { return _chi2 ; }
@@ -75,7 +75,9 @@ namespace IMPL{
     checkAccess("VertexImpl::addParameter") ;
     _par.push_back( p ) ;
   }
-
  
 } // end namespace
+
+
+
 
