@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.54 2006-08-24 18:11:36 jeremy Exp $
+ * @version $Id: LCIO.aid,v 1.55 2006-08-25 12:19:29 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -96,7 +96,6 @@ public interface LCIO{
     static const char* TRACKERRAWDATA ;
     static const char* TRACKERDATA ;
     static const char* TRACKERPULSE ;
-    static const char* TPRAWDATA ;
     static const char* TRACKERHIT ;
     static const char* LCSTRVEC ;
     static const char* LCFLOATVEC ;
