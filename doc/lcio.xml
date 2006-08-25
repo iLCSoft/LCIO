@@ -448,7 +448,7 @@
         </repeat>
 	<data type="pntr" name="associatedParticle">reconstructed particle associated to the vertex</data>
         <data type="ptag" name="this"></data>
-      </repeat>
+    </repeat>
     </block>
     <block name="ReconstructedParticle" major="1" minor="8">
       <data type="int" name="flag"></data>
@@ -486,10 +486,6 @@
             </repeat>
 	  </if>
 	</repeat>
-	<if condition="1000*major+minor&gt;1007">
-	  <data type="pntr" name="startVertex">start vertex associated to the particle</data>
-	  <!--data type="pntr" name="endVertex">end vertex associated to the particle</data-->
-	</if>
         <if condition="1000*major+minor&gt;1002">
           <data type="pntr" name="ParticleIDUsed"></data>
 	  <data type="float" name="goodnessOfPID">overall quality of the particle 
@@ -516,6 +512,10 @@
 	    <data type="float" name="weight">TODO: to be defined </data>
           </if>
 	</repeat>
+	<if condition="1000*major+minor&gt;1007">
+	  <data type="pntr" name="startVertex">start vertex associated to the particle</data>
+	  <!--data type="pntr" name="endVertex">end vertex associated to the particle</data-->
+	</if>
         <if condition="1000*major+minor&lt;1003">
 	  <data type="int" name="nmc"/>
 	  <repeat count="nmc">

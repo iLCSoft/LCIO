@@ -8,13 +8,14 @@ typedef std::vector<Vertex*> VertexVec ;
 }
 @endif
 
-/** A Vertex class for LCIO, as proposed by Sonja Hillert for the LCFI working group.
+/** The Vertex class for LCIO. 
+ *  <p>UNDER DEVELOPMENT!</p>
  *  see: <a href="http://forum.linearcollider.org/index.php?t=tree&goto=473">here</a><br>
  *
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.4 2006-08-18 13:39:14 engels Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.5 2006-08-25 08:47:46 gaede Exp $
  */
 
 public interface Vertex extends LCObject {
