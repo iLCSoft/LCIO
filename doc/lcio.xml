@@ -433,10 +433,11 @@
       </repeat>
     </block>
     <block name="Vertex" major="1" minor="8">
+      <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nVertex"></data>
       <repeat count="nVertex">
-	<data type="bool" name="primary">primary vertex of the event</data>
+	<data type="int" name="primary">primary vertex of the event</data>
 	<data type="float" name="chi2">chi**2 of vertex</data>
 	<data type="float" name="probability">?probability of the fit?</data>
 	<data type="float[3]" name="position">position of the vertex (px,py,pz)</data>
@@ -446,6 +447,7 @@
 	  <data type="float" name="parameter"/>
         </repeat>
 	<data type="pntr" name="associatedParticle">reconstructed particle associated to the vertex</data>
+        <data type="ptag" name="this"></data>
       </repeat>
     </block>
     <block name="ReconstructedParticle" major="1" minor="8">

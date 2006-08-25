@@ -57,6 +57,7 @@ int main(int argc, char** argv ){
   //gives a warnig...
   //cout<<tail(&VertexImpl());
  
+  //gives a warnig...
   cout<<&IMPL::VertexImpl()<<endl;
   
   LCTOOLS::printVertices( vertexVec  ) ;
