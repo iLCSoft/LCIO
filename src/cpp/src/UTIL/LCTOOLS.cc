@@ -70,7 +70,7 @@ namespace UTIL {
     
       cout.width(30); cout << left << *name;
       cout.width(25); cout << left << evt->getCollection( *name )->getTypeName();
-      cout.width(20); cout << left << evt->getCollection( *name )->getNumberOfElements();
+      cout.width(9); cout << right << evt->getCollection( *name )->getNumberOfElements();
       cout << endl;
       //cout << "---------------------------------------------------------------------------" << endl;
     }

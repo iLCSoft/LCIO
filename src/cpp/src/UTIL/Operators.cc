@@ -74,7 +74,7 @@ namespace UTIL{
   const std::string& header(const EVENT::Vertex* v){
     
     static std::string _vtxh(
-      "\n    [id]    |pri|   chi2   |   prob.  |       position ( x, y, z)       |"
+      "\n    [id]    |pri|    chi2   |    prob.  |       position ( x, y, z)       |"
 	"                   covariance matrix (px, py, pz)                 |  [idRecP]  \n");
     _vtxh+=tail(new IMPL::VertexImpl());
     return _vtxh;
@@ -83,7 +83,7 @@ namespace UTIL{
   const std::string& tail(const EVENT::Vertex* v){
     
     static std::string _vtxt(
-	"------------|---|----------|----------|---------------------------------|"
+	"------------|---|-----------|-----------|---------------------------------|"
 	"------------------------------------------------------------------|------------\n");
     return _vtxt;
   }
