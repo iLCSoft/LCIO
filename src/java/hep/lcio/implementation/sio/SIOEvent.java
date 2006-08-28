@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.41 2006-04-28 18:46:18 jeremy Exp $
+ * @version $Id: SIOEvent.java,v 1.41.2.1 2006-08-28 13:31:07 engels Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -298,6 +298,16 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc,name);
          }
+         else if (type.equals(LCIO.VERTEX))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOVertex(in, this, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc,name);
+         }
          else if (type.equals(LCIO.LCRELATION))
          {
             int n = in.readInt();
@@ -538,6 +548,11 @@ class SIOEvent extends ILCEvent
             {
                for (int i=0; i < n; i++)
                   SIOReconstructedParticle.write((ReconstructedParticle) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.VERTEX))
+            {
+               for (int i=0; i < n; i++)
+                  SIOVertex.write((Vertex) col.getElementAt(i), out);
             }
             else if (type.equals(LCIO.LCRELATION))
             {

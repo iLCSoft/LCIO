@@ -51,6 +51,7 @@ public class RandomEvent extends ILCEvent
 		addCollection(LCIO.TRACK, ITrack.class, 1 << LCIO.TRBIT_HITS);
 		addCollection(LCIO.CLUSTER, ICluster.class, 1 << LCIO.CLBIT_HITS);
 		addCollection(LCIO.RECONSTRUCTEDPARTICLE, IReconstructedParticle.class);
+		addCollection(LCIO.VERTEX, IVertex.class);
 		addCollection(LCIO.CALORIMETERHIT, ICalorimeterHit.class, 1 << LCIO.RCHBIT_ID1 | 1 << LCIO.RCHBIT_LONG | 1 << LCIO.RCHBIT_TIME);
 		addCollection(LCIO.LCFLOATVEC, ILCFloatVec.class);
 		addCollection(LCIO.LCINTVEC, ILCIntVec.class);

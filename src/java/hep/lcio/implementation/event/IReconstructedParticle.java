@@ -31,7 +31,9 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    protected double mass;
    protected float goodnessOfPID;
    protected int type;
+   protected Vertex startVertex;
    
+
    public float getGoodnessOfPID()
    {
       return goodnessOfPID;
@@ -171,15 +173,20 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       return referencePoint;
    }
    
-
-
-    /** FIXME: empty implemetation */
-    public Vertex getStartVertex() { return null ;} 
-
-    /** FIXME: empty implemetation */
-    public Vertex getEndVertex() { return null ;} 
-
-
+   public Vertex getStartVertex(){
+	   return startVertex;
+   }
+   
+   public void setStartVertex(Vertex vertex){
+	   checkAccess();
+	   this.startVertex = vertex;
+   }
+   
+   public Vertex getEndVertex(){
+	   if(particles.size() != 0)
+		   return ((ReconstructedParticle)particles.get(0)).getStartVertex();
+	   return null;
+   }
 
    public void setTracks(List tracks)
    {

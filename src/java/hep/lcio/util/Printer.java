@@ -15,6 +15,7 @@ import hep.lcio.event.MCParticle;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.RawCalorimeterHit;
 import hep.lcio.event.ReconstructedParticle;
+import hep.lcio.event.Vertex;
 import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.event.SimTrackerHit;
 import hep.lcio.event.TPCHit;
@@ -62,6 +63,7 @@ public class Printer
 		plist.add(new LCIntVecPrinter());
 		plist.add(new LCStrVecPrinter());
 		plist.add(new ReconstructedParticlePrinter());
+		plist.add(new VertexPrinter());
 		plist.add(new RawCalorimeterHitPrinter());
 		plist.add(new TrackPrinter());
 		plist.add(new TPCHitPrinter());
@@ -769,12 +771,43 @@ public class Printer
 			return LCIO.LCSTRVEC;
 		}
 	}
-	
+	class VertexPrinter extends LCTypePrinter{
+		void print(LCCollection coll, int nprint){
+			ps.println(" [   id   ] | pri | chi2 | prob. |          position ( x,y,z)       | [assRecP]");
+			
+			for (int i=0; i<nprint; i++){
+				Vertex v = (Vertex)coll.getElementAt(i);
+				ps.format(" [%08x] | %3s | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] \n",
+			    		new Object[] {
+			    			Integer.valueOf(v.hashCode()),
+			    			v.isPrimary() ? "yes" : "no", 
+			    			Double.valueOf(v.getChi2()), 
+			    			Double.valueOf(v.getProbability()),
+			    			Double.valueOf(v.getPosition()[0]),
+			    			Double.valueOf(v.getPosition()[1]), 
+			    			Double.valueOf(v.getPosition()[2]),
+			    			(v.getAssociatedParticle() != null ? Integer.valueOf(v.getAssociatedParticle().hashCode()):0)
+			    			}
+			    );
+			    
+			    // Print covariance matrix.
+			    ps.print("    covariance( px,py,pz) : (");
+			    for(int j=0; j<6; j++){
+			    	ps.format("%4.2e, ", new Object[] {Double.valueOf(v.getCovMatrix()[j])}) ; 
+			    }
+			    ps.println(")");
+			}
+		}
+		String type()
+		{
+			return LCIO.VERTEX;
+		}
+	}
 	class ReconstructedParticlePrinter extends LCTypePrinter
 	{
 		void print(LCCollection coll, int nprint)
 		{
-			ps.println(" [   id   ] | com | type |     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed]");
+			ps.println(" [   id   ] | com | type |     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed] | [sVtx] | [eVtx]");
 			
 			for (int i=0; i<nprint; i++)
 			{
@@ -789,7 +822,7 @@ public class Printer
 			    	pidused = recp.getParticleIDUsed().hashCode();
 			    }
 			    
-			    ps.format(" [%08x] | %3s | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] \n",
+			    ps.format(" [%08x] | %3s | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] | [%08x] | [%08x]\n",
 			    		new Object[] {
 			    			Integer.valueOf(recp.hashCode()),
 			    			compound ? "yes" : "no", 
@@ -803,7 +836,9 @@ public class Printer
 			    			Double.valueOf(recp.getReferencePoint()[0]), 
 			    			Double.valueOf(recp.getReferencePoint()[1]), 
 			    			Double.valueOf(recp.getReferencePoint()[2]), 
-			    			Integer.valueOf(pidused)
+			    			Integer.valueOf(pidused),
+			    			(recp.getStartVertex() != null ? Integer.valueOf(recp.getStartVertex().hashCode()):0),
+			    			(recp.getEndVertex() != null ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
 			    			}
 			    );
 			    
