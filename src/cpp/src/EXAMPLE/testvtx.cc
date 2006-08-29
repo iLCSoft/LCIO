@@ -46,6 +46,11 @@ int main(int argc, char** argv ){
       cov[5] = 6. ;
 
       vtx->setCovMatrix( cov ) ;
+
+      vtx->addParameter(.01);
+      vtx->addParameter(.02);
+      vtx->addParameter(.03);
+      
       
       //Vertex* v=vtx;
       //cout<<lcshort(v);
@@ -58,7 +63,9 @@ int main(int argc, char** argv ){
   //cout<<tail(&VertexImpl());
  
   //gives a warnig...
-  cout<<&IMPL::VertexImpl()<<endl;
+  //cout<<&IMPL::VertexImpl()<<endl;
+  
+  cout << dynamic_cast<Vertex*>(vertexVec->getElementAt(0)) << endl;
   
   LCTOOLS::printVertices( vertexVec  ) ;
 

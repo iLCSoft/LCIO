@@ -2,6 +2,7 @@
 
 #include "lcio.h" 
 #include "IMPL/ReconstructedParticleImpl.h"
+#include "IMPL/VertexImpl.h"
 
 using namespace lcio ;
 
@@ -166,6 +167,17 @@ PTRTYPE lcrcpgettracks( PTRTYPE recopart ) {
 //   *nweights = (int)(rcp->getMCParticles().size() + 1);
 //   return LCIO::SUCCESS ;
 // }
+PTRTYPE lcrcpgetstartvertex( PTRTYPE recopart ) {
+  ReconstructedParticle* rcp = f2c_pointer<ReconstructedParticle,LCObject>( recopart ) ;
+  Vertex* vtx = rcp->getStartVertex();
+  return reinterpret_cast<PTRTYPE>( vtx );
+}
+
+PTRTYPE lcrcpgetendvertex( PTRTYPE recopart ) {
+  ReconstructedParticle* rcp = f2c_pointer<ReconstructedParticle,LCObject>( recopart ) ;
+  Vertex* vtx = rcp->getEndVertex();
+  return reinterpret_cast<PTRTYPE>( vtx );
+}
 
 
 // set,add Methods
@@ -259,5 +271,10 @@ int lcrcpaddtrack( PTRTYPE recopart, PTRTYPE track ) {
 //   return LCIO::SUCCESS ;
 // }
 
-
+int lcrcpsetstartvertex( PTRTYPE recopart, PTRTYPE vertex ) {
+  ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
+  Vertex* vtx = f2c_pointer<Vertex,LCObject>( vertex ) ;
+  rcp->setStartVertex( vtx ) ;
+  return LCIO::SUCCESS ;
+}
 

@@ -1201,9 +1201,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nPrint = nReconstructedParticles > MAX_HITS ? MAX_HITS : nReconstructedParticles ;
     
     std::cout << endl
-	      << " [   id   ] |com|type|     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed] | [startVtx] | [endVtx] "
+	      << " [   id   ] |com|type|     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed] "
 	      << endl	      
-	      << "  ----------|---|----|---------------------------------|----------|----------|-----------|----------------------------------|-----------|------------|----------"
+	      << "  ----------|---|----|---------------------------------|----------|----------|-----------|----------------------------------|-----------"
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -1225,7 +1225,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       if(  recP->getParticleIDUsed() != 0 ) 
 	pidUsed  = recP->getParticleIDUsed()->id() ;
       
-      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x] | [%8.8x] | [%8.8x]\n"
+      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x]\n"
 	     //	     , reinterpret_cast<int> ( recP )
 	     , recP->id()
 	     , compound
@@ -1240,8 +1240,8 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     , recP->getReferencePoint()[1] 
 	     , recP->getReferencePoint()[2] 
 	     , pidUsed
-	     , (recP->getStartVertex()!=NULL?recP->getStartVertex()->id():0)
-	     , (recP->getEndVertex()!=NULL?recP->getEndVertex()->id():0)
+	     //, (recP->getStartVertex()!=NULL?recP->getStartVertex()->id():0)
+	     //, (recP->getEndVertex()!=NULL?recP->getEndVertex()->id():0)
 	     ) ;
       cout << "    covariance( px,py,pz,E) : (" ;
       for(int l=0;l<10;l++){
@@ -1272,6 +1272,27 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	ParticleID* pid = recP->getParticleIDs()[l] ;
 	printf("[%8.8x], %6.6d, (%6.6d)  ",  pid->id() , pid->getPDG() , pid->getType() ) ;
       }
+      cout << endl ;
+      
+      Vertex* sv = dynamic_cast<Vertex*>(recP->getStartVertex());
+      Vertex* ev = dynamic_cast<Vertex*>(recP->getEndVertex());
+      ReconstructedParticle* svr=0;
+      ReconstructedParticle* evr=0;
+      
+      if(sv!=0){
+         svr = dynamic_cast<ReconstructedParticle*>(sv->getAssociatedParticle());
+      }
+      if(ev!=0){
+         evr = dynamic_cast<ReconstructedParticle*>(ev->getAssociatedParticle());
+      }
+      
+      printf("    vertices: startVertex( id:[%8.8x], id_aRP:[%8.8x] )   endVertex( id:[%8.8x], id_aRP:[%8.8x] ) "
+        , ( sv != 0 ? sv->id() : 0 )
+        , ((sv != 0 && svr != 0) ? svr->id() : 0 )
+        , ( ev != 0 ? ev->id() : 0 )
+        , ((ev != 0 && evr != 0) ? evr->id() : 0 )
+      ) ;
+     
       cout << endl ;
 
 //       cout << "    MCParticles ( [   id   ] (weight) ): " ;

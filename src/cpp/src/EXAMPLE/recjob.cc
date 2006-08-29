@@ -493,8 +493,11 @@ public:
       cov[4] = 5. ;
       cov[5] = 6. ;
       vtx->setCovMatrix( cov ) ;
+      for(int j=0;j<3;j++){
+        vtx->addParameter( j*.1 ) ;
+      }
+      
       vertexVec->addElement ( vtx ) ;
-
     }
 
     evt->addCollection( vertexVec, "SomeVertices" ) ;
