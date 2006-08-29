@@ -45,7 +45,7 @@ FCALLSCFUN2(INT, lcvtxgetcovmatrix, LCVTXGETCOVMATRIX, lcvtxgetcovmatrix, CFORTR
 FCALLSCFUN3(INT, lcvtxgetparameters, LCVTXGETPARAMETERS, lcvtxgetparameters, CFORTRANPNTR, FLOATV, INTV)
 FCALLSCFUN1(CFORTRANPNTR, lcvtxgetassociatedparticle,  LCVTXGETASSOCIATEDPARTICLE, lcvtxgetassociatedparticle, CFORTRANPNTR) 
 
-// FCALLSCFUN2(INT, lcvtxsetprimary, LCVTXSETPRIMARY, lcvtxsetprimary, CFORTRANPNTR, LOGICAL) 
+FCALLSCFUN2(INT, lcvtxsetprimary, LCVTXSETPRIMARY, lcvtxsetprimary, CFORTRANPNTR, LOGICAL) 
 FCALLSCFUN2(INT, lcvtxsetchi2, LCVTXSETCHI2, lcvtxsetchi2, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lcvtxsetprobability, LCVTXSETPROBABILITY, lcvtxsetprobability, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lcvtxsetposition, LCVTXSETPOSITION, lcvtxsetposition, CFORTRANPNTR, FLOATV) 

@@ -588,7 +588,9 @@ c          status  = lcclusetmuonweight ( clusp, .333)
       vtxcol = lccolcreate (  LCIO_VERTEX )
       do  i = 1, nvtx
         vtx  =  lcvtxcreate ()
-c        status   =  lcvtxsetprimary ( vtxv, .true. )
+        if ( i .eq. 1 )  then
+          status   =  lcvtxsetprimary ( vtx, .true. )
+        end if
         status   =  lcvtxsetchi2 ( vtx, (i-1)*101.101 )
         status   =  lcvtxsetprobability ( vtx, 0.511*(i-1) )
         do  j = 1, 6

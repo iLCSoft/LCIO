@@ -79,11 +79,11 @@ PTRTYPE lcvtxgetassociatedparticle( PTRTYPE vertex ) {
 
 // set,add Methods
 
-// int lcvtxsetprimary( PTRTYPE vertex, bool pri ) {
-//   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
-//   vtx->setPrimary( pri ) ;
-//   return LCIO::SUCCESS ;
-// }
+int lcvtxsetprimary( PTRTYPE vertex, bool pri ) {
+  VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
+  vtx->setPrimary( pri ) ;
+  return LCIO::SUCCESS ;
+}
 
 int lcvtxsetchi2( PTRTYPE vertex, float chi2 ) {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
