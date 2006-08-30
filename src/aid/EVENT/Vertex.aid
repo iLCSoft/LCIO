@@ -15,7 +15,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.5 2006-08-25 08:47:46 gaede Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.6 2006-08-30 17:44:24 gaede Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -49,6 +49,11 @@ public interface Vertex extends LCObject {
      *  cov(xx),cov(y,x),cov(y,y) ).
      */
     public const FloatVec & getCovMatrix() const ;
+
+    /** Type code for the algorithm that has been used to create the vertex - check/set the 
+     *  collection parameters AglorithmName and  AglorithmType.
+     */
+    public int getAlgorithmType() const ;	
 
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.
