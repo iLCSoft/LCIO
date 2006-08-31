@@ -33,6 +33,11 @@ bool lcvtxisprimary ( PTRTYPE vertex ) {
   return vtx->isPrimary() ;
 }
 
+int lcvtxgetalgorithmtype ( PTRTYPE vertex ) {
+  VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
+  return vtx->getAlgorithmType() ;
+}
+
 float lcvtxgetchi2( PTRTYPE vertex ) {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
   return vtx->getChi2() ;
@@ -82,6 +87,12 @@ PTRTYPE lcvtxgetassociatedparticle( PTRTYPE vertex ) {
 int lcvtxsetprimary( PTRTYPE vertex, bool pri ) {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
   vtx->setPrimary( pri ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcvtxsetalgorithmtype( PTRTYPE vertex, int type ) {
+  VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
+  vtx->setAlgorithmType( type ) ;
   return LCIO::SUCCESS ;
 }
 

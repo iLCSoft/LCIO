@@ -28,6 +28,7 @@ namespace SIO{
 
     //read data
     SIO_DATA( stream ,  &(vtx->_primary)  , 1 ) ;
+    SIO_DATA( stream ,  &(vtx->_type)  , 1 ) ;
     SIO_DATA( stream ,  &(vtx->_chi2)  , 1 ) ;
     SIO_DATA( stream ,  &(vtx->_probability)  , 1 ) ;
     SIO_DATA( stream ,  vtx->_vpos  , 3 ) ;
@@ -67,6 +68,7 @@ namespace SIO{
 
     //write data
     LCSIO_WRITE( stream, vtx->isPrimary()  ) ;
+    LCSIO_WRITE( stream, vtx->getAlgorithmType()  ) ;
     LCSIO_WRITE( stream, vtx->getChi2()  ) ;
     LCSIO_WRITE( stream, vtx->getProbability()  ) ;
 

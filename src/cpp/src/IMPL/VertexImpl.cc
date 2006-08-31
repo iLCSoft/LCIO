@@ -7,6 +7,7 @@ namespace IMPL{
 
   VertexImpl::VertexImpl() :
     _primary(0),
+    _type(0),
     _chi2(0),
     _probability(0),
     _par(0),
@@ -20,7 +21,8 @@ namespace IMPL{
 
   VertexImpl::~VertexImpl(){ }
  
-  bool VertexImpl::isPrimary() const { return _primary ;}
+  bool VertexImpl::isPrimary() const { return _primary ; }
+  int VertexImpl::getAlgorithmType() const { return _type ; }
   float VertexImpl::getChi2() const { return _chi2 ; }
   float VertexImpl::getProbability() const { return _probability ; }
   const float* VertexImpl::getPosition() const { return  _vpos ; }
@@ -33,6 +35,11 @@ namespace IMPL{
   void VertexImpl::setPrimary(bool primary){
     checkAccess("VertexImpl::setPrimary" );
     _primary = (primary==0?0:1);
+  }
+
+  void VertexImpl::setAlgorithmType( int type ){
+    checkAccess("VertexImpl::setAlgorithmType");
+    _type = type;
   }
   
   void VertexImpl::setChi2(float chi2){

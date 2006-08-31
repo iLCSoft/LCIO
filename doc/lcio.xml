@@ -438,6 +438,7 @@
       <data type="int" name="nVertex"></data>
       <repeat count="nVertex">
 	<data type="int" name="primary">primary vertex of the event</data>
+	<data type="int" name="type">algorithm type</data>
 	<data type="float" name="chi2">chi**2 of vertex</data>
 	<data type="float" name="probability">?probability of the fit?</data>
 	<data type="float[3]" name="position">position of the vertex (px,py,pz)</data>

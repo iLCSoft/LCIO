@@ -15,7 +15,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.6 2006-08-30 17:44:24 gaede Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.7 2006-08-31 15:18:54 engels Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -32,6 +32,11 @@ public interface Vertex extends LCObject {
      *  Only one primary vertex per event is allowed
      */
     public boolean isPrimary() const ;
+    
+    /** Type code for the algorithm that has been used to create the vertex - check/set the 
+     *  collection parameters AlgorithmName and  AlgorithmType.
+     */
+    public int getAlgorithmType() const ;	
 
      /** Chi squared of the vertex fit.
      */
@@ -49,11 +54,6 @@ public interface Vertex extends LCObject {
      *  cov(xx),cov(y,x),cov(y,y) ).
      */
     public const FloatVec & getCovMatrix() const ;
-
-    /** Type code for the algorithm that has been used to create the vertex - check/set the 
-     *  collection parameters AglorithmName and  AglorithmType.
-     */
-    public int getAlgorithmType() const ;	
 
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.

@@ -773,14 +773,15 @@ public class Printer
 	}
 	class VertexPrinter extends LCTypePrinter{
 		void print(LCCollection coll, int nprint){
-			ps.println(" [   id   ] | pri | chi2 | prob. |          position ( x,y,z)       | [assRecP]");
+			ps.println(" [   id   ] | pri | alg. type | chi2 | prob. |          position ( x,y,z)       | [assRecP]");
 			
 			for (int i=0; i<nprint; i++){
 				Vertex v = (Vertex)coll.getElementAt(i);
-				ps.format(" [%08x] | %3s | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] \n",
+				ps.format(" [%08x] | %3s | %d | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] \n",
 			    		new Object[] {
 			    			Integer.valueOf(v.hashCode()),
-			    			v.isPrimary() ? "yes" : "no", 
+			    			v.isPrimary() ? "yes" : "no",
+			    			v.getAlgorithmType(),
 			    			Double.valueOf(v.getChi2()), 
 			    			Double.valueOf(v.getProbability()),
 			    			Double.valueOf(v.getPosition()[0]),

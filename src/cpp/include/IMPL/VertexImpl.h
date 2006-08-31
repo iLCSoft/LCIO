@@ -36,7 +36,12 @@ namespace IMPL {
      *  Only one primary vertex per event is allowed
      */
     virtual bool isPrimary() const ;
-    
+     
+    /** Type code for the algorithm that has been used to create the vertex - check/set the
+     *  collection parameters AlgorithmName and  AlgorithmType.
+     */
+    virtual int getAlgorithmType() const ;
+
     /** Chi squared of the vertex fit.
      */
     virtual float getChi2() const;
@@ -53,7 +58,7 @@ namespace IMPL {
      *  cov(xx),cov(y,x),cov(y,y) ).
      */
     virtual const EVENT::FloatVec & getCovMatrix() const;
-                                                                                                         
+
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.
      */
@@ -64,7 +69,8 @@ namespace IMPL {
     virtual EVENT::ReconstructedParticle * getAssociatedParticle() const;
 
     // setters
-    void setPrimary(bool primary) ;
+    void setPrimary( bool primary ) ;
+    void setAlgorithmType( int type ) ;
     void setChi2( float chi2 ) ;
     void setProbability( float probability ) ;
     void setPosition( float vpos[3] ) ;
@@ -76,6 +82,7 @@ namespace IMPL {
 
   protected:
     int _primary ;
+    int _type ;
     float _chi2 ;
     float _probability ;
     float _vpos[3] ;

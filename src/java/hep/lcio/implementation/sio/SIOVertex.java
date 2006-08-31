@@ -15,6 +15,7 @@ import java.io.IOException;
 public class SIOVertex extends IVertex{
 	public SIOVertex(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException{
 		this.primary = in.readInt();
+		this.type = in.readInt();
 		this.chi2 = in.readFloat();
 		this.probability = in.readFloat();
 		for (int i=0; i<3; i++) this.position[i] = in.readFloat();
@@ -31,6 +32,7 @@ public class SIOVertex extends IVertex{
 		}
 	    else{
 	    	out.writeInt(v.isPrimary()?1:0);
+	    	out.writeInt(v.getAlgorithmType());
 	    	out.writeFloat(v.getChi2());
 	    	out.writeFloat(v.getProbability());
 	    	float[] pos = v.getPosition();
@@ -47,6 +49,7 @@ public class SIOVertex extends IVertex{
 	   }
 	private void write(SIOOutputStream out) throws IOException{
 		out.writeInt(primary);
+		out.writeInt(type);
 		out.writeFloat(chi2);
 		out.writeFloat(probability);
 		for (int i=0; i<3; i++) out.writeFloat(position[i]);
