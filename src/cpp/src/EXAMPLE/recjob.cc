@@ -21,6 +21,7 @@
 #include "IMPL/ParticleIDImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
+//#include "UTIL/IndexMap.h"
 #include "IMPL/LCRelationImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
@@ -474,6 +475,10 @@ public:
 
     // add some vertices
     LCCollectionVec* vertexVec = new LCCollectionVec( LCIO::VERTEX ) ;
+
+    //EXP: INDEX MAP - UNDER DEVELOPMENT
+    //UTIL::IndexMap imvtx(vertexVec, "AlgorithmNames", "AlgorithmTypes");
+    
     for(int i=0; i < (nRecP+1); i++){
       VertexImpl* vtx = new VertexImpl ;
       if(i==0){
@@ -481,6 +486,16 @@ public:
       }else{
 	vtx->setPrimary(false);
       }
+      /*
+	//EXP: INDEX MAP - UNDER DEVELOPMENT
+      
+      switch(i){
+        case 0: vtx->setAlgorithmType( imvtx.encode( "ZvTop" ) ); break;
+        case 1: vtx->setAlgorithmType( imvtx.encode( "ZvKin" ) ); break;
+        case 5: vtx->setAlgorithmType( imvtx.encode( "SimAnnealing" ) ); break;
+        default: break;
+      }
+      */
       vtx->setChi2(1+i*.01);
       vtx->setProbability(0.0032+i*.01);
       vtx->setPosition(0.3453+i*.01,.45345354+i*.01,2.345354+i*.01);

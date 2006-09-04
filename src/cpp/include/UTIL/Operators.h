@@ -3,6 +3,7 @@
 
 #include "IMPL/VertexImpl.h"
 #include "IMPL/ReconstructedParticleImpl.h"
+#include "EVENT/LCCollection.h"
 
 #include <iostream>
 #include <iomanip>
@@ -18,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace UTIL{
-  
+
   //template to enable the use of the operator << for a "one-line" output of an object.
   //since there are two ostream& << operators for sending an object to the output stream this
   //template works like a "wrapper class" so that the correct operator can be triggered for the
@@ -30,12 +31,28 @@ namespace UTIL{
 
   //template to enable a "one-line" output of a vertex object
   template <class T> lcio_short<T> lcshort( const T* t){ return lcio_short<T>(t); }
+ 
+/*
+  // EXP: INDEX MAP - UNDER DEVELOPMENT
+  
+  template <class T, class T2> struct lcio_short{
+  const T* obj;
+  const T2* cobj;
+  lcio_short(const T* t, const T2* t2) : obj(t),cobj(t2) {}
+  };
+
+  //template to enable a "one-line" output of a vertex object
+  template <class T, class T2> lcio_short<T, T2> lcshort( const T* t, const T2* t2){ return lcio_short<T, T2>(t, t2); }
+*/
 
   /** operator for detailed output of a vertex object (e.g. cout << vertexObj << endl; ) */
   std::ostream& operator<<( std::ostream& out, const EVENT::Vertex* v);
   
   /** operator for short output of a vertex object (e.g. cout << lcshort(vertexObj) << endl; ) */
   std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex>& sV);
+ 
+  //EXP: INDEX MAP - UNDER DEVELOPMENT
+  //std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex, EVENT::LCCollection>& sV);
   
   //deprecated
   //std::string brief( const EVENT::Vertex* v);

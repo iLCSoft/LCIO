@@ -1,21 +1,52 @@
 #include "UTIL/Operators.h"
+//#include "UTIL/IndexMap.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // EXP: UNDER DEVELOPMENT!!!
 ////////////////////////////////////////////////////////////////////////////////
 
 using namespace std;
+using namespace EVENT;
 
 namespace UTIL{
 
-  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex>& sV){
-    const EVENT::Vertex* v=sV.obj;
+/* 
+  // EXP: INDEX MAP - UNDER DEVELOPMENT
+  
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex, EVENT::LCCollection>& sV){
+    const EVENT::Vertex* v = sV.obj;
+    const EVENT::LCCollection* col = sV.cobj;
+    
+    //TODO: PROBLEM HERE!!!
+    UTIL::IndexMap im(col,"AlgorithmNames","AlgorithmTypes");
     
     out << setfill('0');
     out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
-    out << setfill(' ') << setw(17) << left << v->getAlgorithmType() << " | ";
+    out << setfill(' ') << setw(17) << left << im.decode( v->getAlgorithmType() ) << " | ";
     
     out << setfill('0') << scientific << right << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
+	v->getPosition()[0] << "," <<
+        v->getPosition()[1] << "," <<
+        v->getPosition()[2] << " | [" ;
+
+//    for(int i=0;i<VTXCOVMATRIX;i++)
+//      out << v->getCovMatrix()[i] << (i<(VTXCOVMATRIX-1)?",":" | [");
+    out << setw(3) << v->getParameters().size() << "] | [";
+    out << setw(8) << hex << (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) << "]\n";
+    
+    return out;
+
+  }
+*/
+
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex>& sV){
+    const EVENT::Vertex* v = sV.obj;
+    
+    out << setfill('0');
+    out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
+    out << setw(7) << right << v->getAlgorithmType() << " | ";
+    
+    out << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
 	v->getPosition()[0] << "," <<
         v->getPosition()[1] << "," <<
         v->getPosition()[2] << " | [" ;
@@ -63,6 +94,21 @@ namespace UTIL{
    
     return out;
   }
+  
+  const std::string& header(const EVENT::Vertex* v){
+    
+    static std::string _vtxh(
+      "\n    [id]    |pri| al.type |    chi2   |    prob.  |      position ( x, y, z)      | [par] |  [idRecP]  \n");
+    _vtxh+=tail(new IMPL::VertexImpl());
+    return _vtxh;
+  }
+  
+  const std::string& tail(const EVENT::Vertex* v){
+    
+    static std::string _vtxt(
+	"------------|---|---------|-----------|-----------|-------------------------------|-------|------------\n");
+    return _vtxt;
+  }
 
 //deprecated
 /*
@@ -90,6 +136,9 @@ namespace UTIL{
   }
 */
 
+/*
+  // EXP: INDEX MAP - UNDER DEVELOPMENT
+  
   const std::string& header(const EVENT::Vertex* v){
     
     static std::string _vtxh(
@@ -104,6 +153,6 @@ namespace UTIL{
 	"------------|---|-------------------|-----------|-----------|-------------------------------|-------|------------\n");
     return _vtxt;
   }
-
+*/
 } // namespace
  

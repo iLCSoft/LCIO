@@ -9,10 +9,12 @@
 
 #include "LCIOSTLTypes.h"
 #include "UTIL/LCTOOLS.h"
+//#include "UTIL/IndexMap.h"
 #include "UTIL/Operators.h"
 
 using namespace std ;
 using namespace lcio ;
+using namespace UTIL ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -25,6 +27,9 @@ int main(int argc, char** argv ){
   
   //gives a warnig...
   //cout<<header(&VertexImpl());
+  
+  //EXP: INDEX MAP - UNDER DEVELOPMENT
+  //IndexMap imVtx(vertexVec, "AlgorithmNames", "AlgorithmTypes");
   
   for(int i=0; i < 10; i++){
     
@@ -46,6 +51,17 @@ int main(int argc, char** argv ){
       cov[5] = 6. ;
 
       vtx->setCovMatrix( cov ) ;
+      
+      /*
+	//EXP: INDEX MAP - UNDER DEVELOPMENT
+      
+      switch(i){
+	case 0: vtx->setAlgorithmType( imVtx.encode( "ZvTop" ) ); break;
+	case 1: vtx->setAlgorithmType( imVtx.encode( "ZvKin" ) ); break;
+	case 5: vtx->setAlgorithmType( imVtx.encode( "SimAnnealing" ) ); break;
+	default: vtx->setAlgorithmType( imVtx.encode( "SthElse" ) );
+      }
+      */
 
       vtx->addParameter(.01);
       vtx->addParameter(.02);
