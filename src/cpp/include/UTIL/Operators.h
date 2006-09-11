@@ -1,9 +1,11 @@
 #ifndef LCIO_OPERATORS_H
 #define LCIO_OPERATORS_H 1
 
-#include "IMPL/VertexImpl.h"
-#include "IMPL/ReconstructedParticleImpl.h"
-#include "EVENT/LCCollection.h"
+//#include "EVENT/LCCollection.h"
+#include "EVENT/Vertex.h"
+#include "EVENT/ReconstructedParticle.h"
+
+//#include "UTIL/IndexMap.h"
 
 #include <iostream>
 #include <iomanip>
@@ -14,8 +16,8 @@
 // 
 // EXP: UNDER DEVELOPMENT!!!
 //
-// author engels
-// version Aug 24, 2006
+// @author engels
+// @version $Id: Operators.h,v 1.1.2.3 2006-09-11 13:05:30 engels Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace UTIL{

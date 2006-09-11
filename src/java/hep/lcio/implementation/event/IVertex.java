@@ -11,7 +11,7 @@ public class IVertex extends ILCObject implements Vertex {
 
 	private static float[] null0 = new float[0];
 	protected int primary;
-	protected int type;
+	protected String type = "Unknown";
 	protected float chi2;
 	protected float probability;
 	protected float[] position = new float[3];
@@ -84,11 +84,11 @@ public class IVertex extends ILCObject implements Vertex {
 		this.primary = (primary == true ? 1 : 0 );
 	}
 	
-	public int getAlgorithmType() {
+	public String getAlgorithmType() {
 		return type;
 	}
 	
-	public void setAlgorithmType(int type) {
+	public void setAlgorithmType(String type) {
 		checkAccess();
 		this.type=type;
 	}

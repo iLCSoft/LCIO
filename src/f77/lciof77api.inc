@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.37.4.1 2006-08-29 15:00:22 engels Exp $
+*  $Id: lciof77api.inc,v 1.37.4.2 2006-09-11 13:05:34 engels Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -219,13 +219,14 @@ c-----the Vertex interface
       integer lcvtxdelete, lcvtxid
 
       logical lcvtxisprimary
+      character*80 lcvtxgetalgorithmtype
       integer lcvtxgetposition, lcvtxgetcovmatrix, lcvtxgetparameters
       real    lcvtxgetchi2, lcvtxgetprobability
       PTRTYPE lcvtxgetassociatedparticle
 
       integer lcvtxsetprimary, lcvtxsetchi2, lcvtxsetprobability
       integer lcvtxsetposition, lcvtxsetcovmatrix, lcvtxaddparameter
-      integer lcvtxsetassociatedparticle
+      integer lcvtxsetalgorithmtype, lcvtxsetassociatedparticle
 
 c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawhits

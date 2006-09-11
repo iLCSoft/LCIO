@@ -33,9 +33,9 @@ bool lcvtxisprimary ( PTRTYPE vertex ) {
   return vtx->isPrimary() ;
 }
 
-int lcvtxgetalgorithmtype ( PTRTYPE vertex ) {
+char* lcvtxgetalgorithmtype ( PTRTYPE vertex ) {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
-  return vtx->getAlgorithmType() ;
+  return const_cast<char*>( vtx->getAlgorithmType().c_str() );
 }
 
 float lcvtxgetchi2( PTRTYPE vertex ) {
@@ -90,7 +90,7 @@ int lcvtxsetprimary( PTRTYPE vertex, bool pri ) {
   return LCIO::SUCCESS ;
 }
 
-int lcvtxsetalgorithmtype( PTRTYPE vertex, int type ) {
+int lcvtxsetalgorithmtype( PTRTYPE vertex, char* type ) {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
   vtx->setAlgorithmType( type ) ;
   return LCIO::SUCCESS ;

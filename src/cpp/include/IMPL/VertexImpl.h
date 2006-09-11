@@ -27,7 +27,7 @@ namespace IMPL {
      */
     VertexImpl() ;
     
-    /// Destructor.
+    // Destructor.
     virtual ~VertexImpl() ; 
 
     virtual int id() const { return simpleUID() ; }
@@ -40,7 +40,8 @@ namespace IMPL {
     /** Type code for the algorithm that has been used to create the vertex - check/set the
      *  collection parameters AlgorithmName and  AlgorithmType.
      */
-    virtual int getAlgorithmType() const ;
+    //virtual int getAlgorithmType() const ;
+    virtual const std::string& getAlgorithmType() const ;
 
     /** Chi squared of the vertex fit.
      */
@@ -70,7 +71,8 @@ namespace IMPL {
 
     // setters
     void setPrimary( bool primary ) ;
-    void setAlgorithmType( int type ) ;
+    //void setAlgorithmType( int type ) ;
+    void setAlgorithmType( std::string type ) ;
     void setChi2( float chi2 ) ;
     void setProbability( float probability ) ;
     void setPosition( float vpos[3] ) ;
@@ -82,7 +84,8 @@ namespace IMPL {
 
   protected:
     int _primary ;
-    int _type ;
+    //int _type ;
+    std::string _type ;
     float _chi2 ;
     float _probability ;
     float _vpos[3] ;

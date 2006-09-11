@@ -6,16 +6,24 @@ import hep.lcio.event.Vertex;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.implementation.event.IVertex;
 
+import java.util.TreeMap;
+
 import java.io.IOException;
 
 /**
 * @author engels
 */
 
-public class SIOVertex extends IVertex{
-	public SIOVertex(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException{
+class SIOVertex extends IVertex{
+	public SIOVertex(SIOInputStream in, SIOEvent owner, String[] keys, int major, int minor) throws IOException{
 		this.primary = in.readInt();
-		this.type = in.readInt();
+
+		//dbg
+		//int t=in.readInt();
+		//this.type = keys[t];
+    	//System.out.println("Reading... (int)["+t+"] (string)["+type+"]");
+    	
+    	this.type = keys[in.readInt()];
 		this.chi2 = in.readFloat();
 		this.probability = in.readFloat();
 		for (int i=0; i<3; i++) this.position[i] = in.readFloat();
@@ -26,13 +34,20 @@ public class SIOVertex extends IVertex{
 	    this.aRecP = (ReconstructedParticle) in.readPntr().getObject();
 		in.readPTag(this);
 	}
-	static void write(Vertex v, SIOOutputStream out) throws IOException{
+	static void write(Vertex v, SIOOutputStream out, TreeMap keys) throws IOException{
 		if (v instanceof SIOVertex){
-			((SIOVertex) v).write(out);
+			((SIOVertex) v).write(out, keys);
 		}
 	    else{
 	    	out.writeInt(v.isPrimary()?1:0);
-	    	out.writeInt(v.getAlgorithmType());
+	    	int at=(Integer)keys.get(v.getAlgorithmType());
+	    	out.writeInt(at);
+	    	//int[] at=(int[])keys.get(v.getAlgorithmType());
+	    	//out.writeInt(at[0]);
+	    	
+	    	//dbg
+	    	//System.out.println("Writing... (string)["+v.getAlgorithmType()+"] (int)["+at+"]");
+
 	    	out.writeFloat(v.getChi2());
 	    	out.writeFloat(v.getProbability());
 	    	float[] pos = v.getPosition();
@@ -47,9 +62,10 @@ public class SIOVertex extends IVertex{
 	    	out.writePTag(v);
 	      }
 	   }
-	private void write(SIOOutputStream out) throws IOException{
+	private void write(SIOOutputStream out, TreeMap keys) throws IOException{
 		out.writeInt(primary);
-		out.writeInt(type);
+		int at=(Integer)keys.get(type);
+		out.writeInt(at);
 		out.writeFloat(chi2);
 		out.writeFloat(probability);
 		for (int i=0; i<3; i++) out.writeFloat(position[i]);

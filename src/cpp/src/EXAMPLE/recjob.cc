@@ -32,9 +32,7 @@
 #define M_PI 3.14159265358979323846
 
 #include <iostream>
-#include <map>
 #include <algorithm>
-//#include <string>
 
 using namespace std ;
 using namespace lcio ;
@@ -496,6 +494,17 @@ public:
         default: break;
       }
       */
+
+      //EXP: INDEX MAP V2 - UNDER DEVELOPMENT
+      switch(rand()%7){
+        case 0: vtx->setAlgorithmType( "ZvTop" ); break;
+        case 1: vtx->setAlgorithmType( "ZvKin" ); break;
+	case 2: vtx->setAlgorithmType( "42" ); break;
+	case 3: vtx->setAlgorithmType( "SimAnnealing" ); break;
+	case 5: vtx->setAlgorithmType( "_Test" ); break;
+        default: break;
+      }
+      
       vtx->setChi2(1+i*.01);
       vtx->setProbability(0.0032+i*.01);
       vtx->setPosition(0.3453+i*.01,.45345354+i*.01,2.345354+i*.01);

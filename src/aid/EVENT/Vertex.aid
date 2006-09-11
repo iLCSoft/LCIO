@@ -15,7 +15,7 @@ typedef std::vector<Vertex*> VertexVec ;
  *  <p>UNDER DEVELOPMENT!</p>
  *  
  * @author gaede, engels
- * @version $Id: Vertex.aid,v 1.2.2.7 2006-08-31 15:18:54 engels Exp $
+ * @version $Id: Vertex.aid,v 1.2.2.8 2006-09-11 13:05:29 engels Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -36,7 +36,8 @@ public interface Vertex extends LCObject {
     /** Type code for the algorithm that has been used to create the vertex - check/set the 
      *  collection parameters AlgorithmName and  AlgorithmType.
      */
-    public int getAlgorithmType() const ;	
+    //public int getAlgorithmType() const ;
+    public const String& getAlgorithmType() const ;	
 
      /** Chi squared of the vertex fit.
      */

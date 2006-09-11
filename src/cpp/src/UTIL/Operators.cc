@@ -1,5 +1,4 @@
 #include "UTIL/Operators.h"
-//#include "UTIL/IndexMap.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // EXP: UNDER DEVELOPMENT!!!
@@ -24,7 +23,7 @@ namespace UTIL{
     out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
     out << setfill(' ') << setw(17) << left << im.decode( v->getAlgorithmType() ) << " | ";
     
-    out << setfill('0') << scientific << right << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
+    out << setfill('0') << right << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
 	v->getPosition()[0] << "," <<
         v->getPosition()[1] << "," <<
         v->getPosition()[2] << " | [" ;
@@ -44,15 +43,13 @@ namespace UTIL{
     
     out << setfill('0');
     out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
-    out << setw(7) << right << v->getAlgorithmType() << " | ";
+    out << setfill(' ') << setw(17) << left << v->getAlgorithmType() << " | ";
     
-    out << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
+    out << setfill('0') << right << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
 	v->getPosition()[0] << "," <<
         v->getPosition()[1] << "," <<
         v->getPosition()[2] << " | [" ;
 
-//    for(int i=0;i<VTXCOVMATRIX;i++)
-//      out << v->getCovMatrix()[i] << (i<(VTXCOVMATRIX-1)?",":" | [");
     out << setw(3) << v->getParameters().size() << "] | [";
     out << setw(8) << hex << (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) << "]\n";
     
@@ -75,8 +72,8 @@ namespace UTIL{
 	v->getPosition()[2] << endl;
     
     out << "Covariance Matrix:\t";
-    for(int i=0; i<VTXCOVMATRIX; i++)
-      out << v->getCovMatrix()[i] << (i<(VTXCOVMATRIX-1)?", ":"\n");
+    for(unsigned int i=0; i<v->getCovMatrix().size(); i++)
+      out << v->getCovMatrix()[i] << (i<(v->getCovMatrix().size()-1)?", ":"\n");
     
     out << "Parameters:";
     if(v->getParameters().size()==0){
@@ -98,15 +95,15 @@ namespace UTIL{
   const std::string& header(const EVENT::Vertex* v){
     
     static std::string _vtxh(
-      "\n    [id]    |pri| al.type |    chi2   |    prob.  |      position ( x, y, z)      | [par] |  [idRecP]  \n");
-    _vtxh+=tail(new IMPL::VertexImpl());
+      "\n    [id]    |pri|     alg. type     |    chi2   |    prob.  |      position ( x, y, z)      | [par] |  [idRecP]  \n");
+    _vtxh+=tail(v);
     return _vtxh;
   }
   
   const std::string& tail(const EVENT::Vertex* v){
     
     static std::string _vtxt(
-	"------------|---|---------|-----------|-----------|-------------------------------|-------|------------\n");
+	"------------|---|-------------------|-----------|-----------|-------------------------------|-------|------------\n");
     return _vtxt;
   }
 
@@ -136,23 +133,5 @@ namespace UTIL{
   }
 */
 
-/*
-  // EXP: INDEX MAP - UNDER DEVELOPMENT
-  
-  const std::string& header(const EVENT::Vertex* v){
-    
-    static std::string _vtxh(
-      "\n    [id]    |pri|     alg. type     |    chi2   |    prob.  |      position ( x, y, z)      | [par] |  [idRecP]  \n");
-    _vtxh+=tail(new IMPL::VertexImpl());
-    return _vtxh;
-  }
-  
-  const std::string& tail(const EVENT::Vertex* v){
-    
-    static std::string _vtxt(
-	"------------|---|-------------------|-----------|-----------|-------------------------------|-------|------------\n");
-    return _vtxt;
-  }
-*/
 } // namespace
  

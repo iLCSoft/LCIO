@@ -591,6 +591,20 @@ c          status  = lcclusetmuonweight ( clusp, .333)
         if ( i .eq. 1 )  then
           status   =  lcvtxsetprimary ( vtx, .true. )
         end if
+        
+        k=MOD(irand( 0 ), 7)
+        if ( k .eq. 0 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "ZvTop")
+        else if ( k .eq. 1 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "ZvKin")
+        else if ( k .eq. 2 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "42")
+        else if ( k .eq. 3 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "SimAnnealing")
+        else if ( k .eq. 5 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "_Test")
+        end if
+        
         status   =  lcvtxsetchi2 ( vtx, (i-1)*101.101 )
         status   =  lcvtxsetprobability ( vtx, 0.511*(i-1) )
         do  j = 1, 6

@@ -14,7 +14,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.14.6.1 2006-08-28 13:30:58 engels Exp $
+ * @version $Id: RecJob.java,v 1.14.6.2 2006-09-11 13:05:36 engels Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
@@ -132,6 +132,7 @@ public class RecJob implements LCRunListener, LCEventListener
       evt.addCollection(calVec, "HCALReco");
 
       LCTools.dumpEvent(evt);
+      System.out.println("------------------------------------");
 
       // ****NEW*** Add some clusters 
       
@@ -164,6 +165,16 @@ public class RecJob implements LCRunListener, LCEventListener
       {
          IVertex v = new IVertex();
          v.setPrimary((j == 0 ? true : false));
+         
+         switch((random.nextInt()%7)){
+         	case 0: v.setAlgorithmType( "ZvTop" ); break;
+         	case 1: v.setAlgorithmType( "ZvKin" ); break;
+         	case 2: v.setAlgorithmType( "42" ); break;
+         	case 3: v.setAlgorithmType( "SimAnnealing" ); break;
+         	case 5: v.setAlgorithmType( "_Test" ); break;
+         	default: break;
+         }
+         
          v.setChi2(j+1.0f);
          v.setProbability(j+2.0f);
          float f[] = {j+j*1.0f,j+j*2.0f,j+j*3.0f};
