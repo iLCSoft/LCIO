@@ -8,10 +8,12 @@ import hep.lcio.exceptions.* ;
  * like any other LCObject. Use inplementations of LCRelationNavigator to 
  * navigate the relation efficiently.
  * the types of the objects is decoded in the collection paramters 'RelationFromType'
- * and 'RelationToType'
+ * and 'RelationToType'. In order to  store weights != 1. with the relation set the 
+ * collection flag bit LCIO::LCREL_WEIGHTED, this is done automatically in 
+ * UTIL::LCRelationNavigator if a weight != 1. exists.
  * 
  * @author gaede 
- * @version $Id: LCRelation.aid,v 1.6 2006-03-24 13:25:52 gaede Exp $
+ * @version $Id: LCRelation.aid,v 1.7 2006-09-14 10:16:11 gaede Exp $
  * @see LCRelationNavigator
  */
 
@@ -34,7 +36,7 @@ public interface LCRelation extends LCObject
      */
     public LCObject* getTo() const;
 
-    /** The weight of the given relation. 
+    /** The weight of the given relation - only if collection flag bit LCIO::LCREL_WEIGHTED is set. 
      */
     public float getWeight( ) const;
 }
