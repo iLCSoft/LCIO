@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.19 2006-08-04 17:24:40 gaede Exp $
+ * @version $Id: SimJob.java,v 1.20 2006-09-20 15:30:54 gaede Exp $
  */
 public class SimJob
 {
@@ -201,7 +201,7 @@ public class SimJob
     int tpcFlag = 0 ;
 
     // store the cellId1
-    tpcFlag = 1 << LCIO.TRAWBIT_ID1
+    tpcFlag = 1 << LCIO.TRAWBIT_ID1 ;
     TPCVec.setFlag( tpcFlag  ) ;
     
     for(int j=0;j<NHITS;j++){
