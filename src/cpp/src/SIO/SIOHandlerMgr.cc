@@ -19,6 +19,7 @@
 #include "SIO/SIOTrackerRawDataHandler.h" 
 #include "SIO/SIOTrackerDataHandler.h" 
 #include "SIO/SIOTrackerPulseHandler.h" 
+#include "SIO/SIOVertexHandler.h"
 
 #include "EVENT/LCIO.h"
 
@@ -47,6 +48,7 @@ namespace SIO {
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
     _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;
     _map[ LCIO::LCRELATION] = new SIOLCRelationHandler ;
+    _map[ LCIO::VERTEX] = new SIOVertexHandler ;
     // generic arrays/vectors
     _map[ LCIO::LCSTRVEC ] = new SIOStrVecHandler ;
     _map[ LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;

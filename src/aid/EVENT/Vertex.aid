@@ -8,13 +8,14 @@ typedef std::vector<Vertex*> VertexVec ;
 }
 @endif
 
-/** A Vertex class for LCIO, as proposed by Sonja Hillert for the LCFI working group.
+/** The Vertex class for LCIO. 
+ *  <p>UNDER DEVELOPMENT!</p>
  *  see: <a href="http://forum.linearcollider.org/index.php?t=tree&goto=473">here</a><br>
  *
  *  <p>UNDER DEVELOPMENT!</p>
  *  
- * @author gaede
- * @version $Id: Vertex.aid,v 1.2 2006-08-03 16:53:35 gaede Exp $
+ * @author gaede, engels
+ * @version $Id: Vertex.aid,v 1.3 2006-09-21 06:10:36 gaede Exp $
  */
 
 public interface Vertex extends LCObject {
@@ -26,29 +27,19 @@ public interface Vertex extends LCObject {
     typedef Vertex lcobject_type ;
 }
 @endif
-    
-    /** The vertex' 3-momentum, i.e. the sum of all track momenta.
-     */
-    public const float3V getMomentum() const ;	
-    
-    /** Mass of the  vertex
-     */
-    public float getMass() const ;	
-    
-    /** Charge of the vertex.
-     */
-    public float getCharge() const ;	
-    
-    /** Position of the cluster.
-     */
-    public const float3V getPosition() const;
 
-    /** Covariance matrix of the position (stored as lower triangle matrix, i.e. 
-     *  cov(xx),cov(y,x),cov(y,y) ).
+    /** Checks if the Vertex is the primary vertex of the event.
+     *  Only one primary vertex per event is allowed
      */
-    public const FloatVec& getCovMatrix() const ;
+    public boolean isPrimary() const ;
+    
+    /** Type code for the algorithm that has been used to create the vertex - check/set the 
+     *  collection parameters AlgorithmName and  AlgorithmType.
+     */
+    //public int getAlgorithmType() const ;
+    public const String& getAlgorithmType() const ;	
 
-    /** Chi squared of the vertex fit.
+     /** Chi squared of the vertex fit.
      */
     public float getChi2() const ;	
 
@@ -56,29 +47,22 @@ public interface Vertex extends LCObject {
      */
     public float getProbability() const ;	
 
-    /** Link to previous vertex in chain of vertices.
+    /** Position of the vertex
      */
-    public Vertex* getPreviousVertex() const; 
+    public const float3V getPosition() const;
+
+    /** Covariance matrix of the position (stored as lower triangle matrix, i.e. 
+     *  cov(xx),cov(y,x),cov(y,y) ).
+     */
+    public const FloatVec & getCovMatrix() const ;
 
     /** Additional parameters related to this vertex - check/set the collection
      *  parameter "VertexParameterNames" for the parameters' meaning.
      */
-    public const FloatVec& getParameters() const ;
+    public const FloatVec & getParameters() const ;
 
-    /** The tracks that have been used for this vertex.
+    /** Returns Reconstructed Particle associated to the Vertex
      */
-    public const TrackVec& getTracks() const ; 
-    
-    /** Add a track to this vertex.
-     */
-    public void addTrack( Track* track ) ;
-
-//     /** Distance to previous vertex - computed from  getPreviousVertex().getPosition() ???
-//      */
-//     public float getDistanceToPreviousVertex() const ;
-//     /** Error of distance to previous vertex - computed from  getPreviousVertex().getPosition() ??
-//      */
-//     public float getErrorOfDistance() const ;
-
+    public ReconstructedParticle * getAssociatedParticle() const;
 }
 

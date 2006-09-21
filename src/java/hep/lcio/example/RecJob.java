@@ -14,13 +14,14 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: RecJob.java,v 1.14 2005-02-28 14:49:51 gaede Exp $
+ * @version $Id: RecJob.java,v 1.15 2006-09-21 06:10:49 gaede Exp $
  */
 public class RecJob implements LCRunListener, LCEventListener
 {
    private final static int NHITS = 50;
    private final static int NCLUSTERS = 50;
    private final static int NTRACKS = 50;
+   private final static int NVERTICES = 10;
 
    private LCWriter lcWrt;
    private Random random = new Random();
@@ -131,6 +132,7 @@ public class RecJob implements LCRunListener, LCEventListener
       evt.addCollection(calVec, "HCALReco");
 
       LCTools.dumpEvent(evt);
+      System.out.println("------------------------------------");
 
       // ****NEW*** Add some clusters 
       
@@ -156,7 +158,32 @@ public class RecJob implements LCRunListener, LCEventListener
          track.setTanLambda(j);        
          trackVec.add(track);
       }
-      evt.addCollection(trackVec, "Tracks");   
+      evt.addCollection(trackVec, "Tracks");
+      
+      ILCCollection vertexVec = new ILCCollection(LCIO.VERTEX);
+      for (int j = 0; j < NVERTICES; j++)
+      {
+         IVertex v = new IVertex();
+         v.setPrimary((j == 0 ? true : false));
+         
+         switch((random.nextInt()%7)){
+         	case 0: v.setAlgorithmType( "ZvTop" ); break;
+         	case 1: v.setAlgorithmType( "ZvKin" ); break;
+         	case 2: v.setAlgorithmType( "42" ); break;
+         	case 3: v.setAlgorithmType( "SimAnnealing" ); break;
+         	case 5: v.setAlgorithmType( "_Test" ); break;
+         	default: break;
+         }
+         
+         v.setChi2(j+1.0f);
+         v.setProbability(j+2.0f);
+         float f[] = {j+j*1.0f,j+j*2.0f,j+j*3.0f};
+         v.setPosition(f);
+         float[] cov = { 10.0f , 20.0f, 30.0f, 40.0f, 50.0f, 60.0f };
+         v.setCovMatrix(cov);
+         vertexVec.add(v);
+      }
+      evt.addCollection(vertexVec, "Vertices");
       
       try
       {

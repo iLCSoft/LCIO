@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.37 2006-03-24 14:05:43 gaede Exp $
+*  $Id: lciof77api.inc,v 1.38 2006-09-21 06:10:47 gaede Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -205,12 +205,28 @@ c-----the ReconstructedParticle interface
       real    lcrcpgetenergy, lcrcpgetmass, lcrcpgetcharge
       PTRTYPE lcrcpgetparticleids, lcrcpgetparticles
       PTRTYPE lcrcpgetclusters, lcrcpgettracks
+      PTRTYPE lcrcpgetstartvertex, lcrcpgetendvertex
 
       integer lcrcpsettype, lcrcpsetmomentum, lcrcpsetenergy
       integer lcrcpsetcovmatrix, lcrcpsetmass, lcrcpsetcharge
       integer lcrcpsetreferencepoint, lcrcpsetgoodnessofpid
+      integer lcrcpsetstartvertex
       integer lcrcpaddparticleid
       integer lcrcpaddparticle, lcrcpaddcluster, lcrcpaddtrack
+
+c-----the Vertex interface
+      PTRTYPE lcvtxcreate 
+      integer lcvtxdelete, lcvtxid
+
+      logical lcvtxisprimary
+      character*80 lcvtxgetalgorithmtype
+      integer lcvtxgetposition, lcvtxgetcovmatrix, lcvtxgetparameters
+      real    lcvtxgetchi2, lcvtxgetprobability
+      PTRTYPE lcvtxgetassociatedparticle
+
+      integer lcvtxsetprimary, lcvtxsetchi2, lcvtxsetprobability
+      integer lcvtxsetposition, lcvtxsetcovmatrix, lcvtxaddparameter
+      integer lcvtxsetalgorithmtype, lcvtxsetassociatedparticle
 
 c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawhits
@@ -294,6 +310,7 @@ c---- constants as defined in EVENT::LCIO
       character*32 LCIO_TRACK
       character*32 LCIO_CLUSTER
       character*32 LCIO_RECONSTRUCTEDPARTICLE
+      character*32 LCIO_VERTEX
       character*32 LCIO_LCRELATION
       character*32 LCIO_LCGENERICOBJECT
 
@@ -313,6 +330,7 @@ c---- constants as defined in EVENT::LCIO
       data LCIO_TRACK /'Track'/
       data LCIO_CLUSTER /'Cluster'/
       data LCIO_RECONSTRUCTEDPARTICLE /'ReconstructedParticle'/
+      data LCIO_VERTEX /'Vertex'/
       data LCIO_LCRELATION /'LCRelation'/
       data LCIO_LCGENERICOBJECT /'LCGenericObject'/
 

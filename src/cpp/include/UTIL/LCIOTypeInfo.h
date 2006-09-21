@@ -22,6 +22,7 @@
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/LCGenericObject.h"
 #include "EVENT/LCRelation.h"
+#include "EVENT/Vertex.h"
 
 #include <vector>
 #include <sstream>
@@ -63,6 +64,7 @@ namespace UTIL{
   template<> const char* lctypename<EVENT::ReconstructedParticle>() { return EVENT::LCIO::RECONSTRUCTEDPARTICLE ; }
   template<> const char* lctypename<EVENT::LCRelation>() { return EVENT::LCIO::LCRELATION ; }
   template<> const char* lctypename<EVENT::LCGenericObject>() { return EVENT::LCIO::LCGENERICOBJECT ; }
+  template<> const char* lctypename<EVENT::Vertex>() { return EVENT::LCIO::VERTEX ; }
   
   
   /** Template that returns the LCIO type name as used in the LCCollctions (and files) based on 
@@ -101,6 +103,7 @@ namespace UTIL{
     if( dynamic_cast<const EVENT::ReconstructedParticle*>(o) != 0 ) return   lctypename<EVENT::ReconstructedParticle>() ;
     if( dynamic_cast<const EVENT::LCRelation*>(o) != 0 ) return   lctypename<EVENT::LCRelation>() ;
     if( dynamic_cast<const EVENT::LCGenericObject*>(o) != 0 ) return   lctypename<EVENT::LCGenericObject>() ;
+    if( dynamic_cast<const EVENT::Vertex*>(o) != 0 ) return   lctypename<EVENT::Vertex>() ;
     
     return "UNKNOWN" ;
   }

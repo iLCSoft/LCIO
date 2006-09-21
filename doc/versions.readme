@@ -2,6 +2,14 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+=====================
+v01-08-vtx               BETA-NON-PRODUCTION-RELEASE !!!!  
+=====================
+
+   - test implementation new  of Vertex class 
+
+   - modified function UTIL:LCTOOLS:dumpEvent() for a more readable format 
+
    - bug fixes:
 	+ in SIOReader::skipNEvents() (skipped only n-1 with readStream())
         + collection parameters in LCRelationNavigator (From/ToType)

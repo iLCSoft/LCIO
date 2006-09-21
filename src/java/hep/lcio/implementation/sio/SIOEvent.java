@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.41 2006-04-28 18:46:18 jeremy Exp $
+ * @version $Id: SIOEvent.java,v 1.42 2006-09-21 06:10:50 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -298,6 +300,20 @@ class SIOEvent extends ILCEvent
             ilc.setOwner(this);
             addCollection(ilc,name);
          }
+         else if (type.equals(LCIO.VERTEX))
+         {
+            int n = in.readInt();
+            SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
+            ilc.setParameters( colParameters ) ;
+            
+            //index integers to strings (reading)
+            String[] keys=colParameters.getStringVals("_lcio.VertexAlgorithmTypes");
+            
+            for (int i = 0; i < n; i++)
+               ilc.add(new SIOVertex(in, this, keys, major, minor));
+            ilc.setOwner(this);
+            addCollection(ilc,name);
+         }
          else if (type.equals(LCIO.LCRELATION))
          {
             int n = in.readInt();
@@ -417,6 +433,23 @@ class SIOEvent extends ILCEvent
             }
             out.writeInt(flags);
             
+            //vertices need to add indexing parameters to collection
+            if ( type.equals(LCIO.VERTEX )){
+                TreeSet _set = new TreeSet();
+                
+                for (int i=0; i < col.getNumberOfElements(); i++){
+                	Vertex v = (Vertex) col.getElementAt(i);
+                	_set.add(v.getAlgorithmType());
+                }
+                Object[] ob = _set.toArray() ;
+        		String[] keys = new String[ ob.length ] ;
+        	    for (int i = 0; i < keys.length; i++){
+        	    	keys[i] = (String) ob[i] ;
+        	    }
+        	    //add parameters to collection
+        	    col.getParameters().setValues( "_lcio.VertexAlgorithmTypes", keys );
+            }
+             
             SIOLCParameters.write( col.getParameters() , out ) ;
             
 //          fg20050302 add suport for subset collections
@@ -538,6 +571,26 @@ class SIOEvent extends ILCEvent
             {
                for (int i=0; i < n; i++)
                   SIOReconstructedParticle.write((ReconstructedParticle) col.getElementAt(i), out, flags);
+            }
+            else if (type.equals(LCIO.VERTEX))
+            {
+            	//index strings to integers (writing)
+            	
+            	/* THIS DOES NOT WORK!!!
+        	    //add parameters to collection
+        	    col.getParameters().setValues( "_lcio.VertexAlgorithmTypes", keys );
+        	    SIOLCParameters.write( col.getParameters() , out ) ;
+        	    */
+
+            	TreeMap _map = new TreeMap();
+            	String[] keys = new String[ col.getParameters().getStringVals("_lcio.VertexAlgorithmTypes").length ] ;
+            	keys=col.getParameters().getStringVals("_lcio.VertexAlgorithmTypes");
+            	for (int i=0; i < keys.length; i++){
+            		_map.put(keys[i],i);
+            	}
+                
+               for (int i=0; i < n; i++)
+                  SIOVertex.write((Vertex) col.getElementAt(i), out, _map);
             }
             else if (type.equals(LCIO.LCRELATION))
             {

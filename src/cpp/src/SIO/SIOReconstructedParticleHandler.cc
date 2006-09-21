@@ -111,6 +111,14 @@ namespace SIO{
 	SIO_PNTR( stream , &(recP->_clusters[i] ) ) ;
       }
       
+      if( _vers > SIO_VERSION_ENCODE( 1,7 )   ) {
+	
+	//read pointers to start/end vertices
+	SIO_PNTR( stream ,   &(recP->_sv) ) ;
+	//SIO_PNTR( stream ,   &(recP->_ev) ) ;
+      }
+      
+      
     } else {   // old version (1.0-1.2 keep for a while - no official release !! )
 
       int typeFlag ;
@@ -313,6 +321,13 @@ namespace SIO{
 //       SIO_PNTR( stream , &(recP->getMCParticles()[i]) ) ;
 //       LCSIO_WRITE( stream, recP->getMCParticleWeights()[i]  ) ;
 //     }
+
+    // write pointers to start/end vertices
+    EVENT::Vertex* sv = recP->getStartVertex() ;
+    SIO_PNTR( stream , &sv  ) ;
+    //EVENT::Vertex* ev = recP->getEndVertex() ;
+    //SIO_PNTR( stream , &ev  ) ;
+
 
     // write a ptag in order to be able to point to recPs
     SIO_PTAG( stream , recP ) ;

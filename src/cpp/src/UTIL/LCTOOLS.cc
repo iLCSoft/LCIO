@@ -1,4 +1,5 @@
 #include "UTIL/LCTOOLS.h"
+#include "UTIL/Operators.h"
 
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
@@ -17,6 +18,7 @@
 #include "EVENT/Track.h"
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
+#include "EVENT/Vertex.h"
 #include "EVENT/LCGenericObject.h"
 
 #include "EVENT/LCRelation.h"
@@ -42,10 +44,41 @@ using namespace IMPL ;
 
 namespace UTIL {
 
-
   static int MAX_HITS = 1000 ;
 
 
+  void LCTOOLS::dumpEvent(const LCEvent* evt){
+    
+    // the event:
+    cout << "///////////////////////////////////" << endl;
+    cout << "EVENT: " << evt->getEventNumber() << endl
+         << "RUN: " << evt->getRunNumber() << endl
+         << "DETECTOR: " << evt->getDetectorName() << endl
+         << "COLLECTIONS: (see below)" << endl;
+    cout << "///////////////////////////////////" << endl << endl;
+     
+    cout << "---------------------------------------------------------------------------" << endl;
+    cout.width(30); cout << left << "COLLECTION NAME";
+    cout.width(25); cout << left << "COLLECTION TYPE";
+    cout.width(20); cout << left << "NUMBER OF ELEMENTS" << endl;
+    cout << "===========================================================================" << endl;
+    
+    const std::vector< std::string >* strVec = evt->getCollectionNames() ;
+
+    // loop over collections:
+    for( std::vector< std::string >::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+    
+      cout.width(30); cout << left << *name;
+      cout.width(25); cout << left << evt->getCollection( *name )->getTypeName();
+      cout.width(9); cout << right << evt->getCollection( *name )->getNumberOfElements();
+      cout << endl;
+      //cout << "---------------------------------------------------------------------------" << endl;
+    }
+    cout << "---------------------------------------------------------------------------" << endl;
+    cout << endl << endl << endl;
+  }
+
+  
   void LCTOOLS::dumpEventDetailed(const LCEvent* evt){
     
     // the event:
@@ -150,6 +183,11 @@ namespace UTIL {
 	printReconstructedParticles( col ) ;
 
       }
+      else if( evt->getCollection( *name )->getTypeName() == LCIO::VERTEX ){
+	  
+	printVertices( col ) ;
+
+      }
       else if( evt->getCollection( *name )->getTypeName() == LCIO::LCGENERICOBJECT ){
 	  
 	printLCGenericObjects( col ) ;
@@ -186,185 +224,6 @@ namespace UTIL {
 //     }
 
   }
-
-  void LCTOOLS::dumpEvent(const LCEvent* evt){
-    
-    // the event:
-    cout << "event  : " 
-	 << evt->getEventNumber() 
-	 << " - run " << evt->getRunNumber()
-	 << " detector : "  <<  evt->getDetectorName()
-	 << " - collections  : "
-	 << endl ;
-    
-    const std::vector< std::string >* strVec = evt->getCollectionNames() ;
-
-    // loop over collections:
-    for( std::vector< std::string >::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
-      cout << "     " <<  *name <<   " " 
-	   <<   evt->getCollection( *name )->getTypeName() << " : "  ; 
-    
-      LCCollection* col = evt->getCollection( *name ) ;
-    
-    
-      // print SimCalorimeterHit collections:
-      if(evt->getCollection( *name )->getTypeName() == LCIO::SIMCALORIMETERHIT ){
-      
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " hits - first hit: " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	int flag = col->getFlag() ;
-
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	
-	  SimCalorimeterHit* hit = 
-	    dynamic_cast<SimCalorimeterHit*>( col->getElementAt( i ) ) ;
-	
-	  cout << "    hit -  e: "  << hit->getEnergy() ;
-
-	  if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
-
-	    const float* x =  hit->getPosition() ;
-	    cout << "  pos: " << x[0] << ", " << x[1] << ", " << x[2] << endl ;   
-
-	  } else{
-	    cout << "  short hits: position not available! " << hex << flag << dec << endl ;
-	  }
-	}
-      }
-      else if(evt->getCollection( *name )->getTypeName() == LCIO::CALORIMETERHIT ){
-	
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " hits - first hit: " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	int flag = col->getFlag() ;
-	
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	  
-	  CalorimeterHit* hit = 
-	    dynamic_cast<CalorimeterHit*>( col->getElementAt( i ) ) ;
-	  
-	  cout << "    hit -  e: "  << hit->getEnergy() ;
-
-	  if( LCFlagImpl(flag).bitSet( LCIO::CHBIT_LONG ) ){
-	    
-	    const float* x =  hit->getPosition() ;
-	    cout << "  pos: " << x[0] << ", " << x[1] << ", " << x[2] << endl ;   
-	    
-	  } else{
-	    cout << "  short hits: position not available! " << hex << flag << dec << endl ;
-	  }
-	}
-	
-      } else if(evt->getCollection( *name )->getTypeName() == LCIO::SIMTRACKERHIT ){
-      
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " hits : " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	  SimTrackerHit* hit = 
-	    dynamic_cast<SimTrackerHit*>( col->getElementAt( i ) ) ;
-// 
-// Since hit may not have MCParticle, need to check that it exists
-//
-	  int pdgid = 0;
-	  if(hit->getMCParticle() > 0)pdgid = 
-		 hit->getMCParticle()->getPDG();
-      
-	
-	  const double* x =  hit->getPosition() ;
-	  cout << "    hit -  dEdx: " 
-	       << hit->getdEdx() 
-	       << "  mc: " << pdgid 
-	       << "  pos: " 
-	       << x[0] << ", " << x[1] << ", " << x[2] 
-	       << endl ;   
-	  
-	}
-      } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCFLOATVEC ){
-	
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " vectors: " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	  LCFloatVec* vec = 
-	    dynamic_cast<LCFloatVec*>( col->getElementAt( i ) ) ;
-	  
-	  cout << " values(" << i << "): " ;
-	  unsigned int maxE = ( vec->size() > 5 ?  5 : vec->size() ) ; 
-	  for(unsigned int k=0 ; k< maxE  ; k++ )
-	    cout <<  (*vec)[k]  << ", " ;
-	  cout << endl ;   
-	  
-	}
-      } else if(evt->getCollection( *name )->getTypeName() == LCIO::LCINTVEC ){
-	
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " vectors: " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	  LCIntVec* vec = 
-	    dynamic_cast<LCIntVec*>( col->getElementAt( i ) ) ;
-	  
-	  cout << " values(" << i << "): " ;
-	  unsigned int maxE = ( vec->size() > 5 ?  5 : vec->size() ) ; 
-	  for(unsigned int k=0 ; k< maxE  ; k++ )
-	    cout <<  (*vec)[k]  << ", " ;
-	  cout << endl ;   
-	  
-	}
-      } else if(evt->getCollection( *name )->getTypeName() == LCIO::MCPARTICLE ){
-	
-	
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " particles : " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-	  MCParticle* part = 
-	    dynamic_cast<MCParticle*>( col->getElementAt( i ) ) ;
-	  
-	  cout << "           " << part->getPDG() << " p: " 
-	       <<  part->getMomentum()[0]  << ", "
-	       <<  part->getMomentum()[1]  << ", "
-	       <<  part->getMomentum()[2]  
-	       << endl ;	
-	  
-	}
-      } else if( evt->getCollection( *name )->getTypeName() == LCIO::TPCHIT ){
-	
-	int nHits =  col->getNumberOfElements() ;
-	cout << nHits << " hits - first : " ;
-	int nPrint = nHits>0 ? 1 : 0 ;
-	
-	if(!nPrint ) cout << endl ;
-	for( int i=0 ; i< nPrint ; i++ ){
-
-	    LCObjectHandle<TPCHit> hit( col->getElementAt( i ) )  ;
-	  
-	  cout << " id: " << hit->getCellID() 
-	       << " t: " << hit->getTime()  
-	       << " charge: " << hit->getCharge()  
-	       << " quality: " << hit->getQuality()  
-	       << endl ;	
-	}	
-      } else {
-	cout << endl ;
-      } 
-    }
-    cout << endl ;
-  }
-
 
   void LCTOOLS::printTracks(const EVENT::LCCollection* col ){
     if( col->getTypeName() != LCIO::TRACK ){
@@ -1295,6 +1154,30 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	   << endl ;
   }
 
+  void LCTOOLS::printVertices( const EVENT::LCCollection* col ){
+    if( col->getTypeName() != LCIO::VERTEX ){
+      
+      cout << " collection not of type " << LCIO::VERTEX << endl ;
+      return ;
+    }
+    cout << endl 
+	 << "--------------- " << "print out of "  << LCIO::VERTEX << " collection "
+	 << "--------------- " << endl << endl;
+    
+    printParameters( col->getParameters() ) ;
+    
+    int nVertices = col->getNumberOfElements() ;
+    int nPrint = nVertices > MAX_HITS ? MAX_HITS : nVertices ;
+    
+    for( int i=0 ; i< nPrint ; i++ ){
+      Vertex* v = dynamic_cast<Vertex*>( col->getElementAt( i ) ) ;
+      
+      if( i==0) { cout<<header(v); }
+      //cout<<lcshort(v,col);
+      cout<<lcshort(v);
+      if(i==nPrint-1){ cout<<tail(v); }
+    }
+  }
 
   void LCTOOLS::printReconstructedParticles( const EVENT::LCCollection* col ){
 
@@ -1319,9 +1202,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nPrint = nReconstructedParticles > MAX_HITS ? MAX_HITS : nReconstructedParticles ;
     
     std::cout << endl
-	      << " [   id   ] |com|type|     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed]"
+	      << " [   id   ] |com|type|     momentum( px,py,pz)         | energy   | mass     | charge    |          position ( x,y,z)       | [pidUsed] "
 	      << endl	      
-	      << "  ----------|---|----|---------------------------------|----------|----------|-----------|----------------------------------|----------"
+	      << "  ----------|---|----|---------------------------------|----------|----------|-----------|----------------------------------|-----------"
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
@@ -1343,7 +1226,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       if(  recP->getParticleIDUsed() != 0 ) 
 	pidUsed  = recP->getParticleIDUsed()->id() ;
       
-      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x] \n"
+      printf(" [%8.8x] | %1d | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%8.8x]\n"
 	     //	     , reinterpret_cast<int> ( recP )
 	     , recP->id()
 	     , compound
@@ -1357,7 +1240,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     , recP->getReferencePoint()[0] 
 	     , recP->getReferencePoint()[1] 
 	     , recP->getReferencePoint()[2] 
-	     , pidUsed 
+	     , pidUsed
+	     //, (recP->getStartVertex()!=NULL?recP->getStartVertex()->id():0)
+	     //, (recP->getEndVertex()!=NULL?recP->getEndVertex()->id():0)
 	     ) ;
       cout << "    covariance( px,py,pz,E) : (" ;
       for(int l=0;l<10;l++){
@@ -1388,6 +1273,27 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	ParticleID* pid = recP->getParticleIDs()[l] ;
 	printf("[%8.8x], %6.6d, (%6.6d)  ",  pid->id() , pid->getPDG() , pid->getType() ) ;
       }
+      cout << endl ;
+      
+      Vertex* sv = dynamic_cast<Vertex*>(recP->getStartVertex());
+      Vertex* ev = dynamic_cast<Vertex*>(recP->getEndVertex());
+      ReconstructedParticle* svr=0;
+      ReconstructedParticle* evr=0;
+      
+      if(sv!=0){
+         svr = dynamic_cast<ReconstructedParticle*>(sv->getAssociatedParticle());
+      }
+      if(ev!=0){
+         evr = dynamic_cast<ReconstructedParticle*>(ev->getAssociatedParticle());
+      }
+      
+      printf("    vertices: startVertex( id:[%8.8x], id_aRP:[%8.8x] )   endVertex( id:[%8.8x], id_aRP:[%8.8x] ) "
+        , ( sv != 0 ? sv->id() : 0 )
+        , ((sv != 0 && svr != 0) ? svr->id() : 0 )
+        , ( ev != 0 ? ev->id() : 0 )
+        , ((ev != 0 && evr != 0) ? evr->id() : 0 )
+      ) ;
+     
       cout << endl ;
 
 //       cout << "    MCParticles ( [   id   ] (weight) ): " ;

@@ -3,7 +3,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 #define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 7
+#define LCIO_MINOR_VERSION 8
 #define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.55 2006-08-25 12:19:29 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.56 2006-09-21 06:10:35 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -114,8 +114,9 @@ public interface LCIO{
 }
 @else
     // current version number of lcio
-  public static const int MAJORVERSION  = 1 ;
-  public static const int MINORVERSION  = 7 ;
+  public static const int MAJORVERSION  = 1 ; 
+  public static const int MINORVERSION  = 8 ;
+
 
   // bits in flag words
   // SimCalorimeterHit (CH)
@@ -189,6 +190,7 @@ public interface LCIO{
   public static const String LCGENERICOBJECT = "LCGenericObject";
   public static const String PARTICLEID = "ParticleID";
   public static const String VERTEX = "Vertex";
+
 
   // reserved names, e.g. name of event/collections paramaters
 

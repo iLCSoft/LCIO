@@ -4,6 +4,8 @@ import hep.lcio.event.Cluster;
 import hep.lcio.event.ParticleID;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Track;
+import hep.lcio.event.Vertex ;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -29,7 +31,9 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    protected double mass;
    protected float goodnessOfPID;
    protected int type;
+   protected Vertex startVertex;
    
+
    public float getGoodnessOfPID()
    {
       return goodnessOfPID;
@@ -169,6 +173,21 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
       return referencePoint;
    }
    
+   public Vertex getStartVertex(){
+	   return startVertex;
+   }
+   
+   public void setStartVertex(Vertex vertex){
+	   checkAccess();
+	   this.startVertex = vertex;
+   }
+   
+   public Vertex getEndVertex(){
+	   if(particles.size() != 0)
+		   return ((ReconstructedParticle)particles.get(0)).getStartVertex();
+	   return null;
+   }
+
    public void setTracks(List tracks)
    {
       checkAccess();

@@ -72,3 +72,5 @@ $(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/testcopy: testcopy.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/testcopy $(CPPFLAGS) testcopy.cc  $(LIBS) 
 
+$(BINDIR)/testvtx: testvtx.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/testvtx $(CPPFLAGS) testvtx.cc  $(LIBS) 

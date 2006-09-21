@@ -161,7 +161,10 @@ c---    make consistent with recjob.cc, if nargs > 0
 ***   create some clusters and add them to the event
       call clusters
 
-***   add some reconstructed particles
+***   add some vertices
+      call vertices
+      
+**   add some reconstructed particles
       call reco_particles
 
       end
@@ -565,6 +568,69 @@ c          status  = lcclusetmuonweight ( clusp, .333)
 
 **********************************************************************
 *                                                                    *
+      subroutine vertices                                           !*
+*                                                                    *
+**********************************************************************
+
+      implicit none
+
+#include "recjob.inc"
+
+      PTRTYPE helpp, clusp
+      integer i, j, k
+      real    cov(6), pos(3)
+      character*30 colname
+
+      integer   nvtx
+      parameter (nvtx=11)
+
+***   add some vertices
+      vtxcol = lccolcreate (  LCIO_VERTEX )
+      do  i = 1, nvtx
+        vtx  =  lcvtxcreate ()
+        if ( i .eq. 1 )  then
+          status   =  lcvtxsetprimary ( vtx, .true. )
+        end if
+        
+        k=MOD(irand( 0 ), 7)
+        if ( k .eq. 0 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "ZvTop")
+        else if ( k .eq. 1 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "ZvKin")
+        else if ( k .eq. 2 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "42")
+        else if ( k .eq. 3 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "SimAnnealing")
+        else if ( k .eq. 5 ) then
+          status   =  lcvtxsetalgorithmtype(vtx, "_Test")
+        end if
+        
+        status   =  lcvtxsetchi2 ( vtx, (i-1)*101.101 )
+        status   =  lcvtxsetprobability ( vtx, 0.511*(i-1) )
+        do  j = 1, 6
+          cov(j) = j
+        end do
+        status   =  lcvtxsetcovmatrix ( vtx, cov )
+        pos(1)  =  10.
+        pos(2)  =  20.
+        pos(3)  =  30.
+        status   =  lcvtxsetposition ( vtx, pos )
+        do  j = 1, 3
+          status   = lcvtxaddparameter ( vtx, (j-1)*.1 )
+        end do
+
+***     add this vertex to collection
+        status  =  lccoladdelement ( vtxcol, vtx )
+        
+      end do
+      colname  =  'Vertices'
+      status   =  lcevtaddcollection ( eventi, vtxcol, colname )
+*
+      end
+
+
+**********************************************************************
+*                                                                    *
       subroutine reco_particles                                     !*
 *                                                                    *
 **********************************************************************
@@ -579,7 +645,7 @@ c          status  = lcclusetmuonweight ( clusp, .333)
       integer i, j, k
       integer ihit1, ihit2, ihit3, npid, itrk, iclu, imcp
       real    mom(3), cov(10), refp(3), prob
-      character*30 colname1, colname2
+      character*30 colname
       double precision dpos(3), dhelp
 
       integer   nreccp
@@ -606,6 +672,12 @@ c        status   =  lcrcpsetprimary ( recopp, .true. )
         refp(2)  =  20.
         refp(3)  =  30.
         status   =  lcrcpsetreferencepoint (recopp, refp )
+
+***     associate vertices
+        vtx    =  lccolgetelementat ( vtxcol , i )
+        status   =  lcrcpsetstartvertex ( recopp, vtx )
+        vtx    =  lccolgetelementat ( vtxcol , i + 1 )
+        status   =  lcvtxsetassociatedparticle ( vtx , recopp )
 
 ***     add some particle ids
         npid = 5
@@ -658,8 +730,8 @@ c        status  = lcrcpaddmcparticle ( recopp , mcpp, 0.5 )
         status  =  lccoladdelement ( recopcol, recopp )
         
       end do
-      colname2 =  'ReconstructedParticle'
-      status   =  lcevtaddcollection ( eventi, recopcol, colname2 )
+      colname  =  'ReconstructedParticle'
+      status   =  lcevtaddcollection ( eventi, recopcol, colname )
 *
       end
 

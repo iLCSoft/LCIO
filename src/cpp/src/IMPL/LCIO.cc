@@ -26,6 +26,7 @@ const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ;
 const char* LCIO::LCRELATION = "LCRelation" ; 
 const char* LCIO::LCGENERICOBJECT = "LCGenericObject" ; 
 const char* LCIO::PARTICLEID = "ParticleID" ; 
+const char* LCIO::VERTEX = "Vertex" ; 
 
 const char* LCIO::CellIDEncoding = "CellIDEncoding" ; 
 }

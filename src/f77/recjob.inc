@@ -12,6 +12,7 @@
       PTRTYPE tpchitcol, trackerhitcol, trhitp, tpchit, trackcol, trkp
       PTRTYPE simcalcol, cluscol, calhitcol, simcalhitp, calhitp
       PTRTYPE recopcol, recopp, pidp, recopp1, recopp2
+      PTRTYPE vtxcol, vtx
 
 ***   temporary pointers used in several routines
       PTRTYPE screlp, screlcol
@@ -23,6 +24,7 @@
      &,       tpchitcol, trackerhitcol, trhitp, tpchit, trackcol, trkp
      &,       simcalcol, cluscol, calhitcol, simcalhitp, calhitp
      &,       recopcol, recopp, pidp, recopp1, recopp2
+     &,       vtxcol, vtx
      &,       ievent
 
       integer status, ievent

@@ -11,7 +11,7 @@ typedef std::vector<ReconstructedParticle*> ReconstructedParticleVec ;
 /** The LCIO reconstructedParticle.
  * 
  * @author gaede
- * @version $Id: ReconstructedParticle.aid,v 1.17 2006-08-03 16:53:35 gaede Exp $
+ * @version $Id: ReconstructedParticle.aid,v 1.18 2006-09-21 06:10:35 gaede Exp $
  */
 
 public interface ReconstructedParticle extends LCObject {
@@ -121,22 +121,16 @@ public interface ReconstructedParticle extends LCObject {
      */
     public const TrackVec& getTracks() const ; 
     
-//     /** The weights of track contributions to this particle
-//      */
-//     public const FloatVec& getTrackWeights() const ; 
+
+    /** The start vertex associated to this particle
+     */
+    public Vertex * getStartVertex() const ;
     
-
-//     /** The MCParticle assigned to this reconstructed particle.
-//      * @see MCParticle
-//      */
-//     public const MCParticleVec& getMCParticles() const ;
-
-
-//     /** The weights of the MCParticle assignment.
-//      */
-//     public const FloatVec& getMCParticleWeights() const ;
-
-
+    /** The vertex where the particle decays
+     *  This method actually returns the start vertex from the first daughter particle found
+     */
+    public Vertex * getEndVertex() const ;
+    
     // set methods
 
 //     /** Set the type of reconstructed particle, one of:<br>

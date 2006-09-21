@@ -5,6 +5,7 @@ import hep.lcd.io.sio.SIOInputStream;
 import hep.lcd.io.sio.SIOOutputStream;
 import hep.lcd.io.sio.SIORef;
 import hep.lcio.event.ReconstructedParticle;
+import hep.lcio.event.Vertex;
 import hep.lcio.implementation.event.IReconstructedParticle;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.5 2005-05-27 07:55:56 gaede Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.6 2006-09-21 06:10:51 gaede Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {
@@ -65,6 +66,10 @@ class SIOReconstructedParticle extends IReconstructedParticle
       {
          tempClusters.add(in.readPntr());
       }
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,7))
+      {
+    	  this.startVertex = (Vertex) in.readPntr().getObject();
+      }
       in.readPTag(this);
    }
    static void write(ReconstructedParticle particle, SIOOutputStream out, int flag) throws IOException
@@ -102,6 +107,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
          List clusters = particle.getClusters();
          out.writeInt(clusters.size());
          for (Iterator i = clusters.iterator(); i.hasNext(); ) out.writePntr(i.next());
+         out.writePntr(particle.getStartVertex());
          out.writePTag(particle);
       }
    }
@@ -129,6 +135,7 @@ class SIOReconstructedParticle extends IReconstructedParticle
       for (Iterator i = tracks.iterator(); i.hasNext(); ) out.writePntr(i.next());
       out.writeInt(clusters.size());
       for (Iterator i = clusters.iterator(); i.hasNext(); ) out.writePntr(i.next());
+      out.writePntr(startVertex);
       out.writePTag(this);
    }
    
