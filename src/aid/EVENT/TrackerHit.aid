@@ -11,7 +11,7 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version $Id: TrackerHit.aid,v 1.10 2006-08-03 16:53:35 gaede Exp $
+ * @version $Id: TrackerHit.aid,v 1.11 2006-10-11 13:27:29 gaede Exp $
  */
 
 public interface TrackerHit extends LCObject {
@@ -28,10 +28,11 @@ public interface TrackerHit extends LCObject {
      */
     public const double3V getPosition() const ;
 
-    /**Covariance of the position (x,y,z)
+    /** Covariance of the position (x,y,z), stored as lower triangle matrix. i.e.
+     *  cov(x,x) , cov(y,x) , cov(y,y) , cov(z,x) , cov(z,y) , cov(z,z).
      */
     public const FloatVec& getCovMatrix() const ;
-
+    
     /** The dE/dx of the hit in [GeV].
      */ 	
     public float getdEdx() const ;
