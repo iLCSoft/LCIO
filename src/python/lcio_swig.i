@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.7 2006-08-24 18:11:56 jeremy Exp $
+// $Id: lcio_swig.i,v 1.8 2006-10-25 23:35:09 jeremy Exp $
 
 /*
  * Process this file with Swig to make a Python wrapper for LCIO.
@@ -814,7 +814,7 @@ LCCOLLECTION_CONVERTERS = {
     GLOBALS.LCIO_TRACK : getTrackCollection,
     GLOBALS.LCIO_TRACKERDATA : getTrackerDataCollection,
     GLOBALS.LCIO_TRACKERPULSE : getTrackerPulseCollection,
-    GLOBALS.LCIO_TRACKERRAWDATA : getTrackerRawDataCollection
+    GLOBALS.LCIO_TRACKERRAWDATA : getTrackerRawDataCollection,
     GLOBALS.LCIO_VERTEX : getVertexCollection
 }
 }
