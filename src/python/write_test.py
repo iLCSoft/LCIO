@@ -3,11 +3,11 @@
 import lcio
 import gc
 
-print dir(lcio)
+#print dir(lcio)
 
 # Factory
 fac=lcio.LCFactory.getInstance()
-print repr(fac)
+#print repr(fac)
 
 # LCWriter
 writer=fac.createLCWriter()
