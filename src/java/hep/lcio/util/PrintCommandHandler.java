@@ -46,12 +46,17 @@ public class PrintCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
-		
+				
 		if (cl.hasOption("f"))
 		{
 			String fname = cl.getOptionValue("f");
 			f = new File(fname);
 		}
+		else if (cl.getArgList().size() > 0)
+		{
+			String fname = cl.getArgs()[0];
+			f = new File(fname);
+		}		
 		else {
 			printUsage(true);
 		}
