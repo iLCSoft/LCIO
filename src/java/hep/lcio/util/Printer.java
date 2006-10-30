@@ -839,8 +839,11 @@ public class Printer
 			    			Double.valueOf(recp.getReferencePoint()[2]), 
 			    			Integer.valueOf(pidused),
 			    			(recp.getStartVertex() != null ? Integer.valueOf(recp.getStartVertex().hashCode()):0),
-			    			(recp.getEndVertex() != null ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
+			    			(recp.getParticles().size()>0 ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
 			    			}
+			    
+			    //(recp.getEndVertex() != null ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
+			    
 			    );
 			    
 			    // Print covariance matrix.
