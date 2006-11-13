@@ -900,7 +900,11 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 		) ;
        }
       std::cout << "        id-fields: (" << idDecoder( hit ).valueString() << ")" << std::endl ; 
-      
+
+      //-------- example : acessing cell id components, e.g. layer: 
+//       int layer =  idDecoder( hit )["K-1"] + 1  ;
+//       cout << "  ---- debug  ---  hit layer : " <<  layer << std::endl ;
+
       for(int k=0;k < hit->getNMCContributions();k++){
 
 	try{

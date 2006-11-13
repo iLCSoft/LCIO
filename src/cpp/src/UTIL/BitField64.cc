@@ -91,9 +91,9 @@ namespace UTIL{
 
 
 
-  size_t BitField64::index( const std::string& name){
+  size_t BitField64::index( const std::string& name) const {
     
-    IndexMap::iterator it = _map.find( name ) ;
+    IndexMap::const_iterator it = _map.find( name ) ;
     
     if( it != _map.end() ) 
       

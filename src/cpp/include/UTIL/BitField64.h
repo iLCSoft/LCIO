@@ -79,10 +79,11 @@ namespace UTIL {
      */
     operator lcio::long64() const { return value() ; } 
     
-    /** Conversion operator for int - allows to write:<br>
+    /** fg: removed because it causes ambiguities with operator lcio::long64().
+     *  Conversion operator for int - allows to write:<br>
      *  int index = myBitFieldValue ;
      */
-    operator int() const { return (int) value() ; } 
+    //     operator int() const { return (int) value() ; } 
     
     /** The field's name */
     const std::string& name() const { return _name ; }
@@ -192,7 +193,7 @@ namespace UTIL {
 
     /** Index for field named 'name' 
      */
-    size_t index( const std::string& name) ;
+    size_t index( const std::string& name) const ;
 
     /** Access to field through name .
      */
@@ -200,7 +201,14 @@ namespace UTIL {
 
       return *_fields[ index( name ) ] ;
     }
-      
+    /** Const Access to field through name .
+     */
+    const BitFieldValue& operator[](const std::string& name) const { 
+
+      return *_fields[ index( name ) ] ;
+    }
+
+
     /** The low  word, bits 0-31
      */
     unsigned lowWord() const { return unsigned( _value &  0xffffFFFF )  ; } 
