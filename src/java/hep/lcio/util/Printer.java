@@ -618,22 +618,21 @@ public class Printer
 				mcpmap.put(coll.getElementAt(i), Integer.valueOf(i));
 			}
 			
-			ps.println(" [   id   ] | idx | index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" +  
+			ps.println(" index | [   id   ] | index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" +  
 				      " | mass | charge | energy");
 			
 			for (int i=0; i<coll.size(); i++)
 			{
 				MCParticle part = (MCParticle)coll.getElementAt(i);						
 				
-				ps.format(" [%08x]",
+				ps.print(" " + i + " | ");
+				
+				ps.format("[%08x] | [",
 						new Object[] {
 							Integer.valueOf(part.hashCode()),
 						}
 				);
-			
-				ps.print(i + " | ");
-				
-				ps.print("[");
+							
 				for(int k=0; k<part.getParents().size(); k++) 
 	  	      	{
 		    		if (k>0) 
