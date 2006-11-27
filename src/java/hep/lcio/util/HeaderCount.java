@@ -17,7 +17,7 @@ import java.util.List;
  * Utility method for counting the number of runs and events in an LCIO file.
  * 
  * @author jeremym
- * @version $Id: HeaderCount.java,v 1.1 2006-06-06 21:27:03 jeremy Exp $
+ * @version $Id: HeaderCount.java,v 1.2 2006-11-27 18:29:43 jeremy Exp $
  */
 public class HeaderCount
 {
@@ -100,10 +100,7 @@ public class HeaderCount
 				strbuff.append(evt);
 			}
 			
-			if (printRun || printEvent)
-			{
-				strbuff.append('\n');
-			}
+			strbuff.append('\n');			
 			
 			evttot += evt;
 			runtot += run;
@@ -124,6 +121,7 @@ public class HeaderCount
 			strbuff.append(runtot);
 			strbuff.append('\t');
 			strbuff.append(evttot);
+			strbuff.append('\n');
 		}
 		
 		pstr.print(strbuff.toString());
