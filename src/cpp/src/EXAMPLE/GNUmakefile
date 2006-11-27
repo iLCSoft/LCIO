@@ -74,3 +74,6 @@ $(BINDIR)/testcopy: testcopy.cc $(INSTALL)/liblcio.a
 
 $(BINDIR)/testvtx: testvtx.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/testvtx $(CPPFLAGS) testvtx.cc  $(LIBS) 
+
+$(BINDIR)/lcrtrelation: lcrtrelation.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/lcrtrelation $(CPPFLAGS) lcrtrelation.cc  $(LIBS) 

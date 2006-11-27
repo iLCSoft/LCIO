@@ -23,13 +23,24 @@ typedef std::vector<LCObject*> LCObjectVec ;
  * @version Jun 7, 2003
  * fg 20040405 moved here from hep.lcio.data
  */
-public interface LCObject extends Cloneable {
     
+public interface LCObject extends Cloneable, LCRTRelations{
 @ifdef cpp
+
     /** Returns an object id for internal (debugging) use in LCIO.
      */
     public int id() const ;
 @endif
+// @ifdef cpp
+// public interface LCObject extends Cloneable, LCRTRelations{
+
+//     /** Returns an object id for internal (debugging) use in LCIO.
+//      */
+//     public int id() const ;
+// @else
+//  public interface LCObject extends Cloneable {
+    
+// @endif
 
 @cpp{
     /** Deep copy of the object. C++ implementations should return the 
