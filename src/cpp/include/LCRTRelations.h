@@ -154,6 +154,13 @@ struct LC1To1Relation :
   public LCRelationTraits<LCLinkTraits<FromRelation<U>,From>,
 			  LCLinkTraits<ToRelation<U>,To> > {} ; 
 
+
+template <class U, class From, class To>
+struct LC1ToNRelation : 
+  public LCRelationTraits<LCLinkTraits<FromRelation<U>,From>,
+			  LCLinkListTraits<ToRelation<U>,To> > {
+} ; 
+
 template <class U, class From, class To>
 struct LCNToNRelation : 
   public LCRelationTraits<LCLinkListTraits<FromRelation<U>,From>,
@@ -225,7 +232,6 @@ class LCRTRelations{
 
   template <class R> 
   friend void unset_relation(typename R::from_traits::value_type f );
-
 
   template <class R> 
   friend void add_relation( typename R::from_traits::value_type f, 
@@ -349,13 +355,41 @@ void unset_relation(LCRTRelations* f){
 }
 
 
+template <bool is_container>
+struct helper{
+
+  template <class T, class S>
+  inline static void add( T t, S s) { t.push_back( s )  ; }
+
+  template <class T, class S>
+  inline static void remove( T t, S s) { t.remove( s )  ; }
+};
+
+template <>
+struct helper<false>{
+
+  template <class T, class S> 
+  inline static void add( T& t, S s) { 
+
+    t = s ; 
+//     std::cout << " assigning " << s << " to " << t << std::endl ;
+  }
+
+  template <class T, class S>
+  inline static void remove( T& t, S s) { t = 0 ; }
+};
+
 template <class R> 
 void add_relation(  typename R::from_traits::value_type f, 
 		    typename R::to_traits::value_type t){
 
   f->LCRTRelations::access_to<R>().push_back( t ) ;
-  t->LCRTRelations::access_from <R>().push_back( f ) ;
+
+//   std::cout << " ask to assign " << f << " to " << t << std::endl ;
+  helper<R::from_traits::is_container>::add( t->LCRTRelations::access_from<R>() , f ) ; 
 }
+
+
 
 
 template <class R> 
@@ -363,7 +397,8 @@ void remove_relation( typename R::from_traits::value_type f,
 		      typename R::to_traits::value_type t ) {
   
   f->LCRTRelations::access_to<R>().remove( t ) ;
-  t->LCRTRelations::access_from<R>().remove( f ) ;
+
+  helper<R::from_traits::is_container>::remove( t->LCRTRelations::access_from <R>() , f ) ; 
 }
 
 
@@ -374,7 +409,11 @@ void remove_relations( typename R::from_traits::type::value_type f ) {
   
   for( typename R::to_traits::iterator it = cl.begin(); it!=cl.end(); ++it){
     
-    (*it)->LCRTRelations::access_from<R>().remove( f ) ;
+
+//     (*it)->LCRTRelations::access_from<R>().remove( f ) ;
+
+    helper<R::from_traits::is_container>::remove((*it)->LCRTRelations::access_from <R>() , f ) ; 
+
   }
   cl.clear() ;
 }
@@ -387,14 +426,18 @@ void merge_relations(typename R::from_traits::value_type f1,
   
   for( typename R::to_traits::iterator it = lt2.begin() ;it !=  lt2.end() ; it++ ){
     
-    typename R::from_traits::ref  lf2 = (*it)->LCRTRelations::access_from<R>() ;
+    typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
     
-    lf2.remove( f2 )  ;
+//     lf2.remove( f2 )  ;
+
+    helper<R::from_traits::is_container>::remove( lf2, f2 ) ; 
     
-    lf2.push_back( f1 ) ;
+//     lf2.push_back( f1 ) ;
+
+    helper<R::from_traits::is_container>::add( lf2, f1 ) ; 
   }
 
-  typename R::from_traits::ref  lt1 = f1->LCRTRelations::access_to<R>() ;
+  typename R::to_traits::ref  lt1 = f1->LCRTRelations::access_to<R>() ;
   
   lt1.merge( lt2 ) ;
 }
