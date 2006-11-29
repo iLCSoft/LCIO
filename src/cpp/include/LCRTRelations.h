@@ -45,6 +45,9 @@ struct DeleteElements{
 
 typedef std::map< DeleteFPtr , void * > PtrMap ;
 
+typedef std::vector< DeleteFPtr > DPtrVec ;
+typedef std::vector< void * > PtrVec ;
+
 
 
 template <class U, class T , class I=SimplePtrInit, class D=NoDelete >
@@ -263,32 +266,50 @@ public:
     return  ext<typename V::from_traits>() ;
   }
   
+  LCRTRelations() { 
+    _vec = new PtrVec( 32  ) ; // initialize to prevent from to many resizes
+  }
+
   ~LCRTRelations() {
-    
-    for( PtrMap::iterator it = _map.begin() ;
-	 it != _map.end() ; ++it ){
-      
-      it->first( it->second ) ;  // call the delete function
-    }
+
+
+//     std::cout << "  --- in ~LCRTRelations() - cleaners.size: " 
+// 	      <<  cleaners().size() << std::endl ;
+
+   for( unsigned i=0 ; i< cleaners().size() ; ++i){
+
+//      std::cout << " cleaners()[i] : " <<  cleaners()[i] << std::endl ;
+//      if( cleaners()[i] != 0 ) 
+     cleaners()[i]( _vec->operator[](i)  ) ;  // call the delete function
+     
+   }
+   delete _vec ;
   }
-  
 
-  void print(){
+//   ~LCRTRelations() {
     
-    std::cout << " ---- LCRTRelations -- : " << std::endl ;
-
-    typedef std::map< void * , void*  > MyPtrMap ;
-
-    MyPtrMap& map = *(MyPtrMap*) &_map ;
-    
-    for( MyPtrMap::iterator it = map.begin() ;
-	 it != map.end() ; ++it ){
+//     for( PtrMap::iterator it = _map.begin() ;
+// 	 it != _map.end() ; ++it ){
       
-      std::cout << "      ----   key : " << &(it->first) << " value " 
-		<<  (void*)it->second  << std::endl ;
-      
-    }
-  }
+//       it->first( it->second ) ;  // call the delete function
+//     }
+//   }
+
+
+
+
+
+//   void print(){
+//     std::cout << " ---- LCRTRelations -- : " << std::endl ;
+//     typedef std::map< void * , void*  > MyPtrMap ;
+//     MyPtrMap& map = *(MyPtrMap*) &_map ;
+//     for( MyPtrMap::iterator it = map.begin() ;
+// 	 it != map.end() ; ++it ){
+//       std::cout << "      ----   key : " << &(it->first) << " value " 
+// 		<<  (void*)it->second  << std::endl ;
+//     }
+//   }
+
 
 protected:
 
@@ -308,25 +329,97 @@ protected:
   template <class V>
   typename V::ptr & ptr() {
     
-    typedef std::map< DeleteFPtr , typename V::ptr  > MyPtrMap ;
-    
-    MyPtrMap& map = *(MyPtrMap*) &_map ;
-    
-    typename MyPtrMap::iterator it = map.find( V::deletePtr() ) ;
-    
-    if( it == map.end() )
-      it = map.insert( map.begin(), 
-		       std::make_pair( V::deletePtr(), V::init() )) ;
-    
-    return  it->second  ;
+    typedef std::vector< typename V::ptr  > MyPtrVec ;
+    MyPtrVec* vec = (MyPtrVec*) _vec ;
+
+    unsigned id =  typeID<V>()  ;
+
+    if( ! (vec->size() > id )  ) {
+//     std::cout << "   -  need to resize vec from " << vec->size() << " to  " 
+// 	      << id +  1 << std::endl ;
+      vec->resize( id + 1 ) ;
+    }
+
+    typename V::ptr& p =  vec->operator[](id) ;
+
+//     std::cout << " ----- p : " << p << " -- type: " 
+// 	      << typeid(typename V::ptr).name() 
+// 	      << "   size: " << vec->size()
+// 	      << "   typid: : " << id 
+// 	      << std::endl ;
+
+    if( p == 0 ) 
+      p = V::init() ;
+
+    return  p ;
   }
   
+
+//   /** Returns the reference to the pointer to the extension/relation object */
+//   template <class V>
+//   typename V::ptr & ptr() {
+    
+//     typedef std::map< DeleteFPtr , typename V::ptr  > MyPtrMap ;
+    
+//     MyPtrMap& map = *(MyPtrMap*) &_map ;
+    
+//     typename MyPtrMap::iterator it = map.find( V::deletePtr() ) ;
+    
+//     if( it == map.end() )
+//       it = map.insert( map.begin(), 
+// 		       std::make_pair( V::deletePtr(), V::init() )) ;
+    
+//     return  it->second  ;
+//   }
+
 private:
   
-  PtrMap _map ;
+  static DPtrVec& cleaners(){
+    static DPtrVec v ;
+    return v ;
+  }
+  
+  unsigned nextID(DeleteFPtr cp){
+    static unsigned id(0) ;
+
+//     std::cout << " ---- nextID " << id+1  << " - delete Ptr  " 
+    // <<  cp << std::endl ;
+      
+    cleaners().push_back( cp ) ;
+
+    return id++ ;
+  }
+  
+  template <class T>
+  unsigned typeID(){
+    const static unsigned uid  = nextID( T::deletePtr() ) ;
+
+    return uid ;
+  } ;
+  
+  //   PtrMap _map ;
+  
+  
+  PtrVec* _vec ; 
+  
 } ;
+  
 
 
+/** Unset the 1-to-1 relation from this object if it exists*/
+template <class R> 
+void unset_relation(typename R::from_traits::value_type f){
+
+  if( f != 0 ){
+    
+    LCRTRelations* t = f->LCRTRelations::to<R>() ;
+
+    if( t != 0 ) 
+      t->LCRTRelations::access_from<R>() = 0 ;
+
+    f->LCRTRelations::access_to<R>() = 0 ;
+  }
+}
 
 template <class R> 
 void set_relation(typename R::from_traits::value_type f, typename R::to_traits::value_type t){
@@ -339,20 +432,6 @@ void set_relation(typename R::from_traits::value_type f, typename R::to_traits::
   t->LCRTRelations::access_from<R>() =  f ;
 }
 
-/** Unset the 1-to-1 relation from this object if it exists*/
-template <class R> 
-void unset_relation(LCRTRelations* f){
-
-  if( f != 0 ){
-    
-    LCRTRelations* t = f->LCRTRelations::to<R>() ;
-
-    if( t != 0 ) 
-      t->LCRTRelations::access_from<R>() = 0 ;
-
-    f->LCRTRelations::access_to<R>() = 0 ;
-  }
-}
 
 
 template <bool is_container>
@@ -403,7 +482,7 @@ void remove_relation( typename R::from_traits::value_type f,
 
 
 template <class R> 
-void remove_relations( typename R::from_traits::type::value_type f ) {
+void remove_relations( typename R::from_traits::value_type f ) {
   
   typename R::to_traits::ref  cl = f->LCRTRelations::access_to<R>() ;
   
@@ -426,15 +505,19 @@ void merge_relations(typename R::from_traits::value_type f1,
   
   for( typename R::to_traits::iterator it = lt2.begin() ;it !=  lt2.end() ; it++ ){
     
-    typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
-    
-//     lf2.remove( f2 )  ;
+//     typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
 
-    helper<R::from_traits::is_container>::remove( lf2, f2 ) ; 
-    
-//     lf2.push_back( f1 ) ;
+    helper<R::from_traits::is_container>::remove( (*it)->LCRTRelations::access_from<R>(), f2 ) ; 
+    helper<R::from_traits::is_container>::add( (*it)->LCRTRelations::access_from<R>(), f1 ) ; 
 
-    helper<R::from_traits::is_container>::add( lf2, f1 ) ; 
+//   for( typename R::to_traits::iterator it = lt2.begin() ;it !=  lt2.end() ; it++ ){
+    
+// //     typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
+// //     lf2.remove( f2 )  ;
+//     helper<R::from_traits::is_container>::remove( lf2, f2 ) ; 
+// //     lf2.push_back( f1 ) ;
+//     helper<R::from_traits::is_container>::add( lf2, f1 ) ; 
+
   }
 
   typename R::to_traits::ref  lt1 = f1->LCRTRelations::access_to<R>() ;
