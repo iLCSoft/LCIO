@@ -81,6 +81,47 @@ struct LCBaseLinkTraits : public LCBaseTraits<U,T,I,D,b>{
   static const bool is_container=false ;
 };
 
+/** Special Extension that allows to write int extensions directly (not through a pointer !). */
+template <class U >
+struct LCIntExtension{  // FIXME: need to check on 64 bit architecture...
+
+  typedef int ptr ;  // base pointer type 
+
+  typedef U tag ;     // this ensures that a new class instance is created for every user extension
+
+  static const int allowed_to_call_ext = 1 ;
+
+  static void clean(void *v) { }
+
+  static ptr init() { 
+    return 0 ; 
+  }
+  static DeleteFPtr deletePtr() { return  &clean ; }  ;
+
+  typedef int& ext_type ;                
+};
+
+
+/** Special Extension that allows to write float extensions directly (not through a pointer !). */
+template <class U >
+
+struct LCFloatExtension{// FIXME: need to check on 64 bit architecture...
+
+  typedef float  ptr ;  // base pointer type 
+  typedef U tag ;     // this ensures that a new class instance is created for every user extension
+  
+  static const int allowed_to_call_ext = 1 ;
+  
+  static void clean(void *v) { }
+
+  static ptr init() { return 0 ; }
+
+  static DeleteFPtr deletePtr() { return  &clean ; }  ;
+
+  typedef float& ext_type ;                 // return value of  ext<>()
+};
+
+
 template <class U, class T , class I=CreationPtrInit<T>, class D=DeletePtr<T> , bool b=1>
 struct LCBaseLinkContainerTraits : public LCBaseTraits<U,T,I,D,b>{
 
@@ -389,7 +430,7 @@ private:
   
   template <class T>
   inline unsigned typeID(){
-    const static unsigned uid  = nextID( T::deletePtr() ) ;
+    static const unsigned uid  = nextID( T::deletePtr() ) ;
 
     return uid ;
   } ;
