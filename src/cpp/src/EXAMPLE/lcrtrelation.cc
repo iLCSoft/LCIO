@@ -16,7 +16,7 @@ using namespace lcio ;
 
 struct TrkCluLink : LCNToNRelation<TrkCluLink,Track,Cluster> {} ;
 
-struct Index : LCOwnedLinkTraits<Index,int> {} ;
+struct Index : LCOwnedExtension<Index,int> {} ;
 
 
 /** Example/test program for new LCIO runtime relations.
@@ -102,21 +102,25 @@ int main(int argc, char** argv ){
 
 	std::cout << " track " << j << " cluster relations:   " ; 
 
-	for( TrkCluLink::to_traits::const_iterator iclu =  
-	       trkcol->getElementAt(j)->to<TrkCluLink>().begin()  ;
-	     
-	     iclu != trkcol->getElementAt(j)->to<TrkCluLink>().end() ; ++iclu ){
+	Track*   trk = dynamic_cast<Track*>   ( trkcol->getElementAt(j) ) ;
+
+	TrkCluLink::to::rel_type clulist =  trk->rel<TrkCluLink::to>() ;
+
+	for( TrkCluLink::to::const_iterator iclu = clulist->begin() ;
+	     iclu != clulist->end() ; ++iclu ){
 	  
- 	  std::cout << *(*iclu)->ext<Index>() << ", " ; 
+	  Cluster* clu = *iclu ;
+
+	  std::cout << * clu->ext<Index>() << ", " ; 
 	}
 	std::cout << std::endl ; 
       }
-
-
+      
+      
     } else {
       std::cout << " couldn't find Track and Cluster collection in event !" << std::endl ;
     }
-
+    
     nEvents ++ ;
   } 
   // -------- end of event loop -----------

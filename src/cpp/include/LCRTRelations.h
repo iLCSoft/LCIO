@@ -5,67 +5,60 @@
 #include <vector>
 #include <list>
 #include <map>
-#include <sstream>
-//#include <typeinfo>
-
-using namespace std ;
 
 
+
+//------------------ internal helper typdefs, function and classes ----------
+
+/** Function pointer for delete function */
 typedef void (*DeleteFPtr)(void*) ;
 
-
+/** Simple init function for simple pointers */
 struct SimplePtrInit{ static void* init() { return 0 ; } } ;
 
+/** Empty delete function for pointers w/o ownership */
 struct NoDelete{ static void clean(void *v) { /* no_op */ } } ;
 
-
+/** Factory for objects of type  T*/
 template <class T>
 struct CreationPtrInit{ static void* init() { return new T ; } } ;
 
+/** Delete function for pointers w/ ownership.*/
 template <class T>
 struct DeletePtr{ static void clean(void *v) { delete (T*) v ; } } ;
 
 
+/** Delete function for containers of owned objects */
 template <class T>
 struct DeleteElements{
 
   static void clean(void *v) { 
-    
     T* vec = static_cast<T*>(v) ;
-    
-    for( typename T::iterator it = vec->begin() ;
-	 it != vec->end() ; ++it ){
+    for( typename T::iterator it = vec->begin();it != vec->end(); ++it){
       delete *it ;
     }
-    
     delete vec  ;    
   } 
-} ;
+};
 
 
-typedef std::map< DeleteFPtr , void * > PtrMap ;
+// typedef std::map< DeleteFPtr , void * > PtrMap ;
 
+/** Vector of delete  functions */
 typedef std::vector< DeleteFPtr > DPtrVec ;
+
+/** Vector of pointers to extension obbjects*/
 typedef std::vector< void * > PtrVec ;
 
 
-
-template <class U, class T , class I=SimplePtrInit, class D=NoDelete >
-struct LCBaseLinkTraits{
-
-  typedef T type ;
-  typedef T* ptr ;
-  typedef T*& ext ; // return value of  ext<>()
-  typedef T* cext ; // return value of  to<>() and from<>()
-  typedef const T* cptr ;
-  typedef T& ref ;
-  typedef const T& cref ;
-  typedef U tag ; // this ensures that a new class instance is created for every user extension
-
-
-  typedef ptr value_type ;
-  static const bool is_container=false ;
-
+template <class U, class T , class I, class D, bool b>
+struct LCBaseTraits{
+  
+  typedef T*  ptr ;  // base pointer type 
+  typedef U tag ;    // this ensures that a new class instance is created for every user extension
+  
+  static const int allowed_to_call_ext = b ;
+  
   static void clean(void *v) {
     D::clean( v ) ;
   }
@@ -76,152 +69,179 @@ struct LCBaseLinkTraits{
 };
 
 
+template <class U, class T , class I=SimplePtrInit, class D=NoDelete , bool b=1>
+struct LCBaseLinkTraits : public LCBaseTraits<U,T,I,D,b>{
 
-template <class U, class T , class I=CreationPtrInit<T>, class D=DeletePtr<T> >
-struct LCBaseLinkContainerTraits{
+  typedef LCBaseTraits<U,T,I,D,b> base ;
 
-  typedef T type ;
-  typedef T* ptr ;
-  typedef T*& ext ; // return value of  ext<>()
-  typedef const T* cext ; // return value of  to<>() and from<>()
-  typedef const T* cptr ;
-  typedef T& ref ;
-  typedef const T& cref ;
-  typedef U tag ; // this ensures that a new class instance is created for every user extension
+  typedef T*& ext_type ;                 // return value of  ext<>()
+  typedef T*  rel_type ;                 // return value of  rel<>() 
+  typedef typename base::ptr obj_ptr ;   // pointer to object
 
-  typedef typename type::value_type value_type ;
-  typedef typename type::iterator iterator ;
-  typedef typename type::const_iterator const_iterator ;
-  typedef cref container ;
+  static const bool is_container=false ;
+};
+
+template <class U, class T , class I=CreationPtrInit<T>, class D=DeletePtr<T> , bool b=1>
+struct LCBaseLinkContainerTraits : public LCBaseTraits<U,T,I,D,b>{
+
+  typedef LCBaseTraits<U,T,I,D,b> base ;
+
+  typedef       T*  ext_type ;              // return value of  ext<>()
+  typedef const T*  rel_type ;              // return value of  rel<>() 
+  typedef typename T::value_type obj_ptr ;  // pointer to object
+
+  typedef typename T::iterator iterator ;
+  typedef typename T::const_iterator const_iterator ;
 
   static const bool is_container=true ;
-
-  static void clean(void *v) {
-    D::clean( v ) ;
-  }
-  static ptr init() {
-    return (ptr) I::init() ;
-  }
-  static DeleteFPtr deletePtr() { return  &clean ; }  ;
 };
 
+//-----------end of  internal helper typdefs, function and classes ----------
+
+/** Simple Extension -  pointer to an object of type T. 
+ *  The class U needs to be the subclass  type, e.g.<br>
+ *  struct MyAttributes : public LCExtension<MyAttributes,Attributes> {} ; <br>
+ */
+template <class U, typename T> 
+struct LCExtension : public LCBaseLinkTraits< U, T > {};
+
+/** Simple Extension -  pointer to an object of type T where the ownership is taken over
+ *  by the object holding the extension, i.e. it deletes the object when itself is deleted. 
+ *  The class U needs to be the subclass  type, e.g.<br>
+ *  struct MyAttributes : public LCExtension<MyAttributes,Attributes> {} ; <br>
+ */
+template <class U, typename T> 
+class LCOwnedExtension : public LCBaseLinkTraits< U, T , SimplePtrInit , DeletePtr<T> > {};
 
 
+/** Extension vector holding pointers to objects of type T - no ownership of the objects is taken. */
 template <class U, class T> 
-class LCLinkTraits : public LCBaseLinkTraits< U, T > {};
-
-
-template <class U, class T> 
-class LCOwnedLinkTraits : public LCBaseLinkTraits< U, T , SimplePtrInit , DeletePtr<T>  > {};
-
-
-template <class U, class T> 
-class LCOwnedLinkVectorTraits : 
-  public LCBaseLinkContainerTraits< U, std::vector<T*>,
-				    CreationPtrInit< std::vector<T*> > , 
-				    DeleteElements< std::vector<T*> > > {};
-
-template <class U, class T> 
-class LCOwnedLinkListTraits : 
-  public LCBaseLinkContainerTraits< U, std::list<T*>,
-				    CreationPtrInit< std::list<T*> > , 
-				    DeleteElements<  std::list<T*> > > {};
-
-template <class U, class T> 
-class LCLinkVectorTraits :
+class LCExtensionVector :
   public LCBaseLinkContainerTraits< U, std::vector<T*>,
 				    CreationPtrInit< std::vector<T*> > , 
 				    DeletePtr<std::vector<T*> > > {};
 
+
+/** Extension vector holding pointers to objects of type T - ownership of the objects is taken, i.e.
+ *  all objects pointed to in the vector are deleted when the object itself is deleted.
+ */
 template <class U, class T> 
-class LCLinkListTraits :
+class LCOwnedExtensionVector : 
+  public LCBaseLinkContainerTraits< U, std::vector<T*>,
+				    CreationPtrInit< std::vector<T*> > , 
+				    DeleteElements< std::vector<T*> > > {};
+
+
+/** Extension list holding pointers to objects of type T - no ownership of the objects is taken. */
+template <class U, class T> 
+class LCExtensionList :
   public LCBaseLinkContainerTraits< U, std::list<T*>,
 				    CreationPtrInit< std::list<T*> > , 
 				    DeletePtr<std::list<T*> > > {};
 
-template <class U>
-struct FromRelation{} ;
+/** Extension list holding pointers to objects of type T - ownership of the objects is taken, i.e.
+ *  all objects pointed to in the vector are deleted when the object itself is deleted.
+ */
+template <class U, class T> 
+class LCOwnedExtensionList : 
+  public LCBaseLinkContainerTraits< U, std::list<T*>,
+				    CreationPtrInit< std::list<T*> > , 
+				    DeleteElements<  std::list<T*> > > {};
 
-template <class U>
-struct ToRelation{} ;
 
+
+/** Helper class for relations */
+template <class U, class T> 
+struct RelationOneSide  : 
+  public LCBaseLinkTraits<U,T,SimplePtrInit,NoDelete,false> {};
+
+
+/** Helper class for relations */
+template <class U, class T> 
+struct RelationManySide :
+  public LCBaseLinkContainerTraits< U, std::list<T*>,
+				    CreationPtrInit< std::list<T*> > , 
+				    DeletePtr<std::list<T*> > ,false  > {};
+
+/** Helper class for relations */
+template <class U> struct FromRelation{} ;
+
+/** Helper class for relations */
+template <class U> struct ToRelation{} ;
+
+
+/** Helper class for biderectional relations provides the to and from type*/
 template <class From, class To>
-struct LCRelationTraits{
-  typedef From from_traits  ;
-  typedef To   to_traits  ;
+struct BiDirectional{
+  typedef From from  ;
+  typedef To   to  ;
 } ;
 
 
+
+/** One to one relation between two objects of type From and To */
 template <class U, class From, class To>
 struct LC1To1Relation : 
-  public LCRelationTraits<LCLinkTraits<FromRelation<U>,From>,
-			  LCLinkTraits<ToRelation<U>,To> > {} ; 
+  public BiDirectional<RelationOneSide<FromRelation<U>,From>,
+			  RelationOneSide<ToRelation<U>,To> > {
 
-
-template <class U, class From, class To>
-struct LC1ToNRelation : 
-  public LCRelationTraits<LCLinkTraits<FromRelation<U>,From>,
-			  LCLinkListTraits<ToRelation<U>,To> > {
 } ; 
 
+/** One to many relation between one object of type From to many objects of type To */
+template <class U, class From, class To>
+struct LC1ToNRelation : 
+  public BiDirectional<RelationOneSide<FromRelation<U>,From>,
+			  RelationManySide<ToRelation<U>,To> > {
+} ; 
+
+/** Many to many relation between objects of type From to objects of type To */
 template <class U, class From, class To>
 struct LCNToNRelation : 
-  public LCRelationTraits<LCLinkListTraits<FromRelation<U>,From>,
-			  LCLinkListTraits<ToRelation<U>,To> > {
+  public BiDirectional<RelationManySide<FromRelation<U>,From>,
+			  RelationManySide<ToRelation<U>,To> > {
 } ; 
 
 
 //--------------------------------------------------------------------
+
+
+
 class LCRTRelations ;
 
 /** Set the 1-to-1 relation between two objects - prexisting inconsistent relations 
     involving the two objects are deleted to enforce a coinsistent set of from-to relations. */
 template <class R> 
-void set_relation( typename R::from_traits::value_type f, 
-		   typename R::to_traits::value_type t) ;
+void set_relation( typename R::from::obj_ptr f, 
+		   typename R::to::obj_ptr t) ;
 
 /** Unset the 1-to-1 relation from f */
 template <class R> 
-void unset_relation(typename R::from_traits::value_type f );
+void unset_relation(typename R::from::obj_ptr f );
 
 
 /** Add a link from f to t to an N-to-N relation ship  */
 template <class R> 
-void add_relation( typename R::from_traits::value_type f, 
-		   typename R::to_traits::value_type t) ;
+void add_relation( typename R::from::obj_ptr f, 
+		   typename R::to::obj_ptr t) ;
 
 
 /** Remove the link from from f to t from the N-to-N relation ship  */
 template <class R> 
-void remove_relation( typename R::from_traits::value_type f, 
-		      typename R::to_traits::value_type t) ;
+void remove_relation( typename R::from::obj_ptr f, 
+		      typename R::to::obj_ptr t) ;
 
 
 /** Removes all relations from the given object */
 template <class R> 
-void remove_relations(typename R::from_traits::value_type f );
+void remove_relations(typename R::from::obj_ptr f );
 
 
 /** Merge the relations from f2 to f1 - after this call f1 will hold all 
  *  the relations and f2 will be empty. 
  */
 template <class R> 
-void merge_relations( typename R::from_traits::value_type f1, 
-		      typename R::from_traits::value_type f2) ;
-
-
-
-/*External helper function with partial specialization */
-template <class V, bool take_reference>
-struct ext_helper{
-  inline static typename V::ext ext( typename V::ptr& p ) { return p ;}
-};
-
-/*External helper function with partial specialization */
-template <class V>
-struct ext_helper<V,true>{
-  inline static typename V::ext ext( typename V::ptr& p ) { return *p ;}
-};
+void merge_relations( typename R::from::obj_ptr f1, 
+		      typename R::from::obj_ptr f2) ;
 
 
 
@@ -229,58 +249,61 @@ struct ext_helper<V,true>{
 
 class LCRTRelations{
   
+  // declare functions for relation handling as friends
   template <class R> 
-  friend void set_relation( typename R::from_traits::value_type f, 
-			    typename R::to_traits::value_type t);
+  friend void set_relation( typename R::from::obj_ptr f, 
+			    typename R::to::obj_ptr t);
+  template <class R> 
+  friend void unset_relation(typename R::from::obj_ptr f );
 
   template <class R> 
-  friend void unset_relation(typename R::from_traits::value_type f );
+  friend void add_relation( typename R::from::obj_ptr f, 
+		     typename R::to::obj_ptr t) ;
+  template <class R> 
+  friend void remove_relation( typename R::from::obj_ptr f, 
+			       typename R::to::obj_ptr t) ;
+  template <class R> 
+  friend void remove_relations(typename R::from::obj_ptr f );
 
   template <class R> 
-  friend void add_relation( typename R::from_traits::value_type f, 
-		     typename R::to_traits::value_type t) ;
-  template <class R> 
-  friend void remove_relation( typename R::from_traits::value_type f, 
-			       typename R::to_traits::value_type t) ;
-  template <class R> 
-  friend void remove_relations(typename R::from_traits::value_type f );
-
-  template <class R> 
-  friend void merge_relations( typename R::from_traits::value_type f1, 
-			       typename R::from_traits::value_type f2) ;
+  friend void merge_relations( typename R::from::obj_ptr f1, 
+			       typename R::from::obj_ptr f2) ;
   
 public:
   
+  /** Provides access to an extension object - the type and ownership is defined 
+   *  by the class V which should be a subtype of LCExtension, LCOwnedExtension,
+   *  LCExtensionVector, LCExtensionList,...
+   */
   template <class V>
-  typename V::ext  ext() { 
-//     return ext_helper<V,V::is_container>::ext(  ptr<V>()  ) ;
+  inline typename V::ext_type  ext() { 
+
+    static char check[ V::allowed_to_call_ext] ;
+
     return  ptr<V>() ;
   }
   
+
+  /** Provides read access to relations - the object types and their connectivity 
+   *  are defined by the class V which has to be a subtype of either 
+   *  LC1To1Relation, LC1ToNRelation or LCNToNRelation.
+   */
   template <class V>
-  typename V::to_traits::cext to() {
-    return  ext<typename V::to_traits>() ;
+  inline typename V::rel_type rel() {
+    
+    return  ptr<V>() ;
   }
   
-  template <class V>
-  typename V::from_traits::cext from() {
-    return  ext<typename V::from_traits>() ;
-  }
   
+
   LCRTRelations() { 
     _vec = new PtrVec( 32  ) ; // initialize to prevent from to many resizes
   }
 
   ~LCRTRelations() {
 
-
-//     std::cout << "  --- in ~LCRTRelations() - cleaners.size: " 
-// 	      <<  cleaners().size() << std::endl ;
-
    for( unsigned i=0 ; i< cleaners().size() ; ++i){
 
-//      std::cout << " cleaners()[i] : " <<  cleaners()[i] << std::endl ;
-//      if( cleaners()[i] != 0 ) 
      cleaners()[i]( _vec->operator[](i)  ) ;  // call the delete function
      
    }
@@ -288,17 +311,11 @@ public:
   }
 
 //   ~LCRTRelations() {
-    
 //     for( PtrMap::iterator it = _map.begin() ;
 // 	 it != _map.end() ; ++it ){
-      
 //       it->first( it->second ) ;  // call the delete function
 //     }
 //   }
-
-
-
-
 
 //   void print(){
 //     std::cout << " ---- LCRTRelations -- : " << std::endl ;
@@ -314,21 +331,9 @@ public:
 
 protected:
 
-  /** provides write access to a relation - only for friends */
-  template <class V>
-  typename V::to_traits::ext access_to() {
-    return  ext<typename V::to_traits>() ;
-  }
-
-  /** provides write access to a relation - only for friends */
-  template <class V>
-  typename V::from_traits::ext access_from() {
-    return  ext<typename V::from_traits>() ;
-  }
-
   /** Returns the reference to the pointer to the extension/relation object */
   template <class V>
-  typename V::ptr & ptr() {
+  inline typename V::ptr & ptr() {
     
     typedef std::vector< typename V::ptr  > MyPtrVec ;
     MyPtrVec* vec = (MyPtrVec*) _vec ;
@@ -336,18 +341,10 @@ protected:
     unsigned id =  typeID<V>()  ;
 
     if( ! (vec->size() > id )  ) {
-//     std::cout << "   -  need to resize vec from " << vec->size() << " to  " 
-// 	      << id +  1 << std::endl ;
       vec->resize( id + 1 ) ;
     }
 
     typename V::ptr& p =  vec->operator[](id) ;
-
-//     std::cout << " ----- p : " << p << " -- type: " 
-// 	      << typeid(typename V::ptr).name() 
-// 	      << "   size: " << vec->size()
-// 	      << "   typid: : " << id 
-// 	      << std::endl ;
 
     if( p == 0 ) 
       p = V::init() ;
@@ -355,7 +352,6 @@ protected:
     return  p ;
   }
   
-
 //   /** Returns the reference to the pointer to the extension/relation object */
 //   template <class V>
 //   typename V::ptr & ptr() {
@@ -380,7 +376,7 @@ private:
     return v ;
   }
   
-  unsigned nextID(DeleteFPtr cp){
+  inline unsigned nextID(DeleteFPtr cp){
     static unsigned id(0) ;
 
 //     std::cout << " ---- nextID " << id+1  << " - delete Ptr  " 
@@ -392,7 +388,7 @@ private:
   }
   
   template <class T>
-  unsigned typeID(){
+  inline unsigned typeID(){
     const static unsigned uid  = nextID( T::deletePtr() ) ;
 
     return uid ;
@@ -406,31 +402,32 @@ private:
 } ;
   
 
+//----------------------- relation function definitions -----------------------------------
 
-/** Unset the 1-to-1 relation from this object if it exists*/
+
 template <class R> 
-void unset_relation(typename R::from_traits::value_type f){
-
+void unset_relation(typename R::from::obj_ptr f){
+  
   if( f != 0 ){
     
-    LCRTRelations* t = f->LCRTRelations::to<R>() ;
-
+    LCRTRelations* t = f->LCRTRelations::rel<typename R::to>() ;
+    
     if( t != 0 ) 
-      t->LCRTRelations::access_from<R>() = 0 ;
-
-    f->LCRTRelations::access_to<R>() = 0 ;
+      t->LCRTRelations::ptr<typename R::from>() = 0 ;
+    
+    f->LCRTRelations::ptr<typename R::to>() = 0 ;
   }
 }
 
 template <class R> 
-void set_relation(typename R::from_traits::value_type f, typename R::to_traits::value_type t){
+void set_relation(typename R::from::obj_ptr f, typename R::to::obj_ptr t){
   
   // clear old relations first
   unset_relation<R>( f ) ;
-  unset_relation<R>(t->LCRTRelations::from<R>() ) ; 
+  unset_relation<R>(t->LCRTRelations::rel<typename R::from>() ) ; 
   
-  f->LCRTRelations::access_to<R>() =  t ;
-  t->LCRTRelations::access_from<R>() =  f ;
+  f->LCRTRelations::ptr<typename R::to>() =  t ;
+  t->LCRTRelations::ptr<typename R::from>() =  f ;
 }
 
 
@@ -449,81 +446,64 @@ template <>
 struct helper<false>{
 
   template <class T, class S> 
-  inline static void add( T& t, S s) { 
-
-    t = s ; 
-//     std::cout << " assigning " << s << " to " << t << std::endl ;
-  }
+  inline static void add( T& t, S s) { t = s ; }
 
   template <class T, class S>
   inline static void remove( T& t, S s) { t = 0 ; }
 };
 
 template <class R> 
-void add_relation(  typename R::from_traits::value_type f, 
-		    typename R::to_traits::value_type t){
+void add_relation(  typename R::from::obj_ptr f, 
+		    typename R::to::obj_ptr t){
 
-  f->LCRTRelations::access_to<R>()->push_back( t ) ;
+  f->LCRTRelations::ptr<typename R::to>()->push_back( t ) ;
 
 //   std::cout << " ask to assign " << f << " to " << t << std::endl ;
-  helper<R::from_traits::is_container>::add( t->LCRTRelations::access_from<R>() , f ) ; 
+  helper<R::from::is_container>::add( t->LCRTRelations::ptr<typename R::from>() , f ) ; 
 }
 
 
 
 
 template <class R> 
-void remove_relation( typename R::from_traits::value_type f, 
-		      typename R::to_traits::value_type t ) {
+void remove_relation( typename R::from::obj_ptr f, 
+		      typename R::to::obj_ptr t ) {
   
-  f->LCRTRelations::access_to<R>()->remove( t ) ;
+  f->LCRTRelations::ptr<typename R::to>()->remove( t ) ;
 
-  helper<R::from_traits::is_container>::remove( t->LCRTRelations::access_from <R>() , f ) ; 
+  helper<R::from::is_container>::remove( t->LCRTRelations::ptr<typename R::from>() , f ) ; 
 }
 
 
 template <class R> 
-void remove_relations( typename R::from_traits::value_type f ) {
+void remove_relations( typename R::from::obj_ptr f ) {
   
-  typename R::to_traits::ref  cl = *f->LCRTRelations::access_to<R>() ;
+  typename R::to::ptr cl = f->LCRTRelations::ptr<typename R::to>() ;
   
-  for( typename R::to_traits::iterator it = cl.begin(); it!=cl.end(); ++it){
+  for( typename R::to::iterator it = cl->begin(); it!=cl->end(); ++it){
     
 
-//     (*it)->LCRTRelations::access_from<R>().remove( f ) ;
+//     (*it)->LCRTRelations::ptr<typename R::from>().remove( f ) ;
 
-    helper<R::from_traits::is_container>::remove((*it)->LCRTRelations::access_from <R>() , f ) ; 
+    helper<R::from::is_container>::remove((*it)->LCRTRelations::ptr<typename R::from>() , f ) ; 
 
   }
-  cl.clear() ;
+  cl->clear() ;
 }
 
 template <class R> 
-void merge_relations(typename R::from_traits::value_type f1, 
-		     typename R::from_traits::value_type f2 ) {
+void merge_relations(typename R::from::obj_ptr f1, 
+		     typename R::from::obj_ptr f2 ) {
   
-  typename R::to_traits::ref  lt2 = *f2->LCRTRelations::access_to<R>() ;
+  typename R::to::ptr  lt2 = f2->LCRTRelations::ptr<typename R::to>() ;
   
-  for( typename R::to_traits::iterator it = lt2.begin() ;it !=  lt2.end() ; it++ ){
+  for( typename R::to::iterator it = lt2->begin() ;it !=  lt2->end() ; it++ ){
     
-//     typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
-
-    helper<R::from_traits::is_container>::remove( (*it)->LCRTRelations::access_from<R>(), f2 ) ; 
-    helper<R::from_traits::is_container>::add( (*it)->LCRTRelations::access_from<R>(), f1 ) ; 
-
-//   for( typename R::to_traits::iterator it = lt2.begin() ;it !=  lt2.end() ; it++ ){
-    
-// //     typename R::from_traits::value_type  lf2 = (*it)->LCRTRelations::access_from<R>() ;
-// //     lf2.remove( f2 )  ;
-//     helper<R::from_traits::is_container>::remove( lf2, f2 ) ; 
-// //     lf2.push_back( f1 ) ;
-//     helper<R::from_traits::is_container>::add( lf2, f1 ) ; 
-
+    helper<R::from::is_container>::remove( (*it)->LCRTRelations::ptr<typename R::from>(), f2 ) ; 
+    helper<R::from::is_container>::add( (*it)->LCRTRelations::ptr<typename R::from>(), f1 ) ; 
   }
 
-  typename R::to_traits::ref  lt1 = *f1->LCRTRelations::access_to<R>() ;
-  
-  lt1.merge( lt2 ) ;
+  f1->LCRTRelations::ptr<typename R::to>()->merge( *lt2 ) ;
 }
 
 
