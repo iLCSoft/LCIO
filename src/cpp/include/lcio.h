@@ -7,7 +7,7 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version $Id: lcio.h,v 1.25 2006-09-21 06:10:36 gaede Exp $ 
+ * @version $Id: lcio.h,v 1.26 2006-12-01 14:10:09 gaede Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"
@@ -50,6 +50,12 @@ namespace IMPL{}
 namespace UTIL{}
 
 
+/** The namespace lcrtrel holds classes and functions for runtime extensions and relations
+ *  see LCRTRelations for more detailed documentation.
+ * 
+ */
+namespace lcrtrel{}
+
 
 /** The LCIO namespace combines EVENT, IO, IMPL and UTIL for user convenience. 
  */
@@ -62,6 +68,8 @@ namespace lcio{
   using namespace IMPL ;
 
   using namespace UTIL ;
+
+  using namespace lcrtrel ;
 
   using IOIMPL::LCFactory ;
 

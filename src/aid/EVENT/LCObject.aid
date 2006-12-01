@@ -12,6 +12,7 @@ package hep.lcio.event ;
 class LCObject ;
 /**Vector of (pointers to) LCObjects.*/
 typedef std::vector<LCObject*> LCObjectVec ;
+using namespace lcrtrel ;
 }
 @endif
 

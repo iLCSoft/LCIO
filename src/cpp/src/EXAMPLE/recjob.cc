@@ -178,7 +178,7 @@ public:
     trkVec->setFlag( trkFlag.getFlag()  ) ;
     
 
-    int nTrk = 10 ;
+    int nTrk = 5 ;
     for( int i=0; i < nTrk ; i ++ ){
       
       TrackImpl* trk = new TrackImpl ;

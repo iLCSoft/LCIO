@@ -8,13 +8,17 @@ v01-08-beta
 
   - fixed bug with BitField64/CellIdDecoder
 
+  - introduced C++ runtime (user) extensions and relations
+    see LCRTRelation and lcrtrelation.cc for documentation and examples
+
 =====================
 v01-08-vtx               BETA-NON-PRODUCTION-RELEASE !!!!  
 =====================
 
    - test implementation new  of Vertex class 
 
-   - modified function UTIL:LCTOOLS:dumpEvent() for a more readable format 
+   - modified function UTIL:LCTOOLS:dumpEvent() for a more readable format
+     used e.g. in anajob.cc 
 
    - bug fixes:
 	+ in SIOReader::skipNEvents() (skipped only n-1 with readStream())
