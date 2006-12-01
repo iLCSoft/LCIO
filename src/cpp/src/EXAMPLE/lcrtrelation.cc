@@ -183,8 +183,11 @@ int main(int argc, char** argv ){
 	Track* trk =  clu->rel<TrkCluLink::from>() ;
 	
 	std::cout << " cluster " 
-		  << clu->ext<Index>() << " assigned from track:   " 
-		  << trk->ext<Index>() << std::endl ; 
+		  << clu->ext<Index>() << " assigned from track:   " ;
+	if( trk != 0 )
+	  std::cout << trk->ext<Index>() << std::endl ; 
+	else
+	  std::cout << " none "  << std::endl ; 
       }
 
       std::cout << std::endl ; 
