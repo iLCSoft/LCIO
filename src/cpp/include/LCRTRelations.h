@@ -537,7 +537,7 @@ namespace lcrtrel{
       static const unsigned uid  = nextID( T::deletePtr() ) ;
 
       return uid ;
-    } ;
+    } 
   
   
     //   PtrVec* _vec ; 

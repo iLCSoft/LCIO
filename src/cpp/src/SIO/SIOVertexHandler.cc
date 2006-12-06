@@ -1,5 +1,6 @@
 #include "SIO/SIOVertexHandler.h"
 
+#include <algorithm>
 #include "SIO/LCSIO.h"
 
 #include "EVENT/LCIO.h"
@@ -166,7 +167,8 @@ namespace SIO{
     //write data
     LCSIO_WRITE( stream, vtx->isPrimary()  ) ;
     //LCSIO_WRITE( stream, imw[vtx->getAlgorithmType()]  ) ;
-    LCSIO_WRITE( stream, distance( _set.begin(),_set.find( vtx->getAlgorithmType() ))) ;
+   
+    LCSIO_WRITE( stream, static_cast<size_t> (distance( _set.begin(),_set.find( vtx->getAlgorithmType() )))) ;
     
     //dbg
     //std::cout<<"Writing... (string)["<<vtx->getAlgorithmType()<<"] (int)["<<distance( _set.begin(),_set.find( vtx->getAlgorithmType() ))<<"]\n";

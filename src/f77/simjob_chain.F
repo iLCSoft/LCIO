@@ -77,8 +77,9 @@ c---- variables
       PTRTYPE  mcpv(50), pointerv(50), ppointerv
       integer npointers
       integer status
-      integer i, j, k, irun, nrun, iev, nev, itim, locf
+      integer i, j, k, irun, nrun, iev, nev, itimv(8), itim, locf
       integer nhit, flag
+      character*10 dum1, dum2, dum3
 
       integer ipass
       character*16 filename
@@ -126,11 +127,14 @@ c----- write a run header first (run number is: ipass*10 +irun)
 c-----  event loop 
          do iev = 1,nev
             
-            itim   = 20031009*1000+iev
             event = lcevtcreate()
             status = lcevtsetdetectorname( event, detectorname )
             status = lcevtsetrunnumber( event, irun ) 
             status = lcevtseteventnumber( event,  iev ) 
+
+c           get a time stamp
+            call date_and_time (dum1, dum2, dum3, itimv)
+            itim  = (itimv(5)*100+itimv(6))*100+itimv(7)
             status = lcevtsettimestamp( event, itim )
 
             mcpcol = lccolcreate( LCIO_MCPARTICLE )
@@ -254,12 +258,20 @@ c ----      set the flag bits to store position for calorimeter hits
 c-----     now we will check the stl pointer vector
            if (irun .eq. 1 .and. iev .eq. 1)  then
              print *, 'pointers going into the pointer vector'
+#if defined(__ia64__)
+             print '(5z20)', (mcpv(i), i=1,nhit/2)
+#else
              print '(10z10)', (mcpv(i), i=1,nhit/2)
+#endif
              ppointerv = pointervectorcreate( mcpv, nhit/2 )
              npointers = pointervectorgetlength( ppointerv )
              status = getpointervector( ppointerv, pointerv, npointers)
              print *, 'pointers got from the pointer vector'
+#if defined(__ia64__)
+             print '(5z20)', (pointerv(i), i=1,npointers)
+#else
              print '(10z10)', (pointerv(i), i=1,npointers)
+#endif
              status = pointervectordelete( ppointerv )
            end if
 
@@ -323,7 +335,7 @@ C
       PTRTYPE reader, event, runhdr, detnames
       PTRTYPE pcol1, pcol2, pcol3, pobject1, pobject2, pobject3
       
-      character*(*) filename
+      character*16 filename
       integer status, irun, ievent
       integer i, nactdet, ii
       character*80 detname

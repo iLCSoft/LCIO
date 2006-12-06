@@ -14,17 +14,25 @@ SIOINSTALL = $(LCIOBASE)/sio
 # check the gcc compiler version if libfrtbegin.a has to be included
 COMPILER_VERSION := $(shell gcc --version 2>&1 | grep "gcc" | cut -d' ' -f3 | cut -c1 )
 COMPILER_MINOR_VERSION := $(shell gcc --version 2>&1 | grep "gcc" | cut -d' ' -f3 | cut -c3 )
+
+FC = g77
 ifeq ($(COMPILER_VERSION),3)
- ifneq ($(COMPILER_MINOR_VERSION),0)
-  FTN_START_LIB = -lfrtbegin
- endif
+  ifneq ($(COMPILER_MINOR_VERSION),0)
+    FTN_START_LIB = -lfrtbegin
+  endif
+  LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib  -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c -llcio -lsio -lz
+endif
+ifeq ($(COMPILER_VERSION),4)
+  FC = gfortran
+  LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -lgfortran -lgfortranbegin -lgfortran -llcio -lsio -lz
 endif
 
 # check for AMD64 Linux and set -fno-f2c to get correct results
-OS_TYPE:= $(shell uname -m)
-ifeq ($(OS_TYPE),x86_64)
-  X86_64_OPTION = -fno-f2c
-endif
+# not needed anymore with the modified "cfortran.h"
+# /OS_TYPE:= $(shell uname -m)
+# /ifeq ($(OS_TYPE),x86_64)
+# /  X86_64_OPTION = -fno-f2c
+# /endif
 
 # check for private compiler definitions
 ifdef MY_CXX
@@ -34,8 +42,6 @@ else
 endif
 ifdef MY_FC
   FC = $(MY_FC)
-else
-  FC = g77 $(X86_64_OPTION)
 endif
 
 
@@ -43,9 +49,6 @@ BINDIR = $(LCIOBASE)/bin
 BINS := $(patsubst %.F,$(BINDIR)/%_F,$(wildcard *.F))
 
 INSTALL = $(LCIOBASE)/lib
-#LIBG2CPATH = /products/gcc-2.95/lib/gcc-lib/i686-pc-linux-gnu/2.95.3
-LIBS = -L $(INSTALL) -L $(SIOINSTALL)/lib -L$(LIBG2CPATH) -llcio -lsio -lz -lg2c $(FTN_START_LIB) -lg2c -llcio -lsio -lz
-
 
 
 bin: $(BINS)

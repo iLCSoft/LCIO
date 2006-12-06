@@ -64,7 +64,7 @@ ccc      write(*,*) 'Give LCIO file name:'
 c     ---- event loop ------
       do 
          
-         event = lcrdrreadnextevent( reader )
+         event = lcrdrreadnextevent( reader , LCIO_READ_ONLY )
          if( event.eq.0 ) goto 11 
          
          mccol = lcevtgetcollection( event, mcpcolname )

@@ -98,8 +98,8 @@ unsigned int LCSIO::write( SIO_stream* stream , unsigned int i){
  
 }
 
-// needed for AMD64 architectures
-#if defined(__x86_64__) || defined(__APPLE_CC__)
+// needed for LP64 architectures
+#if defined(_LP64) || defined(__APPLE_CC__)
 unsigned int LCSIO::write( SIO_stream* stream , size_t i){
 
   unsigned int local = i ;

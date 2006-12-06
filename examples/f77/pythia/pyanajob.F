@@ -77,7 +77,7 @@ c     ---- run loop ------
 
 c     ---- event loop ------
       do   ievt = 1,100000
-         event = lcrdrreadnextevent( reader )
+         event = lcrdrreadnextevent( reader , LCIO_READ_ONLY )
          if( event.eq.0 ) goto 10
 
           print '(a,z8)', ' event pointer: ',  event

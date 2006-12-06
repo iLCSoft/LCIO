@@ -234,7 +234,7 @@ C     nsubdio is I/O argument !
 
 C *** Event loop **************************************************************
       do  i = 1,1000000
-         event = lcrdrreadnextevent( reader )
+         event = lcrdrreadnextevent( reader , LCIO_READ_ONLY )
          if( event.eq.0 ) goto 110
 
 C ***    Get event header

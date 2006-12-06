@@ -2,7 +2,8 @@
 #define SIO_SIOVERTEXHANDLER_H 1
 
 #include "SIO/SIOObjectHandler.h"
-#include "LCIOSTLTypes.h"
+// #include "LCIOSTLTypes.h"
+#include "EVENT/LCParameters.h"
 
 #include <map>
 #include <set>
@@ -14,7 +15,7 @@ namespace SIO {
 /** Implementation of SIOObjectHandler to handle IO of Vertexes.
  *
  * @author gaede, engels
- * @version $Id: SIOVertexHandler.h,v 1.2 2006-09-21 06:10:38 gaede Exp $
+ * @version $Id: SIOVertexHandler.h,v 1.3 2006-12-06 19:09:18 hvogt Exp $
  */
 
   class SIOVertexHandler : public SIOObjectHandler {

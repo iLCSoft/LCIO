@@ -96,7 +96,8 @@ namespace SIO  {
 // 	 }else{
 
 	std::string colType( type ) ;
-	unsigned  idx ;
+//  	unsigned  idx ;
+	std::string::size_type idx ;
 	if( ( idx = colType.rfind( SUBSETPOSTFIX ) ) != std::string::npos ){
 	  colType = std::string( colType , 0 , idx ) ;
 	}

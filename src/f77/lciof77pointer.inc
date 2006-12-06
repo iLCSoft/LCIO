@@ -20,14 +20,15 @@ C Check for 32/64 bit architetures
 ** AIX           PPC(?)        _AIX          GNU compiler  4 bytes
 ** OSF1          Alpha         __alpha__     GNU compiler  8 bytes
 ** Linux         x86           __i386__      GNU compiler  4 bytes
-** Linux         Opteron       __x86_64__    GNU compiler  8 bytes
+** Linux         Opteron       _LP64         GNU compiler  8 bytes
+** Linux         Itanium       _LP64         GNU compiler  8 bytes
 ** SunOS         Sparc         __sparc__     GNU compiler  4 bytes
 ** Windows/NT    Alpha         _M_ALPHA      VC  compiler  8 bytes
 ** Windows/NT    x86           _M_IX86       VC  compiler  4 bytes
 ** Windows/NT    MIPS          _M_MRX000     VC  compiler  ? bytes
 ** Windows/NT    PPC           _M_PPC        VC  compiler  4 bytes
 ** ----------------------------------------------------------------------------
-#if defined(__alpha__) || defined(_M_ALPHA) || defined(__x86_64__)
+#if defined(__alpha__) || defined(_M_ALPHA) || defined(_LP64)
 #define PTRTYPE integer*8
 #endif
 
