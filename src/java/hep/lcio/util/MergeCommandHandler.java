@@ -20,7 +20,7 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  *
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.7 2006-11-03 08:41:26 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.8 2006-12-07 00:47:32 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
@@ -51,12 +51,15 @@ public class MergeCommandHandler extends CommandHandler
 	private static Options createMergeOptions()
 	{
 		Options options = new Options();
-
-		Option opt = new Option("o", false, "Set the output file.");
+		
+		Option opt = new Option("h", false, "Print merge usage.");
+		options.addOption(opt);
+		
+		opt = new Option("o", false, "Set the output file.");
 		opt.setArgs(1);
 		options.addOption(opt);
-
-		opt = new Option("i", false, "Add an input file.");
+				
+		opt = new Option("f", false, "Add an input file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 
@@ -76,8 +79,8 @@ public class MergeCommandHandler extends CommandHandler
 		opt.setArgs(1);
 		options.addOption(opt);
 
-		opt = new Option("f", true, "Set input file list with format:\n[file_name],[n_reads_per_event],[start_time],[delta_time]\n" +
-				"This option is not usable with the -i argument.");
+		opt = new Option("i", true, "Set input file list with format:\n[file_name],[n_reads_per_event],[start_time],[delta_time]\n" +
+				"This option is not usable with the -f argument.");
 		opt.setArgs(1);
 		options.addOption(opt);
 
@@ -92,6 +95,11 @@ public class MergeCommandHandler extends CommandHandler
 	{
 		CommandLine cl = parser.parse(options, argv);
 
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
+		
 		// Must have at least one of -i or -f.
 		if (!cl.hasOption("i") && !cl.hasOption("f"))
 		{
@@ -107,13 +115,13 @@ public class MergeCommandHandler extends CommandHandler
 		}
 
 		// Read a file containing comma-delimited list of fname and nreads.
-		if (cl.hasOption("f"))
+		if (cl.hasOption("i"))
 		{
 			mergeFiles = createMergeFiles(FileUtil.loadFile(cl.getOptionValue("f")));
 		}
 
 		// Add input files one-by-one.
-		if (cl.hasOption("i"))
+		if (cl.hasOption("f"))
 		{
 			// Create input file array.
 			infiles = FileUtil.createFiles(cl.getOptionValues("i"));
@@ -121,7 +129,7 @@ public class MergeCommandHandler extends CommandHandler
 			// Create default merge files.
 			mergeFiles = createDefaultMergeFiles(infiles);
 		}
-
+		
 		// Output file.
 		if (cl.hasOption("o"))
 		{

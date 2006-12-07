@@ -15,7 +15,7 @@ import org.apache.commons.cli.PosixParser;
  * Command-line handling for concat command.
  * 
  * @author jeremym
- * @version $Id: ConcatenateCommandHandler.java,v 1.2 2006-06-02 00:22:57 jeremy Exp $
+ * @version $Id: ConcatenateCommandHandler.java,v 1.3 2006-12-07 00:47:32 jeremy Exp $
  */
 public class ConcatenateCommandHandler extends CommandHandler
 {
@@ -39,7 +39,10 @@ public class ConcatenateCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("i",false,"Add an input file.");
+		Option opt = new Option("h", false, "Print concat usage.");
+		options.addOption(opt);
+		
+		opt = new Option("f",false,"Add an input file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 
@@ -47,7 +50,7 @@ public class ConcatenateCommandHandler extends CommandHandler
 		opt.setArgs(1);
 		options.addOption(opt);
 		
-		opt = new Option("f", false,"List of input files, 1 per line.");
+		opt = new Option("i", false,"List of input files, 1 per line.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -71,16 +74,15 @@ public class ConcatenateCommandHandler extends CommandHandler
 	{
 		CommandLine cl = parser.parse(options, argv);
 		
-		// One of '-i' or '-f' is required.
-		if (!cl.hasOption("i") && !cl.hasOption("f"))
+		if ( cl.hasOption("h") )
 		{
 			printUsage(true);
-		}
-		
+		}		
+						
 		// Add individual files.
-		if (cl.hasOption("i"))
+		if (cl.hasOption("f"))
 		{
-			String[] infilepaths = cl.getOptionValues("i");
+			String[] infilepaths = cl.getOptionValues("f");
 			for (int i=0; i<infilepaths.length; i++)
 			{
 				infiles.add(new File(infilepaths[i]));
@@ -88,9 +90,9 @@ public class ConcatenateCommandHandler extends CommandHandler
 		}
 		
 		// Add list of files.
-		if (cl.hasOption("f"))
+		if (cl.hasOption("i"))
 		{
-			String[] infilelists = cl.getOptionValues("f");
+			String[] infilelists = cl.getOptionValues("i");
 			for (int i=0; i<infilelists.length; i++)
 			{
 				List lines = FileUtil.loadFile(infilelists[i]);
@@ -102,6 +104,21 @@ public class ConcatenateCommandHandler extends CommandHandler
 			}
 		}
 		
+		// Interpret extra arguments as input files.
+		if (cl.getArgList() != null)
+		{
+			for (Object o : cl.getArgList())
+			{
+				String s = (String)o;
+				infiles.add(new File(s));
+			}			
+		}
+		
+		if ( infiles.size() == 0 )
+		{
+			printUsage(true);
+		}
+				
 		// Set output file name.
 		if (cl.hasOption("o"))
 		{

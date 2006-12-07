@@ -12,7 +12,7 @@ import org.apache.commons.cli.Options;
  * Command line handling for the count command.
  * 
  * @author jeremym
- * @version $Id: HeaderCountCommandHandler.java,v 1.2 2006-11-11 00:59:40 jeremy Exp $
+ * @version $Id: HeaderCountCommandHandler.java,v 1.3 2006-12-07 00:47:32 jeremy Exp $
  */
 public class HeaderCountCommandHandler extends CommandHandler
 {
@@ -36,7 +36,10 @@ public class HeaderCountCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("r", false, "Print number of run headers.");
+		Option opt = new Option("h", false, "Print count usage.");
+		options.addOption(opt);
+		
+		opt = new Option("r", false, "Print number of run headers.");
 		options.addOption(opt);
 		
 		opt = new Option("e", false, "Print number of event headers.");
@@ -58,6 +61,11 @@ public class HeaderCountCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
+		
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
 		
 		if (cl.hasOption("r"))
 		{

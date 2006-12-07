@@ -17,7 +17,7 @@ import org.apache.commons.cli.Options;
  * CommandHandler for the compare command.
  * 
  * @author jeremym
- * @version $Id: CompareCommandHandler.java,v 1.1 2006-06-02 23:48:34 jeremy Exp $
+ * @version $Id: CompareCommandHandler.java,v 1.2 2006-12-07 00:47:32 jeremy Exp $
  */
 public class CompareCommandHandler extends CommandHandler
 {
@@ -41,8 +41,11 @@ public class CompareCommandHandler extends CommandHandler
 	private static Options createCompareOptions()
 	{
 		Options options = new Options();
+		
+		Option opt = new Option("h", false, "Print compare usage.");
+		options.addOption(opt);
 
-		Option opt = new Option("f", false, "Add a file to compare (Must have at least 2).");
+		opt = new Option("f", false, "Add a file to compare (Must have at least 2).");
 		opt.setArgs(1);
 		options.addOption(opt);
 
@@ -68,8 +71,14 @@ public class CompareCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
+			
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}		
 
 		String f[] = cl.getOptionValues("f");
+		
 		if (f != null && f.length >= 2)
 		{
 			for (int i = 0; i < f.length; i++)
@@ -77,7 +86,17 @@ public class CompareCommandHandler extends CommandHandler
 				files.add(new File(f[i]));
 			}
 		}
-		else
+		
+		if (cl.getArgList() != null)
+		{
+			for (Object o : cl.getArgList())
+			{
+				String s = (String)o;
+				files.add(new File(s));
+			}			
+		}
+		
+		if ( files.size() == 0 )
 		{
 			printUsage(true);
 		}

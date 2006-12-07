@@ -20,7 +20,7 @@ import org.jdom.input.SAXBuilder;
  * Command-line handling for Tony's SIODump utility.
  * 
  * @author jeremym
- * @version $Id: SIODumpCommandHandler.java,v 1.1 2006-06-02 00:22:57 jeremy Exp $
+ * @version $Id: SIODumpCommandHandler.java,v 1.2 2006-12-07 00:47:33 jeremy Exp $
  */
 public class SIODumpCommandHandler extends CommandHandler
 {
@@ -44,7 +44,10 @@ public class SIODumpCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 
-		Option opt = new Option("f", false, "Set the input LCIO file.");
+		Option opt = new Option("h", false, "Print siodump usage.");
+		options.addOption(opt);
+		
+		opt = new Option("f", false, "Set the input LCIO file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 
@@ -110,10 +113,15 @@ public class SIODumpCommandHandler extends CommandHandler
 	{
 		CommandLine cl = parser.parse(options, argv);
 
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
+				
 		if (cl.hasOption("f"))
 		{
 			inputfile = new File(cl.getOptionValue("f"));
-		}
+		}		
 		else
 		{
 			printUsage(true);

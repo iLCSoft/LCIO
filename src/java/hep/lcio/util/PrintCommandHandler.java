@@ -24,7 +24,10 @@ public class PrintCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("f",true, "Set the LCIO file to dump.");
+		Option opt = new Option("h", false, "Print print command usage.");
+		options.addOption(opt);
+		
+		opt = new Option("f",true, "Set the LCIO file to dump.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -46,6 +49,11 @@ public class PrintCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
+		
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
 				
 		if (cl.hasOption("f"))
 		{

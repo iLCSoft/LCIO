@@ -61,7 +61,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.13 2006-07-22 23:17:58 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.14 2006-12-07 00:47:32 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -74,7 +74,7 @@ public class CommandLineTool
 	
 	/**
 	 * Get an instance of CommandLineTool.
-	 * @return A globall unique instance of CommandLineTool.
+	 * @return A global unique instance of CommandLineTool.
 	 */
 	public static CommandLineTool instance()
 	{

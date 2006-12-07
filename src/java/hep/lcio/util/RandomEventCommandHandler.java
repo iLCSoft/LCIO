@@ -14,7 +14,7 @@ import org.apache.commons.cli.Options;
  * CommandHandler for the random command.
  * 
  * @author jeremym
- * @version $Id: RandomEventCommandHandler.java,v 1.1 2006-06-07 22:32:34 jeremy Exp $
+ * @version $Id: RandomEventCommandHandler.java,v 1.2 2006-12-07 00:47:33 jeremy Exp $
  */
 public class RandomEventCommandHandler extends CommandHandler
 {
@@ -36,7 +36,10 @@ public class RandomEventCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("o", true, "Set the LCIO output file name.");
+		Option opt = new Option("h", false, "Print random usage.");
+		options.addOption(opt);
+		
+		opt = new Option("o", true, "Set the LCIO output file name.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -74,7 +77,12 @@ public class RandomEventCommandHandler extends CommandHandler
 	{
 		CommandLine cl = parser.parse(options, argv);
 		
-		String fname = "randomevents";
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}		
+		
+		String fname = "random_events";
 		if (cl.hasOption("o"))
 		{
 			fname = cl.getOptionValue("o");

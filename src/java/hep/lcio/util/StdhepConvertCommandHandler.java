@@ -22,7 +22,10 @@ public class StdhepConvertCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("i", true, "Input Stdhep file.");
+		Option opt = new Option("h", false, "Print stdhep usage.");
+		options.addOption(opt);
+		
+		opt = new Option("i", true, "Input Stdhep file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -36,7 +39,12 @@ public class StdhepConvertCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
-			
+		
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
+		
 		if (cl.hasOption("i"))
 		{
 			infile = new File(cl.getOptionValue("i"));

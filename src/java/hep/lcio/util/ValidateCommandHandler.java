@@ -12,7 +12,7 @@ import org.apache.commons.cli.Options;
  * Command-line handler for the validate utility.
  * 
  * @author Jeremy McCormick
- * @version $Id: ValidateCommandHandler.java,v 1.1 2006-06-28 18:31:55 jeremy Exp $
+ * @version $Id: ValidateCommandHandler.java,v 1.2 2006-12-07 00:47:33 jeremy Exp $
  */
 public class ValidateCommandHandler extends CommandHandler
 {
@@ -35,7 +35,10 @@ public class ValidateCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 		
-		Option opt = new Option("f", true, "Add an LCIO file to validate.");
+		Option opt = new Option("h", false, "Print validate usage.");
+		options.addOption(opt);
+				
+		opt = new Option("f", true, "Add an LCIO file to validate.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -61,6 +64,11 @@ public class ValidateCommandHandler extends CommandHandler
 	{
 		CommandLine cl = parser.parse(options, argv);
 		
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
+				
 		if (cl.hasOption("f"))
 		{
 			String files[] = cl.getOptionValues("f");
@@ -69,7 +77,18 @@ public class ValidateCommandHandler extends CommandHandler
 				infiles.add(new File(files[i]));
 			}
 		}
-		else {
+		
+		// Interpret extra arguments as input files.
+		if (cl.getArgList() != null)
+		{
+			for (Object o : cl.getArgList())
+			{
+				String s = (String)o;
+				infiles.add(new File(s));
+			}			
+		}
+		
+		if ( infiles.size() == 0 ) {
 			printUsage(true);
 		}
 		

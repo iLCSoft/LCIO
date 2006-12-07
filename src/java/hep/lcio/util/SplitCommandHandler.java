@@ -13,7 +13,7 @@ import org.apache.commons.cli.PosixParser;
  * Command-line handler for the split utility.
  * 
  * @author Jeremy McCormick
- * @version $Id: SplitCommandHandler.java,v 1.3 2006-06-02 00:22:57 jeremy Exp $
+ * @version $Id: SplitCommandHandler.java,v 1.4 2006-12-07 00:47:33 jeremy Exp $
  */
 public class SplitCommandHandler extends CommandHandler
 {
@@ -36,7 +36,10 @@ public class SplitCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 	
-		Option opt = new Option("i", true, "The input LCIO file.");
+		Option opt = new Option("h", false, "Print split usage.");
+		options.addOption(opt);
+		
+		opt = new Option("i", true, "The input LCIO file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -55,6 +58,11 @@ public class SplitCommandHandler extends CommandHandler
 	public void parse(String[] argv) throws Exception
 	{
 		CommandLine cl = parser.parse(options, argv);
+		
+		if ( cl.hasOption("h") )
+		{
+			printUsage(true);
+		}
 		
 		if (!cl.hasOption("i") || !cl.hasOption("n"))
 		{
