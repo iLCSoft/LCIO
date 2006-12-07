@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.21 2006-04-24 22:08:33 jeremy Exp $    -->
+<!-- Version: $Id: build.xml,v 1.22 2006-12-07 19:15:25 tonyj Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -87,6 +87,9 @@
           file="config/version.template"
           tofile="${jar.dir}/${projectname}-version.txt"
     />
+    <condition property="isJDK1.4">
+       <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
   </target>
 
   <target name="init.jar" depends="init">
@@ -378,7 +381,8 @@
     <freehep.defined property="src.dir" target="compile.ok"/>
   </target>
 
-  <target name="compile.ok">
+  <target name="compile.ok" depends="compile.15,compile.14"/>
+  <target name="compile.15" unless="isJDK1.4">
     <echo message="   Building module '${projectname}-${jar}'"/>
 
     <freehep.javac srcdir="${src.dir}"
@@ -389,6 +393,26 @@
            optimize="${optimization}"
            packages="${packages}"
            excludepackages="${packages.exclude}"
+           includes="${compile.includes}"
+           excludes="${compile.excludes}">
+    </freehep.javac>
+
+  </target>
+  <target name="compile.14" if="isJDK1.4">
+    <echo message="   Building module '${projectname}-${jar}'"/>
+
+    <echo message="*******************************************"/>
+    <echo message="* Skipping hep.lcio.util because JDK 1.4  *"/>
+    <echo message="*******************************************"/>
+    
+    <freehep.javac srcdir="${src.dir}"
+           destdir="${src.dir}"
+           classpath="${exp.classpath};${classpath}"
+           debug="${debug}"
+           deprecation="${deprecation}"
+           optimize="${optimization}"
+           packages="${packages}"
+           excludepackages="hep.lcio.util"
            includes="${compile.includes}"
            excludes="${compile.excludes}">
     </freehep.javac>
