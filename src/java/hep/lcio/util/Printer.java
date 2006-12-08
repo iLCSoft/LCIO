@@ -839,8 +839,9 @@ public class Printer
 			    			Double.valueOf(recp.getReferencePoint()[2]), 
 			    			Integer.valueOf(pidused),
 			    			(recp.getStartVertex() != null ? Integer.valueOf(recp.getStartVertex().hashCode()):0),
-			    			(recp.getParticles().size()>0 ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
-			    			}
+			    			(recp.getEndVertex() != null  ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
+//			    			(recp.getParticles().size()>0 ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
+			    					    			}
 			    
 			    //(recp.getEndVertex() != null ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
 			    
@@ -857,7 +858,7 @@ public class Printer
 			    ps.print("    particles ( [   id   ] ):");
 			    for(int j=0; j<recp.getParticles().size(); j++)
 			    {
-			    	ps.format("[%8.8x], ", new Object[] { Integer.valueOf(recp.getParticles().get(j).hashCode()) }); 
+			    	ps.format("[%08x], ", new Object[] { Integer.valueOf(recp.getParticles().get(j).hashCode()) }); 
 			    }
 			    ps.println();
 
@@ -1033,7 +1034,7 @@ public class Printer
 				ps.print(" subdetector Hit numbers : ");
 				for (int j=0; j<trk.getSubdetectorHitNumbers().length; j++)
 				{
-					ps.print(trk.getSubdetectorHitNumbers()[i] + ", ");
+					ps.print(trk.getSubdetectorHitNumbers()[j] + ", ");
 				}
 				ps.println();
 			}

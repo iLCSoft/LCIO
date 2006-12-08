@@ -183,8 +183,8 @@ public class IReconstructedParticle extends ILCObject implements ReconstructedPa
    }
    
    public Vertex getEndVertex(){
-	   if(particles.size() != 0)
-		   return ((ReconstructedParticle)particles.get(0)).getStartVertex();
+	   if(getParticles().size() != 0)
+		   return ((ReconstructedParticle)getParticles().get(0)).getStartVertex();
 	   return null;
    }
 
