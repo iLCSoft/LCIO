@@ -199,11 +199,12 @@ int main(int argc, char** argv ){
       
       nmcp = ( nmcp < 10 ? nmcp : 10 ) ;
 
+      MCParticle*  mcp0 = 0 ;   // pointer for first particle
+
       for(int i=0 ; i<nmcp  ; i++ ){
 	
 	MCParticle*  mcp = dynamic_cast<MCParticle*>( mcpcol->getElementAt(i) ) ;
 
-	MCParticle*  mcp0 = 0 ;   // keep the first particle
 	if( i == 0 ) mcp0 = mcp  ;
 	
 	ParticleIDs::ext_type pidv =  mcp->ext<ParticleIDs>() ;
