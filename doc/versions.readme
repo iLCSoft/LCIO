@@ -3,19 +3,17 @@
 ---------------------------------------------------------------
 
 =====================
-v01-08-beta          
+v01-08    
 =====================
 
-  - fixed bug with BitField64/CellIdDecoder
+   - introduced C++ runtime (user) extensions and relations
+     see LCRTRelation and lcrtrelation.cc for documentation and examples
 
-  - introduced C++ runtime (user) extensions and relations
-    see LCRTRelation and lcrtrelation.cc for documentation and examples
+   - new Vertex class in LCIO - for a detailed description see the proposal at:
+     http://forum.linearcollider.org/index.php?t=getfile&id=32
 
-=====================
-v01-08-vtx               BETA-NON-PRODUCTION-RELEASE !!!!  
-=====================
-
-   - test implementation new  of Vertex class 
+   - new Java lcio command line tool - for detailed documentation see:
+     http://confluence.slac.stanford.edu/display/ilc/LCIO+Command+Line+Tool
 
    - modified function UTIL:LCTOOLS:dumpEvent() for a more readable format
      used e.g. in anajob.cc 
@@ -24,6 +22,8 @@ v01-08-vtx               BETA-NON-PRODUCTION-RELEASE !!!!
 	+ in SIOReader::skipNEvents() (skipped only n-1 with readStream())
         + collection parameters in LCRelationNavigator (From/ToType)
         + made id() const
+        + bug with BitField64/CellIdDecoder
+        + ...
 
 ======================
   v01-07
