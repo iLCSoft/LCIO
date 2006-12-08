@@ -10,6 +10,11 @@ namespace lcrtrel_helper{
 
   //------------------ internal helper typdefs, function and classes ----------
 
+  template <bool B>
+  struct can_call_ext{};
+  template <>
+  struct can_call_ext<true>{ static void check(){/* no_op */ } ; };
+
   /** Function pointer for delete function */
   typedef void (*DeleteFPtr)(void*) ;
 
@@ -424,7 +429,8 @@ namespace lcrtrel{
     template <class V>
     inline typename V::ext_type  ext() { 
 
-      static char check[ V::allowed_to_call_ext] ;
+      //      static char check[ V::allowed_to_call_ext] ;
+      can_call_ext<V::allowed_to_call_ext>::check() ;
 
       return  ptr<V>() ;
     }
