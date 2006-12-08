@@ -24,7 +24,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.8 2006-06-20 16:44:32 jeremy Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.9 2006-12-08 10:18:59 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
@@ -35,7 +35,10 @@ namespace UTIL{
      */
     CellIDDecoder( const LCCollection* col ) : _oldHit(0) {
       
-      std::string initString = col->getParameters().getStringVal(  LCIO::CellIDEncoding ) ;
+      std::string initString("") ; 
+
+      if( col !=0 ) 
+	initString = col->getParameters().getStringVal(  LCIO::CellIDEncoding ) ;
       
       if( initString.size() == 0 ) {
 	
