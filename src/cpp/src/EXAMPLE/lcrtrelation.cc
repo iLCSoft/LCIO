@@ -203,7 +203,7 @@ int main(int argc, char** argv ){
 	
 	MCParticle*  mcp = dynamic_cast<MCParticle*>( mcpcol->getElementAt(i) ) ;
 
-	MCParticle*  mcp0 ;   // keep the first particle
+	MCParticle*  mcp0 = 0 ;   // keep the first particle
 	if( i == 0 ) mcp0 = mcp  ;
 	
 	ParticleIDs::ext_type pidv =  mcp->ext<ParticleIDs>() ;
