@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.22 2006-12-07 19:15:25 tonyj Exp $    -->
+<!-- Version: $Id: build.xml,v 1.23 2006-12-08 14:28:27 gaede Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -33,6 +33,39 @@
   <property name="docs.dir" value="doc"/>
 
 
+  <!-- ====== here we can exclude certain packages from the build if we are using JDK 1.4 ===== -->
+ 
+ <target name="jdk14excludes" depends="checkjdk" if="isjdk14">
+
+    <property name="packages.exclude" value="hep.lcio.util"/>
+
+    <property name="javadoc.packages.excludes" value="${packages.exclude}"/>
+
+    <echo message="********************************************************"/>
+    <echo message="* Using JDK 1.4  - skipping: ${packages.exclude} "       />
+    <echo message="********************************************************"/>
+
+  </target>
+
+  <target name="jdk15excludes" depends="checkjdk" unless="isjdk14">
+
+    <property name="packages.exclude" value=""/>
+
+    <property name="javadoc.packages.excludes" value="${packages.exclude}"/>
+
+    <echo message="********************************************************"/>
+    <echo message="* Using JDK 1.5  - skipping: ${packages.exclude} "       />
+    <echo message="********************************************************"/>
+
+  </target>
+
+  <target name="checkjdk">
+    <condition property="isjdk14">
+      <equals arg1="${ant.java.version}" arg2="1.4"/>
+    </condition>
+  </target>
+
+
   <!-- =================================================================== -->
   <!-- Help                                                                -->
   <!-- =================================================================== -->
@@ -52,7 +85,7 @@
   <!-- =================================================================== -->
   <!-- Initialization, setup of commands, check                            -->
   <!-- =================================================================== -->
-  <target name="init">
+  <target name="init" depends="jdk14excludes,jdk15excludes">
     
     <taskdef name="junit"               classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
 
@@ -381,8 +414,7 @@
     <freehep.defined property="src.dir" target="compile.ok"/>
   </target>
 
-  <target name="compile.ok" depends="compile.15,compile.14"/>
-  <target name="compile.15" unless="isJDK1.4">
+  <target name="compile.ok" >
     <echo message="   Building module '${projectname}-${jar}'"/>
 
     <freehep.javac srcdir="${src.dir}"
@@ -393,26 +425,6 @@
            optimize="${optimization}"
            packages="${packages}"
            excludepackages="${packages.exclude}"
-           includes="${compile.includes}"
-           excludes="${compile.excludes}">
-    </freehep.javac>
-
-  </target>
-  <target name="compile.14" if="isJDK1.4">
-    <echo message="   Building module '${projectname}-${jar}'"/>
-
-    <echo message="*******************************************"/>
-    <echo message="* Skipping hep.lcio.util because JDK 1.4  *"/>
-    <echo message="*******************************************"/>
-    
-    <freehep.javac srcdir="${src.dir}"
-           destdir="${src.dir}"
-           classpath="${exp.classpath};${classpath}"
-           debug="${debug}"
-           deprecation="${deprecation}"
-           optimize="${optimization}"
-           packages="${packages}"
-           excludepackages="hep.lcio.util"
            includes="${compile.includes}"
            excludes="${compile.excludes}">
     </freehep.javac>
