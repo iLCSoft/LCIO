@@ -20,7 +20,7 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  *
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.8 2006-12-07 00:47:32 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.9 2007-01-31 19:27:44 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
@@ -117,14 +117,14 @@ public class MergeCommandHandler extends CommandHandler
 		// Read a file containing comma-delimited list of fname and nreads.
 		if (cl.hasOption("i"))
 		{
-			mergeFiles = createMergeFiles(FileUtil.loadFile(cl.getOptionValue("f")));
+			mergeFiles = createMergeFiles(FileUtil.loadFile(cl.getOptionValue("i")));
 		}
 
 		// Add input files one-by-one.
 		if (cl.hasOption("f"))
 		{
 			// Create input file array.
-			infiles = FileUtil.createFiles(cl.getOptionValues("i"));
+			infiles = FileUtil.createFiles(cl.getOptionValues("f"));
 
 			// Create default merge files.
 			mergeFiles = createDefaultMergeFiles(infiles);
