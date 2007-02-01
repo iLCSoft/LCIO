@@ -125,7 +125,7 @@ namespace SIO {
     // SIO has some rules about valid names for streams, records, etc ...
     //    const char* stream_name = LCSIO::getValidSIOName(sioFilename) ;
     std::string stream_name = LCSIO::getValidSIOName(sioFilename) ;
-    _stream = SIO_streamManager::add(  stream_name.c_str() , 64 * SIO_KBYTE ) ;
+    _stream = SIO_streamManager::add(  stream_name.c_str() , 32*SIO_KBYTE*SIO_KBYTE ) ;
     
     if( _stream == 0 )
       throw IOException( std::string( "[SIOWriter::open()] Bad or duplicate stream name: " 
