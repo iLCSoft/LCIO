@@ -480,14 +480,37 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     printParameters( col->getParameters() ) ;
 
-//     LCFlagImpl flag( col->getFlag() ) ;
-//     cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
-    
+    CellIDDecoder<TrackerRawData> id( col ) ;
+
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
+//     std::cout << endl
+// 	      << " [   id   ] |  cellid0 |  cellid1 |   time    | chargeADC "
+// 	      << endl 
+// 	      << endl ;
+    
+//     for( int i=0 ; i< nPrint ; i++ ){
+      
+//       TrackerRawData* hit = 
+// 	dynamic_cast<TrackerRawData*>( col->getElementAt( i ) ) ;
+      
+//       printf(" [%8.8x] | %8.8x | %8.8x | %10d | " 
+// 	     , hit->id() 
+// 	     , hit->getCellID0()                 
+// 	     , hit->getCellID1()                 
+// 	     , hit->getTime ()  
+// 	     ) ;
+//       const ShortVec& charge = hit->getADCValues() ;
+//       for( unsigned j=0 ; j < charge.size() ; j++ ) {
+// 	cout << charge[j] << "," ;
+//       }
+//       cout << endl ;
+//       std::cout << "        id-fields: (" << id( hit ).valueString() << ")" << std::endl ; 
+
+//     }
     std::cout << endl
-	      << " [   id   ] |  cellid0 |  cellid1 |   time    | chargeADC "
+	      << " [   id   ] |  cellid0 |  cellid1 |   time    | cellid-fields: |"
 	      << endl 
 	      << endl ;
     
@@ -502,12 +525,17 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     , hit->getCellID1()                 
 	     , hit->getTime ()  
 	     ) ;
+      std::cout << " " << id( hit ).valueString() << "|" << std::endl ; 
+
+      std::cout << " adc values: " ; 
       const ShortVec& charge = hit->getADCValues() ;
       for( unsigned j=0 ; j < charge.size() ; j++ ) {
 	cout << charge[j] << "," ;
       }
       cout << endl ;
+
     }
+
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 
 	 << endl ;
@@ -540,8 +568,10 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
+    CellIDDecoder<TrackerData> id( col ) ;
+
     std::cout << endl
-	      << " [   id   ] |  cellid0 |  cellid1 |   time    | chargeADC "
+	      << " [   id   ] |  cellid0 |  cellid1 |   time    | cellid-fields: |"
 	      << endl 
 	      << endl ;
     
@@ -556,6 +586,9 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     , hit->getCellID1()                 
 	     , hit->getTime ()  
 	     ) ;
+      std::cout << " " << id( hit ).valueString() << "|" << std::endl ; 
+
+      std::cout << "chargeADC : " ;
       const FloatVec& charge = hit->getChargeValues() ;
       for( unsigned j=0 ; j < charge.size() ; j++ ) {
 	cout << charge[j] << "," ;
@@ -591,8 +624,10 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
+    CellIDDecoder<TrackerPulse> id( col ) ;
+
     std::cout << endl
-	      << " [   id   ] |  cha.id  |  time | charge| quality  | corr.Data  "
+	      << " [   id   ] |  cha.id  |  time | charge| quality  | corr.Data  | cellid-fields: |"
 	      << endl 
 	      << endl ;
     
@@ -616,7 +651,8 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 
       printf("[%8.8x] ",   ( corr != 0 ? corr->id() : 0 ) ) ;
 
-      cout << endl ;
+      std::cout << " " << id( hit ).valueString() << "|" << std::endl ; 
+
     }
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 
