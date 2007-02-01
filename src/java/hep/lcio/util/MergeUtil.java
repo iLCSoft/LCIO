@@ -24,7 +24,7 @@ import java.util.List;
  * application of a delta time.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.6 2006-04-28 18:48:15 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.7 2007-02-01 19:38:16 jeremy Exp $
  */
 abstract public class MergeUtil
 {
@@ -50,10 +50,12 @@ abstract public class MergeUtil
 
 		// File read loop.
 		for (;;)
-		{
+		{			
 			// Check if max output events is reached.
 			if (nevents >= maxEvents)
 				break;
+			
+			System.out.println("merge - processing event <"+(nevents+1)+">");
 
 			// Create the new output event.
 			ILCEvent targetEvent = new ILCEvent();
@@ -113,7 +115,6 @@ abstract public class MergeUtil
 		writer.close();
 
 		// Close the readers.
-		//closeReaders(readers);
 		for (Iterator iter = mergeFiles.iterator(); iter.hasNext();)
 		{
 			try
@@ -209,6 +210,8 @@ abstract public class MergeUtil
 	 */
 	public static void mergeSingleEvent(ILCEvent targetEvent, LCEvent overlayEvent, float dt)
 	{
+		//System.out.println("mergeSingleEvent");
+		
 		if (overlayEvent.getCollectionNames().length == 0)
 		{
 			// Empty event, nothing to do.
@@ -226,6 +229,8 @@ abstract public class MergeUtil
 		{
 			// Get the name of this overlay collection.
 			String collname = ocolls[i];
+			
+			//System.out.println("collname="+ocolls[i]);
 
 			// Get this overlay collection.
 			LCCollection ocoll = overlayEvent.getCollection(collname);
@@ -252,7 +257,9 @@ abstract public class MergeUtil
 			{
 				// Get the existing target collection.
 				tcoll = targetEvent.getCollection(collname);
-			}
+			}		
+			
+			//System.out.println("merging " + tcolls[i] + " and " + ocolls[i]);
 
 			// Overlay overlay collection into target collection.
 			mergeCollection(tcoll, ocoll, dt);
@@ -270,7 +277,11 @@ abstract public class MergeUtil
 	 */
 	public static void mergeCollection(LCCollection targetColl, LCCollection overlayColl, float dt)
 	{
+		//System.out.println("mergeCollection");
+				
 		String colltype = targetColl.getTypeName();
+		
+		//System.out.println("colltype="+colltype);
 
 		// Handle a SimTrackerHit collection.
 		if (colltype.compareTo(LCIO.SIMTRACKERHIT) == 0)
