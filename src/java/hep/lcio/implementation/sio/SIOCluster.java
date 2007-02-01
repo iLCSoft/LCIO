@@ -15,7 +15,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.15 2004-11-03 16:30:24 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.16 2007-02-01 04:58:08 tonyj Exp $
  */
 class SIOCluster extends ICluster
 {
@@ -152,7 +152,7 @@ class SIOCluster extends ICluster
       out.writeInt(type);
       out.writeFloat(energy);
       for (int i=0; i<3; i++) out.writeFloat(position[i]);
-      for (int i=0; i<3; i++) out.writeFloat(positionError[i]);
+      for (int i=0; i<6; i++) out.writeFloat(positionError[i]);
       out.writeFloat(theta);
       out.writeFloat(phi);
       for (int i=0; i<3; i++) out.writeFloat(directionError[i]);
@@ -165,6 +165,7 @@ class SIOCluster extends ICluster
          SIOParticleID.write(pid,out);
       }
       
+      List clusters = getClusters();
       out.writeInt(clusters.size());
       for (Iterator i = clusters.iterator(); i.hasNext(); )
       {
@@ -173,6 +174,7 @@ class SIOCluster extends ICluster
       
       if (bitTest(flag,LCIO.CLBIT_HITS))
       {
+         List calorimeterHits = getCalorimeterHits();
          out.writeInt(calorimeterHits.size());
          int ii = 0;
          for (Iterator i = calorimeterHits.iterator(); i.hasNext(); )
