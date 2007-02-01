@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.6 2006-12-06 19:09:18 hvogt Exp $
+// CVS $Id: SIO_functions.cc,v 1.7 2007-02-01 08:57:51 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -187,7 +187,23 @@ if( stream->mode != SIO_MODE_READ )
         unsigned char
            *newbuf;
 
-        newlen = (stream->bufmax - stream->bufloc) << 1;
+//fg: --- this is not correct if the new request is larger than double the size...
+//         newlen = (stream->bufmax - stream->bufloc) << 1;
+
+	int minNeeded = (stream->buffer + padlen) - stream->bufmax ;
+	int bufSize = stream->bufmax - stream->bufloc ;
+	int resizeFactor = 2 ;
+	while( bufSize * (resizeFactor-1)  < minNeeded ) 
+	  ++resizeFactor ;
+
+	newlen = bufSize * resizeFactor  ;
+
+// 	std::cout << " resizing buffer - needed : " << minNeeded 
+// 		  << " bufSize : " << bufSize 
+// 		  << " resize factor : " << resizeFactor
+// 		  << " new size: " << std::endl ;
+//fg: ---
+
         newbuf = (unsigned char *)malloc( newlen );
         if( newbuf == NULL )
         {
@@ -205,7 +221,9 @@ if( stream->mode != SIO_MODE_READ )
             return( SIO_STREAM_NOALLOC );
         }
 
-        oldlen = stream->buffer - stream->bufloc;
+
+	oldlen = stream->buffer - stream->bufloc;
+ 
         memcpy( newbuf, stream->bufloc, oldlen );
         free( stream->bufloc );
         stream->blkmax = newbuf + (stream->blkmax - stream->bufloc);
