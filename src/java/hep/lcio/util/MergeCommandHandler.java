@@ -20,7 +20,7 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  *
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.9 2007-01-31 19:27:44 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.10 2007-02-01 19:33:24 jeremy Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
@@ -156,7 +156,13 @@ public class MergeCommandHandler extends CommandHandler
 		// Set the maximum number of merged events.
 		if (cl.hasOption("n"))
 		{
-			this.def_ntoread = Integer.parseInt(cl.getOptionValue("n"));
+			maxevents = Integer.parseInt(cl.getOptionValue("n"));
+		}
+		
+		// Set the maximum number of merged events.
+		if (cl.hasOption("e"))
+		{
+			def_ntoread = Integer.parseInt(cl.getOptionValue("n"));
 		}
 	}
 
@@ -165,6 +171,7 @@ public class MergeCommandHandler extends CommandHandler
 	 */
 	public void execute() throws Exception
 	{
+		System.out.println("maxevents="+maxevents);
 		MergeUtil.mergeFiles(outfile, mergeFiles, maxevents);
 	}
 
