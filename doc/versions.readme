@@ -3,6 +3,15 @@
 ---------------------------------------------------------------
 
 =====================
+v01-08-01
+=====================
+  bug fix release
+  no changes in file format and API
+    - fixed problems with storing large arrays in SIO (C++) 
+    - fixed some issues with CellIDEncoder (C++) 
+    - enforce valid collection names (like C/C++ variables)
+
+=====================
 v01-08    
 =====================
 

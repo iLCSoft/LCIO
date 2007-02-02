@@ -121,6 +121,13 @@ LCCollection * LCEventImpl::takeCollection(const std::string & name) const
 void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) 
   throw (EventException, std::exception)  {
 
+  
+  if( ! validateCollectionName(name.c_str()) ){
+
+    throw EventException( std::string("LCEventImpl::addCollection() invalid name (has to be C/C++ name): "
+				      +name) ) ; 
+  }
+      
   // check if name exists
   if( _colMap.find( name ) != _colMap.end() )
     
@@ -192,5 +199,25 @@ void LCEventImpl::setAccessMode( int accessMode ) {
 
 
 }
+  
+  /**Tests the validity of a collection name. SIO only accepts names starting with 
+   * (regular expression) [A-Za-z_] and continuing with [A-Za-z0-9_] (C/C++ variable name).
+   */
+  bool LCEventImpl::validateCollectionName( const char* name ){ //copy of SIO_functions::validateName
+    
+    if( *name < 0 ) 
+      return false ;
+    
+    if( !isalpha( (int)*name ) && *name != '_' ) 
+      return false ;
+    
+    for( name += 1; *name != '\0'; name++ ){
+      if( *name < 0 ) 
+	return false ;
+      if( !isalnum( (int)*name ) && *name != '_' ) 
+	return false ;
+    } 
+    return true ;
+  }
 
 }

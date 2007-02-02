@@ -79,9 +79,11 @@ namespace IMPL{
     virtual EVENT::LCCollection * takeCollection(const std::string & name) const 
       throw (EVENT::DataNotAvailableException, std::exception ) ;
 
-    /** Adds a collection with the given name. Throws an exception if the name already
-     * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
-     * 
+    /** Adds a collection with the given name (has to be a valid C/C++ variable name). 
+     *	Throws an exception if the name already
+     *  exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
+     *
+     *@see validateCollectionName
      *@throws EventException
      */ 
     virtual void addCollection(EVENT::LCCollection * col, const std::string & name)  
@@ -149,7 +151,11 @@ namespace IMPL{
   protected:
     void setAccessMode( int accessMode ) ;
     
-    
+    /**Tests the validity of a collection name. LCIO only accepts collection names starting with 
+     * (regular expression) [A-Za-z_] and continuing with [A-Za-z0-9_] (C/C++ variable name).
+     */
+    bool validateCollectionName( const char* name ) ;
+      
     // data members - declared protected to be accessible 
     // for friends of sub classes ...
     

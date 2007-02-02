@@ -8,7 +8,7 @@ import hep.lcio.exceptions.* ;
  * the corresponding types.  
  *
  * @author gaede
- * @version $Id: LCEvent.aid,v 1.12 2005-03-07 11:36:18 gaede Exp $
+ * @version $Id: LCEvent.aid,v 1.13 2007-02-02 09:34:26 gaede Exp $
  * @see LCCollection
  */
 
@@ -55,9 +55,11 @@ public interface LCEvent {
      public LCCollection* takeCollection(const String& name) const throws DataNotAvailableException ;
 @endif
 
-    /** Adds a collection with the given name. Throws an exception if the name already
-     * exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
-     * 
+    /** Adds a collection with the given name (has to be a valid C/C++ variable name). 
+     *	Throws an exception if the name already
+     *  exists in the event. NB: Adding collections is allowed even when the event is 'read only'.
+     *
+     *@see validateCollectionName
      *@throws EventException
      */ 
     public void addCollection(LCCollection* col ,const  String& name ) throws EventException ;
