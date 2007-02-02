@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.7 2007-02-01 08:57:51 gaede Exp $
+// CVS $Id: SIO_functions.cc,v 1.8 2007-02-02 08:59:06 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -40,11 +40,11 @@
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  ?
 // Windows/NT    PPC           _M_PPC        VC  compiler  Big
 // ----------------------------------------------------------------------------
-#if defined(__alpha__) ||   defined(__i386__)  ||   defined(_M_ALPHA)  ||   defined(_M_IX86) || defined(_LP64)
+#if defined(__alpha__) ||   defined(__i386__)  ||   defined(_M_ALPHA)  ||   defined(_M_IX86) || defined(_LP64) || defined(__LITTLE_ENDIAN__)
 #define SIO_LITTLE_ENDIAN
 #endif
 
-#if defined(_AIX)      ||   defined(__sparc__) ||   defined(_M_PPC) || defined(__APPLE_CC__)
+#if defined(_AIX)      ||   defined(__sparc__) ||   defined(_M_PPC) || ( defined(__APPLE_CC__) && !defined(__LITTLE_ENDIAN__)  ) 
 #define SIO_BIG_ENDIAN
 #endif
 
