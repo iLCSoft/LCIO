@@ -27,7 +27,7 @@ namespace UTIL{
    *  or -1 if no cellid1 exists. 
    */
   template <class T>
-  int CellIDEncoder_cellID1Bit()  { return -1 ; } ;
+  int CellIDEncoder_cellID1Bit()  { return -1 ; } 
 
   /** specialization that returns the proper bit for the second cellid */
   template<> int CellIDEncoder_cellID1Bit<EVENT::SimCalorimeterHit>() {  return LCIO::CHBIT_ID1 ; }
@@ -63,7 +63,7 @@ namespace UTIL{
    *  &nbsp;   } <br>
    * 
    *  @see BitField64
-   *  @version $Id: CellIDEncoder.h,v 1.2 2007-02-01 10:43:23 gaede Exp $
+   *  @version $Id: CellIDEncoder.h,v 1.3 2007-02-02 09:01:47 gaede Exp $
    */
   template <class T> 
   class CellIDEncoder : public BitField64 {
