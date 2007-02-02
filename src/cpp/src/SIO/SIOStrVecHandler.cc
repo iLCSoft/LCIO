@@ -29,8 +29,14 @@ namespace SIO{
     //    char* x = new char*[]( nElements ) ;
     for(int i=0;i<nElements;i++){
       char* x ;
-      LCSIO_READ( stream , &x ) ;
-      vec->push_back( x ) ;
+      int len ;
+      LCSIO_READ_LEN( stream , &x , &len) ;
+
+      //      vec->push_back( x ) ;
+      vec->resize( vec->size() + 1 ) ;
+      vec->back().resize(len) ;
+      memcpy( &(vec->back()[0]) , x , len ) ;
+
     }
 
     if( _vers > SIO_VERSION_ENCODE( 1, 2)   ) {

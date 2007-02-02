@@ -5,6 +5,8 @@
 #include <cctype>
 #include "Exceptions.h"
 
+#include <iostream>
+
 using namespace EVENT ;
 
 namespace SIO {
@@ -59,12 +61,12 @@ namespace SIO {
     
 //   }
   
-  unsigned int LCSIO::read( SIO_stream* stream ,char** c){
+  unsigned int LCSIO::read( SIO_stream* stream ,char** c, int* len){
     
     int status ;
     int strLen ;
     status = SIO_functions::data( stream ,  &strLen  , 1  ) ;
-    
+
     if( !( status & 1 ) ) return status ;
     
     // make sure our string buffer is large enough 
@@ -80,9 +82,10 @@ namespace SIO {
     dummy[ strLen ] = '\0' ; // still needed for char* ...
     
     *c = dummy  ;
-    
+    if(len!=0) 
+      *len = strLen ;
+
     return status ;
-    
   }
   
 unsigned int LCSIO::write( SIO_stream* stream , int i){

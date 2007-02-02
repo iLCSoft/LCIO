@@ -11,6 +11,7 @@ namespace SIO {
 
 
 #define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt)  ); if( !(status & 1) ) return status;
+#define LCSIO_READ_LEN( rec, pnt , len ) status = LCSIO::read( (rec), (pnt) , (len)  ); if( !(status & 1) ) return status;
 
 #define LCSIO_WRITE( rec, pnt ) status = LCSIO::write( (rec), (pnt)  ); if( !(status & 1) ) return status;
 
@@ -46,8 +47,9 @@ namespace SIO {
     /** Read a string from the stream into a dummy buffer. 
      * Warning the same buffer is used for each call.
      * So the return value needs to be copied to its final memory destination.
+     * len holds the length of the string (can contain '\0').
      */
-    static unsigned int read( SIO_stream* stream ,char** c ) ;
+    static unsigned int read( SIO_stream* stream ,char** c , int* len=0) ;
 
 //     /** This version checks the versionId to be able to read 'old' files with 
 //      * trailing '\00' (version <= 00-02).
