@@ -30,22 +30,22 @@ namespace UTIL{
   int CellIDEncoder_cellID1Bit()  { return -1 ; } 
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::SimCalorimeterHit>() {  return LCIO::CHBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::SimCalorimeterHit>() ;
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::RawCalorimeterHit>() {  return LCIO::RCHBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::RawCalorimeterHit>() ;
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::CalorimeterHit>() {  return LCIO::RCHBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::CalorimeterHit>() ; 
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerData>() {  return LCIO::TRAWBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerData>() ;
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerPulse>() {  return LCIO::TRAWBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerPulse>() ;
 
   /** specialization that returns the proper bit for the second cellid */
-  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerRawData>() {  return LCIO::TRAWBIT_ID1 ; }
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerRawData>() ;
 
 
   /** Convenient class for encoding cellIDs for various hit objects.
@@ -63,7 +63,7 @@ namespace UTIL{
    *  &nbsp;   } <br>
    * 
    *  @see BitField64
-   *  @version $Id: CellIDEncoder.h,v 1.3 2007-02-02 09:01:47 gaede Exp $
+   *  @version $Id: CellIDEncoder.h,v 1.4 2007-02-09 11:37:01 gaede Exp $
    */
   template <class T> 
   class CellIDEncoder : public BitField64 {
