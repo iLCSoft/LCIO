@@ -48,6 +48,21 @@ namespace UTIL{
   template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerRawData>() ;
 
 
+  /** Helper function that sets cellid1 and cellid2  
+   */
+  template <class T>
+  void CellIDEncoder_setCellID(T* hit, int low, int high)  {  
+
+    hit->setCellID0( low ) ;
+    hit->setCellID1( high ) ;
+  } 
+ 
+  /** Specialization for SimTrackerHits that have only one cellID */
+  template<> 
+  void CellIDEncoder_setCellID<IMPL::SimTrackerHitImpl>( IMPL::SimTrackerHitImpl* hit, 
+							 int low, int high);
+
+
   /** Convenient class for encoding cellIDs for various hit objects.
    *  It sets the proper collection parameter LCIO::CellIDEncoding and
    *  sets the proper flag bit for storing a second cellid if necessary.
@@ -63,7 +78,7 @@ namespace UTIL{
    *  &nbsp;   } <br>
    * 
    *  @see BitField64
-   *  @version $Id: CellIDEncoder.h,v 1.4 2007-02-09 11:37:01 gaede Exp $
+   *  @version $Id: CellIDEncoder.h,v 1.5 2007-02-09 18:30:45 gaede Exp $
    */
   template <class T> 
   class CellIDEncoder : public BitField64 {
@@ -83,12 +98,9 @@ namespace UTIL{
 	setCellIDFlag() ;
     }
 
-    void setCellID( T* hit) {
-      
-      hit->setCellID0( lowWord()  ) ;
-      
-      hit->setCellID1( highWord() ) ;
+    inline void setCellID( T* hit) {
 
+      CellIDEncoder_setCellID( hit , lowWord() , highWord() ) ;
     }
 
     /** Helper method that sets/unsets the proper bit for storing a second cellid word 
@@ -124,12 +136,6 @@ namespace UTIL{
     T* _oldHit ;
   } ; 
   
-
-
-  /** Specialization for SimTrackerHits that have only one cellID */
-  template<> void CellIDEncoder<IMPL::SimTrackerHitImpl>::setCellID( IMPL::SimTrackerHitImpl* hit) {
-    hit->setCellID( lowWord()  ) ;
-  }
 
 
 
