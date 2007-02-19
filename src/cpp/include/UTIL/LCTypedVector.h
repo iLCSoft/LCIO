@@ -23,7 +23,7 @@ namespace UTIL{
    *  <p>Note that instantiating an LCTypedVector involves copying and casting of the pointers in 
    *  the collection. In a future release of LCIO this might not be neccessary any more.
    *  @author gaede
-   *  @version $Id: LCTypedVector.h,v 1.2 2006-03-28 17:18:49 gaede Exp $
+   *  @version $Id: LCTypedVector.h,v 1.3 2007-02-19 17:38:46 gaede Exp $
    */
   template <class T> 
   class LCTypedVector : public  std::vector<T*> {
@@ -32,7 +32,7 @@ namespace UTIL{
     
     LCTypedVector( EVENT::LCCollection* col ) : _col( col) {
       
-      resize( _col->getNumberOfElements() ) ;
+      this->resize( _col->getNumberOfElements() ) ;
       
       for(int i=0;i<_col->getNumberOfElements();i++ ) {
 	

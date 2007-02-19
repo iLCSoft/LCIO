@@ -22,6 +22,8 @@
 #include "UTIL/LCTime.h"
 //#include "UTIL/BitField64.h"
 #include "UTIL/CellIDEncoder.h"
+#include "UTIL/LCTypedVector.h"
+
 
 // #include "UTIL/LCIOTypeInfo.h"
 
@@ -294,6 +296,8 @@ int main(int argc, char** argv ){
 	trkVec->setFlag( thFlag.getFlag()  ) ;
 	
 
+	LCTypedVector<MCParticle> mcpTV( mcVec ) ;
+
 	CellIDEncoder<SimTrackerHitImpl> cd( "i:8,j:8,k:8" ,trkVec )  ;
 	
 	for(int j=0;j<NHITS;j++){
@@ -319,7 +323,9 @@ int main(int argc, char** argv ){
 	  float rn =  .99999*rand()/RAND_MAX ;
 	  int mcIndx = static_cast<int>( NMCPART * rn ) ;
 	  
-	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
+
+// 	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;
+	  hit->setMCParticle( mcpTV[ mcIndx ]  ) ;
 	  
 	  hit->setMomentum( 1. , 2. , 3. ) ; 
 	  hit->setPathLength( .042 ) ;
