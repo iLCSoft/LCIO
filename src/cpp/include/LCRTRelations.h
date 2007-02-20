@@ -22,7 +22,7 @@ namespace lcrtrel_helper{
   struct SimplePtrInit{ static void* init() { return 0 ; } } ;
 
   /** Empty delete function for pointers w/o ownership */
-  struct NoDelete{ static void clean(void *v) { /* no_op */ } } ;
+  struct NoDelete{ static void clean(void *) { /* no_op */ } } ;
 
   /** Factory for objects of type  T*/
   template <class T>
