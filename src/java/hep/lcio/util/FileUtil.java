@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Miscellaneous java file utilities.
  * @author jeremym
- * @version $Id: FileUtil.java,v 1.2 2006-04-26 19:37:05 jeremy Exp $
+ * @version $Id: FileUtil.java,v 1.3 2007-03-16 00:36:20 jeremy Exp $
  */
 public abstract class FileUtil
 {
@@ -23,7 +23,7 @@ public abstract class FileUtil
 	public static List loadFile(String fileName)
 	{
 		if ((fileName == null) || (fileName == ""))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("invalid fileName: "+fileName);
 
 		String line;
 		ArrayList file = new ArrayList();
