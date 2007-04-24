@@ -10,7 +10,7 @@ SET( CMAKE_Fortran_COMPILER_INIT g77 )
 PROJECT( LCIOF77 Fortran )
 
 # set this to on to build f77 testjobs
-OPTION( BUILD_F77_TESTJOBS OFF )
+OPTION( BUILD_F77_TESTJOBS "Set to on to build LCIO F77 testjobs" OFF )
 
 # fortran testjobs
 SET( f77_bins
