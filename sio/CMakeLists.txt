@@ -1,23 +1,31 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
-PROJECT(SIO)
+#################################
+# cmake file for building SIO
+# @author Frank Gaede, DESY
+# @author Jan Engels, DESY
+#################################
 
-SET(SIO_MAJOR_VERSION 1)
-SET(SIO_MINOR_VERSION 8)
-SET(SIO_PATCH_LEVEL 1)
+# project name
+PROJECT( SIO )
 
-SET(SIO_VERSION "v01-08-01")
-
+# project version
+SET( SIO_MAJOR_VERSION 1 )
+SET( SIO_MINOR_VERSION 9 )
+SET( SIO_PATCH_LEVEL 0 )
+SET( ${PROJECT_NAME}_VERSION
+    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
+SET( ${PROJECT_NAME}_SOVERSION
+    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
 
 #INCLUDE(FindZLIB)
-FIND_PACKAGE(ZLIB REQUIRED)
+FIND_PACKAGE( ZLIB REQUIRED )
 #ZLIB_INCLUDE_DIR - where to find zlib.h, etc.
 #ZLIB_LIBRARIES   - List of libraries when using zlib.
 #ZLIB_FOUND       - True if zlib found.
 
 #MESSAGE(STATUS "ZLIB_LIBRARIES: " ${ZLIB_LIBRARIES})
 
-INCLUDE(TestBigEndian)
-TEST_BIG_ENDIAN(BIG_ENDIAN)
+INCLUDE( TestBigEndian )
+TEST_BIG_ENDIAN( BIG_ENDIAN )
 
 INCLUDE_DIRECTORIES(
 	${SIO_SOURCE_DIR}/include
@@ -33,18 +41,29 @@ SET (SIO_SRCS
   ${SIO_SOURCE_DIR}/src/SIO_stream.cc
   ${SIO_SOURCE_DIR}/src/SIO_streamManager.cc
 )
-ADD_DEFINITIONS( -D_FILE_OFFSET_BITS=64 -Wno-sign-compare )
 
-#IF(NOT CMAKE_BUILD_TYPE)
-#  SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-#      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-#      FORCE)
-#ENDIF(NOT CMAKE_BUILD_TYPE)
+#------ require proper C++ -------
+ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
+#----- need long long for int64 for now ------
+#FIXME: should establish wether we are on a 32bit or 64 bit machine ....
+ADD_DEFINITIONS( "-Wno-long-long" )
 
-ADD_LIBRARY(sio ${SIO_SRCS})
-TARGET_LINK_LIBRARIES(sio ${ZLIB_LIBRARIES})
+ADD_DEFINITIONS( "-D_FILE_OFFSET_BITS=64 -Wno-sign-compare" )
 
-#---- export zlib for the LCIOConfig.cmake -----
-SET( ZLIB ${ZLIB_LIBRARIES} )
-INSTALL(TARGETS sio DESTINATION lib)
+ADD_LIBRARY( lib_${PROJECT_NAME} ${SIO_SRCS} )
 
+SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
+    # create *nix style library versions + symbolic links
+    VERSION ${${PROJECT_NAME}_VERSION}
+    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    # avoid conflicts between library and binary target names
+    OUTPUT_NAME sio
+)
+
+TARGET_LINK_LIBRARIES( lib_${PROJECT_NAME} ${ZLIB_LIBRARIES} )
+
+# install library
+INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
+		OWNER_READ OWNER_WRITE OWNER_EXECUTE
+		GROUP_READ GROUP_EXECUTE
+		WORLD_READ WORLD_EXECUTE )

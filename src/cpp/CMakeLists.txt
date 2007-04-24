@@ -1,3 +1,8 @@
+#################################
+# cmake file for building LCIO
+# @author Frank Gaede, DESY
+# @author Jan Engels, DESY
+#################################
 
 INCLUDE_DIRECTORIES (
 	${LCIO_SOURCE_DIR}/sio/include
@@ -56,10 +61,12 @@ SET( LCIO_IMPL_SRCS
   ./src/IMPL/TrackerPulseImpl.cc
   ./src/IMPL/TrackerRawDataImpl.cc
   ./src/IMPL/VertexImpl.cc
-  )
+)
+
 SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
 )
+
 SET( LCIO_SIO_SRCS
   ./src/SIO/LCSIO.cc
   ./src/SIO/SIOCalHitHandler.cc
@@ -90,7 +97,7 @@ SET( LCIO_SIO_SRCS
   ./src/SIO/SIOVertexHandler.cc
   ./src/SIO/SIOWriter.cc
   ./src/SIO/SIOReader.cc
-  )
+)
 
 SET( LCIO_UTIL_SRCS
   ./src/UTIL/BitField64.cc
@@ -105,31 +112,64 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/lXDR.cc
   ./src/UTIL/LCTOOLS.cc
   ./src/UTIL/CellIDEncoder.cc
- )
+)
+
+#------ require proper C++ -------
+ADD_DEFINITIONS( -Wall -ansi  -pedantic )
+#----- need long long for int64 for now ------
+#FIXME: should establish wether we are on a 32bit or 64 bit machine ....
+ADD_DEFINITIONS( -Wno-long-long )
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
   ${LCIO_CPPFORT_SRCS} PROPERTIES 
   COMPILE_FLAGS "-Df2cFortran -Wno-unused"
-  )
+)
 
-ADD_LIBRARY(lcio 
-  ${LCIO_IMPL_SRCS} 
-  ${LCIO_IOIMPL_SRCS}  
+ADD_LIBRARY( lib_${PROJECT_NAME}F77 
   ${LCIO_CPPFORT_SRCS} 
-  ${LCIO_UTIL_SRCS} 
-  ${LCIO_SIO_SRCS} 
-  )
+)
 
-TARGET_LINK_LIBRARIES(lcio sio)
+SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
+    # create *nix style library versions + symbolic links
+    VERSION ${${PROJECT_NAME}_VERSION}
+    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    # avoid conflicts between library and binary target names
+    OUTPUT_NAME lcioF77
+)
+
+ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} lib_${PROJECT_NAME}F77 lib_SIO )
+
+ADD_LIBRARY( lib_${PROJECT_NAME} 
+  ${LCIO_IMPL_SRCS}
+  ${LCIO_IOIMPL_SRCS}
+  ${LCIO_UTIL_SRCS}
+  ${LCIO_SIO_SRCS}
+)
+
+SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
+    # create *nix style library versions + symbolic links
+    VERSION ${${PROJECT_NAME}_VERSION}
+    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    # avoid conflicts between library and binary target names
+    OUTPUT_NAME lcio
+)
+
+TARGET_LINK_LIBRARIES( lib_LCIO lib_SIO )
+TARGET_LINK_LIBRARIES( lib_LCIOF77 lib_LCIO )
+
+# create symbolic bin target for calling targets bin_XXX
+ADD_CUSTOM_TARGET( bin )
 
 # ==== a macro for adding binaries from the EXAMPLE directory =====
-MACRO(ADD_LCIO_BIN file)
-  ADD_EXECUTABLE( ${file} ./src/EXAMPLE/${file}.cc)
+MACRO( ADD_LCIO_BIN file )
+  ADD_EXECUTABLE( bin_${file} ./src/EXAMPLE/${file}.cc )
+  ADD_DEPENDENCIES( bin bin_${file} )
 #  MESSAGE( STATUS " in ADD_LCIO_BIN : " ${file} " " ./src/EXAMPLE/${file}.cc )
-  TARGET_LINK_LIBRARIES(${file} lcio )
-  INSTALL(TARGETS ${file} DESTINATION bin)
-ENDMACRO(ADD_LCIO_BIN)
+  SET_TARGET_PROPERTIES( bin_${file} PROPERTIES OUTPUT_NAME ${file} )
+  TARGET_LINK_LIBRARIES( bin_${file} lib_${PROJECT_NAME} )
+  INSTALL( TARGETS bin_${file} DESTINATION bin )
+ENDMACRO()
 #===================================================================
 
 ADD_LCIO_BIN( simjob ) 
@@ -138,19 +178,27 @@ ADD_LCIO_BIN( recjob )
 ADD_LCIO_BIN( dumpevent ) 
 ADD_LCIO_BIN( copyfix ) 
 
-OPTION(BUILD_LCIO_TESTJOBS FALSE)
+OPTION( BUILD_LCIO_TESTJOBS OFF )
 
-IF( BUILD_LCIO_TESTJOBS)
+IF( BUILD_LCIO_TESTJOBS )
   ADD_LCIO_BIN( readcalibration ) 
   ADD_LCIO_BIN( stdhepjob ) 
   ADD_LCIO_BIN( testvtx ) 
   ADD_LCIO_BIN( lcrtrelation ) 
-ENDIF( BUILD_LCIO_TESTJOBS)
+ENDIF()
 
 
 #------------- install the library and the (public) header files -------
 
-INSTALL(TARGETS lcio DESTINATION lib)
+INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
+		OWNER_READ OWNER_WRITE OWNER_EXECUTE
+		GROUP_READ GROUP_EXECUTE
+		WORLD_READ WORLD_EXECUTE )
+
+INSTALL( TARGETS lib_${PROJECT_NAME}F77 DESTINATION lib PERMISSIONS
+		OWNER_READ OWNER_WRITE OWNER_EXECUTE
+		GROUP_READ GROUP_EXECUTE
+		WORLD_READ WORLD_EXECUTE )
 
 INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include 
   PATTERN "*~" EXCLUDE
@@ -158,5 +206,4 @@ INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include
   PATTERN "*SIO*" EXCLUDE
   PATTERN "*CPPFORT*" EXCLUDE
   PATTERN "*CVS*" EXCLUDE)
-
 

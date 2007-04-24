@@ -1,61 +1,108 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
-PROJECT(LCIO)
+#################################
+# cmake file for building LCIO
+# @author Frank Gaede, DESY
+# @author Jan Engels, DESY
+#################################
 
-SET(LCIO_MAJOR_VERSION 1)
-SET(LCIO_MINOR_VERSION 8)
-SET(LCIO_PATCH_LEVEL 1)
+# cmake minimum required version
+CMAKE_MINIMUM_REQUIRED( VERSION 2.4 )
+SET( CMAKE_BACKWARDS_COMPATIBILITY 2.2 )
+MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 
-SET(LCIO_VERSION "v01-08-01")
+# allow more human readable "if then else" constructs
+SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 
-IF(NOT CMAKE_BUILD_TYPE)
-  SET(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
-ENDIF(NOT CMAKE_BUILD_TYPE)
+# project name
+PROJECT( LCIO )
 
-#------ require proper C++ -------
-ADD_DEFINITIONS(-Wall -ansi  -pedantic)
-#----- need long long for int64 for now ------
-#FIXME: should establish wether we are on a 32bit or 64 bit machine ....
-ADD_DEFINITIONS( -Wno-long-long )
+# project version
+SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
+SET( ${PROJECT_NAME}_MINOR_VERSION 9 )
+SET( ${PROJECT_NAME}_PATCH_LEVEL 0 )
+SET( ${PROJECT_NAME}_VERSION
+	"${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
+SET( ${PROJECT_NAME}_SOVERSION
+	"${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
 
+# build shared libraries per default
+IF( NOT DEFINED BUILD_SHARED_LIBS )
+	SET( BUILD_SHARED_LIBS ON )
+ENDIF()
 
-#----- if no install prefix set install in source directory -----
-IF( ${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local")
-  SET( CMAKE_INSTALL_PREFIX  ${LCIO_SOURCE_DIR} )
-ENDIF( ${CMAKE_INSTALL_PREFIX} STREQUAL "/usr/local")
+# set default cmake build type to RelWithDebInfo
+IF( NOT CMAKE_BUILD_TYPE )
+	SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
+ENDIF()
 
-#---- add own find modules to global module search path -------
-SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${LCIO_SOURCE_DIR}/CMake )
- 
-#------ optionally we can build with CLHEP -------
-SET(CLHEP_DIR "" CACHE PATH "if specified LCIO is build with CLHEP" )
-IF( CLHEP_DIR )
-  FIND_PACKAGE("CLHEP" REQUIRED )
-  ADD_DEFINITIONS(-DUSE_CLHEP)
-  INCLUDE_DIRECTORIES ( ${CLHEP_INCLUDE_DIRS} ) 
-ENDIF( CLHEP_DIR )
+# set default install prefix to project root directory
+IF( CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT )
+	SET( CMAKE_INSTALL_PREFIX "${${PROJECT_NAME}_SOURCE_DIR}" )
+ENDIF()
 
-#------------------------------------------------
+# add library install path to the rpath list
+SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH )
 
+# append link pathes to rpath list
+SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
+MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 
-ADD_SUBDIRECTORY(sio sio)
-ADD_SUBDIRECTORY(src/cpp lcio)
+# output directories
+SET( EXECUTABLE_OUTPUT_PATH "${${PROJECT_NAME}_BINARY_DIR}/bin" CACHE PATH
+	"EXECUTABLE_OUTPUT_PATH" FORCE )
+SET( LIBRARY_OUTPUT_PATH "${${PROJECT_NAME}_BINARY_DIR}/lib" CACHE PATH
+	"LIBRARY_OUTPUT_PATH" FORCE )
+MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
 
- 
-# --- get all dependencies of sio (actually zlib only)
-FOREACH( dep ${sio_LIB_DEPENDS} )
- set( siodeps ${siodeps} ${dep} )
-ENDFOREACH(  dep ${sio_LIB_DEPENDS} ) 
+# input directories
+ADD_SUBDIRECTORY( sio sio )
+ADD_SUBDIRECTORY( src/cpp lcio )
+ADD_SUBDIRECTORY( src/f77 f77 EXCLUDE_FROM_ALL )
 
-#----- siodeps is used in LCIOConfig.cmake.in :
-CONFIGURE_FILE(${LCIO_SOURCE_DIR}/LCIOConfig.cmake.in
-               ${LCIO_BINARY_DIR}/LCIOConfig.cmake @ONLY )
+# create uninstall configuration file 
+CONFIGURE_FILE( "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+				"${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+				IMMEDIATE @ONLY )
 
-#----- install configure file for dependend packages
-INSTALL(FILES  ${LCIO_BINARY_DIR}/LCIOConfig.cmake DESTINATION .)
+# create uninstall target
+ADD_CUSTOM_TARGET( uninstall
+  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" )
 
+# create configuration file from .in file
+CONFIGURE_FILE( "${${PROJECT_NAME}_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
+				"${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}Config.cmake" @ONLY )
 
-#EXPORT_LIBRARY_DEPENDENCIES( lciodep.cmake)
+# install configuration file
+INSTALL( FILES "${${PROJECT_NAME}_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+		DESTINATION . )
 
- 
+# display status message for important variables
+MESSAGE( STATUS )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )
+MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
+MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
+MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
+MESSAGE( STATUS "BUILD_LCIO_TESTJOBS = ${BUILD_LCIO_TESTJOBS}" )
+MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
+MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
+MESSAGE( STATUS "-------------------------------------------------------------------------------" )
+MESSAGE( STATUS )
+
+# force some variables that could be defined in the command line
+# to be written to cache
+SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL
+	"Build shared libraries flag" FORCE )
+SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
+	"Where to install ${PROJECT_NAME}" FORCE )
+SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
+	"Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
+SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
+	"Path to custom CMake Modules" FORCE )
+SET( BUILD_LCIO_TESTJOBS "${BUILD_LCIO_TESTJOBS}" CACHE BOOL
+	"Set to ON to build LCIO testbobs" FORCE )
+SET( BUILD_F77_TESTJOBS "${BUILD_F77_TESTJOBS}" CACHE BOOL
+	"Set to ON to build LCIO F77 testbobs" FORCE )
+
+# export library dependencies (keep this as the last line in the file)
+EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
