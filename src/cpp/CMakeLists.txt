@@ -178,8 +178,6 @@ ADD_LCIO_BIN( recjob )
 ADD_LCIO_BIN( dumpevent ) 
 ADD_LCIO_BIN( copyfix ) 
 
-OPTION( BUILD_LCIO_TESTJOBS "Set to ON to build LCIO testjobs" OFF )
-
 IF( BUILD_LCIO_TESTJOBS )
   ADD_LCIO_BIN( readcalibration ) 
   ADD_LCIO_BIN( stdhepjob ) 

@@ -15,6 +15,10 @@ SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
 # project name
 PROJECT( LCIO )
 
+# project options
+OPTION( BUILD_LCIO_TESTJOBS "Set to ON to build LCIO testjobs" OFF )
+OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
+
 # project version
 SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
 SET( ${PROJECT_NAME}_MINOR_VERSION 9 )
