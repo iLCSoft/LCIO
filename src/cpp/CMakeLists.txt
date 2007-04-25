@@ -134,6 +134,8 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
     # create *nix style library versions + symbolic links
     VERSION ${${PROJECT_NAME}_VERSION}
     SOVERSION ${${PROJECT_NAME}_SOVERSION}
+	# allow creating static and shared libs without conflicts
+	CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME lcioF77
 )
@@ -151,6 +153,8 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
     # create *nix style library versions + symbolic links
     VERSION ${${PROJECT_NAME}_VERSION}
     SOVERSION ${${PROJECT_NAME}_SOVERSION}
+	# allow creating static and shared libs without conflicts
+	CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME lcio
 )
