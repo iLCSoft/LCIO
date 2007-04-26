@@ -12,37 +12,38 @@ namespace IMPL{
     _position[2] = 0. ; 
   }
 
-// // deep copy of the SimCalorimeterHit hit
-// SimCalorimeterHitImpl::SimCalorimeterHitImpl(const SimCalorimeterHit& hit) :
-//   _cellID0( hit.getCellID0() ),
-//   _cellID1( hit.getCellID1() ),
-//   _energy( hit.getEnergy() ) {
-  
-//   const float* p = hit.getPosition() ;
-//   _position[0] = p[0] ;
-//   _position[1] = p[1] ;
-//   _position[2] = p[2] ;
-  
-//   int nMC = hit.getNMCContributions() ;
-  
-//   // now copy all the MCParticle contributions
-//   for(int i=0; i<nMC ;i++){
+//   // copy of the SimCalorimeterHit hit
+  SimCalorimeterHitImpl::SimCalorimeterHitImpl(const SimCalorimeterHit& hit) :
     
-//     MCParticleCont* con = new  MCParticleCont ;
+    _cellID0( hit.getCellID0() ),
+    _cellID1( hit.getCellID1() ),
+    _energy( hit.getEnergy() ) {
     
-//     con->Particle = hit.getParticleCont(i) ;
-//     con->Energy = hit.getEnergyCont(i) ;
-//     con->Time = hit.getTimeCont(i) ;
-//     con->PDG = hit.getPDGCont(i) ;
+    const float* p = hit.getPosition() ;
+    _position[0] = p[0] ;
+    _position[1] = p[1] ;
+    _position[2] = p[2] ;
     
-//     _vec.push_back( con ) ;
-//   }  
-// }
-
-  EVENT::LCObject* SimCalorimeterHitImpl::clone() const{
-    // shallow copy ... more thought needed
-    return new SimCalorimeterHitImpl( *this ) ;
+    int nMC = hit.getNMCContributions() ;
+    
+    // now copy all the MCParticle contributions
+    for(int i=0; i<nMC ;i++){
+      
+      MCParticleCont* con = new  MCParticleCont ;
+      
+      con->Particle = hit.getParticleCont(i) ;
+      con->Energy = hit.getEnergyCont(i) ;
+      con->Time = hit.getTimeCont(i) ;
+      con->PDG = hit.getPDGCont(i) ;
+      
+      _vec.push_back( con ) ;
+    }  
   }
+  
+//   EVENT::LCObject* SimCalorimeterHitImpl::clone() const{
+//     // shallow copy ... more thought needed
+//     return new SimCalorimeterHitImpl( *this ) ;
+//   }
   
 
   SimCalorimeterHitImpl::~SimCalorimeterHitImpl(){

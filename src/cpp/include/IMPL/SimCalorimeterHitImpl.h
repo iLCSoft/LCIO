@@ -34,23 +34,23 @@ namespace IMPL {
      */
     SimCalorimeterHitImpl() ;
 
-    /** Copy constructor. Not yet - needs pointer chasing ... 
+    /** Copy constructor - shallow copy. 
      */
-    //    SimCalorimeterHitImpl(const SimCalorimeterHit& hit) ;
+    SimCalorimeterHitImpl(const SimCalorimeterHit& hit) ;
 
     /// Destructor.
     virtual ~SimCalorimeterHitImpl() ;
     
     virtual int id() const { return simpleUID() ; }
 
-    /** Create a deep copy of itself.
-     * Overwrites return type in LCObject::clone().
-     * Not yet - as AID genereates virtual inheritance and
-     * g++ doesn't support virtual constructors with virtual inheritance
-     * TODO - change org.freehep.aid.CPPHeaderGenerator !
-     */
-    //virtual  SimCalorimeterHit* clone() const;
-    virtual LCObject* clone() const;
+//     /** Create a deep copy of itself.
+//      * Overwrites return type in LCObject::clone().
+//      * Not yet - as AID genereates virtual inheritance and
+//      * g++ doesn't support virtual constructors with virtual inheritance
+//      * TODO - change org.freehep.aid.CPPHeaderGenerator !
+//      */
+//     //virtual  SimCalorimeterHit* clone() const;
+//     virtual LCObject* clone() const;
     
     /**Returns the detector specific (geometrical) cell id.
      */
