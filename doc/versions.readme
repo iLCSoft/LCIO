@@ -3,6 +3,15 @@
 ---------------------------------------------------------------
 
 =====================
+v01-08-02
+=====================
+  bug fix release
+  no changes in file format and API
+    - fixed several problems with templates for newer gcc versions (>=3.4)
+    - removed obsolte lcioframe example
+    - support for building LCIO (C++) with cmake (experimental)
+
+=====================
 v01-08-01
 =====================
   bug fix release
