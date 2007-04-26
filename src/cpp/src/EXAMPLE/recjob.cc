@@ -246,6 +246,9 @@ public:
 
     LCCollection* simcalHits = evt->getCollection( simcalHitName ) ;
 
+//     // create a collection with copied simhits and modify these
+//     // (test copy constructor  - NOT YET AVAILABLE FOR OTHER CLASSES !)
+//     LCCollection* modifiedSimCalHits = new LCCollectionVec( LCIO::SIMCALORIMETERHIT );
 
     LCCollectionVec* clusterVec = new LCCollectionVec( LCIO::CLUSTER )  ;
     LCCollectionVec* calHits = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
@@ -283,8 +286,15 @@ public:
       scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       calHits->addElement( calHit ) ;
+
+//       // create a copy of sim hit and modify it
+//       SimCalorimeterHitImpl* mSimHit = new SimCalorimeterHitImpl( *simcalHit ) ;
+//       mSimHit->setEnergy(  mSimHit->getEnergy() * 1000. ) ;
+//       modifiedSimCalHits->addElement( mSimHit ) ;
+
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
+//     evt->addCollection( modifiedSimCalHits , "ModifiedSimCalorimeterHits") ;
 
     LCFlagImpl relFlag(0) ;
     relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
@@ -292,7 +302,7 @@ public:
 
     evt->addCollection( scRel , "CalorimeterHitsSimRel" ) ;
     //    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
-
+    
 
 
 
