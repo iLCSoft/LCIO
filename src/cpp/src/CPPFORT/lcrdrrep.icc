@@ -1,13 +1,13 @@
 
 extern "C"{
-//  void processevent_( PTRTYPE* ) ;
-//  void modifyevent_( PTRTYPE* ) ;
-//  void processrunheader_( PTRTYPE* ) ;
-//  void modifyrunheader_( PTRTYPE* ) ;
-  void processevent_( PTRTYPE* ) {}
-  void modifyevent_( PTRTYPE* ) {}
-  void processrunheader_( PTRTYPE* ) {}
-  void modifyrunheader_( PTRTYPE* ) {}
+  void processevent_( PTRTYPE* ) ;
+  void modifyevent_( PTRTYPE* ) ;
+  void processrunheader_( PTRTYPE* ) ;
+  void modifyrunheader_( PTRTYPE* ) ;
+//  void processevent_( PTRTYPE* ) {}
+//  void modifyevent_( PTRTYPE* ) {}
+//  void processrunheader_( PTRTYPE* ) {}
+//  void modifyrunheader_( PTRTYPE* ) {}
 }
 
 
