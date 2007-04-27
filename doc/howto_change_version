@@ -7,6 +7,10 @@ CMakeLists.txt
   SET( ${PROJECT_NAME}_MINOR_VERSION 8 )
   SET( ${PROJECT_NAME}_PATCH_LEVEL 2 )
   
+sio/CMakeLists.txt
+  SET( SIO_MAJOR_VERSION 1 )
+  SET( SIO_MINOR_VERSION 8 )
+  SET( SIO_PATCH_LEVEL 2 )
 
 config/lcio.properties
   version=0.9
