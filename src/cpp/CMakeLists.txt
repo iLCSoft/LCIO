@@ -126,14 +126,14 @@ SET_SOURCE_FILES_PROPERTIES(
   COMPILE_FLAGS "-Df2cFortran -Wno-unused"
 )
 
-ADD_LIBRARY( lib_${PROJECT_NAME}F77 
+ADD_LIBRARY( lib_${PROJECT_NAME}F77 STATIC
   ${LCIO_CPPFORT_SRCS} 
 )
 
 SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
     # create *nix style library versions + symbolic links
-    VERSION ${${PROJECT_NAME}_VERSION}
-    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    #VERSION ${${PROJECT_NAME}_VERSION}
+    #SOVERSION ${${PROJECT_NAME}_SOVERSION}
 	# allow creating static and shared libs without conflicts
 	CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
