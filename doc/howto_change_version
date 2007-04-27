@@ -2,13 +2,20 @@
 To change the version of LCIO the following files have to be modified:
 
 
+CMakeLists.txt
+  SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
+  SET( ${PROJECT_NAME}_MINOR_VERSION 8 )
+  SET( ${PROJECT_NAME}_PATCH_LEVEL 2 )
+  
+
 config/lcio.properties
   version=0.9
   dist.version=v00-09
 
 src/aid/EVENT/LCIO.aid
-  static const int MAJORVERSION  = 0 ;
-  static const int MINORVERSION  = 9 ;
+  #define LCIO_MAJOR_VERSION 1
+  #define LCIO_MINOR_VERSION 8
+  #define LCIO_PATCH_LEVEL 2
 
   public static const int MAJORVERSION  = 0 ; 
   public static const int MINORVERSION  = 9 ; 
