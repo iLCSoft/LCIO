@@ -58,7 +58,7 @@ MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
 # input directories
 ADD_SUBDIRECTORY( sio sio )
 ADD_SUBDIRECTORY( src/cpp lcio )
-ADD_SUBDIRECTORY( src/f77 f77 EXCLUDE_FROM_ALL )
+ADD_SUBDIRECTORY( src/f77 f77 )
 
 # create uninstall configuration file 
 CONFIGURE_FILE( "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"

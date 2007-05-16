@@ -142,6 +142,19 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
 
 ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} lib_${PROJECT_NAME}F77 lib_SIO )
 
+# ===== load dependencies macro ====================================================
+IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
+    # load macro
+    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+        MESSAGE( FATAL_ERROR "\nSorry, could not find MacroCheckDeps.cmake...\n"
+            "Please set CMAKE_MODULE_PATH correctly with: "
+            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+    ENDIF()
+    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+    CHECK_DEPS()
+ENDIF()
+# ==================================================================================
+
 ADD_LIBRARY( lib_${PROJECT_NAME} 
   ${LCIO_IMPL_SRCS}
   ${LCIO_IOIMPL_SRCS}
