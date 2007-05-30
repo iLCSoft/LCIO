@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTrackerRawData.java,v 1.1 2005-05-31 07:43:31 gaede Exp $
+ * @version $Id: SIOTrackerRawData.java,v 1.2 2007-05-30 18:50:52 tonyj Exp $
  */
 class SIOTrackerRawData extends ITrackerRawData
 {
@@ -29,6 +29,7 @@ class SIOTrackerRawData extends ITrackerRawData
          aDCValues = new short[n];
          for (int i=0; i<n; i++) aDCValues[i] = in.readShort();
       }
+      in.pad();
       in.readPTag(this);
    }
    static void write(TrackerRawData hit, SIOOutputStream out, int flags) throws IOException
@@ -51,6 +52,7 @@ class SIOTrackerRawData extends ITrackerRawData
             out.writeInt(c.length);
             for (int i=0; i<c.length; i++) out.writeShort(c[i]);
          }
+         out.pad();
          out.writePTag(hit);
       }
    }
