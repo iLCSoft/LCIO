@@ -257,6 +257,8 @@ public class SIODump
 						blockMap.put(values.get("blockName"), values.get("blockType"));
 					}
 				}
+                                // ToDo: Check what SIO rules are for padding
+                                data.pad();
 			}
 			else if (nodeName.equals("if"))
 			{
