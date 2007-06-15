@@ -11,10 +11,12 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 /**
- * CommandHandler for the random command.
+ * CommandHandler for the <i>random</i> command.
+ * 
+ * Generates an {@link hep.lcio.event.LCEvent} containing random data.
  * 
  * @author jeremym
- * @version $Id: RandomEventCommandHandler.java,v 1.2 2006-12-07 00:47:33 jeremy Exp $
+ * @version $Id: RandomEventCommandHandler.java,v 1.3 2007-06-15 23:15:28 jeremy Exp $
  */
 public class RandomEventCommandHandler extends CommandHandler
 {
