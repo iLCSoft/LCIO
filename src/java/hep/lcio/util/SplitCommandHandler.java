@@ -13,12 +13,13 @@ import org.apache.commons.cli.PosixParser;
  * Command-line handler for the split utility.
  * 
  * @author Jeremy McCormick
- * @version $Id: SplitCommandHandler.java,v 1.4 2006-12-07 00:47:33 jeremy Exp $
+ * @version $Id: SplitCommandHandler.java,v 1.5 2007-06-15 23:14:57 jeremy Exp $
  */
 public class SplitCommandHandler extends CommandHandler
 {
 	File infile;
 	int nevents;
+    int maxevents=-1;
 	
 	SplitCommandHandler()
 	{
@@ -46,6 +47,10 @@ public class SplitCommandHandler extends CommandHandler
 		opt = new Option("n", true, "The number of events to split.");
 		opt.setArgs(1);
 		options.addOption(opt);
+        
+        opt = new Option("m", false, "The maximum number of events to read.");
+        opt.setArgs(1);
+        options.addOption(opt);
 		
 		return options;
 	}
@@ -80,6 +85,11 @@ public class SplitCommandHandler extends CommandHandler
 		{
 			nevents = Integer.parseInt(cl.getOptionValue("n"));
 		}
+        
+        if (cl.hasOption("m"))
+        {
+            maxevents = Integer.parseInt(cl.getOptionValue("m"));
+        }
 	}
 	
 	/**
@@ -87,7 +97,7 @@ public class SplitCommandHandler extends CommandHandler
 	 */
 	public void execute() throws Exception
 	{
-		List flist = Split.split(infile, nevents);
+		List flist = Split.split(infile, nevents, maxevents);
 		Split.printSplitSummary(flist, System.out);
 	}
 }

@@ -21,7 +21,7 @@ import java.util.List;
  * chunks of given size.
  * 
  * @author Jeremy McCormick
- * @version $Id: Split.java,v 1.1 2006-04-28 21:33:51 jeremy Exp $
+ * @version $Id: Split.java,v 1.2 2007-06-15 23:14:57 jeremy Exp $
  */
 public class Split
 {
@@ -31,10 +31,10 @@ public class Split
 	 * @param nevents The number of events in each new output file.
 	 * @throws Exception
 	 */
-	public static List split(File infile, int nevents) throws Exception
+	public static List split(File infile, int nevents, int maxevents) throws Exception
 	{
 		// List of files created.
-		List outfilelist = new ArrayList();
+		List<File> outfilelist = new ArrayList<File>();
 
 		// Base name from input file name.
 		String basename = infile.getAbsolutePath().replace(".slcio", "");
@@ -67,6 +67,7 @@ public class Split
 
 		// file loop
 		String outfile;
+        int totalevents=0;
 		for (;;)
 		{
 			// Next output file name.
@@ -120,6 +121,7 @@ public class Split
 						{
 							// Increment number of events.
 							++neventsread;
+                            ++totalevents;
 						}
 
 						// Increment number of records.
@@ -130,6 +132,11 @@ public class Split
 						throw new RuntimeException("Error writing record " + (nevents - 1), x);
 					}
 				}
+                
+                if (maxevents != -1 && totalevents == maxevents)
+                {
+                    done = true;
+                }
 
 				if (neventsread == nevents || done)
 				{
@@ -178,8 +185,11 @@ public class Split
 		}
 
 		// Delete the last file as it doesn't have any events.
-		outfilelist.remove(outfilelist.size() - 1);
-		(new File(outfile)).delete();
+        if (neventsread == 0)
+        {
+            outfilelist.remove(outfilelist.size() - 1);
+            (new File(outfile)).delete();
+        }
 
 		// Return a list of files created.
 		return outfilelist;
