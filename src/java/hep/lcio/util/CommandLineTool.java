@@ -18,31 +18,31 @@ import org.apache.commons.cli.PosixParser;
  * 
  * lcio [global_options] [command] [command_options]
  * 
- * @see hep.lcio.util.Concat concat [X]
+ * @see hep.lcio.util.Concat concat 
  * -concatenate LCIO files together
  * 
- * @see hep.lcio.util.MergeCommandHandler merge [X]
+ * @see hep.lcio.util.MergeCommandHandler merge
  * -overlay events
  * 
- * @see hep.lcio.util.Split split [X]
+ * @see hep.lcio.util.Split split
  * -split LCIO file into multiple output files
  * 
- * @see hep.lcio.util.SioDump siodump [X]
+ * @see hep.lcio.util.SioDump siodump
  * -dump low-level SIOinfo
  * 
- * @see hep.lcio.util.Compare compare [X]
+ * @see hep.lcio.util.Compare compare
  * -compare series of LCIO files
  * 
- * @see hep.lcio.util.Headers count [X]
+ * @see hep.lcio.util.Headers count
  * -print header info
  * -number of LCRunHeader
  * -number of LCEventHeader
  * -number of LCEvent
  * 
- * @see hep.lcio.util.RandomEvent random [X]
+ * @see hep.lcio.util.RandomEvent random
  * -generate X random events
  *  
- * @see hep.lcio.util.Validate validate [X]
+ * @see hep.lcio.util.Validate validate
  * -Is an LCIO file?
  * -version check
  * 
@@ -51,17 +51,11 @@ import org.apache.commons.cli.PosixParser;
  * 
  * @see hep.lcio.util.PrintEvent print
  * -dump lcio file (similar to C++ dump cmd)
- * 
- * @see hep.lcio.util.Filter filter
- * -filter out/in by coll type
- * -filter out/in by coll name
- * -filter out/in by event number
- * -filter out/in by run number
  *
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.14 2006-12-07 00:47:32 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.15 2007-06-15 23:16:38 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -105,6 +99,7 @@ public class CommandLineTool
 		addCommandHandler(new ValidateCommandHandler());
 		addCommandHandler(new StdhepConvertCommandHandler());
 		addCommandHandler(new PrintCommandHandler());
+        addCommandHandler(new SelectCommandHandler());
 	}
 	
 	/**

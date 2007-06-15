@@ -11,7 +11,7 @@ import org.apache.commons.cli.PosixParser;
  * single command in the CommandLineTool.
  * 
  * @author jeremym
- * @version $Id: CommandHandler.java,v 1.5 2006-06-02 23:48:34 jeremy Exp $
+ * @version $Id: CommandHandler.java,v 1.6 2007-06-15 23:16:38 jeremy Exp $
  */
 
 public abstract class CommandHandler 
@@ -76,7 +76,7 @@ public abstract class CommandHandler
 	public void printUsage(boolean doExit)
 	{
 		HelpFormatter help = new HelpFormatter();
-
+       
 		help.printHelp(getName(), getOptions());
 		
 		if (doExit)
