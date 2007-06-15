@@ -18,7 +18,7 @@ import org.apache.commons.cli.Options;
  * {@link CommandHandler} for the <i>select</i> command.
  * 
  * @author jeremym
- * @version $Id: SelectCommandHandler.java,v 1.1 2007-06-15 23:16:39 jeremy Exp $
+ * @version $Id: SelectCommandHandler.java,v 1.2 2007-06-15 23:37:29 jeremy Exp $
  */
 public class SelectCommandHandler extends CommandHandler
 {       
@@ -121,6 +121,11 @@ public class SelectCommandHandler extends CommandHandler
     public void parse( String[] argv) throws Exception
     {
         CommandLine cl = parser.parse(options, argv);
+        
+        if ( cl.hasOption("h") )
+        {
+            printUsage(true);
+        }        
         
         if (cl.hasOption("f"))
         {
