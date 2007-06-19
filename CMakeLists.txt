@@ -186,6 +186,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.dvi"
         COMMAND "${LATEX_COMPILER}" ARGS "manual.tex"
+        COMMAND "${LATEX_COMPILER}" ARGS "manual.tex"
         COMMAND "${DVIPS_CONVERTER}" ARGS "manual.dvi"
         COMMAND "${PDFLATEX_COMPILER}" ARGS "manual.tex"
         COMMAND "${LATEX2HTML_CONVERTER}" ARGS
@@ -198,24 +199,27 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
             DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.dvi" )
 
     # reference manual
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
-        COMMAND "${LATEX_COMPILER}" ARGS "refman.tex"
-        COMMAND "${DVIPS_CONVERTER}" ARGS "refman.dvi"
-        # FIXME psnup should be detected
-        COMMAND "psnup" ARGS "-2 refman.ps ${${PROJECT_NAME}_SOURCE_DIR}/doc/lciorefman.ps"
-        COMMAND "${PDFLATEX_COMPILER}" ARGS "refman.tex"
-        WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex"
-        COMMENT "Building Documentation - Reference Manual..."
-        VERBATIM )
+    # FIXME this is not working correctly
+    #ADD_CUSTOM_COMMAND(
+    #    OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
+    #    COMMAND "${LATEX_COMPILER}" ARGS "refman.tex"
+    #    COMMAND "${LATEX_COMPILER}" ARGS "refman.tex"
+    #    COMMAND "${DVIPS_CONVERTER}" ARGS "refman.dvi"
+    #    # FIXME psnup should be detected
+    #    COMMAND "psnup" ARGS "-2 refman.ps ${${PROJECT_NAME}_SOURCE_DIR}/doc/lciorefman.ps"
+    #    COMMAND "${PDFLATEX_COMPILER}" ARGS "refman.tex"
+    #    WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex"
+    #    COMMENT "Building Documentation - Reference Manual..."
+    #    VERBATIM )
 
-    ADD_CUSTOM_TARGET( doc_refman
-            DEPENDS
-                "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/html"
-                "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi" )
+    #ADD_CUSTOM_TARGET( doc_refman
+    #        DEPENDS
+    #            "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/html"
+    #            "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi" )
     
     # add custom target for building all documentation
-    ADD_CUSTOM_TARGET( doc DEPENDS doc_api doc_refman doc_manual )
+    #ADD_CUSTOM_TARGET( doc DEPENDS doc_api doc_refman doc_manual )
+    ADD_CUSTOM_TARGET( doc DEPENDS doc_api doc_manual )
 
 ELSE()
     IF( NOT DOXYGEN_FOUND )
