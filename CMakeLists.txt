@@ -184,30 +184,31 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
 
     # user manual
     ADD_CUSTOM_COMMAND(
-        OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.dvi"
-        COMMAND "${LATEX_COMPILER}" ARGS "manual.tex"
-        COMMAND "${LATEX_COMPILER}" ARGS "manual.tex"
-        COMMAND "${DVIPS_CONVERTER}" ARGS "manual.dvi"
-        COMMAND "${PDFLATEX_COMPILER}" ARGS "manual.tex"
+        OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual/manual.dvi"
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
+        COMMAND "${DVIPS_CONVERTER}" ARGS -q manual.dvi
+        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX2HTML_CONVERTER}" ARGS
-        "-mkdir -dir ${${PROJECT_NAME}_SOURCE_DIR}/doc/manual_html -info 0 -no_auto_link -split 0 -no_navigation manual.tex"
-        WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/src/latex"
+            -mkdir -dir ${${PROJECT_NAME}_SOURCE_DIR}/doc/manual_html
+            -verbosity 0 -info 0 -no_auto_link -split 0 -no_navigation manual.tex
+        WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual"
         COMMENT "Building Documentation - Users Manual..."
         VERBATIM )
 
     ADD_CUSTOM_TARGET( doc_manual
-            DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.dvi" )
+            DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual/manual.dvi" )
 
     # reference manual
     # FIXME this is not working correctly
     #ADD_CUSTOM_COMMAND(
     #    OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
-    #    COMMAND "${LATEX_COMPILER}" ARGS "refman.tex"
-    #    COMMAND "${LATEX_COMPILER}" ARGS "refman.tex"
-    #    COMMAND "${DVIPS_CONVERTER}" ARGS "refman.dvi"
+    #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
+    #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
+    #    COMMAND "${DVIPS_CONVERTER}" ARGS -q refman.dvi
     #    # FIXME psnup should be detected
-    #    COMMAND "psnup" ARGS "-2 refman.ps ${${PROJECT_NAME}_SOURCE_DIR}/doc/lciorefman.ps"
-    #    COMMAND "${PDFLATEX_COMPILER}" ARGS "refman.tex"
+    #    COMMAND "psnup" ARGS -q -2 refman.ps ${${PROJECT_NAME}_SOURCE_DIR}/doc/lciorefman.ps
+    #    COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
     #    WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex"
     #    COMMENT "Building Documentation - Reference Manual..."
     #    VERBATIM )
