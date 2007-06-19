@@ -184,20 +184,40 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
 
     # user manual
     ADD_CUSTOM_COMMAND(
-        OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual/manual.dvi"
+        OUTPUT  "${${PROJECT_NAME}_BINARY_DIR}/manual"
+        # first we copy directory from source tree to binary tree to
+        # keep the source tree unchanged
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory
+            "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual"
+            "${${PROJECT_NAME}_BINARY_DIR}/manual"
+        VERBATIM )
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  "${${PROJECT_NAME}_SOURCE_DIR}/doc/manual.pdf"
+        # copy directory from source tree to binary tree
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory
+            "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual"
+            "${${PROJECT_NAME}_BINARY_DIR}/manual"
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${DVIPS_CONVERTER}" ARGS -q manual.dvi
         COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX2HTML_CONVERTER}" ARGS
-            -mkdir -dir ${${PROJECT_NAME}_SOURCE_DIR}/doc/manual_html
-            -verbosity 0 -info 0 -no_auto_link -split 0 -no_navigation manual.tex
-        WORKING_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual"
+            -mkdir -dir manual_html -verbosity 0 -info 0 -no_auto_link -split 0 -no_navigation manual.tex
+        # copy files to doc directory
+        COMMAND "${CMAKE_COMMAND}" -E copy "manual.pdf"
+            "${${PROJECT_NAME}_SOURCE_DIR}/doc"
+        COMMAND "${CMAKE_COMMAND}" -E copy "manual.ps"
+            "${${PROJECT_NAME}_SOURCE_DIR}/doc"
+        COMMAND "${CMAKE_COMMAND}" -E copy_directory "manual_html"
+            "${${PROJECT_NAME}_SOURCE_DIR}/doc/manual_html"
+        DEPENDS "${${PROJECT_NAME}_BINARY_DIR}/manual"
+        WORKING_DIRECTORY "${${PROJECT_NAME}_BINARY_DIR}/manual"
         COMMENT "Building Documentation - Users Manual..."
         VERBATIM )
 
     ADD_CUSTOM_TARGET( doc_manual
-            DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual/manual.dvi" )
+            DEPENDS "${${PROJECT_NAME}_SOURCE_DIR}/doc/manual.pdf" )
 
     # reference manual
     # FIXME this is not working correctly
@@ -219,8 +239,9 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     #            "${${PROJECT_NAME}_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi" )
     
     # add custom target for building all documentation
-    #ADD_CUSTOM_TARGET( doc DEPENDS doc_api doc_refman doc_manual )
-    ADD_CUSTOM_TARGET( doc DEPENDS doc_api doc_manual )
+    ADD_CUSTOM_TARGET( doc )
+    #ADD_DEPENDENCIES( doc doc_api doc_manual doc_refman )
+    ADD_DEPENDENCIES( doc doc_api doc_manual )
 
 ELSE()
     IF( NOT DOXYGEN_FOUND )
@@ -244,12 +265,6 @@ IF( INSTALL_DOC )
     INSTALL( DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}/doc"
             DESTINATION .
             PATTERN "*CVS*" EXCLUDE )
-
-    INSTALL( FILES
-            "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.ps"
-            "${${PROJECT_NAME}_SOURCE_DIR}/src/latex/manual.pdf"
-            DESTINATION doc )
-
 ENDIF()
 
 # create uninstall configuration file 
