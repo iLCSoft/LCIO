@@ -99,7 +99,7 @@ IF( NOT EXISTS "${${PROJECT_NAME}_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
         # in case JDK_HOME or JAVA_HOME already set ensure that both variables
         # are set correctly (JDK_HOME as well as JAVA_HOME)
         IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
-            IF( ENV{JDK_HOME} STREQUAL "$ENV{JAVA_HOME}" )
+            IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
                 SET( java_path "$ENV{JDK_HOME}" )
             ELSE()
                 MESSAGE( SEND_ERROR 
