@@ -5,8 +5,8 @@
 #################################
 
 INCLUDE_DIRECTORIES (
-	${LCIO_SOURCE_DIR}/sio/include
-	${LCIO_SOURCE_DIR}/src/cpp/include
+    "${LCIO_SOURCE_DIR}/sio/include"
+    "${LCIO_SOURCE_DIR}/src/cpp/include"
 )
 
 SET( LCIO_CPPFORT_SRCS
@@ -134,26 +134,13 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
     # create *nix style library versions + symbolic links
     #VERSION ${${PROJECT_NAME}_VERSION}
     #SOVERSION ${${PROJECT_NAME}_SOVERSION}
-	# allow creating static and shared libs without conflicts
-	CLEAN_DIRECT_OUTPUT 1
+    # allow creating static and shared libs without conflicts
+    CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME lcioF77
 )
 
 ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} lib_${PROJECT_NAME}F77 lib_SIO )
-
-# ===== load dependencies macro ====================================================
-IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-    # load macro
-    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-        MESSAGE( FATAL_ERROR "\nSorry, could not find MacroCheckDeps.cmake...\n"
-            "Please set CMAKE_MODULE_PATH correctly with: "
-            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
-    ENDIF()
-    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-    CHECK_DEPS()
-ENDIF()
-# ==================================================================================
 
 ADD_LIBRARY( lib_${PROJECT_NAME} 
   ${LCIO_IMPL_SRCS}
@@ -166,8 +153,8 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
     # create *nix style library versions + symbolic links
     VERSION ${${PROJECT_NAME}_VERSION}
     SOVERSION ${${PROJECT_NAME}_SOVERSION}
-	# allow creating static and shared libs without conflicts
-	CLEAN_DIRECT_OUTPUT 1
+    # allow creating static and shared libs without conflicts
+    CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME lcio
 )
@@ -206,14 +193,14 @@ ENDIF()
 #------------- install the library and the (public) header files -------
 
 INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
-		OWNER_READ OWNER_WRITE OWNER_EXECUTE
-		GROUP_READ GROUP_EXECUTE
-		WORLD_READ WORLD_EXECUTE )
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE )
 
 INSTALL( TARGETS lib_${PROJECT_NAME}F77 DESTINATION lib PERMISSIONS
-		OWNER_READ OWNER_WRITE OWNER_EXECUTE
-		GROUP_READ GROUP_EXECUTE
-		WORLD_READ WORLD_EXECUTE )
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE )
 
 INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include 
   PATTERN "*~" EXCLUDE

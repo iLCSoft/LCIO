@@ -28,8 +28,8 @@ INCLUDE( TestBigEndian )
 TEST_BIG_ENDIAN( BIG_ENDIAN )
 
 INCLUDE_DIRECTORIES(
-	${SIO_SOURCE_DIR}/include
-	${ZLIB_INCLUDE_DIR}
+    ${SIO_SOURCE_DIR}/include
+    ${ZLIB_INCLUDE_DIR}
 )
 
 SET (SIO_SRCS
@@ -56,8 +56,8 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
     # create *nix style library versions + symbolic links
     VERSION ${${PROJECT_NAME}_VERSION}
     SOVERSION ${${PROJECT_NAME}_SOVERSION}
-	# allow creating static and shared libs without conflicts
-	CLEAN_DIRECT_OUTPUT 1
+    # allow creating static and shared libs without conflicts
+    CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME sio
 )
@@ -66,6 +66,6 @@ TARGET_LINK_LIBRARIES( lib_${PROJECT_NAME} ${ZLIB_LIBRARIES} )
 
 # install library
 INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
-		OWNER_READ OWNER_WRITE OWNER_EXECUTE
-		GROUP_READ GROUP_EXECUTE
-		WORLD_READ WORLD_EXECUTE )
+        OWNER_READ OWNER_WRITE OWNER_EXECUTE
+        GROUP_READ GROUP_EXECUTE
+        WORLD_READ WORLD_EXECUTE )
