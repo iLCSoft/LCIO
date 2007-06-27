@@ -22,7 +22,7 @@ SET( ${PROJECT_NAME}_MINOR_VERSION 8 )
 SET( ${PROJECT_NAME}_PATCH_LEVEL 3 )
 
 # project options
-OPTION( BUILD_SHARED_LIBS "Set this to OFF to build static libraries" ON )
+OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
 OPTION( BUILD_LCIO_TESTJOBS "Set to ON to build LCIO testjobs" OFF )
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 OPTION( INSTALL_DOC "Set to ON to install Documentation" ON )
@@ -37,95 +37,95 @@ IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" )
 ENDIF()
 
-# generate header files with ant aid.generate
-IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
-    # check if java is available
-    # FIXME put this stuff into a module FindJDK.cmake?
-    
-    IF( NOT DEFINED ENV{JDK_HOME} AND NOT DEFINED ENV{JAVA_HOME} )
-        MESSAGE( STATUS "Autodetecting java..." )
-        FIND_PACKAGE( Java )
-        IF( JAVA_RUNTIME )
-            SET( java_bin "${JAVA_RUNTIME}" )
-            IF( UNIX )
-                # initialize flow-control variable
-                SET( link_found TRUE )
-                
-                # dereference links
-                WHILE( link_found )
-                    # check if the java binary is a symbolic link
-                    EXEC_PROGRAM( file ARGS "${java_bin}"
-                        OUTPUT_VARIABLE out_tmp
-                        RETURN_VALUE out_ret )
-                    IF( out_ret )
-                        MESSAGE( SEND_ERROR "Error dereferencing links to Java Home!!" )
-                        MESSAGE( FATAL_ERROR "${out_tmp}" )
-                    ENDIF()
-                    # set variable if link is found
-                    STRING( REGEX MATCH " symbolic link to " link_found "${out_tmp}" )
-                    IF( link_found )
-                        # get the file to where the link points to
-                        STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
-                        MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
-                        SET( java_bin "${out_regex}" )
-                    ENDIF()
-                ENDWHILE()
-            ENDIF()
-            # get java_path out of java binary
-            STRING( REGEX REPLACE "(.*)\\/bin\\/java$" "\\1" java_path ${java_bin} )
+# check for java
+# FIXME put this stuff into a module FindJDK.cmake?
+IF( NOT DEFINED ENV{JDK_HOME} AND NOT DEFINED ENV{JAVA_HOME} )
+    MESSAGE( STATUS "Autodetecting java..." )
+    FIND_PACKAGE( Java )
+    IF( JAVA_RUNTIME )
+        SET( java_bin "${JAVA_RUNTIME}" )
+        #IF( UNIX )
+        #    # initialize flow-control variable
+        #    SET( link_found TRUE )
+        #    
+        #    # dereference links
+        #    WHILE( link_found )
+        #        # check if the java binary is a symbolic link
+        #        EXEC_PROGRAM( file ARGS "${java_bin}"
+        #            OUTPUT_VARIABLE out_tmp
+        #            RETURN_VALUE out_ret )
+        #        IF( out_ret )
+        #            MESSAGE( STATUS "Error dereferencing links to Java Home!!" )
+        #            MESSAGE( FATAL_ERROR "${out_tmp}" )
+        #        ENDIF()
+        #        # set variable if link is found
+        #        STRING( REGEX MATCH " symbolic link to " link_found "${out_tmp}" )
+        #        IF( link_found )
+        #            # get the file to where the link points to
+        #            STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
+        #            MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
+        #            SET( java_bin "${out_regex}" )
+        #        ENDIF()
+        #    ENDWHILE()
+        #ENDIF()
+        # get java_path out of java binary
+        STRING( REGEX REPLACE "(.*)\\/bin\\/java$" "\\1" java_path ${java_bin} )
+    ELSE()
+        MESSAGE( FATAL_ERROR "Java was not found in your system!!" )
+    ENDIF()
+ELSE()
+    # in case JDK_HOME or JAVA_HOME already set ensure that both variables
+    # are set correctly (JDK_HOME as well as JAVA_HOME)
+    IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
+        IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
+            SET( java_path "$ENV{JDK_HOME}" )
         ELSE()
-            MESSAGE( FATAL_ERROR "Java was not found in your system!!" )
+            MESSAGE( STATUS 
+                "JDK_HOME and JAVA_HOME are set to different paths!!" )
+            MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
+            MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
+            MESSAGE( FATAL_ERROR 
+                "Please unset one of them or set both correctly!!" )
         ENDIF()
     ELSE()
-        # in case JDK_HOME or JAVA_HOME already set ensure that both variables
-        # are set correctly (JDK_HOME as well as JAVA_HOME)
-        IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
-            IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
-                SET( java_path "$ENV{JDK_HOME}" )
-            ELSE()
-                MESSAGE( SEND_ERROR 
-                    "JDK_HOME and JAVA_HOME are set to different paths!!" )
-                MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
-                MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
-                MESSAGE( FATAL_ERROR 
-                    "Please unset one of them or set both correctly!!" )
-            ENDIF()
-        ELSE()
-            IF( DEFINED ENV{JDK_HOME} )
-                SET( java_path "$ENV{JDK_HOME}" )
-            ENDIF()
-            IF( DEFINED ENV{JAVA_HOME} )
-                SET( java_path "$ENV{JAVA_HOME}" )
-            ENDIF()
+        IF( DEFINED ENV{JDK_HOME} )
+            SET( java_path "$ENV{JDK_HOME}" )
         ENDIF()
-        SET( java_bin "${java_path}/bin/java" )
-        IF( NOT EXISTS "${java_bin}" )
-            MESSAGE( FATAL_ERROR
-                "Java runtime not found in: ${java_bin}" )
+        IF( DEFINED ENV{JAVA_HOME} )
+            SET( java_path "$ENV{JAVA_HOME}" )
         ENDIF()
     ENDIF()
-
-    # parse the output of java -version
-    EXEC_PROGRAM( "${java_bin}" ARGS "-version"
-            OUTPUT_VARIABLE out_tmp
-            RETURN_VALUE out_ret )
-    IF( out_ret )
-        MESSAGE( SEND_ERROR "Error executing java -version!!" )
+    SET( java_bin "${java_path}/bin/java" )
+    IF( NOT EXISTS "${java_bin}" )
+        MESSAGE( FATAL_ERROR
+            "Java runtime not found in: ${java_bin}" )
     ENDIF()
-    STRING( REGEX REPLACE ".* version \"([0-9]+\\.[0-9]+\\.[0-9]+).*"
-            "\\1" java_version "${out_tmp}" )
-    
-    # display info
-    MESSAGE( STATUS "JDK_HOME and JAVA_HOME set to ${java_path}" )
-    MESSAGE( STATUS "Java version ${java_version} configured successfully!" )
-    
-    # set environment variables
-    SET( ENV{JDK_HOME} "${java_path}" )
-    SET( ENV{JAVA_HOME} "${java_path}" )
-    SET( ENV{LCIO} "${CMAKE_SOURCE_DIR}" )
-    SET( ENV{PATH} "${CMAKE_SOURCE_DIR}/tools:${java_path}/bin:$ENV{PATH}" )
+ENDIF()
 
-    # now generate header files
+# parse the output of java -version
+EXEC_PROGRAM( "${java_bin}" ARGS "-version"
+        OUTPUT_VARIABLE out_tmp
+        RETURN_VALUE out_ret )
+IF( out_ret )
+    MESSAGE( STATUS "Error executing java -version!!" )
+ENDIF()
+STRING( REGEX REPLACE ".* version \"([0-9]+\\.[0-9]+\\.[0-9]+).*"
+        "\\1" java_version "${out_tmp}" )
+
+# display info
+MESSAGE( STATUS "JDK_HOME and JAVA_HOME set to ${java_path}" )
+MESSAGE( STATUS "Java version ${java_version} configured successfully!" )
+
+# set environment variables for ant
+SET( ENV{JDK_HOME} "${java_path}" )
+SET( ENV{JAVA_HOME} "${java_path}" )
+SET( ENV{LCIO} "${CMAKE_SOURCE_DIR}" )
+SET( ENV{PATH} "${CMAKE_SOURCE_DIR}/tools:${java_path}/bin:$ENV{PATH}" )
+
+# generate header files with ant aid.generate
+# FIXME should be done with custom target - problem: env vars
+IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
+
     MESSAGE( STATUS "Generating ${PROJECT_NAME} header files with ant aid.generate..." )
     EXEC_PROGRAM( ant "${CMAKE_SOURCE_DIR}"
         ARGS aid.generate
@@ -135,10 +135,27 @@ IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
     IF( NOT out_ret )
         MESSAGE( STATUS "Header files successfully generated..." )
     ELSE()
-        MESSAGE( SEND_ERROR "Error generating header files!!" )
+        MESSAGE( STATUS "Error generating header files!!" )
         MESSAGE( FATAL_ERROR "${out_tmp}" )
     ENDIF()
 ENDIF()
+
+# LCIO - JAVA
+# FIXME not working correctly - problem: env vars
+# for this to work the environment variables:
+# LCIO, JDK_HOME and PATH have to be set BEFORE
+# running cmake
+# workaround until shell script is written for
+# calling ant aid
+# command for calling ant aid
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
+    COMMAND ant ARGS aid
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    COMMENT "Building LCIO Java..."
+    VERBATIM )
+# create java target
+ADD_CUSTOM_TARGET( jar DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
 
 # DOCUMENTATION
 FIND_PACKAGE( Doxygen )
@@ -172,7 +189,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
         OUTPUT  "${CMAKE_SOURCE_DIR}/doc/manual.pdf"
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
-        COMMAND "${DVIPS_CONVERTER}" ARGS -q manual.dvi
+        COMMAND "${DVIPS_CONVERTER}" ARGS -q -o manual.ps manual.dvi
         COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX2HTML_CONVERTER}" ARGS
             -mkdir -dir manual_html -verbosity 0 -info 0 -no_auto_link -split 0 -no_navigation manual.tex
@@ -197,7 +214,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     #    OUTPUT  "${CMAKE_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
     #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
     #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
-    #    COMMAND "${DVIPS_CONVERTER}" ARGS -q refman.dvi
+    #    COMMAND "${DVIPS_CONVERTER}" ARGS -q -o refman.ps refman.dvi
     #    # FIXME psnup should be detected
     #    COMMAND "psnup" ARGS -q -2 refman.ps ${CMAKE_SOURCE_DIR}/doc/lciorefman.ps
     #    COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
@@ -217,9 +234,9 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
 
 ELSE()
     IF( NOT DOXYGEN_FOUND )
-        MESSAGE( SEND_ERROR "Doxygen not found in your system!!" )
+        MESSAGE( STATUS "Doxygen not found in your system!!" )
     ELSE()
-        MESSAGE( SEND_ERROR "Latex or one of its tools (dvips, pdflatex, latex2html, makeindex) not found in your system!!" )
+        MESSAGE( STATUS "Latex or one of its tools (dvips, pdflatex, latex2html, makeindex) not found in your system!!" )
     ENDIF()
     IF( INSTALL_DOC )
         MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
@@ -241,10 +258,10 @@ ENDIF()
 ##########################################################################################
 
 # library *nix style versioning
-SET( ${PROJECT_NAME}_VERSION
-    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 SET( ${PROJECT_NAME}_SOVERSION
     "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
+SET( ${PROJECT_NAME}_VERSION
+    "${${PROJECT_NAME}_SOVERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
 
 # add library install path to the rpath list
 SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
@@ -278,7 +295,9 @@ ENDIF()
 # input directories
 ADD_SUBDIRECTORY( sio sio )
 ADD_SUBDIRECTORY( src/cpp lcio )
-ADD_SUBDIRECTORY( src/f77 f77 )
+IF( BUILD_F77_TESTJOBS )
+    ADD_SUBDIRECTORY( src/f77 f77 )
+ENDIF()
 
 # create uninstall configuration file 
 CONFIGURE_FILE( "${CMAKE_SOURCE_DIR}/cmake_uninstall.cmake.in"
@@ -313,7 +332,7 @@ MESSAGE( STATUS )
 # force some variables that could be defined in the command line
 # to be written to cache
 SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL
-    "Set this to OFF to build static libraries" FORCE )
+    "Set to OFF to build static libraries" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
     "Where to install ${PROJECT_NAME}" FORCE )
 SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
