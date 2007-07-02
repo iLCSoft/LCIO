@@ -7,10 +7,6 @@
 # (3) $ cmake -C ../BuildSetup.cmake ..
 # (4) $ make install
 #
-# NOTE for SL3/SL4 users:
-# For using afs reference installation replace step (3) with:
-# $ cmake -C /afs/desy.de/group/it/ilcsoft/vXX-XX/ILCSoft.cmake ..
-#
 # @author Jan Engels, DESY
 #############################################################################
 
