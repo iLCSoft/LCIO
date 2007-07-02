@@ -103,19 +103,16 @@ ELSE()
     FIND_PROGRAM( java_bin
         java
         ${java_path}/bin
-        #FIXME add path to MacOS here
         NO_DEFAULT_PATH )
   
     FIND_PROGRAM( javac_bin
         javac
         ${java_path}/bin
-        #FIXME add path to MacOS here
         NO_DEFAULT_PATH )
     
     FIND_PROGRAM( jar_bin
         jar
         ${java_path}/bin
-        #FIXME add path to MacOS here
         NO_DEFAULT_PATH )
     
     # abort if not found
