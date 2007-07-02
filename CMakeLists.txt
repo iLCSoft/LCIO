@@ -170,6 +170,7 @@ ENDIF()
 
 # generate shell script for setting environment
 # and calling ant aid
+MESSAGE( STATUS "Generating shell script for calling ant..." )
 FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
             "export LCIO=${CMAKE_SOURCE_DIR}\n"
             "export JDK_HOME=${java_path}\n"
@@ -202,7 +203,7 @@ ELSE()
         VERBATIM )
 
     # create java target
-    ADD_CUSTOM_TARGET( jar DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+    ADD_CUSTOM_TARGET( jar ALL DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
     
     #ADD_CUSTOM_COMMAND(
     #    OUTPUT "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
