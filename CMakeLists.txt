@@ -204,6 +204,13 @@ ELSE()
 
     # create java target
     ADD_CUSTOM_TARGET( jar ALL DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+    # tell make clean to also erase lcio.jar
+    SET_DIRECTORY_PROPERTIES( PROPERTIES
+        ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+    # install jar
+    INSTALL( FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
     
     #ADD_CUSTOM_COMMAND(
     #    OUTPUT "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
