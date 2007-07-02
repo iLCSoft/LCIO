@@ -175,7 +175,7 @@ FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
             "export LCIO=${CMAKE_SOURCE_DIR}\n"
             "export JDK_HOME=${java_path}\n"
             "export JAVA_HOME=${java_path}\n"
-            "export PATH=${java_bin_path}:${CMAKE_SOURCE_DIR}/tools:$PATH\n"
+            "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
             "ant $1" )
 
 # find shell
