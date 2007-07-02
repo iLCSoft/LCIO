@@ -17,26 +17,23 @@ SET( f77_bins
     simjob_chain
 )
 
-IF( BUILD_F77_TESTJOBS )
+# create symbolic bin target for calling targets bin_XXX
+ADD_CUSTOM_TARGET( f77 )
+
+# loop through list of binaries
+FOREACH( bin ${f77_bins} )
+    # create target for binary
+    ADD_EXECUTABLE( f77_${bin} EXCLUDE_FROM_ALL ${bin}.F )
+    # tell bin target to call this bin_XXX target
+    ADD_DEPENDENCIES( f77 f77_${bin} )
+    # avoid conflicts between library and binary target names
+    SET_TARGET_PROPERTIES( f77_${bin} PROPERTIES OUTPUT_NAME ${bin}_F )
+    # link against project library
     
-    # create symbolic bin target for calling targets bin_XXX
-    ADD_CUSTOM_TARGET( f77 )
+    #FIXME: frtbegin g2c and gfortran needs to be tested
+    #TARGET_LINK_LIBRARIES( f77_${bin} lib_LCIO lib_LCIOF77 frtbegin g2c )
+    TARGET_LINK_LIBRARIES( f77_${bin} lib_LCIO lib_LCIOF77 )
 
-    # loop through list of binaries
-    FOREACH( bin ${f77_bins} )
-        # create target for binary
-        ADD_EXECUTABLE( f77_${bin} EXCLUDE_FROM_ALL ${bin}.F )
-        # tell bin target to call this bin_XXX target
-        ADD_DEPENDENCIES( f77 f77_${bin} )
-        # avoid conflicts between library and binary target names
-        SET_TARGET_PROPERTIES( f77_${bin} PROPERTIES OUTPUT_NAME ${bin}_F )
-        # link against project library
-        
-        #FIXME: frtbegin g2c and gfortran needs to be tested
-        #TARGET_LINK_LIBRARIES( f77_${bin} lib_LCIO lib_LCIOF77 frtbegin g2c )
-        TARGET_LINK_LIBRARIES( f77_${bin} lib_LCIO lib_LCIOF77 )
-
-        # install binary commando
-        INSTALL( TARGETS f77_${bin} DESTINATION bin )
-    ENDFOREACH()
-ENDIF()
+    # install binary commando
+    INSTALL( TARGETS f77_${bin} DESTINATION bin )
+ENDFOREACH()
