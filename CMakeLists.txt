@@ -26,6 +26,7 @@ OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
 OPTION( BUILD_LCIO_TESTJOBS "Set to ON to build LCIO testjobs" OFF )
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
+OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
 
 # set default cmake build type to RelWithDebInfo
 IF( NOT CMAKE_BUILD_TYPE )
@@ -145,8 +146,15 @@ EXEC_PROGRAM( "${java_bin}" ARGS "-version"
 IF( out_ret )
     MESSAGE( STATUS "Error executing java -version!!" )
 ENDIF()
-STRING( REGEX REPLACE ".* version \"([0-9]+\\.[0-9]+\\.[0-9]+).*"
-        "\\1" java_version "${out_tmp}" )
+# extract major/minor version and patch level from "java -version" output
+STRING( REGEX REPLACE ".* version \"([0-9]+)\\.[0-9]+\\.[0-9]+.*"
+        "\\1" java_major_ver "${out_tmp}" )
+STRING( REGEX REPLACE ".* version \"[0-9]+\\.([0-9]+)\\.[0-9]+.*"
+        "\\1" java_minor_ver "${out_tmp}" )
+STRING( REGEX REPLACE ".* version \"[0-9]+\\.[0-9]+\\.([0-9]+).*"
+        "\\1" java_patch_lev "${out_tmp}" )
+
+SET( java_version "${java_major_ver}.${java_minor_ver}.${java_patch_lev}" )
 
 # display info
 MESSAGE( STATUS "JDK_HOME and JAVA_HOME set to ${java_path}" )
@@ -176,16 +184,6 @@ IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
     ENDIF()
 ENDIF()
 
-# generate shell script for setting environment
-# and calling ant aid
-MESSAGE( STATUS "Generating shell script for calling ant..." )
-FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
-            "export LCIO=${CMAKE_SOURCE_DIR}\n"
-            "export JDK_HOME=${java_path}\n"
-            "export JAVA_HOME=${java_path}\n"
-            "export PATH=${java_bin_path}:${CMAKE_SOURCE_DIR}/tools:$PATH\n"
-            "ant $1" )
-
 # find shell
 FIND_PROGRAM( SH
   sh
@@ -198,27 +196,13 @@ FIND_PROGRAM( SH
 )
 MARK_AS_ADVANCED( SH )
 
-IF( SH-NOTFOUND )
-    MESSAGE( STATUS "Unix Shell not found - cannot enable jar target!!" )
-ELSE()
-
-    # LCIO - JAVA
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
-        COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid
+IF( SH )
+    # create "always out-of-date" headers target
+    ADD_CUSTOM_TARGET( headers
+        COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" aid.generate
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        COMMENT "Building LCIO Java..."
+        COMMENT "Generating header files with ant aid.generate..."
         VERBATIM )
-
-    # create java target
-    ADD_CUSTOM_TARGET( jar ALL DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
-
-    # tell make clean to also erase lcio.jar
-    SET_DIRECTORY_PROPERTIES( PROPERTIES
-        ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
-
-    # install jar
-    INSTALL( FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
     
     #ADD_CUSTOM_COMMAND(
     #    OUTPUT "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
@@ -229,15 +213,62 @@ ELSE()
     #
     #ADD_CUSTOM_TARGET( headers DEPENDS
     #        "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
-    
-    # create "always out-of-date" headers target
-    ADD_CUSTOM_TARGET( headers
-        COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" aid.generate
+ENDIF()
+
+# check if everything is ok for building lcio.jar
+IF( INSTALL_JAR )
+    IF( java_major_ver LESS 1 )
+        MESSAGE( STATUS "For building lcio.jar you need at least java 1.5.0" )
+        MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
+        SET( INSTALL_JAR OFF )
+    ELSE()
+        IF( java_minor_ver LESS 5 )
+            MESSAGE( STATUS "For building lcio.jar you need at least java 1.5.0" )
+            MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
+            SET( INSTALL_JAR OFF )
+        ELSE()
+            IF( SH-NOTFOUND )
+                MESSAGE( STATUS "Unix Shell needed for lcio.jar build script not found!!" )
+                MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
+                SET( INSTALL_JAR OFF )
+            ENDIF()
+        ENDIF()
+    ENDIF()
+ENDIF()
+
+IF( INSTALL_JAR )
+    # generate shell script for setting environment
+    # and calling ant aid
+    MESSAGE( STATUS "Generating shell script for calling ant..." )
+    FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
+        "export LCIO=${CMAKE_SOURCE_DIR}\n"
+        "export JDK_HOME=${java_path}\n"
+        "export JAVA_HOME=${java_path}\n"
+        "export PATH=${java_bin_path}:${CMAKE_SOURCE_DIR}/tools:$PATH\n"
+        "ant $1" )
+
+   # LCIO - JAVA
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
+        COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        COMMENT "Generating header files with ant aid.generate..."
+        COMMENT "Building LCIO Java..."
         VERBATIM )
 
+    # create java target
+    ADD_CUSTOM_TARGET( jar DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+    # tell make clean to also erase lcio.jar
+    SET_DIRECTORY_PROPERTIES( PROPERTIES
+        ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+    # make sure jar is built before calling make install
+    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS jar)" )
+    
+    # install jar
+    INSTALL( FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
 ENDIF()
+
 
 # DOCUMENTATION
 FIND_PACKAGE( Doxygen )
@@ -407,6 +438,7 @@ MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
 MESSAGE( STATUS "BUILD_LCIO_TESTJOBS = ${BUILD_LCIO_TESTJOBS}" )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
+MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -427,6 +459,8 @@ SET( BUILD_F77_TESTJOBS "${BUILD_F77_TESTJOBS}" CACHE BOOL
     "Set to ON to build LCIO F77 testbobs" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
+SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
+    "Set to OFF to skip build/install lcio.jar" FORCE )
 
 # export build settings
 INCLUDE( CMakeExportBuildSettings )
