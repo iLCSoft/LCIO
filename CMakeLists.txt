@@ -39,7 +39,10 @@ ENDIF()
 
 # check for java
 # FIXME put this stuff into a module FindJDK.cmake?
-IF( NOT DEFINED ENV{JDK_HOME} AND NOT DEFINED ENV{JAVA_HOME} )
+IF( NOT DEFINED ENV{JDK_HOME} AND 
+    NOT DEFINED ENV{JAVA_HOME} AND
+    NOT DEFINED JAVA_HOME )
+
     MESSAGE( STATUS "Autodetecting java..." )
     FIND_PACKAGE( Java )
     IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
@@ -77,25 +80,30 @@ IF( NOT DEFINED ENV{JDK_HOME} AND NOT DEFINED ENV{JAVA_HOME} )
         MESSAGE( FATAL_ERROR "Java was not found in your system!!" )
     ENDIF()
 ELSE()
-    # in case JDK_HOME or JAVA_HOME already set ensure that both variables
-    # are set correctly (JDK_HOME as well as JAVA_HOME)
-    IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
-        IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
-            SET( java_path "$ENV{JDK_HOME}" )
-        ELSE()
-            MESSAGE( STATUS 
-                "JDK_HOME and JAVA_HOME are set to different paths!!" )
-            MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
-            MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
-            MESSAGE( FATAL_ERROR 
-                "Please unset one of them or set both correctly!!" )
-        ENDIF()
+    # definition of JAVA_HOME in cmake has priority over env vars
+    IF( DEFINED JAVA_HOME )
+        SET( java_path "${JAVA_HOME}" )
     ELSE()
-        IF( DEFINED ENV{JDK_HOME} )
-            SET( java_path "$ENV{JDK_HOME}" )
-        ENDIF()
-        IF( DEFINED ENV{JAVA_HOME} )
-            SET( java_path "$ENV{JAVA_HOME}" ) 
+        # in case JDK_HOME or JAVA_HOME already set ensure that both variables
+        # are set correctly (JDK_HOME as well as JAVA_HOME)
+        IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
+            IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
+                SET( java_path "$ENV{JDK_HOME}" )
+            ELSE()
+                MESSAGE( STATUS 
+                    "JDK_HOME and JAVA_HOME are set to different paths!!" )
+                MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
+                MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
+                MESSAGE( FATAL_ERROR 
+                    "Please unset one of them or set both correctly!!" )
+            ENDIF()
+        ELSE()
+            IF( DEFINED ENV{JDK_HOME} )
+                SET( java_path "$ENV{JDK_HOME}" )
+            ENDIF()
+            IF( DEFINED ENV{JAVA_HOME} )
+                SET( java_path "$ENV{JAVA_HOME}" ) 
+            ENDIF()
         ENDIF()
     ENDIF()
 
@@ -175,7 +183,7 @@ FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
             "export LCIO=${CMAKE_SOURCE_DIR}\n"
             "export JDK_HOME=${java_path}\n"
             "export JAVA_HOME=${java_path}\n"
-            "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
+            "export PATH=${java_bin_path}:${CMAKE_SOURCE_DIR}/tools:$PATH\n"
             "ant $1" )
 
 # find shell

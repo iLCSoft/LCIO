@@ -19,6 +19,10 @@
 SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01_beta"
     CACHE PATH "Path to ILC Software" FORCE )
 
+# Path to Java
+SET( JAVA_HOME "${ILC_HOME}/java/1.5.0"
+    CACHE PATH "Path to Java" FORCE )
+
 # Path to CLHEP
 SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
     CACHE PATH "Path to CLHEP" FORCE )
