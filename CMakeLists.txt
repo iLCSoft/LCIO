@@ -213,26 +213,11 @@ IF( SH )
     #
     #ADD_CUSTOM_TARGET( headers DEPENDS
     #        "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
-ENDIF()
-
-# check if everything is ok for building lcio.jar
-IF( INSTALL_JAR )
-    IF( java_major_ver LESS 1 )
-        MESSAGE( STATUS "For building lcio.jar you need at least java 1.5.0" )
+ELSE()
+    IF( INSTALL_JAR )
+        MESSAGE( STATUS "Unix Shell needed for lcio.jar build script not found!!" )
         MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
         SET( INSTALL_JAR OFF )
-    ELSE()
-        IF( java_minor_ver LESS 5 )
-            MESSAGE( STATUS "For building lcio.jar you need at least java 1.5.0" )
-            MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
-            SET( INSTALL_JAR OFF )
-        ELSE()
-            IF( SH-NOTFOUND )
-                MESSAGE( STATUS "Unix Shell needed for lcio.jar build script not found!!" )
-                MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
-                SET( INSTALL_JAR OFF )
-            ENDIF()
-        ENDIF()
     ENDIF()
 ENDIF()
 
@@ -244,10 +229,17 @@ IF( INSTALL_JAR )
         "export LCIO=${CMAKE_SOURCE_DIR}\n"
         "export JDK_HOME=${java_path}\n"
         "export JAVA_HOME=${java_path}\n"
-        "export PATH=${java_bin_path}:${CMAKE_SOURCE_DIR}/tools:$PATH\n"
+        "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
         "ant $1" )
+    
+    # create custom target for cleaning class files
+    ADD_CUSTOM_TARGET( jar_clean
+        COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" clean
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        COMMENT "Cleaning java classes with ant clean..."
+        VERBATIM )
 
-   # LCIO - JAVA
+    # LCIO - JAVA
     ADD_CUSTOM_COMMAND(
         OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
         COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid
