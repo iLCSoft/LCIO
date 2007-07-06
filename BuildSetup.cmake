@@ -42,6 +42,7 @@ SET( CMAKE_MODULE_PATH "${ILC_HOME}/CMakeModules/v01-00"
 #############################################################################
 
 # Enable this for building LCIO with CLHEP
+# For building LCIO with CLHEP you also need the CMakeModules (see above!)
 #SET( BUILD_WITH "CLHEP" CACHE STRING "Build LCIO with these optional packages" FORCE )
 
 # Path to CLHEP

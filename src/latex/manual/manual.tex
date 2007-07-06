@@ -114,9 +114,35 @@ AID~\cite{ref_aid} tool. The build scripts used in LCIO also require that \verb$
 The C++ version of LCIO is developed under (Suse) Linux with gcc2.95.3 and tested
 as well with gcc3.2 on Linux and Windows/Cygwin. 
 As the -ansi switch is used it should be fairly easy to port it to other platforms with
-an ANSI compliant C++ compiler.
+an ANSI compliant C++ compiler.\\\\
+A new cross-platform building tool called CMake~\cite{ref_cmake} was introduced in LCIO
+version 1.8.3 for making the LCIO building system more compatible across different platforms
+and to also ease the task of maintaining it.\\
+Some of the features CMake includes are:
+\begin{verbatim}
+  * Support for building shared libraries
+  * Generates native build files (e.g., makefiles on Unix; workspaces/projects on MS Visual C++)
+  * Support for out-of-source builds. Multiple build trees are possible from a single source tree.
+  * CMake is open source
+\end{verbatim}
+If you want to use CMake for building LCIO you need at least CMake version 2.4.6.
+\subsection{Build LCIO} \label{build_lcio}
+If you want to build LCIO using CMake just follow these simple steps:\\\\
+1st: make sure that cmake is in your path:\\
+\verb|export PATH=Path_to_CMake/bin:$PATH|\\\\
+2nd: edit the file BuildSetup.cmake and adjust it to your needs\\\\
+Afterwards type:
+\begin{verbatim}
+  mkdir build           <-- create an out-of-source directory for the build
+  cd build
+  cmake -C ../BuildSetup.cmake ..
+  make install
+\end{verbatim}
+If for some reason you cannot use CMake for building LCIO there is still the possiblility
+to use the old makefiles (see below), but I strongly disencourage you to do so!\\\\
 
-\subsection {Building the library}
+--- Deprecated!! ---
+For building LCIO with the old makefiles:\\
 
 A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
@@ -221,6 +247,8 @@ This will create the following libraries and executables:
 
 \end{verbatim}
 
+\subsection {Checking the Installation}
+
 To check whether the (C++) installation was successful run the {\it simjob} program:
 \begin{verbatim}
   simjob simjob.slcio
@@ -242,8 +270,21 @@ or for the Java Windows (Cygwin) version:
 
 \subsection {Building the documentation} \label{build_doc}
 
-A few targets are defined to build the documentation that is also available from the 
-LCIO homepage~\cite{lcio_home}, see (\ref{sec_api}).
+A few targets are defined to build the documentation (see below), that is also available
+from the LCIO homepage~\cite{lcio_home}, see (\ref{sec_api}).\\
+
+If you are using CMake (see \ref{build_lcio}) all documentation gets built and installed
+by default, when you type "make install". If you don't want this, \\
+set \verb|INSTALL_DOC| in your BuildSetup.cmake to OFF, afterwards you can still call the doc targets:
+\begin{verbatim}
+  make doc              <-- build all documentation (doc_cpp + doc_java + doc_manual)
+  make doc_cpp          <-- C++ API documentation
+  make doc_java         <-- Java API documentation
+  make doc_manual       <-- User manual
+\end{verbatim}
+
+If you are not using CMake keep on reading the rest of this section on how to build
+the documentation with ant:\\
 
 You can create the documentation of the Java API with {\em javadoc}~\cite{ref_javadoc}:
 \begin{verbatim}
@@ -1169,6 +1210,9 @@ AIDA Homepage: \\
 \bibitem{ref_jas}
 JAS3 Homepage: \\
 \Href{http://jas.freehep.org/jas3/index.html}
+CMake Homepage: \\
+\Href{http://www.cmake.org}
+\bibitem{ref_cmake}
 \end{thebibliography}
 
 
