@@ -108,7 +108,7 @@ ELSE()
         ENDIF()
     ENDIF()
 
-    # find java, javac and jar
+    # find java, javac, javadoc and jar
     FIND_PROGRAM( java_bin
         java
         ${java_path}/bin
@@ -123,6 +123,11 @@ ELSE()
         jar
         ${java_path}/bin
         NO_DEFAULT_PATH )
+     
+    FIND_PROGRAM( javadoc_bin
+        javadoc
+        ${java_path}/bin
+        NO_DEFAULT_PATH )
     
     # abort if not found
     IF( java_bin-NOTFOUND )
@@ -133,6 +138,9 @@ ELSE()
     ENDIF()
     IF( jar_bin-NOTFOUND )
         MESSAGE( FATAL_ERROR "Could not find jar!!" )
+    ENDIF()
+    IF( javadoc_bin-NOTFOUND )
+        MESSAGE( STATUS "Could not find javadoc!!" )
     ENDIF()
 
     # extract bin path from full path
@@ -184,100 +192,124 @@ IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
     ENDIF()
 ENDIF()
 
-# find shell
-FIND_PROGRAM( SH
-  sh
-  ${CYGWIN_INSTALL_PATH}/bin
-  /bin
-  /usr/bin
-  /usr/local/bin
-  /sbin
-  # FIXME add path to MacOS here
-)
-MARK_AS_ADVANCED( SH )
+# add custom target for building all documentation
+ADD_CUSTOM_TARGET( doc )
 
-IF( SH )
-    # create "always out-of-date" headers target
-    ADD_CUSTOM_TARGET( headers
-        COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" aid.generate
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        COMMENT "Generating header files with ant aid.generate..."
-        VERBATIM )
-    
-    #ADD_CUSTOM_COMMAND(
-    #    OUTPUT "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
-    #    COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid.generate
-    #    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-    #    COMMENT "Generating header files with ant aid.generate..."
-    #    VERBATIM )
-    #
-    #ADD_CUSTOM_TARGET( headers DEPENDS
-    #        "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
-ELSE()
-    IF( INSTALL_JAR )
-        MESSAGE( STATUS "Unix Shell needed for lcio.jar build script not found!!" )
-        MESSAGE( STATUS "INSTALL_JAR forced to OFF and jar target disabled!" )
-        SET( INSTALL_JAR OFF )
+# code for *nix only!
+IF( UNIX )
+    # find shell
+    FIND_PROGRAM( SH
+      sh
+      ${CYGWIN_INSTALL_PATH}/bin
+      /bin
+      /usr/bin
+      /usr/local/bin
+      /sbin
+      # FIXME add path to MacOS here
+    )
+    MARK_AS_ADVANCED( SH )
+
+    IF( SH )
+        # generate shell script for setting environment
+        # and calling ant aid
+        MESSAGE( STATUS "Generating shell script for calling ant..." )
+        FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
+            "export LCIO=${CMAKE_SOURCE_DIR}\n"
+            "export JDK_HOME=${java_path}\n"
+            "export JAVA_HOME=${java_path}\n"
+            "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
+            "ant $1" )
+     
+        # create "always out-of-date" headers target
+        ADD_CUSTOM_TARGET( headers
+            COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" aid.generate
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            COMMENT "Generating header files with ant aid.generate..."
+            VERBATIM )
+        
+        #ADD_CUSTOM_COMMAND(
+        #    OUTPUT "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
+        #    COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid.generate
+        #    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        #    COMMENT "Generating header files with ant aid.generate..."
+        #    VERBATIM )
+        #
+        #ADD_CUSTOM_TARGET( headers DEPENDS
+        #        "${CMAKE_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
+
+        # LCIO - JAVA
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
+            COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            COMMENT "Building LCIO Java..."
+            VERBATIM )
+
+        # create java target
+        ADD_CUSTOM_TARGET( jar DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+        # create custom target for cleaning class files
+        ADD_CUSTOM_TARGET( jar_clean
+            COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" clean
+            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+            COMMENT "Cleaning java classes with ant clean..."
+            VERBATIM )
+
+        # tell make clean to also erase lcio.jar
+        SET_DIRECTORY_PROPERTIES( PROPERTIES
+            ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
+
+        #JAVADOC
+        IF( javadoc_bin )
+            ADD_CUSTOM_COMMAND(
+                OUTPUT "${CMAKE_SOURCE_DIR}/doc/api/index.html"
+                COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" doc
+                WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+                COMMENT "Building Java API Documentation..."
+                VERBATIM )
+            
+            ADD_CUSTOM_TARGET( doc_java DEPENDS "${CMAKE_SOURCE_DIR}/doc/api/index.html" )
+            # tell doc target to call doc_java
+            ADD_DEPENDENCIES( doc doc_java )
+        ENDIF()
+    ELSE()
+        MESSAGE( STATUS "Unix Shell needed for calling ant not found!!" )
+        IF( INSTALL_DOC )
+            MESSAGE( STATUS "WARNING: INSTALL_DOC forced to OFF and doc_java disabled!" )
+            SET( INSTALL_DOC OFF )
+        ELSE()
+            MESSAGE( STATUS "WARNING: doc_java target disabled!" )
+        ENDIF()
+        IF( INSTALL_JAR )
+            MESSAGE( STATUS "WARNING: INSTALL_JAR forced to OFF and jar target disabled!" )
+            SET( INSTALL_JAR OFF )
+        ELSE()
+            MESSAGE( STATUS "WARNING: jar target disabled!" )
+        ENDIF()
     ENDIF()
 ENDIF()
 
-IF( INSTALL_JAR )
-    # generate shell script for setting environment
-    # and calling ant aid
-    MESSAGE( STATUS "Generating shell script for calling ant..." )
-    FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
-        "export LCIO=${CMAKE_SOURCE_DIR}\n"
-        "export JDK_HOME=${java_path}\n"
-        "export JAVA_HOME=${java_path}\n"
-        "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
-        "ant $1" )
-    
-    # create custom target for cleaning class files
-    ADD_CUSTOM_TARGET( jar_clean
-        COMMAND ${SH} "${CMAKE_BINARY_DIR}/script.sh" clean
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        COMMENT "Cleaning java classes with ant clean..."
-        VERBATIM )
-
-    # LCIO - JAVA
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${CMAKE_SOURCE_DIR}/lib/lcio.jar"
-        COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" aid
-        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-        COMMENT "Building LCIO Java..."
-        VERBATIM )
-
-    # create java target
-    ADD_CUSTOM_TARGET( jar DEPENDS "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
-
-    # tell make clean to also erase lcio.jar
-    SET_DIRECTORY_PROPERTIES( PROPERTIES
-        ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
-
-    # make sure jar is built before calling make install
-    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS jar)" )
-    
-    # install jar
-    INSTALL( FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
+IF( WIN32 )
+    MESSAGE( SEND_ERROR "Windows support not implemented yet!!!" )
+    #TODO generate script for calling ant.bat
 ENDIF()
 
-
-# DOCUMENTATION
+# doxygen and latex stuff
 FIND_PACKAGE( Doxygen )
 FIND_PACKAGE( LATEX )
 
 IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     AND DVIPS_CONVERTER AND LATEX2HTML_CONVERTER AND DOXYGEN_FOUND )
     
-    # api documentation
+    # c++ documentation
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${CMAKE_SOURCE_DIR}/doc/doxygen_api/html"
         COMMAND "${DOXYGEN_EXECUTABLE}"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/doc/doxygen_api"
-        COMMENT "Building API Documentation..."
+        COMMENT "Building C++ API Documentation..."
         VERBATIM )
     
-    ADD_CUSTOM_TARGET( doc_api
+    ADD_CUSTOM_TARGET( doc_cpp
             DEPENDS "${CMAKE_SOURCE_DIR}/doc/doxygen_api/html" )
 
     # user manual
@@ -332,10 +364,8 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     #            "${CMAKE_SOURCE_DIR}/doc/doxygen_api/html"
     #            "${CMAKE_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi" )
     
-    # add custom target for building all documentation
-    ADD_CUSTOM_TARGET( doc )
-    #ADD_DEPENDENCIES( doc doc_api doc_manual doc_refman )
-    ADD_DEPENDENCIES( doc doc_api doc_manual )
+    #ADD_DEPENDENCIES( doc doc_cpp doc_manual doc_refman )
+    ADD_DEPENDENCIES( doc doc_cpp doc_manual )
 
 ELSE()
     IF( NOT DOXYGEN_FOUND )
@@ -344,12 +374,18 @@ ELSE()
         MESSAGE( STATUS "Latex or one of its tools (dvips, pdflatex, latex2html, makeindex) not found in your system!!" )
     ENDIF()
     IF( INSTALL_DOC )
-        MESSAGE( STATUS "INSTALL_DOC forced to OFF" )
+        MESSAGE( STATUS "WARNING: INSTALL_DOC forced to OFF" )
         SET( INSTALL_DOC OFF )
     ENDIF()
 ENDIF()
 
-# install documentation rules
+# installation rules
+IF( INSTALL_JAR )
+    # make sure jar is built before calling make install
+    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS jar)" )
+    # install jar
+    INSTALL( FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
+ENDIF()
 IF( INSTALL_DOC )
     # make sure documentation is built before make install is called
     INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${CMAKE_BINARY_DIR} ARGS doc)" )
