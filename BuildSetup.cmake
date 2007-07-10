@@ -53,8 +53,6 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
 # Project options
 #############################################################################
 
-
-#SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Set to OFF to build static libraries" FORCE )
 #SET( INSTALL_DOC OFF CACHE BOOL "Set to OFF to skip build/install Documentation" FORCE )
 #SET( BUILD_LCIO_TESTJOBS ON CACHE BOOL "Set to ON to build LCIO testjobs" FORCE )
 #SET( BUILD_F77_TESTJOBS ON CACHE BOOL "Set to ON to build LCIO F77 testjobs" FORCE )
@@ -66,6 +64,8 @@ SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
 #############################################################################
 # Advanced options
 #############################################################################
+
+#SET( BUILD_SHARED_LIBS OFF CACHE BOOL "Set to OFF to build static libraries" FORCE )
 
 # installation path for LCIO
 #SET( CMAKE_INSTALL_PREFIX "/foo/bar" CACHE STRING "Where to install LCIO" FORCE )
