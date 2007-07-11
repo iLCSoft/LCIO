@@ -38,142 +38,23 @@ IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}" )
 ENDIF()
 
-# check for java
-# FIXME put this stuff into a module FindJDK.cmake?
-IF( NOT DEFINED ENV{JDK_HOME} AND 
-    NOT DEFINED ENV{JAVA_HOME} AND
-    NOT DEFINED JAVA_HOME )
+# include FindJAVA.cmake for finding Java
 
-    MESSAGE( STATUS "Autodetecting java..." )
-    FIND_PACKAGE( Java )
-    IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
-        SET( java_bin "${JAVA_RUNTIME}" )
-        IF( UNIX AND NOT APPLE )
-            # initialize flow-control variable
-            SET( link_found TRUE )
-            
-            # dereference links
-            WHILE( link_found )
-                # check if the java binary is a symbolic link
-                EXEC_PROGRAM( file ARGS "${java_bin}"
-                    OUTPUT_VARIABLE out_tmp
-                    RETURN_VALUE out_ret )
-                IF( out_ret )
-                    MESSAGE( STATUS "Error dereferencing links to Java Home!!" )
-                    MESSAGE( FATAL_ERROR "${out_tmp}" )
-                ENDIF()
-                # set variable if link is found
-                STRING( REGEX MATCH " symbolic link to " link_found "${out_tmp}" )
-                IF( link_found )
-                    # get the file to where the link points to
-                    STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
-                    MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
-                    SET( java_bin "${out_regex}" )
-                ENDIF()
-            ENDWHILE()
-        ENDIF()
-        
-        # extract java_path out of full path to java runtime
-        STRING( REGEX REPLACE "(.*)\\/[^/]+\\/java$" "\\1" java_path ${java_bin} )
-        # extract java_bin_path out of full path to java runtime
-        STRING( REGEX REPLACE "(.*)\\/java$" "\\1" java_bin_path ${java_bin} )
-    ELSE()
-        MESSAGE( FATAL_ERROR "Java was not found in your system!!" )
-    ENDIF()
+INCLUDE( FindJAVA.cmake )
+
+IF( JAVA_FOUND )
+    MESSAGE( STATUS "JAVA_HOME set to ${JAVA_HOME}" )
 ELSE()
-    # definition of JAVA_HOME in cmake has priority over env vars
-    IF( DEFINED JAVA_HOME )
-        SET( java_path "${JAVA_HOME}" )
-    ELSE()
-        # in case JDK_HOME or JAVA_HOME already set ensure that both variables
-        # are set correctly (JDK_HOME as well as JAVA_HOME)
-        IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
-            IF( "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
-                SET( java_path "$ENV{JDK_HOME}" )
-            ELSE()
-                MESSAGE( STATUS 
-                    "JDK_HOME and JAVA_HOME are set to different paths!!" )
-                MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
-                MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
-                MESSAGE( FATAL_ERROR 
-                    "Please unset one of them or set both correctly!!" )
-            ENDIF()
-        ELSE()
-            IF( DEFINED ENV{JDK_HOME} )
-                SET( java_path "$ENV{JDK_HOME}" )
-            ENDIF()
-            IF( DEFINED ENV{JAVA_HOME} )
-                SET( java_path "$ENV{JAVA_HOME}" ) 
-            ENDIF()
-        ENDIF()
-    ENDIF()
-
-    # find java, javac, javadoc and jar
-    FIND_PROGRAM( java_bin
-        java
-        ${java_path}/bin
-        NO_DEFAULT_PATH )
-  
-    FIND_PROGRAM( javac_bin
-        javac
-        ${java_path}/bin
-        NO_DEFAULT_PATH )
-    
-    FIND_PROGRAM( jar_bin
-        jar
-        ${java_path}/bin
-        NO_DEFAULT_PATH )
-     
-    FIND_PROGRAM( javadoc_bin
-        javadoc
-        ${java_path}/bin
-        NO_DEFAULT_PATH )
-    
-    # abort if not found
-    IF( java_bin-NOTFOUND )
-        MESSAGE( FATAL_ERROR "Could not find java!!" )
-    ENDIF()
-    IF( javac_bin-NOTFOUND )
-        MESSAGE( FATAL_ERROR "Could not find javac!!" )
-    ENDIF()
-    IF( jar_bin-NOTFOUND )
-        MESSAGE( FATAL_ERROR "Could not find jar!!" )
-    ENDIF()
-    IF( javadoc_bin-NOTFOUND )
-        MESSAGE( STATUS "Could not find javadoc!!" )
-    ENDIF()
-
-    # extract bin path from full path
-    STRING( REGEX REPLACE "(.*)\\/java$" "\\1" java_bin_path ${java_bin} )
+    MESSAGE( STATUS "Java could not be found in your system!!" )
+    MESSAGE( FATAL_ERROR "Please set JAVA_HOME!!" )
 ENDIF()
-
-# parse the output of java -version
-EXEC_PROGRAM( "${java_bin}" ARGS "-version"
-        OUTPUT_VARIABLE out_tmp
-        RETURN_VALUE out_ret )
-IF( out_ret )
-    MESSAGE( STATUS "Error executing java -version!!" )
-ENDIF()
-# extract major/minor version and patch level from "java -version" output
-STRING( REGEX REPLACE ".* version \"([0-9]+)\\.[0-9]+\\.[0-9]+.*"
-        "\\1" java_major_ver "${out_tmp}" )
-STRING( REGEX REPLACE ".* version \"[0-9]+\\.([0-9]+)\\.[0-9]+.*"
-        "\\1" java_minor_ver "${out_tmp}" )
-STRING( REGEX REPLACE ".* version \"[0-9]+\\.[0-9]+\\.([0-9]+).*"
-        "\\1" java_patch_lev "${out_tmp}" )
-
-SET( java_version "${java_major_ver}.${java_minor_ver}.${java_patch_lev}" )
-
-# display info
-MESSAGE( STATUS "JDK_HOME and JAVA_HOME set to ${java_path}" )
-MESSAGE( STATUS "Java version ${java_version} configured successfully!" )
 
 # set environment variables for
 # generating header files with ant aid.generate
-SET( ENV{JDK_HOME} "${java_path}" )
-SET( ENV{JAVA_HOME} "${java_path}" )
+SET( ENV{JDK_HOME} "${JAVA_HOME}" )
+SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
 SET( ENV{LCIO} "${CMAKE_SOURCE_DIR}" )
-SET( ENV{PATH} "${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$ENV{PATH}" )
+SET( ENV{PATH} "${CMAKE_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
 
 # generate header files with ant aid.generate
 IF( NOT EXISTS "${CMAKE_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
@@ -215,9 +96,9 @@ IF( UNIX )
         MESSAGE( STATUS "Generating shell script for calling ant..." )
         FILE( WRITE "${CMAKE_BINARY_DIR}/script.sh"
             "export LCIO=${CMAKE_SOURCE_DIR}\n"
-            "export JDK_HOME=${java_path}\n"
-            "export JAVA_HOME=${java_path}\n"
-            "export PATH=${CMAKE_SOURCE_DIR}/tools:${java_bin_path}:$PATH\n"
+            "export JDK_HOME=${JAVA_HOME}\n"
+            "export JAVA_HOME=${JAVA_HOME}\n"
+            "export PATH=${CMAKE_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
             "ant $1" )
      
         # create "always out-of-date" headers target
@@ -260,7 +141,7 @@ IF( UNIX )
             ADDITIONAL_MAKE_CLEAN_FILES "${CMAKE_SOURCE_DIR}/lib/lcio.jar" )
 
         #JAVADOC
-        IF( javadoc_bin )
+        IF( JAVA_DOC )
             ADD_CUSTOM_COMMAND(
                 OUTPUT "${CMAKE_SOURCE_DIR}/doc/api/index.html"
                 COMMAND ${SH} ARGS "${CMAKE_BINARY_DIR}/script.sh" doc
@@ -427,16 +308,36 @@ MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
 
 # DEPENDENCIES: this code has to be placed before adding any library or
 # executable so that these are linked properly against the dependencies
-IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-    # load macro
-    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-        MESSAGE( FATAL_ERROR
-            "\nSorry, could not find MacroCheckDeps.cmake...\n"
-            "Please set CMAKE_MODULE_PATH correctly with: "
-            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+#IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
+#    # load macro
+#    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+#        MESSAGE( FATAL_ERROR
+#            "\nSorry, could not find MacroCheckDeps.cmake...\n"
+#            "Please set CMAKE_MODULE_PATH correctly with: "
+#            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
+#    ENDIF()
+#    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
+#    CHECK_DEPS()
+#ENDIF()
+
+# This code would not be necessary if the DEPENDENCIES code above would not
+# be commented out, but this way LCIO does not depend on CMakeModules
+IF( DEFINED BUILD_WITH AND BUILD_WITH STREQUAL "CLHEP" )
+    IF( NOT DEFINED CLHEP_HOME )
+        MESSAGE( FATAL_ERROR "Check for CLHEP: CLHEP_HOME not set!! "
+            "Please call cmake with -DCLHEP_HOME=<path_to_CLHEP>" )
     ENDIF()
-    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-    CHECK_DEPS()
+    MESSAGE( STATUS "Check for CLHEP: ${CLHEP_HOME}" )
+    INCLUDE( FindCLHEP.cmake )
+
+    IF( CLHEP_FOUND )
+        INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIR} )
+        LINK_LIBRARIES( ${CLHEP_LIBRARIES} )
+        ADD_DEFINITIONS( ${CLHEP_DEFINITIONS} )
+    ENDIF()
+
+    SET( BUILD_WITH "${BUILD_WITH}" CACHE STRING
+        "Build ${PROJECT_NAME} with these optional packages" FORCE )
 ENDIF()
 
 # input directories
