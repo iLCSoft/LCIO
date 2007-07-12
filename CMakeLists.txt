@@ -45,8 +45,7 @@ INCLUDE( FindJAVA.cmake )
 IF( JAVA_FOUND )
     MESSAGE( STATUS "JAVA_HOME set to ${JAVA_HOME}" )
 ELSE()
-    MESSAGE( STATUS "Java could not be found in your system!!" )
-    MESSAGE( FATAL_ERROR "Please set JAVA_HOME!!" )
+    MESSAGE( FATAL_ERROR "Please set JAVA_HOME correctly!!" )
 ENDIF()
 
 # set environment variables for

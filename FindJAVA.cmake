@@ -150,6 +150,10 @@ ELSE()
         ${JAVA_HOME}/bin
         ${JAVA_HOME}/Commands   # FIXME MacOS
         NO_DEFAULT_PATH )
+    
+    IF( NOT JAVA_BIN_PATH AND NOT JAVA_FIND_QUIETLY )
+        MESSAGE( STATUS "${JAVA_HOME} is not a valid path for Java!!" )
+    ENDIF()
 
     IF( JAVA_BIN_PATH )
         # find java, javac, jar and javadoc
