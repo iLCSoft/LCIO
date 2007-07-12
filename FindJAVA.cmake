@@ -30,7 +30,9 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
     NOT DEFINED JAVA_HOME AND
     NOT DEFINED JDK_HOME )
 
-    MESSAGE( STATUS "Autodetecting Java..." )
+    IF( NOT JAVA_FIND_QUIETLY )
+        MESSAGE( STATUS "Autodetecting Java..." )
+    ENDIF()
     
     # use the CMake FindJava.cmake module
     FIND_PACKAGE( Java )
@@ -48,29 +50,45 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
             MARK_AS_ADVANCED( FILE_BIN )
             
             IF( FILE_BIN )
-                # initialize flow-control variable
+
+                # initialize some variables
+                SET( java_bin "${JAVA_RUNTIME}" )
                 SET( java_link_found TRUE )
-                MARK_AS_ADVANCED( java_link_found )
+                SET( java_link_error FALSE )
+                MARK_AS_ADVANCED( java_bin java_link_found java_link_error )
 
                 # dereference links
-                WHILE( java_link_found )
+                WHILE( java_link_found AND NOT java_link_error )
                     # check if the java binary is a symbolic link
-                    EXEC_PROGRAM( ${FILE_BIN} ARGS "${JAVA_RUNTIME}"
+                    EXEC_PROGRAM( ${FILE_BIN} ARGS "${java_bin}"
                         OUTPUT_VARIABLE out_tmp
                         RETURN_VALUE out_ret )
                     IF( out_ret )
-                        MESSAGE( STATUS "Error dereferencing links to Java Home!!" )
-                        MESSAGE( FATAL_ERROR "${out_tmp}" )
+                        IF( NOT JAVA_FIND_QUIETLY )
+                            MESSAGE( STATUS "Error dereferencing links to Java Home!!" )
+                            MESSAGE( STATUS "${out_tmp}" )
+                        ENDIF()
+                        SET( java_link_error TRUE )
                     ENDIF()
-                    # set variable if link is found
-                    STRING( REGEX MATCH " symbolic link to " java_link_found "${out_tmp}" )
-                    IF( java_link_found )
-                        # get the file to where the link points to
-                        STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
-                        MESSAGE( STATUS "Java binary ${JAVA_RUNTIME} is a symbolic link to ${out_regex}" )
-                        SET( JAVA_RUNTIME "${out_regex}" )
+                    IF( NOT java_link_error )
+                        # set variable if link is found
+                        STRING( REGEX MATCH " symbolic link to " java_link_found "${out_tmp}" )
+                        IF( java_link_found )
+                            # get the file to where the link points to
+                            STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
+                            IF( NOT JAVA_FIND_QUIETLY )
+                                MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
+                            ENDIF()
+                            SET( java_bin "${out_regex}" )
+                        ENDIF()
                     ENDIF()
                 ENDWHILE()
+
+                # check if something went wrong
+                IF( NOT java_link_error )
+                    # if not set JAVA_RUNTIME to the dereferenced link
+                    SET( JAVA_RUNTIME "${java_bin}" )
+                ENDIF()
             ENDIF()
         ENDIF()
         
@@ -79,7 +97,9 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
         # extract java bin path out of full path to java runtime
         STRING( REGEX REPLACE "(.*)\\/java$" "\\1" JAVA_BIN_PATH ${JAVA_RUNTIME} )
     ELSE()
-        MESSAGE( STATUS "Failed to autodetect Java!!" )
+        IF( NOT JAVA_FIND_QUIETLY )
+            MESSAGE( STATUS "Failed to autodetect Java!!" )
+        ENDIF()
     ENDIF()
 ELSE()
     # definition of JAVA_HOME or JDK_HOME in cmake has priority over env vars
@@ -87,12 +107,13 @@ ELSE()
         # ensure that both variables are set correctly (JDK_HOME as well as JAVA_HOME)
         IF( DEFINED JDK_HOME AND DEFINED JAVA_HOME )
             IF( NOT "${JDK_HOME}" STREQUAL "${JAVA_HOME}" )
-                MESSAGE( STATUS 
-                    "JDK_HOME and JAVA_HOME are set to different paths!!" )
-                MESSAGE( STATUS "JDK_HOME: ${JDK_HOME}" )
-                MESSAGE( STATUS "JAVA_HOME: ${JAVA_HOME}" )
-                MESSAGE( FATAL_ERROR 
-                    "Please unset one of them or set both correctly!!" )
+                IF( NOT JAVA_FIND_QUIETLY )
+                    MESSAGE( STATUS 
+                        "WARNING: JDK_HOME and JAVA_HOME are set to different paths!!" )
+                    MESSAGE( STATUS "JDK_HOME: ${JDK_HOME}" )
+                    MESSAGE( STATUS "JAVA_HOME: ${JAVA_HOME}" )
+                    MESSAGE( STATUS "${JAVA_HOME} will be used in this installation!!" )
+                ENDIF()
             ENDIF()
         ELSE()
             IF( NOT DEFINED JAVA_HOME )
@@ -104,19 +125,21 @@ ELSE()
         # are set correctly (JDK_HOME as well as JAVA_HOME)
         IF( DEFINED ENV{JDK_HOME} AND DEFINED ENV{JAVA_HOME} )
             IF( NOT "$ENV{JDK_HOME}" STREQUAL "$ENV{JAVA_HOME}" )
-                MESSAGE( STATUS 
-                    "JDK_HOME and JAVA_HOME are set to different paths!!" )
-                MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
-                MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
-                MESSAGE( FATAL_ERROR 
-                    "Please unset one of them or set both correctly!!" )
+                IF( NOT JAVA_FIND_QUIETLY )
+                    MESSAGE( STATUS 
+                        "WARNING: JDK_HOME and JAVA_HOME are set to different paths!!" )
+                    MESSAGE( STATUS "JDK_HOME: $ENV{JDK_HOME}" )
+                    MESSAGE( STATUS "JAVA_HOME: $ENV{JAVA_HOME}" )
+                    MESSAGE( STATUS "$ENV{JAVA_HOME} will be used in this installation!!" )
+                ENDIF()
             ENDIF()
+            SET( JAVA_HOME "$ENV{JAVA_HOME}" )
         ELSE()
+            IF( DEFINED ENV{JAVA_HOME} )
+                SET( JAVA_HOME "$ENV{JAVA_HOME}" )
+            ENDIF()
             IF( DEFINED ENV{JDK_HOME} )
                 SET( JAVA_HOME "$ENV{JDK_HOME}" )
-            ENDIF()
-            IF( DEFINED ENV{JAVA_HOME} )
-                SET( JAVA_HOME "$ENV{JAVA_HOME}" ) 
             ENDIF()
         ENDIF()
     ENDIF()
@@ -155,16 +178,16 @@ ELSE()
             NO_DEFAULT_PATH )
         
         # abort if not found
-        IF( NOT JAVA_RUNTIME )
+        IF( NOT JAVA_RUNTIME AND NOT JAVA_FIND_QUIETLY )
             MESSAGE( STATUS "Could not find java!!" )
         ENDIF()
-        IF( NOT JAVA_COMPILE )
+        IF( NOT JAVA_COMPILE AND NOT JAVA_FIND_QUIETLY )
             MESSAGE( STATUS "Could not find javac!!" )
         ENDIF()
-        IF( NOT JAVA_ARCHIVE )
+        IF( NOT JAVA_ARCHIVE AND NOT JAVA_FIND_QUIETLY )
             MESSAGE( STATUS "Could not find jar!!" )
         ENDIF()
-        IF( NOT JAVA_DOC )
+        IF( NOT JAVA_DOC AND NOT JAVA_FIND_QUIETLY )
             MESSAGE( STATUS "Could not find javadoc!!" )
         ENDIF()
     ENDIF()
@@ -180,7 +203,9 @@ IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
             RETURN_VALUE out_ret )
 
     IF( out_ret )
-        MESSAGE( STATUS "Error executing java -version!!" )
+        IF( NOT JAVA_FIND_QUIETLY )
+            MESSAGE( STATUS "Error executing java -version!! Java version variables will not be set!!" )
+        ENDIF()
     ELSE()
         # extract major/minor version and patch level from "java -version" output
         STRING( REGEX REPLACE ".* version \"([0-9]+)\\.[0-9]+\\.[0-9]+.*"
@@ -194,6 +219,13 @@ IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
 
         # display info
         MESSAGE( STATUS "Java version ${JAVA_VERSION} configured successfully!" )
+    ENDIF()
+ELSE()
+    IF( JAVA_FIND_REQUIRED )
+        MESSAGE( FATAL_ERROR "Failed configuring Java!!" )
+    ENDIF()
+    IF( NOT JAVA_FIND_QUIETLY )
+        MESSAGE( STATUS "Failed configuring Java!!" )
     ENDIF()
 ENDIF()
 
