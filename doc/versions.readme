@@ -3,6 +3,14 @@
 ---------------------------------------------------------------
 
 =====================
+v01-08-03
+=====================
+  bug fix release
+  no changes in file format and API
+  - minor fixes in Java code (TJ,JMC)
+  - full support for building with cmake 
+
+=====================
 v01-08-02
 =====================
   bug fix release
