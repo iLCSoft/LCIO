@@ -75,7 +75,7 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
                         STRING( REGEX MATCH " symbolic link to " java_link_found "${out_tmp}" )
                         IF( java_link_found )
                             # get the file to where the link points to
-                            STRING( REGEX REPLACE ".* symbolic link to (.*)" "\\1" out_regex "${out_tmp}" )
+                            STRING( REGEX REPLACE ".* symbolic link to[^/]+([^'`´]+).*" "\\1" out_regex "${out_tmp}" )
                             IF( NOT JAVA_FIND_QUIETLY )
                                 MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
                             ENDIF()
