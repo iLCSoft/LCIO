@@ -16,17 +16,21 @@
 #############################################################################
 
 # ILC_HOME
-SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01_beta"
+SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft"
     CACHE PATH "Path to ILC Software" FORCE )
 
 #############################################################################
 # Java
 #############################################################################
 
-# If you don't want to use the java version automatically detected by cmake
-# you can define here what java to use
+#specify path to the java version that you want to use
 
+#  ---- SL4 
 # Path to Java
+SET( JAVA_HOME "${ILC_HOME}/java/1.6.0"
+    CACHE PATH "Path to Java" FORCE )
+
+#  ---- SL3 
 #SET( JAVA_HOME "${ILC_HOME}/java/1.5.0"
 #    CACHE PATH "Path to Java" FORCE )
 
@@ -38,7 +42,7 @@ SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft/v01-01_beta"
 #############################################################################
 
 # Enable this for building LCIO with CLHEP
-#SET( BUILD_WITH "CLHEP" CACHE STRING "Build LCIO with these optional packages" FORCE )
+SET( BUILD_WITH "CLHEP" CACHE STRING "Build LCIO with these optional packages" FORCE )
 
 # Path to CLHEP
 SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
