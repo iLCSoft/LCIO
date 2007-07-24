@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Miscellaneous java file utilities.
  * @author jeremym
- * @version $Id: FileUtil.java,v 1.3 2007-03-16 00:36:20 jeremy Exp $
+ * @version $Id: FileUtil.java,v 1.4 2007-07-24 18:28:42 jeremy Exp $
  */
 public abstract class FileUtil
 {
@@ -61,6 +61,8 @@ public abstract class FileUtil
 		{
 			String ifile = (String) fstr[i];
 			infiles[i] = new File(ifile);
+			if (!infiles[i].exists())
+				throw new RuntimeException("File " + infiles[i] + " does not exist!");
 		}
 		return infiles;
 	}
