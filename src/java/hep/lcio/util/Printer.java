@@ -134,11 +134,9 @@ public class Printer
 		ps.println(" COLLECTIONS SUMMARY");
 		ps.println();
 		ps.format(" %-30s %-20s %s\n", 
-				new String[] {
-					"Collection Name", 
-					"Collection Type", 
-					"Number of Elements"
-				}
+				"Collection Name", 
+				"Collection Type", 
+				"Number of Elements"
 		);
 		ps.println(" -----------------------------------------------------------------");
 
@@ -147,11 +145,9 @@ public class Printer
 		{
 			LCCollection coll = event.getCollection(collnames[i]);
 			ps.format(" %-30s %-20s %d\n", 
-					new Object[] {
-						collnames[i], 
-						coll.getTypeName(), 
-						Integer.valueOf(coll.getNumberOfElements()) 
-				}
+					collnames[i], 
+					coll.getTypeName(), 
+					Integer.valueOf(coll.getNumberOfElements()) 
 			);
 		}
 	}
@@ -169,9 +165,7 @@ public class Printer
 			ps.println(" Collection Type : " + coll.getTypeName());
 			ps.println(" Number of Elements : " + coll.size());
 			ps.format(" Flag Word: 0x%x\n", 
-					new Object[] { 
-						Integer.valueOf(coll.getFlag()) 
-					}
+					Integer.valueOf(coll.getFlag()) 
 			);
 
 			printParameters(coll.getParameters());
@@ -211,7 +205,7 @@ public class Printer
 		{
 			String floatkey = floatkeys[i];
 			float val = param.getFloatVal(floatkey);
-			ps.format(" %s = %5.3e\n",new Object[] {floatkey, Float.valueOf(val)} );
+			ps.format(" %s = %5.3e\n",floatkey, Float.valueOf(val));
 		}
 		
 		String intkeys[] = param.getIntKeys();
@@ -219,7 +213,7 @@ public class Printer
 		{
 			String intkey = intkeys[i];
 			int val = param.getIntVal(intkey);
-			ps.format(" %s %d\n",new Object[] {intkey, Integer.valueOf(val)});
+			ps.format(" %s %d\n",intkey, Integer.valueOf(val));
 		}
 			
 		String strkeys[] = param.getStringKeys();
@@ -252,11 +246,9 @@ public class Printer
 		    {
 		    	LCRelation rel = (LCRelation)coll.getElementAt(i);
 		    	ps.format(" [%08x] |  [[%08x]   | %5.3e \n",
-		    			new Object[] {
 		    		  		Integer.valueOf(rel.getFrom().hashCode()), 
 		    		  		Integer.valueOf(rel.getTo().hashCode()), 
 		    		  		Double.valueOf(rel.getWeight())
-		    		  	}
 		    	);  
 		    }
 		}
@@ -296,7 +288,6 @@ public class Printer
 				if (havepos)
 				{
 					ps.format(" [%08x] | %08x | %08x |" + " %5.3e | (%5.3e,%5.3e,%5.3e) | %d\n", 
-							new Object[] { 
 								Integer.valueOf(hit.hashCode()),
 								Integer.valueOf(id0), 
 								Integer.valueOf(id1), 
@@ -305,19 +296,16 @@ public class Printer
 								Float.valueOf(hit.getPosition()[1]), 
 								Float.valueOf(hit.getPosition()[2]), 
 								Integer.valueOf(hit.getNMCContributions()) 
-							}
 					);
 				}
 				else
 				{
-					ps.format(" [%08x] |%08x | %08x |" + " %5.3e |    no position available         | %d\n", 
-							new Object[] { 
+					ps.format(" [%08x] |%08x | %08x |" + " %5.3e |    no position available         | %d\n",  
 								Integer.valueOf(hit.hashCode()), 
 								Integer.valueOf(id0), 
 								Integer.valueOf(id1), 
 								Float.valueOf(hit.getEnergy()), 
 								Integer.valueOf(hit.getNMCContributions()) 
-								}
 					);
 				}
 
@@ -381,7 +369,6 @@ public class Printer
 				}
 
 				ps.format(" [%08x] | [%08x] | (%5.3e, %5.3e, %5.3e) | %e | %e | %d", 
-						new Object[] {
 							Integer.valueOf(hit.hashCode()),
 							Integer.valueOf(hit.getCellID()), 
 							Double.valueOf(hit.getPosition()[0]), 
@@ -389,18 +376,16 @@ public class Printer
 							Double.valueOf(hit.getPosition()[2]), 
 							Float.valueOf(hit.getdEdx()), 
 							Float.valueOf(hit.getTime()), 
-							Integer.valueOf(pdgid) }
+							Integer.valueOf(pdgid)
 				);
 
 				if (pstored)
 				{
-					ps.format(" | (%5.3e %5.3e %5.3e) | %e", 
-							new Object[] { 
+					ps.format(" | (%5.3e %5.3e %5.3e) | %e",  
 								Float.valueOf(hit.getMomentum()[0]), 
 								Float.valueOf(hit.getMomentum()[1]), 
 								Float.valueOf(hit.getMomentum()[2]), 
 								Float.valueOf(hit.getPathLength()) 
-							}
 					);
 				}
 
@@ -432,7 +417,6 @@ public class Printer
 				if ((flag & (1 << LCIO.CHBIT_LONG)) != 0)
 				{
 					ps.format(" [%08x] | [%08x] | [%08x] | %5.3e | (%5.3e,%5.3e,%5.3e)\n", 
-							new Object[] {
 								Integer.valueOf(hit.hashCode()),
 								Integer.valueOf(id0), 
 								Integer.valueOf(id1), 
@@ -440,17 +424,14 @@ public class Printer
 								Double.valueOf(hit.getPosition()[0]), 
 								Double.valueOf(hit.getPosition()[1]), 
 								Double.valueOf(hit.getPosition()[2]) 
-								}
 					);
 				}
 				else
 				{
 					ps.format(" [%08x] | [%08x] | %5.3e |    no position available         \n", 
-							new Object[] {
 								Integer.valueOf(id0), 
 								Integer.valueOf(id1), 
 								Double.valueOf(hit.getEnergy()) 
-								}
 					);
 				}
 
@@ -474,8 +455,6 @@ public class Printer
 				TrackerHit hit = (TrackerHit)coll.getElementAt(i);
 		        
 		        ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n",
-		        		new Object[] 
-		        		{
 		        				Integer.valueOf(hit.hashCode()),
 		        				Double.valueOf(hit.getPosition()[0]), 
 		        				Double.valueOf(hit.getPosition()[1]), 
@@ -483,7 +462,6 @@ public class Printer
 		        				Double.valueOf(hit.getdEdx()), 
 		        				Double.valueOf(hit.getTime()), 
 		        				Integer.valueOf(hit.getType()) 
-		        		}
 		  	     );
 			}
 		}
@@ -505,7 +483,6 @@ public class Printer
 				Cluster clu = (Cluster)coll.getElementAt(i);
 				
 			    ps.format(" [%08x] | %d | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e \n",
-			    	new Object[] {
 			    		Integer.valueOf(clu.hashCode()),
 			    		Integer.valueOf(clu.getType()), 
 			    		Double.valueOf(clu.getEnergy()), 
@@ -514,20 +491,20 @@ public class Printer
 			    		Double.valueOf(clu.getPosition()[2]),		    	
 			    		Float.valueOf(clu.getITheta()), 
 			    		Float.valueOf(clu.getIPhi())
-			    	});
+			    );
 			    
 			    ps.print(" errors (6 pos)/( 3 dir): (");
 			    
 			    for(int j=0; j<6; j++) 
 			    {
-			    	ps.format("%4.2e, ", new Object[] {Double.valueOf(clu.getPositionError()[j])});
+			    	ps.format("%4.2e, ", Double.valueOf(clu.getPositionError()[j]));
 			    }
 			    
 			    ps.print(")/(");
 			    
 			    for(int j=0; j<3; j++)
 			    {
-			    	ps.format("%4.2e, ", new Object[] {Double.valueOf(clu.getDirectionError()[j])} ) ; 
+			    	ps.format("%4.2e, ", Double.valueOf(clu.getDirectionError()[j]) ) ; 
 			    }
 			    
 			    ps.println(")");
@@ -538,7 +515,7 @@ public class Printer
 			    
 			    for(int j=0; j<clusters.size(); j++)
 			    {
-					ps.format("%4.2e, ", new Object[] { Double.valueOf(((Cluster)clusters.get(j)).getEnergy()) } ) ; 
+					ps.format("%4.2e, ", Double.valueOf(((Cluster)clusters.get(j)).getEnergy()) ) ; 
 			    }
 			    
 			    ps.println();
@@ -553,7 +530,7 @@ public class Printer
 					
 					for(int j=0; j<hits.size(); j++)
 					{
-						ps.format(" (%4.3e), " , new Object[] { Double.valueOf(contr[j]) } ) ;
+						ps.format(" (%4.3e), " , Double.valueOf(contr[j]) ) ;
 					}
 				}
 				
@@ -628,9 +605,7 @@ public class Printer
 				ps.print(" " + i + " | ");
 				
 				ps.format("[%08x] | [",
-						new Object[] {
-							Integer.valueOf(part.hashCode()),
-						}
+							Integer.valueOf(part.hashCode())
 				);
 							
 				for(int k=0; k<part.getParents().size(); k++) 
@@ -650,7 +625,6 @@ public class Printer
 		    	}
 		    
 		    	ps.format("] | %d | (%5.3e, %5.3e, %5.3e) | %d | %08x | (%5.3e, %5.3e, %5.3e) | (",
-		    			new Object[] {
 		    				Integer.valueOf(part.getPDG()),
 		    				Double.valueOf(part.getMomentum()[0]),
 		    				Double.valueOf(part.getMomentum()[1]),
@@ -660,17 +634,15 @@ public class Printer
 		    				Double.valueOf(part.getVertex()[0]),
 		    				Double.valueOf(part.getVertex()[1]),
 		    				Double.valueOf(part.getVertex()[2])
-		    	});
+		    	);
 		    	
 		    	
 		    	try {
 		    		part.getEndpoint();
 		    		ps.format("%e %e %e",
-		    				new Object[] {
 		    					Double.valueOf(part.getEndpoint()[0]),
 		    					Double.valueOf(part.getEndpoint()[1]),
 		    					Double.valueOf(part.getEndpoint()[2])
-		    				}
 		    		);
 		    	}
 		    	catch (Exception e)
@@ -679,11 +651,9 @@ public class Printer
 		    	}
 		    		    	
 		    	ps.format(") | %e | %e | %e",
-		    			new Object[] { 
 		    				Double.valueOf(part.getMass()), 
 		    				Double.valueOf(part.getCharge()), 
 		    				Double.valueOf(part.getEnergy())
-		    				}
 		    	);
 		    	
 		    	ps.println();
@@ -778,7 +748,6 @@ public class Printer
 				Vertex v = (Vertex)coll.getElementAt(i);
 												
 				ps.format(" [%08x] | %3s | %15s | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] \n",
-			    		new Object[] {
 			    			Integer.valueOf(v.hashCode()),
 			    			v.isPrimary() ? "yes" : "no",
 			    			v.getAlgorithmType(),
@@ -788,13 +757,12 @@ public class Printer
 			    			Double.valueOf(v.getPosition()[1]), 
 			    			Double.valueOf(v.getPosition()[2]),
 			    			(v.getAssociatedParticle() != null ? Integer.valueOf(v.getAssociatedParticle().hashCode()):new Integer(0))
-			    			}
 			    );
 			    
 			    // Print covariance matrix.
 			    ps.print("    covariance( px,py,pz) : (");
 			    for(int j=0; j<6; j++){
-			    	ps.format("%4.2e, ", new Object[] {Double.valueOf(v.getCovMatrix()[j])}) ; 
+			    	ps.format("%4.2e, ", Double.valueOf(v.getCovMatrix()[j])) ; 
 			    }
 			    ps.println(")");
 			}
@@ -824,7 +792,6 @@ public class Printer
 			    }
 			    
 			    ps.format(" [%08x] | %3s | %2d | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e | (%5.3e,%5.3e,%5.3e) | [%08x] | [%08x] | [%08x]\n",
-			    		new Object[] {
 			    			Integer.valueOf(recp.hashCode()),
 			    			compound ? "yes" : "no", 
 			    			Integer.valueOf(type), 
@@ -840,17 +807,12 @@ public class Printer
 			    			Integer.valueOf(pidused),
 			    			(recp.getStartVertex() != null ? Integer.valueOf(recp.getStartVertex().hashCode()):0),
 			    			(recp.getEndVertex() != null  ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
-//			    			(recp.getParticles().size()>0 ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
-			    					    			}
-			    
-			    //(recp.getEndVertex() != null ? Integer.valueOf(recp.getEndVertex().hashCode()):0)
-			    
 			    );
 			    
 			    // Print covariance matrix.
 			    ps.print("    covariance( px,py,pz,E) : (");
 			    for(int j=0; j<10; j++){
-			    	ps.format("%4.2e, ", new Object[] {Double.valueOf(recp.getCovMatrix()[j])}) ; 
+			    	ps.format("%4.2e, ", Double.valueOf(recp.getCovMatrix()[j])) ; 
 			    }
 			    ps.println(")");
 			    
@@ -858,15 +820,19 @@ public class Printer
 			    ps.print("    particles ( [   id   ] ):");
 			    for(int j=0; j<recp.getParticles().size(); j++)
 			    {
-			    	ps.format("[%08x], ", new Object[] { Integer.valueOf(recp.getParticles().get(j).hashCode()) }); 
+			    	ps.format("[%08x], ", Integer.valueOf(recp.getParticles().get(j).hashCode())); 
 			    }
 			    ps.println();
 
 			    // Print tracks.
 			    ps.print("    tracks ( [   id   ] ): ");
+			    System.out.println("number of tracks: " + recp.getTracks().size());
 			    for(int j=0; j<recp.getTracks().size(); j++)
 			    {
-			    	ps.format("[%08x], ", new Object[] {Integer.valueOf(recp.getTracks().get(j).hashCode())} );
+			    	System.out.println("proc track: " + j);
+			    	if (recp.getTracks().get(j) == null)
+			    		throw new RuntimeException("track " + j + " is null");
+			    	ps.format("[%08x], ", Integer.valueOf(recp.getTracks().get(j).hashCode()));
 			    }
 			    ps.println();
 
@@ -874,7 +840,7 @@ public class Printer
 			    ps.print("    clusters ( [   id   ] ): ");
 			    for(int j=0; j<recp.getClusters().size(); j++)
 			    {
-			    	ps.format("[%08x], ", new Object[] {Integer.valueOf(recp.getClusters().get(j).hashCode())} );
+			    	ps.format("[%08x], ", Integer.valueOf(recp.getClusters().get(j).hashCode()));
 			    }
 			    ps.println();
 
@@ -883,7 +849,7 @@ public class Printer
 			    for(int j=0; j<recp.getParticleIDs().size(); j++)
 			    {		    
 			    	ParticleID pid = (ParticleID)recp.getParticleIDs().get(j);
-			    	ps.format("[%08x], %6d, (%6d)  ", new Object[] { Integer.valueOf(pid.hashCode()), Integer.valueOf(pid.getPDG()), Integer.valueOf(pid.getType()) }) ;
+			    	ps.format("[%08x], %6d, (%6d)  ", Integer.valueOf(pid.hashCode()), Integer.valueOf(pid.getPDG()), Integer.valueOf(pid.getType())) ;
 			    }
 			    ps.println();
 			}
@@ -906,13 +872,11 @@ public class Printer
 				ParticleID id = (ParticleID)coll.getElementAt(i);
 				
 				ps.format(" %08 | %d | %e | %d | %d ",
-						new Object[] {
 							Integer.valueOf(id.hashCode()),
 							Integer.valueOf(id.getAlgorithmType()), 
 							Double.valueOf(id.getLikelihood()), 
 							Integer.valueOf(id.getPDG()), 
 							Integer.valueOf(id.getType())
-							} 
 				);
 				
 				ps.print("params : (");
@@ -940,13 +904,11 @@ public class Printer
 			{
 				RawCalorimeterHit hit = (RawCalorimeterHit)coll.getElementAt(i);
 				ps.format(" [0x%08x] | [0x%08x] | [0x%08x] | %10d | %10d \n",
-						new Object[] {
 							Integer.valueOf(hit.hashCode()),
 							Integer.valueOf(hit.getCellID0()),
 							Integer.valueOf(hit.getCellID1()),
 							Integer.valueOf(hit.getAmplitude()),
 							Integer.valueOf(hit.getTimeStamp())
-						}
 				);			
 			}
 		}
@@ -972,7 +934,6 @@ public class Printer
 				Track trk = (Track)coll.getElementAt(i);
 
 				ps.format(" [%08x] | %08x | %4.2e | %4.2e | %4.2e | %5.3e | %5.3e | (%5.3e,%5.3e,%5.3e) | %4.2e | %4.2e | %4.2e \n",
-						new Object[] {
 						Integer.valueOf(trk.hashCode()),
 						Integer.valueOf(trk.getType()), 
 						Double.valueOf(trk.getD0()), 
@@ -986,7 +947,6 @@ public class Printer
 						Double.valueOf(trk.getdEdx()), 
 						Double.valueOf(trk.getdEdxError()), 
 						Double.valueOf(trk.getChi2())
-						}
 				);
 		
 				// Print errors.
@@ -994,9 +954,7 @@ public class Printer
 				for (int j=0; j<15; j++)
 				{
 					ps.format("%4.2e, ", 
-							new Object[] {
 								Double.valueOf(trk.getCovMatrix()[j])
-							}
 					); 				
 				}
 				
@@ -1007,9 +965,7 @@ public class Printer
 				for(int j=0; j<tracks.size(); j++)
 				{
 					ps.format("[%08x], ", 
-							new Object[] {
 								Integer.valueOf(tracks.get(j).hashCode())
-							} 
 					); 
 				}
 				ps.println();
@@ -1022,7 +978,7 @@ public class Printer
 					for(int j=0; j<hits.size(); j++)
 					{
 					  ps.format("[%08x] ", 
-							  new Object[] { Integer.valueOf(hits.get(j).hashCode())} ) ;
+							  Integer.valueOf(hits.get(j).hashCode())) ;
 					}
 					ps.println();
 				}
@@ -1060,12 +1016,11 @@ public class Printer
 				TPCHit hit = (TPCHit)coll.getElementAt(i);
 				
 				ps.format(" [%08x] | %e | %e | %e",
-						new Object[] {
 							Integer.valueOf(hit.hashCode()),
 							Double.valueOf(hit.getTime()),
 							Double.valueOf(hit.getCharge()),
 							Double.valueOf(hit.getQuality())
-						}
+		
 				);
 							
 				boolean raw = ((flag & (1 << LCIO.TPCBIT_RAW)) != 0);
@@ -1074,9 +1029,8 @@ public class Printer
 				
 				for (int j=0; j<nwords; j++)
 				{
-					ps.format(" [%08]", new Object[] {
-							Integer.valueOf(hit.getRawDataWord(j))
-					}
+					ps.format(" [%08]",
+							Integer.valueOf(hit.getRawDataWord(j))					
 					);				
 				}
 				
@@ -1100,13 +1054,12 @@ public class Printer
 			{
 				TrackerData hit = (TrackerData)coll.getElementAt(i);
 				
-				ps.format(" [%08x] | %08x | %08x | %5.3f  | " , 
-						new Object[] { 
+				ps.format(" [%08x] | %08x | %08x | %5.3f  | " ,  
 							Integer.valueOf(hit.hashCode()), 
 							Integer.valueOf(hit.getCellID0()),                 
 							Integer.valueOf(hit.getCellID1()), 
 							Float.valueOf(hit.getTime())  
-						} ) ;
+				) ;
 				
 				float[] charge = hit.getChargeValues();
 				if (charge != null) {
@@ -1136,18 +1089,16 @@ public class Printer
 				TrackerPulse hit = (TrackerPulse)coll.getElementAt(i);
 				
 				ps.format(" [%08x] | %08x | %08x | %5.3f | %5.3f | %08x | ",
-						new Object[] {
 							Integer.valueOf(hit.hashCode()),
 							Integer.valueOf(hit.getCellID0()),
 							Integer.valueOf(hit.getCellID1()),
 							Float.valueOf(hit.getTime()),
 							Float.valueOf(hit.getCharge()),
 							Integer.valueOf(hit.getQuality())
-						}
 				);
 				
 				TrackerData corr = hit.getTrackerData();
-				ps.format("[%08x] ", new Object[] { Integer.valueOf(corr != null ? corr.hashCode() : 0)});
+				ps.format("[%08x] ", Integer.valueOf(corr != null ? corr.hashCode() : 0));
 				ps.println();
 			}
 		}
@@ -1168,12 +1119,10 @@ public class Printer
 				TrackerRawData hit = (TrackerRawData)coll.getElementAt(i);
 				
 				ps.format(" [%08x] | [%08x] | [%08x] | %10d | ",
-						new Object[] {
 							Integer.valueOf(hit.hashCode()), 
 							Integer.valueOf(hit.getCellID0()), 
 							Integer.valueOf(hit.getCellID1()),						
 							Integer.valueOf(hit.getTime())
-						}									
 				);
 			
 				short charge[] = hit.getADCValues();
