@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.10 2004-09-24 13:54:49 tonyj Exp $
+ * @version $Id: SIOTrack.java,v 1.11 2007-07-24 17:36:22 jeremy Exp $
  */
 class SIOTrack extends ITrack
 {
@@ -139,6 +139,10 @@ class SIOTrack extends ITrack
       for (int i = 0; i < subdetectorHitNumbers.length; i++)
       {
          out.writeInt( subdetectorHitNumbers[i] ) ;
+      }
+      if (tracks == null)
+      {
+    	  tracks = getTracks();
       }
       out.writeInt( tracks.size()  ) ;
       for (Iterator iter = tracks.iterator(); iter.hasNext();)
