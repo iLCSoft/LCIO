@@ -594,13 +594,14 @@ namespace SIO {
 // 	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
 	  postProcessEvent() ;
 
-	  // fg20050422 changed order of update and process (needed for 
-	  // marlin::LCIOOutputprocessor to drop collections )
+	  // fg20070813 changed order of update and process (needed for 
+	  // Marlin modifying processors )
+	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->modifyEvent( *_evtP ) ;
+
 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
 	  (*iter)->processEvent( *_evtP ) ;
 
-	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	  (*iter)->modifyEvent( *_evtP ) ;
 
 	  iter++ ;
 	  

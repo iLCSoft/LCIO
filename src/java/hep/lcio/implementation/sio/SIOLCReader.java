@@ -22,7 +22,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.13 2005-10-21 13:53:21 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.14 2007-08-13 10:35:02 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -213,10 +213,12 @@ class SIOLCReader implements LCReader
                if (l > 0)
                {
                   SIOEvent event = new SIOEvent(record,LCIO.READ_ONLY);
+		  // fg20070813 changed order of update and process to be consistent with C++
+		  // (needed for Marlin modifying processors )
+		  event.setReadOnly(false);
+                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).modifyEvent(event); }
                   event.readData(reader.readRecord());
                   for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).processEvent(event); }
-                  event.setReadOnly(false);
-                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).modifyEvent(event); }
                }
             }
          }
