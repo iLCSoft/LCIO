@@ -16,12 +16,13 @@ typedef std::map< std::string , EVENT::IntVec* > IndexMap ;
 
 namespace IMPL {
 
-
-/** Implementation of Track.
+/** Implementation of the LCIO track class. The helix parameterization follows that of the L3 experiment at LEP.
+ *  A detailed description of the track parameters is given in the LC-Note LC-DET-2006-004 
+ *  "Track Parameters in LCIO" <a href="http://www-flc.desy.de/lcnotes/notes/LC-DET-2006-004.pdf">(pdf)</a>.
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.14 2006-08-04 16:52:46 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.15 2007-09-18 09:47:10 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
