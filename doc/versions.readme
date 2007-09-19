@@ -3,6 +3,21 @@
 ---------------------------------------------------------------
 
 =====================
+v01-08-04 
+=====================
+  bug fix release
+  no changes in file format and API
+  - minor fixes in Java code (JMC)
+  - minor fixes for building with cmake 
+
+  - changed order of modifyEvent and processEvent in SIOLCReader
+    (needed for Marlin Overlay processor)
+ 
+  - simple shell like tool for browsing lcio files in C++: .../EXAMPLES/lsh.cc
+    ( use -DBUILD_LCIO_SHELL=true - requires ncurses and readline )
+    [experimental code]
+ 
+=====================
 v01-08-03
 =====================
   bug fix release
