@@ -181,7 +181,12 @@ ADD_LCIO_BIN( anajob )
 ADD_LCIO_BIN( recjob ) 
 ADD_LCIO_BIN( dumpevent ) 
 ADD_LCIO_BIN( copyfix ) 
-ADD_LCIO_BIN( lsh ) 
+
+
+IF( BUILD_LCIO_SHELL )
+ ADD_LCIO_BIN( lsh ) 
+ TARGET_LINK_LIBRARIES( bin_lsh readline ncurses)
+ENDIF()
 
 IF( BUILD_LCIO_TESTJOBS )
   ADD_LCIO_BIN( readcalibration ) 
