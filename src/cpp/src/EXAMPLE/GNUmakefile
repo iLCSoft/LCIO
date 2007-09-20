@@ -65,6 +65,9 @@ $(BINDIR)/anajob: anajob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/readcalibration $(CPPFLAGS) readcalibration.cc  $(LIBS) 
 
+$(BINDIR)/lsh: lsh.cc $(INSTALL)/liblcio.a
+	    $(CXX) -o $(BINDIR)/lsh $(CPPFLAGS) lsh.cc  $(LIBS) -lreadline -lncurses
+
 
 $(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/stdhepjob $(CPPFLAGS) stdhepjob.cc  $(LIBS) 
