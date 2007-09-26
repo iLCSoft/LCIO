@@ -5,7 +5,7 @@
 <!--     this file is used for FreeHEP and WIRED                             -->
 <!--                                                                         -->
 <!-- Author: Mark Donszelmann                                                -->
-<!-- Version: $Id: build.xml,v 1.23 2006-12-08 14:28:27 gaede Exp $    -->
+<!-- Version: $Id: build.xml,v 1.24 2007-09-26 20:45:41 jeremy Exp $    -->
 <!--                                                                         -->
 <!-- ======================================================================= -->
 
@@ -199,12 +199,12 @@
 
    <target name="cpp.linux" depends="cpp.lcio.linux"/>
    <target name="cpp.sio.linux">
-     <exec dir="." executable="gmake" os="Linux" failOnError="true">
+     <exec dir="." executable="make" os="Linux" failOnError="true">
        <arg line="-C ./sio lib"/>
      </exec>
    </target>
    <target name="cpp.lcio.linux" depends="cpp.sio.linux">
-     <exec dir="." executable="gmake" os="Linux" failOnError="true">
+     <exec dir="." executable="make" os="Linux" failOnError="true">
        <arg line="-C ./src/cpp all"/>
      </exec>
    </target>
@@ -235,7 +235,7 @@
 
 
    <target name="f77.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux" failOnError="true">
+     <exec dir="." executable="make" os="Linux" failOnError="true">
        <arg line="-C ./src/f77"/>
      </exec>
    </target>
@@ -251,7 +251,7 @@
 
 
    <target name="f77.clean.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="gmake" os="Linux" failOnError="true">
+     <exec dir="." executable="make" os="Linux" failOnError="true">
        <arg line="-C ./src/f77 clean"/>
      </exec>
    </target>
@@ -276,10 +276,10 @@
 
  
    <target name="cpp.clean.linux">
-     <exec dir="." executable="gmake" os="Linux">
+     <exec dir="." executable="make" os="Linux">
        <arg line="-C ./sio clean"/>
      </exec>
-     <exec dir="." executable="gmake" os="Linux">
+     <exec dir="." executable="make" os="Linux">
        <arg line="-C ./src/cpp clean"/>
      </exec>
    </target>
