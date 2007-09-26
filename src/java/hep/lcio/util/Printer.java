@@ -38,7 +38,7 @@ import java.util.Map;
  * A utility class for printing LCEvents and LCCollections
  * of all the LCIO types.  It borrows heavily from 
  * Frank Gaede's C++ dumpevent utility found in 
- * src/cpp/UTIL/LCTOOLS.cc within the LCIO distribution.
+ * <code>src/cpp/UTIL/LCTOOLS.cc</code>.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
  */
@@ -78,6 +78,11 @@ public class Printer
 		}
 				
 		plist = null;		 
+	}
+	
+	void setPrintStream(PrintStream ps)
+	{
+		this.ps = ps;
 	}
 
 	void print(File f, int nevents, int nskip, int maxrec) throws Exception
@@ -515,7 +520,14 @@ public class Printer
 			    
 			    for(int j=0; j<clusters.size(); j++)
 			    {
-					ps.format("%4.2e, ", Double.valueOf(((Cluster)clusters.get(j)).getEnergy()) ) ; 
+			    	if (clusters.get(j) != null)
+			    	{
+			    		ps.format("%4.2e, ", Double.valueOf(((Cluster)clusters.get(j)).getEnergy()) ) ;
+			    	}
+			    	else
+			    	{
+			    		ps.format("WARNING: Sub-cluster " + j + " is null!\n");
+			    	}
 			    }
 			    
 			    ps.println();
@@ -826,13 +838,17 @@ public class Printer
 
 			    // Print tracks.
 			    ps.print("    tracks ( [   id   ] ): ");
-			    System.out.println("number of tracks: " + recp.getTracks().size());
+			    ps.println("number of tracks: " + recp.getTracks().size());
 			    for(int j=0; j<recp.getTracks().size(); j++)
-			    {
-			    	System.out.println("proc track: " + j);
-			    	if (recp.getTracks().get(j) == null)
-			    		throw new RuntimeException("track " + j + " is null");
-			    	ps.format("[%08x], ", Integer.valueOf(recp.getTracks().get(j).hashCode()));
+			    {			    	
+			    	if (recp.getTracks().get(j) != null)
+			    	{
+			    		ps.format("[%08x], ", Integer.valueOf(recp.getTracks().get(j).hashCode()));			    		
+			    	}
+			    	else 
+			    	{
+			    		ps.format("WARNING: Track at index " + j + " is null!\n");
+			    	}
 			    }
 			    ps.println();
 
