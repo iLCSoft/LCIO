@@ -12,14 +12,14 @@ import org.apache.commons.cli.Options;
  * Command line handling for the count command.
  * 
  * @author jeremym
- * @version $Id: HeaderCountCommandHandler.java,v 1.3 2006-12-07 00:47:32 jeremy Exp $
+ * @version $Id: HeaderCountCommandHandler.java,v 1.4 2007-09-26 21:12:24 jeremy Exp $
  */
 public class HeaderCountCommandHandler extends CommandHandler
 {
 	boolean printRun = false;
 	boolean printEvent = false;
 	boolean printTot = false;
-	List files = new ArrayList();
+	List<File> files = new ArrayList<File>();
 	
 	HeaderCountCommandHandler()
 	{
@@ -94,8 +94,9 @@ public class HeaderCountCommandHandler extends CommandHandler
 				files.add(new File(f[i]));
 			}
 		}
+		
 		// Interpret extras as input files.
-		else if (cl.getArgList() != null)
+		if (cl.getArgList() != null)
 		{
 			for (Object o : cl.getArgList())
 			{
@@ -103,7 +104,8 @@ public class HeaderCountCommandHandler extends CommandHandler
 				files.add(new File(s));
 			}			
 		}
-		else {
+		
+		if (files.size() == 0) {
 			printUsage(true);
 		}
 	}
