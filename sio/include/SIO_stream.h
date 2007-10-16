@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.4 2005-12-09 19:01:47 jeremy Exp $
+// CVS $Id: SIO_stream.h,v 1.5 2007-10-16 16:22:45 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -50,6 +50,10 @@ public:
     unsigned int           write( const char* );
     unsigned int           write( SIO_record* );
 
+    // return the start of the last record read; -1 if not sucessfull
+    SIO_64BITINT           lastRecordStart() { return recPos ; }
+    unsigned int           seek(SIO_64BITINT pos) ;
+
 private:
     SIO_stream( const char *, unsigned int, SIO_verbosity );
    ~SIO_stream();
@@ -80,6 +84,9 @@ private:
     unsigned int           reserve;       // Reserved size of buffer
     SIO_stream_state       state;         // Stream state  
     SIO_verbosity          verbosity;     // Reporting level
+
+    SIO_64BITINT           recPos  ;      // start Position of last record read
+
 
 friend class SIO_streamManager;           // Access to constructor/destructor
 friend class SIO_record;                  // Access to buffer

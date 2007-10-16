@@ -3,12 +3,14 @@
 
 #include <string>
 #include <set>
+#include <map>
 #include "IO/LCReader.h"
 #include "IO/LCEventListener.h"
 #include "IO/LCRunListener.h"
 
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
+#include "LCIOTypes.h"
 
 class SIO_record ;
 class SIO_stream ;    
@@ -22,10 +24,12 @@ class SIOEventHandler ;
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version $Id: SIOReader.h,v 1.24 2005-10-21 13:53:19 gaede Exp $
+ * @version $Id: SIOReader.h,v 1.25 2007-10-16 16:22:45 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     
+    typedef std::map< EVENT::long64 , EVENT::long64 > EventMap ;
+
   public:
     
     /** Default constructor.
@@ -148,6 +152,7 @@ class SIOEventHandler ;
 
     void postProcessEvent() ;
 
+    void getEventMap() ;
 
   protected:
     
@@ -173,6 +178,7 @@ class SIOEventHandler ;
     const std::vector<std::string>* _myFilenames ;
     unsigned int _currentFileIndex ;
 
+    EventMap _evtMap ;
 
   }; // class
 } // namespace

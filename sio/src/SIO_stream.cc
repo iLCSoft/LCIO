@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.3 2005-05-11 00:40:45 tonyj Exp $
+// CVS $Id: SIO_stream.cc,v 1.4 2007-10-16 16:22:45 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -544,6 +544,48 @@ pointerTo = new pointerToMap_c;
 return( SIO_STREAM_SUCCESS );
 }
 
+
+
+//
+//fg: add method to position the file pointer
+//
+unsigned int SIO_stream::seek(SIO_64BITINT pos) {  
+  
+  unsigned int status;
+  
+  //
+  // This must be a readable stream!
+  //
+  if( mode != SIO_MODE_READ ) {
+    
+    if( verbosity >= SIO_ERRORS ) {
+      
+      std::cout << "SIO: ["  << name << "//] "
+		<< "Cannot seek (stream is write only)"
+		<< std::endl;
+    }
+    return( SIO_STREAM_WRITEONLY );
+  }
+
+  status = fseek( handle, pos , SEEK_SET )  ;
+  
+  if( status != 0 ) {
+    
+    state = SIO_STATE_ERROR;
+    
+    if( verbosity >= SIO_ERRORS ) {
+      
+      std::cout << "SIO: ["  << name << "/] "
+		<< "Failed seeking position" << pos
+		<< std::endl;
+    }
+    return( SIO_STREAM_EOF );
+  }
+  
+  return( SIO_STREAM_SUCCESS );
+}
+
+
 // ----------------------------------------------------------------------------
 // Read the next record.
 // ----------------------------------------------------------------------------
@@ -577,6 +619,9 @@ bool
 // Initialize the returned record pointer to something nasty.
 //
 *record = NULL;
+
+ recPos = -1 ;  
+ SIO_64BITINT  recStart = -1 ;
 
 //
 // The stream must be open!
@@ -612,6 +657,9 @@ if( mode != SIO_MODE_READ )
 requested = false;
 while( requested == false )
 {
+
+  recStart = std::ftell( handle ) ;
+
     //
     // Initialize the buffer and read the first eight bytes.  A read failure
     // at this point is treated as an end-of-file (even if there are a few
@@ -933,7 +981,11 @@ while( requested == false )
 	              << "Unpacking error"
                       << std::endl;
         }
+    } else {
+      // save position of record start // can be queried with lastRecordStart()
+      recPos = recStart ;
     }
+
 }
 
 //

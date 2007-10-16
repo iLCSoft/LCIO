@@ -3,6 +3,15 @@
 ---------------------------------------------------------------
 
 =====================
+v01-08-05 --- in preparation
+=====================
+  no changes in file format and API
+
+  - experimental code for direct access (C++) 
+    (LCReader builds event map at open())
+  - readEvent( rNum , evtNum ) uses direct access
+
+=====================
 v01-08-04 
 =====================
   bug fix release

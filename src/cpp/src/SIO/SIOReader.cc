@@ -33,6 +33,8 @@ using namespace IO ;
 using namespace IOIMPL ;
 using namespace IMPL ;
 
+#define EVENTKEY(RN,EN)  ( EVENT::long64( RN ) << 32 ) | EN 
+ 
 namespace SIO {
 
   // small helper class to activate the unpack mode of the
@@ -182,8 +184,69 @@ namespace SIO {
 //       eh = new SIOEventHandler( LCSIO::HEADERBLOCKNAME, _evtP ) ;
 //     else
 //       eh->setEventPtr( _evtP ) ;
-  }
 
+    getEventMap() ;
+
+  }
+  
+  void SIOReader::getEventMap() {
+
+
+    int status = _stream->seek(0) ; // go to start - FIXME - should we store the current position ?
+
+    if( status != SIO_STREAM_SUCCESS ) 
+      throw IOException( std::string( "[SIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
+    
+    std::cout << " SIOReader::getEventMap() recreating event for direct access ..." 
+	      << std::endl ;
+    
+    { // -- scope for unpacking evt header --------
+      SIOUnpack hdrUnp( SIOUnpack::EVENTHDR ) ;
+      
+      while( true ){
+	
+	SIO_blockManager::remove(  LCSIO::HEADERBLOCKNAME ) ;
+	SIO_blockManager::add( _evtHandler ) ;
+
+	//----	  readRecord() ;
+	// read the next record from the stream
+	if( _stream->getState()== SIO_STATE_OPEN ){
+      
+	  unsigned int status =  _stream->read( &_dummyRecord ) ;
+	  
+	  if( ! (status & 1)  ){
+
+	    if( status & SIO_STREAM_EOF ){
+	      break ;
+	    }
+	    
+	    throw IOException( std::string(" io error on stream: ") + *_stream->getName() ) ;
+	  }
+	} else {
+	  throw IOException( std::string(" stream not open: ")+ *_stream->getName() ) ;
+	}
+	
+	//--
+	int runNum = (*_evtP)->getRunNumber() ;
+	int evtNum = (*_evtP)->getEventNumber() ;
+	
+        _evtMap[  EVENTKEY( runNum , evtNum ) ] = _stream->lastRecordStart() ;
+	
+// 	EVENT::long64 key  = (EVENT::long64( runNum ) << 32 ) | evtNum ;
+// 	std::cout << "  " <<  key << " - " << _stream->lastRecordStart()  
+// 		  << " evt: " << evtNum << std::endl ;
+	
+      } // while
+
+      _stream->seek(0) ; // go to start - FIXME - should we store the current 
+
+      if( status != SIO_STREAM_SUCCESS ) 
+	throw IOException( std::string( "[SIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
+
+    }// -- end of scope for unpacking evt header --
+
+    std::cout << " SIOReader::getEventMap() : done " << std::endl ;
+  }
 
   void SIOReader::readRecord() throw (IOException , EndOfDataException , std::exception) {
 
@@ -395,7 +458,7 @@ namespace SIO {
       
 //       // restore the daughter relations from the parent relations
 //       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
- 	  postProcessEvent() ;
+       postProcessEvent() ;
      
       return *_evtP ;      
     }
@@ -420,7 +483,7 @@ namespace SIO {
       }
     }
 
-    // now we need to also read the next  record which suposedly nis an event record
+    // now we need to also read the next  record which suposedly is an event record
     // in order to prevent readStream from reading this event (the last to be skipped)
     SIOUnpack evtUnp( SIOUnpack::EVENT ) ;
     
@@ -436,6 +499,26 @@ namespace SIO {
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
     throw (IOException , std::exception) {
     
+
+    EventMap::iterator it = _evtMap.find( EVENTKEY( runNumber,evtNumber ) ) ;
+
+    if( it != _evtMap.end() ) {
+      
+      int status = _stream->seek( it->second ) ;
+
+      if( status != SIO_STREAM_SUCCESS ) 
+	throw IOException( std::string( "[SIOReader::readEvent()] Can't seek stream to"
+					" requested position" ) ) ;
+      
+      return readNextEvent() ;
+    } 
+    else 
+ 
+      return 0 ;
+
+
+    /* ---- OLD code with fast skip -----------
+
     bool runFound = false ;
     bool evtFound = false ;
     // check current run - if any
@@ -495,6 +578,7 @@ namespace SIO {
       return *_evtP ;      
     }
 
+    */
   }
 
 
