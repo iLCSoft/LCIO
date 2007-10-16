@@ -192,7 +192,19 @@ IF( BUILD_LCIO_TESTJOBS )
   ADD_LCIO_BIN( readcalibration ) 
   ADD_LCIO_BIN( stdhepjob ) 
   ADD_LCIO_BIN( testvtx ) 
-  ADD_LCIO_BIN( lcrtrelation ) 
+  ADD_LCIO_BIN( lcrtrelation )
+
+  # ctest jobs (call with 'make test')
+  ADD_TEST( t_simjob "${EXECUTABLE_OUTPUT_PATH}/simjob" )
+  ADD_TEST( t_recjob "${EXECUTABLE_OUTPUT_PATH}/recjob" simjob.slcio recjob.slcio )
+  ADD_TEST( t_anajob "${EXECUTABLE_OUTPUT_PATH}/anajob" recjob.slcio )
+  
+  SET_TESTS_PROPERTIES( t_simjob PROPERTIES PASS_REGULAR_EXPRESSION
+      "created  10 runs with  100 events" )
+  SET_TESTS_PROPERTIES( t_recjob PROPERTIES PASS_REGULAR_EXPRESSION
+      "added collection: 'SomeClusters' and 'SomeTracks' to   100 events and added one extra MCParticle to each event." )
+  SET_TESTS_PROPERTIES( t_anajob PROPERTIES PASS_REGULAR_EXPRESSION
+      "100 events read from files:" )
 ENDIF()
 
 
