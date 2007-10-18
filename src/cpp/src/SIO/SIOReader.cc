@@ -197,7 +197,7 @@ namespace SIO {
     if( status != SIO_STREAM_SUCCESS ) 
       throw IOException( std::string( "[SIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
     
-    std::cout << " SIOReader::getEventMap() recreating event for direct access ..." 
+    std::cout << " SIOReader::getEventMap() recreating event map for direct access ..." 
 	      << std::endl ;
     
     { // -- scope for unpacking evt header --------
