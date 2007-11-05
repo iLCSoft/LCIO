@@ -627,8 +627,8 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     CellIDDecoder<TrackerPulse> id( col ) ;
 
     std::cout << endl
-	      << " [   id   ] |  cha.id  |  time | charge| quality  | corr.Data  | cellid-fields: |"
-	      << endl 
+	      << " [   id   ] | cellid0  | cellid1  | time | charge | quality  |corr.Data | cellid-fields: |"
+ 	      << endl 
 	      << endl ;
     
     for( int i=0 ; i< nPrint ; i++ ){
