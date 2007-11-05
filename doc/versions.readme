@@ -3,13 +3,23 @@
 ---------------------------------------------------------------
 
 =====================
-v01-08-05 --- in preparation
+v01-08-05
 =====================
   no changes in file format and API
 
   - experimental code for direct access (C++) 
     (LCReader builds event map at open())
+
   - readEvent( rNum , evtNum ) uses direct access
+
+  - first version of cmake tests (for C++)  (JE)
+    build with -DBUILD_LCIO_TESTJOBS=ON, afterwards call 'make test'
+
+  - bug fixes:
+    Change all gmake calls to make for Linux build  (JMC)
+    predefined USE_CLHEP for doxygen (JE)
+    dump format of TrackerPulses in LCTOOLS (AB)
+    show proper include path in API doc
 
 =====================
 v01-08-04 
