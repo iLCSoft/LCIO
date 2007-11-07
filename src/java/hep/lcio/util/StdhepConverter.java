@@ -28,7 +28,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.1 2006-06-28 23:25:17 jeremy Exp $
+ * @version $Id: StdhepConverter.java,v 1.2 2007-11-07 20:45:45 jeremy Exp $
  */
 class StdhepConverter
 {
@@ -37,7 +37,8 @@ class StdhepConverter
 	// c_light copied from CLHEP 1.9.2.2 
 	// CLHEP/Units/PhysicalConstants.h
 	private static final double c_light = 2.99792458e+8;
-	
+	private boolean haveWarned = false;
+
 	StdhepConverter()
 	{}
 
@@ -52,11 +53,16 @@ class StdhepConverter
 			LCFactory.getInstance().createLCWriter();
 		writer.open(lcio.getAbsolutePath());
 
+		int cntr=0;
+		
 		try
 		{
+			
 			// Loop over all records in the Stdhep file.
 			for (;;)
 			{
+				++cntr;
+
 				// Get the next Stdhep event.
 				StdhepRecord record = reader.nextRecord();
 
@@ -66,25 +72,27 @@ class StdhepConverter
 					// Convert to an LCCollection of MCParticle objects.
 					ILCCollection mcpcoll = 
 						convert((StdhepEvent) record);
-					
+
 					// Make a new LCEvent.
 					ILCEvent event = new ILCEvent();
-					
+
 					// FIXME: What should this be set to?
 					// NullPointerException if not set to something.
 					event.setDetectorName("test");
-					
+
 					// FIXME: What values for these?
 					event.setEventNumber(0);
 					event.setRunNumber(0);
 					event.setTimeStamp(0);
-		
+
 					// Add the MCParticle collection to the event.
 					event.addCollection(mcpcoll, LCIO.MCPARTICLE);
-					
+
 					// Write out the event to the LCIO file.
 					writer.writeEvent(event);
 				}
+
+				++cntr;
 			}
 		}
 		catch (EOFException e)
@@ -92,8 +100,10 @@ class StdhepConverter
 			// End of Stdhep file.
 		}
 
-		reader.close();
+		System.out.println("processed events = " + cntr);
 		
+		reader.close();
+
 		writer.close();
 	}
 
@@ -111,33 +121,37 @@ class StdhepConverter
 	private int fillIndexVec(int[] vec, int idx1, int idx2)
 	{
 		int l = 0;
-		if (idx1 != -1 && idx2 != -1)
-		{
-			if (idx1 < idx2)
+		//if (idx1 != -1 && idx2 != -1)
+		try {
+			if (idx1 >= 0 && idx2 >= 0)
 			{
-				for (int i = idx1; i < (idx2 + 1); i++)
+				if (idx1 < idx2)
 				{
-					vec[l++] = i;
+					for (int i = idx1; i < (idx2 + 1); i++)
+					{
+						vec[l++] = i;
+					}
+				}
+				else if (idx1 > idx2)
+				{
+					vec[l++] = idx1;
+					vec[l++] = idx2;
+				}
+				// indices are equal
+				else
+				{
+					vec[l++] = idx1;
 				}
 			}
-			else if (idx1 > idx2)
-			{
-				vec[l++] = idx1;
-				vec[l++] = idx2;
-			}
-			// indices are equal
-			else
+			else if (idx1 >= 0)
 			{
 				vec[l++] = idx1;
 			}
 		}
-		else if (idx1 != -1)
+		catch (ArrayIndexOutOfBoundsException x)
 		{
-			vec[l++] = idx1;
-		}
-		else if (idx2 != -1)
-		{
-			vec[l++] = idx2;
+			if (!haveWarned) System.err.println("Warning: Array index out of bounds exception caused by corrupt stdhep file ignored");
+			haveWarned = true;
 		}
 		return l;
 	}
@@ -159,10 +173,10 @@ class StdhepConverter
 		{
 			// Create new MCParticle for this Stdhep record.
 			IMCParticle particle = new IMCParticle();
-		
+
 			// Add MCParticle to the temp array.
 			particles[i] = particle;
-			
+
 			// Set vertex from VHEP.
 			double vertex[] =
 			{ hepevt.getVHEP(i, 0), hepevt.getVHEP(i, 1), hepevt.getVHEP(i, 2) };
@@ -178,7 +192,7 @@ class StdhepConverter
 			try {
 				// Get the particle type.
 				type = ppp.get(hepevt.getIDHEP(i));
-				
+
 				// Set the charge.
 				particle.setCharge((float) type.getCharge());
 			}
@@ -190,7 +204,7 @@ class StdhepConverter
 
 			// Set mass from PHEP.
 			particle.setMass((float)hepevt.getPHEP(i, 4));
-			
+
 			// Set PDG from IDHEP.
 			particle.setPDG(hepevt.getIDHEP(i));
 
@@ -228,7 +242,7 @@ class StdhepConverter
 				checkAndAddDaughter(particles, ancestors, i, vec[j]);
 			}
 		}
-		
+
 		// Add particles to the collection.
 		for (int i=0; i<n; i++)
 		{

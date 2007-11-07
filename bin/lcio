@@ -34,7 +34,8 @@ fi
 LOCALCLASSPATH=$LCIO/lib/lcio.jar:$LCIO/tools/sio.jar:$LCIO/tools/jdom.jar:$LCIO/tools/saxpath.jar
 LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/jaxen-jdom.jar:$LCIO/tools/jaxen-core.jar:$LCIO/tools/jel.jar
 LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/commons-cli-1.0.jar:$LCIO/tools/commons-lang-2.1.jar
-LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-hep.jar:$LCIO/tools/freehep-physics.jar:$LCIO/tools/freehep-base.jar
+#LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-hep.jar:$LCIO/tools/freehep-physics.jar:$LCIO/tools/freehep-base.jar
+LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-mcfio-2.0.1.jar:$LCIO/tools/freehep-stdhep-2.0.1.jar:$LCIO/tools/freehep-sio-2.0.jar:$LCIO/tools/freehep-xdr-2.0.3.jar:$LCIO/tools/freehep-physics-2.1.jar
 
 # OS specific support for Cygwin 
 cygwin=false;
