@@ -28,7 +28,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.2 2007-11-07 20:45:45 jeremy Exp $
+ * @version $Id: StdhepConverter.java,v 1.3 2007-11-07 22:22:50 jeremy Exp $
  */
 class StdhepConverter
 {
@@ -52,17 +52,12 @@ class StdhepConverter
 		LCWriter writer = 
 			LCFactory.getInstance().createLCWriter();
 		writer.open(lcio.getAbsolutePath());
-
-		int cntr=0;
-		
-		try
-		{
 			
+		try
+		{			
 			// Loop over all records in the Stdhep file.
 			for (;;)
-			{
-				++cntr;
-
+			{			
 				// Get the next Stdhep event.
 				StdhepRecord record = reader.nextRecord();
 
