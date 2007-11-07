@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 
 
 import hep.lcio.event.LCIO;
@@ -17,7 +17,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOSimTrackerHit.java,v 1.14 2006-03-20 20:05:46 tonyj Exp $
+ * @version $Id: SIOSimTrackerHit.java,v 1.15 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOSimTrackerHit extends ISimTrackerHit
 {

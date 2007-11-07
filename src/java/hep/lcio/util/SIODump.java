@@ -1,7 +1,7 @@
 package hep.lcio.util;
 
 import gnu.jel.*;
-import hep.lcd.io.sio.*;
+import hep.io.sio.*;
 import hep.lcio.event.LCIO;
 
 import java.io.BufferedInputStream;

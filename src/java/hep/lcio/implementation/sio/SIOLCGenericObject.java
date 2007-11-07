@@ -1,6 +1,6 @@
 package hep.lcio.implementation.sio;
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 import hep.lcio.event.LCGenericObject;
 import hep.lcio.event.LCIO;
 import hep.lcio.implementation.event.ILCGenericObject;
@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  *
  * @author gaede
- * @version $Id: SIOLCGenericObject.java,v 1.1 2005-02-28 14:49:52 gaede Exp $
+ * @version $Id: SIOLCGenericObject.java,v 1.2 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOLCGenericObject extends ILCGenericObject
 {

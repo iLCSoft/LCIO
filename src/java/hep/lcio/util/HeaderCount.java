@@ -1,7 +1,7 @@
 package hep.lcio.util;
 
-import hep.lcd.io.sio.SIOReader;
-import hep.lcd.io.sio.SIORecord;
+import hep.io.sio.SIOReader;
+import hep.io.sio.SIORecord;
 import hep.lcio.event.LCIO;
 
 import java.io.BufferedInputStream;
@@ -17,7 +17,7 @@ import java.util.List;
  * Utility method for counting the number of runs and events in an LCIO file.
  * 
  * @author jeremym
- * @version $Id: HeaderCount.java,v 1.2 2006-11-27 18:29:43 jeremy Exp $
+ * @version $Id: HeaderCount.java,v 1.3 2007-11-07 20:46:24 jeremy Exp $
  */
 public class HeaderCount
 {

@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 import hep.lcio.event.Track;
 import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrack.java,v 1.11 2007-07-24 17:36:22 jeremy Exp $
+ * @version $Id: SIOTrack.java,v 1.12 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOTrack extends ITrack
 {

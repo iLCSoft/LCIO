@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 
 import hep.lcio.event.LCIO;
 import hep.lcio.event.LCRunHeader;
@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORunHeader.java,v 1.8 2004-07-15 15:49:30 gaede Exp $
+ * @version $Id: SIORunHeader.java,v 1.9 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIORunHeader extends ILCRunHeader
 {

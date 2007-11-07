@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 
 import hep.lcio.event.CalorimeterHit;
 import hep.lcio.event.LCIO;
@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.18 2004-09-24 13:21:23 tonyj Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.19 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {

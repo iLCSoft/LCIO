@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.TrackerData;
 import hep.lcio.event.TrackerPulse;
@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTrackerPulse.java,v 1.1 2005-05-31 07:43:31 gaede Exp $
+ * @version $Id: SIOTrackerPulse.java,v 1.2 2007-11-07 20:46:23 jeremy Exp $
  */
 public class SIOTrackerPulse extends ITrackerPulse
 {

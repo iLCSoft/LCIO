@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 
 import hep.lcio.event.TrackerHit;
 
@@ -16,7 +16,7 @@ import java.util.ListIterator;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.9 2004-09-24 10:39:32 tonyj Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.10 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {

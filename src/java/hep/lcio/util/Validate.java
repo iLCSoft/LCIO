@@ -1,8 +1,8 @@
 package hep.lcio.util;
 
-import hep.lcd.io.sio.SIOBlock;
-import hep.lcd.io.sio.SIOReader;
-import hep.lcd.io.sio.SIORecord;
+import hep.io.sio.SIOBlock;
+import hep.io.sio.SIOReader;
+import hep.io.sio.SIORecord;
 import hep.lcio.event.LCEvent;
 import hep.lcio.implementation.io.LCFactory;
 import hep.lcio.io.LCReader;
@@ -17,7 +17,7 @@ import java.io.FileInputStream;
  * Several static utility methods for simple validation of LCIO/SIO files. 
  * 
  * @author jeremym
- * @version $Id: Validate.java,v 1.1 2006-06-28 18:31:55 jeremy Exp $
+ * @version $Id: Validate.java,v 1.2 2007-11-07 20:46:24 jeremy Exp $
  */
 public class Validate
 {	

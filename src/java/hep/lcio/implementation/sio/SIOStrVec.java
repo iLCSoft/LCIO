@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 
 import hep.lcio.event.LCStrVec;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOStrVec.java,v 1.3 2004-09-24 10:45:19 tonyj Exp $
+ * @version $Id: SIOStrVec.java,v 1.4 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOStrVec extends ILCStrVec
 {

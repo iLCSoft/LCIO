@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 import hep.lcio.event.Cluster;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.ParticleID;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCluster.java,v 1.16 2007-02-01 04:58:08 tonyj Exp $
+ * @version $Id: SIOCluster.java,v 1.17 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOCluster extends ICluster
 {

@@ -1,9 +1,9 @@
 package hep.lcio.implementation.sio;
 
 import hep.lcio.event.ParticleID;
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 import hep.lcio.event.ReconstructedParticle;
 import hep.lcio.event.Vertex;
 import hep.lcio.implementation.event.IReconstructedParticle;
@@ -15,7 +15,7 @@ import java.util.List;
 /**
  *
  * @author tonyj
- * @version $Id: SIOReconstructedParticle.java,v 1.6 2006-09-21 06:10:51 gaede Exp $
+ * @version $Id: SIOReconstructedParticle.java,v 1.7 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOReconstructedParticle extends IReconstructedParticle
 {

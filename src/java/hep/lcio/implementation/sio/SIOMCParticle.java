@@ -1,8 +1,8 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIORef;
 
 
 import hep.lcio.event.MCParticle;
@@ -17,7 +17,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOMCParticle.java,v 1.17 2005-05-27 07:55:56 gaede Exp $
+ * @version $Id: SIOMCParticle.java,v 1.18 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOMCParticle extends IMCParticle
 {

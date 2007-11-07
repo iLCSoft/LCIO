@@ -1,6 +1,6 @@
 package hep.lcio.example;
 
-import hep.lcd.io.sio.*;
+import hep.io.sio.*;
 
 import java.io.EOFException;
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 /** Small programm that dumps the structure and contents of an (LCIO) SIO file to the screen.
  *
  * @author Frank Gaede
- * @version $Id: SIODump.java,v 1.4 2004-04-08 09:57:59 gaede Exp $
+ * @version $Id: SIODump.java,v 1.5 2007-11-07 20:46:22 jeremy Exp $
  */
 public class SIODump
 {

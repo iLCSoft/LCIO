@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 
 import hep.lcio.event.LCParameters;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Frank Gaede
- * @version $Id: SIOLCParameters.java,v 1.2 2004-07-02 10:12:54 gaede Exp $
+ * @version $Id: SIOLCParameters.java,v 1.3 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOLCParameters extends ILCParameters
 {

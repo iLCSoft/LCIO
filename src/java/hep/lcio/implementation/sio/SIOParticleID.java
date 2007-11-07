@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 
 import hep.lcio.event.ParticleID;
 import hep.lcio.implementation.event.IParticleID;
@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOParticleID.java,v 1.6 2004-11-03 16:30:24 tonyj Exp $
+ * @version $Id: SIOParticleID.java,v 1.7 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOParticleID extends IParticleID
 {

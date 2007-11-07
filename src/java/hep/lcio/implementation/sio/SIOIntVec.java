@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOInputStream;
-import hep.lcd.io.sio.SIOOutputStream;
+import hep.io.sio.SIOInputStream;
+import hep.io.sio.SIOOutputStream;
 
 import hep.lcio.event.LCIntVec;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOIntVec.java,v 1.5 2004-09-24 10:45:19 tonyj Exp $
+ * @version $Id: SIOIntVec.java,v 1.6 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOIntVec extends ILCIntVec
 {

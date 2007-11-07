@@ -1,6 +1,6 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.*;
+import hep.io.sio.*;
 import hep.lcio.event.*;
 
 import hep.lcio.implementation.event.ILCEvent;
@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.43 2006-12-07 19:15:25 tonyj Exp $
+ * @version $Id: SIOEvent.java,v 1.44 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOEvent extends ILCEvent
 {

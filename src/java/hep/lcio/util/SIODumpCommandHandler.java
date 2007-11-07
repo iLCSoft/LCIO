@@ -1,7 +1,7 @@
 package hep.lcio.util;
 
-import hep.lcd.io.sio.SIOReader;
-import hep.lcd.io.sio.SIORecord;
+import hep.io.sio.SIOReader;
+import hep.io.sio.SIORecord;
 import hep.lcio.event.LCIO;
 
 import java.io.BufferedInputStream;
@@ -20,7 +20,7 @@ import org.jdom.input.SAXBuilder;
  * Command-line handling for Tony's SIODump utility.
  * 
  * @author jeremym
- * @version $Id: SIODumpCommandHandler.java,v 1.2 2006-12-07 00:47:33 jeremy Exp $
+ * @version $Id: SIODumpCommandHandler.java,v 1.3 2007-11-07 20:46:24 jeremy Exp $
  */
 public class SIODumpCommandHandler extends CommandHandler
 {

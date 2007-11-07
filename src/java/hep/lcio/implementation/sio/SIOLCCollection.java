@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import hep.lcd.io.sio.SIORef;
+import hep.io.sio.SIORef;
 import hep.lcio.implementation.event.ILCCollection;
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCCollection.java,v 1.2 2005-03-02 16:23:00 gaede Exp $
+ * @version $Id: SIOLCCollection.java,v 1.3 2007-11-07 20:46:22 jeremy Exp $
  */
 class SIOLCCollection extends ILCCollection
 {

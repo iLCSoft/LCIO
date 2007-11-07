@@ -1,7 +1,7 @@
 package hep.lcio.implementation.sio;
 
-import hep.lcd.io.sio.SIOOutputStream;
-import hep.lcd.io.sio.SIOWriter;
+import hep.io.sio.SIOOutputStream;
+import hep.io.sio.SIOWriter;
 
 import hep.lcio.event.LCEvent;
 import hep.lcio.event.LCRunHeader;
@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.12 2005-05-11 01:06:42 tonyj Exp $
+ * @version $Id: SIOLCWriter.java,v 1.13 2007-11-07 20:46:23 jeremy Exp $
  */
 class SIOLCWriter implements LCWriter
 {
