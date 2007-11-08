@@ -11,7 +11,7 @@ namespace UTIL{
    * file information.
    * 
    * @author cassell
-   * @version $Id: LCStdHepRdr.h,v 1.2 2005-04-15 08:37:45 gaede Exp $
+   * @version $Id: LCStdHepRdr.h,v 1.3 2007-11-08 14:32:23 gaede Exp $
    */
   class LCStdHepRdr{
     
@@ -28,6 +28,11 @@ namespace UTIL{
     /** Read an event and return a LCCollectionVec of MCParticles.
      */
 	IMPL::LCCollectionVec * readEvent() ;
+
+
+    /** Return the charge of the particle times 3  - code copied from HepPDT package.
+     */
+    int threeCharge( int pdgID ) const ;
 
   private:
     

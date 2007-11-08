@@ -4,6 +4,8 @@
 #include "lcio.h"
 #include "EVENT/LCIO.h"
 #include <sstream>
+//#include <stdlib.h>
+#include <cmath>	// for pow()
 #include "Exceptions.h"
 
 using namespace EVENT ;
@@ -22,6 +24,9 @@ namespace UTIL{
       description << "LCStdHepRdr: no stdhep file: " << evfile << std::ends ;
       throw IO::IOException( description.str() );
     }
+
+    _reader->printFileHeader() ;
+
   }
   LCStdHepRdr::~LCStdHepRdr(){}
   
@@ -61,6 +66,7 @@ namespace UTIL{
     //  Loop over particles
     //
     int NHEP = _reader->nTracks();
+
     for( int IHEP=0; IHEP<NHEP; IHEP++ )
       {
 	//
@@ -71,6 +77,13 @@ namespace UTIL{
 	//  PDGID
 	//
 	mcp->setPDG(_reader->pid(IHEP));
+
+
+	//
+	//  charge
+	// 
+	mcp->setCharge( threeCharge( mcp->getPDG() ) / 3. ) ;
+
 	//
 	//  Momentum vector
 	//
@@ -265,6 +278,96 @@ namespace UTIL{
     return mcVec;    
   }
 
+
+  int LCStdHepRdr::threeCharge( int pdgID ) const {
+    //
+    // code copied from HepPDT package, author L.Garren
+    // modified to take pdg
+    
+    ///  PID digits (base 10) are: n nr nl nq1 nq2 nq3 nj
+    ///  The location enum provides a convenient index into the PID.
+    enum location { nj=1, nq3, nq2, nq1, nl, nr, n, n8, n9, n10 };
+
+    int charge=0;
+    int ida, sid;
+    unsigned short q1, q2, q3;
+    static int ch100[100] = { -1, 2,-1, 2,-1, 2,-1, 2, 0, 0,
+			      -3, 0,-3, 0,-3, 0,-3, 0, 0, 0,
+			      0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
+			      0, 0, 0, 3, 0, 0, 3, 0, 0, 0,
+			      0, -1, 0, 0, 0, 0, 0, 0, 0, 0,
+			      0, 6, 3, 6, 0, 0, 0, 0, 0, 0,
+			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    
+    ida = (pdgID < 0) ? -pdgID : pdgID ;
+    
+    //     q1 = digit(nq1);
+    //     q2 = digit(nq2);
+    //     q3 = digit(nq3);
+
+    q1 =  ( ida / ( (int) std::pow( 10.0, (nq1 -1) ) )  ) % 10 ;
+    q2 =  ( ida / ( (int) std::pow( 10.0, (nq2 -1) ) )  ) % 10 ;
+    q3 =  ( ida / ( (int) std::pow( 10.0, (nq3 -1) ) )  ) % 10 ;
+    
+//     sid = fundamentalID();
+    //---- ParticleID::fundamentalID -------
+    short dig_n9 =  ( ida / ( (int) std::pow( 10.0, (n9 -1) ) )  ) % 10 ;
+    short dig_n10 =  ( ida / ( (int) std::pow( 10.0, (n10 -1) ) )  ) % 10 ;
+    
+    if( ( dig_n10 == 1 ) && ( dig_n9 == 0 ) ) {
+      
+      sid = 0 ;
+    } 
+    else if( q2 == 0 && q1 == 0) {
+      
+      sid = ida % 10000;
+    } 
+    else if( ida <= 102 ) {
+      
+      sid = ida ; 
+    } 
+    else {
+
+      sid = 0;
+    }
+    //----------------
+
+    int extraBits = ida / 10000000 ;
+    // everything beyond the 7th digit (e.g. outside the numbering scheme)
+
+    short dig_nj =  ( ida / ( (int) std::pow( 10.0, (nj -1) ) )  ) % 10 ;
+
+    if( ida == 0 || extraBits > 0 ) {      // ion or illegal
+      return 0;
+    } else if( sid > 0 && sid <= 100 ) {	// use table
+      charge = ch100[sid-1];
+      if(ida==1000017 || ida==1000018) { charge = 0; }
+      if(ida==1000034 || ida==1000052) { charge = 0; }
+      if(ida==1000053 || ida==1000054) { charge = 0; }
+      if(ida==5100061 || ida==5100062) { charge = 6; }
+    } else if( dig_nj == 0 ) { 		// KL, Ks, or undefined
+      return 0;
+    } else if( q1 == 0 ) {			// mesons
+      if( q2 == 3 || q2 == 5 ) {
+	charge = ch100[q3-1] - ch100[q2-1];
+      } else {
+	charge = ch100[q2-1] - ch100[q3-1];
+      }
+    } else if( q3 == 0 ) {			// diquarks
+      charge = ch100[q2-1] + ch100[q1-1];
+    } else { 					// baryons
+      charge = ch100[q3-1] + ch100[q2-1] + ch100[q1-1];
+    }
+    if( charge == 0 ) {
+      return 0;
+    } else if( pdgID < 0 ) {
+      charge = -charge; 
+    }
+    return charge;
+  }
 
 } // namespace UTIL
 
