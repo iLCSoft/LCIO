@@ -28,7 +28,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.5 2007-11-08 01:21:28 jeremy Exp $
+ * @version $Id: StdhepConverter.java,v 1.6 2007-11-08 14:33:28 gaede Exp $
  */
 class StdhepConverter
 {
@@ -217,6 +217,9 @@ class StdhepConverter
 
 			// Set PDG from IDHEP.
 			particle.setPDG(hepevt.getIDHEP(i));
+
+
+			particle.setGeneratorStatus( hepevt.getISTHEP(i) ) ;
 
 			// Set time from VHEP(4).
 			// Convert to mm/c^2 from mm/c, as in slic/StdHepToLcioConvertor .
