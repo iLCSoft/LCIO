@@ -28,7 +28,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.4 2007-11-08 00:10:57 jeremy Exp $
+ * @version $Id: StdhepConverter.java,v 1.5 2007-11-08 01:21:28 jeremy Exp $
  */
 class StdhepConverter
 {
@@ -42,7 +42,7 @@ class StdhepConverter
 	StdhepConverter()
 	{}
 
-	public void convert(File stdhep, File lcio) throws Exception
+	public void convert(File stdhep, File lcio, int skipEvents, int maxEvents) throws Exception
 	{
 		// Create StdhepReader with the input file path.
 		StdhepReader reader = 
@@ -52,12 +52,26 @@ class StdhepConverter
 		LCWriter writer = 
 			LCFactory.getInstance().createLCWriter();
 		writer.open(lcio.getAbsolutePath());
-			
+		
+		// Skip events.
+		if (skipEvents != -1)
+		{
+			for (int i=0; i<skipEvents; i++)
+			{
+				reader.nextRecord();
+			}
+		}
+						
+		int cntr = 0;
+		
 		try
 		{			
 			// Loop over all records in the Stdhep file.
 			for (;;)
-			{			
+			{		
+				if (maxEvents != -1 && cntr >= maxEvents)
+					break;
+				
 				// Get the next Stdhep event.
 				StdhepRecord record = reader.nextRecord();
 
@@ -71,12 +85,10 @@ class StdhepConverter
 					// Make a new LCEvent.
 					ILCEvent event = new ILCEvent();
 
-					// FIXME: What should this be set to?
-					// NullPointerException if not set to something.
-					event.setDetectorName("test");
+					event.setDetectorName("NONE");
 
 					// FIXME: What values for these?
-					event.setEventNumber(0);
+					event.setEventNumber(cntr);
 					event.setRunNumber(0);
 					event.setTimeStamp(0);
 
@@ -85,6 +97,15 @@ class StdhepConverter
 
 					// Write out the event to the LCIO file.
 					writer.writeEvent(event);
+					
+					// Garbage collect every 1000 events.
+					if (cntr % 1000 == 0)
+					{
+						System.gc();
+					}
+									
+					// Increment event counter.
+					++cntr;
 				}
 			}
 		}
@@ -106,13 +127,11 @@ class StdhepConverter
 		boolean added = ancestor.add(particle[parentID]);
 		if (added)
 			particle[parentID].addDaughter(particle[childID]);
-		//System.out.println("add "+parentID+" "+childID+" "+added);
 	}
 
 	private int fillIndexVec(int[] vec, int idx1, int idx2)
 	{
 		int l = 0;
-		//if (idx1 != -1 && idx2 != -1)
 		try {
 			if (idx1 >= 0 && idx2 >= 0)
 			{

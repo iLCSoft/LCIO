@@ -10,6 +10,8 @@ public class StdhepConvertCommandHandler extends CommandHandler
 {
 	File infile;
 	File outfile;
+	int maxEvents = -1;
+	int skipEvents = -1;
 	
 	StdhepConvertCommandHandler()
 	{
@@ -30,6 +32,14 @@ public class StdhepConvertCommandHandler extends CommandHandler
 		options.addOption(opt);
 		
 		opt = new Option("o", true, "Output LCIO file.");
+		opt.setArgs(1);
+		options.addOption(opt);
+		
+		opt = new Option("m", true, "Maximum number of events to read.");
+		opt.setArgs(1);
+		options.addOption(opt);
+		
+		opt = new Option("s", true, "Number of events to skip.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
@@ -62,11 +72,21 @@ public class StdhepConvertCommandHandler extends CommandHandler
 		}
 		
 		outfile = new File(lcioname);
+		
+		if (cl.hasOption("m"))
+		{
+			maxEvents = Integer.valueOf(cl.getOptionValue("m"));
+		}
+		
+		if (cl.hasOption("s"))
+		{
+			skipEvents = Integer.valueOf(cl.getOptionValue("s"));
+		}
 	}
 
 	public void execute() throws Exception
 	{
 		StdhepConverter converter = new StdhepConverter();
-		converter.convert(infile, outfile);
+		converter.convert(infile, outfile, skipEvents, maxEvents);
 	}
 }
