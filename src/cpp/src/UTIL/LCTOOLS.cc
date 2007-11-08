@@ -24,9 +24,9 @@
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
 
-#ifdef USE_CLHEP
-#include "UTIL/LCFourVector.h"
-#endif
+// #ifdef USE_CLHEP
+// #include "UTIL/LCFourVector.h"
+// #endif
 #include "UTIL/LCObjectHandle.h"
 #include "UTIL/LCTime.h"
 #include "UTIL/CellIDDecoder.h"
@@ -1249,12 +1249,12 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-#ifdef USE_CLHEP
-      ReconstructedParticle4V recP( col->getElementAt( i ) ) ;
-#else
+// #ifdef USE_CLHEP
+//       ReconstructedParticle4V recP( col->getElementAt( i ) ) ;
+// #else
       ReconstructedParticle* recP = 
       	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
-#endif
+// #endif
 
       
       int compound = recP->isCompound() ;
@@ -1470,11 +1470,11 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     for(  int index = 0 ; index < nParticles ; index++){
       
 
-#ifdef USE_CLHEP
-      MCParticle4V part( col->getElementAt( index ) ) ;
-#else
+// #ifdef USE_CLHEP
+//       MCParticle4V part( col->getElementAt( index ) ) ;
+// #else
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
-#endif
+// #endif
       printf(" [%8.8x] |", part->id() );
       cout << index << " [" ;
       for(unsigned int k=0;k<part->getParents().size();k++){
@@ -1507,12 +1507,12 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       cout <<  part->getMass()         << " | " 
 	   <<  part->getCharge()       << " | " 
 	   <<  part->getEnergy()      
-#ifdef USE_CLHEP
-	//---- DEBUG
-	   << " m(4V) : " << part.m()
-	   << " e(4V) : " << part.e()
-	//---- DEBUG
-#endif
+// #ifdef USE_CLHEP
+// 	//---- DEBUG
+// 	   << " m(4V) : " << part.m()
+// 	   << " e(4V) : " << part.e()
+// 	//---- DEBUG
+// #endif
 	   << endl ;	
 
 
