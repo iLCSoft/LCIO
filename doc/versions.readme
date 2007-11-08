@@ -6,8 +6,10 @@
 v01-09
 =====================
   no changes in file format and API
-   - made compatible with new stdhep files
-   - LCStdHepRdr now fills MCParticle::charge properly
+   - made compatible with new stdhep files (Java/C++)
+   - LCStdHepRdr now fills MCParticle::charge properly (C++)
+   - Java uses new sio classes from hep.io.sio
+
 
 =====================
 v01-08-05
