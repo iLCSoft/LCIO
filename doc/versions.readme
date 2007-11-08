@@ -5,11 +5,15 @@
 =====================
 v01-09
 =====================
-  no changes in file format and API
+  no changes in file format
+
    - made compatible with new stdhep files (Java/C++)
+
    - LCStdHepRdr now fills MCParticle::charge properly (C++)
+
    - Java uses new sio classes from hep.io.sio
 
+   - added event weight: LCEvent.getWeight()  (Java/C++)
 
 =====================
 v01-08-05

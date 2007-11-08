@@ -15,7 +15,7 @@ import java.util.Random;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SimJob.java,v 1.20 2006-09-20 15:30:54 gaede Exp $
+ * @version $Id: SimJob.java,v 1.21 2007-11-08 19:35:37 gaede Exp $
  */
 public class SimJob
 {
@@ -66,6 +66,7 @@ public class SimJob
             evt.setRunNumber(rn);
             evt.setEventNumber(i);
             evt.setDetectorName("D09TileHcal");
+	    evt.setWeight(  random.nextFloat() ) ;
 
             // create and add some mc particles
             ILCCollection mcVec = new ILCCollection(LCIO.MCPARTICLE);

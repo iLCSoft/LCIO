@@ -115,6 +115,7 @@ int main(int argc, char** argv ){
 	evt->setTimeStamp( now.timeStamp()  ) ;
 	evt->setDetectorName( detName ) ;
 	
+	evt->setWeight( 1.*rand()/RAND_MAX ) ;
 
 	evt->parameters().setValue("Description"," event can have it's own set of parameters" ) ;
 	evt->parameters().setValue("Thrust", (float) 0.671 ) ;

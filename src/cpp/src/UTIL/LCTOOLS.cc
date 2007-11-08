@@ -83,12 +83,13 @@ namespace UTIL {
     
     // the event:
     cout << endl 
-	 << "==============================================================" << endl ;
+	 << "============================================================================" << endl ;
     cout << "        Event  : " << evt->getEventNumber() 
 	 << " - run:  "         << evt->getRunNumber()
          << " - timestamp "     << evt->getTimeStamp()   
+         << " - weight "        << evt->getWeight()   
 	 << endl ;
-    cout << "==============================================================" << endl ;    
+    cout << "============================================================================" << endl ;    
 
     LCTime evtTime( evt->getTimeStamp() ) ;
     cout << " date:      "      << evtTime.getDateString() << endl ;     

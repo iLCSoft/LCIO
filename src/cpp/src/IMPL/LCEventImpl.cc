@@ -4,6 +4,7 @@
 #include "IMPL/AccessChecked.h"
 #include "IMPL/LCCollectionVec.h"
 
+#define EVT_WGT "_weight" 
 
 using namespace EVENT ;
 //using namespace DATA ;
@@ -70,7 +71,14 @@ long64 LCEventImpl::getTimeStamp() const {
   return _timeStamp ;
 }
 
+double LCEventImpl::getWeight() const {
+  double w = _params.getFloatVal( EVT_WGT ) ;
     
+  return w == 0 ? 1. : w ;
+
+}
+
+   
 const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
 
   // return pointer to updated vector _colNames 
@@ -178,7 +186,12 @@ void LCEventImpl::setTimeStamp(long64 ts) {
   _timeStamp =  ts ;
 }
 
-       
+
+void LCEventImpl::setWeight(double w) {
+  checkAccess("LCEventImpl::setWeight") ;
+  _params.setValue(  EVT_WGT , (float) w ) ;
+}
+
      
 void LCEventImpl::setAccessMode( int accessMode ) {
 

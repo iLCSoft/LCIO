@@ -14,7 +14,7 @@ import java.util.Map;
  * A default implementation of LCEvent
  * 
  * @author Tony Johnson
- * @version $Id: ILCEvent.java,v 1.13 2007-02-02 09:34:26 gaede Exp $
+ * @version $Id: ILCEvent.java,v 1.14 2007-11-08 19:35:37 gaede Exp $
  */
 public class ILCEvent extends ILCObject implements LCEvent
 {
@@ -89,6 +89,16 @@ public class ILCEvent extends ILCObject implements LCEvent
       return timeStamp;
    }
    
+   public double getWeight() {
+     double w = (double) parameters.getFloatVal("_weight") ;
+     return w == 0 ? 1. : w ; 
+   }
+
+   public void  setWeight( double w) {
+     checkAccess();
+     parameters.setValue("_weight", (float) w ) ;
+   }
+
    public void addCollection(LCCollection col, String name)
    {
        if( !isValidCollectionName(name))

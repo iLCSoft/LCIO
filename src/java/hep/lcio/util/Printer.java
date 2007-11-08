@@ -121,6 +121,7 @@ public class Printer
 		ps.println(" Event : " + event.getEventNumber());
 		ps.println(" Detector : " + event.getDetectorName());
 		ps.println(" Time Stamp : " + event.getTimeStamp());
+		ps.println(" Weight : " + event.getWeight());
 		ps.println(" ==============================================================");
 		ps.println();
 

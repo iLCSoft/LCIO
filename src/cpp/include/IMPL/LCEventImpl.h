@@ -57,6 +57,10 @@ namespace IMPL{
      */
     virtual EVENT::long64 getTimeStamp() const ;
     
+    /** Returns the event weight.
+     */
+    virtual double getWeight() const  ;
+
     /** Returns the names of the collections in the  event.
      */
     virtual const std::vector<std::string>  * getCollectionNames() const;
@@ -147,6 +151,9 @@ namespace IMPL{
      */
     void setTimeStamp(EVENT::long64 ts) ;
        
+    /** Set the event weight.
+     */
+    void setWeight(double w) ;
      
   protected:
     void setAccessMode( int accessMode ) ;
