@@ -2,7 +2,7 @@
 //
 // This class is based on the light-weight XDR class lXDR,
 // and parses/writes StdHep files. It was mainly written,
-// to provide a faster alternative to the more cumdersome
+// to provide a faster alternative to the more cumbersome
 // methods using mcfio in StdHep.
 //
 // W.G.J. Langeveld, 24 May 2002
@@ -25,9 +25,7 @@
 // reading, the file cannot be written to, and v.v.
 //
 lStdHep::lStdHep(const char *filename, bool open_for_write) : lXDR(filename, open_for_write),
-   moreEvents(true), version(0), title(0), comment(0), date(0), closingDate(0), blockIds(0),
-   blockNames(0)
-   
+   version(0), title(0), comment(0), date(0), closingDate(0), blockIds(0), blockNames(0)
 {
    if (open_for_write) {
       setError(LSH_NOTSUPPORTED);
@@ -107,6 +105,8 @@ void lStdHep::printTrack(int i, FILE *fp)
    if (i < event.nhep) {
       fprintf(fp, "    Track: id: %ld, vtx: (%g, %g, %g, %g), mom: (%g, %g, %g, %g, %g)\n",
                    pid(i), X(i), Y(i), Z(i), T(i), Px(i), Py(i), Pz(i), E(i), M(i));
+      fprintf(fp, "    Track: wgt: %g, alpha QED: %g, alpha QCD: %g, idrup: %ld\n",
+                   eventweight(), alphaQED(), alphaQCD(), idrup());
    }
    return;
 }
@@ -125,7 +125,7 @@ void lStdHep::printEndRunRecord(FILE *fp)
 
 bool lStdHep::more(void)
 {
-   return(moreEvents && (getError() == LSH_SUCCESS));
+   return(getError() == LSH_SUCCESS);
 }
 
 long lStdHep::readEvent(void)
@@ -152,7 +152,7 @@ long lStdHep::readEvent(void)
 //
 // This was the last event table, signal quitting. Not an error.
 //
-            moreEvents = false;
+            setError(LSH_ENDOFFILE);
             return(getError());
          }
          else if (eventTable.nextlocator == -1) {
@@ -247,7 +247,7 @@ long lStdHep::readFileHeader(void)
 //
 // Read the first event table
 //
-   if (eventTable.read(*this) != LSH_SUCCESS) moreEvents = 0;
+   eventTable.read(*this);
    return(getError());
 }
 
@@ -359,7 +359,9 @@ long lStdHep::EventTable::print(FILE *fp)
 lStdHep::Event::Event() :
    isEmpty(1), blockid(0), ntot(0), version(0), blockIds(0),
    ptrBlocks(0), nevhep(0), nhep(0), isthep(0), idhep(0),
-   jmohep(0), jdahep(0), phep(0), vhep(0) 
+   jmohep(0), jdahep(0), phep(0), vhep(0), eventweight(0.0),
+   alphaqed(0.0), alphaqcd(0.0), scale(0), spin(0), colorflow(0),
+   idrup(0)
 {
    return;
 }
@@ -380,6 +382,9 @@ void lStdHep::Event::cleanup(void)
    delete [] jdahep;      jdahep    = 0;
    delete [] phep;        phep      = 0;
    delete [] vhep;        vhep      = 0;
+   delete [] scale;       scale     = 0;
+   delete [] spin;        spin      = 0;
+   delete [] colorflow;   colorflow = 0;
    blockid = ntot = nevhep = nhep = 0;
    isEmpty = 1;
    return;
@@ -430,11 +435,7 @@ long lStdHep::Event::read(lStdHep &ls)
    for (int i = 0; i < nBlocks; i++) {
       blockid = ls.readLong();
       ntot    = ls.readLong();
-
-
-      //FIXME: fg:  this fixes a memory leak as the readString allocates memory on every call !
-      delete[] version ;
-
+      if (version) delete [] version;
       version = ls.readString(len);
 
       isEmpty = 0;
@@ -442,12 +443,47 @@ long lStdHep::Event::read(lStdHep &ls)
          case LSH_STDHEP          : // 101
             nevhep = ls.readLong();
             nhep   = ls.readLong();
+            if (isthep) delete [] isthep;
             isthep = ls.readLongArray(len);
+            if (idhep)  delete [] idhep;
             idhep  = ls.readLongArray(len);
+            if (jmohep) delete [] jmohep;
             jmohep = ls.readLongArray(len);
+            if (jdahep) delete [] jdahep;
             jdahep = ls.readLongArray(len);
+            if (phep)   delete [] phep;
             phep   = ls.readDoubleArray(len);
+            if (vhep)   delete [] vhep;
             vhep   = ls.readDoubleArray(len);
+            break;
+         case LSH_STDHEPEV4       : // 201
+            nevhep = ls.readLong();
+            nhep   = ls.readLong();
+            if (isthep) delete [] isthep;
+            isthep = ls.readLongArray(len);
+            if (idhep)  delete [] idhep;
+            idhep  = ls.readLongArray(len);
+            if (jmohep) delete [] jmohep;
+            jmohep = ls.readLongArray(len);
+            if (jdahep) delete [] jdahep;
+            jdahep = ls.readLongArray(len);
+            if (phep)   delete [] phep;
+            phep   = ls.readDoubleArray(len);
+            if (vhep)   delete [] vhep;
+            vhep   = ls.readDoubleArray(len);
+//
+// New stuff for STDHEPEV4:
+//
+            eventweight = ls.readDouble();
+            alphaqed    = ls.readDouble();
+            alphaqcd    = ls.readDouble();
+            if (scale) delete [] scale;
+            scale       = ls.readDoubleArray(len);
+            if (spin)  delete [] spin;
+            spin        = ls.readDoubleArray(len);
+            if (colorflow) delete [] colorflow;
+            colorflow   = ls.readLongArray(len);
+            idrup       = ls.readLong();
             break;
          case LSH_OFFTRACKARRAYS  : // 102
          case LSH_OFFTRACKSTRUCT  : // 103
@@ -489,11 +525,12 @@ long lStdHep::Event::printHeader(FILE *fp)
    fprintf(fp, "             : nNTuples: %ld, dimNTuples: %ld\n", nNTuples, dimNTuples);
 
    for (int i = 0; i < nBlocks; i++) {
-      const char *labels[9] = {"Event", "Off-track arrays", "Off-track struct", "Trace arrays",
-                               "Event with multiple interactions", "Begin run", "End run", "StdHepCXX",
-                               "Unknown" };
+      const char *labels[10] = {"Event", "Off-track arrays", "Off-track struct", "Trace arrays",
+                                "Event with multiple interactions", "Begin run", "End run", "StdHepCXX",
+                                "EventV4", "Unknown" };
       int j = blockIds[i] - 101;
-      if ((j < 0) || (j > 8)) j = 8;
+      if (blockIds[i] == LSH_STDHEPEV4) j = 8;
+      if ((j < 0) || (j > 9)) j = 9;
       fprintf(fp, "             : %d: blockIds %ld (%s) ptrBlocks %ld\n",
               i, blockIds[i], labels[j], ptrBlocks[i]);
    }
