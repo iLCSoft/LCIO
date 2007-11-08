@@ -28,7 +28,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  * 
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.3 2007-11-07 22:22:50 jeremy Exp $
+ * @version $Id: StdhepConverter.java,v 1.4 2007-11-08 00:10:57 jeremy Exp $
  */
 class StdhepConverter
 {
@@ -86,8 +86,6 @@ class StdhepConverter
 					// Write out the event to the LCIO file.
 					writer.writeEvent(event);
 				}
-
-				++cntr;
 			}
 		}
 		catch (EOFException e)
@@ -95,8 +93,6 @@ class StdhepConverter
 			// End of Stdhep file.
 		}
 
-		System.out.println("processed events = " + cntr);
-		
 		reader.close();
 
 		writer.close();
