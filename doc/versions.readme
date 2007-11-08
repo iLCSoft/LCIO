@@ -3,6 +3,13 @@
 ---------------------------------------------------------------
 
 =====================
+v01-09
+=====================
+  no changes in file format and API
+   - made compatible with new stdhep files
+   - LCStdHepRdr now fills MCParticle::charge properly
+
+=====================
 v01-08-05
 =====================
   no changes in file format and API

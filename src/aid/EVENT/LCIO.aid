@@ -3,8 +3,8 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 #define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 8
-#define LCIO_PATCH_LEVEL 5
+#define LCIO_MINOR_VERSION 9
+#define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
 
@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.61 2007-10-18 09:45:16 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.62 2007-11-08 17:38:43 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -115,7 +115,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 8 ;
+  public static const int MINORVERSION  = 9 ;
 
 
   // bits in flag words
