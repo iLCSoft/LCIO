@@ -13,7 +13,7 @@ namespace UTIL{
    *  Note: this is experimental beta code - please use for testing only !
    * 
    * @author gaede
-   * @version $Id: LCSplitWriter.h,v 1.1 2006-03-07 09:32:29 gaede Exp $
+   * @version $Id: LCSplitWriter.h,v 1.2 2007-11-09 21:00:55 gaede Exp $
    */
   class LCSplitWriter : public IO::LCWriter {
     
@@ -65,6 +65,13 @@ namespace UTIL{
      * @throws IO::IOException
      */
     virtual void writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IO::IOException, std::exception ) ;
+
+    /** Set CompressionLevel.
+     * @see LCWriter::setCompressionLevel()
+     */
+    virtual void setCompressionLevel(int level) { 
+      _wrt->setCompressionLevel(level) ; 
+    }  
 
 
     /** Writes the given file to file. Opens a new file if the given file size is already exceeded
