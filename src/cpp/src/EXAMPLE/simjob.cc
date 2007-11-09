@@ -59,7 +59,9 @@ int main(int argc, char** argv ){
     for(int rn=0;rn<NRUN;rn++){
       
       // create sio writer
-      LCWriter* lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter() , 20000 ) ;
+      LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter()  ;
+
+      //LCWriter* lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), 20000 ) ;
       
       if( argc > 1 ) { FILEN = argv[1] ; }
       
