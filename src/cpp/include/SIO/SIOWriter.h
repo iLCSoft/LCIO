@@ -60,6 +60,22 @@ namespace SIO {
      */
     virtual void open(const std::string & filename, int writeMode)throw (IO::IOException, std::exception) ;
     
+    /** Set the compression level - needs to be called before open() otherwise
+     *  call will have no effect. If not called the Writer will use default compression.<br>
+     *  Valid compression levels are:
+     *  <ul>
+     *    <li> level <  0 : default compression </li>
+     *    <li> level == 0 : no compression</li>
+     *    <li> level >  0 : 1 (fastest) - 9 (best compression) 
+     *    </li>
+     *  </ul>
+     *  Experimental code - don't use for production.
+     * 
+     *@param level compression level
+     */
+    virtual void setCompressionLevel(int level) ;
+
+
     /** Writes the given run header to file.
      *
      *@throws IOException
@@ -98,16 +114,20 @@ namespace SIO {
     
   protected:
     
-    static SIO_record *_evtRecord ;
-    static SIO_record *_hdrRecord ;
-    static SIO_record *_runRecord ;
     SIO_stream *_stream ;
+    int _compressionLevel ;
 
   private:
 
     SIOEventHandler *_hdrHandler ;
     SIORunHeaderHandler *_runHandler ;
     std::vector<SIO_block*> _connectedBlocks ;
+
+  protected:
+    
+    static SIO_record *_evtRecord ;
+    static SIO_record *_hdrRecord ;
+    static SIO_record *_runRecord ;
 
   }; // class
 

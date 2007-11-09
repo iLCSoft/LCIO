@@ -30,6 +30,25 @@ public interface LCWriter {
     public void open(const String& filename , int writeMode ) throws IOException ;
 
     
+    /** Set the compression level - needs to be called before open() otherwise
+     *  call will have no effect. If not called the Writer will use default compression.<br>
+     *  Valid compression levels are:
+     *  <ul>
+     *    <li> level <  0 : default compression </li>
+     *    <li> level == 0 : no compression</li>
+     *    <li> level >  0 : compression level (typically 1 (fastest) - 9 (best compression))
+     *    </li>
+     *  </ul>
+     *  
+     *  Status:  (v01-09)<br>
+     *  C++: experimental code - don't use for production<br>
+     *  Java: not implemented
+     * 
+     *@param level compression level
+     */
+    public void setCompressionLevel(int level) ;
+
+
     /** Writes the given run header to file.
      *
      *@throws IOException

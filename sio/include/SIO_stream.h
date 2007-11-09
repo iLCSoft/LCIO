@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.5 2007-10-16 16:22:45 gaede Exp $
+// CVS $Id: SIO_stream.h,v 1.6 2007-11-09 20:21:09 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -54,6 +54,10 @@ public:
     SIO_64BITINT           lastRecordStart() { return recPos ; }
     unsigned int           seek(SIO_64BITINT pos) ;
 
+    // set compression level: -1:default, 0, no compression, 1-9 compression
+    // note if level==0  user should set compression off for all records !
+    void                   setCompressionLevel( int level ) ;
+
 private:
     SIO_stream( const char *, unsigned int, SIO_verbosity );
    ~SIO_stream();
@@ -86,7 +90,7 @@ private:
     SIO_verbosity          verbosity;     // Reporting level
 
     SIO_64BITINT           recPos  ;      // start Position of last record read
-
+    int                    compLevel ;    // compression level
 
 friend class SIO_streamManager;           // Access to constructor/destructor
 friend class SIO_record;                  // Access to buffer

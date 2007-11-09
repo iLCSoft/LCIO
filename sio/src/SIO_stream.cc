@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.4 2007-10-16 16:22:45 gaede Exp $
+// CVS $Id: SIO_stream.cc,v 1.5 2007-11-09 20:21:09 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -58,6 +58,7 @@ reserve   = i_reserve;
 state     = SIO_STATE_CLOSED;
 verbosity = i_verbosity;
 
+compLevel = Z_DEFAULT_COMPRESSION ;
 }
 
 // ----------------------------------------------------------------------------
@@ -388,6 +389,29 @@ SIO_stream_state SIO_stream::getState()    { return( state ); }
 // ----------------------------------------------------------------------------
 SIO_verbosity SIO_stream::getVerbosity()   { return( verbosity ); }
 
+
+// ----------------------------------------------------------------------------
+// Set compresision level
+// ----------------------------------------------------------------------------
+void SIO_stream::setCompressionLevel(int level) { 
+  
+  // zlib knows comp levels:  -1/Z_DEFAULT_COMPRESSION, 1-9
+  if( level < 0 ) 
+
+    compLevel = Z_DEFAULT_COMPRESSION ;
+
+  else if( level > 9 )
+    
+    compLevel == 9  ;
+ 
+  else 
+
+    compLevel = level ;
+
+}
+
+
+
 // ----------------------------------------------------------------------------
 // Associate a file name and a mode with this stream and open the file.
 // ----------------------------------------------------------------------------
@@ -514,7 +538,7 @@ z_strm->zfree  = Z_NULL;
 z_strm->opaque = 0;
 
 z_stat = (mode == SIO_MODE_READ) ? inflateInit( z_strm )
-                                 : deflateInit( z_strm, Z_DEFAULT_COMPRESSION );
+                                 : deflateInit( z_strm, compLevel );
 
 if( z_stat != Z_OK )
 {

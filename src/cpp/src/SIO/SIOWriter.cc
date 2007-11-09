@@ -30,13 +30,17 @@ using namespace IMPL ;
 
 namespace SIO {
 
-  SIO_record * SIOWriter::_evtRecord ;
-  SIO_record * SIOWriter::_hdrRecord ;
-  SIO_record * SIOWriter::_runRecord ;
+  SIO_record * SIOWriter::_evtRecord = 0 ;
+  SIO_record * SIOWriter::_hdrRecord = 0 ;
+  SIO_record * SIOWriter::_runRecord = 0 ;
   
 
-  SIOWriter::SIOWriter() : _hdrHandler(0), _runHandler(0) {
-  
+
+  SIOWriter::SIOWriter() :  _stream(0),
+			    _compressionLevel(-1), 
+			    _hdrHandler(0), 
+			    _runHandler(0)  {
+    
 #ifdef DEBUG
     SIO_streamManager::setVerbosity( SIO_ALL ) ;
     SIO_recordManager::setVerbosity( SIO_ALL ) ;
@@ -54,8 +58,6 @@ namespace SIO {
     _runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
     _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
   
-    //    evtP = new LCEvent* ;
-
     LCIOExceptionHandler::createInstance() ;
 
   }
@@ -130,10 +132,11 @@ namespace SIO {
     if( _stream == 0 )
       throw IOException( std::string( "[SIOWriter::open()] Bad or duplicate stream name: " 
  				      + stream_name  )) ;
-// 				      + std::string(stream_name)  )) ;
-//     delete[] stream_name ;
-    
 
+    // SIO_stream takes any value and maps it to [-1,0,1...,9]
+    _stream->setCompressionLevel( _compressionLevel ) ;
+    
+    
     unsigned int  status = 0  ;
     switch( writeMode ) 
       {
@@ -160,10 +163,15 @@ namespace SIO {
      _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
 
 
-    _hdrRecord->setCompress( LCSIO::COMPRESSION ) ;
-    _evtRecord->setCompress( LCSIO::COMPRESSION ) ;
-    _runRecord->setCompress( LCSIO::COMPRESSION ) ;
-    
+     
+     _hdrRecord->setCompress( _compressionLevel != 0 ) ;
+     _evtRecord->setCompress( _compressionLevel != 0 ) ;
+     _runRecord->setCompress( _compressionLevel != 0 ) ; 
+     
+  }
+
+  void SIOWriter::setCompressionLevel(int level) {
+    _compressionLevel = level ;
   }
 
 
@@ -187,6 +195,10 @@ namespace SIO {
     _runHandler->setRunHeader(  hdr ) ;
     
     if( _stream->getState()== SIO_STATE_OPEN ){
+      
+      _hdrRecord->setCompress( _compressionLevel != 0 ) ;
+      _evtRecord->setCompress( _compressionLevel != 0 ) ;
+      _runRecord->setCompress( _compressionLevel != 0 ) ; 
       
       // write LCRunHeader record
       unsigned int status =  _stream->write( LCSIO::RUNRECORDNAME    ) ;
@@ -296,15 +308,20 @@ namespace SIO {
   }
 
   void SIOWriter::writeEvent(const LCEvent* evt)  throw(IOException, std::exception) {
-  
 
+    
+    
     //here we set up the collection handlers 
-
+    
     try{   setUpHandlers( evt) ;
     
     }catch(...){
       throw IOException(  "[SIOWriter::writeEvent] could not set up handlers " ) ;
     }
+
+    _hdrRecord->setCompress( _compressionLevel != 0 ) ;
+    _evtRecord->setCompress( _compressionLevel != 0 ) ;
+    _runRecord->setCompress( _compressionLevel != 0 ) ; 
 
     if( _stream->getState()== SIO_STATE_OPEN ){
    

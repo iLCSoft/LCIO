@@ -15,6 +15,9 @@ v01-09
 
    - added event weight: LCEvent.getWeight()  (Java/C++)
 
+   - added LCWriter::setCompressionLevel(int level)  (C++) 
+
+
 =====================
 v01-08-05
 =====================

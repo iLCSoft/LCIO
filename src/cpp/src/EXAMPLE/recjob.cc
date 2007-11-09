@@ -66,7 +66,10 @@ public:
     // open outputfile
     lcWrt = LCFactory::getInstance()->createLCWriter() ;
 
-    try{ lcWrt->open( OUTFILEN , LCIO::WRITE_NEW ) ; } 
+    try{ 
+      lcWrt->setCompressionLevel( 9 ) ;
+      lcWrt->open( OUTFILEN , LCIO::WRITE_NEW ) ; 
+    } 
     
     catch(IOException& e){
       cout << "[RunEventProcessor()] Can't open file for writing -  " 

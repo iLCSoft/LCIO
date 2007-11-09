@@ -19,7 +19,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCWriter.java,v 1.13 2007-11-07 20:46:23 jeremy Exp $
+ * @version $Id: SIOLCWriter.java,v 1.14 2007-11-09 20:21:10 gaede Exp $
  */
 class SIOLCWriter implements LCWriter
 {
@@ -40,6 +40,10 @@ class SIOLCWriter implements LCWriter
       boolean append = writeMode == LCIO.WRITE_APPEND;
       if (!filename.endsWith(".slcio")) filename += ".slcio";
       writer = new SIOWriter(new FileOutputStream(filename,append));
+   }
+
+   public void setCompressionLevel(int level) {
+	    // not yet ...
    }
 
    public void writeEvent(LCEvent evt) throws IOException
