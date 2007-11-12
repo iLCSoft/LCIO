@@ -3,103 +3,105 @@
 
 #include "IO/LCWriter.h"
 #include "EVENT/LCIO.h"
-#include "DATA/LCFloatVec.h"
-#include "DATA/LCIntVec.h"
-
 #include "IMPL/LCEventImpl.h" 
 #include "IMPL/LCRunHeaderImpl.h" 
-#include "IMPL/LCCollectionVec.h"
-#include "IMPL/SimCalorimeterHitImpl.h"
-#include "IMPL/SimTrackerHitImpl.h"
-#include "IMPL/MCParticleImpl.h" 
-#include "IMPL/LCFlagImpl.h" 
-#include "IMPL/LCTOOLS.h"
-#include "IMPL/TPCHitImpl.h"
-#include "UTIL/LCRelationNavigator.h"
+
 #include "UTIL/LCStdHepRdr.h"
 
 #include <cstdlib>
 #include <iostream>
 #include <sstream>
+#include <memory>
 
 
-using namespace std ;
+// using namespace std ;
 using namespace lcio ;
-
-static const int NEVENT = 10 ; // events
-
-static string OUTFILENAME = "stdhepjob.slcio" ;
-
-char *  INFILENAME;
 
 
 /** Simple test program to demonstrate reading of binary .stdhep generator files.
- * Writes MCParticle collections to the outputfile stdhepjob.slcio.
+ *  Writes MCParticle collections to the outputfile stdhepjob.slcio.
  */
 
 int main(int argc, char** argv ){
   
-  try{
-
-    if(argc < 2)
-      {
-	cout << "Usage: stdhepjob xxxx.stdhep " << endl;
-        return 1;
-      }
+  if(argc < 4) {
     
-    INFILENAME = argv[1];
-      
-    // create sio writer
-    LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter() ;
-      
-    lcWrt->open( OUTFILENAME , LCIO::WRITE_NEW )  ;
-
-    LCRunHeaderImpl* runHdr = new LCRunHeaderImpl ; 
-    runHdr->setRunNumber( 0 ) ;
-      
-    string detName("Unknown")  ;
-    runHdr->setDetectorName( detName ) ;
-      
-    stringstream description ; 
-    description << " just for testing LCStdHepRdr" ;
-    runHdr->setDescription( description.str()  ) ;
-    lcWrt->writeRunHeader( runHdr ) ;
+     std::cout << " usage: stdhepjob infile.stdhep outfile.slcio maxEvt " <<  std::endl 
+	       << "   infile.stdhep    - input file name "  <<  std::endl 
+	       << "   outfile.slcio    - ouput file name "  <<  std::endl 
+	       << "   maxEvt           - max number of events to read [-1: all]"  <<  std::endl  ;
+     
+    return 1;
+  }
+    
+  std::string inFile  = argv[1] ;
+  std::string outFile = argv[2] ;
+  int maxEvt = std::atoi( argv[3] ) ; 
 
 
-    // Open an instance of the StdHep Reader with the given filename
-    LCStdHepRdr * rdr = new LCStdHepRdr(INFILENAME);
+  std::cout << "==================================================== " << std::endl
+	    << " stdhepjob : " << std::endl  ;
+
+  // Open an instance of the StdHep Reader with the given filename
+  LCStdHepRdr rdr( inFile.c_str()  ) ;
+  
+  std::cout << " opened file : " << inFile << std::endl ;
+  
+  rdr.printHeader() ;
+
+  // create sio writer
+  std::auto_ptr<LCWriter> lcWrt( LCFactory::getInstance()->createLCWriter() ) ;
+  
+  lcWrt->open( outFile )  ;
+  
+  std::auto_ptr<LCRunHeaderImpl> runHdr(  new LCRunHeaderImpl ) ; 
+  
+  runHdr->setRunNumber( 0 ) ;
+  
+  std::string detName("Unknown")  ;
+  runHdr->setDetectorName( detName ) ;
       
-    for(int i=0;i<NEVENT;i++){
+  std::stringstream description ; 
+
+  description << " file generated with LCIO stdhepjob from "  << inFile  ;
+
+  runHdr->setDescription( description.str()  ) ;
+
+  lcWrt->writeRunHeader( runHdr.get()  ) ;
+
+  int count = 0; 
+
+  try {
+
+    while( maxEvt < 0  || count < maxEvt ){
 	
-      LCEventImpl*  evt = new LCEventImpl() ;
-	
+      std::auto_ptr<LCEventImpl> evt( new LCEventImpl() ) ;
 	
       evt->setRunNumber(  0   ) ;
-      evt->setEventNumber( i ) ;
+      evt->setEventNumber( count ) ;
       evt->setDetectorName( detName ) ;
 	
-      LCCollectionVec* mcVec = rdr->readEvent()  ;
+      // read the next stdhep event and add an MCParticle collection to the event
+      rdr.updateNextEvent( evt.get()  , "MCParticle" ) ;
 	
-	// add all collections to the event
-      evt->addCollection( mcVec , "MCParticle" ) ;
-
-      lcWrt->writeEvent( evt ) ;
+      lcWrt->writeEvent( evt.get()  ) ;
+	
+      ++count ;
 	
     } // evt loop
-
-    delete runHdr ;
-
-    lcWrt->close() ;
-    delete lcWrt ;
-
-  
-  } catch( Exception& ex){
-
-    cout << " an excpetion occured: " << endl ;
-    cout << "  " << ex.what() << endl ;
-    return 1 ;
   }
-
+    
+  catch( IO::EndOfDataException& e ) {  
+  }
+    
+  std::cout << "  converted " << count << " events - written to LCIO " << outFile  << std::endl ;
+    
+  std::cout << "==================================================== " 
+	    << std::endl << std::endl ;
+    
+  lcWrt->close() ;
+  
   return 0 ;
+
 }
 
