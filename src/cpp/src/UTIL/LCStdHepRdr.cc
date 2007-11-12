@@ -1,6 +1,7 @@
 #include "UTIL/LCStdHepRdr.h"
 #include "EVENT/MCParticle.h"
 #include "IMPL/MCParticleImpl.h"
+#include "IMPL/LCEventImpl.h"
 #include "lcio.h"
 #include "EVENT/LCIO.h"
 #include <sstream>
@@ -11,6 +12,9 @@
 using namespace EVENT ;
 using namespace IMPL ;
 
+
+#define IDRUP_NAME "_idrup" 
+#define EVTWGT_NAME "_weight" 
 
 namespace UTIL{
 
@@ -25,11 +29,62 @@ namespace UTIL{
       throw IO::IOException( description.str() );
     }
 
-    _reader->printFileHeader() ;
+    //    _reader->printFileHeader() ;
 
   }
-  LCStdHepRdr::~LCStdHepRdr(){}
+  LCStdHepRdr::~LCStdHepRdr(){
+
+    delete _reader ;
+  }
   
+
+
+  void LCStdHepRdr::printHeader(std::ostream& os ) {
+
+    if( os == std::cout ) {
+
+      _reader->printFileHeader() ;
+    }
+
+  }
+
+
+
+  void LCStdHepRdr::updateNextEvent( IMPL::LCEventImpl* evt , const char* colName ) {
+
+    if( evt == 0 ) {
+      throw EVENT::Exception( " LCStdHepRdr::updateEvent - null pointer for event "  );
+    }
+    
+    IMPL::LCCollectionVec* mcpCol = readEvent() ;
+    
+    if( mcpCol == 0 ) {
+
+      throw IO::EndOfDataException( " LCStdHepRdr::updateEvent: EOF " ) ;
+    }
+
+    // copy event parameters from the collection to the event:
+    // FIXME: make this more efficient - not going through paramer map twice....
+    
+    int idrup = mcpCol->getParameters().getIntVal( IDRUP_NAME ) ;
+    
+    if( idrup !=0 ) {
+      
+      evt->parameters().setValue( IDRUP_NAME ,  idrup ) ;
+    }
+
+    double evtwgt = mcpCol->getParameters().getFloatVal( EVTWGT_NAME ) ;
+
+    evt->setWeight( evtwgt ) ;
+
+
+    // ---- end event parameters  ------------------
+
+ 
+    evt->addCollection( mcpCol , colName ) ;
+  }
+
+
   //
   // Read an event and return a LCCollectionVec of MCParticles
   //
@@ -40,22 +95,36 @@ namespace UTIL{
     //
     //  Read the event, check for errors
     //
-    if(_reader->more()){
+//     if( _reader->more() ){
 
-      if( int errorcode = _reader->readEvent() ) {
-	std::stringstream description ; 
-	description << "LCStdHepRdr::readEvent: error when reading event: " << errorcode << std::ends ;
-	throw IO::IOException( description.str() );
-	return mcVec;
+      int errorcode = _reader->readEvent() ;
+
+      if( errorcode != LSH_SUCCESS ){
+
+	if(  errorcode != LSH_ENDOFFILE ) {
+	  
+	  std::stringstream description ; 
+	  description << "LCStdHepRdr::readEvent: error when reading event: " << errorcode << std::ends ;
+	  
+	  throw IO::IOException( description.str() );
+	}
+	
+	else {
+	  
+	  throw IO::EndOfDataException( " LCStdHepRdr::readEvent EOF " ) ;
+	}
       }
 
-    } else {
-      //
-      // End of File :: ??? Exception ???
-      //   -> FG:   EOF is not an exception as it happens for every file at the end !
-      //
-      return mcVec;
-    }
+
+      
+//     } else {
+//       //
+//       // End of File :: ??? Exception ???
+//       //   -> FG:   EOF is not an exception as it happens for every file at the end !
+//       //
+//       return mcVec;  // == null !
+//     }
+
     //
     //  Create a Collection Vector
     //
@@ -66,6 +135,21 @@ namespace UTIL{
     //  Loop over particles
     //
     int NHEP = _reader->nTracks();
+    
+    // user defined process  id
+    long idrup = _reader->idrup() ;  
+    
+    if( idrup != 0 ) {
+      
+      mcVec->parameters().setValue( IDRUP_NAME ,  (int) idrup ) ;
+    }
+    
+    double evtWeight = _reader->eventweight() ;
+    
+    
+    mcVec->parameters().setValue( EVTWGT_NAME ,  (float) evtWeight ) ;
+   
+
 
     for( int IHEP=0; IHEP<NHEP; IHEP++ )
       {

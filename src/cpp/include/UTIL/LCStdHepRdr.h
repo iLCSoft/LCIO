@@ -3,6 +3,14 @@
 
 #include "IMPL/LCCollectionVec.h"
 #include "UTIL/lStdHep.hh"
+#include "EVENT/LCIO.h"
+#include "Exceptions.h"
+
+namespace IMPL{
+
+class LCEventImpl ;
+
+}
 
 namespace UTIL{
   
@@ -11,7 +19,7 @@ namespace UTIL{
    * file information.
    * 
    * @author cassell
-   * @version $Id: LCStdHepRdr.h,v 1.3 2007-11-08 14:32:23 gaede Exp $
+   * @version $Id: LCStdHepRdr.h,v 1.4 2007-11-12 16:39:04 gaede Exp $
    */
   class LCStdHepRdr{
     
@@ -25,9 +33,21 @@ namespace UTIL{
 	 */
 	~LCStdHepRdr() ;
 
-    /** Read an event and return a LCCollectionVec of MCParticles.
+    /** Read an event and return an LCCollectionVec of MCParticles.
+     * @deprecated please use updateEvent()
      */
 	IMPL::LCCollectionVec * readEvent() ;
+
+    /** Reads the next stdhep event and adds a new MCParticle collection to the
+     *  the event with default name 'MCParticle'
+     * @throw IO::EndOfDataException if no event in stdhep file
+     */
+    void updateNextEvent( IMPL::LCEventImpl* evt , const char* colName=EVENT::LCIO::MCPARTICLE ) ;
+
+
+    /** Print the file header to the given ostream.
+     */
+    void printHeader(std::ostream& os = std::cout ) ; 
 
 
     /** Return the charge of the particle times 3  - code copied from HepPDT package.
