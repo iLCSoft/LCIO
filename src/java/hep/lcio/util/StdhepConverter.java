@@ -1,6 +1,7 @@
 package hep.lcio.util;
 
 import hep.io.stdhep.StdhepEvent;
+import hep.io.stdhep.StdhepExtendedEvent;
 import hep.io.stdhep.StdhepReader;
 import hep.io.stdhep.StdhepRecord;
 import hep.lcio.event.LCIO;
@@ -28,7 +29,7 @@ import java.util.Set;
  * Java 1.4 compatibility.
  *
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: StdhepConverter.java,v 1.7 2007-11-12 06:22:12 tonyj Exp $
+ * @version $Id: StdhepConverter.java,v 1.8 2007-11-12 06:46:19 tonyj Exp $
  */
 class StdhepConverter
 {
@@ -91,6 +92,16 @@ class StdhepConverter
                event.setEventNumber(cntr);
                event.setRunNumber(0);
                event.setTimeStamp(0);
+               
+               // Add event weight
+               if (record instanceof StdhepExtendedEvent)
+               {
+                  StdhepExtendedEvent extended = (StdhepExtendedEvent) record;
+                  event.setWeight(extended.getEventWeight());
+                  // In the ILC WhizData events IDRUP is used to flag the event type
+                  int idrup = extended.getIDRUP();
+                  if (idrup != 0) event.getParameters().setValue("_idrup",idrup);
+               }
                
                // Add the MCParticle collection to the event.
                event.addCollection(mcpcoll, LCIO.MCPARTICLE);
