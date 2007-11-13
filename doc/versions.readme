@@ -7,15 +7,22 @@ v01-09
 =====================
   no changes in file format
 
-   - made compatible with new stdhep files (Java/C++)
-
-   - LCStdHepRdr now fills MCParticle::charge properly (C++)
-
-   - Java uses new sio classes from hep.io.sio
-
    - added event weight: LCEvent.getWeight()  (Java/C++)
 
    - added LCWriter::setCompressionLevel(int level)  (C++) 
+
+   - lcio (java tool) and stdhepjob (C++) improved
+       - made compatible with new stdhep files (Java/C++)
+       - fill stdhep event weight ( and _idrup / user process id )
+       - stdhepjob now build by default (an be used to convert stdhep to LCIO)
+ 
+   - LCStdHepRdr now fill MCParticle::charge properly (C++)
+ 
+   - Java uses new sio classes from hep.io.sio
+
+   - LCIO (C++) no longer has optional direct dependency on CLHEP 
+     ( only file is UTIL/LCFourVector.h that can be used in
+       programs built with LCIO and CLHEP )   
 
 
 =====================

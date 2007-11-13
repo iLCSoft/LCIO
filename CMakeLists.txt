@@ -325,23 +325,25 @@ MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
 # This code would not be necessary if the DEPENDENCIES code above would not
 # be commented out, but this way LCIO does not depend on CMakeModules
 IF( DEFINED BUILD_WITH AND BUILD_WITH STREQUAL "CLHEP" )
-    IF( NOT DEFINED CLHEP_HOME )
-        MESSAGE( FATAL_ERROR "Check for CLHEP: CLHEP_HOME not set!! "
-            "Please call cmake with -DCLHEP_HOME=<path_to_CLHEP>" )
-    ENDIF()
-    MESSAGE( STATUS "Check for CLHEP: ${CLHEP_HOME}" )
-    INCLUDE( FindCLHEP.cmake )
+  MESSAGE( STATUS " --- LCIO no longer (optionally) depends on CLHEP =>  BUILD_WITH \"CLHEP\" ignored !"  )
 
-    IF( CLHEP_FOUND )
-        INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIR} )
+#    IF( NOT DEFINED CLHEP_HOME )
+#        MESSAGE( FATAL_ERROR "Check for CLHEP: CLHEP_HOME not set!! "
+#            "Please call cmake with -DCLHEP_HOME=<path_to_CLHEP>" )
+#    ENDIF()
+#    MESSAGE( STATUS "Check for CLHEP: ${CLHEP_HOME}" )
+#    INCLUDE( FindCLHEP.cmake )
+#
+#    IF( CLHEP_FOUND )
+#        INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIR} )
 #        LINK_LIBRARIES( ${CLHEP_LIBRARIES} )
-        ADD_DEFINITIONS( ${CLHEP_DEFINITIONS} )
-        SEPARATE_ARGUMENTS( CLHEP_DEFINITIONS )
-        LIST( APPEND ${PROJECT_NAME}_DEFINITIONS ${CLHEP_DEFINITIONS} )
-    ENDIF()
+#        ADD_DEFINITIONS( ${CLHEP_DEFINITIONS} )
+#        SEPARATE_ARGUMENTS( CLHEP_DEFINITIONS )
+#        LIST( APPEND ${PROJECT_NAME}_DEFINITIONS ${CLHEP_DEFINITIONS} )
+#    ENDIF()
 
-    SET( BUILD_WITH "${BUILD_WITH}" CACHE STRING
-        "Build ${PROJECT_NAME} with these optional packages" FORCE )
+#    SET( BUILD_WITH "${BUILD_WITH}" CACHE STRING
+#        "Build ${PROJECT_NAME} with these optional packages" FORCE )
 ENDIF()
 
 # input directories

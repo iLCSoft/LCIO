@@ -41,12 +41,12 @@ SET( JAVA_HOME "${ILC_HOME}/java/1.6.0"
 # CLHEP
 #############################################################################
 
-# Enable this for building LCIO with CLHEP
-SET( BUILD_WITH "CLHEP" CACHE STRING "Build LCIO with these optional packages" FORCE )
+# LCIO no longer depends directly on CLHEP 
 
-# Path to CLHEP
-SET( CLHEP_HOME "${ILC_HOME}/CLHEP/2.0.2.2"
-    CACHE PATH "Path to CLHEP" FORCE )
+# only dependency is  UTIL::LCFourVector.h which can be used in programs 
+# linking against LCIO and CLHEP 
+# -> specify BUILD_WITH("CLHEP") in this program's BuildSetup
+
 
 #############################################################################
 # Project options
