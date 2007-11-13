@@ -111,10 +111,10 @@ namespace UTIL{
 	
 	else {
 	  
-	  throw IO::EndOfDataException( " LCStdHepRdr::readEvent EOF " ) ;
+	  return 0 ;
+	  // throw IO::EndOfDataException( " LCStdHepRdr::readEvent EOF " ) ;
 	}
       }
-
 
       
 //     } else {
@@ -139,6 +139,22 @@ namespace UTIL{
     // user defined process  id
     long idrup = _reader->idrup() ;  
     
+//     static int counter = 0 ;
+//     bool isCritical = false ;
+//     std::cout << " -----  readEvent  " << counter << " err: " <<   errorcode 
+// 	      << " nhep : " << NHEP 
+// 	      << std::endl ;
+//     if( counter++ == 3850 ) {
+//       std::cout << " - critical event read !!! " << std::endl ;
+//       isCritical = true ;
+//       _reader->printEvent() ;
+//       _reader->printEventHeader() ;
+//       for(int bla=0;bla<NHEP;bla++){
+// 	_reader->printTrack( bla ) ;
+//       }
+//     }
+
+
     if( idrup != 0 ) {
       
       mcVec->parameters().setValue( IDRUP_NAME ,  (int) idrup ) ;
@@ -204,6 +220,11 @@ namespace UTIL{
 	//
 	int fp = _reader->mother1(IHEP) - 1;
 	int lp = _reader->mother2(IHEP) - 1;
+
+// 	if( isCritical ) {
+// 	  std::cout << " parents:  fp : " << fp  << " lp : " <<  lp << std::endl ;
+// 	}
+
 	//
 	//  If both first parent and second parent > 0, and second parent >
 	//     first parent, assume a range
@@ -268,6 +289,11 @@ namespace UTIL{
 	//
 	int fd = _reader->daughter1(IHEP)%10000 - 1;
 	int ld = _reader->daughter2(IHEP)%10000 - 1;
+
+// 	if( isCritical ) {
+// 	  std::cout << "daughters fd : " << fd  << " ld : " <<  ld << std::endl ;
+// 	}
+
 	//
 	//  As with the parents, look for range, 2 discreet or 1 discreet 
 	//  daughter.
@@ -327,33 +353,51 @@ namespace UTIL{
 		if(!gotit)d->addParent(mcp);
 	      }
 	  }
-	else if(fd > -1)
+	else if(fd > -1 ) 
 	  {
-	    d = dynamic_cast<MCParticleImpl*>
-	      (mcVec->getElementAt(fd));
-	    int np = d->getParents().size();
-	    bool gotit = false;
-	    for(int ip=0;ip < np;ip++)
-	      {
-		p = dynamic_cast<MCParticleImpl*>
-		  (d->getParents()[ip]);
-		if(p == mcp)gotit = true;
-	      }
-	    if(!gotit)d->addParent(mcp);
+
+	    if( fd < NHEP ) {
+	      d = dynamic_cast<MCParticleImpl*>
+		(mcVec->getElementAt(fd));
+	      int np = d->getParents().size();
+	      bool gotit = false;
+	      for(int ip=0;ip < np;ip++)
+		{
+		  p = dynamic_cast<MCParticleImpl*>
+		    (d->getParents()[ip]);
+		  if(p == mcp)gotit = true;
+		}
+	      if(!gotit)d->addParent(mcp);
+
+	    } else { 
+	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
+// 	      std::cout << " WARNING:  LCStdhepReader: invalid index in stdhep : " << fd 
+// 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
+	    }
+
 	  }
-	else if(ld > -1)
+	else if(ld > -1 )
 	  {
-	    d = dynamic_cast<MCParticleImpl*>
-	      (mcVec->getElementAt(ld));
-	    int np = d->getParents().size();
-	    bool gotit = false;
-	    for(int ip=0;ip < np;ip++)
-	      {
-		p = dynamic_cast<MCParticleImpl*>
-		  (d->getParents()[ip]);
-		if(p == mcp)gotit = true;
-	      }
-	    if(!gotit)d->addParent(mcp);
+	    if(  ld < NHEP ){
+	      d = dynamic_cast<MCParticleImpl*>
+		(mcVec->getElementAt(ld));
+	      int np = d->getParents().size();
+	      bool gotit = false;
+	      for(int ip=0;ip < np;ip++)
+		{
+		  p = dynamic_cast<MCParticleImpl*>
+		    (d->getParents()[ip]);
+		  if(p == mcp)gotit = true;
+		}
+	      if(!gotit)d->addParent(mcp);
+
+	    } else {
+	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
+// 	      std::cout << " WARNING: LCStdhepReader: invalid index in stdhep : " << ld 
+// 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
+
+	    }
+
 	  }
       }// End second loop over particles
     //
