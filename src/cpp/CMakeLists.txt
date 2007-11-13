@@ -181,6 +181,7 @@ ADD_LCIO_BIN( anajob )
 ADD_LCIO_BIN( recjob ) 
 ADD_LCIO_BIN( dumpevent ) 
 ADD_LCIO_BIN( copyfix ) 
+ADD_LCIO_BIN( stdhepjob ) 
 
 
 IF( BUILD_LCIO_SHELL )
@@ -190,7 +191,6 @@ ENDIF()
 
 IF( BUILD_LCIO_TESTJOBS )
   ADD_LCIO_BIN( readcalibration ) 
-  ADD_LCIO_BIN( stdhepjob ) 
   ADD_LCIO_BIN( testvtx ) 
   ADD_LCIO_BIN( lcrtrelation )
 
