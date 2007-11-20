@@ -126,6 +126,7 @@ public class Printer
 		ps.println();
 
 		// Print the event parameters.
+        ps.println(" Run parameters : ");
 		printParameters(event.getParameters());
 		
 		// Print summary of collections.
@@ -174,6 +175,7 @@ public class Printer
 					Integer.valueOf(coll.getFlag()) 
 			);
 
+            System.out.println(" Collection Parameters : ");
 			printParameters(coll.getParameters());
 
 			printLCCollection(coll);
@@ -203,9 +205,7 @@ public class Printer
 	}
 
 	void printParameters(LCParameters param)
-	{
-		ps.println(" collection parameters : ");		
-		
+	{		
 		String floatkeys[] = param.getFloatKeys();
 		for (int i=0; i<floatkeys.length; i++) 
 		{
