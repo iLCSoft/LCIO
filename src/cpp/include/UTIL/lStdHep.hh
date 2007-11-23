@@ -36,6 +36,9 @@
 #include "UTIL/lXDR.hh"
 #include <vector>
 
+
+namespace UTIL{
+
 //
 // MCFIO block codes
 //
@@ -393,5 +396,6 @@ private:
    Event          event;
 };
 
+} // end namespace
 
 #endif

@@ -18,6 +18,8 @@
 
 #include <stdio.h>
 
+namespace UTIL{
+
 ////
 //
 // The main lXDR class.
@@ -137,5 +139,5 @@ private:
 #define LXDR_WRITEERROR      6
 #define LXDR_SEEKERROR       7
  
-
+}
 #endif

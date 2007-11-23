@@ -22,6 +22,8 @@
 #else
 #include <sys/socket.h>
 #endif
+
+namespace UTIL{
 ////
 //
 // Constructor, destructor
@@ -316,3 +318,4 @@ long lXDR::filePosition(long pos)
    return(pos);
 }
 
+}// end namespace
