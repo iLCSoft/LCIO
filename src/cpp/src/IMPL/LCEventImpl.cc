@@ -1,10 +1,13 @@
 
 #include "IMPL/LCEventImpl.h"
-#include <iostream>
 #include "IMPL/AccessChecked.h"
 #include "IMPL/LCCollectionVec.h"
 
 #define EVT_WGT "_weight" 
+
+#include <iostream>
+#include <sstream>
+
 
 using namespace EVENT ;
 //using namespace DATA ;
@@ -99,9 +102,13 @@ LCCollection * LCEventImpl::getCollection(const std::string & name) const
 
   LCCollectionMap::iterator it = _colMap.find( name )  ;
 
-  if( it == _colMap.end() ) 
-    throw(DataNotAvailableException( std::string("LCEventImpl::getCollection: collection not in event:" 
-						 + name) )) ; 
+  if( it == _colMap.end() ) {
+    
+    std::stringstream ss ;
+    ss << "LCEventImpl::getCollection: collection not in event:" << name ;
+
+    throw( DataNotAvailableException( ss.str() ) ) ; 
+  }
   return  it->second ;
 
   //   if( _colMap.find( name ) == _colMap.end() ) 
