@@ -22,7 +22,7 @@ namespace UTIL{
     //
     //   Use Willie's reader from LELAPS, and open the input file
     //
-    _reader = new lStdHep(evfile,false);
+    _reader = new UTIL::lStdHep(evfile,false);
     if(_reader->getError()) {
       std::stringstream description ; 
       description << "LCStdHepRdr: no stdhep file: " << evfile << std::ends ;
@@ -164,7 +164,6 @@ namespace UTIL{
     
     
     mcVec->parameters().setValue( EVTWGT_NAME ,  (float) evtWeight ) ;
-   
 
 
     for( int IHEP=0; IHEP<NHEP; IHEP++ )
@@ -214,61 +213,76 @@ namespace UTIL{
 	//  Add the particle to the collection vector
 	//
 	mcVec->push_back(mcp);
-	//
-	// Add the parent information. The implicit assumption here is that
-	// no particle is read in before its parents.
-	//
-	int fp = _reader->mother1(IHEP) - 1;
-	int lp = _reader->mother2(IHEP) - 1;
 
-// 	if( isCritical ) {
-// 	  std::cout << " parents:  fp : " << fp  << " lp : " <<  lp << std::endl ;
-// 	}
 
-	//
-	//  If both first parent and second parent > 0, and second parent >
-	//     first parent, assume a range
-	//
-	if( (fp > -1) && (lp > -1) )
-	  {
-	    if(lp >= fp)
-	      {
-		for(int ip=fp;ip<lp+1;ip++)
-		  {
-		    p = dynamic_cast<MCParticleImpl*>
-		      (mcVec->getElementAt(ip));
-		    mcp->addParent(p);
-		  }
-	      }
-	    //
-	    //  If first parent < second parent, assume 2 discreet parents
-	    //
-	    else
-	      {
-		p = dynamic_cast<MCParticleImpl*>
-		  (mcVec->getElementAt(fp));
-		mcp->addParent(p);
-		p = dynamic_cast<MCParticleImpl*>
-		  (mcVec->getElementAt(lp));
-		mcp->addParent(p);
-	      }
-	  }
-	//
-	//  Only 1 parent > 0, set it
-	//
-	else if(fp > -1)
-	  {
-	    p = dynamic_cast<MCParticleImpl*>
-	      (mcVec->getElementAt(fp));
-	    mcp->addParent(p);
-	  }
-	else if(lp > -1)
-	  {
-	    p = dynamic_cast<MCParticleImpl*>
-	      (mcVec->getElementAt(lp));
-	    mcp->addParent(p);
-	  }
+// ------
+// fg 20071120 - ignore mother relation ship altogether and use only daughter relationship
+//             - this is neede to avoid double counting in Mokka geant4 simulation
+//             - however some information might be lost here if encoded in inconsistent parent
+//               daughter relationships...
+
+//
+//
+// 	//
+// 	// Add the parent information. The implicit assumption here is that
+// 	// no particle is read in before its parents.
+// 	//
+// 	int fp = _reader->mother1(IHEP) - 1;
+// 	int lp = _reader->mother2(IHEP) - 1;
+
+// // 	if( isCritical ) {
+// // 	  std::cout << " parents:  fp : " << fp  << " lp : " <<  lp << std::endl ;
+// // 	}
+
+// 	//
+// 	//  If both first parent and second parent > 0, and second parent >
+// 	//     first parent, assume a range
+// 	//
+// 	if( (fp > -1) && (lp > -1) )
+// 	  {
+// 	    if(lp >= fp)
+// 	      {
+// 		for(int ip=fp;ip<lp+1;ip++)
+// 		  {
+// 		    p = dynamic_cast<MCParticleImpl*>
+// 		      (mcVec->getElementAt(ip));
+// 		    mcp->addParent(p);
+// 		  }
+// 	      }
+// 	    //
+// 	    //  If first parent < second parent, assume 2 discreet parents
+// 	    //
+// 	    else
+// 	      {
+// 		p = dynamic_cast<MCParticleImpl*>
+// 		  (mcVec->getElementAt(fp));
+// 		mcp->addParent(p);
+// 		p = dynamic_cast<MCParticleImpl*>
+// 		  (mcVec->getElementAt(lp));
+// 		mcp->addParent(p);
+// 	      }
+// 	  }
+// 	//
+// 	//  Only 1 parent > 0, set it
+// 	//
+// 	else if(fp > -1)
+// 	  {
+// 	    p = dynamic_cast<MCParticleImpl*>
+// 	      (mcVec->getElementAt(fp));
+// 	    mcp->addParent(p);
+// 	  }
+// 	else if(lp > -1)
+// 	  {
+// 	    p = dynamic_cast<MCParticleImpl*>
+// 	      (mcVec->getElementAt(lp));
+// 	    mcp->addParent(p);
+// 	  }
       }// End loop over particles
+
+
+// fg 20071120 - as we ignore mother relation ship altogether this loop now
+//      creates the parent-daughter
+
     //
     //  Now make a second loop over the particles, checking the daughter
     //  information. This is not always consistent with parent 
