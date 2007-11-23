@@ -14,7 +14,7 @@ v01-09
    - lcio (java tool) and stdhepjob (C++) improved
        - made compatible with new stdhep files (Java/C++)
        - fill stdhep event weight ( and _idrup / user process id )
-       - stdhepjob now build by default (an be used to convert stdhep to LCIO)
+       - stdhepjob now build by default (can be used to convert stdhep to LCIO)
  
    - LCStdHepRdr now fill MCParticle::charge properly (C++)
  
