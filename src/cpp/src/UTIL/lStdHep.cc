@@ -12,6 +12,8 @@
 #include "string.h"
 #include "stdlib.h"
 
+namespace UTIL{
+
 ////
 //
 // The main lStdHep class.
@@ -541,4 +543,6 @@ long lStdHep::Event::print(FILE *fp)
 {
    fprintf(fp, "   Event: nevhep: %ld, nhep: %ld\n", nevhep, nhep);
    return(0);
+}
+
 }
