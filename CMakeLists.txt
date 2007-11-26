@@ -43,7 +43,7 @@ ENDIF()
 
 # include FindJAVA.cmake for finding Java
 
-INCLUDE( FindJAVA.cmake )
+INCLUDE( ${PROJECT_SOURCE_DIR}/FindJAVA.cmake )
 
 IF( JAVA_FOUND )
     MESSAGE( STATUS "JAVA_HOME set to ${JAVA_HOME}" )
