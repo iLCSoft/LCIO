@@ -32,6 +32,10 @@ else
  TESTJOBS := testcopy.cc
 endif
 
+ifndef BUILD_LCIO_SHELL 
+ TESTJOBS += lsh.cc
+endif
+
 #BINS = $(filter-out $(TESTJOBS),  $(patsubst %.cc,$(BINDIR)/%,$(wildcard *.cc))  ) 
 
 BINS =  $(patsubst %.cc,$(BINDIR)/%, $(filter-out $(TESTJOBS), $(wildcard *.cc))) 
@@ -65,9 +69,11 @@ $(BINDIR)/anajob: anajob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/readcalibration $(CPPFLAGS) readcalibration.cc  $(LIBS) 
 
+# ----- building lsh has to be explicitly activated:
+ifndef BUILD_LCIO_SHELL 
 $(BINDIR)/lsh: lsh.cc $(INSTALL)/liblcio.a
 	    $(CXX) -o $(BINDIR)/lsh $(CPPFLAGS) lsh.cc  $(LIBS) -lreadline -lncurses
-
+endif
 
 $(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/stdhepjob $(CPPFLAGS) stdhepjob.cc  $(LIBS) 
