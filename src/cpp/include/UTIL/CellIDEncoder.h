@@ -78,14 +78,14 @@ namespace UTIL{
    *  &nbsp;   } <br>
    * 
    *  @see BitField64
-   *  @version $Id: CellIDEncoder.h,v 1.5 2007-02-09 18:30:45 gaede Exp $
+   *  @version $Id: CellIDEncoder.h,v 1.6 2008-01-22 14:38:55 gaede Exp $
    */
   template <class T> 
   class CellIDEncoder : public BitField64 {
 
   public:  
     
-    /** Constructor reads encoding string from collection parameter LCIO::CellIDEncoding.
+    /** Constructor, sets collection parameter LCIO::CellIDEncoding to the given encoding string.
      */
     CellIDEncoder( const std::string& cellIDEncoding ,  LCCollection* col) :
 
