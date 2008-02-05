@@ -171,7 +171,7 @@ MACRO( ADD_LCIO_BIN file )
   ADD_DEPENDENCIES( bin bin_${file} )
 #  MESSAGE( STATUS " in ADD_LCIO_BIN : " ${file} " " ./src/EXAMPLE/${file}.cc )
   SET_TARGET_PROPERTIES( bin_${file} PROPERTIES OUTPUT_NAME ${file} )
-  TARGET_LINK_LIBRARIES( bin_${file} lib_${PROJECT_NAME} readline ncurses)
+  TARGET_LINK_LIBRARIES( bin_${file} lib_${PROJECT_NAME} ) #readline ncurses)
   INSTALL( TARGETS bin_${file} DESTINATION bin )
 ENDMACRO()
 #===================================================================
