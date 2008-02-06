@@ -55,7 +55,7 @@ import org.apache.commons.cli.PosixParser;
  * FIXME: Implement all of the above commands.
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.15 2007-06-15 23:16:38 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.16 2008-02-06 23:37:39 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -100,6 +100,7 @@ public class CommandLineTool
 		addCommandHandler(new StdhepConvertCommandHandler());
 		addCommandHandler(new PrintCommandHandler());
         addCommandHandler(new SelectCommandHandler());
+        addCommandHandler(new SizeCommandHandler());
 	}
 	
 	/**
