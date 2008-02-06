@@ -154,7 +154,7 @@ extends CommandHandler
 		System.out.println();
 		System.out.println("TOTALS");
 		System.out.println();
-		System.out.format("%-40s %10s %10s\n","Collection","Tot Bytes","Avg Bytes");
+		System.out.format("%-40s %10s %10s\n","COLLECTION","TOT BYTES","AVG BYTES");
 		for (Entry<String,Integer> total : totals.entrySet())
 		{
 			System.out.format("%-40s %10d %10d\n",total.getKey(),total.getValue(),total.getValue() / eventsread);
