@@ -19,11 +19,11 @@ swig   - 1.3.28
 
 Other combinations of these tools may or may not work.  The Swig version seems
 especially important as the C++ support has been continually improving.  I recommend
-building or installing a fresh copy if you're site's installation is not up-to-date.
+building or installing a fresh copy if your site's installation is not current.
 
 Only recent versions of Swig will work. Some Linux distributions, like 
 Scientific Linux 3 and RHEL 3, come with default Swig versions that are very
-old (1.1.x), and these will not work.   
+old (1.1.x), and these DO NOT WORK with the LCIO .i file.   
 
 ENVIRONMENT VARIABLES
 
@@ -40,15 +40,15 @@ Defaults to 'python'
 
 PYTHONHOME
 Where is Python's home dir?
-Defaults to one directory up from python executable
+Defaults to one directory up from the python executable
 
 PYTHONVER
-Python version in form '#.#'
+Python version in form '#.#'.
 Defaults to version from output of 'python -V'
 
 PYTHON_INCLUDE_DIR
 What is the directory that contains 'Python.h'?
-Defaults to $(PYTHONHOME)/include/python$(PYTHONVER)
+Defaults to $(PYTHONHOME)/include/python$(PYTHONVER) 
 
 PYTHON_INSTALL_DIR
 Where should the Python binding be installed?
@@ -81,4 +81,4 @@ To file a bug report, use the ILC Jira Bug Tracker.
 
 https://jira.slac.stanford.edu/browse/LCIO
 
-Other questions can be sent to <jeremym@slac.stanford.edu>.
+Questions about the Swig wrapper can be sent to <jeremym@slac.stanford.edu>.
