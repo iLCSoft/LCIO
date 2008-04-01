@@ -70,7 +70,7 @@ TESTING
 
 The lcio module is imported with the python statement 'import lcio'.
 
-The files 'test.py' and 'write_test.py' show a few examples of basic usage.
+The files starting with 'test' are a few basic examples of using the wrapper.
 
 SUPPORT
 
