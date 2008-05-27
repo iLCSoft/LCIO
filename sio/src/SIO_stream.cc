@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.5 2007-11-09 20:21:09 gaede Exp $
+// CVS $Id: SIO_stream.cc,v 1.6 2008-05-27 07:23:40 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -24,6 +24,29 @@
 #include "SIO_record.h"
 #include "SIO_recordManager.h"
 #include "SIO_stream.h"
+
+#ifdef SIO_USE_DCAP
+
+#include <dcap.h>
+
+#define FOPEN  dc_fopen
+#define FTELL  dc_ftell
+#define FSEEK  dc_fseek
+#define FCLOSE dc_fclose
+#define FREAD  dc_fread
+#define FWRITE dc_fwrite
+
+#else
+
+#define FOPEN  fopen
+#define FTELL  ftell
+#define FSEEK  fseek
+#define FCLOSE fclose
+#define FREAD  fread
+#define FWRITE fwrite
+
+#endif
+
 
 static unsigned int
     SIO_align       = 0x00000003,
@@ -193,7 +216,7 @@ if( bufloc != NULL )
 //
 // Close the stream and destroy associated information.
 //
-if( fclose( handle ) == EOF )
+if( FCLOSE( handle ) == EOF )
 {
     status = SIO_STREAM_GOTEOF;
     if( verbosity >= SIO_ERRORS )
@@ -402,7 +425,7 @@ void SIO_stream::setCompressionLevel(int level) {
 
   else if( level > 9 )
     
-    compLevel == 9  ;
+    compLevel = 9  ;
  
   else 
 
@@ -462,7 +485,7 @@ if( i_mode == SIO_MODE_UNDEFINED )
 //
 // Open the file.
 //
-if( (handle = fopen( i_filename, SIO_filemode[i_mode] )) == NULL )
+if( (handle = FOPEN( i_filename, SIO_filemode[i_mode] )) == NULL )
 {
     if( verbosity >= SIO_ERRORS )
     {
@@ -591,7 +614,7 @@ unsigned int SIO_stream::seek(SIO_64BITINT pos) {
     return( SIO_STREAM_WRITEONLY );
   }
 
-  status = fseek( handle, pos , SEEK_SET )  ;
+  status = FSEEK( handle, pos , SEEK_SET )  ;
   
   if( status != 0 ) {
     
@@ -682,7 +705,7 @@ requested = false;
 while( requested == false )
 {
 
-  recStart = std::ftell( handle ) ;
+  recStart = FTELL( handle ) ;
 
     //
     // Initialize the buffer and read the first eight bytes.  A read failure
@@ -690,7 +713,7 @@ while( requested == false )
     // bytes dangling in the file).
     //
     buffer = bufloc;
-    status = fread( buffer, SIO_LEN_SB, 8, handle );
+    status = FREAD( buffer, SIO_LEN_SB, 8, handle );
     if( status < 8 )
         return( SIO_STREAM_EOF );
  
@@ -720,7 +743,7 @@ while( requested == false )
     //            6) The length of the record name.
     //            7) The record name.
     //
-    status = fread( buffer, SIO_LEN_SB, (head_length - 8), handle );
+    status = FREAD( buffer, SIO_LEN_SB, (head_length - 8), handle );
     if( status < (head_length - 8) )
     {
         if( verbosity >= SIO_ERRORS )
@@ -799,7 +822,7 @@ while( requested == false )
     if( requested == false )
     {
         data_length += (4 - (data_length & SIO_align)) & SIO_align;
-        status = fseek( handle, data_length, 1 );
+        status = FSEEK( handle, data_length, 1 );
         if( status != 0 )
         {
             state = SIO_STATE_ERROR;
@@ -857,7 +880,7 @@ while( requested == false )
         // -always- aligned to a four byte boundary in the file, so no pad
         // skipping is necessary,
         //
-        status = fread( buffer, SIO_LEN_SB, data_length, handle );
+        status = FREAD( buffer, SIO_LEN_SB, data_length, handle );
         if( status < data_length )
         {
             state = SIO_STATE_ERROR;
@@ -901,7 +924,7 @@ while( requested == false )
         //
         // Read the compressed record data.
         //
-        status = fread( cmploc, SIO_LEN_SB, data_length, handle );
+        status = FREAD( cmploc, SIO_LEN_SB, data_length, handle );
         if( status < data_length )
         {
             state = SIO_STATE_ERROR;
@@ -922,7 +945,7 @@ while( requested == false )
         padlen = (4 - (data_length & SIO_align)) & SIO_align;
         if( padlen > 0 )
         {
-            status = fseek( handle, padlen, 1 );
+            status = FSEEK( handle, padlen, 1 );
             if( status != 0 )
             {
                 state = SIO_STATE_ERROR;
@@ -1230,7 +1253,7 @@ if( !compress )
     // no padding is required.
     //
     data_length += head_length;
-    bufout = fwrite( bufloc, sizeof(char), data_length, handle );
+    bufout = FWRITE( bufloc, sizeof(char), data_length, handle );
     if( bufout != data_length && ! fflush( handle ) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
@@ -1331,7 +1354,7 @@ else
     //
     // Write the record header.
     //
-    bufout = fwrite( bufloc, sizeof(char), head_length, handle );
+    bufout = FWRITE( bufloc, sizeof(char), head_length, handle );
     if( bufout != head_length )
     {
         state = SIO_STATE_ERROR;
@@ -1347,7 +1370,7 @@ else
     //
     // Write the compressed record data.
     //
-    bufout = fwrite( cmploc, sizeof(char), data_length, handle );
+    bufout = FWRITE( cmploc, sizeof(char), data_length, handle );
     if( bufout != data_length && ! fflush(handle) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
@@ -1368,7 +1391,7 @@ else
     newlen = (4 - (data_length & SIO_align)) & SIO_align;
     if( newlen > 0 )
     {
-        bufout = fwrite( pad, sizeof(char), newlen, handle );
+        bufout = FWRITE( pad, sizeof(char), newlen, handle );
         if( bufout != newlen && ! fflush(handle))// fg 20030514 - flush the record
         {
             state = SIO_STATE_ERROR;
