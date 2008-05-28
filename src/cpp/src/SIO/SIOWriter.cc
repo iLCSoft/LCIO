@@ -24,6 +24,8 @@
 #include "IMPL/LCTOOLS.h"
 #include "IMPL/LCRelationImpl.h" 
 
+#include <cstring>
+
 using namespace EVENT ;
 using namespace IO ;
 using namespace IMPL ;

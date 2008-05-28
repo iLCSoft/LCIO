@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <cstdlib>
 
 // the canonical year zero
 #define YEAR0 1970 

@@ -26,6 +26,8 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <cstring>
+#include <climits>
 //#include <limits>
 
 using namespace EVENT ;

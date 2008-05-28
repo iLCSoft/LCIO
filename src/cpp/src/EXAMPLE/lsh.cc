@@ -6,12 +6,13 @@
  * (developed during DESY summerstudent programme 2007)
  * 
  * @author N. Chiapolini, DESY
- * @version $Id: lsh.cc,v 1.1 2007-09-19 06:50:47 gaede Exp $
+ * @version $Id: lsh.cc,v 1.2 2008-05-28 14:02:09 engels Exp $
  */
 
 #include <signal.h>
 #include <string>
 #include <cstring>
+#include <cstdlib>
 #include <sstream>
 #include <fstream>
 #include <iomanip>

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.cc,v 1.8 2007-02-02 08:59:06 gaede Exp $
+// CVS $Id: SIO_functions.cc,v 1.9 2008-05-28 14:02:09 engels Exp $
 // ----------------------------------------------------------------------------
 // => Function package for SIO                            
 // ----------------------------------------------------------------------------
@@ -16,6 +16,8 @@
 #endif
 
 #include <iostream>
+#include <cstdlib>
+#include <cstring>
 
 #include "SIO_stream.h"
 #include "SIO_functions.h"

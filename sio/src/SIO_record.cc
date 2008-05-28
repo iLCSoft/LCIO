@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.cc,v 1.4 2005-09-22 12:27:19 gaede Exp $
+// CVS $Id: SIO_record.cc,v 1.5 2008-05-28 14:02:09 engels Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO record.                          
 // ----------------------------------------------------------------------------
@@ -15,6 +15,7 @@
 #endif
 
 #include <iostream>
+#include <cstdlib>
 
 #include "SIO_block.h"
 #include "SIO_blockManager.h"

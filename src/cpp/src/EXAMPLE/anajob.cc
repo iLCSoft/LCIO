@@ -4,6 +4,8 @@
 #include "IMPL/LCTOOLS.h"
 #include "EVENT/LCRunHeader.h" 
 
+#include <cstdlib>
+
 //static const char* FILEN = "recjob.slcio" ; // default file name 
 static std::vector<std::string> FILEN ; 
 

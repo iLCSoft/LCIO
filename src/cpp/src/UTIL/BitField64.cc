@@ -1,5 +1,8 @@
 #include "UTIL/BitField64.h"
 
+#include <cmath>
+#include <algorithm>
+
 using namespace EVENT ;
 
 namespace UTIL{

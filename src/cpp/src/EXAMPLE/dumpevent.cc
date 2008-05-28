@@ -11,6 +11,7 @@
 
 #include "UTIL/CellIDDecoder.h"
 
+#include <cstdlib>
 
 using namespace std ;
 using namespace lcio ;
