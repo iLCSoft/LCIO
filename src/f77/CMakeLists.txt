@@ -23,7 +23,7 @@ ADD_CUSTOM_TARGET( f77 )
 # loop through list of binaries
 FOREACH( bin ${f77_bins} )
     # create target for binary
-    ADD_EXECUTABLE( f77_${bin} EXCLUDE_FROM_ALL ${bin}.F )
+    ADD_EXECUTABLE( f77_${bin} ${bin}.F )
     # tell bin target to call this bin_XXX target
     ADD_DEPENDENCIES( f77 f77_${bin} )
     # avoid conflicts between library and binary target names
