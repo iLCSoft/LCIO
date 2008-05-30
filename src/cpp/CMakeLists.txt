@@ -112,6 +112,8 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/lXDR.cc
   ./src/UTIL/LCTOOLS.cc
   ./src/UTIL/CellIDEncoder.cc
+  ./src/UTIL/CollectionParameterMap.cc
+  ./src/UTIL/PIDHandler.cc
 )
 
 #------ require proper C++ -------
