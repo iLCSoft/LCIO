@@ -27,6 +27,10 @@ namespace IMPL{
     return _parameters ;
   }
 
+  EVENT::FloatVec& ParticleIDImpl::parameters() {
+    return _parameters ;
+  }
+
   void ParticleIDImpl::setType( int type ){
     checkAccess("ParticleIDImpl::setType") ;
     _type = type ;

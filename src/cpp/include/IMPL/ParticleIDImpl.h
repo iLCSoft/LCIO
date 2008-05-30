@@ -23,7 +23,7 @@ namespace IMPL {
  *
  * @see ParticleID
  * @author gaede
- * @version $Id: ParticleIDImpl.h,v 1.10 2006-08-04 16:52:46 gaede Exp $
+ * @version $Id: ParticleIDImpl.h,v 1.11 2008-05-30 13:23:27 gaede Exp $
  */
 
   class ParticleIDImpl : public EVENT::ParticleID, public AccessChecked {
@@ -51,15 +51,20 @@ namespace IMPL {
      */
     virtual float getLikelihood() const ;
 
-    /** Type of the algorithm/module that created this hypothesis. 
-     * Check/set collection parameters PIDAlgorithmTypeName and PIDAlgorithmTypeID.
+    /** Type of the algorithm/module that created this hypothesis - NOTE: must be unique within one 
+     *  collection.  
+     *  Check/set collection parameters PIDAlgorithmTypeName and PIDAlgorithmTypeID.
      */
     virtual  int getAlgorithmType() const ;
 
     /** Parameters associated with this hypothesis.
-     * Check/set collection paramter PIDParameterNames for decoding the indices.
+     * Check/set collection parameter ParameterNames_PIDAlgorithmTypeName for decoding the indices.
      */
     virtual const EVENT::FloatVec & getParameters() const ;
+
+    /**Access to parameters associated with this hypothesis.
+     */
+    virtual EVENT::FloatVec& parameters() ;
 
     // setters
     void setType( int type ) ;

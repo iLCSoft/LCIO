@@ -13,7 +13,7 @@ typedef std::vector<ParticleID*> ParticleIDVec ;
  *  for different hypotheses on the particle type.
  * 
  * @author gaede
- * @version $Id: ParticleID.aid,v 1.10 2006-08-03 16:53:35 gaede Exp $
+ * @version $Id: ParticleID.aid,v 1.11 2008-05-30 13:23:27 gaede Exp $
  * @see ReconstructedParticle.getParticleIDs()
  * @see Cluster.getParticleIDs()
  */
@@ -48,13 +48,14 @@ public interface ParticleID extends  LCObject {
      */
     public float getLikelihood() const ;	
     
-    /** Type of the algorithm/module that created this hypothesis. 
-     * Check/set collection parameters PIDAlgorithmTypeName and PIDAlgorithmTypeID.
+    /** Type of the algorithm/module that created this hypothesis - NOTE: must be unique within one 
+     *  collection.  
+     *  Check/set collection parameters PIDAlgorithmTypeName and PIDAlgorithmTypeID.
      */
     public  int getAlgorithmType() const ;	
     
     /** Parameters associated with this hypothesis.
-     * Check/set collection paramter PIDParameterNames for decoding the indices.
+     * Check/set collection parameters ParameterNames_PIDAlgorithmTypeName for decoding the indices.
      */
     public const FloatVec& getParameters() const ;
     
