@@ -1,0 +1,68 @@
+#ifndef CollectionParameterMap_h
+#define CollectionParameterMap_h 1
+
+#include "EVENT/LCCollection.h"
+
+#include <map>
+#include <string>
+
+using namespace EVENT;
+
+
+namespace UTIL{
+  
+  
+  /** Helper class for setting and retrieving an std::map<string,int> as collection parameters.
+   *  Depending on which constructor was used the collection parameters will be updated if
+   *  an object of this class goes out of scope. The corresponding collection parameters will
+   *  hold the current state of the map. If the a const LCCollection* was specified (read use case)
+   *  no parameters will be updated.
+   *
+   *  @see LCCollection::getParameters()
+   *  @see LCParameters
+   *  @author F.Gaede, DESY
+   *  @version $Id: CollectionParameterMap.h,v 1.1 2008-05-30 13:26:16 gaede Exp $
+   */
+  class CollectionParameterMap {
+
+  public:  
+    
+    typedef  std::map< std::string, int >  map_type ;
+
+    /** Create CollectionParameterMap for given collection - read the collection parameters
+     *  keyName and valueName if they exist.
+     */
+    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  LCCollection* col ) ;
+    
+    /** Create CollectionParameterMap for given collection - read the collection parameters
+     *  keyName and valueName if they exist.
+     */
+    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  const LCCollection* col ) ;
+
+    /** Update the collection parameters keyName and valueName when going out of scope.
+     */
+    ~CollectionParameterMap() ;
+
+    /** The std::map< std::string, int >.
+     */
+    map_type& map() { return _map ; }
+
+
+  protected:
+
+    CollectionParameterMap();
+    
+    void init( const LCCollection* col ) ; 
+ 
+    std::string _keyName ;
+    std::string _valueName ;
+    LCCollection* _col ;
+    map_type _map ;
+
+
+  } ; 
+  
+} // namespace
+#endif
+
+
