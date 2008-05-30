@@ -160,7 +160,8 @@ namespace IMPL{
   }
 
   void ReconstructedParticleImpl::addParticleID( ParticleID* pid ){
-    checkAccess("ReconstructedParticleImpl::addParticleID" );
+    // adding a PID should also be possible w/ read only data
+    //    checkAccess("ReconstructedParticleImpl::addParticleID" );
     _pid.push_back( pid ) ;
     // sort wrt. probability
     sort( _pid.begin() , _pid.end() , PIDSort()  ) ;
