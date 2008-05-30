@@ -3,6 +3,17 @@
 ---------------------------------------------------------------
 
 =====================
+v01-09-01
+=====================
+  no changes in file format
+
+     - optional linkage agains libdcap (dCache) for C++
+       -> cmake ..... -DBUILD_WITH_DCAP=1 -D DCAP_HOME=dcap_home ....
+
+     - made compatible w/ gcc4.3 (A.Bulgheroni)
+
+
+=====================
 v01-09
 =====================
   no changes in file format
