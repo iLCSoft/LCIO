@@ -18,9 +18,10 @@
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/VertexImpl.h" 
-#include "IMPL/ParticleIDImpl.h" 
+//#include "IMPL/ParticleIDImpl.h" 
 #include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
+#include "UTIL/PIDHandler.h"
 //#include "UTIL/IndexMap.h"
 #include "IMPL/LCRelationImpl.h"
 
@@ -94,6 +95,7 @@ public:
   
   void processEvent( LCEvent * evt ) { /* used for 'read only' access*/ 
 
+
     // this is our event loop code
     
     // read collection with MCParticles
@@ -102,10 +104,10 @@ public:
     
 
     // ---- trying to modify objects here would cause a ReadOnlyExcpetion. e.g. -----
-//         for(int i=0 ; i< NMCPART ; i++ ){
-//           MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
-//           part->setPDG(1234) ;      // <<<<< ------- will cause ReadOnlyException ---------
-//         }
+    //         for(int i=0 ; i< NMCPART ; i++ ){
+    //           MCParticleImpl* part =  dynamic_cast<MCParticleImpl*>( mcVec->getElementAt( i )) ;
+    //           part->setPDG(1234) ;      // <<<<< ------- will cause ReadOnlyException ---------
+    //         }
     // ---- also  adding  sth. to en existing collection is not allowed here ----
     //     MCParticleImpl* part = new MCParticleImpl ;
     //     part->setPDG( 1234 ) ;
@@ -249,9 +251,9 @@ public:
 
     LCCollection* simcalHits = evt->getCollection( simcalHitName ) ;
 
-//     // create a collection with copied simhits and modify these
-//     // (test copy constructor  - NOT YET AVAILABLE FOR OTHER CLASSES !)
-//     LCCollection* modifiedSimCalHits = new LCCollectionVec( LCIO::SIMCALORIMETERHIT );
+    //     // create a collection with copied simhits and modify these
+    //     // (test copy constructor  - NOT YET AVAILABLE FOR OTHER CLASSES !)
+    //     LCCollection* modifiedSimCalHits = new LCCollectionVec( LCIO::SIMCALORIMETERHIT );
 
     LCCollectionVec* clusterVec = new LCCollectionVec( LCIO::CLUSTER )  ;
     LCCollectionVec* calHits = new LCCollectionVec( LCIO::CALORIMETERHIT )  ;
@@ -283,21 +285,21 @@ public:
       calHit->setCellID0(  simcalHit->getCellID0() ) ;
       calHit->setPosition( simcalHit->getPosition()) ;
 
-//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
-//       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      //       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
+      //       scRel->addRelation( calHit , simcalHit , 0.5 ) ;
       scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       scRel->addElement( new LCRelationImpl( calHit , simcalHit , 0.5 ) ) ;
       calHits->addElement( calHit ) ;
 
-//       // create a copy of sim hit and modify it
-//       SimCalorimeterHitImpl* mSimHit = new SimCalorimeterHitImpl( *simcalHit ) ;
-//       mSimHit->setEnergy(  mSimHit->getEnergy() * 1000. ) ;
-//       modifiedSimCalHits->addElement( mSimHit ) ;
+      //       // create a copy of sim hit and modify it
+      //       SimCalorimeterHitImpl* mSimHit = new SimCalorimeterHitImpl( *simcalHit ) ;
+      //       mSimHit->setEnergy(  mSimHit->getEnergy() * 1000. ) ;
+      //       modifiedSimCalHits->addElement( mSimHit ) ;
 
     }
     evt->addCollection( calHits , "CalorimeterHits") ;
-//     evt->addCollection( modifiedSimCalHits , "ModifiedSimCalorimeterHits") ;
+    //     evt->addCollection( modifiedSimCalHits , "ModifiedSimCalorimeterHits") ;
 
     LCFlagImpl relFlag(0) ;
     relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
@@ -325,7 +327,7 @@ public:
 	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
 	
 	std::cout << "   relations for object " << hex << calHit->id()  
-		  ; // << std::endl ;
+	  ; // << std::endl ;
 	
 	const LCObjectVec& simHits = rel.getRelatedToObjects( calHit ) ;
 	const FloatVec& weights = rel.getRelatedToWeights( calHit ) ;
@@ -350,16 +352,16 @@ public:
 	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
 	
 	CalibrationConstant* cCon  = new CalibrationConstant( calHit->getCellID0() ,
-							     1.*j , 0.01*j );
+							      1.*j , 0.01*j );
 	calVec->addElement( cCon ) ;
       }    
       
       evt->addCollection(  calVec , "Calibration" ) ;
     }
 
-     // debug test: add empty collection of LCGenericObjects
-     LCCollectionVec* emtpyCol = new LCCollectionVec( LCIO::LCGENERICOBJECT )  ;
-     evt->addCollection(  emtpyCol , "EmptyLCGenericObject" ) ;
+    // debug test: add empty collection of LCGenericObjects
+    LCCollectionVec* emtpyCol = new LCCollectionVec( LCIO::LCGENERICOBJECT )  ;
+    evt->addCollection(  emtpyCol , "EmptyLCGenericObject" ) ;
 
     // -------------------------------------------------------------------------------------
     
@@ -378,24 +380,25 @@ public:
     
     clusterVec->parameters().setValues( "ClusterShapeParameters" , shapeParams ) ;
     
-    IntVec algoIDs ;
-    enum {
-      RunEventProcessorID  = 1 ,
-      anotherAlgorithmID,
-      andYetAnotherAlgorithmID
-    }	;
+    //     IntVec algoIDs ;
+    //     enum {
+    //       RunEventProcessorID  = 1 ,
+    //       anotherAlgorithmID,
+    //       andYetAnotherAlgorithmID
+    //     }	;
     
-    algoIDs.push_back( RunEventProcessorID ) ;
-    algoIDs.push_back( anotherAlgorithmID ) ;
-    algoIDs.push_back( andYetAnotherAlgorithmID ) ;
+    //     algoIDs.push_back( RunEventProcessorID ) ;
+    //     algoIDs.push_back( anotherAlgorithmID ) ;
+    //     algoIDs.push_back( andYetAnotherAlgorithmID ) ;
     
-    StringVec algoNames ;
-    algoNames.push_back("recojob-RunEventProcessor") ;
-    algoNames.push_back("anotherAlgorithm") ;
-    algoNames.push_back("andYetAnotherAlgorithm") ;
+    //     StringVec algoNames ;
+    //     algoNames.push_back("recojob-RunEventProcessor") ;
+    //     algoNames.push_back("anotherAlgorithm") ;
+    //     algoNames.push_back("andYetAnotherAlgorithm") ;
     
-    clusterVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
-    clusterVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
+    //     clusterVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
+    //     clusterVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
+    
     
     
     if( calHits ){
@@ -405,6 +408,18 @@ public:
       
       
       
+      PIDHandler cluPidHandler( clusterVec ) ;
+	
+      StringVec pNames ;
+      pNames.push_back( "param0" );
+      pNames.push_back( "param1" );
+      pNames.push_back( "param2" );
+	
+      IntVec algoIDs(3) ;
+      algoIDs[0] = cluPidHandler.addAlgorithm( "recojobRunEventProcessor" , pNames ) ;
+      algoIDs[1] = cluPidHandler.addAlgorithm( "anotherAlgorithm" , pNames ) ;
+      algoIDs[2] = cluPidHandler.addAlgorithm( "andYetAnotherAlgorithm" , pNames ) ;
+	
       for( int i=0; i < nCluster ; i ++ ){
 	
 	ClusterImpl* cluster = new ClusterImpl ;
@@ -428,22 +443,43 @@ public:
 	float shapeArray[6] = { 1.,2.,3.,3.,2.,1.} ;
 	FloatVec shape ;
 	copy( &shapeArray[0] , &shapeArray[5] , back_inserter( shape ) ) ;
- 	cluster->setShape( shape ) ;
+	cluster->setShape( shape ) ;
 
+	// 	// add some particle ids
+	// 	int nPID = 5 ;
+	// 	for(int j=0;j<nPID;j++){
+	// 	  ParticleIDImpl* pid = new ParticleIDImpl ;
+	// 	  pid->setLikelihood( (double) j / nPID ) ;
+	// 	  pid->setType( j ) ;
+	// 	  pid->setPDG( -11 ) ;
+	// 	  pid->setAlgorithmType( RunEventProcessorID ) ;
+
+	// 	  for(int k=0;k<3;k++){
+	// 	    pid->addParameter( k*.1 ) ;
+	// 	  }
+	// 	  cluster->addParticleID( pid ) ;
+	// 	}      
 	// add some particle ids
-	int nPID = 5 ;
-	for(int j=0;j<nPID;j++){
-	  ParticleIDImpl* pid = new ParticleIDImpl ;
-	  pid->setLikelihood( (double) j / nPID ) ;
-	  pid->setType( j ) ;
-	  pid->setPDG( -11 ) ;
-	  pid->setAlgorithmType( RunEventProcessorID ) ;
+	int nPID =  algoIDs.size() ;
 
-	  for(int k=0;k<3;k++){
-	    pid->addParameter( k*.1 ) ;
+	for(int j=0;j<nPID;j++){
+
+	  
+	  // some parameters
+	  FloatVec fv( pNames.size()  ) ;
+	  for( unsigned k=0 ; k < pNames.size() ; k++){
+	    fv[k] =  j*1000.+k*.1  ;
 	  }
-	  cluster->addParticleID( pid ) ;
+	  
+	  cluPidHandler.setParticleID( cluster,  
+				       j  , // user type
+				       22 , // PDG 
+				       1.*j / nPID , // likelihood
+				       algoIDs[j] ,
+				       fv ) ;
+
 	}      
+
 
 	// add some subdetector energies
 	const int NCALORIMETER = 2 ;
@@ -453,7 +489,7 @@ public:
 	detNames.resize(  NCALORIMETER ) ;
 	detNames[ECALINDEX] = "Ecal" ;
 	detNames[HCALINDEX] = "Hcal" ;
- 	clusterVec->parameters().setValues( "ClusterSubdetectorNames" , detNames ) ;
+	clusterVec->parameters().setValues( "ClusterSubdetectorNames" , detNames ) ;
 	
 
 	cluster->subdetectorEnergies().resize( NCALORIMETER )  ;
@@ -498,24 +534,24 @@ public:
 	vtx->setPrimary(false);
       }
       /*
-	//EXP: INDEX MAP - UNDER DEVELOPMENT
+      //EXP: INDEX MAP - UNDER DEVELOPMENT
       
       switch(i){
-        case 0: vtx->setAlgorithmType( imvtx.encode( "ZvTop" ) ); break;
-        case 1: vtx->setAlgorithmType( imvtx.encode( "ZvKin" ) ); break;
-        case 5: vtx->setAlgorithmType( imvtx.encode( "SimAnnealing" ) ); break;
-        default: break;
+      case 0: vtx->setAlgorithmType( imvtx.encode( "ZvTop" ) ); break;
+      case 1: vtx->setAlgorithmType( imvtx.encode( "ZvKin" ) ); break;
+      case 5: vtx->setAlgorithmType( imvtx.encode( "SimAnnealing" ) ); break;
+      default: break;
       }
       */
 
       //EXP: INDEX MAP V2 - UNDER DEVELOPMENT
       switch(rand()%7){
-        case 0: vtx->setAlgorithmType( "ZvTop" ); break;
-        case 1: vtx->setAlgorithmType( "ZvKin" ); break;
-	case 2: vtx->setAlgorithmType( "42" ); break;
-	case 3: vtx->setAlgorithmType( "SimAnnealing" ); break;
-	case 5: vtx->setAlgorithmType( "_Test" ); break;
-        default: break;
+      case 0: vtx->setAlgorithmType( "ZvTop" ); break;
+      case 1: vtx->setAlgorithmType( "ZvKin" ); break;
+      case 2: vtx->setAlgorithmType( "42" ); break;
+      case 3: vtx->setAlgorithmType( "SimAnnealing" ); break;
+      case 5: vtx->setAlgorithmType( "_Test" ); break;
+      default: break;
       }
       
       vtx->setChi2(1+i*.01);
@@ -531,7 +567,7 @@ public:
       cov[5] = 6. ;
       vtx->setCovMatrix( cov ) ;
       for(int j=0;j<3;j++){
-        vtx->addParameter( j*.1 ) ;
+	vtx->addParameter( j*.1 ) ;
       }
       
       vertexVec->addElement ( vtx ) ;
@@ -541,85 +577,133 @@ public:
     
     // add some reconstructed particles
     LCCollectionVec* particleVec = new LCCollectionVec( LCIO::RECONSTRUCTEDPARTICLE )  ;
-    particleVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
-    particleVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
+    //     particleVec->parameters().setValues( "PIDAlgorithmTypeName" , algoNames ) ;
+    //     particleVec->parameters().setValues( "PIDAlgorithmTypeID" , algoIDs ) ;
     
-    for(int i=0;i<nRecP;i++){
-      ReconstructedParticleImpl * part = new ReconstructedParticleImpl ;
-      part->setType( 42 ) ;
-      
-      float p[3] = { 1.1 , 2.2 , 3.3 } ;
-      part->setMomentum( p ) ;
-      part->setEnergy(  i*101.101 ) ;
+    if( particleVec ){
 
-      float covA[] =  { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10. } ;
-      FloatVec cov(10) ;
-      for(int j=0;j<10;j++) cov[j] = covA[j] ;
+      PIDHandler recPIDHandler ( particleVec ) ;
+	
+      StringVec pNames ;
+      pNames.push_back( "param0" );
+      pNames.push_back( "param1" );
+      pNames.push_back( "param2" );
+      pNames.push_back( "param3" );
+      pNames.push_back( "param4" );
 
+      IntVec aIDs(4) ;
+      aIDs[0] = recPIDHandler.addAlgorithm( "recojobRunEventProcessor" , pNames ) ;
+      aIDs[1] = recPIDHandler.addAlgorithm( "anotherAlgorithm" , pNames ) ;
+      aIDs[2] = recPIDHandler.addAlgorithm( "andYetAnotherAlgorithm" , pNames ) ;
+      aIDs[4] = recPIDHandler.addAlgorithm( "andEvenAFourthAlgorithm" , pNames ) ;
+	
+      for(int i=0;i<nRecP;i++){
+	ReconstructedParticleImpl * part = new ReconstructedParticleImpl ;
+	part->setType( 42 ) ;
+	  
+	float p[3] = { 1.1 , 2.2 , 3.3 } ;
+	part->setMomentum( p ) ;
+	part->setEnergy(  i*101.101 ) ;
+	  
+	float covA[] =  { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10. } ;
+	FloatVec cov(10) ;
+	for(int j=0;j<10;j++) cov[j] = covA[j] ;
+	  
+	  
+	part->setCovMatrix( cov) ;
+	part->setMass( 0.511*i ) ;
+	part->setCharge( -2./3. ) ;
+	float x[3] = { 10.,20.,30. } ;
+	part->setReferencePoint( x )  ;
+	  
+	//associate vertices
+	part->setStartVertex( dynamic_cast<Vertex*>( vertexVec->getElementAt(i) )  ) ;
+	VertexImpl* v = dynamic_cast<VertexImpl*>( vertexVec->getElementAt(i+1) ) ;
+	//part->setEndVertex( v ) ;
+	//associate particles to vertices
+	v->setAssociatedParticle( dynamic_cast<ReconstructedParticle*>( part ) ) ;
+	  
+	// 	// add some particle ids
+	// 	int nPID = 5 ;
+	// 	for(int j=0;j<nPID;j++){
+	// 	  ParticleIDImpl* pid = new ParticleIDImpl ;
+	// 	  pid->setLikelihood( (double) j / nPID ) ;
+	// 	  pid->setType( j ) ;
+	// 	  pid->setPDG( -11 ) ;
+	// 	  pid->setAlgorithmType( algoIDs[0] ) ;
+	// 	  for(int k=0;k<3;k++){
+	// 	    pid->addParameter( k*.1 ) ;
+	// 	  }
+	// 	  part->addParticleID( pid ) ;
+	// 	  if( j == 2 ) 
+	// 	    part->setParticleIDUsed( pid ) ;
+	// 	}      
+	  
+	// add some particle ids
+	int nPID =  aIDs.size() ;
+	  
+	for(int j=0;j<nPID;j++){
+	    
+	  // some parameters
+	  FloatVec fv( pNames.size()  ) ;
+	  for( unsigned k=0 ; k < pNames.size() ; k++){
+	    fv[k] =  j*1000.+k*.1  ;
+	  }
+	    
+	  recPIDHandler.setParticleID( part,  
+				       j*j  , // user type
+				       -11 , // PDG 
+				       42.*j / nPID , // likelihood
+				       aIDs[j] ,
+				       fv ) ;
+	    
+	  if( j == 2 ) 
 
-      part->setCovMatrix( cov) ;
-      part->setMass( 0.511*i ) ;
-      part->setCharge( -2./3. ) ;
-      float x[3] = { 10.,20.,30. } ;
-      part->setReferencePoint( x )  ;
-      
-      //associate vertices
-      part->setStartVertex( dynamic_cast<Vertex*>( vertexVec->getElementAt(i) )  ) ;
-      VertexImpl* v = dynamic_cast<VertexImpl*>( vertexVec->getElementAt(i+1) ) ;
-      //part->setEndVertex( v ) ;
-      //associate particles to vertices
-      v->setAssociatedParticle( dynamic_cast<ReconstructedParticle*>( part ) ) ;
-      
-      // add some particle ids
-      int nPID = 5 ;
-      for(int j=0;j<nPID;j++){
-	ParticleIDImpl* pid = new ParticleIDImpl ;
-	pid->setLikelihood( (double) j / nPID ) ;
-	pid->setType( j ) ;
-	pid->setPDG( -11 ) ;
-	pid->setAlgorithmType( RunEventProcessorID ) ;
-	for(int k=0;k<3;k++){
-	  pid->addParameter( k*.1 ) ;
+	    recPIDHandler.setParticleIDUsed( part,  aIDs[j] ) ;
+
+	}      
+	       
+	part->setGoodnessOfPID( 0.7 ) ;
+	  
+	// some other particles
+	if( i > 1  ){
+	  ReconstructedParticle* p1 = 
+	    dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-1) ) ;
+	  ReconstructedParticle* p2 = 
+	    dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-2) ) ;
+	  part->addParticle( p1 ) ;
+	  part->addParticle( p2 ) ;
 	}
-	part->addParticleID( pid ) ;
-	if( j == 2 ) 
-	  part->setParticleIDUsed( pid ) ;
-      }      
-
-      part->setGoodnessOfPID( 0.7 ) ;
-
-      // some other particles
-      if( i > 1  ){
-	ReconstructedParticle* p1 = 
-	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-1) ) ;
-	ReconstructedParticle* p2 = 
-	  dynamic_cast<ReconstructedParticle*> ( particleVec->getElementAt(i-2) ) ;
-	part->addParticle( p1 ) ;
-	part->addParticle( p2 ) ;
+	//a track
+	int iTrk = (int) ( double (trkVec->size()) * rand() / RAND_MAX )    ;
+	Track* trk = dynamic_cast<Track*> ( trkVec->getElementAt( iTrk ) ) ;
+	part->addTrack( trk ) ;
+	  
+	// a cluster 
+	int iClu = (int) ( double (clusterVec->size()) *  rand() / RAND_MAX )  ;
+	Cluster* clu = dynamic_cast<Cluster*> ( clusterVec->getElementAt( iClu ) ) ;
+	part->addCluster( clu ) ;
+	  
+	//       // and finaly an MCParticle
+	//       LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+	//       int iMCP = (int) ( double (mcVec->getNumberOfElements()) *  rand() / RAND_MAX ) ;
+	//       MCParticle* mcp = dynamic_cast<MCParticle*>( mcVec->getElementAt( iMCP ) ) ;
+	//       part->addMCParticle( mcp , 0.5 ) ;
+	  
+	particleVec->addElement( part ) ;
       }
-      //a track
-      int iTrk = (int) ( double (trkVec->size()) * rand() / RAND_MAX )    ;
-      Track* trk = dynamic_cast<Track*> ( trkVec->getElementAt( iTrk ) ) ;
-      part->addTrack( trk ) ;
-
-      // a cluster 
-      int iClu = (int) ( double (clusterVec->size()) *  rand() / RAND_MAX )  ;
-      Cluster* clu = dynamic_cast<Cluster*> ( clusterVec->getElementAt( iClu ) ) ;
-      part->addCluster( clu ) ;
-
-//       // and finaly an MCParticle
-//       LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
-//       int iMCP = (int) ( double (mcVec->getNumberOfElements()) *  rand() / RAND_MAX ) ;
-//       MCParticle* mcp = dynamic_cast<MCParticle*>( mcVec->getElementAt( iMCP ) ) ;
-//       part->addMCParticle( mcp , 0.5 ) ;
-
-      particleVec->addElement( part ) ;
     }
 
     evt->addCollection( particleVec, "ReconstructedParticle" )  ;
 
     nEvent ++ ;
 
+
+    
+    LCTOOLS::dumpEvent( evt ) ;
+
+
+    lcWrt->writeEvent( evt ) ;
   }
 
   void modifyEvent( LCEvent * evt ) {
@@ -639,10 +723,7 @@ public:
     part->addParent( dynamic_cast<MCParticle*>( mcVec->getElementAt(0) )) ;
     mcVec->addElement( part ) ;  // <<<< adding to collections
 
-    LCTOOLS::dumpEvent( evt ) ;
-    
-    lcWrt->writeEvent( evt ) ;
-   }
+  }
   
 
   void processRunHeader( LCRunHeader* run){
@@ -660,43 +741,43 @@ public:
 
 int main(int argc, char** argv ){
   
-    srand(1234) ;
+  srand(1234) ;
     
-    // create reader and writer for input and output streams 
-    LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+  // create reader and writer for input and output streams 
+  LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     
     
-    // read file name from command line 
-    if( argc > 1 ) { FILEN = argv[1] ; }
-    if( argc > 2 ) { OUTFILEN = argv[2] ; }
+  // read file name from command line 
+  if( argc > 1 ) { FILEN = argv[1] ; }
+  if( argc > 2 ) { OUTFILEN = argv[2] ; }
 
-    lcReader->open( FILEN ) ;
-    // we could catch the exception here - but this not really needed
-    // as long as we exit anyhow if the file could not be opened...
-    //     try{  lcReader->open( FILEN ) ; } 
-    //     catch( IOException& e){
-    //       cout << "Can't open file : " << e.what()  << endl ;
-    //       exit(1) ;
-    //     }
+  lcReader->open( FILEN ) ;
+  // we could catch the exception here - but this not really needed
+  // as long as we exit anyhow if the file could not be opened...
+  //     try{  lcReader->open( FILEN ) ; } 
+  //     catch( IOException& e){
+  //       cout << "Can't open file : " << e.what()  << endl ;
+  //       exit(1) ;
+  //     }
     
-    // create a new RunEventProcessor, register it with the reader
-    // and read and proccess the whole stream 
-    {
-      RunEventProcessor evtProc ;
+  // create a new RunEventProcessor, register it with the reader
+  // and read and proccess the whole stream 
+  {
+    RunEventProcessor evtProc ;
       
-      lcReader->registerLCRunListener( &evtProc ) ; 
-      lcReader->registerLCEventListener( &evtProc ) ; 
+    lcReader->registerLCRunListener( &evtProc ) ; 
+    lcReader->registerLCEventListener( &evtProc ) ; 
       
-      lcReader->readStream() ;
+    lcReader->readStream() ;
 
-//             lcReader->readStream( 5) ; // debugging: only read 4 events 
-//             lcReader->readStream( 10000 ) ; // debugging: provoke EndOfDataException
+    //             lcReader->readStream( 5) ; // debugging: only read 4 events 
+    //             lcReader->readStream( 10000 ) ; // debugging: provoke EndOfDataException
       
-    } 
+  } 
     
-    lcReader->close() ;
-    delete lcReader ;
-    return 0 ;
+  lcReader->close() ;
+  delete lcReader ;
+  return 0 ;
 }
 
 //=============================================================================

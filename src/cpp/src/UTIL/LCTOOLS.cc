@@ -30,6 +30,7 @@
 #include "UTIL/LCObjectHandle.h"
 #include "UTIL/LCTime.h"
 #include "UTIL/CellIDDecoder.h"
+#include "UTIL/PIDHandler.h"
 #include <map>
 #include <set>
 #include <cstdio>
@@ -1362,9 +1363,83 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       cout  << "------------|---|----|---------------------------------|----------|----------|-----------|---------------------------------|-----------|"
 	    << endl ;
     }
-      cout << endl 
-	   << "-------------------------------------------------------------------------------- " 
-	   << endl ;
+    // --- detailed PID info:
+    
+    cout <<  endl 
+	 << "  ------------ detailed PID info: --- " <<   endl  <<   endl 
+	 << "   algorithms : " 
+	 <<   endl ;
+    
+    
+    PIDHandler pidH( col )  ;
+    
+    const IntVec& ids =  pidH.getAlgorithmIDs() ;
+
+    for(unsigned i=0; i<ids.size() ; ++i){
+
+      cout << "   [id: " << ids[i] << "]   " 
+	   <<  pidH.getAlgorithmName( ids[i] ) 
+	   << " - params: " ;
+      
+      const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
+ 
+      for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
+
+	cout << " " << *it  ;
+      }
+      cout << endl ;
+    }
+    cout << endl ;
+
+    std::cout << endl
+	      << "   [particle] |  PDG   | likelihood |  type  |  algoId  | parameters : " << endl
+	      << "              |        |            |        |          |              "
+      	      << endl ;
+
+
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      ReconstructedParticle* recP = 
+	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
+      
+      printf("   [%8.8x] " , recP->id() ) ;
+      
+      
+      for(unsigned int l=0;l<recP->getParticleIDs().size();l++){
+	
+	if( l!=0)
+	  printf("              " ) ;
+
+	ParticleID* pid = recP->getParticleIDs()[l] ;
+	
+	printf("| %6d | %6.4e | %6.6d | %8d | [",  
+	       pid->getPDG() , 
+	       pid->getLikelihood()  ,
+	       pid->getType() ,
+	       pid->getAlgorithmType() 
+	       ) ;
+
+	const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
+	
+	for(unsigned j=0;j< pNames.size() ;++j){
+
+	  cout << " " <<  pNames[j]
+	       << " : " <<  pid->getParameters()[j] << "," ; 
+
+	}
+	cout << "]"<< endl ;
+	
+
+      }
+      cout << endl ;
+      
+    }
+    
+    
+    
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
     
   }
 
