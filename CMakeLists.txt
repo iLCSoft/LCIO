@@ -411,6 +411,10 @@ SET( BUILD_LCIO_TESTJOBS "${BUILD_LCIO_TESTJOBS}" CACHE BOOL
     "Set to ON to build LCIO testbobs" FORCE )
 SET( BUILD_F77_TESTJOBS "${BUILD_F77_TESTJOBS}" CACHE BOOL
     "Set to ON to build LCIO F77 testbobs" FORCE )
+SET( BUILD_WITH_DCAP "${BUILD_WITH_DCAP}" CACHE BOOL
+    "Set to ON to build LCIO with dcap support (dCache)" FORCE )
+SET( DCAP_HOME "${DCAP_HOME}" CACHE BOOL
+    "Set to dcap installation directory - only if BUILD_WITH_DCAP=true" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
 SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
