@@ -1191,6 +1191,82 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	   << "-------|-----------|---------------------------------|----------|----------|----------|----------|---------"
 	   << endl ;
     }
+
+
+    // --- detailed PID info:
+    
+    cout <<  endl 
+	 << "  ------------ detailed PID info: --- " <<   endl  <<   endl 
+	 << "   algorithms : " 
+	 <<   endl ;
+    
+    
+    PIDHandler pidH( col )  ;
+    
+    const IntVec& ids =  pidH.getAlgorithmIDs() ;
+
+    for(unsigned i=0; i<ids.size() ; ++i){
+
+      cout << "   [id: " << ids[i] << "]   " 
+	   <<  pidH.getAlgorithmName( ids[i] ) 
+	   << " - params: " ;
+      
+      const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
+ 
+      for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
+
+	cout << " " << *it  ;
+      }
+      cout << endl ;
+    }
+    cout << endl ;
+
+    std::cout << endl
+	      << "   [cluster ] |  PDG   | likelihood |  type  |  algoId  | parameters : " << endl
+	      << "              |        |            |        |          |              "
+      	      << endl ;
+
+
+    for( int i=0 ; i< nPrint ; i++ ){
+      
+      Cluster* clu = 
+	dynamic_cast<Cluster*>( col->getElementAt( i ) ) ;
+      
+      printf("   [%8.8x] " , clu->id() ) ;
+      
+      
+      for(unsigned int l=0;l<clu->getParticleIDs().size();l++){
+	
+	if( l!=0)
+	  printf("              " ) ;
+
+	ParticleID* pid = clu->getParticleIDs()[l] ;
+	
+	printf("| %6d | %6.4e | %6.6d | %8d | [",  
+	       pid->getPDG() , 
+	       pid->getLikelihood()  ,
+	       pid->getType() ,
+	       pid->getAlgorithmType() 
+	       ) ;
+
+	const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
+	
+	for(unsigned j=0;j< pNames.size() ;++j){
+
+	  cout << " " <<  pNames[j]
+	       << " : " <<  pid->getParameters()[j] << "," ; 
+
+	}
+	cout << "]"<< endl ;
+	
+
+      }
+      cout << endl ;
+      
+    }
+    
+    
+    
       cout << endl 
 	   << "-------------------------------------------------------------------------------- " 
 	   << endl ;
