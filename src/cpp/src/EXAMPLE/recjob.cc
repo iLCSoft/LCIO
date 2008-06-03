@@ -595,7 +595,7 @@ public:
       aIDs[0] = recPIDHandler.addAlgorithm( "recojobRunEventProcessor" , pNames ) ;
       aIDs[1] = recPIDHandler.addAlgorithm( "anotherAlgorithm" , pNames ) ;
       aIDs[2] = recPIDHandler.addAlgorithm( "andYetAnotherAlgorithm" , pNames ) ;
-      aIDs[4] = recPIDHandler.addAlgorithm( "andEvenAFourthAlgorithm" , pNames ) ;
+      aIDs[3] = recPIDHandler.addAlgorithm( "andEvenAFourthAlgorithm" , pNames ) ;
 	
       for(int i=0;i<nRecP;i++){
 	ReconstructedParticleImpl * part = new ReconstructedParticleImpl ;
