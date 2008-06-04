@@ -1,4 +1,4 @@
-// $Id: lcio_swig.i,v 1.8 2006-10-25 23:35:09 jeremy Exp $
+// $Id: lcio_swig.i,v 1.9 2008-06-04 17:37:16 engels Exp $
 
 /*
  * Process this file with Swig to make a Python wrapper for LCIO.
@@ -377,6 +377,7 @@ namespace EVENT
             static const int RCHBIT_ID1;
             static const int RCHBIT_NO_PTR;
             static const int RCHBIT_TIME;
+            static const int RCHBIT_ENERGY_ERROR;
             static const int TRAWBIT_ID1;
             static const int THBIT_BARREL;
             static const int THBIT_MOMENTUM;

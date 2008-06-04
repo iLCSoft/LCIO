@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOCalorimeterHit.java,v 1.19 2007-11-07 20:46:22 jeremy Exp $
+ * @version $Id: SIOCalorimeterHit.java,v 1.20 2008-06-04 17:37:16 engels Exp $
  */
 class SIOCalorimeterHit extends ICalorimeterHit
 {
@@ -27,6 +27,9 @@ class SIOCalorimeterHit extends ICalorimeterHit
       if ((flags & (1 << LCIO.RCHBIT_ID1)) != 0 || ( major == 0 && minor == 8) )  cellId1 = in.readInt();
       else cellId1 = 0;
       energy = in.readFloat();
+      if (1000*major+minor>1009 && (flags&(1<<LCIO.RCHBIT_ENERGY_ERROR)) != 0){
+        energyError = in.readFloat();
+      }
       if (1000*major+minor>1002 && (flags&(1<<LCIO.RCHBIT_TIME)) != 0)
       {
 	 time = in.readFloat();
@@ -63,6 +66,7 @@ class SIOCalorimeterHit extends ICalorimeterHit
          out.writeInt(hit.getCellID0());
          if ((flags & (1 << LCIO.RCHBIT_ID1)) != 0) out.writeInt(hit.getCellID1());
          out.writeFloat(hit.getEnergy());
+         if ((flags & (1 << LCIO.RCHBIT_ENERGY_ERROR)) != 0) out.writeFloat(hit.getEnergyError());
          if ((flags & (1 << LCIO.RCHBIT_TIME)) != 0) out.writeFloat(hit.getTime());
          if ((flags & (1 << LCIO.RCHBIT_LONG)) != 0)
          {
@@ -84,6 +88,7 @@ class SIOCalorimeterHit extends ICalorimeterHit
       out.writeInt(cellId0);
       if ((flags & (1 << LCIO.RCHBIT_ID1)) != 0) out.writeInt(cellId1);
       out.writeFloat(energy);
+      if ((flags & (1 << LCIO.RCHBIT_ENERGY_ERROR)) != 0) out.writeFloat(energyError);
       if ((flags & (1 << LCIO.RCHBIT_TIME)) != 0) out.writeFloat(time);
 
       if ((flags & (1 << LCIO.RCHBIT_LONG)) != 0)

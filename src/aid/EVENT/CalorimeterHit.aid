@@ -24,7 +24,7 @@ typedef std::vector<CalorimeterHit*> CalorimeterHitVec ;
  *  flag(LCIO::RCHBIT_NO_PTR)==1. 
  *  
  * @author gaede
- * @version $Id: CalorimeterHit.aid,v 1.15 2006-08-03 16:53:34 gaede Exp $
+ * @version $Id: CalorimeterHit.aid,v 1.16 2008-06-04 17:37:15 engels Exp $
  */
 
 public interface CalorimeterHit extends LCObject {
@@ -49,7 +49,12 @@ public interface CalorimeterHit extends LCObject {
     /** Returns the energy of the hit in [GeV].
      */
     public float getEnergy() const ;
-    
+
+    /** Returns the error of the hit energy in [GeV]. Optional, check/set
+     *  flag(LCIO::RCHBIT_ENERGY_ERROR)==1.
+     */
+    public float getEnergyError() const ;
+
     /** Returns the time of the hit in [ns]. Optional, check/set 
      *  flag(LCIO::RCHBIT_TIME)==1.
      */

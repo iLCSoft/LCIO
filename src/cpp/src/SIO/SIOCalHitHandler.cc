@@ -42,6 +42,10 @@ namespace SIO{
     }
     SIO_DATA( stream ,  &(hit->_energy) , 1  ) ;
 
+    if( _vers > SIO_VERSION_ENCODE( 1, 9 ) && lcFlag.bitSet( LCIO::RCHBIT_ENERGY_ERROR )){
+        SIO_DATA( stream ,  &(hit->_energyError) , 1  ) ;
+    } 
+
 
     if( _vers > SIO_VERSION_ENCODE( 1, 2) && lcFlag.bitSet( LCIO::RCHBIT_TIME ) ){
       SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
@@ -89,6 +93,9 @@ namespace SIO{
       LCSIO_WRITE( stream, hit->getCellID1()  ) ;
     }
     LCSIO_WRITE( stream, hit->getEnergy()  ) ;
+    if( lcFlag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) ){
+        LCSIO_WRITE( stream, hit->getEnergyError()  ) ;
+    }
 
     if( lcFlag.bitSet( LCIO::RCHBIT_TIME ) ){
       LCSIO_WRITE( stream ,  hit->getTime() ) ;

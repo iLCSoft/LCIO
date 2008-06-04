@@ -3,8 +3,8 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 #define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 9
-#define LCIO_PATCH_LEVEL 1
+#define LCIO_MINOR_VERSION 10
+#define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
 
@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.63 2008-05-30 14:05:16 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.64 2008-06-04 17:37:15 engels Exp $
  * @see LCObject
  * @see LCIO
  */
@@ -46,6 +46,7 @@ public interface LCIO{
     static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
     static const int RCHBIT_NO_PTR = 28 ; // 1: pointer tag not added
     static const int RCHBIT_TIME   = 27 ; // 1: time information stored
+    static const int RCHBIT_ENERGY_ERROR  = 26 ;   // 1: store energy error
 
     // raw tracker data (pulses)
     static const int TRAWBIT_ID1   = 31 ;  //  cellid1 stored
@@ -115,7 +116,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 9 ;
+  public static const int MINORVERSION  = 10 ;
 
 
   // bits in flag words
@@ -131,6 +132,7 @@ public interface LCIO{
   public static const int RCHBIT_ID1    = 29 ;  // cellid1 stored
   public static const int RCHBIT_NO_PTR = 28 ; // 1: pointer tag not added
   public static const int RCHBIT_TIME   = 27 ; // 1: time information stored
+  public static const int RCHBIT_ENERGY_ERROR  = 26 ;  // 1: store energy error
 
   // raw tracker data (pulses)
   public static const int TRAWBIT_ID1   = 31 ;  //  cellid1 stored

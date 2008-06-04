@@ -993,6 +993,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
     cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
     cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+    cout << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
 
     int nHits =  col->getNumberOfElements() ;
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -1003,7 +1004,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 
 
     std::cout << endl
-	      << " [   id   ] |  cellId0 | cellId1  |   energy  |        position (x,y,z)          |"
+	      << " [   id   ] |  cellId0 | cellId1  |   energy  | energyerr |        position (x,y,z)          |"
 	      << endl ;
 
     for( int i=0 ; i< nPrint ; i++ ){
@@ -1014,25 +1015,28 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       int id0 = hit->getCellID0() ;
       int id1 = hit->getCellID1() ;
       
-      if( flag.bitSet( LCIO::CHBIT_LONG ) ){
-	printf( " [%8.8x] | %8.8x | %8.8x |"
-		" %5.3e | (%5.3e,%5.3e,%5.3e)|\n" , 
-		hit->id(), 
-		id0,
-		id1,
-		hit->getEnergy() ,
-		hit->getPosition()[0] ,
-		hit->getPosition()[1] ,
-		hit->getPosition()[2]
-		) ;
-      } else{
-	printf( " [%8.8x] | %8.8x | %8.8x |"
-		" %5.3e |    no position available         \n" , 
+	printf( " [%8.8x] | %8.8x | %8.8x | %5.3e | " , 
 		hit->id(), 
 		id0,
 		id1,
 		hit->getEnergy()
 		) ;
+
+      if( flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) ){
+        printf( "%5.3e | ", hit->getEnergyError() );
+      }
+      else{
+        printf( "  - NA -  | " );
+      }
+
+      if( flag.bitSet( LCIO::CHBIT_LONG ) ){
+	printf( "(%5.3e,%5.3e,%5.3e)|\n" , 
+		hit->getPosition()[0] ,
+		hit->getPosition()[1] ,
+		hit->getPosition()[2]
+		) ;
+      } else{
+	printf( "    no position available         \n") ;
       }
       std::cout << "        id-fields: (" << idDecoder( hit ).valueString() << ")" << std::endl ; 
 

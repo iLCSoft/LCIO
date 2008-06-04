@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.38 2006-09-21 06:10:47 gaede Exp $
+*  $Id: lciof77api.inc,v 1.39 2008-06-04 17:37:16 engels Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -158,9 +158,10 @@ c-----the SimCalorimeterHit interface
 c-----the CalorimeterHit interface
       PTRTYPE lccahcreate
       integer lccahid, lccahdelete, lccahgetcellid0, lccahgetcellid1
-      real    lccahgetenergy, lccahgettime
+      real    lccahgetenergy, lccahgetenergyerr, lccahgettime
       integer lccahgetposition,lccahgettype,lccahgetrawhit
-      integer lccahsetcellid0, lccahsetcellid1, lccahsetenergy
+      integer lccahsetcellid0, lccahsetcellid1
+      integer lccahsetenergy, lccahsetenergyerr
       integer lccahsetposition, lccahsettime,lccahsettype,lccahsetrawhit
 
 c-----the Cluster interface
@@ -264,6 +265,7 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_RCHBIT_ID1
       integer LCIO_RCHBIT_NO_PTR
       integer LCIO_RCHBIT_TIME
+      integer LCIO_RCHBIT_ENERGY_ERROR
       integer LCIO_THBIT_BARREL
       integer LCIO_THBIT_MOMENTUM
       integer LCIO_TRBIT_HITS
@@ -282,7 +284,8 @@ c---- constants as defined in EVENT::LCIO
       parameter (LCIO_CHBIT_LONG=31, LCIO_CHBIT_BARREL=30,
      &           LCIO_CHBIT_PDG=28, LCIO_CHBIT_ID1=29)
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
-     &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28)
+     &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28,
+     &           LCIO_RCHBIT_TIME=27, LCIO_RCHBIT_ENERGY_ERROR=26)
       parameter (LCIO_THBIT_BARREL=31)
       parameter (LCIO_THBIT_MOMENTUM=30)
       parameter (LCIO_TRBIT_HITS=31)

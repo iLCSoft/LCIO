@@ -409,7 +409,7 @@ public class Printer
 	{
 		void print(LCCollection coll, int nprint)
 		{
-			ps.println(" [   id   ] | [cellID0] | [cellID1]  |   energy  |        position (x,y,z)          ");
+			ps.println(" [   id   ] | [cellID0] | [cellID1]  |   energy  | energyerr |        position (x,y,z)          ");
 			
 			for (int i = 0; i < nprint; i++)
 			{
@@ -420,13 +420,24 @@ public class Printer
 
 				int flag = coll.getFlag();
 
+                ps.format(" [%08x] | [%08x] | [%08x] | %5.3e | ", 
+                    Integer.valueOf(hit.hashCode()),
+                    Integer.valueOf(id0), 
+                    Integer.valueOf(id1), 
+                    Double.valueOf(hit.getEnergy()) 
+				);
+
+				if ((flag & (1 << LCIO.RCHBIT_ENERGY_ERROR)) != 0){
+                    ps.format("%5.3e | ", Double.valueOf(hit.getEnergyError()));
+                }
+                else{
+                    ps.format(" - NA - | ");
+                }
+
+
 				if ((flag & (1 << LCIO.CHBIT_LONG)) != 0)
 				{
-					ps.format(" [%08x] | [%08x] | [%08x] | %5.3e | (%5.3e,%5.3e,%5.3e)\n", 
-								Integer.valueOf(hit.hashCode()),
-								Integer.valueOf(id0), 
-								Integer.valueOf(id1), 
-								Double.valueOf(hit.getEnergy()), 
+					ps.format("(%5.3e,%5.3e,%5.3e)\n", 
 								Double.valueOf(hit.getPosition()[0]), 
 								Double.valueOf(hit.getPosition()[1]), 
 								Double.valueOf(hit.getPosition()[2]) 
@@ -434,11 +445,7 @@ public class Printer
 				}
 				else
 				{
-					ps.format(" [%08x] | [%08x] | %5.3e |    no position available         \n", 
-								Integer.valueOf(id0), 
-								Integer.valueOf(id1), 
-								Double.valueOf(hit.getEnergy()) 
-					);
+					ps.format("    no position available         \n");
 				}
 
 				//ps.print("        id-fields: (" + idDecoder( hit ).valueString() << ")" << std::endl ;

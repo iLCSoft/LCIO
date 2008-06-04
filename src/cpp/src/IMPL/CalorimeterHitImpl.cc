@@ -6,6 +6,7 @@ namespace IMPL{
     _cellID0(0),
     _cellID1(0),
     _energy(0.),
+    _energyError(0.),
     _time(0.),
     _type(0),
     _rawHit(0) {
@@ -28,6 +29,10 @@ namespace IMPL{
   
   float CalorimeterHitImpl::getEnergy() const {
     return _energy ;
+  }
+
+  float CalorimeterHitImpl::getEnergyError() const {
+    return _energyError ;
   }
   
   float CalorimeterHitImpl::getTime() const {
@@ -60,6 +65,11 @@ namespace IMPL{
     _energy = en ;
   }
   
+  void CalorimeterHitImpl::setEnergyError(float enerr){
+    checkAccess("CalorimeterHitImpl::setEnergyError") ;
+    _energyError = enerr ;
+  }
+ 
   void CalorimeterHitImpl::setTime(float t){
     checkAccess("CalorimeterHitImpl::setTime") ;
     _time = t ;

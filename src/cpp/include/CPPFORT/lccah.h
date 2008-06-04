@@ -11,24 +11,26 @@
 // trailing underscores on Linux
 
 PTRTYPE lccahcreate() ;
-int lccahdelete( PTRTYPE simcalhit ) ;
-int lccahid( PTRTYPE simcalhit ) ;
+int lccahdelete( PTRTYPE calhit ) ;
+int lccahid( PTRTYPE calhit ) ;
 
-int lccahgetcellid0( PTRTYPE simcalhit )  ;
-int lccahgetcellid1( PTRTYPE simcalhit )  ;
-float lccahgetenergy( PTRTYPE simcalhit )  ;
-float lccahgettime( PTRTYPE simcalhit )  ;
-int lccahgetposition( PTRTYPE simcalhit, float * )  ;
-int   lccahgettype( PTRTYPE simcalhit ) ;
-PTRTYPE lccahgetrawhit( PTRTYPE simcalhit ) ;
+int lccahgetcellid0( PTRTYPE calhit )  ;
+int lccahgetcellid1( PTRTYPE calhit )  ;
+float lccahgetenergy( PTRTYPE calhit )  ;
+float lccahgetenergyerr( PTRTYPE calhit )  ;
+float lccahgettime( PTRTYPE calhit )  ;
+int lccahgetposition( PTRTYPE calhit, float * )  ;
+int   lccahgettype( PTRTYPE calhit ) ;
+PTRTYPE lccahgetrawhit( PTRTYPE calhit ) ;
 
-int lccahsetcellid0( PTRTYPE simcalhit, int id0) ;
-int lccahsetcellid1( PTRTYPE simcalhit, int id1) ;
-int lccahsetenergy( PTRTYPE simcalhit, float en) ;
-int lccahsettime( PTRTYPE simcalhit, float time) ;
-int lccahsetposition( PTRTYPE simcalhit, float pos[3])  ;
-int lccahsettype( PTRTYPE simcalhit, int type ) ;
-int lccahsetrawhit( PTRTYPE simcalhit, PTRTYPE rawHit ) ;
+int lccahsetcellid0( PTRTYPE calhit, int id0) ;
+int lccahsetcellid1( PTRTYPE calhit, int id1) ;
+int lccahsetenergy( PTRTYPE calhit, float en) ;
+int lccahsetenergyerr( PTRTYPE calhit, float en) ;
+int lccahsettime( PTRTYPE calhit, float time) ;
+int lccahsetposition( PTRTYPE calhit, float pos[3])  ;
+int lccahsettype( PTRTYPE calhit, int type ) ;
+int lccahsetrawhit( PTRTYPE calhit, PTRTYPE rawHit ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

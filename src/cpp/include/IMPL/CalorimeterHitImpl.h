@@ -13,7 +13,7 @@ namespace IMPL {
 /** Implementation of the real data CalorimeterHit.
  * 
  * @author gaede
- * @version $Id: CalorimeterHitImpl.h,v 1.15 2006-08-04 16:52:46 gaede Exp $
+ * @version $Id: CalorimeterHitImpl.h,v 1.16 2008-06-04 17:37:16 engels Exp $
  */
 
   class CalorimeterHitImpl : public EVENT::CalorimeterHit , public AccessChecked {
@@ -47,6 +47,11 @@ namespace IMPL {
      */
     virtual float getEnergy() const ;
     
+    /** Returns the error of the hit energy. Optional, check/set
+     *  flag(LCIO::RCHBIT_ENERGY_ERROR)==1.
+     */
+    virtual float getEnergyError() const ;
+ 
     /** Returns the time of the hit in [ns]. Optional, check/set 
      *  flag(LCIO::RCHBIT_TIME)==1.
      */
@@ -86,6 +91,11 @@ namespace IMPL {
      */
     void setEnergy(float en) ;
 
+    /** Sets the error of the hit energy.
+     *  Not stored if flag RCHBIT_ENERGY_ERROR isn't set
+     */
+    void setEnergyError(float enerr) ;
+
     /** Sets the time.
      */
     void setTime(float t) ;
@@ -103,6 +113,7 @@ namespace IMPL {
     int _cellID0 ;
     int _cellID1 ;
     float _energy ;
+    float _energyError ;
     float _time ;
     float _position[3] ;
     int _type ;

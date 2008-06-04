@@ -6,13 +6,14 @@ import hep.lcio.event.LCObject;
 /**
  * A default implementation of CalorimeterHit
  * @author Tony Johnson
- * @version $Id: ICalorimeterHit.java,v 1.9 2004-09-24 10:39:28 tonyj Exp $
+ * @version $Id: ICalorimeterHit.java,v 1.10 2008-06-04 17:37:16 engels Exp $
  */
 public class ICalorimeterHit extends ILCObject implements CalorimeterHit
 {
    protected float[] position = new float[3];
    protected float time;
    protected float energy;
+   protected float energyError;
    protected int cellId0;
    protected int cellId1;
    protected int type;
@@ -49,6 +50,11 @@ public class ICalorimeterHit extends ILCObject implements CalorimeterHit
    public float getEnergy()
    {
       return energy;
+   }
+
+   public float getEnergyError()
+   {
+      return energyError;
    }
    
    public void setPosition(float[] pos)
