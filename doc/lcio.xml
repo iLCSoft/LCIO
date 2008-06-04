@@ -200,7 +200,8 @@
       <block name="CalorimeterHit" major="1" minor="10">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0;
-	      Bit 27 = 1: timeStamp stored; Bits 0-15 user/detector specific</data>
+	      Bit 27 = 1: timeStamp stored; Bit 26 = 1: energy error stored;
+              Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nHits"></data>
          <repeat count="nHits">
