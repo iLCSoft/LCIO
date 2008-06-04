@@ -12,7 +12,10 @@ v01-10
   
     - optional linkage agains libdcap (dCache) for C++
        -> cmake ..... -DBUILD_WITH_DCAP=1 -D DCAP_HOME=dcap_home ....
-    
+   
+    -  added PIDHandler class to UTIL (C++) for convenient access to ParticleID properties of 
+      ReconstructedParticle (needed for LCFI flavour tag quantities)    
+   
     - restructured test programs for C++ (make tests ; make test ; when buit with cmake)
 
      - made compatible w/ gcc4.3 C++ (A.Bulgheroni)
