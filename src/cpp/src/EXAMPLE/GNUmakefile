@@ -78,11 +78,5 @@ endif
 $(BINDIR)/stdhepjob: stdhepjob.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/stdhepjob $(CPPFLAGS) stdhepjob.cc  $(LIBS) 
 
-$(BINDIR)/testcopy: testcopy.cc $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/testcopy $(CPPFLAGS) testcopy.cc  $(LIBS) 
-
-$(BINDIR)/testvtx: testvtx.cc $(INSTALL)/liblcio.a
-	$(CXX) -o $(BINDIR)/testvtx $(CPPFLAGS) testvtx.cc  $(LIBS) 
-
 $(BINDIR)/lcrtrelation: lcrtrelation.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/lcrtrelation $(CPPFLAGS) lcrtrelation.cc  $(LIBS) 
