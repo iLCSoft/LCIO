@@ -3,14 +3,19 @@
 ---------------------------------------------------------------
 
 =====================
-v01-09-01
+v01-10
 =====================
-  no changes in file format
-
-     - optional linkage agains libdcap (dCache) for C++
+ 
+   - added optional attribute CalorimeterHit::getEnergyError() 
+       -> set/check flag bit RCH_BIT_ENERGY_ERROR
+       request from calice: [http://bugs.freehep.org/browse/LCIO-56]
+  
+    - optional linkage agains libdcap (dCache) for C++
        -> cmake ..... -DBUILD_WITH_DCAP=1 -D DCAP_HOME=dcap_home ....
+    
+    - restructured test programs for C++ (make tests ; make test ; when buit with cmake)
 
-     - made compatible w/ gcc4.3 (A.Bulgheroni)
+     - made compatible w/ gcc4.3 C++ (A.Bulgheroni)
 
 
 =====================
