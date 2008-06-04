@@ -220,7 +220,11 @@ ADD_CUSTOM_TARGET( tests )
 
 # ==== a macro for adding binaries from the TESTS directory =====
 MACRO( ADD_LCIO_CTEST file )
-  ADD_EXECUTABLE( ${file} EXCLUDE_FROM_ALL ./src/TESTS/${file}.cc )
+  IF( BUILD_LCIO_TESTS )
+    ADD_EXECUTABLE( ${file} ./src/TESTS/${file}.cc )
+  ELSE()
+    ADD_EXECUTABLE( ${file} EXCLUDE_FROM_ALL ./src/TESTS/${file}.cc )
+  ENDIF()
   ADD_DEPENDENCIES( tests ${file} )
   TARGET_LINK_LIBRARIES( ${file} lib_${PROJECT_NAME} )
   ADD_TEST( t_${file} "${EXECUTABLE_OUTPUT_PATH}/${file}" )
