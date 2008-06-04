@@ -46,9 +46,7 @@ namespace UTIL{
     out << setfill(' ') << setw(17) << left << v->getAlgorithmType() << " | ";
     
     out << setfill('0') << right << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
-	v->getPosition()[0] << "," <<
-        v->getPosition()[1] << "," <<
-        v->getPosition()[2] << " | [" ;
+	v->getPosition()[0] << ", " << v->getPosition()[1] << ", " << v->getPosition()[2] << " | [" ;
 
     out << setw(3) << v->getParameters().size() << "] | [";
     out << setw(8) << hex << (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) << "]\n";
@@ -95,7 +93,7 @@ namespace UTIL{
   const std::string& header(const EVENT::Vertex* v){
     
     static std::string _vtxh(
-      "\n    [id]    |pri|     alg. type     |    chi2   |    prob.  |      position ( x, y, z)      | [par] |  [idRecP]  \n");
+      "\n    [id]    |pri|     alg. type     |    chi2   |    prob.  |       position ( x, y, z)       | [par] |  [idRecP]  \n");
     _vtxh+=tail(v);
     return _vtxh;
   }
@@ -103,7 +101,7 @@ namespace UTIL{
   const std::string& tail(const EVENT::Vertex* v){
     
     static std::string _vtxt(
-	"------------|---|-------------------|-----------|-----------|-------------------------------|-------|------------\n");
+	"------------|---|-------------------|-----------|-----------|---------------------------------|-------|------------\n");
     return _vtxt;
   }
 
