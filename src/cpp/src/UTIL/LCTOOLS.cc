@@ -1022,12 +1022,12 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 		hit->getEnergy()
 		) ;
 
-      if( flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) ){
+	//if( flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) ){
         printf( "%5.3e | ", hit->getEnergyError() );
-      }
-      else{
-        printf( "  - NA -  | " );
-      }
+	//}
+	//else{
+        //printf( "  - NA -  | " );
+	//}
 
       if( flag.bitSet( LCIO::CHBIT_LONG ) ){
 	printf( "(%5.3e,%5.3e,%5.3e)|\n" , 
