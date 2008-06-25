@@ -116,7 +116,11 @@ namespace UTIL{
      */
     static void printParameters( const EVENT::LCParameters& params );
 
-
+    /** Returns a string describing the simulator flag bits set for this particle.
+     *  If no MCParticle given a string describing the bits is returned:<br>
+     *  
+     */
+    static std::string getSimulatorStatusString(EVENT::MCParticle* mcp=0) ;
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 

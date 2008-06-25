@@ -48,6 +48,7 @@ namespace UTIL {
   static int MAX_HITS = 1000 ;
 
 
+
   void LCTOOLS::dumpEvent(const LCEvent* evt){
     
     // the event:
@@ -1596,6 +1597,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     int nParticles =  col->getNumberOfElements() ;
 
 
+    cout << "  " << getSimulatorStatusString() << std::endl ;
 
     // fill map with particle pointers and collection indices
     typedef std::map< MCParticle*, int > PointerToIndexMap ;
@@ -1610,67 +1612,86 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       moms.push_back( part ) ;
     }
 
-    std::cout << endl
-	      << " [   id   ] | index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" 
-	      << " | mass | charge | energy"
-	      << endl 
-	      << endl ;
+//     std::cout << endl
+// 	      << " [   id   ] | index [parents] | [daughters] | PDG | (px, py, pz) | GenStatus | SimStatus | vertex (x,y,z) | endpoint(x,y,z)" 
+// 	      << " | mass | charge | energy"
+// 	      << endl 
+// 	      << endl ;
+//     cout.precision(3) ;
 
+  std::cout << endl
+	    <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |  [parents] - [daughters] |"    
+	    << endl 
+	    << endl ;
+  
 
-//    // now loop over mothers and print daughters recursively
-//     int index = 0 ;
-//     std::vector<MCParticle*>::const_iterator  mom ; 
-//     for( mom = moms.begin() ; mom != moms.end() ; mom++){
 
 // loop over collection - preserve order
     for(  int index = 0 ; index < nParticles ; index++){
       
-
-// #ifdef USE_CLHEP
-//       MCParticle4V part( col->getElementAt( index ) ) ;
-// #else
       MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
-// #endif
-      printf(" [%8.8x] |", part->id() );
-      cout << index << " [" ;
+
+      printf("[%8.8x]", part->id() );
+      printf("%5d|"   , index );
+      printf("%10d|" , part->getPDG() );
+      printf("% 1.2e,% 1.2e,% 1.2e|" , 
+	     part->getMomentum()[0] ,
+	     part->getMomentum()[1] , 
+	     part->getMomentum()[2] );
+      printf("% 1.2e|" , part->getEnergy() ) ; 
+
+      printf(" %1d |" , part->getGeneratorStatus()  );
+      printf("%s|" , getSimulatorStatusString( part ).c_str()  ); 
+      printf("% 1.2e,% 1.2e,% 1.2e|" , 
+	     part->getVertex()[0] , 
+	     part->getVertex()[1] , 
+	     part->getVertex()[2] );
+      printf("% 1.2e,% 1.2e,% 1.2e|" , 
+	     part->getEndpoint()[0] , 
+	     part->getEndpoint()[1] ,  
+	     part->getEndpoint()[2] );
+      printf("% 1.2e|" , part->getMass() ) ; 
+      printf("% 1.2e|" , part->getCharge() ) ; 
+      
+      //       cout << index << "|" ;
+
+//       cout <<  part->getPDG() << " | ("
+// 	   << scientific 
+// 	   <<  part->getMomentum()[0]  << ", "
+// 	   <<  part->getMomentum()[1]  << ", "
+// 	   <<  part->getMomentum()[2]  << ") | "
+// 	   <<  part->getGeneratorStatus() << " | "
+// 	    //	   <<  hex << part->getSimulatorStatus() << dec << " | ("
+// 	   << getSimulatorStatusString( part ) << " | ("
+//         <<  part->getVertex()[0]    << ", "
+// 	   <<  part->getVertex()[1]    << ", "
+// 	   <<  part->getVertex()[2]    << ") | (" ;
+
+//       if( part->getEndpoint() != 0 ){
+// 	cout <<  part->getEndpoint()[0]  << ", "
+// 	     <<  part->getEndpoint()[1]  << ", "
+// 	     <<  part->getEndpoint()[2]  << ") | " ;
+//       }else{
+// 	cout << " not set ) | " ; 
+//       }
+//       cout <<  part->getMass()         << " | " 
+// 	   <<  part->getCharge()       << " | " 
+// 	   <<  part->getEnergy()      
+// 	   << endl ;	
+
+      cout << " [" ;
+      
       for(unsigned int k=0;k<part->getParents().size();k++){
 	if(k>0) cout << "," ;
 	cout << p2i_map[ part->getParents()[k] ]  ;
       }
-      cout << "] | [" ;
+      cout << "] - [" ;
       for(unsigned int k=0;k<part->getDaughters().size();k++){
 	if(k>0) cout << "," ;
 	cout << p2i_map[ part->getDaughters()[k] ]  ;
       }
-      cout << "] | " ;
-      cout <<  part->getPDG() << " | ("
-	   <<  part->getMomentum()[0]  << ", "
-	   <<  part->getMomentum()[1]  << ", "
-	   <<  part->getMomentum()[2]  << ") | "
-	   <<  part->getGeneratorStatus() << " | "
-	   <<  hex << part->getSimulatorStatus() << dec << " | ("
-	   <<  part->getVertex()[0]    << ", "
-	   <<  part->getVertex()[1]    << ", "
-	   <<  part->getVertex()[2]    << ") | (" ;
-
-      if( part->getEndpoint() != 0 ){
-	cout <<  part->getEndpoint()[0]  << ", "
-	     <<  part->getEndpoint()[1]  << ", "
-	     <<  part->getEndpoint()[2]  << ") | " ;
-      }else{
-	cout << " not set ) | " ; 
-      }
-      cout <<  part->getMass()         << " | " 
-	   <<  part->getCharge()       << " | " 
-	   <<  part->getEnergy()      
-// #ifdef USE_CLHEP
-// 	//---- DEBUG
-// 	   << " m(4V) : " << part.m()
-// 	   << " e(4V) : " << part.e()
-// 	//---- DEBUG
-// #endif
-	   << endl ;	
-
+      cout << "] " << endl ;
+      
 
     }
 
@@ -1914,6 +1935,65 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     printParameters( const_cast<EVENT::LCRunHeader*>(run)->parameters() ) ;
     
     cout  << " --------------------------------------------------------------- " << endl ;
+  }
+
+
+
+  std::string LCTOOLS::getSimulatorStatusString(MCParticle* mcp){
+    
+    if( mcp == 0  ) {
+      
+      std::stringstream str ;
+
+      str << "simulator status bits: [sbvtcls] "
+	  << " s: created in simulation"
+	  << " b: backscatter"
+	  << " v: vertex is not endpoint of parent" 
+	  << " t: decayed in tracker"
+	  << " c: decayed in calorimeter"
+	  << " l: has left detector"
+	  << " s: stopped"
+	  << std::endl ;
+      
+      return str.str() ;
+    }
+
+    std::string s("[   0   ]") ;
+    
+    if( mcp->getSimulatorStatus() == 0 ) 
+
+      return s ;
+    
+    if( mcp->isCreatedInSimulation() )
+      s[1]='s' ;
+    else
+      s[1]=' ' ;
+    if( mcp->isBackscatter() )
+      s[2]='b' ;
+    else
+      s[2]=' ' ;
+    if( mcp->vertexIsNotEndpointOfParent() )
+      s[3]='v' ;
+    else
+      s[3]=' ' ;
+    if( mcp->isDecayedInTracker() )
+      s[4]='t' ;
+    else
+      s[4]=' ' ;
+    if( mcp->isDecayedInCalorimeter() )
+      s[5]='c' ;
+    else
+      s[5]=' ' ;
+    if( mcp->hasLeftDetector() )
+      s[6]='l' ;
+    else
+      s[6]=' ' ;
+    if( mcp->isStopped() )
+      s[7]='s' ;
+    else
+      s[7]=' ' ;
+    
+    return s ;
   }
 
 } // namespace
