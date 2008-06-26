@@ -288,8 +288,12 @@ namespace UTIL {
       const TrackVec& tracks = trk->getTracks() ;
 
       for(unsigned int l=0;l<tracks.size();l++){
-		printf("[%8.8x], ",  tracks[l]->id() ) ; 
+	if( tracks[l] != 0  ) 
+	  printf("[%8.8x], ",  tracks[l]->id() ) ; 
+	else
+	  printf("[%8.8x], ",  0 ) ; 
       }
+
       cout << endl ;
       if( flag.bitSet( LCIO::TRBIT_HITS ) ) {
 	cout << " hits ->" ;
