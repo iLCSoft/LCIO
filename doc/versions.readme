@@ -3,6 +3,18 @@
 ---------------------------------------------------------------
 
 =====================
+v01-10-01
+=====================
+   - bug fix patch release:
+
+
+    * bug fix for printing DSTs with dumpevent 
+      (Track collections with null pointers to tracks that are not stored)
+
+    * improved format of dump of MCParticle collection
+
+
+=====================
 v01-10
 =====================
  
