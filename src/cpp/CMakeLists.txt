@@ -128,33 +128,33 @@ SET_SOURCE_FILES_PROPERTIES(
   COMPILE_FLAGS "-Df2cFortran -Wno-unused"
 )
 
-ADD_LIBRARY( lib_${PROJECT_NAME}F77 STATIC
+ADD_LIBRARY( lib_LCIOF77 STATIC
   ${LCIO_CPPFORT_SRCS} 
 )
 
-SET_TARGET_PROPERTIES( lib_${PROJECT_NAME}F77 PROPERTIES
+SET_TARGET_PROPERTIES( lib_LCIOF77 PROPERTIES
     # create *nix style library versions + symbolic links
-    #VERSION ${${PROJECT_NAME}_VERSION}
-    #SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    #VERSION ${LCIO_VERSION}
+    #SOVERSION ${LCIO_SOVERSION}
     # allow creating static and shared libs without conflicts
     CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
     OUTPUT_NAME lcioF77
 )
 
-ADD_CUSTOM_TARGET( lib DEPENDS lib_${PROJECT_NAME} lib_${PROJECT_NAME}F77 lib_SIO )
+ADD_CUSTOM_TARGET( lib DEPENDS lib_LCIO lib_LCIOF77 lib_SIO )
 
-ADD_LIBRARY( lib_${PROJECT_NAME} 
+ADD_LIBRARY( lib_LCIO 
   ${LCIO_IMPL_SRCS}
   ${LCIO_IOIMPL_SRCS}
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
 )
 
-SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
+SET_TARGET_PROPERTIES( lib_LCIO PROPERTIES
     # create *nix style library versions + symbolic links
-    VERSION ${${PROJECT_NAME}_VERSION}
-    SOVERSION ${${PROJECT_NAME}_SOVERSION}
+    VERSION ${LCIO_VERSION}
+    SOVERSION ${LCIO_SOVERSION}
     # allow creating static and shared libs without conflicts
     CLEAN_DIRECT_OUTPUT 1
     # avoid conflicts between library and binary target names
@@ -163,7 +163,6 @@ SET_TARGET_PROPERTIES( lib_${PROJECT_NAME} PROPERTIES
 
 TARGET_LINK_LIBRARIES( lib_LCIO lib_SIO )
 TARGET_LINK_LIBRARIES( lib_LCIOF77 lib_LCIO )
-
 
 
 # create symbolic target for calling targets bin_XXX
@@ -175,7 +174,7 @@ MACRO( ADD_LCIO_BIN file )
   ADD_DEPENDENCIES( bin bin_${file} )
 #  MESSAGE( STATUS " in ADD_LCIO_BIN : " ${file} " " ./src/EXAMPLE/${file}.cc )
   SET_TARGET_PROPERTIES( bin_${file} PROPERTIES OUTPUT_NAME ${file} )
-  TARGET_LINK_LIBRARIES( bin_${file} lib_${PROJECT_NAME} )
+  TARGET_LINK_LIBRARIES( bin_${file} lib_LCIO )
   INSTALL( TARGETS bin_${file} DESTINATION bin )
 ENDMACRO()
 #===================================================================
@@ -226,7 +225,7 @@ MACRO( ADD_LCIO_CTEST file )
     ADD_EXECUTABLE( ${file} EXCLUDE_FROM_ALL ./src/TESTS/${file}.cc )
   ENDIF()
   ADD_DEPENDENCIES( tests ${file} )
-  TARGET_LINK_LIBRARIES( ${file} lib_${PROJECT_NAME} )
+  TARGET_LINK_LIBRARIES( ${file} lib_LCIO )
   ADD_TEST( t_${file} "${EXECUTABLE_OUTPUT_PATH}/${file}" )
   #SET_TESTS_PROPERTIES( t_${file} EXECUTABLE_OUTPUT_PATH
   #  PROPERTIES PASS_REGULAR_EXPRESSION "PASSED" )
@@ -240,12 +239,12 @@ ADD_LCIO_CTEST( test_calohit )
 
 #------------- install the library and the (public) header files -------
 
-INSTALL( TARGETS lib_${PROJECT_NAME} DESTINATION lib PERMISSIONS
+INSTALL( TARGETS lib_LCIO DESTINATION lib PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
 
-INSTALL( TARGETS lib_${PROJECT_NAME}F77 DESTINATION lib PERMISSIONS
+INSTALL( TARGETS lib_LCIOF77 DESTINATION lib PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
@@ -265,7 +264,7 @@ ADD_TEST( t_anajob_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" simjob.slcio )
 ADD_TEST( t_recjob "${EXECUTABLE_OUTPUT_PATH}/recjob" simjob.slcio recjob.slcio )
 ADD_TEST( t_anajob_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" recjob.slcio )
 
-SET_TESTS_PROPERTIES( t_simjob EXECUTABLE_OUTPUT_PATH PROPERTIES PASS_REGULAR_EXPRESSION
+SET_TESTS_PROPERTIES( t_simjob PROPERTIES PASS_REGULAR_EXPRESSION
     "created  10 runs with  100 events" )
 SET_TESTS_PROPERTIES( t_anajob_sim PROPERTIES PASS_REGULAR_EXPRESSION
     "100 events read from files:" )

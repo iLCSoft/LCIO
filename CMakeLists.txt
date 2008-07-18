@@ -19,9 +19,9 @@ ENABLE_TESTING()
 PROJECT( LCIO )
 
 # project version
-SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
-SET( ${PROJECT_NAME}_MINOR_VERSION 10 )
-SET( ${PROJECT_NAME}_PATCH_LEVEL 1 )
+SET( LCIO_MAJOR_VERSION 1 )
+SET( LCIO_MINOR_VERSION 10 )
+SET( LCIO_PATCH_LEVEL 1 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
@@ -193,8 +193,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
         COMMENT "Building C++ API Documentation..."
         VERBATIM )
     
-    ADD_CUSTOM_TARGET( doc_cpp
-            DEPENDS "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html" )
+    ADD_CUSTOM_TARGET( doc_cpp DEPENDS "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html" )
 
     # user manual
     ADD_CUSTOM_COMMAND(
@@ -226,8 +225,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
         COMMENT "Building Documentation - Users Manual..."
         VERBATIM )
 
-    ADD_CUSTOM_TARGET( doc_manual
-            DEPENDS "${PROJECT_SOURCE_DIR}/doc/manual.pdf" )
+    ADD_CUSTOM_TARGET( doc_manual DEPENDS "${PROJECT_SOURCE_DIR}/doc/manual.pdf" )
 
     # reference manual
     # FIXME this is not working correctly: latex returns error!
@@ -275,18 +273,14 @@ IF( INSTALL_DOC )
     INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
 
     # install documentation
-    INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc"
-            DESTINATION .
-            PATTERN "*CVS*" EXCLUDE )
+    INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc" DESTINATION . PATTERN "*CVS*" EXCLUDE )
 ENDIF()
 
 ##########################################################################################
 
 # library *nix style versioning
-SET( ${PROJECT_NAME}_SOVERSION
-    "${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}" )
-SET( ${PROJECT_NAME}_VERSION
-    "${${PROJECT_NAME}_SOVERSION}.${${PROJECT_NAME}_PATCH_LEVEL}" )
+SET( LCIO_SOVERSION "${LCIO_MAJOR_VERSION}.${LCIO_MINOR_VERSION}" )
+SET( LCIO_VERSION "${LCIO_SOVERSION}.${LCIO_PATCH_LEVEL}" )
 
 # add install path to the rpath list
 SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
@@ -302,50 +296,10 @@ ENDIF()
 SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
 MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 
-# output directories
-SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin" CACHE PATH
-    "EXECUTABLE_OUTPUT_PATH" FORCE )
-SET( LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib" CACHE PATH
-    "LIBRARY_OUTPUT_PATH" FORCE )
+# build output directories
+SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin" CACHE PATH "EXECUTABLE_OUTPUT_PATH" FORCE )
+SET( LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib" CACHE PATH "LIBRARY_OUTPUT_PATH" FORCE )
 MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
-
-# DEPENDENCIES: this code has to be placed before adding any library or
-# executable so that these are linked properly against the dependencies
-#IF( DEFINED ${PROJECT_NAME}_DEPENDS OR DEFINED BUILD_WITH OR DEFINED LINK_WITH )
-#    # load macro
-#    IF( NOT EXISTS "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-#        MESSAGE( FATAL_ERROR
-#            "\nSorry, could not find MacroCheckDeps.cmake...\n"
-#            "Please set CMAKE_MODULE_PATH correctly with: "
-#            "cmake -DCMAKE_MODULE_PATH=<path_to_cmake_modules>" )
-#    ENDIF()
-#    INCLUDE( "${CMAKE_MODULE_PATH}/MacroCheckDeps.cmake" )
-#    CHECK_DEPS()
-#ENDIF()
-
-# This code would not be necessary if the DEPENDENCIES code above would not
-# be commented out, but this way LCIO does not depend on CMakeModules
-IF( DEFINED BUILD_WITH AND BUILD_WITH STREQUAL "CLHEP" )
-  MESSAGE( STATUS " --- LCIO no longer (optionally) depends on CLHEP =>  BUILD_WITH \"CLHEP\" ignored !"  )
-
-#    IF( NOT DEFINED CLHEP_HOME )
-#        MESSAGE( FATAL_ERROR "Check for CLHEP: CLHEP_HOME not set!! "
-#            "Please call cmake with -DCLHEP_HOME=<path_to_CLHEP>" )
-#    ENDIF()
-#    MESSAGE( STATUS "Check for CLHEP: ${CLHEP_HOME}" )
-#    INCLUDE( FindCLHEP.cmake )
-#
-#    IF( CLHEP_FOUND )
-#        INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIR} )
-#        LINK_LIBRARIES( ${CLHEP_LIBRARIES} )
-#        ADD_DEFINITIONS( ${CLHEP_DEFINITIONS} )
-#        SEPARATE_ARGUMENTS( CLHEP_DEFINITIONS )
-#        LIST( APPEND ${PROJECT_NAME}_DEFINITIONS ${CLHEP_DEFINITIONS} )
-#    ENDIF()
-
-#    SET( BUILD_WITH "${BUILD_WITH}" CACHE STRING
-#        "Build ${PROJECT_NAME} with these optional packages" FORCE )
-ENDIF()
 
 # input directories
 IF( BUILD_WITH_DCAP )
@@ -354,7 +308,8 @@ IF( BUILD_WITH_DCAP )
               "Please call cmake with -DDCAP_HOME=<path_to_DCAP>" )
   ENDIF()
   INCLUDE_DIRECTORIES( ${DCAP_HOME}/include )
-  LINK_LIBRARIES( ${DCAP_HOME}/lib/libdcap.so ) 
+  FIND_LIBRARY( DCAP_LIB NAMES dcap PATHS ${DCAP_HOME}/lib NO_DEFAULT_PATH )
+  LINK_LIBRARIES( ${DCAP_LIB} ) 
 ENDIF()
 
 ADD_SUBDIRECTORY( sio sio )
@@ -372,13 +327,12 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # create configuration file from .in file
-LIST( APPEND ${PROJECT_NAME}_DEFINITIONS "-Wno-long-long" )
-CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/${PROJECT_NAME}Config.cmake.in"
-                "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake" @ONLY )
+LIST( APPEND LCIO_DEFINITIONS "-Wno-long-long" )
+CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/LCIOConfig.cmake.in"
+                "${PROJECT_BINARY_DIR}/LCIOConfig.cmake" @ONLY )
 
 # install configuration file
-INSTALL( FILES "${PROJECT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-        DESTINATION . )
+INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOConfig.cmake" DESTINATION . )
 
 # display status message for important variables
 MESSAGE( STATUS )
@@ -386,7 +340,6 @@ MESSAGE( STATUS "---------------------------------------------------------------
 MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
-MESSAGE( STATUS "CMAKE_MODULE_PATH = ${CMAKE_MODULE_PATH}" )
 MESSAGE( STATUS "BUILD_LCIO_TESTS = ${BUILD_LCIO_TESTS}" )
 MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
@@ -402,11 +355,9 @@ MESSAGE( STATUS )
 SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL
     "Set to OFF to build static libraries" FORCE )
 SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
-    "Where to install ${PROJECT_NAME}" FORCE )
+    "Where to install LCIO" FORCE )
 SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
     "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
-SET( CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" CACHE PATH
-    "Path to custom CMake Modules" FORCE )
 SET( BUILD_LCIO_TESTS "${BUILD_LCIO_TESTS}" CACHE BOOL
     "Set to ON to build LCIO tests under src/cpp/src/TESTS" FORCE )
 SET( BUILD_LCIO_EXAMPLES "${BUILD_LCIO_EXAMPLES}" CACHE BOOL
@@ -415,8 +366,8 @@ SET( BUILD_F77_TESTJOBS "${BUILD_F77_TESTJOBS}" CACHE BOOL
     "Set to ON to build LCIO F77 testbobs" FORCE )
 SET( BUILD_WITH_DCAP "${BUILD_WITH_DCAP}" CACHE BOOL
     "Set to ON to build LCIO with dcap support (dCache)" FORCE )
-SET( DCAP_HOME "${DCAP_HOME}" CACHE BOOL
-    "Set to dcap installation directory - only if BUILD_WITH_DCAP=true" FORCE )
+SET( DCAP_HOME "${DCAP_HOME}" CACHE PATH
+    "Set to dcap installation directory - only if BUILD_WITH_DCAP=ON" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
 SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
@@ -424,7 +375,7 @@ SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
 
 # export build settings
 INCLUDE( CMakeExportBuildSettings )
-CMAKE_EXPORT_BUILD_SETTINGS( "${PROJECT_NAME}BuildSettings.cmake" )
+CMAKE_EXPORT_BUILD_SETTINGS( "LCIOBuildSettings.cmake" )
 
 # export library dependencies (keep this as the last line in the file)
-EXPORT_LIBRARY_DEPENDENCIES( "${PROJECT_NAME}LibDeps.cmake" )
+EXPORT_LIBRARY_DEPENDENCIES( "LCIOLibDeps.cmake" )
