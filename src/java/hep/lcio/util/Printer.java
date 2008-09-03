@@ -126,7 +126,7 @@ public class Printer
 		ps.println();
 
 		// Print the event parameters.
-        ps.println(" Run parameters : ");
+        ps.println(" Event parameters : ");
 		printParameters(event.getParameters());
 		
 		// Print summary of collections.
