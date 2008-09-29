@@ -117,10 +117,10 @@ SET( LCIO_UTIL_SRCS
 )
 
 #------ require proper C++ -------
-ADD_DEFINITIONS( -Wall -ansi -pedantic )
+ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
 #FIXME: should establish wether we are on a 32bit or 64 bit machine ....
-ADD_DEFINITIONS( -Wno-long-long )
+ADD_DEFINITIONS( "-Wno-long-long" )
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
@@ -227,8 +227,8 @@ MACRO( ADD_LCIO_CTEST file )
   ADD_DEPENDENCIES( tests ${file} )
   TARGET_LINK_LIBRARIES( ${file} lib_LCIO )
   ADD_TEST( t_${file} "${EXECUTABLE_OUTPUT_PATH}/${file}" )
-  #SET_TESTS_PROPERTIES( t_${file} EXECUTABLE_OUTPUT_PATH
-  #  PROPERTIES PASS_REGULAR_EXPRESSION "PASSED" )
+  SET_TESTS_PROPERTIES( t_${file} PROPERTIES
+      PASS_REGULAR_EXPRESSION "TEST_PASSED" )
 ENDMACRO()
 #===================================================================
 
