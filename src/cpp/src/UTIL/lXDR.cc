@@ -116,9 +116,14 @@ long lXDR::checkRead(long *l)
    if (_openForWrite) return(_error = LXDR_READONLY);
    if (_fp == 0)      return(_error = LXDR_NOFILE);
    if (l) {
-      long nr;
-      if ((nr = fread(l, 4, 1, _fp)) != 1) return(_error = LXDR_READERROR);
-      *l = ntohl(*l);
+      // je: in architectures where long isn't 4 byte long this code crashes
+      //long nr;
+      //if ((nr = fread(l, 4, 1, _fp)) != 1) return(_error = LXDR_READERROR);
+      //*l = ntohl(*l);
+
+      int32_t buf;
+      if (fread(&buf, 4, 1, _fp) != 1) return(_error = LXDR_READERROR);
+      *l = ((int32_t)ntohl(buf));
    }
    return(LXDR_SUCCESS);
 }
@@ -140,7 +145,10 @@ long lXDR::checkRead(float *f)
    if (_fp == 0)      return(_error = LXDR_NOFILE);
    if (f) {
       if (fread(f, 4, 1, _fp) != 1) return(_error = LXDR_READERROR);
-      *((long *) f) = ntohl(*((long *) f));
+      // je: in architectures where long isn't 4 byte long this code crashes
+      //*((long *) f) = ntohl(*((long *) f));
+
+      *((int32_t *) f) = ntohl(*((int32_t *) f));
    }
    return(LXDR_SUCCESS);
 }
@@ -185,12 +193,30 @@ long *lXDR::readLongArray(long &length)
 {
    if (checkRead(&length)) return(0);
    long *s = new long[length];
-   if (fread(s, 4, length, _fp) != (unsigned long) length) {
-      _error = LXDR_READERROR;
-      delete [] s;
-      return(0);
+   // je: in architectures where long isn't 4 byte long this code crashes
+   //if (fread(s, 4, length, _fp) != (unsigned long) length) {
+   //   _error = LXDR_READERROR;
+   //   delete [] s;
+   //   return(0);
+   //}
+   //if (_hasNetworkOrder == false) for (long i = 0; i < length; i++) s[i] = ntohl(s[i]);
+
+   int32_t *buf = new int32_t[length];
+   if (fread(buf, 4, length, _fp) != (unsigned long) length) {
+       _error = LXDR_READERROR;
+       delete [] buf;
+       delete [] s;
+       return(0);
    }
-   if (_hasNetworkOrder == false) for (long i = 0; i < length; i++) s[i] = ntohl(s[i]);
+   for (long i = 0; i < length; i++){
+       if (_hasNetworkOrder == false){
+           s[i] = ((int32_t)ntohl(buf[i]));
+       }
+       else{
+            s[i] = (long)buf[i];
+       }
+   }
+   delete [] buf;
    _error = LXDR_SUCCESS;
    return(s);
 }
@@ -213,12 +239,14 @@ double *lXDR::readFloatArray(long &length)
 {
    if (checkRead(&length)) return(0);
    long *st = new long[length];
+   // je: FIXME this will cause problems in architectures where long isn't 4 byte long
    if (fread(st, 4, length, _fp) != (unsigned long) length) {
       _error = LXDR_READERROR;
       delete [] st;
       return(0);
    }
    double *s = new double[length];
+   // je: FIXME what happens if _hasNetworkOrder == true?!
    if (_hasNetworkOrder == false) {
       for (long i = 0; i < length; i++) {
          long l = ntohl(st[i]);
@@ -235,6 +263,7 @@ long lXDR::checkWrite(long *l)
    if (_fp == 0)               return(_error = LXDR_NOFILE);
    if (l) {
       long ll = htonl(*l);
+      // je: FIXME this will cause problems in architectures where long isn't 4 byte long
       if (fwrite(&ll, 4, 1, _fp) != 4) return(_error = LXDR_WRITEERROR);
    }
    return(LXDR_SUCCESS);
@@ -283,6 +312,7 @@ long lXDR::writeLongArray(const long *data, long length)
       s = new long[length];
       for (long i = 0; i < length; i++) s[i] = htonl(data[i]);
    }
+   // je: FIXME this will cause problems in architectures where long isn't 4 byte long
    long l = fwrite(s, 4, length, _fp);
    if (_hasNetworkOrder == false) delete [] s;
    if (l != length) return(_error = LXDR_WRITEERROR);
