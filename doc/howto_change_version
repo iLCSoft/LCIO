@@ -3,9 +3,9 @@ To change the version of LCIO the following files have to be modified:
 
 
 CMakeLists.txt
-  SET( ${PROJECT_NAME}_MAJOR_VERSION 1 )
-  SET( ${PROJECT_NAME}_MINOR_VERSION 8 )
-  SET( ${PROJECT_NAME}_PATCH_LEVEL 2 )
+  SET( LCIO_MAJOR_VERSION 1 )
+  SET( LCIO_MINOR_VERSION 8 )
+  SET( LCIO_PATCH_LEVEL 2 )
   
 sio/CMakeLists.txt
   SET( SIO_MAJOR_VERSION 1 )

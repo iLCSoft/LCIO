@@ -26,11 +26,11 @@ INCLUDE( TestBigEndian )
 TEST_BIG_ENDIAN( BIG_ENDIAN )
 
 IF( NOT BIG_ENDIAN )
-    ADD_DEFINITIONS( -D__LITTLE_ENDIAN__ )
+    ADD_DEFINITIONS( "-D__LITTLE_ENDIAN__" )
 ENDIF()
 
 IF( BUILD_WITH_DCAP )
-    ADD_DEFINITIONS( -DSIO_USE_DCAP )
+    ADD_DEFINITIONS( "-DSIO_USE_DCAP" )
 ENDIF()
 
 INCLUDE_DIRECTORIES(
@@ -49,9 +49,9 @@ SET (SIO_SRCS
 )
 
 #------ require proper C++ -------
-ADD_DEFINITIONS( -Wall -ansi -pedantic )
+ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
-ADD_DEFINITIONS( -Wno-long-long -Wno-sign-compare )
+ADD_DEFINITIONS( "-Wno-long-long -Wno-sign-compare" )
 
 ADD_LIBRARY( lib_SIO ${SIO_SRCS} )
 
@@ -72,3 +72,4 @@ INSTALL( TARGETS lib_SIO DESTINATION lib PERMISSIONS
         OWNER_READ OWNER_WRITE OWNER_EXECUTE
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
+

@@ -25,6 +25,7 @@ SET( LCIO_PATCH_LEVEL 1 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
+OPTION( BUILD_32BIT_COMPATIBLE "Set to ON to build in 32 bit compatibility mode" ON )
 OPTION( BUILD_LCIO_TESTS "Set to ON to build LCIO tests under src/cpp/src/TESTS" OFF )
 OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples under src/cpp/src/EXAMPLES" OFF )
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
@@ -41,6 +42,33 @@ ENDIF()
 IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
     SET( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 ENDIF()
+
+#---------------- 32/64 bit issues ---------------------------------------
+#INCLUDE( CheckTypeSize )
+#CHECK_TYPE_SIZE( "void*" SIZE_OF_VOID_P )
+
+IF( CMAKE_SIZEOF_VOID_P EQUAL 4 )
+    MESSAGE( STATUS "32 bit architecture detected" )
+ENDIF()
+
+IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    MESSAGE( STATUS "64 bit architecture detected" )
+
+    IF( BUILD_32BIT_COMPATIBLE )
+        IF( COMMAND SET_PROPERTY )
+            SET_PROPERTY(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS 0)
+            SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32" )
+        ELSE()
+            MESSAGE( FATAL_ERROR "to build in 32 bit compatibility mode you need cmake >= 2.6" )
+        ENDIF()
+        MESSAGE( STATUS "Build in 32 bit compatibility mode" )
+    ELSE()
+        MESSAGE( STATUS "Build in native 64 bit mode" )
+    ENDIF()
+ENDIF()
+
+#-------------------------------------------------------------------------
+
 
 # include FindJAVA.cmake for finding Java
 
@@ -327,7 +355,6 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
 
 # create configuration file from .in file
-LIST( APPEND LCIO_DEFINITIONS "-Wno-long-long" )
 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/LCIOConfig.cmake.in"
                 "${PROJECT_BINARY_DIR}/LCIOConfig.cmake" @ONLY )
 
@@ -340,6 +367,9 @@ MESSAGE( STATUS "---------------------------------------------------------------
 MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
 MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
+IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+    MESSAGE( STATUS "BUILD_32BIT_COMPATIBLE = ${BUILD_32BIT_COMPATIBLE}" )
+ENDIF()
 MESSAGE( STATUS "BUILD_LCIO_TESTS = ${BUILD_LCIO_TESTS}" )
 MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
@@ -376,6 +406,8 @@ SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
 # export build settings
 INCLUDE( CMakeExportBuildSettings )
 CMAKE_EXPORT_BUILD_SETTINGS( "LCIOBuildSettings.cmake" )
+INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOBuildSettings.cmake" DESTINATION lib/cmake )
 
 # export library dependencies (keep this as the last line in the file)
 EXPORT_LIBRARY_DEPENDENCIES( "LCIOLibDeps.cmake" )
+INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOLibDeps.cmake" DESTINATION lib/cmake )
