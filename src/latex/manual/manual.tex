@@ -101,7 +101,7 @@ and then checkout a released version (see~\cite{lcio_home}), e.g.:
 \begin{verbatim}
   mkdir lcio 
   cd lcio
-  cvs co -d v01-08 -r v01-08 lcio
+  cvs co -d v01-10-02 -r v01-10-02 lcio
 \end{verbatim}
 
 \subsection{Requirements}
@@ -120,7 +120,7 @@ an ANSI compliant C++ compiler.\\\\
 \subsection{Building LCIO} \label{build_lcio}
 
 There are two build tools that can be used to build LCIO: ant and CMake~\cite{ref_cmake}. 
-CMake~\cite{ref_cmake} has been introduced in version v01-08-02 to facilitate cross plattform support for 
+CMake~\cite{ref_cmake} has been introduced in version v01-10-02 to facilitate cross plattform support for 
 the C++ version. Building LCIO with CMake is the preferred way within the LDC ilcsoft framework, however
 the {\em classic} way of building LCIO with ant is still fully supported, in fact CMake also uses the ant commands for Java and 
 for generating the documentation.
@@ -157,10 +157,10 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
 \item{ {\bf Linux (and bash):} 
 \begin{verbatim} 
-  export LCIO=/lcio/v01-08                <-- modify as appropriate
+  export LCIO=/lcio/v01-10-02                <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
 
-  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
+  export JDK_HOME=/usr/lib/j2sdk             <-- modify as appropriate
 
   ( export CLHEP=/opt/products/CLHEP/2.0.2.2  <-- optionally use CLHEP four vectors with LCIO/C++) 
 \end{verbatim} 
@@ -170,7 +170,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{verbatim}
   set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
 
-  set LCIO=c:/lcio/devel/v01-08            <-- modify as appropriate
+  set LCIO=c:/lcio/devel/v01-010-02        <-- modify as appropriate
   set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
 
   set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
@@ -179,9 +179,9 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 }
 \item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
 \begin{verbatim}
-  export LCIO=/cygdrive/c/lcio/devel/v01-08   <-- modify as appropriate
+  export LCIO=/cygdrive/c/lcio/devel/v01-10-02   <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
-  export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01  <-- modify as appropriate
+  export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01      <-- modify as appropriate
 \end{verbatim} %$
 }
 \end{itemize}
@@ -206,7 +206,7 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 %\end{verbatim}
 %or using {\it bash}:
 %\begin{verbatim}
-%  cd v01-08
+%  cd v01-10-02
 %  export LCIO=$PWD
 %  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
 %  export PATH=$LCIO/tools:$PATH
