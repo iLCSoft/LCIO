@@ -3,6 +3,16 @@
 ---------------------------------------------------------------
 
 =====================
+v01-10-02
+=====================
+    - bug fix patch release:
+
+    * fixed stdhepjob for running in 64 bit systems
+    * made cmake 2.6 compliant
+    * added 32 bit compatibility build option
+    * added LCIO_LIBRARY_DIRS
+
+=====================
 v01-10-01
 =====================
    - bug fix patch release:
