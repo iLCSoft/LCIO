@@ -390,29 +390,33 @@ namespace UTIL{
 	    }
 
 	  }
-	else if(ld > -1 )
-	  {
-	    if(  ld < NHEP ){
-	      d = dynamic_cast<MCParticleImpl*>
-		(mcVec->getElementAt(ld));
-	      int np = d->getParents().size();
-	      bool gotit = false;
-	      for(int ip=0;ip < np;ip++)
-		{
-		  p = dynamic_cast<MCParticleImpl*>
-		    (d->getParents()[ip]);
-		  if(p == mcp)gotit = true;
-		}
-	      if(!gotit)d->addParent(mcp);
+// --------- fg: ignore daughters if the first daughter index is illegal (0 in stdhep, -1 here)
+// 	else if(ld > -1 )
+// 	  {
+// 	    std::cout << " WARNING: LCStdhepReader: illegal daughter index in stdhep : " << ld 
+// 		      << " NHEP = " << NHEP << " - ignored ! " << std::endl ;
+	// 	    if(  ld < NHEP ){
+	// 	      d = dynamic_cast<MCParticleImpl*>
+	// 		(mcVec->getElementAt(ld));
+	// 	      int np = d->getParents().size();
+	// 	      bool gotit = false;
+	// 	      for(int ip=0;ip < np;ip++)
+	// 		{
+	// 		  p = dynamic_cast<MCParticleImpl*>
+	// 		    (d->getParents()[ip]);
+	// 		  if(p == mcp)gotit = true;
+	// 		}
+	// 	      if(!gotit)d->addParent(mcp);
+	
+	// 	    } else {
+	// 	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
+	// // 	      std::cout << " WARNING: LCStdhepReader: invalid index in stdhep : " << ld 
+	// // 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
+	
+	// 	    }
+	
+	// 	  }
 
-	    } else {
-	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
-// 	      std::cout << " WARNING: LCStdhepReader: invalid index in stdhep : " << ld 
-// 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
-
-	    }
-
-	  }
       }// End second loop over particles
     //
     //  Return the collection
