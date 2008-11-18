@@ -1258,14 +1258,20 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	       pid->getAlgorithmType() 
 	       ) ;
 
-	const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
-	
-	for(unsigned j=0;j< pNames.size() ;++j){
+    try{
+        const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
+        
+        for(unsigned j=0;j< pNames.size() ;++j){
 
-	  cout << " " <<  pNames[j]
-	       << " : " <<  pid->getParameters()[j] << "," ; 
+          cout << " " <<  pNames[j]
+               << " : " <<  pid->getParameters()[j] << "," ; 
 
-	}
+        }
+    }
+    catch( UnknownAlgorithm &e ){
+        cout << "- NA - ";
+    }
+    
 	cout << "]"<< endl ;
 	
 
