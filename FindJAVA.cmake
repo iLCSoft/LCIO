@@ -3,7 +3,7 @@
 #
 # sets following variables:
 #
-# JAVA_FOUND    - TRUE/FALSE (javadoc in ignored for the test)
+# JAVA_FOUND    - TRUE/FALSE (javadoc is ignored for the test)
 #
 # JAVA_HOME     - base dir where subdirs bin, lib, jre and include are located
 # JAVA_BIN_PATH - path to subdirectory "${JAVA_HOME}/bin"
@@ -38,64 +38,29 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
     FIND_PACKAGE( Java )
     
     IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
-        IF( UNIX AND NOT APPLE )
-            # look for the file binary
-            FIND_PROGRAM( FILE_BIN
-                file
-                /bin
-                /usr/bin
-                /usr/local/bin
-                /sbin
-            )
-            MARK_AS_ADVANCED( FILE_BIN )
-            
-            IF( FILE_BIN )
 
-                # initialize some variables
-                SET( java_bin "${JAVA_RUNTIME}" )
-                SET( java_link_found TRUE )
-                SET( java_link_error FALSE )
-                MARK_AS_ADVANCED( java_bin java_link_found java_link_error )
+        IF( UNIX AND NOT APPLE )
+            # look for the readlink binary
+            FIND_PROGRAM( READLINK_BIN readlink )
+            MARK_AS_ADVANCED( READLINK_BIN )
+            
+            IF( READLINK_BIN )
 
                 # dereference links
-                WHILE( java_link_found AND NOT java_link_error )
-                    # check if the java binary is a symbolic link
-                    EXEC_PROGRAM( ${FILE_BIN} ARGS "${java_bin}"
-                        OUTPUT_VARIABLE out_tmp
-                        RETURN_VALUE out_ret )
-                    IF( out_ret )
-                        IF( NOT JAVA_FIND_QUIETLY )
-                            MESSAGE( STATUS "Error dereferencing links to Java Home!!" )
-                            MESSAGE( STATUS "${out_tmp}" )
-                        ENDIF()
-                        SET( java_link_error TRUE )
-                    ENDIF()
-                    IF( NOT java_link_error )
-                        # set variable if link is found
-                        STRING( REGEX MATCH " symbolic link to " java_link_found "${out_tmp}" )
-                        IF( java_link_found )
-                            # get the file to where the link points to
-                            STRING( REGEX REPLACE ".* symbolic link to[^/]+([^'`´]+).*" "\\1" out_regex "${out_tmp}" )
-                            IF( NOT JAVA_FIND_QUIETLY )
-                                MESSAGE( STATUS "Java binary ${java_bin} is a symbolic link to ${out_regex}" )
-                            ENDIF()
-                            SET( java_bin "${out_regex}" )
-                        ENDIF()
-                    ENDIF()
-                ENDWHILE()
+                EXEC_PROGRAM( ${READLINK_BIN} ARGS "-f ${JAVA_COMPILE}"
+                    OUTPUT_VARIABLE javac_dereferenced
+                    RETURN_VALUE return_value )
 
-                # check if something went wrong
-                IF( NOT java_link_error )
-                    # if not set JAVA_RUNTIME to the dereferenced link
-                    SET( JAVA_RUNTIME "${java_bin}" )
+                IF( NOT return_value )
+                    GET_FILENAME_COMPONENT( JAVA_BIN_PATH ${javac_dereferenced} PATH )
+                ELSE()
+                    GET_FILENAME_COMPONENT( JAVA_BIN_PATH ${JAVA_COMPILE} PATH )
                 ENDIF()
             ENDIF()
+
+            GET_FILENAME_COMPONENT( JAVA_HOME ${JAVA_BIN_PATH} PATH )
+
         ENDIF()
-        
-        # extract java home path out of full path to java runtime
-        STRING( REGEX REPLACE "(.*)\\/[^/]+\\/java$" "\\1" JAVA_HOME ${JAVA_RUNTIME} )
-        # extract java bin path out of full path to java runtime
-        STRING( REGEX REPLACE "(.*)\\/java$" "\\1" JAVA_BIN_PATH ${JAVA_RUNTIME} )
     ELSE()
         IF( NOT JAVA_FIND_QUIETLY )
             MESSAGE( STATUS "Failed to autodetect Java!!" )
@@ -146,7 +111,7 @@ ELSE()
 
     SET( JAVA_BIN_PATH JAVA_BIN_PATH-NOTFOUND )
     FIND_PATH( JAVA_BIN_PATH
-        java
+        javac
         ${JAVA_HOME}/bin
         ${JAVA_HOME}/Commands   # FIXME MacOS
         NO_DEFAULT_PATH )
