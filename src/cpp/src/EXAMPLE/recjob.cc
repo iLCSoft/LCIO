@@ -38,8 +38,8 @@
 using namespace std ;
 using namespace lcio ;
 
-static char* FILEN = "simjob.slcio" ;
-static char* OUTFILEN = "recjob.slcio" ;
+static std::string FILEN = "simjob.slcio" ;
+static std::string OUTFILEN = "recjob.slcio" ;
 static const int NHITS = 50 ;  // calorimeter hits per event
 static const int nRecP = 10 ; // number of reconstructed particles
 
