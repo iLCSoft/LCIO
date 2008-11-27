@@ -16,11 +16,13 @@ namespace SIO{
  * for all event entities (hits, tracks, clusters,...).
  * 
  * @author gaede
- * @version $Id: SIOObjectHandler.h,v 1.9 2005-04-15 08:37:42 gaede Exp $
+ * @version $Id: SIOObjectHandler.h,v 1.10 2008-11-27 16:53:35 engels Exp $
  */
 class SIOObjectHandler {
   
 public:
+
+  virtual ~SIOObjectHandler(){ /* nop */; }
   
   /** Reads lcio objects from an SIO stream.
    */
