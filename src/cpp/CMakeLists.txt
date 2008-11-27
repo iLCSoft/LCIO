@@ -119,8 +119,7 @@ SET( LCIO_UTIL_SRCS
 #------ require proper C++ -------
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
-#FIXME: should establish wether we are on a 32bit or 64 bit machine ....
-ADD_DEFINITIONS( "-Wno-long-long" )
+ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 

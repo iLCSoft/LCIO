@@ -51,7 +51,7 @@ SET (SIO_SRCS
 #------ require proper C++ -------
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
-ADD_DEFINITIONS( "-Wno-long-long -Wno-sign-compare" )
+ADD_DEFINITIONS( "-Wno-long-long -Wno-sign-compare -fno-strict-aliasing" )
 
 ADD_LIBRARY( lib_SIO ${SIO_SRCS} )
 
