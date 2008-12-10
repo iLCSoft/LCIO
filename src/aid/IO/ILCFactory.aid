@@ -1,6 +1,5 @@
 package hep.lcio.io;
 
-
 /**Factory to create LCWriter and Reader object for the known data 
  * formats, e.g. SIO. The implementation (LCFactory) will be a singleton class 
  * that knows all concrete reader/writer implementations.
@@ -30,6 +29,6 @@ public interface ILCFactory {
 	
 /**Creates an LCReader object for the current persistency type.
  */
-	public  LCReader* createLCReader() ;
+	public  LCReader* createLCReader(int readerFlag=0) ;
 
 }
