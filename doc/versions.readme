@@ -3,6 +3,15 @@
 ---------------------------------------------------------------
 
 =====================
+ v01-11
+=====================
+  - direct (random) access made optional (C++):
+    use  LCFactory::getInstance()->createLCReader(LCReader::directAccess) if
+    direct access is need (default is off, i.e. 'no recreating of event map' 
+    when opening a file )
+
+
+=====================
 v01-10-03
 =====================
     - bug fix patch release:

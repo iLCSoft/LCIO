@@ -1,4 +1,5 @@
 #include "lcio.h"
+#include <stdio.h>
 
 #include "IO/LCReader.h"
 #include "IMPL/LCTOOLS.h"
@@ -67,7 +68,11 @@ int main(int argc, char** argv ){
   CellIDDecoder<CalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
   CellIDDecoder<RawCalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
 
-  LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+  LCReader* lcReader ;
+  if ( getenv ("LCIO_DIRECT_ACCESS") !=0  )
+    lcReader = LCFactory::getInstance()->createLCReader(LCReader::directAccess) ;
+  else
+    lcReader = LCFactory::getInstance()->createLCReader() ;
   
   LCEvent* evt(0) ;
 

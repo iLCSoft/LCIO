@@ -9,7 +9,7 @@ import hep.lcio.io.LCWriter;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOFactory.java,v 1.5 2003-09-04 04:27:00 tonyj Exp $
+ * @version $Id: SIOFactory.java,v 1.6 2008-12-10 08:10:59 gaede Exp $
  */
 public class SIOFactory extends LCFactory
 {
@@ -25,7 +25,12 @@ public class SIOFactory extends LCFactory
    {
       return new SIOLCReader();
    }
+   public LCReader createLCReader(int lcReaderFlag)
+   { //fg: dumy implementation - could use readerFlag in the future (now only C++)
+      return new SIOLCReader();
+   }
 
+   
    public LCWriter createLCWriter()
    {
       return new SIOLCWriter();

@@ -11,6 +11,15 @@ package hep.lcio.io;
  */
 public interface LCReader {
 
+    /** Configuration flags for the LCReader instance - to be used with LCFactory::createLCReader(). */
+@ifdef cpp
+@cpp{
+    static const int directAccess =  0x00000001 << 0  ;
+}@else
+    public static const int directAccess = 0x00000001  ;
+@endif
+
+
     /** Opens a file for reading (read-only).
      *
      * @throws IOException

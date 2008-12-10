@@ -1,13 +1,6 @@
 // -*- C++ -*-
-/**Factory to create LCWriter and Reader object for the known data 
- * formats, e.g. SIO. Singleton class 
- * that knows all concrete reader/writer implementations.
- * 
- * @author gaede
- * @version Mar 10, 2003
- */
-#ifndef IOIMPL_LCFACTORY_H
-#define IOIMPL_LCFACTORY_H 1
+#ifndef IOIMPL_LCFactory_h
+#define IOIMPL_LCFactory_h 1
 
 
 #include "IO/ILCFactory.h"
@@ -16,6 +9,13 @@
 
 namespace IOIMPL {
 
+/**Factory to create LCWriter and Reader object for the known data 
+ * formats, e.g. SIO. Singleton class 
+ * that knows all concrete reader/writer implementations.
+ * 
+ * @author gaede
+ * @version Mar 10, 2003
+ */
 class LCFactory : public IO::ILCFactory {
 
 
@@ -38,9 +38,11 @@ public:
    */
   virtual IO::LCWriter * createLCWriter() ;
   
-  /**Creates an LCReader object for the current persistency type.
+  /** Creates an LCReader object for the current persistency type.
+   * lcReaderFlag: configuration options for the LCReader object -
+   * combine multible options with '|'. So far only LCReader::directAccess.
    */
-  virtual IO::LCReader * createLCReader() ;
+  virtual IO::LCReader * createLCReader(int lcReaderFlag=0 ) ;
 
 
 private:
@@ -49,4 +51,4 @@ private:
 
 }; // class
 } // namespace IOIMPL
-#endif /* ifndef IOIMPL_LCFACTORY_H */
+#endif /* ifndef IOIMPL_LCFactory_h */
