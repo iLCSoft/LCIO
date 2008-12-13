@@ -5,11 +5,12 @@
 =====================
  v01-11
 =====================
-  - direct (random) access made optional (C++):
+  - made direct (random) access mode in C++ optional:
     use  LCFactory::getInstance()->createLCReader(LCReader::directAccess) if
     direct access is need (default is off, i.e. 'no recreating of event map' 
     when opening a file )
-
+  - bug fixes and improvements in C++
+    (CMake build procedure, compatibility w/ gcc4.x, 32bit compatibility mode)
 
 =====================
 v01-10-03
