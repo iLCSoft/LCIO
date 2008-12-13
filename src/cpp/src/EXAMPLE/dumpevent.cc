@@ -69,10 +69,10 @@ int main(int argc, char** argv ){
   CellIDDecoder<RawCalorimeterHit>::setDefaultEncoding("M:3,S-1:3,I:9,J:9,K-1:6") ;
 
   LCReader* lcReader ;
-  if ( getenv ("LCIO_DIRECT_ACCESS") !=0  )
-    lcReader = LCFactory::getInstance()->createLCReader(LCReader::directAccess) ;
-  else
+  if( dumpNthEvent ) 
     lcReader = LCFactory::getInstance()->createLCReader() ;
+  else
+    lcReader = LCFactory::getInstance()->createLCReader(LCReader::directAccess) ;
   
   LCEvent* evt(0) ;
 
