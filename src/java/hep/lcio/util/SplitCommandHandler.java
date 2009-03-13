@@ -6,20 +6,19 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
-import org.apache.commons.cli.Parser;
-import org.apache.commons.cli.PosixParser;
 
 /**
  * Command-line handler for the split utility.
  * 
  * @author Jeremy McCormick
- * @version $Id: SplitCommandHandler.java,v 1.5 2007-06-15 23:14:57 jeremy Exp $
+ * @version $Id: SplitCommandHandler.java,v 1.6 2009-03-13 18:40:04 jeremy Exp $
  */
 public class SplitCommandHandler extends CommandHandler
 {
 	File infile;
 	int nevents;
     int maxevents=-1;
+    File outdir=null;
 	
 	SplitCommandHandler()
 	{
@@ -37,18 +36,22 @@ public class SplitCommandHandler extends CommandHandler
 	{
 		Options options = new Options();
 	
-		Option opt = new Option("h", false, "Print split usage.");
+		Option opt = new Option("h",false,"Print split usage.");
 		options.addOption(opt);
 		
-		opt = new Option("i", true, "The input LCIO file.");
+		opt = new Option("i", true,"The input LCIO file.");
 		opt.setArgs(1);
 		options.addOption(opt);
 		
-		opt = new Option("n", true, "The number of events to split.");
+		opt = new Option("n", true,"The number of events to split.");
 		opt.setArgs(1);
 		options.addOption(opt);
         
-        opt = new Option("m", false, "The maximum number of events to read.");
+        opt = new Option("m", false,"The maximum number of events to read.");
+        opt.setArgs(1);
+        options.addOption(opt);
+                
+        opt = new Option("d",false,"The output directory for split files; defaults to input file's directory.");
         opt.setArgs(1);
         options.addOption(opt);
 		
@@ -90,6 +93,15 @@ public class SplitCommandHandler extends CommandHandler
         {
             maxevents = Integer.parseInt(cl.getOptionValue("m"));
         }
+        
+        if (cl.hasOption("d"))
+        {
+        	outdir = new File(cl.getOptionValue("d"));
+        	if (!outdir.exists())
+        	{
+        		throw new IllegalArgumentException("The directory " + outdir.toString() + " does not exist.");
+        	}
+        }
 	}
 	
 	/**
@@ -97,7 +109,7 @@ public class SplitCommandHandler extends CommandHandler
 	 */
 	public void execute() throws Exception
 	{
-		List flist = Split.split(infile, nevents, maxevents);
+		List flist = Split.split(infile, outdir, nevents, maxevents);
 		Split.printSplitSummary(flist, System.out);
 	}
 }

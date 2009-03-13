@@ -21,7 +21,7 @@ import java.util.List;
  * chunks of given size.
  * 
  * @author Jeremy McCormick
- * @version $Id: Split.java,v 1.2 2007-06-15 23:14:57 jeremy Exp $
+ * @version $Id: Split.java,v 1.3 2009-03-13 18:40:04 jeremy Exp $
  */
 public class Split
 {
@@ -31,35 +31,64 @@ public class Split
 	 * @param nevents The number of events in each new output file.
 	 * @throws Exception
 	 */
-	public static List split(File infile, int nevents, int maxevents) throws Exception
-	{
+	public static List split(File infile, File outdir, int nevents, int maxevents) throws Exception
+	{			
+		if (infile == null)
+		{
+			throw new IllegalArgumentException("The infile argument points to null.");
+		}
+		
+		if (!infile.exists())
+		{
+			throw new IllegalArgumentException("Input file " + infile.toString() + " does not exist.");
+		}
+		                		
+		// Decide where the files will go.  Uses either the -d argument from
+		// the command line, if it was set.  Or by default the files will
+		// be created in the current working directory.
+		String outpath = null;
+		if (outdir != null)
+		{
+			if (outdir.exists() && outdir.isDirectory() && outdir.canWrite())
+			{
+				outpath = outdir.getCanonicalPath();
+			}
+			else
+			{
+				throw new IllegalArgumentException("Directory " + outdir.toString() + " is not valid."); 
+			}
+		}
+		else
+		{
+			outpath = System.getProperty("user.dir");
+		}
+		
 		// List of files created.
 		List<File> outfilelist = new ArrayList<File>();
 
 		// Base name from input file name.
-		String basename = infile.getAbsolutePath().replace(".slcio", "");
-
+		String basename = infile.getName().replace(".slcio", "");
+				
 		// XDR input stream from file that is being split up.
 		XDRInputStream xi = null;
 		try
 		{
 			// Create the XDR input stream.
-			xi = new XDRInputStream(new FileInputStream(infile.getAbsolutePath()));
+			xi = new XDRInputStream(new FileInputStream(infile.getAbsolutePath()));			
 		}
 		catch (FileNotFoundException x)
 		{
 			// The input file does not exist.
 			throw new RuntimeException("File " + infile.getAbsolutePath() + " does not exist.", x);
 		}
-
+						
 		// Output file sequence number.
 		int filenum = 0;
 
 		// Number of records processed.
 		int nrecs = 0;
 
-		// Number of records read with name 'LCEvent'.
-		// Reset when next file is started.
+		// Number of records read with name 'LCEvent'.  This flag is reset when the next file is started.
 		int neventsread = 0;
 
 		// Flag to indicate processing should end.
@@ -72,7 +101,13 @@ public class Split
 		{
 			// Next output file name.
 			outfile = basename + "-" + String.valueOf(filenum) + "-" + nevents + ".slcio";
-
+			
+			// Add base directory for output if specified.
+			if (outpath != null)
+			{
+				outfile = outpath + File.separator + outfile;
+			}
+									
 			// The output stream for this file.
 			XDROutputStream xo;
 
@@ -198,7 +233,7 @@ public class Split
 	public static void printSplitSummary(List outfilelist, PrintStream ps) throws Exception
 	{
 		ps.println();
-		ps.println("Split Summary");
+		ps.println("--- Split Summary ---");
 		ps.println();
 		
 		// Read back events.
