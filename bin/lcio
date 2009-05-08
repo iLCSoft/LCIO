@@ -48,7 +48,7 @@ if $cygwin; then
 #  echo "classpath before -> "$LOCALCLASSPATH
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 #  echo "classpath after -> "$LOCALCLASSPATH
-  java -cp "$LOCALCLASSPATH" hep.lcio.util.CommandLineTool $*
+  java ${JAVA_OPTS} -cp "$LOCALCLASSPATH" hep.lcio.util.CommandLineTool $*
 else
-  java -cp $LOCALCLASSPATH hep.lcio.util.CommandLineTool $*
+  java ${JAVA_OPTS} -cp $LOCALCLASSPATH hep.lcio.util.CommandLineTool $*
 fi
