@@ -24,7 +24,7 @@ import java.util.List;
  * application of a delta time.
  * 
  * @author jeremym
- * @version $Id: MergeUtil.java,v 1.8 2007-02-01 20:50:11 jeremy Exp $
+ * @version $Id: MergeUtil.java,v 1.9 2009-05-22 20:18:59 cassell Exp $
  */
 abstract public class MergeUtil
 {
@@ -89,7 +89,10 @@ abstract public class MergeUtil
 
 				// Merge ntoread events from this reader into target,
 				// using starting time of startt, delta time of dt.
-				int nmerged = MergeUtil.mergeEvents(targetEvent, reader, ntoread, setEventHeader, startt, dt);
+                                int nmerged = 0;
+                                if(ntoread > 0)
+                                {
+				nmerged = MergeUtil.mergeEvents(targetEvent, reader, ntoread, setEventHeader, startt, dt);
 				
 				// Check if the input file ran out of events.
 				if (nmerged==0) {
@@ -102,6 +105,7 @@ abstract public class MergeUtil
 					// Stop processing this event.
 					break;
 				}
+                                }
 
 				// Increment total merged.
 				totmerged += nmerged;

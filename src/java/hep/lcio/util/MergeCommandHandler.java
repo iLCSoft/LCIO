@@ -20,7 +20,7 @@ import org.apache.commons.cli.PosixParser;
  * passes the results to a method from MergeUtil.
  *
  * @author jeremym
- * @version $Id: MergeCommandHandler.java,v 1.10 2007-02-01 19:33:24 jeremy Exp $
+ * @version $Id: MergeCommandHandler.java,v 1.11 2009-05-22 20:18:59 cassell Exp $
  */
 public class MergeCommandHandler extends CommandHandler
 {
@@ -31,6 +31,7 @@ public class MergeCommandHandler extends CommandHandler
 	float def_dt = 0;
 	float def_startt = 0;
 	int def_ntoread = 1;
+	double def_mreads = 0.;
 
 	/**
 	 * MergeCommandHandler ctor.
@@ -79,7 +80,7 @@ public class MergeCommandHandler extends CommandHandler
 		opt.setArgs(1);
 		options.addOption(opt);
 
-		opt = new Option("i", true, "Set input file list with format:\n[file_name],[n_reads_per_event],[start_time],[delta_time]\n" +
+		opt = new Option("i", true, "Set input file list with format:\n[file_name],[n_reads_per_event],[start_time],[delta_time],[<reads> poisson]\n" +
 				"This option is not usable with the -f argument.");
 		opt.setArgs(1);
 		options.addOption(opt);
@@ -213,11 +214,18 @@ public class MergeCommandHandler extends CommandHandler
 				if (fields.length > 3)
 					dt = Float.parseFloat(fields[3]);
 
+				// Get the mean of a poisson distribution
+				double mreads = def_mreads;
+				if (fields.length > 4)
+					mreads = Double.parseDouble(fields[4]);
+
 				// Create the input file.
 				File f = new File(fname);
 
 				// Create the merge file object.
-				MergeFileParameters fopt = new MergeFileParameters(f, nreads, startt, dt);
+				MergeFileParameters fopt;
+                                if(mreads > 0.)fopt = new MergeFileParameters(f, mreads, startt, dt);
+                                else fopt = new MergeFileParameters(f, nreads, startt, dt);
 
 				// Add this file with options to merge files list.
 				mfiles.add(fopt);
