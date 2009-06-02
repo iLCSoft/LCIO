@@ -1172,6 +1172,13 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 		printf("%4.2e, ",  clusters[l]->getEnergy() ) ; 
       }
       cout << endl ;
+      cout <<" subdetector energies : " ;
+      const FloatVec& sdE = clu->getSubdetectorEnergies() ;
+      for(unsigned int l=0;l<sdE.size();l++){
+		printf("%4.2e, ",  sdE[l] ) ; 
+      }
+
+
       if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
 	cout << " hits ->";
 // 	const StringVec& hitColNames = clu->getHitCollectionNames() ;
@@ -1212,24 +1219,29 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     PIDHandler pidH( col )  ;
     
-    const IntVec& ids =  pidH.getAlgorithmIDs() ;
-
-    for(unsigned i=0; i<ids.size() ; ++i){
-
-      cout << "   [id: " << ids[i] << "]   " 
-	   <<  pidH.getAlgorithmName( ids[i] ) 
-	   << " - params: " ;
+    try{ 
+      const IntVec& ids =  pidH.getAlgorithmIDs() ;
       
-      const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
- 
-      for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
-
-	cout << " " << *it  ;
+      for(unsigned i=0; i<ids.size() ; ++i){
+	
+	cout << "   [id: " << ids[i] << "]   " 
+	     <<  pidH.getAlgorithmName( ids[i] ) 
+	     << " - params: " ;
+	
+	const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
+	
+	for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
+	  
+	  cout << " " << *it  ;
+	}
+	cout << endl ;
       }
       cout << endl ;
     }
-    cout << endl ;
-
+    catch( UnknownAlgorithm &e ){
+      cout << "- NA - ";
+    }
+    
     std::cout << endl
 	      << "   [cluster ] |  PDG   | likelihood |  type  |  algoId  | parameters : " << endl
 	      << "              |        |            |        |          |              "
@@ -1248,33 +1260,33 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	
 	if( l!=0)
 	  printf("              " ) ;
-
-	ParticleID* pid = clu->getParticleIDs()[l] ;
 	
-	printf("| %6d | %6.4e | %6.6d | %8d | [",  
-	       pid->getPDG() , 
-	       pid->getLikelihood()  ,
-	       pid->getType() ,
-	       pid->getAlgorithmType() 
-	       ) ;
-
-    try{
-        const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
-        
-        for(unsigned j=0;j< pNames.size() ;++j){
-
-          cout << " " <<  pNames[j]
-               << " : " <<  pid->getParameters()[j] << "," ; 
-
-        }
-    }
-    catch( UnknownAlgorithm &e ){
-        cout << "- NA - ";
-    }
-    
+	ParticleID* pid = clu->getParticleIDs()[l] ;
+	try{	
+	  printf("| %6d | %6.4e | %6.6d | %8d | [",  
+		 pid->getPDG() , 
+		 pid->getLikelihood()  ,
+		 pid->getType() ,
+		 pid->getAlgorithmType() 
+		 ) ;
+	  
+	  
+	  const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
+	  
+	  for(unsigned j=0;j< pNames.size() ;++j){
+	    
+	    cout << " " <<  pNames[j]
+		 << " : " <<  pid->getParameters()[j] << "," ; 
+	    
+	  }
+	}
+	catch( UnknownAlgorithm &e ){
+	  cout << "- NA - ";
+	}
+	
 	cout << "]"<< endl ;
 	
-
+	
       }
       cout << endl ;
       
@@ -1282,11 +1294,11 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     
     
-      cout << endl 
-	   << "-------------------------------------------------------------------------------- " 
-	   << endl ;
+    cout << endl 
+	 << "-------------------------------------------------------------------------------- " 
+	 << endl ;
   }
-
+  
   void LCTOOLS::printVertices( const EVENT::LCCollection* col ){
     if( col->getTypeName() != LCIO::VERTEX ){
       
@@ -1464,30 +1476,35 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     PIDHandler pidH( col )  ;
     
-    const IntVec& ids =  pidH.getAlgorithmIDs() ;
-
-    for(unsigned i=0; i<ids.size() ; ++i){
-
-      cout << "   [id: " << ids[i] << "]   " 
-	   <<  pidH.getAlgorithmName( ids[i] ) 
-	   << " - params: " ;
+    try{  
+      const IntVec& ids =  pidH.getAlgorithmIDs() ;
       
-      const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
- 
-      for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
-
-	cout << " " << *it  ;
+      for(unsigned i=0; i<ids.size() ; ++i){
+	
+	cout << "   [id: " << ids[i] << "]   " 
+	     <<  pidH.getAlgorithmName( ids[i] ) 
+	     << " - params: " ;
+	
+	const StringVec& pNames = pidH.getParameterNames( ids[i] ) ;
+	
+	for( StringVec::const_iterator it = pNames.begin() ; it != pNames.end() ; ++it ){
+	  
+	  cout << " " << *it  ;
+	}
+	cout << endl ;
       }
       cout << endl ;
     }
-    cout << endl ;
-
+    catch( UnknownAlgorithm &e ){
+      cout << "- NA - ";
+    }
+    
     std::cout << endl
 	      << "   [particle] |  PDG   | likelihood |  type  |  algoId  | parameters : " << endl
 	      << "              |        |            |        |          |              "
       	      << endl ;
-
-
+    
+    
     for( int i=0 ; i< nPrint ; i++ ){
       
       ReconstructedParticle* recP = 
@@ -1502,31 +1519,35 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	  printf("              " ) ;
 
 	ParticleID* pid = recP->getParticleIDs()[l] ;
-	
-	printf("| %6d | %6.4e | %6.6d | %8d | [",  
-	       pid->getPDG() , 
-	       pid->getLikelihood()  ,
-	       pid->getType() ,
-	       pid->getAlgorithmType() 
-	       ) ;
-
-	const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
-	
-	for(unsigned j=0;j< pNames.size() ;++j){
-
-	  cout << " " <<  pNames[j]
-	       << " : " <<  pid->getParameters()[j] << "," ; 
-
+	try{	
+	  printf("| %6d | %6.4e | %6.6d | %8d | [",  
+		 pid->getPDG() , 
+		 pid->getLikelihood()  ,
+		 pid->getType() ,
+		 pid->getAlgorithmType() 
+		 ) ;
+	  
+	  const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
+	  
+	  for(unsigned j=0;j< pNames.size() ;++j){
+	    
+	    cout << " " <<  pNames[j]
+		 << " : " <<  pid->getParameters()[j] << "," ; 
+	    
+	  }
+	  cout << "]"<< endl ;
+	  
+        }
+	catch( UnknownAlgorithm &e ){
+	  cout << "- NA - ";
 	}
-	cout << "]"<< endl ;
 	
-
       }
       cout << endl ;
       
-    }
+    } 
     
-    
+
     
     cout << endl 
 	 << "-------------------------------------------------------------------------------- " 
