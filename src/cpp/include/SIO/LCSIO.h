@@ -97,6 +97,7 @@ namespace SIO {
 
     static char* dummy  ;
     static int dummy_size  ;
+    static int uid ;
     static const int dummy_initial_size = 1024  ;
 
   } ;

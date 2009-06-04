@@ -6,11 +6,13 @@
 #include "Exceptions.h"
 
 #include <iostream>
+#include <sstream>
 
 using namespace EVENT ;
 
 namespace SIO {
 
+  int LCSIO::uid = 0 ;
   int LCSIO::dummy_size = LCSIO::dummy_initial_size ;
   char* LCSIO::dummy = new char[ LCSIO::dummy_initial_size ]   ;
   
@@ -163,7 +165,7 @@ std::string LCSIO::getValidSIOName(const std::string& aName ) {
 
   char* newName =  new char[  aName.length() + 1 ];
   const char * returnStrP = newName ;
-  std::string returnStr ;
+  std::stringstream returnStr ;
 
   if( *name == '\\' || *name == '/' || *name=='.' )
     *newName++ = '_' ;
@@ -187,10 +189,11 @@ std::string LCSIO::getValidSIOName(const std::string& aName ) {
   
   *newName = '\0' ;
 
-  returnStr = returnStrP ;
+  // JE: append uid to name
+  returnStr << returnStrP << uid++;
   delete[] returnStrP ;
 
-  return returnStr ;
+  return returnStr.str() ;
 }
 
 
