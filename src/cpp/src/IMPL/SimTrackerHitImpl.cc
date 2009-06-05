@@ -9,7 +9,8 @@ namespace IMPL {
     _cellID(0),
     _dEdx(0),
     _time(0),
-    _particle(0){
+    _particle(0),
+    _pathLength(0){
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
