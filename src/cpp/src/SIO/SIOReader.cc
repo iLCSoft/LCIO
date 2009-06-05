@@ -30,6 +30,8 @@
 #include <climits>
 //#include <limits>
 
+#include <sys/stat.h> 
+
 using namespace EVENT ;
 using namespace IO ;
 using namespace IOIMPL ;
@@ -130,10 +132,26 @@ namespace SIO {
     SIO_blockManager::clear() ;
   }
 
-
-
   void SIOReader::open(const std::vector<std::string>& filenames) 
     throw( IOException , std::exception){
+
+    unsigned int i;
+    struct stat fileinfo ;
+    std::string missing_files;
+    
+    // JE: first we check if all files exist
+    for(i=0; i < filenames.size(); i++){
+        
+        if ( stat( filenames[i].c_str(), &fileinfo ) != 0 ){
+            missing_files += filenames[i] ;
+            missing_files += "  " ;
+        }
+    }
+
+    // JE: if not raise IOException
+    if( missing_files.size() != 0 ){
+        throw IOException( std::string( "[SIOReader::open()] File(s) not found:  " + missing_files )) ;
+    }
     
     _myFilenames = &filenames ;
     _currentFileIndex = 0 ;
