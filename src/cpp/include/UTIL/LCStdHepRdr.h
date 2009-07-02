@@ -6,10 +6,12 @@
 #include "EVENT/LCIO.h"
 #include "Exceptions.h"
 
+#include <iostream>
+
 namespace IMPL{
-
-class LCEventImpl ;
-
+  
+  class LCEventImpl ;
+  
 }
 
 namespace UTIL{
@@ -19,7 +21,7 @@ namespace UTIL{
    * file information.
    * 
    * @author cassell
-   * @version $Id: LCStdHepRdr.h,v 1.4 2007-11-12 16:39:04 gaede Exp $
+   * @version $Id: LCStdHepRdr.h,v 1.4.8.1 2009-07-02 12:54:38 gaede Exp $
    */
   class LCStdHepRdr{
     
