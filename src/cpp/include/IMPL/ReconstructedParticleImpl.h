@@ -140,16 +140,10 @@ namespace IMPL {
     float _goodnessOfPID ;
     EVENT::ParticleIDVec _pid ;
     EVENT::ReconstructedParticleVec _particles ;
-//     EVENT::FloatVec _particleWeights ;
     EVENT::ClusterVec _clusters ;
-//     EVENT::FloatVec _clusterWeights ;
-    EVENT::TrackVec _tracks ;
-//     EVENT::FloatVec _trackWeights ;
-//     EVENT::MCParticleVec _mcParticles ;
-//     EVENT::FloatVec _mcParticleWeights ;
+    EVENT::TrackVec _tracks ; //! tell ROOT to not stream this ...
 
     EVENT::Vertex* _sv ;
-    //EVENT::Vertex* _ev ;
     
 }; // class
 
