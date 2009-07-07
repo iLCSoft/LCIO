@@ -283,6 +283,8 @@ namespace lcrtrel{
 
   class LCRTRelations ;
 
+#ifndef __CINT__
+
   /** Set the 1-to-1 relation between two objects - prexisting inconsistent relations 
       involving the two objects are deleted to enforce a consistent set of from-to relations. */
   template <class R> 
@@ -634,6 +636,7 @@ namespace lcrtrel{
     f1->LCRTRelations::ptr<typename R::to>()->merge( *lt2 ) ;
   }
 
+#endif
 
 } // end namespace
 
