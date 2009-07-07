@@ -19,14 +19,15 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version $Id: LCCollectionVec.h,v 1.11 2005-04-15 08:37:37 gaede Exp $
+   * @version $Id: LCCollectionVec.h,v 1.11.20.1 2009-07-07 12:49:54 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
   class LCCollectionVec : public EVENT::LCCollection , public EVENT::LCObjectVec 
     , public AccessChecked {
     
-  protected:
+    //  protected:
+  public:
     /**  Default Constructor is protected  - every LCCollection needs to know the type
      *   of its elements.
      */

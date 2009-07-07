@@ -19,6 +19,7 @@ namespace IOIMPL {
     friend class SIO::SIOCollectionHandler ;
     
   protected:
+  public:
     LCCollectionIOVec() {  /* no default c'tor */ }
     
 
