@@ -24,7 +24,7 @@ namespace UTIL{
    *  See UTIL::BitField64 for a description of the encoding string. 
    * 
    *  @see BitField64
-   *  @version $Id: CellIDDecoder.h,v 1.9 2006-12-08 10:18:59 gaede Exp $
+   *  @version $Id: CellIDDecoder.h,v 1.9.12.1 2009-07-08 15:09:02 gaede Exp $
    */
   template <class T> 
   class CellIDDecoder {
@@ -111,7 +111,7 @@ namespace UTIL{
    * Specialization for SimTrackerHits that have only one cellID.
    */
   template<>
-  inline const BitField64 & CellIDDecoder<SimTrackerHit>::operator()( SimTrackerHit* hit ){  
+  inline const BitField64 & CellIDDecoder<EVENT::SimTrackerHit>::operator()( EVENT::SimTrackerHit* hit ){  
     
     if( hit != _oldHit && hit ) {
       
@@ -127,7 +127,7 @@ namespace UTIL{
   
   
   template <>
-  std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
+  std::string* CellIDDecoder<EVENT::SimTrackerHit>::_defaultEncoding  ;
 
 } // namespace
 #endif

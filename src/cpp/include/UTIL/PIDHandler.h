@@ -31,7 +31,7 @@ namespace UTIL{
    *  @see ReconstructedParticle
    *  @see ParticleID
    *  @author F.Gaede, DESY
-   *  @version $Id: PIDHandler.h,v 1.1 2008-05-30 13:27:08 gaede Exp $
+   *  @version $Id: PIDHandler.h,v 1.1.6.1 2009-07-08 15:09:02 gaede Exp $
    */
   class PIDHandler {
 
@@ -83,7 +83,7 @@ namespace UTIL{
     /** Set the particleID algorithm that is used for this particle's  kinematic variables 
      * - throws UnknownAlgorithm.
      */
-    void setParticleIDUsed( ReconstructedParticleImpl* particle , int algorithmID  ) ;
+    void setParticleIDUsed( IMPL::ReconstructedParticleImpl* particle , int algorithmID  ) ;
 
 
     /** The names of parameters for the algorithm with algorithmID - throws UnknownAlgoritm.

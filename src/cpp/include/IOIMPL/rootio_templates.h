@@ -1,5 +1,5 @@
-#ifndef lcio_templates_h
-#define lcio_templates_h 1
+#ifndef rootio_templates_h
+#define rootio_templates_h 1
 
 
 #include "UTIL/LCTypedVector.h"
