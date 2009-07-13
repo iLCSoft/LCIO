@@ -1,0 +1,31 @@
+
+
+The $LCIO/rootio directory contains files related to the test of using ROOT I/O for LCIO.
+
+
+  ROOTDict.mk:  example make file for creating an LCIO dictionary (A.Naumann)
+
+  lciotree.C:  example macro for reading in an example tree w/ LCIO data  
+
+
+additional files added for ROOT I/O :
+
+ $LCIO/src/cpp/src/EXAMPLES/rootio.cc:   example main program that creates a root tree
+ 
+ $LCIO/src/cpp/include/IOIMPL/rootio_templates.h: define some template instantiations used in tree
+
+
+
+
+###############################################################
+
+ Build instructions:
+ -------------------
+export CVSROOT=:pserver:anonymous@cvs.freehep.org:/cvs/lcio
+mkdir lcio 
+cd lcio
+cvs co -d rio_v00-00 -r rio_v00-00 lcio
+
+. /data/gaede/root/5.24.00/bin/thisroot.sh
+
+
