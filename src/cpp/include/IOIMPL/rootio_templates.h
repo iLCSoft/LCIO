@@ -11,6 +11,8 @@
 #include "IMPL/ClusterImpl.h"
 #include "IMPL/LCRelationImpl.h"
 
+#include "TRefArray.h"
+
 // ---- tell ROOT about the templates instantiations that we are going to use ...
 
 #ifdef __MAKECINT__
@@ -28,6 +30,18 @@
 #pragma link C++ class std::vector<EVENT::LCRelation*>+;
 #pragma link C++ class std::vector<EVENT::Vertex*>+;
 #endif
+
+
+
+
+
+
+// seperate data members and pointer members in ROOT
+struct ReconstructedParticleROOT{
+  EVENT::ReconstructedParticle* Particle ;
+  TRefArray  Tracks ;
+} ;
+
 
 
 

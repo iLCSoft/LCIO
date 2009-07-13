@@ -4,15 +4,12 @@
 #include "lcio.h"
 #include "EVENT/LCEvent.h"
 #include "IMPL/LCCollectionVec.h"
-#include "IMPL/ReconstructedParticleImpl.h"
+//#include "IMPL/ReconstructedParticleImpl.h"
 #include "UTIL/LCTypedVector.h"
 
-//#include "TSystem.h"
-//#include "TFile.h"
 #include "TTree.h"
-//#include "TClassTable.h"
+//#include "TRefArray.h"
 
-//typedef IMPL::ReconstructedParticleImpl T ;
 
 
 class LCBranch{
@@ -39,7 +36,8 @@ public:
     tree->Branch( name  , &_tv, 16000, 2 );
 
   }
-  
+
+ 
   
   
   
@@ -86,6 +84,47 @@ protected:
   std::vector<T*>* _tv  ;
 
 }; // class
+
+
+
+
+// template<>
+// void LCCol2Branch<ReconstructedParticleROOT>::fill( EVENT::LCEvent* evt ){
+  
+//   _tv->clear() ;
+//   _tv->resize( 0 ) ;
+  
+  
+//   try{
+    
+//     EVENT::LCCollection* col =  evt->getCollection( _name ) ;
+    
+//     int n = col->getNumberOfElements() ;
+    
+//     _tv->resize( n ) ;
+    
+//     for( int i=0; i<n ; ++i){
+      
+//       EVENT::ReconstructedParticle* p = dynamic_cast<EVENT::ReconstructedParticle*>( col->getElementAt(i) )  ;
+
+//       (*_tv)[i]->Particle = p ;
+
+//       unsigned ntrk = p->getTracks().size() ;
+
+//       for( unsigned j=0;j<ntrk;j++){
+
+// ---- TRefs work only for TObjects !!
+// 	(*_tv)[i]->Tracks.Add(  p->getTracks()[j] ) ; 
+
+//       }
+//     }
+    
+//   } catch(const lcio::DataNotAvailableException& e){
+    
+//     std::cout << "  collection not found : " << _name << std::endl ;
+//   }    
+// }
+
 
 
 #endif 

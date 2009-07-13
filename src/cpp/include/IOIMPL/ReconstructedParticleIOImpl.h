@@ -1,12 +1,14 @@
-#ifndef SIO_RECONSTRUCTEDPARTICLEIOIMPL_H
-#define SIO_RECONSTRUCTEDPARTICLEIOIMPL_H 1
+#ifndef IMPL_ReconstructedParticleIOImpl_H
+#define IMPL_ReconstructedParticleIOImpl_H 1
 
 #include "IMPL/ReconstructedParticleImpl.h"
+
 
 // forward declaration
 namespace SIO{ 
   class SIOReconstructedParticleHandler ;
 }
+ 
 
 namespace IOIMPL {
 
