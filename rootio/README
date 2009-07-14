@@ -10,8 +10,9 @@ The $LCIO/rootio directory contains files related to the test of using ROOT I/O 
 
 additional files added for ROOT I/O :
 
- $LCIO/src/cpp/src/EXAMPLES/rootio.cc:   example main program that creates a root tree
- 
+ $LCIO/src/cpp/src/EXAMPLES/rootio.cc:       example main program that creates a root tree
+ $LCIO//src/cpp/src/EXAMPLE/LCCol2Branch.h:  create and fill ROOT branches
+
  $LCIO/src/cpp/include/IOIMPL/rootio_templates.h: define some template instantiations used in tree
 
 
@@ -38,4 +39,16 @@ mkdir build
 cd build 
 cmake -D BUILD_ROOTIO=ON -D ROOT_HOME=$ROOTSYS ..
 make -j 4 install
+
+
+
+#------- run the example :
+
+./bin/rootio ../rootio/DST01-06_ppr004_bbcsdu.slcio dst.root
+
+root -l
+# root [0] .x ../rootio/lciotree.C
+
+###############################################################
+
 
