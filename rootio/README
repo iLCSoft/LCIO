@@ -21,11 +21,21 @@ additional files added for ROOT I/O :
 
  Build instructions:
  -------------------
-export CVSROOT=:pserver:anonymous@cvs.freehep.org:/cvs/lcio
-mkdir lcio 
-cd lcio
-cvs co -d rio_v00-00 -r rio_v00-00 lcio
 
 . /data/gaede/root/5.24.00/bin/thisroot.sh
 
+
+mkdir lcio 
+cd lcio
+
+export CVSROOT=:pserver:anonymous@cvs.freehep.org:/cvs/lcio
+cvs co -d rio_v00-00 -r rio_v00-00 lcio
+
+
+cd rio_v00-00
+mkdir build 
+
+cd build 
+cmake -D BUILD_ROOTIO=ON -D ROOT_HOME=$ROOTSYS ..
+make -j 4 install
 
