@@ -1,7 +1,7 @@
 /**Header file for the f77-wrapper functions of the Track Class.
  * 
  * @author H. Vogt
- * @version $Id: lctrh.h,v 1.6 2005-04-15 08:37:35 gaede Exp $
+ * @version $Id: lctrh.h,v 1.7 2009-07-22 16:03:35 engels Exp $
  */
 #include "cfortran.h"
 #include "cpointer.h"
@@ -19,6 +19,7 @@ float   lctrhgetdedx( PTRTYPE trh ) ;
 float   lctrhgettime( PTRTYPE trh ) ;
 //char*   lctrhgettype( PTRTYPE trh ) ;
 int   lctrhgettype( PTRTYPE trh ) ;
+int     lctrhgetquality( PTRTYPE trh )  ;
 
 PTRTYPE lctrhgetrawhits( PTRTYPE trh ) ;
 
@@ -27,6 +28,7 @@ int     lctrhsetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
 int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
 int     lctrhsettime( PTRTYPE trh, float time ) ;
 int     lctrhsettype( PTRTYPE trh, int type ) ;
+int     lctrhsetquality( PTRTYPE trh, int q );
 int     lctrhaddrawhit( PTRTYPE trh, PTRTYPE rawhit ) ;
 
 
@@ -43,13 +45,15 @@ FCALLSCFUN1(FLOAT, lctrhgetdedx, LCTRHGETDEDX, lctrhgetdedx, CFORTRANPNTR)
 FCALLSCFUN1(FLOAT, lctrhgettime, LCTRHGETTIME, lctrhgettime, CFORTRANPNTR) 
   //FCALLSCFUN1(STRING, lctrhgettype, LCTRHGETTYPE, lctrhgettype, CFORTRANPNTR ) 
 FCALLSCFUN1(INT, lctrhgettype, LCTRHGETTYPE, lctrhgettype, CFORTRANPNTR ) 
+FCALLSCFUN1(INT, lctrhgetquality,LCTRHGETQUALITY, lctrhgetquality,CFORTRANPNTR)
 FCALLSCFUN1(CFORTRANPNTR, lctrhgetrawhits,  LCTRHGETRAWHITS, lctrhgetrawhits, CFORTRANPNTR) 
 
 FCALLSCFUN2(INT, lctrhsetposition, LCTRHSETPOSITION, lctrhsetposition, CFORTRANPNTR, DOUBLEV) 
 FCALLSCFUN2(INT, lctrhsetcovmatrix, LCTRHSETCOVMATRIX, lctrhsetcovmatrix, CFORTRANPNTR, FLOATV) 
 FCALLSCFUN2(INT, lctrhsetdedx, LCTRHSETDEDX, lctrhsetdedx, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lctrhsettime, LCTRHSETTIME, lctrhsettime, CFORTRANPNTR, FLOAT) 
-FCALLSCFUN2(INT, lctrhsettype, LCTRHSETTYPE, lctrhsettype, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lctrhsettype, LCTRHSETTYPE, lctrhsettype, CFORTRANPNTR, INT )
+FCALLSCFUN2(INT, lctrhsetquality, LCTRHSETQUALITY, lctrhsetquality, CFORTRANPNTR, INT )
 FCALLSCFUN2(INT, lctrhaddrawhit, LCTRHADDRAWHIT, lctrhaddrawhit, CFORTRANPNTR, CFORTRANPNTR) 
 
 }

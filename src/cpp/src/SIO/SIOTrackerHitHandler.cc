@@ -37,6 +37,7 @@ namespace SIO{
 
     SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
+    SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
 
 
     // rawHits
@@ -79,6 +80,7 @@ namespace SIO{
 
     LCSIO_WRITE( stream, hit->getdEdx()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;
+    LCSIO_WRITE( stream, hit->getQuality()  ) ;
     
 //     const LCObject* raw = hit->getRawDataHit()  ;
 //     SIO_PNTR( stream , &raw ) ;

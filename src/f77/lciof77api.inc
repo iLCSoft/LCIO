@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.39 2008-06-04 17:37:16 engels Exp $
+*  $Id: lciof77api.inc,v 1.40 2009-07-22 16:03:36 engels Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -232,10 +232,11 @@ c-----the Vertex interface
 c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawhits
       integer lctrhdelete, lctrhid, lctrhgetposition, lctrhgetcovmatrix
-      integer lctrhgettype
+      integer lctrhgettype, lctrhgetquality
       real    lctrhgetdedx, lctrhgettime
       integer lctrhsetposition, lctrhsetcovmatrix, lctrhsetdedx
-      integer lctrhsettime, lctrhsettype, lctrhaddrawhit
+      integer lctrhsettime, lctrhsettype, lctrhsetquality
+      integer lctrhaddrawhit
 
 c-----the Track interface
       PTRTYPE lctrkcreate, lctrkgettracks, lctrkgettrackerhits

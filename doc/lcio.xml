@@ -245,6 +245,7 @@
             <data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data>
             <data type="float" name="dedx"></data>
             <data type="float" name="time"></data>
+            <data type="int" name="quality">quality flag word</data>
             <if condition="1000*major+minor&gt;1002">
               <data type="int" name="nRawHits">number of raw hits</data>
               <repeat count="nRawHits">

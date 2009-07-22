@@ -7,7 +7,7 @@ import hep.lcio.event.TrackerHit;
 
 /**
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.8 2004-09-24 13:21:22 tonyj Exp $
+ * @version $Id: ITrackerHit.java,v 1.9 2009-07-22 16:03:36 engels Exp $
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
@@ -16,6 +16,7 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    protected float dEdx;
    protected float time;
    protected int type;
+   protected int quality;
    protected List rawHits = new ArrayList() ;
    
    public double[] getPosition()
@@ -63,6 +64,17 @@ public class ITrackerHit extends ILCObject implements TrackerHit
       this.time = time;
    }
       
+   public int getQuality()
+   {
+      return quality;
+   }
+
+   public void setQuality(int quality)
+   {
+      checkAccess();
+      this.quality = quality;
+   }
+
    public int getType()
    {
       return type;

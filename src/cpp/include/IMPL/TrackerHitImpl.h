@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version $Id: TrackerHitImpl.h,v 1.10 2006-08-04 16:52:46 gaede Exp $
+ * @version $Id: TrackerHitImpl.h,v 1.11 2009-07-22 16:03:35 engels Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -58,6 +58,9 @@ namespace IMPL {
      */
     virtual int getType() const ;
 
+    /** The quality bit flag of the hit.
+     */
+    virtual int getQuality() const { return _quality ; }
 
     /** The raw data hits. 
      * Check getType() to get actual data type.
@@ -77,7 +80,8 @@ namespace IMPL {
     void setCovMatrix( float cov[TRKHITNCOVMATRIX]  );
     void setdEdx( float dedx ) ;
     void setTime( float t ) ;
-
+    void setQuality( int quality ) ;
+    void setQualityBit( int bit , bool val=true ) ;
 
 
 protected:
@@ -87,6 +91,7 @@ protected:
     EVENT::FloatVec _cov ;
     float _dEdx ;
     float _time ;
+    int _quality ;
     EVENT::LCObjectVec _rawHits ;
     
 
