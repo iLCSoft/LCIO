@@ -28,7 +28,7 @@ namespace RIO {
   /** Concrete implementation of LCWriter using ROOT I/O.
    * 
    * @author gaede
-   * @version $Id: RIOReader.h,v 1.1.2.1 2009-09-14 13:50:48 gaede Exp $
+   * @version $Id: RIOReader.h,v 1.1.2.2 2009-09-14 16:22:10 gaede Exp $
    */
   class RIOReader : public IO::LCReader {
     
@@ -168,9 +168,9 @@ namespace RIO {
     BranchVector _branches ;
     bool _haveBranches ; 
  
-    IOIMPL::LCEventIOImpl *_evtImpl ;
+    IMPL::LCEventImpl *_evtImpl ;
 
-    IOIMPL::LCRunHeaderIOImpl *_runImpl ;
+    IMPL::LCRunHeaderImpl *_runImpl ;
 
     std::set<IO::LCRunListener*> _runListeners ;
     std::set<IO::LCEventListener*> _evtListeners ;

@@ -48,6 +48,8 @@ namespace RIO {
 #else
 #endif  
     
+    _evtImpl = new IMPL::LCEventImpl ;
+
     LCIOExceptionHandler::createInstance() ;
   }
 
@@ -220,19 +222,14 @@ namespace RIO {
     if( !_haveBranches ) {
       
 
-      // first we create a branch for the event (header) 
-      
-      TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
-      
-      if( br != 0 ){  // branch allready exists -> update/append  mode 
-	
-	br->SetAddress( &_evtImpl ) ;
-	
-      } else {
-	
-	//FIXME: make split level and 'record size' parameters ....
-	_tree->Branch( "LCEvent"  , &_evtImpl , 16000, 2 );
-      }
+//       // first we create a branch for the event (header) 
+//       TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
+//       if( br != 0 ){  // branch allready exists -> update/append  mode 
+// 	  br->SetAddress( &_evtImpl ) ;
+//       } else {
+// 	//FIXME: make split level and 'record size' parameters ....
+// 	_tree->Branch( "LCEvent"  , &_evtImpl , 16000, 2 );
+//       }
 
       // loop over all collections in first event ...
       typedef std::vector< std::string > StrVec ; 
@@ -319,29 +316,44 @@ namespace RIO {
 
     //------------------------------------------------------  
     
-    if( !_haveBranches ) {
       
       _entry ++ ;
 
       // read event header first
+      
       TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
       
-      if( br == 0 ){  // branch allready exists -> update/append  mode 
-      
-	throw IOException( std::string( "[RIOReader::readNextEvent()] cant open branch \"LCEvent\" " ) ) ;
+      if( br == 0 ){        
 	
+	throw IOException( std::string( "[RIOReader::readNextEvent()] cant open branch \"LCEvent\" " ) ) ;
       } 
-
+      
       br->SetAddress( &_evtImpl ) ;
+
+      Long64_t tentry =  _tree->LoadTree( _entry );
+
+      int nbyte = br->GetEntry(tentry);
+
+      if( tentry < 0 ){
+
+	return 0 ; // EOF ?
+      }
+
+      std::cout << " tentry : " << tentry 
+		<< " _entry " << _entry  
+		<< "  eventnum " << _evtImpl->getEventNumber()  
+		<< " ncols: " << _evtImpl->getCollectionNames()->size() 
+		<< " nbyte: " << nbyte
+		<< " _evtImpl " << _evtImpl  
+		<< std::endl ;
+
       
+      if( !_haveBranches ) {
 
-      int nbyte = _tree->LoadTree( _entry );
+	setUpHandlers( _evtImpl ) ;
+      }    
 
-      std::cout << " nbyte : " << nbyte << " _entry " << _entry  << std::endl ;
-      
-      setUpHandlers( _evtImpl ) ;
-    }    
-
+    
     
     //------------------------------------------------------
 
