@@ -9,9 +9,12 @@
 #include "SIO/SIOReader.h"
 
 
+#include "RIO/RIOWriter.h"
+#include "RIO/RIOReader.h"
+
 
 using namespace IO ;
-using namespace SIO ;
+//using namespace SIO ;
 
 namespace IOIMPL{
 
@@ -38,13 +41,15 @@ namespace IOIMPL{
     // the reason for having this class
     // so far we just create SIO objects
 
-    return new SIOWriter ;
+    //    return new SIO::SIOWriter ;
+    return new RIO::RIOWriter ;
   }
   
   LCReader * LCFactory::createLCReader(int lcReaderFlag) {
 
     // so far we just create SIO objects
-    return new SIOReader( lcReaderFlag );
+    //    return new SIO::SIOReader( lcReaderFlag );
+   return new RIO::RIOReader( lcReaderFlag );
   }
   
   

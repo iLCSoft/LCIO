@@ -1,0 +1,17 @@
+
+ To Do for ROOT I/O for LCIO 
+ ===========================
+
+
+ - dependency structure of libraries:
+   liblcio.so should not depend on ROOT libraries !
+   -> can we use a dlopen mechanism ala marlin::ProcessorLoader ?
+      
+   -> for now simply add ROOT libraries ....
+
+
+ - LCFactory needs to have mechanism to choose either SIO or RIO 
+   -> could use default arguments (problem: createLCReader already has one)
+
+
+

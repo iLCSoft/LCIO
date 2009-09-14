@@ -13,7 +13,7 @@
 #include "IMPL/LCEventImpl.h"
 // #include "EVENT/LCRunHeader.h" 
 
-#include "IOIMPL/rootio_templates.h"
+//#include "IOIMPL/rootio_templates.h"
 
 #include "LCCol2Branch.h"
 
@@ -130,12 +130,11 @@ int main(int argc, char** argv ){
   //   the event loop 
   while( (evt = lcReader->readNextEvent()) != 0 ) {
     
-
     for( BV::const_iterator it = _branches.begin() ; it != _branches.end()  ; ++it) {
-
+      
       (*it)->fill( evt ) ;
     }
-
+    
     _tree->Fill() ;
     
     nEvents ++ ;

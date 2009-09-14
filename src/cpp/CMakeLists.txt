@@ -67,6 +67,11 @@ SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
 )
 
+SET( LCIO_RIO_SRCS
+  ./src/RIO/RIOWriter.cc
+  ./src/RIO/RIOReader.cc
+)
+
 SET( LCIO_SIO_SRCS
   ./src/SIO/LCSIO.cc
   ./src/SIO/SIOCalHitHandler.cc
@@ -118,7 +123,10 @@ SET( LCIO_UTIL_SRCS
 
 
 
-
+# -------- ROOT libraries -----------------
+IF( BUILD_ROOTIO )
+  INCLUDE( ${PROJECT_SOURCE_DIR}/FindROOT.cmake )
+ENDIF( BUILD_ROOTIO )
 
 
 #------ require proper C++ -------
@@ -179,6 +187,9 @@ MACRO( ADD_LCIO_BIN file )
 #  MESSAGE( STATUS " in ADD_LCIO_BIN : " ${file} " " ./src/EXAMPLE/${file}.cc )
   SET_TARGET_PROPERTIES( bin_${file} PROPERTIES OUTPUT_NAME ${file} )
   TARGET_LINK_LIBRARIES( bin_${file} lib_LCIO )
+  IF( BUILD_ROOTIO )
+    TARGET_LINK_LIBRARIES( bin_${file} ${ROOT_LIBRARIES} lib_LCIODICT )
+  ENDIF( BUILD_ROOTIO )
   INSTALL( TARGETS bin_${file} DESTINATION bin )
 ENDMACRO()
 #===================================================================
@@ -332,7 +343,9 @@ IF( BUILD_ROOTIO )
     # #include "include/IOIMPL/TrackerRawDataIOImpl.h"
     INCLUDE_DIRECTORIES( "${CMAKE_CURRENT_SOURCE_DIR}" )
     
-    ADD_LIBRARY( lib_LCIODICT ${dict_lib_srcs} )
+    ADD_LIBRARY( lib_LCIODICT ${dict_lib_srcs}  ${LCIO_RIO_SRCS} )
+    ADD_LIBRARY( lib_LCIO ${LCIO_RIO_SRCS} )
+ 
 
    IF( APPLE )
      SET( ROOT_DICT_LINK_FLAGS "-single_module -undefined dynamic_lookup -bind_at_load")

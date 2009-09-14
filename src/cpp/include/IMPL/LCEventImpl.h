@@ -1,5 +1,5 @@
-#ifndef EVENT_LCEVENTIMPL_H
-#define EVENT_LCEVENTIMPL_H 1
+#ifndef IMPL_LCEventImpl_H
+#define IMPL_LCEventImpl_H 1
 
 #include <string>
 #include <map>
@@ -169,7 +169,7 @@ namespace IMPL{
   protected:  
     int _runNumber ;
     int _eventNumber ;
-    EVENT::long64 _timeStamp ;
+    EVENT::long64 _timeStamp ; 
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
