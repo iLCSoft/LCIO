@@ -21,7 +21,8 @@
 
 #include <cstring>
 
-#define ROOTIO_FILE_EXTENSION ".lcio.root"
+//#define ROOTIO_FILE_EXTENSION ".lcio.root"
+#define ROOTIO_FILE_EXTENSION ".rlcio"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -64,8 +65,6 @@ namespace RIO {
     
     // if the file exists we throw an exception
     _file = new TFile( rioFilename.c_str() , "NEW");    
-
-    bool _haveBranches ; 
 
     if( _file->IsOpen() ){ 
 
@@ -114,7 +113,7 @@ namespace RIO {
     //  				      + stream_name  )) ;
         
     
-    unsigned int  status = 0  ;
+    //    unsigned int  status = 0  ;
 
 
     //    std::cout << " ******** open ( " << filename << ", " << writeMode << ") "  << std::endl ;
@@ -238,25 +237,26 @@ namespace RIO {
 	
 	LCCollection* col = evt->getCollection( *name ) ;
 	
-	const LCParameters&  params =  col->getParameters()  ;
+	//	const LCParameters&  params =  col->getParameters()  ;
 	std::string typeName = col->getTypeName() ;
 
 	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
 
+	_branches.push_back(  new RIO::RIOLCCollectionHandler( *name, typeName, _tree) ) ;	 
 
-	//FIXME: these should be held by  a singleton handler manager (registry) 
-	if( typeName == LCIO::MCPARTICLE ){
+// 	//FIXME: these should be held by  a singleton handler manager (registry) 
+// 	if( typeName == LCIO::MCPARTICLE ){
 
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
-	}      
-	if( typeName == LCIO::SIMCALORIMETERHIT ){
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
+// 	}      
+// 	if( typeName == LCIO::SIMCALORIMETERHIT ){
 
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;	  
-	}      
-	if( typeName == LCIO::SIMTRACKERHIT ){
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;	  
+// 	}      
+// 	if( typeName == LCIO::SIMTRACKERHIT ){
 
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
-	}      
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
+// 	}      
 	
 
 	// ToDo:  add all other LCIO types ....

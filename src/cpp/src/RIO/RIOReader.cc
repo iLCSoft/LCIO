@@ -31,8 +31,11 @@ using namespace IMPL ;
  
 namespace RIO {
 
-  //#define DEBUG 1
+
+#define DEBUG 1
   
+
+
   RIOReader::RIOReader( int lcReaderFlag ) :
     _file(0),
     _tree(0),
@@ -217,88 +220,47 @@ namespace RIO {
     return _runImpl ;
   }
   
-  void RIOReader::setUpHandlers(const LCEvent * evt){
+  void RIOReader::setUpHandlers(const LCEventImpl * evt){
 
-    if( !_haveBranches ) {
-      
+    if( !_haveBranches ) {  // only for first event ....
 
-//       // first we create a branch for the event (header) 
-//       TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
-//       if( br != 0 ){  // branch allready exists -> update/append  mode 
-// 	  br->SetAddress( &_evtImpl ) ;
-//       } else {
-// 	//FIXME: make split level and 'record size' parameters ....
-// 	_tree->Branch( "LCEvent"  , &_evtImpl , 16000, 2 );
-//       }
 
-      // loop over all collections in first event ...
+      _haveBranches = true ;
+
       typedef std::vector< std::string > StrVec ; 
 
-      const StrVec* strVec = evt->getCollectionNames() ;
+      const StrVec* strVec = evt->getCollectionNames(false) ;
 
       for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	
-	LCCollection* col = evt->getCollection( *name ) ;
-	
-	const LCParameters&  params =  col->getParameters()  ;
-	std::string typeName = col->getTypeName() ;
+// 	LCCollection* col = evt->getCollection( *name ) ;
+// 	const LCParameters&  params =  col->getParameters()  ;
+// 	std::string typeName = col->getTypeName() ;
+
+	std::string typeName("YetUnknown") ;
 
 	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
 
+// 	//FIXME: these should be held by  a singleton handler manager (registry) 
+// 	if( typeName == LCIO::MCPARTICLE ){
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
+// 	}      
+// 	if( typeName == LCIO::SIMCALORIMETERHIT ){
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;
+// 	}      
+// 	if( typeName == LCIO::SIMTRACKERHIT ){
+// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
+// 	}      
+// 	// ToDo:  add all other LCIO types ....
 
-	//FIXME: these should be held by  a singleton handler manager (registry) 
-	if( typeName == LCIO::MCPARTICLE ){
-
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
-	}      
-	if( typeName == LCIO::SIMCALORIMETERHIT ){
-
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;	  
-	}      
-	if( typeName == LCIO::SIMTRACKERHIT ){
-
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
-	}      
 	
+// 	if( *name == "MCParticlesSkimmed" )
 
-	// ToDo:  add all other LCIO types ....
+	  _branches.push_back(  new RIO::RIOLCCollectionHandler( *name, typeName   , _tree) ) ;	
 
       }
 
-      _haveBranches = true ;
     }
-//     // use event *_evtP to setup the block readers from header information ....
-//     const std::vector<std::string>* strVec = (*_evtP)->getCollectionNames() ;
-//     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-      
-//       const LCCollection* col = (*_evtP)->getCollection( *name ) ;
-
-
-//       // check if block handler exists in manager
-//       RIOCollectionHandler* ch = dynamic_cast<RIOCollectionHandler*> 
-// 	( RIO_blockManager::get( name->c_str() )  ) ;
-      
-//       // if not, create a new block handler
-//       if( ch == 0 ) {
-	
-// 	// create collection handler for event
-// 	try{
-// 	  ch =  new RIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
-// 	  // calls   RIO_blockManager::add( ch )  in the c'tor !
-// 	}
-// 	catch(Exception& ex){   // unsuported type !
-// 	  delete ch ;
-// 	  ch =  0 ;
-// 	}
-
-//       }
-//       // else { // handler already exists
-//       if( ch != 0 )
-// 	ch->setEvent( _evtP ) ; 
-//       //      }
-//     }
-
-
   }
 
 
@@ -310,7 +272,7 @@ namespace RIO {
 
   LCEvent* RIOReader::readNextEvent(int accessMode) throw (IOException, std::exception ) {
 
-//     if( _evtImpl != 0 ) 
+//     if( _evtImpl != 0 )   // memory handling in ROOT I/O ? 
 //       delete _evtImpl ;
     
 
@@ -339,28 +301,34 @@ namespace RIO {
 	return 0 ; // EOF ?
       }
 
+#ifdef DEBUG
+      typedef std::vector< std::string > StrVec ; 
+
+      const StrVec& strVec = *( _evtImpl->getCollectionNames(false) ) ;
+
       std::cout << " tentry : " << tentry 
 		<< " _entry " << _entry  
 		<< "  eventnum " << _evtImpl->getEventNumber()  
-		<< " ncols: " << _evtImpl->getCollectionNames()->size() 
+		<< " ncols: " << strVec.size() 
 		<< " nbyte: " << nbyte
 		<< " _evtImpl " << _evtImpl  
 		<< std::endl ;
 
-      typedef std::vector< std::string > StrVec ; 
-
-      const StrVec* strVec = _evtImpl->getCollectionNames() ;
-
-      for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+      for(  StrVec::const_iterator name = strVec.begin() ; name != strVec.end() ; name++){
 	std::cout << " collection: " << *name << std::endl ;
       }
-      
+#endif      
+
       if( !_haveBranches ) {
 
 	setUpHandlers( _evtImpl ) ;
       }    
 
-    
+      for( BranchVector::iterator it=_branches.begin() ; it!=_branches.end() ; ++it){
+	
+	(*it)->fromBranch( _evtImpl , tentry ) ;
+      }
+      
     
     //------------------------------------------------------
 

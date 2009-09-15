@@ -57,6 +57,7 @@ namespace IMPL {
 
 
   MCParticleImpl::~MCParticleImpl(){
+    //    std::cout << " MCParticleImpl::~MCParticleImpl() - id: " << id() <<std::endl ;
     // no dynamic variables
     //    delete [] _readDaughters ;
 //     for(MCParticlePVec::iterator iter = _daughters.begin();iter != _daughters.end() ;iter++){

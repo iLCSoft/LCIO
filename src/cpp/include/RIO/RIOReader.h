@@ -28,7 +28,7 @@ namespace RIO {
   /** Concrete implementation of LCWriter using ROOT I/O.
    * 
    * @author gaede
-   * @version $Id: RIOReader.h,v 1.1.2.2 2009-09-14 16:22:10 gaede Exp $
+   * @version $Id: RIOReader.h,v 1.1.2.3 2009-09-15 15:45:00 gaede Exp $
    */
   class RIOReader : public IO::LCReader {
     
@@ -150,7 +150,7 @@ namespace RIO {
 
   protected:
 
-    void setUpHandlers( const EVENT::LCEvent * evt ) ;
+    void setUpHandlers( const IMPL::LCEventImpl * evt ) ;
     //    void readRecord() throw (IO::IOException , IO::EndOfDataException , std::exception) ;
 
 

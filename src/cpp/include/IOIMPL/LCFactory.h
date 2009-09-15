@@ -46,8 +46,10 @@ namespace IOIMPL {
 
 
   private:
-  
-    static LCFactory * _me ;
+    
+    //    static LCFactory * _me ;
+    char  _readerType ;
+    char  _writerType ;
 
   }; // class
 } // namespace IOIMPL

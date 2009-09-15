@@ -119,6 +119,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/CellIDEncoder.cc
   ./src/UTIL/CollectionParameterMap.cc
   ./src/UTIL/PIDHandler.cc
+  ./src/UTIL/LCIOTypeInfo.cc
 )
 
 
@@ -173,7 +174,7 @@ SET_TARGET_PROPERTIES( lib_LCIO PROPERTIES
     OUTPUT_NAME lcio
 )
 
-TARGET_LINK_LIBRARIES( lib_LCIO ${ROOT_LIBRARIES} )
+# - needed for apple ??? ---  TARGET_LINK_LIBRARIES( lib_LCIO ${ROOT_LIBRARIES} )
 TARGET_LINK_LIBRARIES( lib_LCIO lib_SIO )
 TARGET_LINK_LIBRARIES( lib_LCIOF77 lib_LCIO )
 

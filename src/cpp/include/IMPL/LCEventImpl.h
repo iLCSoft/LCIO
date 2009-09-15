@@ -65,6 +65,8 @@ namespace IMPL{
      */
     virtual const std::vector<std::string>  * getCollectionNames() const;
     
+    virtual const std::vector<std::string>  * getCollectionNames(bool refresh) const;
+
     /** Returns the collection for the given name.
      *
      * @throws DataNotAvailableException

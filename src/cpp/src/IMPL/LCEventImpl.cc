@@ -84,14 +84,22 @@ double LCEventImpl::getWeight() const {
    
 const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
 
-  // return pointer to updated vector _colNames 
-  typedef LCCollectionMap::const_iterator LCI ;
-  
-  _colNames.clear() ;
+  return getCollectionNames( true ) ;
+}
+const std::vector<std::string>* LCEventImpl::getCollectionNames(bool refresh) const {
 
-  for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
-    _colNames.push_back( i->first  ) ; 
+  if( refresh ) {
+
+    // return pointer to updated vector _colNames 
+    typedef LCCollectionMap::const_iterator LCI ;
+    
+    _colNames.clear() ;
+    
+    for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+      _colNames.push_back( i->first  ) ; 
+    }
   }
+
   return &_colNames ;
 }
 
@@ -144,10 +152,15 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
   }
       
   // check if name exists
-  if( _colMap.find( name ) != _colMap.end() )
+  if( _colMap.find( name ) != _colMap.end() ) {
     
+    
+    LCCollection* old =  _colMap.find( name )->second ;
+    
+    std::string type = old->getTypeName()  ;
     throw EventException( std::string("LCEventImpl::addCollection() name already exists: "
-				      +name) ) ; 
+				      +name+" with type "+type) ) ; 
+  }
   // check if col != 0
   if( col == 0  )
 
