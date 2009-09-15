@@ -347,6 +347,13 @@ namespace RIO {
 		<< " _evtImpl " << _evtImpl  
 		<< std::endl ;
 
+      typedef std::vector< std::string > StrVec ; 
+
+      const StrVec* strVec = _evtImpl->getCollectionNames() ;
+
+      for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	std::cout << " collection: " << *name << std::endl ;
+      }
       
       if( !_haveBranches ) {
 

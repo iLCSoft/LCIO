@@ -14,10 +14,15 @@
 #include "IMPL/LCRelationImpl.h"
 
 #include "TRefArray.h"
+#include <string>
 
 // ---- tell ROOT about the templates instantiations that we are going to use ...
 
 #ifdef __MAKECINT__
+#pragma link C++ class std::vector<std::string>+;
+#pragma link C++ class std::map<std::string,EVENT::LCCollection*>+;
+#pragma link C++ class std::pair<std::string,EVENT::LCCollection*>+;
+
 #pragma link C++ class std::vector<IMPL::ReconstructedParticleImpl*>+;
 #pragma link C++ class std::vector<IMPL::MCParticleImpl*>+;
 #pragma link C++ class std::vector<IMPL::SimTrackerHitImpl*>+;
