@@ -25,11 +25,11 @@ void lciotree() {
     
   
   
-  TFile *f = TFile::Open("dst.root","READ");
+  TFile *f = TFile::Open("DST01-06_ppr004_bbcsdu.rlcio","READ");
    
   if (!f) { return; }
   
-  TTree *t; f->GetObject("lciotree",t);
+  TTree *t; f->GetObject("LCIO",t);
 
   //  t->Draw("PandoraPFOs.getEnergy()" ) ;
   //   t->Draw("PandoraPFOs.getTracks().size()" ) ;
