@@ -175,8 +175,8 @@ namespace IMPL{
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
-    mutable LCCollectionMap _colMap ;    //! no RIO
-    mutable std::vector<std::string> _colNames ;
+    mutable LCCollectionMap _colMap ;    
+    mutable std::vector<std::string> _colNames ; //! no RIO
     
     LCParametersImpl _params ;
     

@@ -13,6 +13,7 @@
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 #include "LCIOTypes.h"
 
+#include "RIO.h"
 
 class TFile ;
 class TTree ;
@@ -28,7 +29,7 @@ namespace RIO {
   /** Concrete implementation of LCWriter using ROOT I/O.
    * 
    * @author gaede
-   * @version $Id: RIOReader.h,v 1.1.2.3 2009-09-15 15:45:00 gaede Exp $
+   * @version $Id: RIOReader.h,v 1.1.2.4 2009-09-18 09:33:39 gaede Exp $
    */
   class RIOReader : public IO::LCReader {
     

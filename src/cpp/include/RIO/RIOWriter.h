@@ -1,13 +1,13 @@
 #ifndef RIO_RIOWriter_H
 #define RIO_RIOWriter_H 1
 
+#include "RIO/RIO.h"
+
 #include <string>
 #include <vector>
 #include "IO/LCWriter.h"
 #include "IMPL/LCEventImpl.h"
-#include "EVENT/LCRunHeader.h"
-
-#include "RIOLCCollectionHandler.h"
+#include "IMPL/LCRunHeaderImpl.h"
 
 class TFile ;
 class TTree ;
@@ -106,11 +106,11 @@ namespace RIO {
      */
     void setUpHandlers(const EVENT::LCEvent * evt)  ;
     
-    /** Creates a proper filename with extension '.lcio.root' 
-     * in sioFilename.
+    /** Creates a proper filename with extension RIO_FILE_EXTENSION
+     *  in rioFilename.
      */
     void getRIOFileName(const std::string& filename, 
-			std::string& sioFilename)  ; 
+			std::string& rioFilename)  ; 
     
   protected:
     
@@ -120,13 +120,13 @@ namespace RIO {
     TTree* _tree ;
     
     const IMPL::LCEventImpl* _evtImpl ;
-
-    BranchVector _branches ;
+    const IMPL::LCRunHeaderImpl* _runImpl ;
     
+    BranchVector _branches ;
     bool _haveBranches ; 
     
+
   }; // class
-  
 } // namespace.
 
 #endif /* ifndef RIO_RIOWriter_H */

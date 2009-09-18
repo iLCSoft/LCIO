@@ -337,6 +337,8 @@ namespace RIO {
   
   void RIOReader::skipNEvents(int n) {
     
+    _entry += n ;
+
 //     int eventsSkipped = 0 ;
     
 //     RIOUnpack hdrUnp( RIOUnpack::EVENTHDR ) ;
@@ -372,6 +374,8 @@ namespace RIO {
     throw (IOException , std::exception) {
     
     
+    // FIXME: here we should use an index of the LCEvent branch for the event map
+
     //     EventMap::iterator it = _evtMap.find( EVENTKEY( runNumber,evtNumber ) ) ;
     
     //     if( it != _evtMap.end() ) {

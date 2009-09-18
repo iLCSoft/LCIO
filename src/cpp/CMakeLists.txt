@@ -65,6 +65,8 @@ SET( LCIO_IMPL_SRCS
 
 SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
+  ./src/IOIMPL/WriterDecorator.cc
+  ./src/IOIMPL/ReaderDecorator.cc
 )
 
 SET( LCIO_RIO_SRCS
