@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.7 2008-05-28 14:02:09 engels Exp $
+// CVS $Id: SIO_stream.cc,v 1.8 2009-10-27 16:01:17 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -27,27 +27,6 @@
 #include "SIO_recordManager.h"
 #include "SIO_stream.h"
 
-#ifdef SIO_USE_DCAP
-
-#include <dcap.h>
-
-#define FOPEN  dc_fopen
-#define FTELL  dc_ftell
-#define FSEEK  dc_fseek
-#define FCLOSE dc_fclose
-#define FREAD  dc_fread
-#define FWRITE dc_fwrite
-
-#else
-
-#define FOPEN  fopen
-#define FTELL  ftell
-#define FSEEK  fseek
-#define FCLOSE fclose
-#define FREAD  fread
-#define FWRITE fwrite
-
-#endif
 
 
 static unsigned int
@@ -122,7 +101,7 @@ if( state == SIO_STATE_CLOSED )
     }
     return( SIO_STREAM_NOTOPEN );
 }
-int rc = fflush( handle );
+int rc = FFLUSH( handle );
 return (rc == 0) ? SIO_STREAM_SUCCESS : SIO_STREAM_BADWRITE;
 }
 
@@ -1256,7 +1235,7 @@ if( !compress )
     //
     data_length += head_length;
     bufout = FWRITE( bufloc, sizeof(char), data_length, handle );
-    if( bufout != data_length && ! fflush( handle ) ) // fg 20030514 - flush the record
+    if( bufout != data_length && ! FFLUSH( handle ) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
         if( verbosity >= SIO_ERRORS )
@@ -1373,7 +1352,7 @@ else
     // Write the compressed record data.
     //
     bufout = FWRITE( cmploc, sizeof(char), data_length, handle );
-    if( bufout != data_length && ! fflush(handle) ) // fg 20030514 - flush the record
+    if( bufout != data_length && ! FFLUSH(handle) ) // fg 20030514 - flush the record
     {
         state = SIO_STATE_ERROR;
         if( verbosity >= SIO_ERRORS )
@@ -1394,7 +1373,7 @@ else
     if( newlen > 0 )
     {
         bufout = FWRITE( pad, sizeof(char), newlen, handle );
-        if( bufout != newlen && ! fflush(handle))// fg 20030514 - flush the record
+        if( bufout != newlen && ! FFLUSH(handle))// fg 20030514 - flush the record
         {
             state = SIO_STATE_ERROR;
             if( verbosity >= SIO_ERRORS )

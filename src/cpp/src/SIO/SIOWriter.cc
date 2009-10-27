@@ -90,7 +90,7 @@ namespace SIO {
 
     // if the file exists we throw an exception
 
-    FILE* f = fopen( sioFilename.c_str() , "r") ;
+    FILE* f = FOPEN( sioFilename.c_str() , "r") ;
     if( f != 0 ){
       fclose(f) ;
       throw IOException( std::string( "[SIOWriter::open()] File already exists: " 

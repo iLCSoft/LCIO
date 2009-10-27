@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.6 2007-11-09 20:21:09 gaede Exp $
+// CVS $Id: SIO_stream.h,v 1.7 2009-10-27 16:01:17 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -29,6 +29,37 @@ typedef std::multimap< void*, void* >           pointerToMap_c;
 typedef std::multimap< void*, void* >::iterator pointerToMap_i;
 
 struct z_stream_s;
+
+
+//------- if built with dcap support we need different file functions -------
+#ifdef SIO_USE_DCAP
+
+#include <dcap.h>
+
+#define FOPEN  dc_fopen
+#define FTELL  dc_ftell
+#define FSEEK  dc_fseek
+#define FCLOSE dc_fclose
+#define FREAD  dc_fread
+#define FWRITE dc_fwrite
+#define FFLUSH dc_fflush
+#define FSTAT  dc_stat
+
+#else
+
+#define FOPEN  fopen
+#define FTELL  ftell
+#define FSEEK  fseek
+#define FCLOSE fclose
+#define FREAD  fread
+#define FWRITE fwrite
+#define FFLUSH fflush
+#define FSTAT  stat
+
+#endif
+
+
+
 
 // ----------------------------------------------------------------------------
 // Class SIO_stream.         
