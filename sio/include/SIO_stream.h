@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.h,v 1.7 2009-10-27 16:01:17 gaede Exp $
+// CVS $Id: SIO_stream.h,v 1.8 2009-10-28 13:37:44 engels Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -46,6 +46,8 @@ struct z_stream_s;
 #define FSTAT  dc_stat
 
 #else
+
+#include <sys/stat.h>
 
 #define FOPEN  fopen
 #define FTELL  ftell
