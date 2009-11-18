@@ -7,7 +7,7 @@
  * documentation with doxygen. 
  * 
  * @author gaede
- * @version $Id: lcio.h,v 1.34 2008-12-13 13:13:50 gaede Exp $ 
+ * @version $Id: lcio.h,v 1.35 2009-11-18 11:09:57 engels Exp $ 
  * @see LCEvent
  */
 #include "EVENT/LCIO.h"
@@ -15,7 +15,7 @@
 #include "IMPL/LCIOExceptionHandler.h"
 
 
-/** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v01-11) 
+/** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v01-12) 
  * A persistency framework for linear collider simulation studies.
  * \section Overview
  * This is the API documentation for the C++ version of LCIO. For general documetation on 

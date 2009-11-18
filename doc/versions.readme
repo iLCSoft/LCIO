@@ -3,6 +3,12 @@
 ---------------------------------------------------------------
 
 =====================
+ v01-12
+=====================
+  - added quality bit field for TrackerHit (http://bugs.freehep.org/browse/LCIO-63)
+  - added support for optional linkage against libdcap (dCache I/O)
+
+=====================
  v01-11
 =====================
   - made direct (random) access mode in C++ optional:

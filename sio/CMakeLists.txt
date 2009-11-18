@@ -9,7 +9,7 @@ PROJECT( SIO )
 
 # project version
 SET( SIO_MAJOR_VERSION 1 )
-SET( SIO_MINOR_VERSION 11 )
+SET( SIO_MINOR_VERSION 12 )
 SET( SIO_PATCH_LEVEL 0 )
 
 # library *nix style versioning
