@@ -92,7 +92,7 @@ namespace SIO {
 
     FILE* f = FOPEN( sioFilename.c_str() , "r") ;
     if( f != 0 ){
-      fclose(f) ;
+      FCLOSE(f) ;
       throw IOException( std::string( "[SIOWriter::open()] File already exists: " 
     				      + sioFilename
 				      + " \n              open it in append or new mode !\n"
