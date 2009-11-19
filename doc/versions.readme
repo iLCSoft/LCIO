@@ -6,7 +6,17 @@
  v01-12
 =====================
   - added quality bit field for TrackerHit (http://bugs.freehep.org/browse/LCIO-63)
-  - added support for optional linkage against libdcap (dCache I/O)
+  
+  - new features in java/lcio:   
+       - output directory in split command
+       - Poisson distribution in merge command
+  
+  - bug fixes:
+       - allow multiple open of file (http://bugs.freehep.org/browse/LCIO-60) in C++
+       - fixed seg. fault with missing PID in LCTOOL::dumpEventDetailed
+       - SIOReader: check if all files exist before start of reading (C++)
+       - fixed support for optional linkage against libdcap (dCache I/O) - C++ only
+       - minor fixes (includes etc.)
 
 =====================
  v01-11
