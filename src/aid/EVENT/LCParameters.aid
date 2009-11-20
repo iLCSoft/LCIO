@@ -10,7 +10,7 @@ import hep.lcio.exceptions.* ;
  *  run, event or collection dependent. 
  * 
  * @author gaede 
- * @version $Id: LCParameters.aid,v 1.2 2004-07-14 15:50:40 gaede Exp $
+ * @version $Id: LCParameters.aid,v 1.3 2009-11-20 11:20:20 gaede Exp $
  * @see LCRunHeader.parameters()
  * @see LCEvent.parameters()
  * @see LCCollection.parameters()
@@ -118,15 +118,15 @@ public interface LCParameters
 
     /** Set integer values for the given key.
      */
-    public void setValues(const String & key, IntVec & values);
+    public void setValues(const String & key, const IntVec & values);
 
     /** Set float values for the given key.
      */
-    public void setValues(const String & key, FloatVec & values);
+    public void setValues(const String & key, const FloatVec & values);
 
     /** Set string values for the given key.
      */
-    public void setValues(const String & key, StringVec & values);
+    public void setValues(const String & key, const StringVec & values);
 
 }
 

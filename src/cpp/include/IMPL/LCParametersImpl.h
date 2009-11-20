@@ -110,15 +110,15 @@ namespace IMPL {
 
     /** Set integer values for the given key.
      */
-    virtual void setValues(const std::string & key, EVENT::IntVec & values);
+    virtual void setValues(const std::string & key, const EVENT::IntVec & values);
 
     /** Set float values for the given key.
      */
-    virtual void setValues(const std::string & key, EVENT::FloatVec & values);
+    virtual void setValues(const std::string & key, const EVENT::FloatVec & values);
 
     /** Set string values for the given key.
      */
-    virtual void setValues(const std::string & key, EVENT::StringVec & values);
+    virtual void setValues(const std::string & key, const EVENT::StringVec & values);
 
 
   protected:
