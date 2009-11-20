@@ -51,6 +51,7 @@ namespace SIO {
     for(int i=0;i<numberOfParents;i++){
       SIO_PNTR( stream , &(particle->_parents[i] ) ) ;
     }
+    //    std::cout << " SIOParticleHandler :  read " << particle->_parents.size() << "parents to MCParticle ...." << std::endl ;
 //     for(int i=0;i<numberOfParents;i++){
       
 //       // create a pointer to a pointer to a MCParticle 
@@ -224,7 +225,10 @@ namespace SIO {
 	  MCParticleIOImpl* mcp = dynamic_cast<MCParticleIOImpl*>( col->getElementAt(i) ) ;
 	  nDaughtersTotal += mcp->getDaughters().size()  ;
 	  nParentsTotal += mcp->getParents().size() ;
+	  //	  std::cout << " SIOParticleHandler::restoreParentDaughterRelations : mcp->getParents().size()" << mcp->getParents().size()  << std::endl ;
 	}
+
+	//	std::cout << " SIOParticleHandler::restoreParentDaughterRelations :  nParentsTotal" << nParentsTotal  << std::endl ;
 
 	for(int i=0; i < col->getNumberOfElements() ; i++){
 	  

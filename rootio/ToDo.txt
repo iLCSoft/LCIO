@@ -11,11 +11,29 @@
 
 
  - LCFactory needs to have mechanism to choose either SIO or RIO 
-
    -> try to resolve based on filename extension (slcio/rlcio)
-
    -> implement 'generic decorator' that resolves type at open() ...
+ DONE: added LCReader/WriterDecorator.cc
+    
+ 
+ - RIOWriter:   write Runheader
+
+
+ - develop  pointer mechanism that is based in collection indices and store these
+    in order to split the event into branches (SIO blocks)
+    -> define templated class RefVec<T> w/ conversion to vector<ptr>
+   
+
+  - order collections in the event wrt. order of addCollection() calls
+     ( use _colNames vector )
+     DONE:     
+
+
+  - handle collections that are not in the first event 
+      (branches need to be declared before first write)
+
  
 
- - RIOWriter:   write Runheader
+  - make LCCollection branches subbranches of LCEvent 
+
 

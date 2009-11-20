@@ -10,6 +10,19 @@ namespace IMPL{
   LCParametersImpl::LCParametersImpl(){
     
   }
+   
+  LCParametersImpl::LCParametersImpl(const LCParametersImpl& other) :
+    _intMap( other._intMap ),
+    _floatMap( other._floatMap ) ,
+    _stringMap( other._stringMap ) {
+  }
+  
+  LCParametersImpl& LCParametersImpl::operator=(const LCParametersImpl& other){
+    _intMap    = other._intMap ;
+    _floatMap  = other._floatMap ;
+    _stringMap = other._stringMap ;
+    return *this ;
+  }
 
   int LCParametersImpl::getIntVal(const std::string & key) const {
     

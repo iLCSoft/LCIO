@@ -16,7 +16,7 @@
 
 #define RIO_RECORD_SIZE    16000
 
-#define RIO_SPLIT_LEVEL        1
+#define RIO_SPLIT_LEVEL        2
 
 #define RIO_DEFAULT_COMPRESS   4  // what is a reasonable default ?
 

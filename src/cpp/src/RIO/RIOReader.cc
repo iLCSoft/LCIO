@@ -60,8 +60,8 @@ namespace RIO {
   RIOReader::~RIOReader(){
     
 
-//     delete _evtP ;
-//     delete _runP ;    
+    //     delete _evtP ;
+    //     delete _runP ;    
   }
 
 
@@ -75,15 +75,15 @@ namespace RIO {
     // JE: first we check if all files exist
     for(i=0; i < filenames.size(); i++){
         
-        if ( stat( filenames[i].c_str(), &fileinfo ) != 0 ){
-            missing_files += filenames[i] ;
-            missing_files += "  " ;
-        }
+      if ( stat( filenames[i].c_str(), &fileinfo ) != 0 ){
+	missing_files += filenames[i] ;
+	missing_files += "  " ;
+      }
     }
 
     // JE: if not raise IOException
     if( missing_files.size() != 0 ){
-        throw IOException( std::string( "[RIOReader::open()] File(s) not found:  " + missing_files )) ;
+      throw IOException( std::string( "[RIOReader::open()] File(s) not found:  " + missing_files )) ;
     }
     
     _myFilenames = &filenames ;
@@ -134,60 +134,60 @@ namespace RIO {
   void RIOReader::getEventMap() {
 
 
-// //     int status = _stream->seek(0) ; // go to start - FIXME - should we store the current position ?
+    // //     int status = _stream->seek(0) ; // go to start - FIXME - should we store the current position ?
 
-// //     if( status != RIO_STREAM_SUCCESS ) 
-// //       throw IOException( std::string( "[RIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
+    // //     if( status != RIO_STREAM_SUCCESS ) 
+    // //       throw IOException( std::string( "[RIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
     
-// // //    std::cout << " RIOReader::getEventMap() recreating event map for direct access ..." 
-// // //	      << std::endl ;
+    // // //    std::cout << " RIOReader::getEventMap() recreating event map for direct access ..." 
+    // // //	      << std::endl ;
     
-// //     { // -- scope for unpacking evt header --------
-// //       RIOUnpack hdrUnp( RIOUnpack::EVENTHDR ) ;
+    // //     { // -- scope for unpacking evt header --------
+    // //       RIOUnpack hdrUnp( RIOUnpack::EVENTHDR ) ;
       
-// //       while( true ){
+    // //       while( true ){
 	
-// // 	RIO_blockManager::remove(  LCRIO::HEADERBLOCKNAME ) ;
-// // 	RIO_blockManager::add( _evtHandler ) ;
+    // // 	RIO_blockManager::remove(  LCRIO::HEADERBLOCKNAME ) ;
+    // // 	RIO_blockManager::add( _evtHandler ) ;
 
-// // 	//----	  readRecord() ;
-// // 	// read the next record from the stream
-// // 	if( _stream->getState()== RIO_STATE_OPEN ){
+    // // 	//----	  readRecord() ;
+    // // 	// read the next record from the stream
+    // // 	if( _stream->getState()== RIO_STATE_OPEN ){
       
-// // 	  unsigned int status =  _stream->read( &_dummyRecord ) ;
+    // // 	  unsigned int status =  _stream->read( &_dummyRecord ) ;
 	  
-// // 	  if( ! (status & 1)  ){
+    // // 	  if( ! (status & 1)  ){
 
-// // 	    if( status & RIO_STREAM_EOF ){
-// // 	      break ;
-// // 	    }
+    // // 	    if( status & RIO_STREAM_EOF ){
+    // // 	      break ;
+    // // 	    }
 	    
-// // 	    throw IOException( std::string(" io error on stream: ") + *_stream->getName() ) ;
-// // 	  }
-// // 	} else {
-// // 	  throw IOException( std::string(" stream not open: ")+ *_stream->getName() ) ;
-// // 	}
+    // // 	    throw IOException( std::string(" io error on stream: ") + *_stream->getName() ) ;
+    // // 	  }
+    // // 	} else {
+    // // 	  throw IOException( std::string(" stream not open: ")+ *_stream->getName() ) ;
+    // // 	}
 	
-// // 	//--
-// // 	int runNum = (*_evtP)->getRunNumber() ;
-// // 	int evtNum = (*_evtP)->getEventNumber() ;
+    // // 	//--
+    // // 	int runNum = (*_evtP)->getRunNumber() ;
+    // // 	int evtNum = (*_evtP)->getEventNumber() ;
 	
-// //         _evtMap[  EVENTKEY( runNum , evtNum ) ] = _stream->lastRecordStart() ;
+    // //         _evtMap[  EVENTKEY( runNum , evtNum ) ] = _stream->lastRecordStart() ;
 	
-// // // 	EVENT::long64 key  = (EVENT::long64( runNum ) << 32 ) | evtNum ;
-// // // 	std::cout << "  " <<  key << " - " << _stream->lastRecordStart()  
-// // // 		  << " evt: " << evtNum << std::endl ;
+    // // // 	EVENT::long64 key  = (EVENT::long64( runNum ) << 32 ) | evtNum ;
+    // // // 	std::cout << "  " <<  key << " - " << _stream->lastRecordStart()  
+    // // // 		  << " evt: " << evtNum << std::endl ;
 	
-// //       } // while
+    // //       } // while
 
-// //       _stream->seek(0) ; // go to start - FIXME - should we store the current 
+    // //       _stream->seek(0) ; // go to start - FIXME - should we store the current 
 
-// //       if( status != RIO_STREAM_SUCCESS ) 
-// // 	throw IOException( std::string( "[RIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
+    // //       if( status != RIO_STREAM_SUCCESS ) 
+    // // 	throw IOException( std::string( "[RIOReader::getEventMap()] Can't seek stream to 0" ) ) ;
 
-// //     }// -- end of scope for unpacking evt header --
+    // //     }// -- end of scope for unpacking evt header --
 
-// // //    std::cout << " RIOReader::getEventMap() : done " << std::endl ;
+    // // //    std::cout << " RIOReader::getEventMap() : done " << std::endl ;
 
   }
   
@@ -201,21 +201,21 @@ namespace RIO {
 
     // ToDo ...
 
-// //   // set the _runRecord to unpack for this scope
-// //     //    RIORecordUnpack runUnp( RIOWriter::_runRecord ) ;
-// //     RIOUnpack runUnp( RIOUnpack::RUN ) ;
+    // //   // set the _runRecord to unpack for this scope
+    // //     //    RIORecordUnpack runUnp( RIOWriter::_runRecord ) ;
+    // //     RIOUnpack runUnp( RIOUnpack::RUN ) ;
 
 
-// //     // this might throw the exceptions
-// //     try{ 
-// //       readRecord() ;
-// //     }
-// //     catch(EndOfDataException){
-// //       return 0 ;
-// //     }
+    // //     // this might throw the exceptions
+    // //     try{ 
+    // //       readRecord() ;
+    // //     }
+    // //     catch(EndOfDataException){
+    // //       return 0 ;
+    // //     }
     
-// //     // set the proper acces mode before returning the event
-// //     (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
+    // //     // set the proper acces mode before returning the event
+    // //     (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
 
     return _runImpl ;
   }
@@ -233,30 +233,31 @@ namespace RIO {
 
       for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	
-// 	LCCollection* col = evt->getCollection( *name ) ;
-// 	const LCParameters&  params =  col->getParameters()  ;
-// 	std::string typeName = col->getTypeName() ;
+	// 	LCCollection* col = evt->getCollection( *name ) ;
+	// 	const LCParameters&  params =  col->getParameters()  ;
+	// 	std::string typeName = col->getTypeName() ;
 
 	std::string typeName("YetUnknown") ;
 
 	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
 
-// 	//FIXME: these should be held by  a singleton handler manager (registry) 
-// 	if( typeName == LCIO::MCPARTICLE ){
-// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
-// 	}      
-// 	if( typeName == LCIO::SIMCALORIMETERHIT ){
-// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;
-// 	}      
-// 	if( typeName == LCIO::SIMTRACKERHIT ){
-// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
-// 	}      
-// 	// ToDo:  add all other LCIO types ....
+	// 	//FIXME: these should be held by  a singleton handler manager (registry) 
+	// 	if( typeName == LCIO::MCPARTICLE ){
+	// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::MCParticle>(name->c_str() ,_tree) ) ;	  
+	// 	}      
+	// 	if( typeName == LCIO::SIMCALORIMETERHIT ){
+	// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimCalorimeterHit>(name->c_str() ,_tree) ) ;
+	// 	}      
+	// 	if( typeName == LCIO::SIMTRACKERHIT ){
+	// 	  _branches.push_back(  new RIO::RIOLCCollectionHandler<EVENT::SimTrackerHit>(name->c_str() ,_tree) ) ;	  
+	// 	}      
+	// 	// ToDo:  add all other LCIO types ....
 
 	
-// 	if( *name == "MCParticlesSkimmed" )
+	// 	if( *name == "MCParticlesSkimmed" )
+	//	if( *name == "PandoraPFOs" )
 
-	  _branches.push_back(  new RIO::RIOLCCollectionHandler( *name, typeName   , _tree) ) ;	
+	_branches[ *name ] =  new RIO::RIOLCCollectionHandler( *name, typeName   , _tree)  ;	
 
       }
 
@@ -272,64 +273,83 @@ namespace RIO {
 
   LCEvent* RIOReader::readNextEvent(int accessMode) throw (IOException, std::exception ) {
 
-//     if( _evtImpl != 0 )   // memory handling in ROOT I/O ? 
-//       delete _evtImpl ;
-    
-
+    //     if( _evtImpl != 0 )   // memory handling in ROOT I/O ? 
+    //       delete _evtImpl ;
     //------------------------------------------------------  
     
       
-      _entry ++ ;
+    _entry ++ ;
 
-      // read event header first
+    // read event header first
       
-      TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
+    TBranch* br = (TBranch*) _tree->GetBranch( "LCEvent" ) ;
       
-      if( br == 0 ){        
+    if( br == 0 ){        
 	
-	throw IOException( std::string( "[RIOReader::readNextEvent()] cant open branch \"LCEvent\" " ) ) ;
-      } 
+      throw IOException( std::string( "[RIOReader::readNextEvent()] cant open branch \"LCEvent\" " ) ) ;
+    } 
       
-      br->SetAddress( &_evtImpl ) ;
+    br->SetAddress( &_evtImpl ) ;
 
-      Long64_t tentry =  _tree->LoadTree( _entry );
+    Long64_t tentry =  _tree->LoadTree( _entry );
 
-      int nbyte = br->GetEntry(tentry);
+    int nbyte = br->GetEntry(tentry);
 
-      if( tentry < 0 ){
+    if( tentry < 0 ){
 
-	return 0 ; // EOF ?
-      }
+      return 0 ; // EOF ?
+    }
+
+    if( !_haveBranches ) {
+      setUpHandlers( _evtImpl ) ;
+    }    
+
+       
+    _evtImpl->setCurrentEvent( _evtImpl ) ;
+
+    for( BranchHandlerMap::iterator it=_branches.begin() ; it!=_branches.end() ; ++it){
+      (it->second)->fromBranch( _evtImpl , tentry ) ;
+    }
+       
+       
+
+    typedef std::vector< std::string > StrVec ; 
+
+    const StrVec& strVec = *( _evtImpl->getCollectionNames() ) ; 
+    //       for(  StrVec::const_iterator name = strVec.begin() ; name != strVec.end() ; name++){
+
+    // 	RIOBranchHandler* bHan = _branches[ *name ] ;
+	
+    // 	if( bHan ) {
+	  
+    // 	  //_evtImpl->removeCollection( *name ) ;
+
+    // 	  bHan->fromBranch( _evtImpl, tentry ) ;
+
+    // 	} else {
+	
+    // 	  std::cout << "WARNING !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl 
+    // 		    << "      no handler for collection " <<  *name << " found - collection is not read   !!!  " << std::endl 
+    // 		    << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl ;
+
+
+    // 	}
+	
+
+    // 	std::cout << " collection: " << *name << std::endl ;
+    //       }
+
 
 #ifdef DEBUG
-      typedef std::vector< std::string > StrVec ; 
-
-      const StrVec& strVec = *( _evtImpl->getCollectionNames(false) ) ;
-
-      std::cout << " tentry : " << tentry 
-		<< " _entry " << _entry  
-		<< "  eventnum " << _evtImpl->getEventNumber()  
-		<< " ncols: " << strVec.size() 
-		<< " nbyte: " << nbyte
-		<< " _evtImpl " << _evtImpl  
-		<< std::endl ;
-
-      for(  StrVec::const_iterator name = strVec.begin() ; name != strVec.end() ; name++){
-	std::cout << " collection: " << *name << std::endl ;
-      }
+    std::cout << " >>>>>>>>> tentry : " << tentry 
+	      << " _entry " << _entry  
+	      << "  eventnum " << _evtImpl->getEventNumber()  
+	      << " ncols: " << strVec.size() 
+	      << " nbyte: " << nbyte
+	      << " _evtImpl " << _evtImpl  
+	      << std::endl ;
 #endif      
 
-      if( !_haveBranches ) {
-
-	setUpHandlers( _evtImpl ) ;
-      }    
-
-      for( BranchVector::iterator it=_branches.begin() ; it!=_branches.end() ; ++it){
-	
-	(*it)->fromBranch( _evtImpl , tentry ) ;
-      }
-      
-    
     //------------------------------------------------------
 
     return _evtImpl ;      
@@ -339,33 +359,33 @@ namespace RIO {
     
     _entry += n ;
 
-//     int eventsSkipped = 0 ;
+    //     int eventsSkipped = 0 ;
     
-//     RIOUnpack hdrUnp( RIOUnpack::EVENTHDR ) ;
+    //     RIOUnpack hdrUnp( RIOUnpack::EVENTHDR ) ;
     
-//     while( eventsSkipped++ < n ){
+    //     while( eventsSkipped++ < n ){
       
-//       try { 
+    //       try { 
 	
-// 	readRecord() ;
+    // 	readRecord() ;
 
-//       }
-//       catch(EndOfDataException){
+    //       }
+    //       catch(EndOfDataException){
 
-// 	return ;
-//       }
-//     }
+    // 	return ;
+    //       }
+    //     }
 
-//     // now we need to also read the next  record which suposedly is an event record
-//     // in order to prevent readStream from reading this event (the last to be skipped)
-//     RIOUnpack evtUnp( RIOUnpack::EVENT ) ;
+    //     // now we need to also read the next  record which suposedly is an event record
+    //     // in order to prevent readStream from reading this event (the last to be skipped)
+    //     RIOUnpack evtUnp( RIOUnpack::EVENT ) ;
     
-//     try{ 
-//       readRecord() ;
-//     }
-//     catch(EndOfDataException){
-//       return ;
-//     }
+    //     try{ 
+    //       readRecord() ;
+    //     }
+    //     catch(EndOfDataException){
+    //       return ;
+    //     }
     
   }
 
@@ -418,7 +438,7 @@ namespace RIO {
 
   void RIOReader::removeLCRunListener(LCRunListener * ls){
     _runListeners.erase( _runListeners.find( ls ) );
- }
+  }
 
   void RIOReader::readStream() throw ( IO::IOException, std::exception ){
 
@@ -430,76 +450,76 @@ namespace RIO {
   void RIOReader::readStream(int maxRecord) throw (IOException, std::exception ){
     
 
-//     bool readUntilEOF = false ;
-//     if( maxRecord == INT_MAX ) 
-//       readUntilEOF = true ;
+    //     bool readUntilEOF = false ;
+    //     if( maxRecord == INT_MAX ) 
+    //       readUntilEOF = true ;
     
-//     // here we need to read all the records on the stream
-//     // and then notify the listeners depending on the type ....
+    //     // here we need to read all the records on the stream
+    //     // and then notify the listeners depending on the type ....
     
-//     int recordsRead = 0 ;
-//     while( recordsRead < maxRecord ){ 
+    //     int recordsRead = 0 ;
+    //     while( recordsRead < maxRecord ){ 
 	
-//       try{ 
-// 	readRecord() ;
-//       }
-//       catch(EndOfDataException){
+    //       try{ 
+    // 	readRecord() ;
+    //       }
+    //       catch(EndOfDataException){
 	
-// 	// only throw exception if a 'finite' number of records was 
-// 	// specified that couldn't be read from the file
-// 	if( readUntilEOF ){  
-// 	  return ;
-// 	}else{
-// 	  std::stringstream message ;
-// 	  message << "RIOReader::readStream(int maxRecord) : EOF before " 
-// 		  << maxRecord << " records read from file" << std::ends ;
-// 	  throw EndOfDataException( message.str())  ;
-// 	}
-//       }
+    // 	// only throw exception if a 'finite' number of records was 
+    // 	// specified that couldn't be read from the file
+    // 	if( readUntilEOF ){  
+    // 	  return ;
+    // 	}else{
+    // 	  std::stringstream message ;
+    // 	  message << "RIOReader::readStream(int maxRecord) : EOF before " 
+    // 		  << maxRecord << " records read from file" << std::ends ;
+    // 	  throw EndOfDataException( message.str())  ;
+    // 	}
+    //       }
       
-//       // notify LCRunListeners 
-//       if( ! strcmp( _dummyRecord->getName()->c_str() , LCRIO::RUNRECORDNAME )){
+    //       // notify LCRunListeners 
+    //       if( ! strcmp( _dummyRecord->getName()->c_str() , LCRIO::RUNRECORDNAME )){
 	
-// 	recordsRead++ ;
+    // 	recordsRead++ ;
 
-// 	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-// 	while( iter != _runListeners.end() ){
+    // 	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+    // 	while( iter != _runListeners.end() ){
 
-// 	  _runImpl->setReadOnly( false ) ;
-// 	  (*iter)->modifyRunHeader( *_runP ) ;
+    // 	  _runImpl->setReadOnly( false ) ;
+    // 	  (*iter)->modifyRunHeader( *_runP ) ;
 
-// 	  _runImpl->setReadOnly( true ) ;
-// 	  (*iter)->processRunHeader( *_runP ) ;
+    // 	  _runImpl->setReadOnly( true ) ;
+    // 	  (*iter)->processRunHeader( *_runP ) ;
 	  
-// 	  iter++ ;
-// 	}
-//       }
-//       // notify LCEventListeners 
-//       if( ! strcmp( _dummyRecord->getName()->c_str() , LCRIO::EVENTRECORDNAME )){
+    // 	  iter++ ;
+    // 	}
+    //       }
+    //       // notify LCEventListeners 
+    //       if( ! strcmp( _dummyRecord->getName()->c_str() , LCRIO::EVENTRECORDNAME )){
 	
-// 	recordsRead++ ;
+    // 	recordsRead++ ;
 
-// 	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-// 	while( iter != _evtListeners.end() ){
+    // 	std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+    // 	while( iter != _evtListeners.end() ){
 
-// // 	  // restore the daughter relations from the parent relations
-// // 	  RIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
-// 	  postProcessEvent() ;
+    // // 	  // restore the daughter relations from the parent relations
+    // // 	  RIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+    // 	  postProcessEvent() ;
 
-// 	  // fg20070813 changed order of update and process (needed for 
-// 	  // Marlin modifying processors )
-// 	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-// 	  (*iter)->modifyEvent( *_evtP ) ;
+    // 	  // fg20070813 changed order of update and process (needed for 
+    // 	  // Marlin modifying processors )
+    // 	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
+    // 	  (*iter)->modifyEvent( *_evtP ) ;
 
-// 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
-// 	  (*iter)->processEvent( *_evtP ) ;
+    // 	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
+    // 	  (*iter)->processEvent( *_evtP ) ;
 
 
-// 	  iter++ ;
+    // 	  iter++ ;
 	  
-// 	}
-//       }
-//     }
+    // 	}
+    //       }
+    //     }
   }
   
   void  RIOReader::postProcessEvent() {

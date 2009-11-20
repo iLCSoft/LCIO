@@ -10,7 +10,7 @@
 
 #include "TTree.h"
 #include <vector>
-
+#include "RIO.h"
 
 namespace RIO{
   /* Abstract interface for handling collections of different types.
@@ -19,7 +19,8 @@ namespace RIO{
   class RIOBranchHandler{
     
   public: 
-    
+    virtual ~RIOBranchHandler() {} ;
+
     virtual void toBranch( const EVENT::LCEvent* evt )=0 ;
     
     virtual void fromBranch( EVENT::LCEvent* evt , int entryID )=0 ;
@@ -31,7 +32,7 @@ namespace RIO{
   /** Branch handler class for (typed) LCCollections.
    */
   
-  //  template <typename T>
+  //template <typename T>
   class RIOLCCollectionHandler : public RIOBranchHandler{
     
   protected:
@@ -44,7 +45,7 @@ namespace RIO{
     
     TBranch* _br ;
     IMPL::LCCollectionVec* _tv ;
-    
+    IMPL::LCCollectionVec* _emptyCol ;
     
   public: 
     
@@ -54,10 +55,16 @@ namespace RIO{
       _name(name),
       _type(type) {
       
+      _emptyCol =  new IMPL::LCCollectionVec( type  )  ;
+
       std::cout << "  RIOLCCollectionHandler( " << name << ", " << tree << ")" << std::endl ;
       
-      //      _tv = 0 ; //IMPL::LCCollectionVec ; // new std::vector<T*> ;      
-      _tv = new IMPL::LCCollectionVec( type  )  ;
+      //_tv = 0 ; //IMPL::LCCollectionVec ; // new std::vector<T*> ;      
+      _tv =  _emptyCol ; // new IMPL::LCCollectionVec( type  )  ;
+//       TClass* cl = TClass::GetClass(TString::Format("vector<EVENT::%s>", type.c_str()));
+//       if (!cl) printf("bad\n");
+//       else {
+      //	_tv = new std::vector<T*> ;      
       
       _br = (TBranch*) tree->GetBranch( _name.c_str() ) ;
       
@@ -65,10 +72,14 @@ namespace RIO{
 	
 	_br->SetAddress( &_tv ) ;
 	
-      } else {
+	std::cout << " set branch address   " << _br->GetName() << " to " << &_tv << std::endl ;
+     
+ } else {
 	
 	//FIXME: make split level and 'record size' parameters ....
-	tree->Branch( _name.c_str()  , &_tv, 16000, 2 );
+	_br = tree->Branch( _name.c_str()  , &_tv, 16000, RIO_SPLIT_LEVEL );
+
+	//((TBranch*)_br->GetListOfBranches()->FindObject("vector<EVENT::LCObject*>"))->SetName("LCObjVec")  ;
       }
       
       
@@ -113,32 +124,36 @@ namespace RIO{
 // 	}
 	
 
-// 	IMPL::LCParametersImpl* lcp =  dynamic_cast<IMPL::LCParametersImpl*> ( & col->parameters() ) ; 
-// 	_params = lcp ;
+// // 	IMPL::LCParametersImpl* lcp =  dynamic_cast<IMPL::LCParametersImpl*> ( & col->parameters() ) ; 
+// // 	_params = lcp ;
 
 
-// 	//FIXME: we also need to add the collection flags to the meta data branch ...
+// // 	//FIXME: we also need to add the collection flags to the meta data branch ...
 
 
-//       } catch(const lcio::DataNotAvailableException& e){
+//        } catch(const lcio::DataNotAvailableException& e){
 
-// 	_tv->resize( 0 ) ;
+//  	_tv->resize( 0 ) ;
 	
-// 	std::cout << "  collection not found : " << _name << std::endl ;
-//       }    
+//  	std::cout << "  collection not found : " << _name << std::endl ;
+//        }    
 
+      _tv = _emptyCol ;
+      
       try{
 	
 	EVENT::LCCollection* col =  evt->getCollection( _name ) ;
 	
-	_tv = dynamic_cast<IMPL::LCCollectionVec*> ( col ) ;
+	if( ! col->isTransient() ) 
+	  
+	  _tv = dynamic_cast<IMPL::LCCollectionVec*> ( col ) ;
 	
       } catch(const lcio::DataNotAvailableException& e){
-
-	_tv = new IMPL::LCCollectionVec( _type ) ;
 	
+	//_tv = _emptyCol ; //new IMPL::LCCollectionVec( _type ) ;
+	  
 	std::cout << "  collection not found : " << _name << std::endl ;
-      }    
+      }
       
       
     }
@@ -167,6 +182,7 @@ namespace RIO{
 
 // 	evt->addCollection( col ,  _name ) ;
 
+      std::cout << " reading from branch  " << _br->GetName() << " entry " << entryID << std::endl ;
 
       int nbyte = _br->GetEntry( entryID );
      

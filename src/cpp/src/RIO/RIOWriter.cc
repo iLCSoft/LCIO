@@ -12,10 +12,12 @@
 #include "EVENT/SimTrackerHit.h"
 
 #include "IMPL/LCIOExceptionHandler.h"
-
+#include "UTIL/LCTOOLS.h"
 
 //#define DEBUG 1
+#ifdef DEBUG
 #include "IMPL/LCTOOLS.h"
+#endif
 
 #include "IMPL/LCRelationImpl.h" 
 
@@ -209,15 +211,18 @@ namespace RIO {
       }
 
       // if we want to have one branch per collection (when pointer isssue is resolved)
-//       //---- loop over all collections in first event ...
-//       typedef std::vector< std::string > StrVec ; 
-//       const StrVec* strVec = evt->getCollectionNames() ;
-//       for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-// 	LCCollection* col = evt->getCollection( *name ) ;
-// 	std::string typeName = col->getTypeName() ;
-// 	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
-// 	_branches.push_back(  new RIO::RIOLCCollectionHandler( *name, typeName, _tree) ) ;	 
-//       }
+      //---- loop over all collections in first event ...
+      typedef std::vector< std::string > StrVec ; 
+      const StrVec* strVec = evt->getCollectionNames() ;
+      for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	LCCollection* col = evt->getCollection( *name ) ;
+	std::string typeName = col->getTypeName() ;
+	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
+
+	if( *name == "RecoMCTruthLink" ) 
+	//if( *name == "PandoraPFOs" ) 
+	  _branches[ *name ] =  new RIO::RIOLCCollectionHandler( *name, typeName, _tree) ;	 
+      }
 
       _haveBranches = true ;
     }
@@ -235,22 +240,53 @@ namespace RIO {
       setUpHandlers( evt ) ;
     }    
     
-    _evtImpl = dynamic_cast<const IMPL::LCEventImpl*> ( evt ) ;
-
-
-    if( !_evtImpl ){
-
-      throw IO::IOException(" evt is not  IMPL::LCEventImpl !???" ) ;
+    const LCEventImpl* evtImpl = dynamic_cast<const IMPL::LCEventImpl*> ( evt )   ;
+    if( ! evtImpl ){
+      throw IO::IOException(" evt is not  IMPL::LCEventImpl !?" ) ;
     }
-
-    // ---- only if we can split the event into one branch per collection (pointers between branches) :
-    //     for( BranchVector::iterator it=_branches.begin() ; it!=_branches.end() ; ++it){
-    //       (*it)->toBranch( evt ) ;
-    //     }
     
+    // create a proxy event - copy of the event w/o collections 
+    // then add to the proxy only those collections that are to be written to the ROOT file
+    LCEventImpl proxyEvt( *evtImpl ) ;
+    
+    typedef std::vector< std::string > StrVec ; 
+    const StrVec* strVec = evt->getCollectionNames() ;
+    for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+      
+      LCCollection* col = evt->getCollection( *name ) ;
+
+      if( ! col->isTransient() ){
+	
+	if(_branches.find( *name) != _branches.end() ){
+
+	  proxyEvt.addCollection( col , *name ) ;
+	}
+	else{
+	  std::cout << "WARNING [RIOWriter]: no handler for collection " <<  *name << " found - collection is not stored !!!" << std::endl ;
+	}
+      }
+    }
+    
+    proxyEvt.ptrToIndex();
+
+    // --- let the handlers write their collections
+    for( BranchHandlerMap::iterator it=_branches.begin() ; it!=_branches.end() ; ++it){
+      it->second->toBranch( evt ) ;
+    }
+    
+    _evtImpl = &proxyEvt ; 
     _tree->Fill() ;
     _file->Flush() ;
 
+    // now we need to take the ownership for the  collections away from proxy Event
+    strVec = proxyEvt.getCollectionNames() ;
+    for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+	_evtImpl->takeCollection( *name ) ;
+    }    
+
+#ifdef DEBUG
+    UTIL::LCTOOLS::dumpEvent( evt ) ;
+#endif
   }
   
   

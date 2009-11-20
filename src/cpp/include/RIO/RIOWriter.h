@@ -17,7 +17,8 @@ namespace RIO {
   
   class RIOBranchHandler ;
 
-  typedef std::vector< RIOBranchHandler * > BranchVector ;
+  //  typedef std::vector< RIOBranchHandler * > BranchVector ;
+  typedef std::map< std::string, RIOBranchHandler*> BranchHandlerMap ;
 
 
   //  class RIOReader ;
@@ -119,10 +120,10 @@ namespace RIO {
     TFile* _file ; 
     TTree* _tree ;
     
-    const IMPL::LCEventImpl* _evtImpl ;
+    IMPL::LCEventImpl* _evtImpl ;
     const IMPL::LCRunHeaderImpl* _runImpl ;
     
-    BranchVector _branches ;
+    BranchHandlerMap _branches ;
     bool _haveBranches ; 
     
 

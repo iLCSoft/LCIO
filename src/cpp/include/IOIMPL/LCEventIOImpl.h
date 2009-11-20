@@ -11,6 +11,10 @@ namespace SIO {
   class SIOReader ;
 }
 
+namespace RIO{
+  class RIOWriter;
+  class RIOReader;
+}
 
 namespace IOIMPL {
   
@@ -26,6 +30,9 @@ namespace IOIMPL {
     friend class SIO::SIOEventHeaderHandler ;
     friend class SIO::SIOEventHandler ;
   
+    friend class RIO::RIOReader ;
+    friend class RIO::RIOWriter ;
+
   }; // class
 
 } // namespace

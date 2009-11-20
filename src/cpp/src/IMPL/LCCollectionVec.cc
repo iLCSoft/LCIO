@@ -1,6 +1,8 @@
 
 #include "IMPL/LCCollectionVec.h"
 #include "EVENT/LCIO.h"
+#include "LCIOTypes.h"
+
 #include <iostream>
 
 // #include "UTIL/LCTOOLS.h"
@@ -48,6 +50,27 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
       if(element){
 	element->setReadOnly( readOnly ) ;
       }
+    }
+  }
+
+  void LCCollectionVec::setIndices( unsigned hash ) {
+
+    for( unsigned i=0 ; i< this->size() ; ++i ){
+
+      EVENT::long64 idx(i) ;
+      EVENT::long64 hashL( hash ) ;
+
+//       EVENT::long64 index(  idx | hashL<<32 ) ;
+//       std::cout << "   LcCol setIndices : " << idx << " , " << hashL << ", " <<  index  << std::endl ;
+      this->operator[](i)->setIndex(  idx | hashL<<32 ) ;
+    }
+  }
+ 
+ void LCCollectionVec::ptrToIndex() {
+
+    for( unsigned i=0 ; i< this->size() ; ++i ){
+
+      this->operator[](i)->ptrToIndex() ;
     }
   }
 

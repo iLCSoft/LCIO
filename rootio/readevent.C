@@ -75,18 +75,18 @@ void readevent() {
   bevt->SetAddress( &evt ) ;
   branches.push_back( bevt ) ;
 
-//   IMPL::LCCollectionVec* col = new IMPL::LCCollectionVec ;
-//   branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
-//   branches.back()->SetAddress( &col ) ;
+   IMPL::LCCollectionVec* col = new IMPL::LCCollectionVec ;
+//    branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
+//    branches.back()->SetAddress( &col ) ;
   
-//   IMPL::LCCollectionVec* cpfo = new IMPL::LCCollectionVec ;
-//   branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
-//   branches.back()->SetAddress( &cpfo ) ;
+   IMPL::LCCollectionVec* cpfo = new IMPL::LCCollectionVec ;
+//    branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
+//    branches.back()->SetAddress( &cpfo ) ;
 
 
-//   IMPL::LCCollectionVec* crml = new IMPL::LCCollectionVec ;
-//   branches.push_back( t->GetBranch("RecoMCTruthLink") ) ;  
-//   branches.back()->SetAddress( &crml ) ;
+   IMPL::LCCollectionVec* crml = new IMPL::LCCollectionVec ;
+   branches.push_back( t->GetBranch("RecoMCTruthLink") ) ;  
+   branches.back()->SetAddress( &crml ) ;
 
   
   int nBranches = branches.size() ;
@@ -108,9 +108,9 @@ void readevent() {
       // 	   << std::endl ;
     }
 
-    EVENT::LCCollection* col  = evt->getCollection("MCParticlesSkimmed") ;
-    EVENT::LCCollection* cpfo = evt->getCollection("PandoraPFOs") ;
-    EVENT::LCCollection* crml = evt->getCollection("RecoMCTruthLink") ;
+//     EVENT::LCCollection* col  = evt->getCollection("MCParticlesSkimmed") ;
+//     EVENT::LCCollection* cpfo = evt->getCollection("PandoraPFOs") ;
+//     EVENT::LCCollection* crml = evt->getCollection("RecoMCTruthLink") ;
 
 
    

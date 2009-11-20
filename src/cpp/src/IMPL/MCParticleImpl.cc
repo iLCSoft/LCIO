@@ -18,9 +18,10 @@ namespace IMPL {
     _simstatus(0),
     _mass(0),
     _charge(0),
-    _time(0),
-    _parents(0),
-    _daughters(0)
+    _time(0)
+// ,
+//     _parents(0),
+//     _daughters(0)
   {
     _vertex[0] = 0.0 ;
     _vertex[1] = 0.0 ;
@@ -76,6 +77,8 @@ namespace IMPL {
 
 
   const MCParticleVec & MCParticleImpl::getParents() const {
+    //    std::cout << "  --- MCParticleImpl::getParents() : size " << _parents.size() << std::endl ;
+
     return _parents ;
   }
   

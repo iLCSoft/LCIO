@@ -53,7 +53,8 @@ namespace IMPL{
   }
   const EVENT::ParticleIDVec & ReconstructedParticleImpl::getParticleIDs() const { return  _pid ; }
 
-  const EVENT::ReconstructedParticleVec& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
+  const std::vector<EVENT::ReconstructedParticle*>& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
+  //  const EVENT::ReconstructedParticleVec& ReconstructedParticleImpl::getParticles() const { return _particles ; } 
 //   const EVENT::FloatVec & ReconstructedParticleImpl::getParticleWeights() const { return  _particleWeights ; }
 
   const EVENT::ClusterVec& ReconstructedParticleImpl::getClusters() const { return _clusters  ; } 

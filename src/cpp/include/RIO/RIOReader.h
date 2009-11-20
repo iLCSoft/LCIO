@@ -23,13 +23,13 @@ namespace RIO {
 
   class RIOBranchHandler ;
 
-  typedef std::vector< RIOBranchHandler * > BranchVector ;
+  typedef std::map< std::string, RIOBranchHandler*> BranchHandlerMap ;
 
 
   /** Concrete implementation of LCWriter using ROOT I/O.
    * 
    * @author gaede
-   * @version $Id: RIOReader.h,v 1.1.2.4 2009-09-18 09:33:39 gaede Exp $
+   * @version $Id: RIOReader.h,v 1.1.2.5 2009-11-20 15:28:50 gaede Exp $
    */
   class RIOReader : public IO::LCReader {
     
@@ -166,7 +166,7 @@ namespace RIO {
     TFile* _file ;
     TTree* _tree ;
 
-    BranchVector _branches ;
+    BranchHandlerMap _branches ;
     bool _haveBranches ; 
  
     IMPL::LCEventImpl *_evtImpl ;

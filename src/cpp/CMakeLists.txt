@@ -176,10 +176,12 @@ SET_TARGET_PROPERTIES( lib_LCIO PROPERTIES
     OUTPUT_NAME lcio
 )
 
-# - needed for apple ??? ---  TARGET_LINK_LIBRARIES( lib_LCIO ${ROOT_LIBRARIES} )
+# - needed for apple ??? ---  
+IF( APPLE )
+TARGET_LINK_LIBRARIES( lib_LCIO ${ROOT_LIBRARIES} )
+ENDIF( APPLE )
 TARGET_LINK_LIBRARIES( lib_LCIO lib_SIO )
 TARGET_LINK_LIBRARIES( lib_LCIOF77 lib_LCIO )
-
 
 # create symbolic target for calling targets bin_XXX
 ADD_CUSTOM_TARGET( bin )

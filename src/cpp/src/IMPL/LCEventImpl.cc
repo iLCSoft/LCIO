@@ -14,31 +14,25 @@ using namespace EVENT ;
 
 namespace IMPL {
   
+LCEventImpl* LCEventImpl::_current = 0 ;
+
 LCEventImpl::LCEventImpl() :
   _runNumber(0),
   _eventNumber(0),
   _timeStamp(0),
   _detectorName("unknown") {
 }
-  
-// LCEventImpl::LCEventImpl(const LCEvent& evt) : 
-//   _runNumber( evt.getRunNumber() ),
-//   _eventNumber( evt.getEventNumber() ),
-//   _timeStamp( evt.getTimeStamp() ),
-//   _detectorName( evt.getDetectorName().c_str() ),
-  
-//   std::vector<std::string>* strVec = evt.getCollectionNames() ;
-//   int nCol = strVec->size() ;
-  
-//   for( std::vector<std::string>::iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
-//     const LCCollection* col = evt.getCollection( *name ) ;
-//     col->getTypeName() ;
-    
-//     // to be done - need to create new LCCollectionVec and add to the event ...
-//   }
 
-// }
+LCEventImpl::LCEventImpl(const LCEventImpl& evt) :
+  _runNumber( evt._runNumber ),
+  _eventNumber( evt._eventNumber ),
+  _timeStamp( evt._timeStamp ),
+  _detectorName(evt._detectorName),
+  _params( evt._params ) {
+  
+  //  mutable LCCollectionSet _notOwned ;   // what should we do here ??
+  
+}
 
 LCEventImpl::~LCEventImpl() {
   //  std::cout << " ~LCEventImpl() : " << this << std::endl ;
@@ -54,7 +48,50 @@ LCEventImpl::~LCEventImpl() {
   }
 
 }
+
+  void LCEventImpl::ptrToIndex() {
     
+    std::vector< LCCollectionVec* > _cols ;
+    _cols.reserve( _colMap.size() ) ;
+
+    typedef LCCollectionMap::const_iterator LCI ;
+
+    for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+
+      LCCollectionVec* col = dynamic_cast<LCCollectionVec*> ( i->second ) ;
+      
+      if( col ) { 
+
+	col->setIndices(  i->first   )  ;
+	_cols.push_back( col ) ;
+      } 
+    }
+    unsigned nCol = _cols.size() ;
+
+    for (unsigned i=0; i<nCol ; i++ ){
+      
+      _cols[i]->ptrToIndex()  ;
+    }
+
+  }
+ 
+  EVENT::LCObject*  LCEventImpl::getObjectForIndex(EVENT::long64 index) {
+
+    // TO DO: cash last collection and hash in order to safe map lookups !!
+    // TO DO: read collection on demand from LCReader ....
+    unsigned hash = ( index >> 32 &  0xffffffff ) ;
+    unsigned i = index & 0xffffffff ;
+
+    LCCollectionMap::iterator it = _colMap.find( hash  )  ;
+
+    if( it != _colMap.end() ) {
+      
+      return it->second->getElementAt( i ) ;
+    }
+    return 0 ;
+  }
+
+
 int LCEventImpl::getRunNumber() const {
   return _runNumber ;
 }
@@ -88,17 +125,14 @@ const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
 }
 const std::vector<std::string>* LCEventImpl::getCollectionNames(bool refresh) const {
 
-  if( refresh ) {
-
-    // return pointer to updated vector _colNames 
-    typedef LCCollectionMap::const_iterator LCI ;
-    
-    _colNames.clear() ;
-    
-    for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
-      _colNames.push_back( i->first  ) ; 
-    }
-  }
+//   if( refresh ) {
+//     // return pointer to updated vector _colNames 
+//     typedef LCCollectionMap::const_iterator LCI ;
+//     _colNames.clear() ;
+//     for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+//       _colNames.push_back( i->first  ) ; 
+//     }
+//   }
 
   return &_colNames ;
 }
@@ -108,7 +142,7 @@ const std::vector<std::string>* LCEventImpl::getCollectionNames(bool refresh) co
 LCCollection * LCEventImpl::getCollection(const std::string & name) const 
   throw (DataNotAvailableException, std::exception) {
 
-  LCCollectionMap::iterator it = _colMap.find( name )  ;
+  LCCollectionMap::iterator it = _colMap.find( Hash( name )  )  ;
 
   if( it == _colMap.end() ) {
     
@@ -152,10 +186,11 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
   }
       
   // check if name exists
-  if( _colMap.find( name ) != _colMap.end() ) {
+  EVENT::long64 nameH = Hash( name ) ;
+  if( _colMap.find( nameH ) != _colMap.end() ) {
     
     
-    LCCollection* old =  _colMap.find( name )->second ;
+    LCCollection* old =  _colMap.find( nameH )->second ;
     
     std::string type = old->getTypeName()  ;
     throw EventException( std::string("LCEventImpl::addCollection() name already exists: "
@@ -167,8 +202,9 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
     throw EventException( std::string("LCEventImpl::addCollection()  cannot add NULL collection for : "
 				      +name) ) ; 
 
-  _colMap[ name ]  = col ;
- 
+  _colMap[ Hash( name  ) ]  = col ;
+  
+  _colNames.push_back( name ) ;
 }
 
     
@@ -177,8 +213,10 @@ void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyExce
 
   // remove collection only, if access mode == update
   checkAccess("LCEventImpl::removeCollection") ;
-  _colMap.erase( name ) ;  
+  _colMap.erase( Hash( name )  ) ;  
 
+  std::vector<std::string>::iterator it = std::find( _colNames.begin() , _colNames.end() , name ) ;
+  _colNames.erase( it) ;
 }
 
     

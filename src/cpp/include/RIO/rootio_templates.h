@@ -41,6 +41,34 @@
 #pragma link C++ class std::vector<EVENT::Cluster*>+;
 #pragma link C++ class std::vector<EVENT::LCRelation*>+;
 #pragma link C++ class std::vector<EVENT::Vertex*>+;
+
+#pragma link C++ class IMPL::LCRefVec<EVENT::LCObject*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::ReconstructedParticle*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::MCParticle*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::SimTrackerHit*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::CalorimeterHit*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::TrackerHit*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::SimCalorimeterHit*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::Track*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::Cluster*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::LCRelation*>+;
+#pragma link C++ class IMPL::LCRefVec<EVENT::Vertex*>+;
+
+
+#pragma link C++ class IMPL::LCRef<EVENT::LCObject*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::ReconstructedParticle*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::MCParticle*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::SimTrackerHit*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::SimCalorimeterHit*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::TrackerHit*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::CalorimeterHit*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::Track*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::Cluster*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::LCRelation*>+;
+#pragma link C++ class IMPL::LCRef<EVENT::Vertex*>+;
+
+
+
 #endif
 
 #endif
