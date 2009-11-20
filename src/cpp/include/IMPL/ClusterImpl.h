@@ -1,9 +1,11 @@
+// -*- C++ -*-
 #ifndef IMPL_CLUSTERIMPL_H
 #define IMPL_CLUSTERIMPL_H 1
 
 
 #include "EVENT/Cluster.h"
 #include "AccessChecked.h"
+#include "IMPL/LCRefVec.h"
 #include <map>
 #include <bitset>
 
@@ -19,7 +21,7 @@ namespace IMPL {
  *
  * @see Cluster
  * @author gaede
- * @version $Id: ClusterImpl.h,v 1.13 2006-08-04 16:52:46 gaede Exp $
+ * @version $Id: ClusterImpl.h,v 1.13.16.1 2009-11-20 15:12:04 gaede Exp $
  */
   class ClusterImpl : public EVENT::Cluster, public AccessChecked {
     
@@ -135,6 +137,11 @@ namespace IMPL {
      */
     EVENT::FloatVec& subdetectorEnergies() ;
 
+    void ptrToIndex() {
+      _clusters.ptrToIndex() ;
+      _hits.ptrToIndex() ;
+    }
+
   protected:
     void setType(int type ) ; 
 
@@ -149,8 +156,10 @@ namespace IMPL {
     EVENT::FloatVec _errdir ;
     EVENT::FloatVec _shape ;
     EVENT::ParticleIDVec _pid ;
-    EVENT::ClusterVec _clusters ;
-    EVENT::CalorimeterHitVec _hits ;
+    //    EVENT::ClusterVec _clusters ;
+    mutable LCRefVec<EVENT::Cluster*> _clusters ;
+    //    EVENT::CalorimeterHitVec _hits ;
+    mutable LCRefVec<EVENT::CalorimeterHit*> _hits ;
     EVENT::FloatVec _weights ;
     EVENT::FloatVec _subdetectorEnergies ;
 

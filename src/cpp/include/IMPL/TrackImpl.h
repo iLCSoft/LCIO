@@ -1,9 +1,11 @@
+// -*- C++ -*-
 #ifndef IMPL_TRACKIMPL_H
 #define IMPL_TRACKIMPL_H 1
 
 
 #include "EVENT/Track.h"
 #include "AccessChecked.h"
+#include "IMPL/LCRefVec.h"
 #include <map>
 #include <bitset>
 
@@ -22,7 +24,7 @@ namespace IMPL {
  *
  * @see Track
  * @author gaede
- * @version $Id: TrackImpl.h,v 1.15 2007-09-18 09:47:10 gaede Exp $
+ * @version $Id: TrackImpl.h,v 1.15.8.1 2009-11-20 15:12:05 gaede Exp $
  */
 
   class TrackImpl : public EVENT::Track, public AccessChecked {
@@ -192,8 +194,10 @@ namespace IMPL {
     float _radiusOfInnermostHit ;
     EVENT::IntVec _subdetectorHitNumbers ;
 
-    EVENT::TrackVec _tracks ;
-    EVENT::TrackerHitVec _hits ;
+    //    EVENT::TrackVec _tracks ;
+    mutable LCRefVec <EVENT::Track*> _tracks ;
+    //EVENT::TrackerHitVec _hits ;
+    mutable LCRefVec <EVENT::TrackerHit*> _hits ;
 
 }; // class
 

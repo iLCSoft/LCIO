@@ -7,6 +7,7 @@
 
 #include "EVENT/LCRelation.h"
 #include "EVENT/LCObject.h"
+#include "IMPL/LCRefVec.h"
 #include "AccessChecked.h"
 
 
@@ -39,9 +40,16 @@ namespace IMPL {
     void setWeight( float weight ) { _weight = weight ; }
     
 
+    void ptrToIndex() {
+      _from.ptrToIndex() ;
+      _to.ptrToIndex() ;
+    }
+
   protected:
-    EVENT::LCObject* _from ;
-    EVENT::LCObject* _to ;
+    //    EVENT::LCObject* _from ;
+    mutable IMPL::LCRef<EVENT::LCObject*> _from ;
+    //EVENT::LCObject* _to ;
+    mutable IMPL::LCRef<EVENT::LCObject*> _to ;
     float _weight ;
 
 }; // class

@@ -7,6 +7,7 @@
 #include "AccessChecked.h"
 
 #include "EVENT/MCParticle.h"
+#include "IMPL/LCRefVec.h"
 #include <bitset>
 
 namespace IMPL {
@@ -19,7 +20,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.23.16.1 2009-07-08 15:09:02 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.23.16.2 2009-11-20 15:12:05 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -229,6 +230,11 @@ namespace IMPL {
 
     virtual void setStopped(bool val) ;
 
+    void ptrToIndex() {
+      _parents.ptrToIndex() ;
+      _daughters.ptrToIndex() ;
+    }
+
   protected:
 
     /** Adds a daughter particle - only called from addParent().
@@ -247,9 +253,11 @@ namespace IMPL {
     double _mass ;
     float _charge ;
     float _time ;
-    EVENT::MCParticleVec _parents ;
-    EVENT::MCParticleVec _daughters ;
-    bool _endpointSet ;
+    mutable LCRefVec<EVENT::MCParticle*> _parents ;
+    mutable LCRefVec<EVENT::MCParticle*> _daughters ;
+//     EVENT::MCParticleVec _parents ;
+//     EVENT::MCParticleVec _daughters ;
+    bool _endpointSet ;    //! no RIO
 
 }; // class
 } // namespace IMPL

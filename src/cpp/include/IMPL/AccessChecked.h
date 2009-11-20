@@ -31,8 +31,8 @@ namespace IMPL {
     void checkAccess(const char* what) throw ( EVENT::ReadOnlyException ) ;
 
   protected: 
-    bool _readOnly ;
-    int _id ;
+    bool _readOnly ;    //! no RIO
+    int _id ;           //! no RIO
     
   };
 } // namespace IMPL

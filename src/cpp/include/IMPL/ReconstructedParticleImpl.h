@@ -5,6 +5,7 @@
 
 #include "EVENT/ReconstructedParticle.h"
 #include "AccessChecked.h"
+#include "LCRefVec.h"
 
 
 #define NCOVARIANCE 10
@@ -32,6 +33,11 @@ namespace IMPL {
 
     virtual int id() const { return simpleUID() ; }
 
+    void ptrToIndex() {
+//       _particles.ptrToIndex() ;
+//       _clusters.ptrToIndex() ;
+//       _tracks.ptrToIndex() ;
+    }
 
     /** Type of reconstructed particle.
      *  Check/set collection parameterrs ReconstructedParticleTypeNames and 
@@ -139,11 +145,16 @@ namespace IMPL {
     EVENT::ParticleID* _pidUsed ;
     float _goodnessOfPID ;
     EVENT::ParticleIDVec _pid ;
-    EVENT::ReconstructedParticleVec _particles ;
-    EVENT::ClusterVec _clusters ;
-    EVENT::TrackVec _tracks ; //#### ! tell ROOT to not stream this ...
 
-    EVENT::Vertex* _sv ;
+    //    EVENT::ReconstructedParticleVec _particles ;
+    mutable LCRefVec<EVENT::ReconstructedParticle*> _particles ;
+    //    EVENT::ClusterVec _clusters ;
+    mutable LCRefVec<EVENT::Cluster*> _clusters ;
+    //    EVENT::TrackVec _tracks ; 
+    mutable LCRefVec<EVENT::Track*> _tracks ;
+    
+    //    EVENT::Vertex* _sv ;
+    mutable LCRef<EVENT::Vertex*> _sv ;
     
 }; // class
 

@@ -19,7 +19,7 @@ namespace IMPL {
    *  of LCObjects.
    * 
    * @author gaede 
-   * @version $Id: LCCollectionVec.h,v 1.11.20.1 2009-07-07 12:49:54 gaede Exp $
+   * @version $Id: LCCollectionVec.h,v 1.11.20.2 2009-11-20 15:12:04 gaede Exp $
    * @see LCObject
    * @see LCCollection
    */
@@ -141,6 +141,12 @@ namespace IMPL {
     /** Parameters defined for this run.
      */
     virtual EVENT::LCParameters & parameters() { return _params ; } 
+    
+    /**Helper function to convert object addresses into indices for all objects:  ((hash<<32)||index) */
+    void setIndices( unsigned hash ) ;
+
+    /** Calls ptrToIndex for all elements */
+    void ptrToIndex() ;
     
 
   protected:

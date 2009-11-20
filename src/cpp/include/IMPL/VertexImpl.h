@@ -4,6 +4,7 @@
 
 
 #include "EVENT/Vertex.h"
+#include "IMPL/LCRefVec.h"
 #include "AccessChecked.h"
 
 #define VTXCOVMATRIX 6
@@ -91,7 +92,8 @@ namespace IMPL {
     float _vpos[3] ;
     EVENT::FloatVec _cov ;
     EVENT::FloatVec _par ;
-    EVENT::ReconstructedParticle* _aParticle ;
+    //    EVENT::ReconstructedParticle* _aParticle ;
+    mutable LCRef<EVENT::ReconstructedParticle*> _aParticle ;
    
 }; // class
 
