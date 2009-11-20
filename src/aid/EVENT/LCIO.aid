@@ -1,4 +1,11 @@
 package hep.lcio.event ;
+@ifdef cpp
+@cpp{
+#include <string>
+}
+@endif
+    @ifdef IGNORE // we have to split the cpp stuff - includes should go outside namespace 
+    @endif
 
 @ifdef cpp
 @cpp{
@@ -10,13 +17,25 @@ package hep.lcio.event ;
 
 #define LCIO_PATCHVERSION_GE( MAJV , MINV , PLEV)  ( (  LCIO_MAJOR_VERSION  > MAJV ) ||   ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION > MINV ) ) ||   ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION == MINV ) && ( LCIO_PATCH_LEVEL >= PLEV ) ) )
 
+
+    /** Hash function for faster lookup in string maps.
+     *  Code copied from ROOT TMath::Hash (http://root.cern.ch).
+     */
+    unsigned Hash(const void *str, int len)  ;
+
+    inline unsigned Hash(const std::string& s){
+      return Hash( &s[0], s.size() ) ;
+    }
+
+
+
 }
 @endif
 
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.68 2008-12-13 13:13:50 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.68.2.1 2009-11-20 15:08:27 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
