@@ -31,6 +31,8 @@ public interface LCObject extends Cloneable, LCRTRelations{
     /** Returns an object id for internal (debugging) use in LCIO.
      */
     public int id() const ;
+
+
 @endif
 // @ifdef cpp
 // public interface LCObject extends Cloneable, LCRTRelations{
@@ -49,7 +51,19 @@ public interface LCObject extends Cloneable, LCRTRelations{
      *  Do not use this method.
      */
     public:
-	 virtual LCObject* clone() const {  return 0 ; } 
+	virtual LCObject* clone() const {  return 0 ; } 
+    
+    /** converts C++ pointers to Indices if any */
+    virtual void ptrToIndex() {}     
+    
+    /** convert indices to C++ pointers */
+    virtual void indexToPtr() {} 
+   
+    long long getIndex() { return _index ; } 
+    void setIndex( long long index ) { _index = index ; }
+    
+    protected:
+	long long _index ;  //! no RIO
 }
 
 }
