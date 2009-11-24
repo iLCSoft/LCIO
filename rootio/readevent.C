@@ -76,12 +76,12 @@ void readevent() {
   branches.push_back( bevt ) ;
 
    IMPL::LCCollectionVec* col = new IMPL::LCCollectionVec ;
-//    branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
-//    branches.back()->SetAddress( &col ) ;
+   branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
+   branches.back()->SetAddress( &col ) ;
   
    IMPL::LCCollectionVec* cpfo = new IMPL::LCCollectionVec ;
-//    branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
-//    branches.back()->SetAddress( &cpfo ) ;
+   branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
+   branches.back()->SetAddress( &cpfo ) ;
 
 
    IMPL::LCCollectionVec* crml = new IMPL::LCCollectionVec ;
@@ -135,7 +135,8 @@ void readevent() {
      
       EVENT::ReconstructedParticle* pfo = dynamic_cast<EVENT::ReconstructedParticle*>( cpfo->getElementAt(j) ) ;
      
-      ePFO += pfo->getEnergy() ;
+      if( pfo ) 
+	ePFO += pfo->getEnergy() ;
     }
     hepfo->Fill(ePFO) ;
    
@@ -153,7 +154,8 @@ void readevent() {
       
       //      cout << " ++ " << mcp << endl ;
 
-      herm->Fill( pfo->getEnergy() ,   mcp->getEnergy()   ) ;
+      if( pfo && mcp ) 
+	herm->Fill( pfo->getEnergy() ,   mcp->getEnergy()   ) ;
 
     }
     
