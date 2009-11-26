@@ -102,7 +102,8 @@ namespace SIO {
 
       for( int i=0 ; i< nObj ; i ++ ){
 	
- 	status  = _myHandler->readBase( stream , & (ioCol->operator[](i) )  ) ;
+	// 	status  = _myHandler->readBase( stream , & (ioCol->operator[](i) )  ) ;
+ 	status  = _myHandler->readBase( stream , & (ioCol->_vec[i] )  ) ;
 
 	if( !( status & 1 ) ) return status ;
       }

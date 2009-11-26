@@ -44,8 +44,8 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
 
     AccessChecked::setReadOnly(readOnly ) ;
 
-    LCObjectVec::iterator iter = begin() ;
-    while( iter != end() ){
+    LCObjectVec::iterator iter = _vec.begin() ;
+    while( iter != _vec.end() ){
       AccessChecked* element = dynamic_cast<AccessChecked*>(*iter++) ;
       if(element){
 	element->setReadOnly( readOnly ) ;
@@ -55,22 +55,22 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
 
   void LCCollectionVec::setIndices( unsigned hash ) {
 
-    for( unsigned i=0 ; i< this->size() ; ++i ){
+    for( unsigned i=0 ; i< _vec.size() ; ++i ){
 
       EVENT::long64 idx(i) ;
       EVENT::long64 hashL( hash ) ;
 
 //       EVENT::long64 index(  idx | hashL<<32 ) ;
 //       std::cout << "   LcCol setIndices : " << idx << " , " << hashL << ", " <<  index  << std::endl ;
-      this->operator[](i)->setIndex(  idx | hashL<<32 ) ;
+      _vec.operator[](i)->setIndex(  idx | hashL<<32 ) ;
     }
   }
  
  void LCCollectionVec::ptrToIndex() {
 
-    for( unsigned i=0 ; i< this->size() ; ++i ){
+    for( unsigned i=0 ; i< _vec.size() ; ++i ){
 
-      this->operator[](i)->ptrToIndex() ;
+      _vec.operator[](i)->ptrToIndex() ;
     }
   }
 
@@ -78,12 +78,12 @@ LCCollectionVec::~LCCollectionVec() {
 
   if( ! isSubset() ){
     // delete all elements
-    LCObjectVec::const_iterator iter = begin() ;
+    LCObjectVec::const_iterator iter = _vec.begin() ;
     //    std::cout << "deleting collection " 
     //  	    << std::endl ;
     //    UTIL::LCTOOLS::printParameters( parameters() )  ;
     
-    while( iter != end() ){
+    while( iter != _vec.end() ){
       delete *iter++ ;
     }
   }
@@ -91,7 +91,7 @@ LCCollectionVec::~LCCollectionVec() {
 
 
 int LCCollectionVec::getNumberOfElements() const{
-  return size() ;
+  return _vec.size() ;
 }
 
 
@@ -102,7 +102,7 @@ const std::string & LCCollectionVec::getTypeName() const{
 
 
 EVENT::LCObject * LCCollectionVec::getElementAt(int index) const{
-  return this->operator[](index) ;
+  return _vec.operator[](index) ;
 }
 
 bool LCCollectionVec::isTransient() const { 
@@ -149,7 +149,7 @@ void LCCollectionVec::setFlag(int flag){
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
     checkAccess("LCCollectionVec::addElement") ;
-    this->push_back( obj ) ; 
+    _vec.push_back( obj ) ; 
   }
 
   void LCCollectionVec::removeElementAt(int i) throw (EVENT::ReadOnlyException){
@@ -157,7 +157,7 @@ void LCCollectionVec::setFlag(int flag){
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
     checkAccess("LCCollectionVec::removeElementAt") ;
-    this->erase( begin() + i ) ;
+    _vec.erase( _vec.begin() + i ) ;
 
   }
 
