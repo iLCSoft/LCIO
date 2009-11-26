@@ -349,8 +349,9 @@ IF( BUILD_ROOTIO )
     # #include "include/IOIMPL/TrackerRawDataIOImpl.h"
     INCLUDE_DIRECTORIES( "${CMAKE_CURRENT_SOURCE_DIR}" )
     
-    ADD_LIBRARY( lib_LCIODICT ${dict_lib_srcs}  ${LCIO_RIO_SRCS} )
-    ADD_LIBRARY( lib_LCIO ${LCIO_RIO_SRCS} )
+    ADD_LIBRARY( lib_LCIODICT ${dict_lib_srcs} ${LCIO_RIO_SRCS} )
+    #ADD_LIBRARY( lib_LCIO ${LCIO_RIO_SRCS} )
+    INSTALL( TARGETS lib_LCIODICT DESTINATION lib )
  
 
    IF( APPLE )
