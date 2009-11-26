@@ -34,11 +34,11 @@ namespace IMPL {
     virtual int id() const { return simpleUID() ; }
 
     void ptrToIndex() {
-//       _particles.ptrToIndex() ;
-//       _clusters.ptrToIndex() ;
-//       _tracks.ptrToIndex() ;
+      _particles.ptrToIndex() ;
+      _clusters.ptrToIndex() ;
+      _tracks.ptrToIndex() ;
     }
-
+    
     /** Type of reconstructed particle.
      *  Check/set collection parameterrs ReconstructedParticleTypeNames and 
      *  ReconstructedParticleTypeValues.
