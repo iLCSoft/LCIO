@@ -219,8 +219,8 @@ namespace RIO {
 	std::string typeName = col->getTypeName() ;
 	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
 
-	if( *name != "RecoMCTruthLink" ) 
-	//if( *name == "PandoraPFOs" ) 
+	//	if( *name != "RecoMCTruthLink" ) 
+	//	if( *name == "PandoraPFOs" ) 
 	  _branches[ *name ] =  new RIO::RIOLCCollectionHandler( *name, typeName, _tree) ;	 
       }
 
