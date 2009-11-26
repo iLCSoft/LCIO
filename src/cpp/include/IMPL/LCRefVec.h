@@ -100,22 +100,23 @@ namespace IMPL {
 
       unsigned n =  _vec.size() ;
 
-      //      std::cout << " ----------------ptrToIndex - n : " << n  << std::endl ;
+      //std::cout << " ----------------ptrToIndex - n : " << n  << std::endl ;
 
       _refVec.clear() ;
       _refVec.resize( n ) ;
       for(unsigned i=0 ; i<n ; i++) {
 
-	//	std::cout << " ----------------ptrToIndex " << _vec[i]->getIndex() << std::endl ;
+	//std::cout << " ----------------ptrToIndex " << _vec[i]->getIndex() << std::endl ;
 
       	_refVec[ i ] = _vec[i]->getIndex() ;
       }
+      //std::cout << " ----------------ptrToIndex - n index : " << _refVec.size() << std::endl ;
     }
 
     void indexToPtr() {
 
       unsigned n =  _refVec.size() ;
-      //      std::cout << " ----------------indexToPtr - n: " << n << "  _vec.size()  " << _vec.size() << std::endl ;
+      //std::cout << " ----------------indexToPtr - n: " << n << "  _refVec.size()  " << _refVec.size() << std::endl ;
 
       _vec.clear() ;
       _vec.resize( n ) ;
@@ -150,15 +151,15 @@ namespace IMPL {
     // conversion to reference of std::vector
     operator std::vector<T>&() { 
 
-      //      std::cout << " --------------- operator std::vector<T>&() -  _vec.size()  " << _vec.size() << " refVec.size() " << _refVec.size() << std::endl ;
+      //std::cout << " --------------- operator std::vector<T>&() -  _vec.size()  " << _vec.size() << " refVec.size() " << _refVec.size() << std::endl ;
 
       if( ! _havePtrs ) {
-	_havePtrs = (_vec.size()>0 && _refVec.size()==0 ) ;
+ 	_havePtrs = (_vec.size()>0 && _refVec.size()==0 ) ;
 	if( ! _havePtrs ) {
 	  indexToPtr() ;
 	  _havePtrs = true ; 
 	}
-      }
+    }
       return _vec ;
     }
 
