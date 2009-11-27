@@ -57,7 +57,9 @@ namespace RIO{
       
       _emptyCol =  new IMPL::LCCollectionVec( type  )  ;
 
+#ifdef DEBUG
       std::cout << "  RIOLCCollectionHandler( " << name << ", " << tree << ")" << std::endl ;
+#endif
       
       //_tv = 0 ; //IMPL::LCCollectionVec ; // new std::vector<T*> ;      
       _tv =  _emptyCol ; // new IMPL::LCCollectionVec( type  )  ;
@@ -72,7 +74,9 @@ namespace RIO{
 	
 	_br->SetAddress( &_tv ) ;
 	
+#ifdef DEBUG
 	std::cout << " set branch address   " << _br->GetName() << " to " << &_tv << std::endl ;
+#endif
      
  } else {
 	
@@ -182,12 +186,17 @@ namespace RIO{
 
 // 	evt->addCollection( col ,  _name ) ;
 
+#ifdef DEBUG
       std::cout << " reading from branch  " << _br->GetName() << " entry " << entryID << std::endl ;
+#endif
 
-      int nbyte = _br->GetEntry( entryID );
+      int nbyte = 0 ;
+      nbyte = _br->GetEntry( entryID );
      
 
+#ifdef DEBUG
       std::cout << "  read " << nbyte << " bytes from branch : " << _name << " of type " << _type << std::endl ;
+#endif
 
       try{
 	

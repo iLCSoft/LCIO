@@ -40,29 +40,11 @@ namespace IOIMPL{
     
     
     return new IOIMPL::WriterDecorator ;
-    
-    //     switch(_writerType ) {
-    //     case 'r':
-    //       return new RIO::RIOWriter ;
-    //       break ;
-    //     default :
-    //       return new SIO::SIOWriter ;
-    //     }
-    
   }
   
   LCReader * LCFactory::createLCReader(int lcReaderFlag) {
     
     return new IOIMPL::ReaderDecorator ;
-   
-//     switch(_readerType ) {
-//     case 'r':
-//       return new RIO::RIOReader( lcReaderFlag );
-//       break;
-//     default :
-//       return new SIO::SIOReader( lcReaderFlag ) ;
-//     }
-    
   }
   
   

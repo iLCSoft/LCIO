@@ -45,10 +45,6 @@ namespace RIO {
     	// file needs 
 
 
-#ifdef DEBUG
-#else
-#endif
-    
     LCIOExceptionHandler::createInstance() ;
   }
   
@@ -217,8 +213,10 @@ namespace RIO {
       for(  StrVec::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
 	LCCollection* col = evt->getCollection( *name ) ;
 	std::string typeName = col->getTypeName() ;
-	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
 
+#ifdef DEBUG
+	std::cout << " registering collection " << *name << " of " <<  typeName <<  std::endl ;
+#endif
 	//	if( *name != "RecoMCTruthLink" ) 
 	//	if( *name == "PandoraPFOs" ) 
 	  _branches[ *name ] =  new RIO::RIOLCCollectionHandler( *name, typeName, _tree) ;	 

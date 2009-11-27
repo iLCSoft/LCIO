@@ -20,7 +20,8 @@ namespace IOIMPL{
       
       _rdr =  new RIO::RIOReader(_lcReaderFlag ) ;
     }
-    else if( filename.rfind( SIO::LCSIO::FILE_EXTENSION ) + strlen( SIO::LCSIO::FILE_EXTENSION ) == filename.length() ) { 
+    else if( filename.rfind( SIO::LCSIO::FILE_EXTENSION ) 
+	     + strlen( SIO::LCSIO::FILE_EXTENSION ) == filename.length() ) { 
       
       _rdr = new SIO::SIOReader(_lcReaderFlag ) ;
     }
