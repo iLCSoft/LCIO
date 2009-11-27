@@ -5,6 +5,7 @@
 #include "include/EVENT/LCEvent.h"
 #include "include/EVENT/ReconstructedParticle.h"
 #include "include/EVENT/MCParticle.h"
+#include "include/UTIL/LCTOOLS.h"
 #endif
 #include <vector>
 
@@ -69,37 +70,50 @@ void readevent() {
 
   //---------  loop over particles in the events  ------------
   
-  //  IMPL::LCEventImpl* evt = new IMPL::LCEventImpl ; // 0 ;
-  EVENT::LCEvent* evt = 0 ; 
+  IMPL::LCEventImpl* evt =0 ; // new IMPL::LCEventImpl ; // 0 ;
+  //  EVENT::LCEventImpl* evt = 0 ; 
   TBranch* bevt = t->GetBranch("LCEvent") ; 
   bevt->SetAddress( &evt ) ;
   branches.push_back( bevt ) ;
 
-   IMPL::LCCollectionVec* col = new IMPL::LCCollectionVec ;
-   branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
-   branches.back()->SetAddress( &col ) ;
+  evt->setCurrentEvent( evt ) ;
+
+  IMPL::LCCollectionVec* col = new IMPL::LCCollectionVec ;
+  branches.push_back( t->GetBranch("MCParticlesSkimmed") ) ;  
+  branches.back()->SetAddress( &col ) ;
   
-   IMPL::LCCollectionVec* cpfo = new IMPL::LCCollectionVec ;
-   branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
-   branches.back()->SetAddress( &cpfo ) ;
-
-
-   IMPL::LCCollectionVec* crml = new IMPL::LCCollectionVec ;
-   branches.push_back( t->GetBranch("RecoMCTruthLink") ) ;  
-   branches.back()->SetAddress( &crml ) ;
-
+  IMPL::LCCollectionVec* cpfo = new IMPL::LCCollectionVec ;
+  branches.push_back( t->GetBranch("PandoraPFOs") ) ;  
+  branches.back()->SetAddress( &cpfo ) ;
   
+  
+  IMPL::LCCollectionVec* crml = new IMPL::LCCollectionVec ;
+  branches.push_back( t->GetBranch("RecoMCTruthLink") ) ;  
+  branches.back()->SetAddress( &crml ) ;
+  
+  //evt->setCurrentEvent( evt ) ;
+  evt->addCollection( col ,  "MCParticlesSkimmed" ) ; 
+  evt->addCollection( cpfo , "PandoraPFOs" ) ; 
+  evt->addCollection( crml , "RecoMCTruthLink" ) ; 
+
+
   int nBranches = branches.size() ;
-
+  
+  
+  
+  
   //***************************************************************************************************
- 
+  
+  
   int nevt = t->GetEntries();
  
   for (Int_t i = 0; i < nevt ; i++) {
     //for (Int_t i = 0; i < 1 ; i++) {
    
+    
     Long64_t tentry = t->LoadTree(i);
    
+
     for (Int_t k = 0; k < nBranches ; k++) {
      
       int nbyte  = branches[k]->GetEntry(tentry);
@@ -111,23 +125,22 @@ void readevent() {
 //     EVENT::LCCollection* col  = evt->getCollection("MCParticlesSkimmed") ;
 //     EVENT::LCCollection* cpfo = evt->getCollection("PandoraPFOs") ;
 //     EVENT::LCCollection* crml = evt->getCollection("RecoMCTruthLink") ;
-
-
-   
-
+    
+    
+    
     int nMCP = col->getNumberOfElements() ;
     double eMCP = 0.0 ;
     for(int j=0;j<nMCP ;++j){
-     
+      
       EVENT::MCParticle* mcp = dynamic_cast<EVENT::MCParticle*>( col->getElementAt(j) ) ;
-
+      
       //      cout << " -- " << mcp << endl ;
-     
+      
       if( mcp->getGeneratorStatus() == 1 )
 	eMCP += mcp->getEnergy() ;
     }
     htot->Fill(eMCP) ;
-   
+    
    
     int nPFO = cpfo->getNumberOfElements() ;
     double ePFO = 0.0 ;
@@ -159,6 +172,7 @@ void readevent() {
 
     }
     
+    //    UTIL::LCTOOLS::dumpEvent( evt ) ;
 
 
   }
