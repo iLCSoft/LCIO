@@ -17,16 +17,17 @@
     
  
  - RIOWriter:   write Runheader
+ - RIOReader:   read  Runheader
 
 
  - develop  pointer mechanism that is based in collection indices and store these
     in order to split the event into branches (SIO blocks)
     -> define templated class RefVec<T> w/ conversion to vector<ptr>
-   
+DONE: see IMPL/LCRefVec.h   
 
   - order collections in the event wrt. order of addCollection() calls
      ( use _colNames vector )
-     DONE:     
+     DONE:
 
 
   - handle collections that are not in the first event 
@@ -35,5 +36,7 @@
  
 
   - make LCCollection branches subbranches of LCEvent 
+
+
 
 
