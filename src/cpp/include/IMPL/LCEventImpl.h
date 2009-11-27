@@ -166,8 +166,10 @@ namespace IMPL{
     // set of collections that are not owned by the event anymore
     mutable LCCollectionSet _notOwned ;   //! no RIO
     
-    static LCEventImpl* _current ;
+    std::pair< unsigned , EVENT::LCCollection* > _cache ; //! no RIO
 
+    static LCEventImpl* _current ;
+    
   }; // class
 
 } // namespace IMPL

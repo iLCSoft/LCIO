@@ -7,7 +7,8 @@
 
 #include <iostream>
 #include <sstream>
-
+#include <algorithm>
+#include <iomanip>
 
 using namespace EVENT ;
 //using namespace DATA ;
@@ -20,7 +21,7 @@ LCEventImpl::LCEventImpl() :
   _runNumber(0),
   _eventNumber(0),
   _timeStamp(0),
-  _detectorName("unknown") {
+  _detectorName("unknown"),_cache(0,0) {
 }
 
 LCEventImpl::LCEventImpl(const LCEventImpl& evt) :
@@ -28,7 +29,7 @@ LCEventImpl::LCEventImpl(const LCEventImpl& evt) :
   _eventNumber( evt._eventNumber ),
   _timeStamp( evt._timeStamp ),
   _detectorName(evt._detectorName),
-  _params( evt._params ) {
+  _params( evt._params ),_cache(0,0) {
   
   //  mutable LCCollectionSet _notOwned ;   // what should we do here ??
   
@@ -82,12 +83,31 @@ LCEventImpl::~LCEventImpl() {
     unsigned hash = ( index >> 32 &  0xffffffff ) ;
     unsigned i = index & 0xffffffff ;
 
+    if( hash == _cache.first && _cache.second ){
+      
+      return _cache.second->getElementAt( i ) ;
+    }
+
+    _cache.first = 0 ;
+    _cache.second = 0 ;
+
     LCCollectionMap::iterator it = _colMap.find( hash  )  ;
 
     if( it != _colMap.end() ) {
       
+      _cache = *it ;
+
       return it->second->getElementAt( i ) ;
     }
+
+//     std::cout << " getObjectForIndex - col not found for idx: "  << std::hex <<  index  
+// 	      << " ! - cols : "   ;
+//     for ( LCCollectionMap::iterator i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+//       std::cout <<  i->first  << " , " ;
+//     }
+//     std::cout <<  std::dec << std::endl ;
+    
+
     return 0 ;
   }
 
@@ -204,7 +224,12 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
 
   _colMap[ Hash( name  ) ]  = col ;
   
-  _colNames.push_back( name ) ;
+
+  // check if the name already exists in the event (e.g. after it has been read from a file )
+  std::vector<std::string>::iterator it =  std::find( _colNames.begin(), _colNames.end() , name ) ;
+  if( it == _colNames.end() ) 
+    _colNames.push_back( name ) ;
+  
 }
 
     
