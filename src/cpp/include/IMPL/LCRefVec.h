@@ -5,6 +5,7 @@
 #include "LCIOTypes.h"
 #include "LCEventImpl.h"
 #include <iostream>
+//#include <iomanip>
 #include <vector>
 
 namespace IMPL {
@@ -34,7 +35,7 @@ namespace IMPL {
 
     LCRef(T t) : _ptr(t), 
 		 _ref(0),
-		 _havePtr( true ) {
+		 _havePtr( t != 0 ) {
       // -- need to get current event on loading.... 
       _evt = LCEventImpl::getCurrentEvent() ;
     }
@@ -42,7 +43,7 @@ namespace IMPL {
     const LCRef<T>& operator=(const T& t) {
       _ptr = t ;
       _ref = 0 ;
-      _havePtr = true  ;
+      _havePtr =  ( t != 0 )  ;
       return *this ;
     }
 
@@ -58,6 +59,12 @@ namespace IMPL {
     // conversion to ptr
     operator T&() { 
       
+//       std::cout << " operator T&() - this " << this 
+//  		<< " _havePtr "  << _havePtr 
+//  		<< " _ptr "  << _ptr 
+//  		<< " _ref "  << std::hex << _ref << std::dec
+//  		<< std::endl ;
+
       if( ! _havePtr ) {
 	_havePtr = (_ptr!=0 && _ref==0 ) ;
 	if( ! _havePtr ) {
@@ -65,6 +72,12 @@ namespace IMPL {
 	  _havePtr = true ; 
 	}
       }
+//       std::cout << " operator T&() - this " << this 
+//  		<< " _havePtr "  << _havePtr 
+//  		<< " _ptr "  << _ptr 
+//  		<< " _ref "  << std::hex << _ref << std::dec
+//  		<< std::endl ;
+
       return _ptr ;
     }
 
