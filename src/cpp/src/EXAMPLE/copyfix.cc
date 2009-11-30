@@ -86,13 +86,17 @@ int main(int argc, char** argv ){
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     
     if( argc < 3 ){
-      cout << "usage: copyfix infilename outfilename " << endl ;
+      cout << "usage: copyfix infilename outfilename [maxEvt]" << endl ;
       exit(1)  ;
     }
     // read file names from command line 
     inFileName = argv[1] ;
     outFileName  = argv[2] ;
 
+    int maxEvt = 0 ;
+
+    if( argc > 3 )
+      maxEvt = atoi( argv[3] ) ;
 
     try{  lcReader->open( inFileName ) ; } 
     
@@ -109,7 +113,7 @@ int main(int argc, char** argv ){
       lcReader->registerLCRunListener( &evtProc ) ; 
       lcReader->registerLCEventListener( &evtProc ) ; 
       
-      lcReader->readStream() ;
+      lcReader->readStream( maxEvt ) ;
     } 
     
     lcReader->close() ;
