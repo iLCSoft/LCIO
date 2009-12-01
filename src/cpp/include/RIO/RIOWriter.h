@@ -4,6 +4,7 @@
 #include "RIO/RIO.h"
 
 #include <string>
+#include <cstring>
 #include <vector>
 #include "IO/LCWriter.h"
 #include "IMPL/LCEventImpl.h"

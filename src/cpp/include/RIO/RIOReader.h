@@ -2,6 +2,7 @@
 #define RIO_RIOReader_H 1
 
 #include <string>
+#include <cstring>
 #include <set>
 #include <map>
 
@@ -29,7 +30,7 @@ namespace RIO {
   /** Concrete implementation of LCWriter using ROOT I/O.
    * 
    * @author gaede
-   * @version $Id: RIOReader.h,v 1.1.2.5 2009-11-20 15:28:50 gaede Exp $
+   * @version $Id: RIOReader.h,v 1.1.2.6 2009-12-01 09:19:23 gaede Exp $
    */
   class RIOReader : public IO::LCReader {
     
