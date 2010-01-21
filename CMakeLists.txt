@@ -33,6 +33,9 @@ OPTION( BUILD_WITH_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
 OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
 
+OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
+
+
 # set default cmake build type to RelWithDebInfo
 IF( NOT CMAKE_BUILD_TYPE )
     SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
@@ -381,6 +384,7 @@ MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 MESSAGE( STATUS "BUILD_WITH_DCAP = ${BUILD_WITH_DCAP}" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
 MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
+MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
 MESSAGE( STATUS )
@@ -407,6 +411,9 @@ SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
 SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
     "Set to OFF to skip build/install lcio.jar" FORCE )
+SET( BUILD_ROOTDICT "${BUILD_ROOTDICT}" CACHE BOOL
+     "Set to ON to build LCIO ROOT dictionary" FORCE )
+
 
 # export build settings
 INCLUDE( CMakeExportBuildSettings )
