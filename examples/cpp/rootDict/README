@@ -1,0 +1,98 @@
+###################################################################
+#
+#  rootDict:  examples for using the ROOT dictionary for LCIO
+#
+#
+# F.Gaede, DESY (01/2010) 
+#
+################################################################### 
+
+Note: the ROOT dictionary for LCIO is a rather experimental feature 
+that should enable the ILC users to evaluate the use of ROOT together with LCIO
+for their data analysis. It should not be used for 'production' type analysis code
+development, as things are likely to evolve.
+
+Please provide feedback to the LCIO team at:
+
+ http://forum.linearcollider.org/index.php?t=threadt&frm_id=5
+
+
+ 
+Build instructions:
+===================
+
+ In order to build LCIO including a ROOT dictionary you need to:
+ 
+#----- set ROOT environment (5.26 or higher: ) :
+ 
+ . ~/ilcsoft/root/5.26.00/bin/thisroot.sh
+
+#---- configure cmake
+ 
+cd ../../../ ; mkdir build ; cd build 
+cmake -D BUILD_ROOTDICT=1 -D ROOT_HOME=$ROOTSYS ..
+
+#----- build and install
+
+make -j 4 install
+cd .. 
+export LCIO=$PWD
+
+
+#----- go to example dir:
+
+cd $LCIO/examples/cpp/rootDict
+
+#- and run the 
+
+example scripts:
+===============
+
+ anajob.C: 
+  reads *.slcio file and dumps events to the screen in a ROOT macro
+  usage:
+    .x anajob.C("DST01-06_ppr004_bbcsdu.slcio") 
+
+===
+
+ writeTree.C:
+
+  reads *.slcio file and writ the MCParticle collection to 
+  a branch of type   std::vector<IMPL::MCParticleImpl*> 
+  in file lcioTree.root
+
+  usage:
+    .x writeTree.C("DST01-06_ppr004_bbcsdu.slcio")
+
+  analyse TTree e.g. with TTree::Draw(), see:
+
+===
+
+  treeDraw.C
+   use the TTree::Draw to create some plots from the 
+   MCParticle tree created with writeTree.C  
+
+   usage:
+     .x treeDraw.C
+
+
+===
+
+  writeEventTree.C :
+  reads *.slcio file and creates a ROOT tree with one branch
+  that hold the complete event 
+    
+   usage:
+  .x writeEventTree.C("DST01-06_ppr004_bbcsdu.slcio")
+
+===
+
+  readEventTree.C:
+    read LCEvents from tree with branch holding complete event  e.g.
+    created with writeEventTree.C
+    and fill a histogram from MCParticle::getEnergy()
+
+  usage:
+
+  .x readEventTree.C("lcioEventTree.root")
+ 
