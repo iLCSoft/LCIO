@@ -19,7 +19,7 @@ namespace IMPL {
   /** Implementation of MCParticle.
    * 
    * @author gaede
-   * @version $Id: MCParticleImpl.h,v 1.23 2006-08-04 16:52:46 gaede Exp $
+   * @version $Id: MCParticleImpl.h,v 1.24 2010-01-21 16:28:25 gaede Exp $
    */
   class MCParticleImpl : public EVENT::MCParticle, public AccessChecked {
     
@@ -59,7 +59,7 @@ namespace IMPL {
 
     /** Returns the i-th parent of this particle.
      */
-    virtual MCParticle * getParent(int i) const ;
+    virtual EVENT::MCParticle * getParent(int i) const ;
 
 
     /** Returns the endpoint of the particle in [mm] - returns NULL if
@@ -131,7 +131,7 @@ namespace IMPL {
 
     /** Returns the production vertex of the particle.
      */
-    virtual const double * getVertex() const ;
+    virtual const double* getVertex() const ;
 
     /** The creation time of the particle in [ns] wrt. the event,
      *  e.g. for preassigned decays or decays in flight from 

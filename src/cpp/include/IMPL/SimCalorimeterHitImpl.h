@@ -17,7 +17,7 @@ namespace IMPL {
     int   PDG ;
   }  MCParticleCont  ;
   
-  typedef std::vector< MCParticleCont* > MCParticleContVec ;
+  typedef std::vector< IMPL::MCParticleCont* > MCParticleContVec ;
   
 /** Implementation of the generic SimCalorimeterHit.
  * 
@@ -36,7 +36,7 @@ namespace IMPL {
 
     /** Copy constructor - shallow copy. 
      */
-    SimCalorimeterHitImpl(const SimCalorimeterHit& hit) ;
+    SimCalorimeterHitImpl(const EVENT::SimCalorimeterHit& hit) ;
 
     /// Destructor.
     virtual ~SimCalorimeterHitImpl() ;
