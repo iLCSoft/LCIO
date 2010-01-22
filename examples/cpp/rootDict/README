@@ -25,7 +25,7 @@ Build instructions:
  
 #----- set ROOT environment (5.26 or higher: ) :
  
- . ~/ilcsoft/root/5.26.00/bin/thisroot.sh
+ .  __path_to_root__/root/5.26.00/bin/thisroot.sh
 
 #---- configure cmake
  
@@ -57,7 +57,7 @@ example scripts:
 
  writeTree.C:
 
-  reads *.slcio file and writ the MCParticle collection to 
+  reads *.slcio file and write the MCParticle collection to 
   a branch of type   std::vector<IMPL::MCParticleImpl*> 
   in file lcioTree.root
 

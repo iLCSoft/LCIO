@@ -37,6 +37,8 @@ TCut isElectron("abs(MCParticlesSkimmed.getPDG())==11" ) ;
 
 
 // simple drawing of scalar variable (using API !) 
+//LCIO->Draw("MCParticlesSkimmed.getPDG()") ;
+
 LCIO->Draw("MCParticlesSkimmed.getPDG()", isPhoton || isElectron ) ;
 
 
@@ -48,7 +50,11 @@ c1->cd(3)  ;
 LCIO->Draw("MCParticlesSkimmed._endpoint[][0]:MCParticlesSkimmed._endpoint[][1]", sizeCut && isElectron ) ;
 
 
-// this syntax does not work !?? ....
+// this syntax does not work !!!!
+// 
+//  in order to access array like data,
+//  you need to use the member variable names as shown above 
+//
 //LCIO->Draw("MCParticlesSkimmed.getEndpoint()[][0]:MCParticlesSkimmed.getEndpoint()[][1]", sizeCut) ;
 
 //LCIO->Draw("MCParticlesSkimmed.getEndpoint()[0]:MCParticlesSkimmed.getEndpoint()[1]" ) ;
