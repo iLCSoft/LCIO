@@ -5,11 +5,20 @@ using namespace EVENT ;
 
 namespace IMPL {
   
-  TrackImpl::TrackImpl() 
-    //: 
-    //    _type("UNKN") ,
-    //    _isReferencePointPCA(true) 
-  { 
+  TrackImpl::TrackImpl() :
+    _type(0),
+    _d0(0),
+    _phi(0),
+    _omega(0),
+    _z0(0),
+     _tanLambda(0),
+    _isReferencePointPCA(0),
+    _chi2(0),
+    _ndf(0),
+    _dEdx(0),
+    _dEdxError(0),
+    _radiusOfInnermostHit(0) { 
+
     for(int i=0 ; i < NCOVMATRIX ; i++ ) {
       _covMatrix.push_back( 0.0 ) ; 
     }
