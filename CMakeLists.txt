@@ -21,7 +21,7 @@ PROJECT( LCIO )
 # project version
 SET( LCIO_MAJOR_VERSION 1 )
 SET( LCIO_MINOR_VERSION 12 )
-SET( LCIO_PATCH_LEVEL 0 )
+SET( LCIO_PATCH_LEVEL 1 )
 
 # project options
 OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )

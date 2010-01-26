@@ -1,6 +1,15 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+=====================
+ v01-12-01
+=====================
+   Experimental patch release:
+   ---------------------------
+   - optionally build a ROOT dictionary for LCIO
+   - see: examples/cpp/rootDict/README for details
+   - library and files fully compatible with v01-12
+
 
 =====================
  v01-12
