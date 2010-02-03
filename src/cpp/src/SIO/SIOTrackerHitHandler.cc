@@ -37,7 +37,9 @@ namespace SIO{
 
     SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
-    SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
+    
+    if( _vers > SIO_VERSION_ENCODE( 1, 11 )   )
+       SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
 
 
     // rawHits

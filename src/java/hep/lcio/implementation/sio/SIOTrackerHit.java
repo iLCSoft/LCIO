@@ -16,7 +16,7 @@ import java.util.ListIterator;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.11 2009-07-22 16:03:36 engels Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.12 2010-02-03 09:53:14 gaede Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
@@ -31,7 +31,10 @@ class SIOTrackerHit extends ITrackerHit
          covMatrix[i] = in.readFloat();
       dEdx = in.readFloat();
       time = in.readFloat();
-      quality = in.readInt();
+      
+      quality = 0 ; 
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,11))
+        quality = in.readInt();
       
       int nRawHits = 1 ;
       if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,2))
