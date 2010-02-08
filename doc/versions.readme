@@ -1,6 +1,15 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+
+
+=====================
+ v01-12-02
+=====================
+  - bug fix/patch release:
+    fix bug with backward compatibility for reading TrackerHits
+
+
 =====================
  v01-12-01
 =====================
