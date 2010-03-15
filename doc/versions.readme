@@ -2,6 +2,12 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+=====================
+ v01-12-03
+=====================
+  - bug fix/patch release:
+    read cluster hit weights as floats (was pointer) 
+    (seg fault on 64 bit with C++ library)
 
 =====================
  v01-12-02
