@@ -116,7 +116,7 @@ namespace SIO{
 
       for(int i=0;i<nHits;i++){
 	SIO_PNTR( stream , &(cluster->_hits[i] ) ) ;
-	SIO_PNTR( stream , &(cluster->_weights[i] ) ) ;
+	SIO_DATA( stream , &(cluster->_weights[i] ) , 1 ) ;
       }
       
     }
