@@ -6,7 +6,7 @@
  * (developed during DESY summerstudent programme 2007)
  * 
  * @author N. Chiapolini, DESY
- * @version $Id: lsh.cc,v 1.2 2008-05-28 14:02:09 engels Exp $
+ * @version $Id: lsh.cc,v 1.3 2010-04-13 10:58:09 engels Exp $
  */
 
 #include <signal.h>
@@ -686,6 +686,14 @@ int main(int argc, char** argv ) {
     
     
     char *line = readline (print_prompt());
+
+    // exit with CTRL+D
+    if( line == '\0' ) {
+        free(line);
+        cout << "exit" << endl;
+        leave(0);
+    }
+
     if (!(line && *line)) {
       free(line);
       cout << endl;
