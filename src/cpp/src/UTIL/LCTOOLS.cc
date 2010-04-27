@@ -1402,15 +1402,21 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
       }
       cout << endl ;
       cout << "    tracks ( [   id   ] ): " ;
-      for(unsigned int l=0;l<recP->getTracks().size();l++){
-	printf("[%8.8x], ",  recP->getTracks()[l]->id() );
-	//,	       recP->getTrackWeights()[l]  ) ; 
-      }
-      cout << endl ;
+     for(unsigned int l=0;l<recP->getTracks().size();l++){
+        if( recP->getTracks()[l]  )
+           printf("[%8.8x], ",  recP->getTracks()[l]->id() );
+        else
+          printf("[%8.8x], ",  0 );
+//,	       recP->getTrackWeights()[l]  ) ; 
+     }
+     cout << endl ;
       cout << "    clusters ( [   id   ] ): " ;
       for(unsigned int l=0;l<recP->getClusters().size();l++){
-	printf("[%8.8x], ",  recP->getClusters()[l]->id() );
-	//,       recP->getClusterWeights()[l]  ) ; 
+	    if( recP->getClusters()[l] )
+           printf("[%8.8x], ",  recP->getClusters()[l]->id() );
+        else
+           printf("[%8.8x], ", 0 ) ;	
+//,       recP->getClusterWeights()[l]  ) ; 
       }
       cout << endl ;
       cout << "    particle ids ( [id], PDG, (type)): " ;
