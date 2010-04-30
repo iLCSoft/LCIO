@@ -11,7 +11,7 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version $Id: TrackerHit.aid,v 1.12 2009-07-22 16:03:35 engels Exp $
+ * @version $Id: TrackerHit.aid,v 1.13 2010-04-30 15:28:24 engels Exp $
  */
 
 public interface TrackerHit extends LCObject {
@@ -55,6 +55,12 @@ public interface TrackerHit extends LCObject {
 
     /** The quality bit flag of the hit */
     public int getQuality() const ;
+
+    /** The charge */
+    public float getCharge() const ;
+
+    /** The charge error*/
+    public float getChargeError() const ;
 
     /** The raw data hits. 
      * Check getType() to get actual data type.

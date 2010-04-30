@@ -374,6 +374,7 @@ ENDMACRO()
 
 ADD_LCIO_CTEST( test_example ) 
 ADD_LCIO_CTEST( test_calohit )
+ADD_LCIO_CTEST( test_trackerhit )
 
 
 #------------- install the library and the (public) header files -------
@@ -426,9 +427,6 @@ IF( BUILD_F77_TESTJOBS )
         "added collection: 'SomeClusters' and 'SomeTracks'.*to    100 events.*and added one extra MCParticle to each event." )
     SET_TESTS_PROPERTIES( t_anajob_F_rec PROPERTIES PASS_REGULAR_EXPRESSION
         "100 events read from files:" )
-ENDIF()
-
-IF( BUILD_LCIO_TESTJOBS AND BUILD_F77_TESTJOBS )
  
     ADD_TEST( t_anajob_cross_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" f_simjob.slcio )
     ADD_TEST( t_anajob_cross_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" f_recjob.slcio )

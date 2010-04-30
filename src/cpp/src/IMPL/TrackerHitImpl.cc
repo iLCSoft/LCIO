@@ -9,6 +9,8 @@ namespace IMPL {
     _type(0),
     _dEdx(0),
     _time(0),
+    _charge(0),
+    _chargeError(0),
     _quality(0) {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
@@ -78,6 +80,16 @@ namespace IMPL {
   void TrackerHitImpl::setTime( float t )  { 
     checkAccess("TrackerHitImpl::setTime") ;
     _time = t ; 
+  }
+
+  void TrackerHitImpl::setCharge( float charge )  { 
+    checkAccess("TrackerHitImpl::setCharge") ;
+    _charge = charge ; 
+  }
+
+  void TrackerHitImpl::setChargeError( float error )  { 
+    checkAccess("TrackerHitImpl::setChargeError") ;
+    _chargeError = error ; 
   }
 
   void TrackerHitImpl::setQuality( int quality )  { 

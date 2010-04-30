@@ -59,6 +59,16 @@ int lctrhgettype( PTRTYPE trhit )  {
   return trh->getType() ;
 }
 
+float lctrhgetcharge( PTRTYPE trhit ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getCharge() ;
+}
+
+float lctrhgetchargeerr( PTRTYPE trhit ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getChargeError() ;
+}
+
 int lctrhgetquality( PTRTYPE trhit )  {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
   return trh->getQuality() ;
@@ -101,6 +111,18 @@ int lctrhsettime( PTRTYPE trhit, float time) {
 int lctrhsettype( PTRTYPE trhit, int type) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
   trh->setType( type ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrhsetcharge( PTRTYPE trhit, float charge ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setCharge( charge ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrhsetchargeerr( PTRTYPE trhit, float error ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setChargeError( error ) ;
   return LCIO::SUCCESS ;
 }
 
