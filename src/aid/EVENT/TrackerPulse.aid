@@ -6,7 +6,7 @@ package hep.lcio.event ;
  *  @see TrackerData
  * 
  * @author gaede
- * @version $Id: TrackerPulse.aid,v 1.2 2006-03-24 13:25:53 gaede Exp $
+ * @version $Id: TrackerPulse.aid,v 1.3 2010-05-04 15:04:04 engels Exp $
  */
 
 public interface TrackerPulse extends LCObject {
@@ -32,11 +32,19 @@ public interface TrackerPulse extends LCObject {
      */
     public float getTime() const ;	
     
-    /** The integrated charge of the pulse - arbitrary units.
+    /** The time error.
+     */
+    public float getTimeError() const ;	
+
+     /** The integrated charge of the pulse - arbitrary units.
      */
     public float getCharge() const ;	
     
-    /** The quality bit flag of the pulse - check/set collection parameters 
+    /** The charge error.
+     */
+    public float getChargeError() const ;	
+
+     /** The quality bit flag of the pulse - check/set collection parameters 
      *  TrackerPulseQualityNames and TrackerPulseQualityNamesValues.
      */
     public int getQuality() const ;	

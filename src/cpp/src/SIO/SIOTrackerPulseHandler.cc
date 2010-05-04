@@ -34,6 +34,10 @@ namespace SIO{
 
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
     SIO_DATA( stream ,  &(hit->_charge )  , 1  ) ;
+    if( _vers > SIO_VERSION_ENCODE( 1, 12 )   ){
+        SIO_DATA( stream ,  &(hit->_timeError) , 1  ) ;
+        SIO_DATA( stream ,  &(hit->_chargeError )  , 1  ) ;
+    }
     SIO_DATA( stream ,  &(hit->_quality )  , 1  ) ;
     
     SIO_PNTR( stream , &(hit->_corrData) ) ;
@@ -58,6 +62,8 @@ namespace SIO{
       LCSIO_WRITE( stream, hit->getCellID1()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;
     LCSIO_WRITE( stream, hit->getCharge()  ) ;
+    LCSIO_WRITE( stream, hit->getTimeError()  ) ;
+    LCSIO_WRITE( stream, hit->getChargeError()  ) ;
     LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
     TrackerData* corr = hit->getTrackerData() ;

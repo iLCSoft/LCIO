@@ -375,6 +375,7 @@ ENDMACRO()
 ADD_LCIO_CTEST( test_example ) 
 ADD_LCIO_CTEST( test_calohit )
 ADD_LCIO_CTEST( test_trackerhit )
+ADD_LCIO_CTEST( test_trackerpulse )
 
 
 #------------- install the library and the (public) header files -------

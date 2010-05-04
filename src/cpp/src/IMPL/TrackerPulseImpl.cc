@@ -12,7 +12,9 @@ namespace IMPL{
     _cellID0(0) ,
     _cellID1(0) ,
     _time(0),
+    _timeError(0),
     _charge(0),
+    _chargeError(0),
     _quality(0),
     _corrData(0) {
   }    
@@ -36,9 +38,19 @@ namespace IMPL{
     _time = time ;
     
   } 
+  void TrackerPulseImpl::setTimeError( float timeError ) {
+    checkAccess("TrackerPulseImpl::setTimeError") ;
+    _timeError = timeError ;
+    
+  } 
   void TrackerPulseImpl::setCharge( float charge ) {
     checkAccess("TrackerPulseImpl::setCharge") ;
     _charge = charge ;
+    
+  } 
+  void TrackerPulseImpl::setChargeError( float chargeError ) {
+    checkAccess("TrackerPulseImpl::setChargeError") ;
+    _chargeError = chargeError ;
     
   } 
   void TrackerPulseImpl::setQuality( int quality ) {

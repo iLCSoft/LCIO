@@ -336,6 +336,10 @@
             </if>
             <data type="float" name="time">time of pulse</data>
             <data type="float" name="charge">charge</data>
+            <if condition="1000*major+minor&gt;1012">
+                <data type="float" name="timeError"></data>
+                <data type="float" name="chargeError"></data>
+            </if>
             <data type="int" name="quality">quality flag word</data>
  	    <data type="pntr" name="tpcCorrectedData">the spectrum used to create the pulse</data>
             <data type="ptag" name="this"></data>
