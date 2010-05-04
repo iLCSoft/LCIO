@@ -16,7 +16,7 @@ import java.util.ListIterator;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.13 2010-04-30 15:28:25 engels Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.14 2010-05-04 15:19:50 engels Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
@@ -34,9 +34,10 @@ class SIOTrackerHit extends ITrackerHit
       
       charge = 0 ; 
       chargeError = 0 ; 
-      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,12))
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,12)){
         charge = in.readFloat();
         chargeError = in.readFloat();
+      }
 
       quality = 0 ; 
       if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,11))
