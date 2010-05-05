@@ -6,7 +6,7 @@ import hep.lcio.event.TrackerPulse;
 /**
  *
  * @author tonyj
- * @version $Id: ITrackerPulse.java,v 1.2 2010-05-05 09:02:25 engels Exp $
+ * @version $Id: ITrackerPulse.java,v 1.3 2010-05-05 09:25:03 engels Exp $
  */
 public class ITrackerPulse extends ILCObject implements TrackerPulse
 {
@@ -52,6 +52,7 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    public float getChargeError()
    {
       return chargeError;
+   }
    
    public int getQuality()
    {
