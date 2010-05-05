@@ -6,16 +6,18 @@ import hep.lcio.event.TrackerPulse;
 /**
  *
  * @author tonyj
- * @version $Id: ITrackerPulse.java,v 1.1 2005-05-31 07:43:30 gaede Exp $
+ * @version $Id: ITrackerPulse.java,v 1.2 2010-05-05 09:02:25 engels Exp $
  */
 public class ITrackerPulse extends ILCObject implements TrackerPulse
 {
    protected int cellID0;
    protected int cellID1;
    protected float charge;
+   protected float chargeError;
    protected int quality;
    protected TrackerData correctedData;
    protected float time;
+   protected float timeError;
    
  
    
@@ -47,6 +49,9 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    {
       return charge;
    }
+   public float getChargeError()
+   {
+      return chargeError;
    
    public int getQuality()
    {
@@ -62,12 +67,21 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    {
       return time;
    }
+   public float getTimeError()
+   {
+      return timeError;
+   }
    
    
    public void setCharge(float charge)
    {
       checkAccess();
       this.charge = charge;
+   }
+   public void setChargeError(float chargeError)
+   {
+      checkAccess();
+      this.chargeError = chargeError;
    }
    
    public void setQuality(int quality)
@@ -87,5 +101,10 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    {
       checkAccess();
       this.time = time;
+   }
+   public void setTimeError(float timeError)
+   {
+      checkAccess();
+      this.timeError = timeError;
    }
 }

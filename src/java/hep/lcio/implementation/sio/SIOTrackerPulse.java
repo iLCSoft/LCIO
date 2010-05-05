@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTrackerPulse.java,v 1.2 2007-11-07 20:46:23 jeremy Exp $
+ * @version $Id: SIOTrackerPulse.java,v 1.3 2010-05-05 09:02:25 engels Exp $
  */
 public class SIOTrackerPulse extends ITrackerPulse
 {
@@ -27,6 +27,12 @@ public class SIOTrackerPulse extends ITrackerPulse
 
       time = in.readFloat();
       charge = in.readFloat();
+      timeError = 0;
+      chargeError = 0;
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,12)){
+        timeError = in.readFloat();
+        chargeError = in.readFloat();
+      }
       quality = in.readInt();
       data = in.readPntr();
       in.readPTag(this);
@@ -52,6 +58,8 @@ public class SIOTrackerPulse extends ITrackerPulse
       if ((flags & (1 << LCIO.TRAWBIT_ID1)) != 0) out.writeInt(cellID1);
       out.writeFloat(time);
       out.writeFloat(charge);
+      out.writeFloat(timeError);
+      out.writeFloat(chargeError);
       out.writeInt(quality);
       out.writePntr(correctedData);
       out.writePTag(this);
