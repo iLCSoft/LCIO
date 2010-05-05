@@ -9,6 +9,15 @@ SET( CMAKE_Fortran_COMPILER_INIT g77 )
 # project name
 PROJECT( LCIOF77 Fortran )
 
+# ${CMAKE_Fortran_FLAGS} do not get propagated from the parent CMakeLists because
+# this CMakeLists contains the line PROJECT( .... )
+IF( BUILD_32BIT_COMPATIBLE )
+    SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32" )
+ENDIF()
+
+#-------------------------------------------------------------------------
+
+
 # fortran testjobs
 SET( f77_bins
     anajob
