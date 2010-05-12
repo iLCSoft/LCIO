@@ -55,16 +55,37 @@ int main(int argc, char** argv ){
             evt->setEventNumber( i ) ;
 
             LCCollectionVec* trkPulses = new LCCollectionVec( LCIO::TRACKERPULSE )  ;
+            LCCollectionVec* trkPulsesCov = new LCCollectionVec( LCIO::TRACKERPULSE )  ;
+
+            LCFlagImpl flag( trkPulsesCov->getFlag() ) ;
+            flag.setBit( LCIO::TRAWBIT_CM ) ;
+            trkPulsesCov->setFlag( flag.getFlag() ) ;
+
 
             for(int j=0;j<NPULSES;j++){
                 TrackerPulseImpl* trkPulse = new TrackerPulseImpl ;
                 trkPulse->setTime( 3.1415 + 0.1 * i ) ;
-                trkPulse->setTimeError( (i+j) * .003 ) ;
+                //trkPulse->setTimeError( (i+j) * .003 ) ;
                 trkPulse->setCharge( 3.1415 + 0.1 * j ) ;
-                trkPulse->setChargeError( (i+j)*.005 ) ;
+                //trkPulse->setChargeError( (i+j)*.005 ) ;
+                
                 trkPulses->addElement( trkPulse ) ;
             }
+            for(int j=0;j<NPULSES;j++){
+                TrackerPulseImpl* trkPulse = new TrackerPulseImpl ;
+                trkPulse->setTime( 3.1415 + 0.1 * i ) ;
+                //trkPulse->setTimeError( (i+j) * .003 ) ;
+                trkPulse->setCharge( 3.1415 + 0.1 * j ) ;
+                //trkPulse->setChargeError( (i+j)*.005 ) ;
+
+                float cov[3] = { i, j, i*j } ;
+                trkPulse->setCovMatrix( cov );
+
+                trkPulsesCov->addElement( trkPulse ) ;
+            }
+
             evt->addCollection( trkPulses , "TrackerPulses") ;
+            evt->addCollection( trkPulsesCov , "TrackerPulsesWithCovMatrix") ;
 
             lcWrt->writeEvent(evt) ;
 
@@ -93,6 +114,8 @@ int main(int argc, char** argv ){
 
             LCCollection* trkPulses = evt->getCollection( "TrackerPulses") ;
 
+            //MYTEST.LOG(" reading back TrackerPulses from file " ) ;
+
             for(int j=0;j<NPULSES;j++) {
 
                 //std::cout << " testing pulse " << j << std::endl ;
@@ -100,11 +123,41 @@ int main(int argc, char** argv ){
                 TrackerPulse* trkPulse = dynamic_cast<TrackerPulse*>(trkPulses->getElementAt(j)) ;
 
                 MYTEST( trkPulse->getTime(),  float( 3.1415 + 0.1 * i ), "time" ) ;
-                MYTEST( trkPulse->getTimeError(),  float( (i + j) * .003 ), "time error" ) ;
+                //MYTEST( trkPulse->getTimeError(),  float( (i + j) * .003 ), "time error" ) ;
                 MYTEST( trkPulse->getCharge(),  float( 3.1415 + 0.1 * j ), "charge" ) ;
-                MYTEST( trkPulse->getChargeError(), float( (i + j) * .005 ), "charge error" ) ;
+                //MYTEST( trkPulse->getChargeError(), float( (i + j) * .005 ), "charge error" ) ;
+
+
+                const FloatVec& cov = trkPulse->getCovMatrix() ;
+                
+                // should be initialized to 0
+                MYTEST( cov[0] , 0 , " cov[0] " ) ;
+                MYTEST( cov[1] , 0 , " cov[1] " ) ;
+                MYTEST( cov[2] , 0 , " cov[2] " ) ;
 
             }
+
+            LCCollection* trkPulsesCov = evt->getCollection( "TrackerPulsesWithCovMatrix") ;
+
+            //MYTEST.LOG(" reading back TrackerPulsesWithCovMatrix from file " ) ;
+
+            for(int j=0;j<NPULSES;j++) {
+
+                //std::cout << " testing pulse " << j << std::endl ;
+
+                TrackerPulse* trkPulse = dynamic_cast<TrackerPulse*>(trkPulsesCov->getElementAt(j)) ;
+
+                MYTEST( trkPulse->getTime(),  float( 3.1415 + 0.1 * i ), "time" ) ;
+                //MYTEST( trkPulse->getTimeError(),  float( (i + j) * .003 ), "time error" ) ;
+                MYTEST( trkPulse->getCharge(),  float( 3.1415 + 0.1 * j ), "charge" ) ;
+                //MYTEST( trkPulse->getChargeError(), float( (i + j) * .005 ), "charge error" ) ;
+                const FloatVec& cov = trkPulse->getCovMatrix() ;
+                
+                MYTEST( cov[0] , i , " cov[0] " ) ;
+                MYTEST( cov[1] , j , " cov[1] " ) ;
+                MYTEST( cov[2] , i*j , " cov[2] " ) ;
+            }
+
         }
         lcRdr->close() ;
 

@@ -6,18 +6,20 @@ import hep.lcio.event.TrackerPulse;
 /**
  *
  * @author tonyj
- * @version $Id: ITrackerPulse.java,v 1.3 2010-05-05 09:25:03 engels Exp $
+ * @version $Id: ITrackerPulse.java,v 1.4 2010-05-12 14:50:01 engels Exp $
  */
 public class ITrackerPulse extends ILCObject implements TrackerPulse
 {
    protected int cellID0;
    protected int cellID1;
    protected float charge;
-   protected float chargeError;
+   //protected float chargeError;
    protected int quality;
    protected TrackerData correctedData;
    protected float time;
-   protected float timeError;
+   //protected float timeError;
+   protected static int covMatrixSize=3;
+   protected float[] covMatrix = new float[covMatrixSize];
    
  
    
@@ -49,10 +51,10 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    {
       return charge;
    }
-   public float getChargeError()
-   {
-      return chargeError;
-   }
+   //public float getChargeError()
+   //{
+   //   return chargeError;
+   //}
    
    public int getQuality()
    {
@@ -68,22 +70,33 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    {
       return time;
    }
-   public float getTimeError()
+   //public float getTimeError()
+   //{
+   //   return timeError;
+   //}
+      
+   public float[] getCovMatrix()
    {
-      return timeError;
+      return covMatrix;
    }
-   
-   
+
+   public void setCovMatrix(float[] matrix)
+   {
+      if (matrix.length != covMatrixSize) throw new IllegalArgumentException();
+      checkAccess();
+      this.covMatrix = matrix;
+   }
+
    public void setCharge(float charge)
    {
       checkAccess();
       this.charge = charge;
    }
-   public void setChargeError(float chargeError)
-   {
-      checkAccess();
-      this.chargeError = chargeError;
-   }
+   //public void setChargeError(float chargeError)
+   //{
+   //   checkAccess();
+   //   this.chargeError = chargeError;
+   //}
    
    public void setQuality(int quality)
    {
@@ -103,9 +116,9 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
       checkAccess();
       this.time = time;
    }
-   public void setTimeError(float timeError)
-   {
-      checkAccess();
-      this.timeError = timeError;
-   }
+   //public void setTimeError(float timeError)
+   //{
+   //   checkAccess();
+   //   this.timeError = timeError;
+   //}
 }

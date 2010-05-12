@@ -12,11 +12,17 @@ namespace IMPL{
     _cellID0(0) ,
     _cellID1(0) ,
     _time(0),
-    _timeError(0),
+    //_timeError(0),
     _charge(0),
-    _chargeError(0),
+    //_chargeError(0),
     _quality(0),
     _corrData(0) {
+
+    _cov.resize( TRKPULSENCOVMATRIX ) ;
+    //for(int i=0; i<TRKPULSENCOVMATRIX; i++){
+    //  _cov.push_back(0.0) ;
+    //}
+
   }    
   
   /// Destructor.
@@ -38,21 +44,36 @@ namespace IMPL{
     _time = time ;
     
   } 
-  void TrackerPulseImpl::setTimeError( float timeError ) {
-    checkAccess("TrackerPulseImpl::setTimeError") ;
-    _timeError = timeError ;
-    
-  } 
+  //void TrackerPulseImpl::setTimeError( float timeError ) {
+  //  checkAccess("TrackerPulseImpl::setTimeError") ;
+  //  _timeError = timeError ;
+  //  
+  //} 
   void TrackerPulseImpl::setCharge( float charge ) {
     checkAccess("TrackerPulseImpl::setCharge") ;
     _charge = charge ;
     
   } 
-  void TrackerPulseImpl::setChargeError( float chargeError ) {
-    checkAccess("TrackerPulseImpl::setChargeError") ;
-    _chargeError = chargeError ;
-    
-  } 
+  //void TrackerPulseImpl::setChargeError( float chargeError ) {
+  //  checkAccess("TrackerPulseImpl::setChargeError") ;
+  //  _chargeError = chargeError ;
+  //  
+  //} 
+
+  void TrackerPulseImpl::setCovMatrix( const FloatVec& cov ){
+    checkAccess("TrackerPulseImpl::setCovMatrix") ;
+    for(int i=0;i<TRKPULSENCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+  //void TrackerPulseImpl::setCovMatrix( float cov[TRKPULSENCOVMATRIX]  ){
+  void TrackerPulseImpl::setCovMatrix( const float* cov  ){
+    checkAccess("TrackerPulseImpl::setCovMatrix") ;
+    for(int i=0;i<TRKPULSENCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+
   void TrackerPulseImpl::setQuality( int quality ) {
     checkAccess("TrackerPulseImpl::setQuality") ;
     _quality = quality ;

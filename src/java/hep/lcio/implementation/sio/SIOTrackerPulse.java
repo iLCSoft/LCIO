@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  *
  * @author tonyj
- * @version $Id: SIOTrackerPulse.java,v 1.3 2010-05-05 09:02:25 engels Exp $
+ * @version $Id: SIOTrackerPulse.java,v 1.4 2010-05-12 14:50:01 engels Exp $
  */
 public class SIOTrackerPulse extends ITrackerPulse
 {
@@ -27,11 +27,20 @@ public class SIOTrackerPulse extends ITrackerPulse
 
       time = in.readFloat();
       charge = in.readFloat();
-      timeError = 0;
-      chargeError = 0;
+      //timeError = 0;
+      //chargeError = 0;
+
+      for (int i = 0; i < covMatrixSize; i++)
+        covMatrix[i] = 0;
+
       if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,12)){
-        timeError = in.readFloat();
-        chargeError = in.readFloat();
+        //timeError = in.readFloat();
+        //chargeError = in.readFloat();
+        if ((flags & (1 << LCIO.TRAWBIT_CM)) != 0){
+          for (int i = 0; i < covMatrixSize; i++){
+              covMatrix[i] = in.readFloat();
+          }
+        }
       }
       quality = in.readInt();
       data = in.readPntr();
@@ -47,6 +56,15 @@ public class SIOTrackerPulse extends ITrackerPulse
          if ((flags & (1 << LCIO.TRAWBIT_ID1)) != 0) out.writeInt(hit.getCellID1()); 
          out.writeFloat(hit.getTime());
          out.writeFloat(hit.getCharge());
+         //out.writeFloat(hit.getTimeError());
+         //out.writeFloat(hit.getChargeError());
+
+         if ((flags & (1 << LCIO.TRAWBIT_CM)) != 0){
+             float[] matrix = hit.getCovMatrix();
+             for (int i = 0; i < matrix.length; i++)
+                 out.writeFloat(matrix[i]);
+         }
+
          out.writeInt(hit.getQuality());
          out.writePntr(hit.getTrackerData());
          out.writePTag(hit);
@@ -58,8 +76,14 @@ public class SIOTrackerPulse extends ITrackerPulse
       if ((flags & (1 << LCIO.TRAWBIT_ID1)) != 0) out.writeInt(cellID1);
       out.writeFloat(time);
       out.writeFloat(charge);
-      out.writeFloat(timeError);
-      out.writeFloat(chargeError);
+      //out.writeFloat(timeError);
+      //out.writeFloat(chargeError);
+
+      if ((flags & (1 << LCIO.TRAWBIT_CM)) != 0){
+          for (int i = 0; i < covMatrix.length; i++)
+              out.writeFloat(covMatrix[i]);
+      }
+      
       out.writeInt(quality);
       out.writePntr(correctedData);
       out.writePTag(this);

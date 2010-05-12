@@ -4,12 +4,14 @@
 #include "EVENT/TrackerPulse.h"
 #include "AccessChecked.h"
 
+#define TRKPULSENCOVMATRIX 3
+
 namespace IMPL {
 
 /** Default implementation of TrackerPulse.
  * 
  * @author gaede
- * @version $Id: TrackerPulseImpl.h,v 1.3 2010-05-04 15:04:05 engels Exp $
+ * @version $Id: TrackerPulseImpl.h,v 1.4 2010-05-12 14:50:00 engels Exp $
  */
 
   class TrackerPulseImpl :  public EVENT::TrackerPulse , public AccessChecked {
@@ -39,17 +41,22 @@ namespace IMPL {
      */
     virtual float getTime() const { return _time ; }
 
-    /** The time error
-     */
-    virtual float getTimeError() const { return _timeError ; }
+    // The time error
+    //virtual float getTimeError() const { return _timeError ; }
 
     /** The integrated charge of the pulse // FIXME: unit ?.
      */
     virtual float getCharge() const { return _charge ; }
 
-    /** The charge error
+    //The charge error
+    //virtual float getChargeError() const { return _chargeError ; }
+
+    /** Covariance matrix of the charge (c) and time (t) measurements. Stored as lower triangle matrix, i.e.
+     *  cov(c,c) , cov(t,c) , cov(t,t).
+     *  Optional, check/set flag(LCIO::TRAWBIT_CM)==1.
      */
-    virtual float getChargeError() const { return _chargeError ; }
+    virtual const EVENT::FloatVec & getCovMatrix() const { return _cov ; }
+
 
     /** The quality bit flag of the pulse - use the defined constants for referring to the bits.
      */
@@ -66,9 +73,12 @@ namespace IMPL {
     void setCellID0( int cellID0 ) ; 
     void setCellID1( int cellID1 ) ; 
     void setTime( float time ) ; 
-    void setTimeError( float timeError ) ; 
+    //void setTimeError( float timeError ) ; 
     void setCharge( float charge ) ; 
-    void setChargeError( float chargeError ) ; 
+    //void setChargeError( float chargeError ) ; 
+    //void setCovMatrix( const float cov[TRKPULSENCOVMATRIX] ) ;
+    void setCovMatrix( const float* cov ) ;
+    void setCovMatrix( const EVENT::FloatVec & ) ;
     void setQuality( int quality ) ; 
     void setQualityBit( int bit , bool val=true ) ; 
     void setTrackerData( EVENT::TrackerData * corrData ) ; 
@@ -78,10 +88,11 @@ protected:
     int _cellID0 ;
     int _cellID1 ;
     float _time ;
-    float _timeError ;
+    //float _timeError ;
     float _charge ;
-    float _chargeError ;
+    //float _chargeError ;
     int   _quality ;
+    EVENT::FloatVec _cov ;
     EVENT::TrackerData* _corrData ;
     
   }; // class

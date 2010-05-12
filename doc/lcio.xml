@@ -336,9 +336,14 @@
             </if>
             <data type="float" name="time">time of pulse</data>
             <data type="float" name="charge">charge</data>
-            <if condition="1000*major+minor&gt;1012">
+            <!--if condition="1000*major+minor&gt;1012">
                 <data type="float" name="timeError"></data>
                 <data type="float" name="chargeError"></data>
+            </if-->
+            <if condition="1000*major+minor&gt;1012">
+                <if condition="(flags&amp;(1&lt;&lt;30)) != 0">
+                    <data type="float[3]" name="covariance">Covariance Matrix of charge (c) and time (t) measurements</data>
+                </if>
             </if>
             <data type="int" name="quality">quality flag word</data>
  	    <data type="pntr" name="tpcCorrectedData">the spectrum used to create the pulse</data>
