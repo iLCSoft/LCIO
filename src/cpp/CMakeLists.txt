@@ -398,49 +398,134 @@ INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include
   PATTERN "*CVS*" EXCLUDE)
 
 
-#------------- ctest stuff (call with ctest or 'make test') ------------
 
-ADD_TEST( t_simjob "${EXECUTABLE_OUTPUT_PATH}/simjob" )
-ADD_TEST( t_anajob_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" simjob.slcio )
-ADD_TEST( t_recjob "${EXECUTABLE_OUTPUT_PATH}/recjob" simjob.slcio recjob.slcio )
-ADD_TEST( t_anajob_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" recjob.slcio )
 
-SET_TESTS_PROPERTIES( t_simjob PROPERTIES PASS_REGULAR_EXPRESSION
-    "created  10 runs with  100 events" )
-SET_TESTS_PROPERTIES( t_anajob_sim PROPERTIES PASS_REGULAR_EXPRESSION
-    "100 events read from files:" )
-SET_TESTS_PROPERTIES( t_recjob PROPERTIES PASS_REGULAR_EXPRESSION
+# =================== ctest stuff (call with ctest or 'make test') ===============================================
+
+
+# ------ c++ tests -----------------------------------------------------
+ADD_TEST( t_c_sim "${EXECUTABLE_OUTPUT_PATH}/simjob" c_sim.slcio )
+ADD_TEST( t_c_ana_c_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" c_sim.slcio )
+ADD_TEST( t_c_rec_c_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" c_sim.slcio c_rec.slcio )
+ADD_TEST( t_c_ana_c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c_rec.slcio )
+
+SET_TESTS_PROPERTIES( t_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "created  10 runs with  100 events" )
+SET_TESTS_PROPERTIES( t_c_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+SET_TESTS_PROPERTIES( t_c_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION
     "added collection: 'SomeClusters' and 'SomeTracks' to   100 events and added one extra MCParticle to each event." )
-SET_TESTS_PROPERTIES( t_anajob_rec PROPERTIES PASS_REGULAR_EXPRESSION
-    "100 events read from files:" )
+SET_TESTS_PROPERTIES( t_c_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+# ----------------------------------------------------------------------
+
+
+
+IF( INSTALL_JAR )
+
+    # ------ java tests -----------------------------------------------------
+    ADD_TEST( t_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
+    ADD_TEST( t_j_ana_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
+    ADD_TEST( t_j_rec_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
+    ADD_TEST( t_j_ana_j_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
+
+    SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created  10 runs with  100 events" )
+    SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_j_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
+    SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
+
+
+    # ------ c++/java ana/sim mixed tests -----------------------------------------------------
+    ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
+    ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
+    ADD_TEST( t_j_ana_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
+    ADD_TEST( t_j_ana_c_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
+
+    SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_j_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
+ 
+
+
+    # ------ c++/java sim/rec mixed tests -----------------------------------------------------
+    ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
+    ADD_TEST( t_j_rec_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
+    ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
+    ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
+
+    SET_TESTS_PROPERTIES( t_c_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION
+        "added collection: 'SomeClusters' and 'SomeTracks' to   100 events and added one extra MCParticle to each event." )
+    SET_TESTS_PROPERTIES( t_j_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
+    SET_TESTS_PROPERTIES( t_c_ana_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
+
+
+    # TODO runSIODump.sh and runrandomtests.sh
+
+ENDIF()
+
+
+
+
 
 IF( BUILD_F77_TESTJOBS )
-    ADD_TEST( t_simjob_F "${EXECUTABLE_OUTPUT_PATH}/simjob_F" )
-    ADD_TEST( t_anajob_F_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" f_simjob.slcio )
-    ADD_TEST( t_recjob_F "${EXECUTABLE_OUTPUT_PATH}/recjob_F" f_simjob.slcio f_recjob.slcio )
-    ADD_TEST( t_anajob_F_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" f_recjob.slcio )
+    
+    # ------ fortran tests ------------------------------------------------------------
+    ADD_TEST( t_f_sim "${EXECUTABLE_OUTPUT_PATH}/simjob_F" f_sim.slcio )
+    ADD_TEST( t_f_ana_f_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" f_sim.slcio )
+    ADD_TEST( t_f_rec_f_sim "${EXECUTABLE_OUTPUT_PATH}/recjob_F" f_sim.slcio f_rec.slcio )
+    ADD_TEST( t_f_ana_f_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" f_rec.slcio )
 
-    SET_TESTS_PROPERTIES( t_simjob_F PROPERTIES PASS_REGULAR_EXPRESSION
-        "created  10 runs with  100 events" )
-    SET_TESTS_PROPERTIES( t_anajob_F_sim PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
-    SET_TESTS_PROPERTIES( t_recjob_F PROPERTIES PASS_REGULAR_EXPRESSION
+    SET_TESTS_PROPERTIES( t_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "created  10 runs with  100 events" )
+    SET_TESTS_PROPERTIES( t_f_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_f_rec_f_sim PROPERTIES PASS_REGULAR_EXPRESSION
         "added collection: 'SomeClusters' and 'SomeTracks'.*to    100 events.*and added one extra MCParticle to each event." )
-    SET_TESTS_PROPERTIES( t_anajob_F_rec PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
+    SET_TESTS_PROPERTIES( t_f_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ---------------------------------------------------------------------------------
  
-    ADD_TEST( t_anajob_cross_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" f_simjob.slcio )
-    ADD_TEST( t_anajob_cross_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" f_recjob.slcio )
-    ADD_TEST( t_anajob_F_cross_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" simjob.slcio )
-    ADD_TEST( t_anajob_F_cross_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" recjob.slcio )
 
-    SET_TESTS_PROPERTIES( t_anajob_cross_sim PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
-    SET_TESTS_PROPERTIES( t_anajob_cross_rec PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
-    SET_TESTS_PROPERTIES( t_anajob_F_cross_sim PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
-    SET_TESTS_PROPERTIES( t_anajob_F_cross_rec PROPERTIES PASS_REGULAR_EXPRESSION
-        "100 events read from files:" )
-   
+    # ------ c++/fortran ana/sim mixed tests -----------------------------------------------------
+    ADD_TEST( t_c_ana_f_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" f_sim.slcio )
+    ADD_TEST( t_c_ana_f_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" f_rec.slcio )
+    ADD_TEST( t_f_ana_c_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" c_sim.slcio )
+    ADD_TEST( t_f_ana_c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" c_rec.slcio )
+
+    SET_TESTS_PROPERTIES( t_c_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_c_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_f_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    SET_TESTS_PROPERTIES( t_f_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
+
+    IF( INSTALL_JAR )
+
+        # ------ java/fortran ana/sim mixed tests -----------------------------------------------------
+        ADD_TEST( t_j_ana_f_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
+        ADD_TEST( t_j_ana_f_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
+        ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
+        ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
+
+        SET_TESTS_PROPERTIES( t_j_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+        SET_TESTS_PROPERTIES( t_j_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+        SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+        SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+        # ------------------------------------------------------------------------------------------------------------------------------
+
+
+    ENDIF()
+
+    
+    # ------ c++/fortran sim/rec mixed tests -----------------------------------------------------
+    #ADD_TEST( t_c_rec_f_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" f_sim.slcio f2c_rec.slcio )
+    #ADD_TEST( t_f_rec_c_sim "${EXECUTABLE_OUTPUT_PATH}/recjob_F" c_sim.slcio c2f_rec.slcio )
+    #ADD_TEST( t_c_ana_f2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" f2c_rec.slcio )
+    #ADD_TEST( t_c_ana_c2f_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2f_rec.slcio )
+
+    #SET_TESTS_PROPERTIES( t_c_rec_f_sim PROPERTIES PASS_REGULAR_EXPRESSION
+    #    "added collection: 'SomeClusters' and 'SomeTracks' to   100 events and added one extra MCParticle to each event." )
+    #SET_TESTS_PROPERTIES( t_f_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
+    #SET_TESTS_PROPERTIES( t_c_ana_f2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    #SET_TESTS_PROPERTIES( t_c_ana_c2f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100 events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
+
 ENDIF()
