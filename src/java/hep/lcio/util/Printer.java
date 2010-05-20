@@ -998,11 +998,18 @@ public class Printer
 				if (havehits)
 				{
 					ps.print(" hits ->");
-					List hits = trk.getTrackerHits() ; 
+					List hits = trk.getTrackerHits(); 
+					if (hits == null || hits.size() == 0) continue;
 					for(int j=0; j<hits.size(); j++)
 					{
-					  ps.format("[%08x] ", 
-							  Integer.valueOf(hits.get(j).hashCode())) ;
+					    // Guard against null hit.  For some reason, above checks for null
+					    // list and size of zero don't cover all cases where this may fail.
+					    try
+					    {					        					   
+					        ps.format("[%08x] ", Integer.valueOf(hits.get(j).hashCode())) ;
+					    }
+					    catch (NullPointerException x)
+					    {}					     
 					}
 					ps.println();
 				}
