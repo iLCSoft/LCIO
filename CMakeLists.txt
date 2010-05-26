@@ -263,26 +263,29 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     ADD_CUSTOM_TARGET( doc_manual DEPENDS "${PROJECT_SOURCE_DIR}/doc/manual.pdf" )
 
     # reference manual
-    # FIXME this is not working correctly: latex returns error!
-    #ADD_CUSTOM_COMMAND(
-    #    OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
-    #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
-    #    COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
-    #    COMMAND "${DVIPS_CONVERTER}" ARGS -q -o refman.ps refman.dvi
-    #    # FIXME psnup should be detected
-    #    COMMAND "psnup" ARGS -q -2 refman.ps ${PROJECT_SOURCE_DIR}/doc/lciorefman.ps
-    #    COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex
-    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
-    #    COMMENT "Building Documentation - Reference Manual..."
-    #    VERBATIM )
+    ADD_CUSTOM_COMMAND(
+        #OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
+        OUTPUT  "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps" "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+        # FIXME: latex returns error, using | type at the end ignores the exit code error
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
+        COMMAND "${DVIPS_CONVERTER}" ARGS -q -o refman.ps refman.dvi
+        # FIXME psnup should be detected
+        COMMAND "psnup" ARGS -q -2 refman.ps ${PROJECT_SOURCE_DIR}/doc/lciorefman.ps
+        COMMAND "echo" ARGS "reference manual created successfully"
+        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
+        COMMAND "${CMAKE_COMMAND}" -E copy refman.pdf ${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
+        COMMENT "Building Documentation - Reference Manual..."
+        VERBATIM )
 
-    #ADD_CUSTOM_TARGET( doc_refman
-    #        DEPENDS
-    #            "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
-    #            "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi" )
+    ADD_CUSTOM_TARGET( doc_refman DEPENDS
+        "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
+        "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps"
+        "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+    )
     
-    #ADD_DEPENDENCIES( doc doc_cpp doc_manual doc_refman )
-    ADD_DEPENDENCIES( doc doc_cpp doc_manual )
+    ADD_DEPENDENCIES( doc doc_cpp doc_manual doc_refman )
 
 ELSE()
     IF( NOT DOXYGEN_FOUND )
