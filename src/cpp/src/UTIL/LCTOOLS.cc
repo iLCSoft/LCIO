@@ -430,7 +430,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] | position (x,y,z)                | dEdx      | time     |  type" 
+	      << " [   id   ] | position (x,y,z)                | dEdx      | time      |type |  charge   | charge_err" 
 	      << endl 
 	      << endl ;
     
@@ -443,7 +443,7 @@ namespace UTIL {
       //       if( hit->getRawDataHit() != 0 ) 
       // 	rawHitId = hit->getRawDataHit()->id()  ;
       
-      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n" 
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
 	     , hit->getPosition()[1] 
@@ -451,7 +451,10 @@ namespace UTIL {
 	     , hit->getdEdx() 
 	     , hit->getTime() 
 	     , hit->getType() 
+         , hit->getCharge()
+         , hit->getChargeError()
 	     ) ;
+
       const LCObjectVec& rawHits = hit->getRawHits() ;
       cout << "    rawHits: " ;
       try{
@@ -624,7 +627,8 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	 << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
 
     LCFlagImpl flag( col->getFlag() ) ;
-    cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
+    cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 )
+         << "     LCIO::TRAWBIT_CM     : " << flag.bitSet( LCIO::TRAWBIT_CM ) << endl ;
     
     printParameters( col->getParameters() ) ;
 
@@ -634,7 +638,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     CellIDDecoder<TrackerPulse> id( col ) ;
 
     std::cout << endl
-	      << " [   id   ] | cellid0  | cellid1  | time | charge | quality  |corr.Data | cellid-fields: |"
+	      << " [   id   ] | cellid0  | cellid1  | time | charge | quality  |corr.Data | cellid-fields: | cov(c,c), cov(t,c), cov(t,t)"
  	      << endl 
 	      << endl ;
     
@@ -658,7 +662,13 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 
       printf("[%8.8x] ",   ( corr != 0 ? corr->id() : 0 ) ) ;
 
-      std::cout << " " << id( hit ).valueString() << "|" << std::endl ; 
+      std::cout << " " << id( hit ).valueString() << " | " ; 
+
+      for( unsigned int j=0; j < hit->getCovMatrix().size(); j++ ){
+	    printf("%4.2e, ", hit->getCovMatrix()[j] ) ; 
+      }
+
+	  cout << "|" << endl ;
 
     }
     cout << endl 
