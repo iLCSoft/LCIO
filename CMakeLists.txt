@@ -165,13 +165,14 @@ IF( UNIX )
             COMMENT "Generating header files with ant aid.generate..."
             VERBATIM )
         
+        # moved to src/cpp/CMakeLists.txt
         #ADD_CUSTOM_COMMAND(
-        #    OUTPUT "${PROJECT_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h"
+        #    OUTPUT "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
         #    COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
         #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
         #    COMMENT "Generating header files with ant aid.generate..."
         #    VERBATIM )
-        #
+        
         #ADD_CUSTOM_TARGET( headers DEPENDS
         #        "${PROJECT_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
 
@@ -183,15 +184,16 @@ IF( UNIX )
             VERBATIM )
 
         # create custom target for cleaning class files
-        ADD_CUSTOM_TARGET( jar_clean
-            COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant clean
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-            COMMENT "Cleaning java classes with ant clean..."
-            VERBATIM )
+        #ADD_CUSTOM_TARGET( jar_clean
+        #    COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant clean
+        #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        #    COMMENT "Cleaning java classes with ant clean..."
+        #    VERBATIM )
 
         # tell make clean to also erase lcio.jar
-        SET_DIRECTORY_PROPERTIES( PROPERTIES
-            ADDITIONAL_MAKE_CLEAN_FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
+        SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+            "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
+        )
 
         #JAVADOC
         IF( JAVA_DOC )

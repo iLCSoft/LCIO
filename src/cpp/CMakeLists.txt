@@ -63,6 +63,15 @@ SET( LCIO_IMPL_SRCS
   ./src/IMPL/VertexImpl.cc
 )
 
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
+    COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    COMMENT "Generating header files with ant aid.generate..."
+)
+
+SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${LCIO_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
+
 SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
 )
@@ -149,6 +158,8 @@ ADD_LIBRARY( lib_LCIO
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
 )
+
+ADD_DEPENDENCIES( lib_LCIO "${LCIO_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
 
 SET_TARGET_PROPERTIES( lib_LCIO PROPERTIES
     # create *nix style library versions + symbolic links
@@ -417,52 +428,47 @@ SET_TESTS_PROPERTIES( t_c_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+e
 
 
 
-IF( INSTALL_JAR )
+# ------ java tests -----------------------------------------------------
+ADD_TEST( t_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
+ADD_TEST( t_j_ana_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
+ADD_TEST( t_j_rec_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
+ADD_TEST( t_j_ana_j_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
 
-    # ------ java tests -----------------------------------------------------
-    ADD_TEST( t_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
-    ADD_TEST( t_j_ana_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
-    ADD_TEST( t_j_rec_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
-    ADD_TEST( t_j_ana_j_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
-
-    SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created[ ]+10[ ]+runs with[ ]+100[ ]+events" )
-    SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_j_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed[ ]+100[ ]+events" )
-    SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    # ------------------------------------------------------------------------------------------------------------------------------
+SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created[ ]+10[ ]+runs with[ ]+100[ ]+events" )
+SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_j_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed[ ]+100[ ]+events" )
+SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+# ------------------------------------------------------------------------------------------------------------------------------
 
 
-    # ------ c++/java ana/sim mixed tests -----------------------------------------------------
-    ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
-    ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
-    ADD_TEST( t_j_ana_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
-    ADD_TEST( t_j_ana_c_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
+# ------ c++/java ana/sim mixed tests -----------------------------------------------------
+ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
+ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
+ADD_TEST( t_j_ana_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
+ADD_TEST( t_j_ana_c_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
 
-    SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_j_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    # ------------------------------------------------------------------------------------------------------------------------------
- 
-
-
-    # ------ c++/java sim/rec mixed tests -----------------------------------------------------
-    ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
-    ADD_TEST( t_j_rec_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
-    ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
-    ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
-
-    SET_TESTS_PROPERTIES( t_c_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClusters' and 'SomeTracks'.*to[ ]+100[ ]+events" )
-    SET_TESTS_PROPERTIES( t_j_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
-    SET_TESTS_PROPERTIES( t_c_ana_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    # ------------------------------------------------------------------------------------------------------------------------------
+SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_j_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+# ------------------------------------------------------------------------------------------------------------------------------
 
 
-    # TODO runSIODump.sh and runrandomtests.sh
 
-ENDIF()
+# ------ c++/java sim/rec mixed tests -----------------------------------------------------
+ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
+ADD_TEST( t_j_rec_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
+ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
+ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
 
+SET_TESTS_PROPERTIES( t_c_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClusters' and 'SomeTracks'.*to[ ]+100[ ]+events" )
+SET_TESTS_PROPERTIES( t_j_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
+SET_TESTS_PROPERTIES( t_c_ana_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+# ------------------------------------------------------------------------------------------------------------------------------
+
+
+# TODO runSIODump.sh and runrandomtests.sh
 
 
 
@@ -494,22 +500,18 @@ IF( BUILD_F77_TESTJOBS )
     SET_TESTS_PROPERTIES( t_f_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
     # ------------------------------------------------------------------------------------------------------------------------------
 
-    IF( INSTALL_JAR )
+    # ------ java/fortran ana/sim mixed tests -----------------------------------------------------
+    ADD_TEST( t_j_ana_f_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
+    ADD_TEST( t_j_ana_f_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
+    ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
+    ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
 
-        # ------ java/fortran ana/sim mixed tests -----------------------------------------------------
-        ADD_TEST( t_j_ana_f_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
-        ADD_TEST( t_j_ana_f_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
-        ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
-        ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
+    SET_TESTS_PROPERTIES( t_j_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+    SET_TESTS_PROPERTIES( t_j_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+    SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+    SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+    # ------------------------------------------------------------------------------------------------------------------------------
 
-        SET_TESTS_PROPERTIES( t_j_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-        SET_TESTS_PROPERTIES( t_j_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-        SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-        SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-        # ------------------------------------------------------------------------------------------------------------------------------
-
-
-    ENDIF()
 
     
     # ------ c++/fortran sim/rec mixed tests -----------------------------------------------------
