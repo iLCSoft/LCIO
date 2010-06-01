@@ -31,7 +31,7 @@ OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples under src/cpp/src/
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 OPTION( BUILD_WITH_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
-OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
+#OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
 
 OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
 
@@ -87,14 +87,13 @@ ELSE()
     MESSAGE( FATAL_ERROR "Please set JAVA_HOME correctly!!" )
 ENDIF()
 
-# set environment variables for
-# generating header files with ant aid.generate
+# set environment variables to generate header files and jar library
 SET( ENV{JDK_HOME} "${JAVA_HOME}" )
 SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
 SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
 SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
 
-# generate header files with ant aid.generate
+# generate header files ( ant aid.generate )
 IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
 
     MESSAGE( STATUS "Generating header files with ant aid.generate..." )
@@ -110,6 +109,24 @@ IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
         MESSAGE( FATAL_ERROR "${out_tmp}" )
     ENDIF()
 ENDIF()
+
+# generate lcio jar library ( ant aid )
+IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
+
+    MESSAGE( STATUS "Generating lcio jar library with ant aid..." )
+    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
+        ARGS aid
+        OUTPUT_VARIABLE out_tmp
+        RETURN_VALUE out_ret )
+    # check if everything went ok
+    IF( NOT out_ret )
+        MESSAGE( STATUS "lcio jar library successfully generated..." )
+    ELSE()
+        MESSAGE( STATUS "Error generating lcio.jar!!" )
+        MESSAGE( FATAL_ERROR "${out_tmp}" )
+    ENDIF()
+ENDIF()
+
 
 # add custom target for building all documentation
 ADD_CUSTOM_TARGET( doc )
@@ -131,14 +148,16 @@ IF( UNIX )
     IF( SH )
         # generate shell script for setting environment
         # and calling ant aid
-        MESSAGE( STATUS "Generating LCIO env init script..." )
-        FILE( WRITE "${PROJECT_BINARY_DIR}/lcio_env_init.sh"
-            "export LCIO=${PROJECT_SOURCE_DIR}\n"
-            "export JDK_HOME=${JAVA_HOME}\n"
-            "export JAVA_HOME=${JAVA_HOME}\n"
-            "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
-            "eval $*" )
-     
+        IF( NOT EXISTS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
+            MESSAGE( STATUS "Generating LCIO env init script..." )
+            FILE( WRITE "${PROJECT_BINARY_DIR}/lcio_env_init.sh"
+                "export LCIO=${PROJECT_SOURCE_DIR}\n"
+                "export JDK_HOME=${JAVA_HOME}\n"
+                "export JAVA_HOME=${JAVA_HOME}\n"
+                "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
+                "eval $*" )
+         ENDIF()
+
         # create "always out-of-date" headers target
         ADD_CUSTOM_TARGET( headers
             COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
@@ -156,16 +175,12 @@ IF( UNIX )
         #ADD_CUSTOM_TARGET( headers DEPENDS
         #        "${PROJECT_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
 
-        # LCIO - JAVA
-        ADD_CUSTOM_COMMAND(
-            OUTPUT "${PROJECT_SOURCE_DIR}/lib/lcio.jar"
-            COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
+        # create "always out-of-date" jar target
+        ADD_CUSTOM_TARGET( jar
+            COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
             WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-            COMMENT "Building LCIO Java..."
+            COMMENT "Building lcio jar library..."
             VERBATIM )
-
-        # create java target
-        ADD_CUSTOM_TARGET( jar DEPENDS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
 
         # create custom target for cleaning class files
         ADD_CUSTOM_TARGET( jar_clean
@@ -198,12 +213,6 @@ IF( UNIX )
             SET( INSTALL_DOC OFF )
         ELSE()
             MESSAGE( STATUS "WARNING: doc_java target disabled!" )
-        ENDIF()
-        IF( INSTALL_JAR )
-            MESSAGE( STATUS "WARNING: INSTALL_JAR forced to OFF and jar target disabled!" )
-            SET( INSTALL_JAR OFF )
-        ELSE()
-            MESSAGE( STATUS "WARNING: jar target disabled!" )
         ENDIF()
     ENDIF()
 ENDIF()
@@ -300,12 +309,13 @@ ELSE()
 ENDIF()
 
 # installation rules
-IF( INSTALL_JAR )
-    # make sure jar is built before calling make install
-    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
-    # install jar
-    INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
-ENDIF()
+#IF( INSTALL_JAR )
+#    # make sure jar is built before calling make install
+#    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
+#    # install jar
+#    INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
+#ENDIF()
+INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib OPTIONAL )
 IF( INSTALL_DOC )
     # make sure documentation is built before make install is called
     INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
@@ -386,7 +396,7 @@ MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 MESSAGE( STATUS "BUILD_WITH_DCAP = ${BUILD_WITH_DCAP}" )
 MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
-MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
+#MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
 MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
 MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
 MESSAGE( STATUS "-------------------------------------------------------------------------------" )
@@ -412,8 +422,8 @@ SET( DCAP_HOME "${DCAP_HOME}" CACHE PATH
     "Set to dcap installation directory - only if BUILD_WITH_DCAP=ON" FORCE )
 SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
     "Set to OFF to skip build/install Documentation" FORCE )
-SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
-    "Set to OFF to skip build/install lcio.jar" FORCE )
+#SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
+#    "Set to OFF to skip build/install lcio.jar" FORCE )
 SET( BUILD_ROOTDICT "${BUILD_ROOTDICT}" CACHE BOOL
      "Set to ON to build LCIO ROOT dictionary" FORCE )
 
