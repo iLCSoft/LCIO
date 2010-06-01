@@ -7,7 +7,7 @@ namespace IMPL {
   
   TrackerHitImpl::TrackerHitImpl() :
     _type(0),
-    _dEdx(0),
+    //_dEdx(0),
     _time(0),
     _charge(0),
     _chargeError(0),
@@ -31,7 +31,10 @@ namespace IMPL {
     return _cov ;
   }
 
-  float TrackerHitImpl::getdEdx() const { return _dEdx ; }
+  float TrackerHitImpl::getdEdx() const {
+      //return _dEdx ;
+      return getCharge();
+  }
 
   float TrackerHitImpl::getTime() const { return _time ; }
 
@@ -72,10 +75,10 @@ namespace IMPL {
     _pos[2] = pos[2] ; 
   }
 
-  void TrackerHitImpl::setdEdx( float dedx )  {
-    checkAccess("TrackerHitImpl::setdEdx") ;
-    _dEdx = dedx ; 
-  }
+  //void TrackerHitImpl::setdEdx( float dedx )  {
+  //  checkAccess("TrackerHitImpl::setdEdx") ;
+  //  _dEdx = dedx ; 
+  //}
 
   void TrackerHitImpl::setTime( float t )  { 
     checkAccess("TrackerHitImpl::setTime") ;

@@ -430,7 +430,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] | position (x,y,z)                | dEdx      | time      |type |  charge   | charge_err" 
+	      << " [   id   ] | position (x,y,z)                | time      |type |  charge   | charge_err" 
 	      << endl 
 	      << endl ;
     
@@ -443,12 +443,13 @@ namespace UTIL {
       //       if( hit->getRawDataHit() != 0 ) 
       // 	rawHitId = hit->getRawDataHit()->id()  ;
       
-      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n" 
+      //printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n" 
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | [%d] | %4.3e | %4.3e \n" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
 	     , hit->getPosition()[1] 
 	     , hit->getPosition()[2] 
-	     , hit->getdEdx() 
+	     //, hit->getdEdx() 
 	     , hit->getTime() 
 	     , hit->getType() 
          , hit->getCharge()

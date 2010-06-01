@@ -16,7 +16,7 @@ import java.util.ListIterator;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOTrackerHit.java,v 1.14 2010-05-04 15:19:50 engels Exp $
+ * @version $Id: SIOTrackerHit.java,v 1.15 2010-06-01 10:19:37 engels Exp $
  */
 class SIOTrackerHit extends ITrackerHit
 {
@@ -29,7 +29,11 @@ class SIOTrackerHit extends ITrackerHit
          position[i] = in.readDouble();
       for (int i = 0; i < 6; i++)
          covMatrix[i] = in.readFloat();
-      dEdx = in.readFloat();
+      //dEdx = in.readFloat();
+      if( SIOVersion.encode(major,minor) < SIOVersion.encode(1,13)){
+          // if reading older files store dEdx as charge
+          charge = in.readFloat();
+      }
       time = in.readFloat();
       
       charge = 0 ; 
@@ -89,7 +93,7 @@ class SIOTrackerHit extends ITrackerHit
          float[] matrix = hit.getCovMatrix();
          for (int i = 0; i < 6; i++)
             out.writeFloat(matrix[i]);
-         out.writeFloat(hit.getdEdx());
+         //out.writeFloat(hit.getdEdx());
          out.writeFloat(hit.getTime());
          out.writeFloat(hit.getCharge());
          out.writeFloat(hit.getChargeError());
@@ -113,7 +117,7 @@ class SIOTrackerHit extends ITrackerHit
          out.writeDouble(position[i]);
       for (int i = 0; i < 6; i++)
          out.writeFloat(covMatrix[i]);
-      out.writeFloat(dEdx);
+      //out.writeFloat(dEdx);
       out.writeFloat(time);
       out.writeFloat(charge);
       out.writeFloat(chargeError);

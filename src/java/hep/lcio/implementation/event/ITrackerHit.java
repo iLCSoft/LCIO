@@ -7,13 +7,14 @@ import hep.lcio.event.TrackerHit;
 
 /**
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.10 2010-04-30 15:28:25 engels Exp $
+ * @version $Id: ITrackerHit.java,v 1.11 2010-06-01 10:19:37 engels Exp $
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
    protected double[] position = new double[3];
    protected float[] covMatrix = new float[6];
-   protected float dEdx;
+   // deprecated
+   //protected float dEdx;
    protected float time;
    protected float charge;
    protected float chargeError;
@@ -47,13 +48,15 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    
    public float getdEdx()
    {
-      return dEdx;
+      //return dEdx;
+      return getCharge();
    }
-   public void setdEdx(float dEdx)
-   {
-      checkAccess();
-      this.dEdx = dEdx;
-   }
+   // deprecated
+   //public void setdEdx(float dEdx)
+   //{
+   //   checkAccess();
+   //   this.dEdx = dEdx;
+   //}
    
    public float getTime()
    {

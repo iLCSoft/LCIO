@@ -35,7 +35,12 @@ namespace SIO{
         SIO_DATA( stream ,  cov  ,  TRKHITNCOVMATRIX ) ;
         hit->setCovMatrix( cov ) ;
 
-        SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
+        //SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
+        if( _vers < SIO_VERSION_ENCODE( 1, 13 )   ){
+            // JE: if reading older files store dEdx as charge
+            SIO_DATA( stream ,  &(hit->_charge) , 1  ) ;
+        }
+
         SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
 
         if( _vers > SIO_VERSION_ENCODE( 1, 12 )   ){
@@ -85,7 +90,7 @@ namespace SIO{
             LCSIO_WRITE( stream, cov[i]  ) ;
         }
 
-        LCSIO_WRITE( stream, hit->getdEdx()  ) ;
+        //LCSIO_WRITE( stream, hit->getdEdx()  ) ;
         LCSIO_WRITE( stream, hit->getTime()  ) ;
         LCSIO_WRITE( stream, hit->getCharge()  ) ;
         LCSIO_WRITE( stream, hit->getChargeError()  ) ;

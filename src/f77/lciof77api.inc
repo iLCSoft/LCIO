@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.41 2010-04-30 15:28:25 engels Exp $
+*  $Id: lciof77api.inc,v 1.42 2010-06-01 10:19:37 engels Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -235,7 +235,7 @@ c-----the TrackerHit interface
       integer lctrhgettype, lctrhgetquality
       real    lctrhgetdedx, lctrhgettime
       real    lctrhgetcharge, lctrhgetchargeerr
-      integer lctrhsetposition, lctrhsetcovmatrix, lctrhsetdedx
+      integer lctrhsetposition, lctrhsetcovmatrix
       integer lctrhsettime, lctrhsettype, lctrhsetquality
       integer lctrhsetcharge, lctrhsetchargeerr
       integer lctrhaddrawhit

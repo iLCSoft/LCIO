@@ -1,7 +1,7 @@
 /**Header file for the f77-wrapper functions of the Track Class.
  * 
  * @author H. Vogt
- * @version $Id: lctrh.h,v 1.8 2010-04-30 15:28:24 engels Exp $
+ * @version $Id: lctrh.h,v 1.9 2010-06-01 10:19:36 engels Exp $
  */
 #include "cfortran.h"
 #include "cpointer.h"
@@ -27,7 +27,7 @@ PTRTYPE lctrhgetrawhits( PTRTYPE trh ) ;
 
 int     lctrhsetposition( PTRTYPE trh, double* pos ) ;
 int     lctrhsetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
-int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
+//int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
 int     lctrhsettime( PTRTYPE trh, float time ) ;
 int     lctrhsettype( PTRTYPE trh, int type ) ;
 int     lctrhsetcharge( PTRTYPE trh, float charge ) ;
@@ -56,7 +56,7 @@ FCALLSCFUN1(CFORTRANPNTR, lctrhgetrawhits,  LCTRHGETRAWHITS, lctrhgetrawhits, CF
 
 FCALLSCFUN2(INT, lctrhsetposition, LCTRHSETPOSITION, lctrhsetposition, CFORTRANPNTR, DOUBLEV) 
 FCALLSCFUN2(INT, lctrhsetcovmatrix, LCTRHSETCOVMATRIX, lctrhsetcovmatrix, CFORTRANPNTR, FLOATV) 
-FCALLSCFUN2(INT, lctrhsetdedx, LCTRHSETDEDX, lctrhsetdedx, CFORTRANPNTR, FLOAT) 
+//FCALLSCFUN2(INT, lctrhsetdedx, LCTRHSETDEDX, lctrhsetdedx, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lctrhsettime, LCTRHSETTIME, lctrhsettime, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lctrhsettype, LCTRHSETTYPE, lctrhsettype, CFORTRANPNTR, INT )
 FCALLSCFUN2(INT, lctrhsetcharge, LCTRHSETCHARGE, lctrhsetcharge, CFORTRANPNTR, FLOAT) 

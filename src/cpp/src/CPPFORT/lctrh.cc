@@ -41,7 +41,8 @@ int lctrhgetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
 
 float lctrhgetdedx( PTRTYPE trhit ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  return trh->getdEdx() ;
+  //return trh->getdEdx() ;
+  return trh->getCharge() ;
 }
 
 float lctrhgettime( PTRTYPE trhit ) {
@@ -96,11 +97,11 @@ int lctrhsetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
   return LCIO::SUCCESS ;
 }
 
-int lctrhsetdedx( PTRTYPE trhit, float dedx) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  trh->setdEdx( dedx ) ;
-  return LCIO::SUCCESS ;
-}
+//int lctrhsetdedx( PTRTYPE trhit, float dedx) {
+//  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+//  trh->setdEdx( dedx ) ;
+//  return LCIO::SUCCESS ;
+//}
 
 int lctrhsettime( PTRTYPE trhit, float time) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
