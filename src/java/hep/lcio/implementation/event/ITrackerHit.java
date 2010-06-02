@@ -7,17 +7,16 @@ import hep.lcio.event.TrackerHit;
 
 /**
  * @author Tony Johnson
- * @version $Id: ITrackerHit.java,v 1.11 2010-06-01 10:19:37 engels Exp $
+ * @version $Id: ITrackerHit.java,v 1.12 2010-06-02 10:59:34 engels Exp $
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
    protected double[] position = new double[3];
    protected float[] covMatrix = new float[6];
-   // deprecated
-   //protected float dEdx;
+   //protected float dEdx; // DEPRECATED. renamed to EDep
+   protected float EDep;
+   protected float EDepError;
    protected float time;
-   protected float charge;
-   protected float chargeError;
    protected int type;
    protected int quality;
    protected List rawHits = new ArrayList() ;
@@ -46,18 +45,43 @@ public class ITrackerHit extends ILCObject implements TrackerHit
       this.covMatrix = matrix;
    }
    
+   // DEPRECATED. renamed to getEDep()
    public float getdEdx()
    {
       //return dEdx;
-      return getCharge();
+      return getEDep();
    }
-   // deprecated
-   //public void setdEdx(float dEdx)
-   //{
-   //   checkAccess();
-   //   this.dEdx = dEdx;
-   //}
+
+   // DEPRECATED. renamed to setEDep()
+   public void setdEdx(float dEdx)
+   {
+      //checkAccess();
+      //this.dEdx = dEdx;
+      setEDep( dEdx );
+   }
    
+   public float getEDep()
+   {
+      return EDep;
+   }
+
+   public void setEDep(float e)
+   {
+      checkAccess();
+      this.EDep = e;
+   }
+
+   public float getEDepError()
+   {
+      return EDepError;
+   }
+
+   public void setEDepError(float e)
+   {
+      checkAccess();
+      this.EDepError = e;
+   }
+
    public float getTime()
    {
       return time;
@@ -69,28 +93,6 @@ public class ITrackerHit extends ILCObject implements TrackerHit
       this.time = time;
    }
       
-   public float getCharge()
-   {
-      return charge;
-   }
-
-   public void setCharge(float charge)
-   {
-      checkAccess();
-      this.charge = charge;
-   }
-
-   public float getChargeError()
-   {
-      return chargeError;
-   }
-
-   public void setChargeError(float error)
-   {
-      checkAccess();
-      this.chargeError = error;
-   }
-
    public int getQuality()
    {
       return quality;

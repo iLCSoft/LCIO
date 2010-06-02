@@ -356,7 +356,8 @@ public class Printer
 
 			boolean pstored = ((flag & (1 << LCIO.THBIT_MOMENTUM)) != 0);
 
-			ps.println(" [   id   ] | cellID[indices] | position (x,y,z) | dEdx | time  | PDG of MCParticle");
+			//ps.println(" [   id   ] | cellID[indices] | position (x,y,z) | dEdx | time  | PDG of MCParticle");
+			ps.println(" [   id   ] | cellID[indices] | position (x,y,z) | EDep | time  | PDG of MCParticle");
 
 			if (pstored)
 				ps.println(" | (px, py, pz) | pathLength ");
@@ -380,7 +381,8 @@ public class Printer
 							Double.valueOf(hit.getPosition()[0]), 
 							Double.valueOf(hit.getPosition()[1]), 
 							Double.valueOf(hit.getPosition()[2]), 
-							Float.valueOf(hit.getdEdx()), 
+							//Float.valueOf(hit.getdEdx()), 
+							Float.valueOf(hit.getEDep()), 
 							Float.valueOf(hit.getTime()), 
 							Integer.valueOf(pdgid)
 				);
@@ -462,19 +464,23 @@ public class Printer
 	{
 		void print(LCCollection coll, int nprint)
 		{
-		    ps.println(" [id] | position (x,y,z)                | dEdx      | time     |  type"); 
+		    //ps.println(" [id] | position (x,y,z)                | dEdx      | time     |  type"); 
+		    ps.println(" [id] | position (x,y,z)                | time     |  type |   EDep    | EDepError"); 
 			for(int i=0 ; i<nprint; i++)
 			{   
 				TrackerHit hit = (TrackerHit)coll.getElementAt(i);
 		        
-		        ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n",
+		        //ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n",
+		        ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n",
 		        				Integer.valueOf(hit.hashCode()),
 		        				Double.valueOf(hit.getPosition()[0]), 
 		        				Double.valueOf(hit.getPosition()[1]), 
 		        				Double.valueOf(hit.getPosition()[2]), 
-		        				Double.valueOf(hit.getdEdx()), 
+		        				//Double.valueOf(hit.getdEdx()), 
 		        				Double.valueOf(hit.getTime()), 
-		        				Integer.valueOf(hit.getType()) 
+		        				Integer.valueOf(hit.getType()),
+		        				Double.valueOf(hit.getEDep()), 
+		        				Double.valueOf(hit.getEDepError()) 
 		  	     );
 			}
 		}
@@ -1113,7 +1119,8 @@ public class Printer
 	{
 		void print(LCCollection coll, int nprint)
 		{
-			ps.println(" [   id   ] |  [cellID0]  |  [cellID1]  |  time | charge | quality  | corr.Data  ");
+			//ps.println(" [   id   ] |  [cellID0]  |  [cellID1]  |  time | charge | quality  | corr.Data  ");
+			ps.println(" [   id   ] |  [cellID0]  |  [cellID1]  |  time | charge | quality  | corr.Data  | cov(c,c), cov(t,c), cov(t,t)");
 			
 			for (int i=0; i<nprint; i++)
 			{
@@ -1130,7 +1137,13 @@ public class Printer
 				
 				TrackerData corr = hit.getTrackerData();
 				ps.format("[%08x] ", Integer.valueOf(corr != null ? corr.hashCode() : 0));
-				ps.println();
+                
+			    // Print covariance matrix.
+			    ps.print("  cov( cc,tc,tt) : (");
+			    for(int j=0; j<hit.getCovMatrix().length; j++){
+			    	ps.format("%4.2e, ", Double.valueOf(hit.getCovMatrix()[j])) ; 
+			    }
+			    ps.println(")");
 			}
 		}
 		

@@ -12,7 +12,7 @@
 *  H. Vogt
 *  05/06/2004  (reconstruction part added)
 *
-*  $Id: lciof77api.inc,v 1.42 2010-06-01 10:19:37 engels Exp $
+*  $Id: lciof77api.inc,v 1.43 2010-06-02 10:59:33 engels Exp $
 ***************************************************
 
 #include "lciof77pointer.inc"
@@ -127,10 +127,11 @@ c-----the MCParticle interface
 c-----the SimTrackerHit interface
       PTRTYPE lcsthcreate, lcsthgetmcparticle
       integer lcsthdelete, lcsthgetcellid
-      real    lcsthgetdedx, lcsthgettime
+      real    lcsthgetdedx, lcsthgetedep, lcsthgettime
       double precision lcsthgetposition
       real lcsthgetmomentum, lcsthgetpathlength
-      integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx   
+      integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx
+      integer lcsthsetedep
       integer lcsthsettime, lcsthsetmcparticle, lcsthsetmomentum
       integer lcsthsetmomentumxyz, lcsthsetpathlength
 
@@ -233,11 +234,10 @@ c-----the TrackerHit interface
       PTRTYPE lctrhcreate, lctrhgetrawhits
       integer lctrhdelete, lctrhid, lctrhgetposition, lctrhgetcovmatrix
       integer lctrhgettype, lctrhgetquality
-      real    lctrhgetdedx, lctrhgettime
-      real    lctrhgetcharge, lctrhgetchargeerr
+      real    lctrhgetdedx, lctrhgetedep, lctrhgetedeperr, lctrhgettime
       integer lctrhsetposition, lctrhsetcovmatrix
       integer lctrhsettime, lctrhsettype, lctrhsetquality
-      integer lctrhsetcharge, lctrhsetchargeerr
+      integer lctrhsetdedx, lctrhsetedep, lctrhsetedeperr
       integer lctrhaddrawhit
 
 c-----the Track interface

@@ -11,7 +11,7 @@ typedef std::vector<TrackerHit*> TrackerHitVec ;
 /** A generic tracker hit to be used by pattern recognition.
  * 
  * @author gaede
- * @version $Id: TrackerHit.aid,v 1.14 2010-06-01 10:19:36 engels Exp $
+ * @version $Id: TrackerHit.aid,v 1.15 2010-06-02 10:59:33 engels Exp $
  */
 
 public interface TrackerHit extends LCObject {
@@ -34,9 +34,8 @@ public interface TrackerHit extends LCObject {
     public const FloatVec& getCovMatrix() const ;
     
     /** The dE/dx of the hit in [GeV].
-     *
-     *  DEPRECATED. Please use getCharge() instead.
-     */ 	
+     *  DEPRECATED. renamed to getEDep()
+     */
     public float getdEdx() const ;
     
     /** The  time of the hit in [ns].
@@ -58,11 +57,11 @@ public interface TrackerHit extends LCObject {
     /** The quality bit flag of the hit */
     public int getQuality() const ;
 
-    /** The charge */
-    public float getCharge() const ;
+    /** The energy deposited on the hit [GeV] */
+    public float getEDep() const ;
 
-    /** The charge error*/
-    public float getChargeError() const ;
+    /** The error measured on EDep [GeV] */
+    public float getEDepError() const ;
 
     /** The raw data hits. 
      * Check getType() to get actual data type.

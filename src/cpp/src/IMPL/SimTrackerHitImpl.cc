@@ -7,7 +7,8 @@ namespace IMPL {
   
   SimTrackerHitImpl::SimTrackerHitImpl() :
     _cellID(0),
-    _dEdx(0),
+    //_dEdx(0),
+    _EDep(0),
     _time(0),
     _particle(0),
     _pathLength(0){
@@ -26,7 +27,13 @@ namespace IMPL {
 
   const double * SimTrackerHitImpl::getPosition() const { return _pos ; }
 
-  float SimTrackerHitImpl::getdEdx() const { return _dEdx ; }
+  // DEPRECATED. use getEDep()
+  float SimTrackerHitImpl::getdEdx() const {
+      //return _dEdx ;
+      return getEDep() ;
+  }
+
+  float SimTrackerHitImpl::getEDep() const { return _EDep ; }
 
   float SimTrackerHitImpl::getTime() const { return _time ; }
 
@@ -48,9 +55,16 @@ namespace IMPL {
     _pos[2] = pos[2] ; 
   }
 
+  // DEPRECATED. use setEDep()
   void SimTrackerHitImpl::setdEdx( float dedx )  {
-    checkAccess("SimTrackerHitImpl::setdEdx") ;
-    _dEdx = dedx ; 
+    //checkAccess("SimTrackerHitImpl::setdEdx") ;
+    //_dEdx = dedx ; 
+    SimTrackerHitImpl::setEDep( dedx ) ;
+  }
+
+  void SimTrackerHitImpl::setEDep( float e )  {
+    checkAccess("SimTrackerHitImpl::setEDep") ;
+    _EDep = e ;
   }
 
   void SimTrackerHitImpl::setTime( float t )  { 

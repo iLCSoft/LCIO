@@ -358,7 +358,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " cellID[indices] | position (x,y,z) | dEdx | time  | PDG of MCParticle"  ;
+	      << " cellID[indices] | position (x,y,z) | EDep | time  | PDG of MCParticle"  ;
 
     if( pStored ) 
       std::cout	 << " | (px, py, pz) | pathLength "  ;
@@ -385,7 +385,7 @@ namespace UTIL {
 	   << hit->getPosition()[0] << ", "
 	   << hit->getPosition()[1] << ", "
 	   << hit->getPosition()[2] << ") | " 
-	   << hit->getdEdx () << " | "
+	   << hit->getEDep () << " | "
 	   << hit->getTime () << " | "
   	   << pdgid ; 
 
@@ -430,7 +430,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] | position (x,y,z)                | time      |type |  charge   | charge_err" 
+	      << " [   id   ] | position (x,y,z)                | time      |type |   EDep    | EDepError" 
 	      << endl 
 	      << endl ;
     
@@ -452,8 +452,8 @@ namespace UTIL {
 	     //, hit->getdEdx() 
 	     , hit->getTime() 
 	     , hit->getType() 
-         , hit->getCharge()
-         , hit->getChargeError()
+         , hit->getEDep()
+         , hit->getEDepError()
 	     ) ;
 
       const LCObjectVec& rawHits = hit->getRawHits() ;

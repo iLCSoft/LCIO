@@ -40,8 +40,14 @@ namespace IMPL {
     virtual const double * getPosition() const ;
 
     /** Returns  the dE/dx of the hit.
+     *  DEPRECATED. renamed to getEDep()
      */ 	
     virtual float getdEdx() const ;
+
+    /** Returns the deposited energy of the hit [GeV]
+     */ 	
+    virtual float getEDep() const ;
+
 
     /** Returns the  time of the hit. TO DO needs definition.
      */
@@ -74,8 +80,13 @@ namespace IMPL {
     void setPosition( double pos[3])  ;
 
     /** Sets dE/dx.
+     *  DEPRECATED. renamed to setEDep()
      */
-    void setdEdx( float dEdX )  ;
+    void setdEdx( float dEdX ) ;
+
+    /** Sets EDep
+     */
+    void setEDep( float e )  ;
 
     /** Sets the time.
      */
@@ -100,7 +111,8 @@ namespace IMPL {
   protected:
     int _cellID ;
     double _pos[3] ;
-    float _dEdx ;
+    //float _dEdx ; // DEPRECATED. renamed to _EDep
+    float _EDep ;
     float _time ;
     EVENT::MCParticle* _particle ;
     float _p[3] ;

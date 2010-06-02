@@ -58,8 +58,8 @@ int main(int argc, char** argv ){
 
             for(int j=0;j<NHITS;j++){
                 TrackerHitImpl* trkHit = new TrackerHitImpl ;
-                trkHit->setCharge( i*j*117. ) ;
-                trkHit->setChargeError( (i+j)*.3 ) ;
+                trkHit->setEDep( i*j*117. ) ;
+                trkHit->setEDepError( (i+j)*.3 ) ;
                 double pos[3] = { i, j, i*j } ;
                 trkHit->setPosition( pos ) ;
                 trkHits->addElement( trkHit ) ;
@@ -99,10 +99,10 @@ int main(int argc, char** argv ){
 
                 TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
 
-                MYTEST( trkHit->getCharge() ,  i*j*117. , "charge" ) ;
+                MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
                 // remove float converstion and check what happens ;)
-                MYTEST( trkHit->getChargeError() ,  float((i+j)*.3) , "charge error" ) ;
-                //MYTEST( trkHit->getChargeError() ,  (i+j)*.3 , "charge error" ) ;
+                MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
+                //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;
 
                 const double* pos = trkHit->getPosition() ;
 

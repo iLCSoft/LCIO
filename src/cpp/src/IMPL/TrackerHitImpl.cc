@@ -8,9 +8,9 @@ namespace IMPL {
   TrackerHitImpl::TrackerHitImpl() :
     _type(0),
     //_dEdx(0),
+    _EDep(0),
+    _EDepError(0),
     _time(0),
-    _charge(0),
-    _chargeError(0),
     _quality(0) {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
@@ -31,9 +31,10 @@ namespace IMPL {
     return _cov ;
   }
 
+  // DEPRECATED. use getEDep()
   float TrackerHitImpl::getdEdx() const {
       //return _dEdx ;
-      return getCharge();
+      return getEDep();
   }
 
   float TrackerHitImpl::getTime() const { return _time ; }
@@ -75,24 +76,26 @@ namespace IMPL {
     _pos[2] = pos[2] ; 
   }
 
-  //void TrackerHitImpl::setdEdx( float dedx )  {
-  //  checkAccess("TrackerHitImpl::setdEdx") ;
-  //  _dEdx = dedx ; 
-  //}
+  // DEPRECATED. use setEDep()
+  void TrackerHitImpl::setdEdx( float dedx )  {
+    //checkAccess("TrackerHitImpl::setdEdx") ;
+    //_dEdx = dedx ; 
+    setEDep( dedx ) ;
+  }
+
+  void TrackerHitImpl::setEDep( float e )  { 
+    checkAccess("TrackerHitImpl::setEDep") ;
+    _EDep = e ; 
+  }
+
+  void TrackerHitImpl::setEDepError( float e )  { 
+    checkAccess("TrackerHitImpl::setEDepError") ;
+    _EDepError = e ; 
+  }
 
   void TrackerHitImpl::setTime( float t )  { 
     checkAccess("TrackerHitImpl::setTime") ;
     _time = t ; 
-  }
-
-  void TrackerHitImpl::setCharge( float charge )  { 
-    checkAccess("TrackerHitImpl::setCharge") ;
-    _charge = charge ; 
-  }
-
-  void TrackerHitImpl::setChargeError( float error )  { 
-    checkAccess("TrackerHitImpl::setChargeError") ;
-    _chargeError = error ; 
   }
 
   void TrackerHitImpl::setQuality( int quality )  { 

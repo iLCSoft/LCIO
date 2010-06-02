@@ -39,10 +39,20 @@ int lctrhgetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
   return LCIO::SUCCESS ;
 }
 
+// DEPRECATED. use lctrhgetedep()
 float lctrhgetdedx( PTRTYPE trhit ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  //return trh->getdEdx() ;
-  return trh->getCharge() ;
+  return trh->getdEdx() ;
+}
+
+float lctrhgetedep( PTRTYPE trhit ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getEDep() ;
+}
+
+float lctrhgetedeperr( PTRTYPE trhit ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getEDepError() ;
 }
 
 float lctrhgettime( PTRTYPE trhit ) {
@@ -58,16 +68,6 @@ float lctrhgettime( PTRTYPE trhit ) {
 int lctrhgettype( PTRTYPE trhit )  {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
   return trh->getType() ;
-}
-
-float lctrhgetcharge( PTRTYPE trhit ) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  return trh->getCharge() ;
-}
-
-float lctrhgetchargeerr( PTRTYPE trhit ) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  return trh->getChargeError() ;
 }
 
 int lctrhgetquality( PTRTYPE trhit )  {
@@ -97,11 +97,24 @@ int lctrhsetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
   return LCIO::SUCCESS ;
 }
 
-//int lctrhsetdedx( PTRTYPE trhit, float dedx) {
-//  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-//  trh->setdEdx( dedx ) ;
-//  return LCIO::SUCCESS ;
-//}
+// DEPRECATED. use lctrhsetedep()
+int lctrhsetdedx( PTRTYPE trhit, float dedx) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setdEdx( dedx ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrhsetedep( PTRTYPE trhit, float e ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setEDep( e ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrhsetedeperr( PTRTYPE trhit, float e ) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setEDepError( e ) ;
+  return LCIO::SUCCESS ;
+}
 
 int lctrhsettime( PTRTYPE trhit, float time) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
@@ -112,18 +125,6 @@ int lctrhsettime( PTRTYPE trhit, float time) {
 int lctrhsettype( PTRTYPE trhit, int type) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
   trh->setType( type ) ;
-  return LCIO::SUCCESS ;
-}
-
-int lctrhsetcharge( PTRTYPE trhit, float charge ) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  trh->setCharge( charge ) ;
-  return LCIO::SUCCESS ;
-}
-
-int lctrhsetchargeerr( PTRTYPE trhit, float error ) {
-  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  trh->setChargeError( error ) ;
   return LCIO::SUCCESS ;
 }
 

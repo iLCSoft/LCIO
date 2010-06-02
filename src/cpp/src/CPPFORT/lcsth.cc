@@ -42,9 +42,15 @@ float lcsthgetpathlength( PTRTYPE hit ){
   return sth->getPathLength() ;
 }
 
+// DEPRECATED. use lcsthgetedep
 float lcsthgetdedx( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   return sth->getdEdx() ;
+}
+
+float lcsthgetedep( PTRTYPE hit ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  return sth->getEDep() ;
 }
 
 float lcsthgettime( PTRTYPE hit ){
@@ -86,9 +92,16 @@ int lcsthsetpathlength(PTRTYPE hit, float pathLength) {
   return LCIO::SUCCESS ;
 }
 
+// DEPRECATED. use lcsthsetedep()
 int lcsthsetdedx( PTRTYPE hit, float dEdX ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   sth->setdEdx( dEdX ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcsthsetedep( PTRTYPE hit, float e ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  sth->setEDep( e ) ;
   return LCIO::SUCCESS ;
 }
 

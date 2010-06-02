@@ -17,6 +17,7 @@ double lcsthgetposition( PTRTYPE hit, int index )  ;
 float lcsthgetmomentum( PTRTYPE hit, int index )  ;
 float lcsthgetpathlength ( PTRTYPE hit )  ;
 float lcsthgetdedx( PTRTYPE hit )  ;
+float lcsthgetedep( PTRTYPE hit ) ;
 float lcsthgettime( PTRTYPE hit )  ;
 
 PTRTYPE lcsthgetmcparticle( PTRTYPE hit )  ;
@@ -27,6 +28,7 @@ int lcsthsetmomentum( PTRTYPE hit, float pos[3] )  ;
 int lcsthsetmomentumxyz( PTRTYPE hit, float px, float py, float pz ) ;
 int lcsthsetpathlength( PTRTYPE hit, float pathLength ) ;
 int lcsthsetdedx( PTRTYPE hit, float dEdX )  ;
+int lcsthsetedep( PTRTYPE hit, float e ) ;
 int lcsthsettime( PTRTYPE hit, float t )  ;
 int lcsthsetmcparticle( PTRTYPE hit,  PTRTYPE  particle )  ;
 
@@ -41,6 +43,7 @@ FCALLSCFUN2(DOUBLE, lcsthgetposition, LCSTHGETPOSITION, lcsthgetposition, CFORTR
 FCALLSCFUN2(FLOAT, lcsthgetmomentum, LCSTHGETMOMENTUM, lcsthgetmomentum, CFORTRANPNTR,  INT ) 
 FCALLSCFUN1(FLOAT, lcsthgetpathlength,LCSTHGETPATHLENGTH,lcsthgetpathlength,CFORTRANPNTR)
 FCALLSCFUN1(FLOAT, lcsthgetdedx,LCSTHGETDEDX,lcsthgetdedx,CFORTRANPNTR) 
+FCALLSCFUN1(FLOAT, lcsthgetedep,LCSTHGETEDEP,lcsthgetedep,CFORTRANPNTR) 
 FCALLSCFUN1(FLOAT, lcsthgettime,LCSTHGETTIME,lcsthgettime,CFORTRANPNTR) 
 
 FCALLSCFUN1(CFORTRANPNTR,lcsthgetmcparticle,LCSTHGETMCPARTICLE,lcsthgetmcparticle,CFORTRANPNTR) 
@@ -52,6 +55,7 @@ FCALLSCFUN4(INT, lcsthsetmomentumxyz, LCSTHSETMOMENTUMXYZ, lcsthsetmomentumxyz, 
             FLOAT, FLOAT, FLOAT )
 FCALLSCFUN2(INT, lcsthsetpathlength, LCSTHSETPATHLENGTH, lcsthsetpathlength, CFORTRANPNTR, FLOAT )
 FCALLSCFUN2(INT, lcsthsetdedx, LCSTHSETDEDX, lcsthsetdedx, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lcsthsetedep, LCSTHSETEDEP, lcsthsetedep, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcsthsettime, LCSTHSETTIME, lcsthsettime, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcsthsetmcparticle, LCSTHSETMCPARTICLE, lcsthsetmcparticle, CFORTRANPNTR, CFORTRANPNTR ) 
 }

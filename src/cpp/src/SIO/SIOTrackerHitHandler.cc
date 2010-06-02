@@ -36,17 +36,13 @@ namespace SIO{
         hit->setCovMatrix( cov ) ;
 
         //SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
-        if( _vers < SIO_VERSION_ENCODE( 1, 13 )   ){
-            // JE: if reading older files store dEdx as charge
-            SIO_DATA( stream ,  &(hit->_charge) , 1  ) ;
+        SIO_DATA( stream ,  &(hit->_EDep) , 1  ) ;
+
+        if( _vers > SIO_VERSION_ENCODE( 1, 12 )   ){
+            SIO_DATA( stream ,  &(hit->_EDepError) , 1  ) ;
         }
 
         SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
-
-        if( _vers > SIO_VERSION_ENCODE( 1, 12 )   ){
-            SIO_DATA( stream ,  &(hit->_charge) , 1  ) ;
-            SIO_DATA( stream ,  &(hit->_chargeError) , 1  ) ;
-        }
 
         if( _vers > SIO_VERSION_ENCODE( 1, 11 )   )
             SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
@@ -91,9 +87,9 @@ namespace SIO{
         }
 
         //LCSIO_WRITE( stream, hit->getdEdx()  ) ;
+        LCSIO_WRITE( stream, hit->getEDep()  ) ;
+        LCSIO_WRITE( stream, hit->getEDepError()  ) ;
         LCSIO_WRITE( stream, hit->getTime()  ) ;
-        LCSIO_WRITE( stream, hit->getCharge()  ) ;
-        LCSIO_WRITE( stream, hit->getChargeError()  ) ;
         LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
         //     const LCObject* raw = hit->getRawDataHit()  ;

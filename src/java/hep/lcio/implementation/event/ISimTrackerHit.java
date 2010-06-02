@@ -7,13 +7,14 @@ import hep.lcio.event.SimTrackerHit;
 /**
  * A default implementation of SimTrackerHit
  * @author Tony Johnson
- * @version $Id: ISimTrackerHit.java,v 1.10 2006-03-20 20:05:46 tonyj Exp $
+ * @version $Id: ISimTrackerHit.java,v 1.11 2010-06-02 10:59:34 engels Exp $
  */
 public class ISimTrackerHit extends ILCObject implements SimTrackerHit
 {
    protected Object particle;
    protected double[] position = new double[3];
-   protected float dEdx;
+   //protected float dEdx; // DEPRECATED. renamed to EDep
+   protected float EDep;
    protected float time;
    protected int cellID;
    protected float[] momentum = new float[3] ;
@@ -66,18 +67,33 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       return time;
    }
    
+   // DEPRECATED. renamed to getEDep()
    public float getdEdx()
    {
-      return dEdx;
+      //return dEdx;
+      return getEDep();
    }
    
+   // DEPRECATED. renamed to setEDep()
    public void setdEdx(float dEdx)
    {
-      checkAccess();
-      this.dEdx = dEdx;
+      //checkAccess();
+      //this.dEdx = dEdx;
+      setEDep( dEdx );
    }
    
-   public float[] getMomentum()
+   public float getEDep()
+   {
+      return EDep;
+   }
+
+   public void setEDep(float e)
+   {
+      checkAccess();
+      this.EDep = e;
+   }
+
+    public float[] getMomentum()
    {
       return momentum;
    }

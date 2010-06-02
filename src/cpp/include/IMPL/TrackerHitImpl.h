@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version $Id: TrackerHitImpl.h,v 1.13 2010-06-01 10:19:37 engels Exp $
+ * @version $Id: TrackerHitImpl.h,v 1.14 2010-06-02 10:59:33 engels Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -39,11 +39,17 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getCovMatrix() const ;
 
     /** The dE/dx of the hit in [GeV/mm].
-     *
-     *  DEPRECATED. use getCharge() instead.
-     *
+     *  DEPRECATED. renamed to getEDep()
      */ 	
     virtual float getdEdx() const ;
+
+    /** The deposited energy of the hit [GeV]
+     */
+    virtual float getEDep() const { return _EDep ; }
+
+    /** The error measured on EDep [GeV]
+     */
+    virtual float getEDepError() const { return _EDepError ; }
 
     /** The  time of the hit in [ns]. Is this needed ?
      */
@@ -60,14 +66,6 @@ namespace IMPL {
      * and "TrackerHitTypeValues".
      */
     virtual int getType() const ;
-
-    /** The charge of the hit.
-     */
-    virtual float getCharge() const { return _charge ; }
-
-    /** The charge error
-     */
-    virtual float getChargeError() const { return _chargeError ; }
 
     /** The quality bit flag of the hit.
      */
@@ -89,10 +87,10 @@ namespace IMPL {
     void setPosition( double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
     void setCovMatrix( float cov[TRKHITNCOVMATRIX]  );
-    //void setdEdx( float dedx ) ;
+    void setdEdx( float dedx ) ; // DEPRECATED. renamed to setEDep()
+    void setEDep( float e ) ;
+    void setEDepError( float e ) ;
     void setTime( float t ) ;
-    void setCharge( float charge ) ;
-    void setChargeError( float error ) ;
     void setQuality( int quality ) ;
     void setQualityBit( int bit , bool val=true ) ;
 
@@ -102,10 +100,10 @@ protected:
     int _type ;
     double _pos[3] ;
     EVENT::FloatVec _cov ;
-    //float _dEdx ;
+    //float _dEdx ; // DEPRECATED. renamed to _EDep
+    float _EDep ;
+    float _EDepError ;
     float _time ;
-    float _charge ;
-    float _chargeError ;
     int _quality ;
     EVENT::LCObjectVec _rawHits ;
     

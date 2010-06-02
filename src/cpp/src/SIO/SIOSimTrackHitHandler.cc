@@ -30,7 +30,9 @@ namespace SIO{
     SIO_DATA( stream ,  &(hit->_cellID) , 1  ) ;
     SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 
-    SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
+    //SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
+    SIO_DATA( stream ,  &(hit->_EDep) , 1  ) ;
+
     SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
 
     SIO_PNTR( stream , &(hit->_particle)  ) ;
@@ -67,7 +69,7 @@ namespace SIO{
     // we have to cast away the constness 
     double* pos = const_cast<double*> ( hit->getPosition() ) ; 
     SIO_DATA( stream,  pos , 3 ) ;
-    LCSIO_WRITE( stream, hit->getdEdx()  ) ;
+    LCSIO_WRITE( stream, hit->getEDep()  ) ;
     LCSIO_WRITE( stream, hit->getTime()  ) ;
     
     const MCParticle* part = hit->getMCParticle()  ;
