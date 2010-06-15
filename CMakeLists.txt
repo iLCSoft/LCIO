@@ -277,14 +277,14 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     ADD_CUSTOM_COMMAND(
         #OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
         OUTPUT  "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps" "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
-        # FIXME: latex returns error, using | type at the end ignores the exit code error
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
+        # FIXME: latex returns error, using | xargs at the end ignores the exit code error
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
+        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
         COMMAND "${DVIPS_CONVERTER}" ARGS -q -o refman.ps refman.dvi
         # FIXME psnup should be detected
         COMMAND "psnup" ARGS -q -2 refman.ps ${PROJECT_SOURCE_DIR}/doc/lciorefman.ps
         COMMAND "echo" ARGS "reference manual created successfully"
-        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | type
+        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
         COMMAND "${CMAKE_COMMAND}" -E copy refman.pdf ${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
         COMMENT "Building Documentation - Reference Manual..."
