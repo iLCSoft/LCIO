@@ -1,4 +1,5 @@
 #include "IMPL/SimCalorimeterHitImpl.h"
+#include "UTIL/LCWarning.h"
 #include <iostream>
 
 namespace IMPL{
@@ -73,12 +74,14 @@ namespace IMPL{
   }
   
   int SimCalorimeterHitImpl::getNMCParticles() const {
-    static bool first = true ;
-    if( first ){
-      std::cout << " WARNING >>>>>>>  SimCalorimeterHitImpl::getNMCParticles() is deprecated "
-                << " - please use  SimCalorimeterHitImpl::getNMCContributions() ! " << std::endl ;
-      first = false ;
-    }
+    //static bool first = true ;
+    //if( first ){
+    //  std::cout << " WARNING >>>>>>>  SimCalorimeterHitImpl::getNMCParticles() is deprecated "
+    //            << " - please use  SimCalorimeterHitImpl::getNMCContributions() ! " << std::endl ;
+    //  first = false ;
+    //}
+
+    UTIL::LCWarning::getInstance().printWarning( "SIMCALORIMETERHIT_DEPRECATED_GETNMCPARTICLES" ) ;
 
     return getNMCContributions() ;
   }

@@ -1,5 +1,6 @@
 #include "IMPL/TrackerHitImpl.h"
 #include "EVENT/LCIO.h"
+#include "UTIL/LCWarning.h"
 
 using namespace EVENT ;
 
@@ -33,6 +34,9 @@ namespace IMPL {
 
   // DEPRECATED. use getEDep()
   float TrackerHitImpl::getdEdx() const {
+
+      UTIL::LCWarning::getInstance().printWarning( "TRACKERHIT_DEPRECATED_GETDEDX" ) ;
+
       //return _dEdx ;
       return getEDep();
   }
@@ -78,6 +82,9 @@ namespace IMPL {
 
   // DEPRECATED. use setEDep()
   void TrackerHitImpl::setdEdx( float dedx )  {
+
+    UTIL::LCWarning::getInstance().printWarning( "TRACKERHIT_DEPRECATED_SETDEDX" ) ;
+
     //checkAccess("TrackerHitImpl::setdEdx") ;
     //_dEdx = dedx ; 
     setEDep( dedx ) ;

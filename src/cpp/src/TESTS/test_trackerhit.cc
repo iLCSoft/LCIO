@@ -58,7 +58,8 @@ int main(int argc, char** argv ){
 
             for(int j=0;j<NHITS;j++){
                 TrackerHitImpl* trkHit = new TrackerHitImpl ;
-                trkHit->setEDep( i*j*117. ) ;
+                //trkHit->setEDep( i*j*117. ) ;
+                trkHit->setdEdx( i*j*117. ) ;
                 trkHit->setEDepError( (i+j)*.3 ) ;
                 double pos[3] = { i, j, i*j } ;
                 trkHit->setPosition( pos ) ;
@@ -99,7 +100,8 @@ int main(int argc, char** argv ){
 
                 TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
 
-                MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
+                //MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
+                MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
                 // remove float converstion and check what happens ;)
                 MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
                 //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;

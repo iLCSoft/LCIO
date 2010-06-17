@@ -40,7 +40,8 @@ namespace IMPL {
     virtual const double * getPosition() const ;
 
     /** Returns  the dE/dx of the hit.
-     *  DEPRECATED. renamed to getEDep()
+     *  @deprecated
+     *  @see getEDep()
      */ 	
     virtual float getdEdx() const ;
 
@@ -80,7 +81,8 @@ namespace IMPL {
     void setPosition( double pos[3])  ;
 
     /** Sets dE/dx.
-     *  DEPRECATED. renamed to setEDep()
+     *  @deprecated
+     *  @see setEDep()
      */
     void setdEdx( float dEdX ) ;
 

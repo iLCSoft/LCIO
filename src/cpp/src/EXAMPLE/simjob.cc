@@ -323,7 +323,8 @@ int main(int argc, char** argv ){
 	  LCFloatVec* extF = new LCFloatVec ;
 	  LCIntVec*   extI = new LCIntVec ;
 	  
-	  hit->setdEdx( 30e-9 ) ; 
+	  //hit->setdEdx( 30e-9 ) ; 
+	  hit->setEDep( 30e-9 ) ; 
 
 	  double pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
 	  

@@ -15,7 +15,7 @@ namespace IMPL {
 /** Implementation of the  generic tracker hit. 
  * 
  * @author gaede
- * @version $Id: TrackerHitImpl.h,v 1.14 2010-06-02 10:59:33 engels Exp $
+ * @version $Id: TrackerHitImpl.h,v 1.15 2010-06-17 12:29:00 engels Exp $
  */
 
   class TrackerHitImpl : public EVENT::TrackerHit , public AccessChecked {
@@ -39,7 +39,8 @@ namespace IMPL {
     virtual const EVENT::FloatVec & getCovMatrix() const ;
 
     /** The dE/dx of the hit in [GeV/mm].
-     *  DEPRECATED. renamed to getEDep()
+     *  @deprecated
+     *  @see getEDep()
      */ 	
     virtual float getdEdx() const ;
 

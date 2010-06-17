@@ -120,6 +120,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/lStdHep.cc
   ./src/UTIL/lXDR.cc
   ./src/UTIL/LCTOOLS.cc
+  ./src/UTIL/LCWarning.cc
   ./src/UTIL/CellIDEncoder.cc
   ./src/UTIL/CollectionParameterMap.cc
   ./src/UTIL/PIDHandler.cc

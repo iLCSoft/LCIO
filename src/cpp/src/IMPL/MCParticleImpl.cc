@@ -1,5 +1,6 @@
 
 #include "IMPL/MCParticleImpl.h"
+#include "UTIL/LCWarning.h"
 
 #include "EVENT/LCIO.h"
 #include <iostream>
@@ -83,23 +84,29 @@ namespace IMPL {
   }
 
   int MCParticleImpl::getNumberOfParents() const { 
-    static bool first = true ;
-    if( first ){
-      std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
-		<< " - please use  MCParticleImpl::getParents().size() ! " << std::endl ;
-      first = false ;
-    }
+    //static bool first = true ;
+    //if( first ){
+    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
+	//	<< " - please use  MCParticleImpl::getParents().size() ! " << std::endl ;
+    //  first = false ;
+    //}
+    
+    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFPARENTS" ) ;
+
     return _parents.size() ; 
   }
 
   MCParticle* MCParticleImpl::getParent(int i) const {
     
-    static bool first = true ;
-    if( first ){
-      std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
-		<< " - please use  MCParticleImpl::getParents()[i] ! " << std::endl ;
-      first = false ;
-    }
+    //static bool first = true ;
+    //if( first ){
+    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
+	//	<< " - please use  MCParticleImpl::getParents()[i] ! " << std::endl ;
+    //  first = false ;
+    //}
+
+    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETPARENT" ) ;
+
     try{
       //      return _parents.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
@@ -118,23 +125,29 @@ namespace IMPL {
 
 
   int MCParticleImpl::getNumberOfDaughters() const { 
-    static bool first = true ;
-    if( first ){
-      std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
-		<< " - please use  MCParticleImpl::getDaughters().size() ! " << std::endl ;
-      first = false ;
-    }
+    //static bool first = true ;
+    //if( first ){
+    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
+	//	<< " - please use  MCParticleImpl::getDaughters().size() ! " << std::endl ;
+    //  first = false ;
+    //}
+
+    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFDAUGHTERS" ) ;
+
     return _daughters.size() ; 
   }
 
   MCParticle* MCParticleImpl::getDaughter(int i) const {
     
-    static bool first = true ;
-    if( first ){
-      std::cout << " WARNING >>>>>>>  MCParticleImpl::getDaughter(i) is deprecated "
-		<< " - please use  MCParticleImpl::getDaughters()[i] ! " << std::endl ;
-      first = false ;
-    }
+    //static bool first = true ;
+    //if( first ){
+    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getDaughter(i) is deprecated "
+	//	<< " - please use  MCParticleImpl::getDaughters()[i] ! " << std::endl ;
+    //  first = false ;
+    //}
+
+    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETDAUGHTER" ) ;
+
     try{
       //      return _daughters.at(i) ;
       //FIXME gcc 2.95 doesn't know at(i) ??
