@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIORelation.java,v 1.4 2007-11-07 20:46:23 jeremy Exp $
+ * @version $Id: SIORelation.java,v 1.5 2010-06-17 13:06:50 gaede Exp $
  */
 class SIORelation extends ILCRelation
 {
@@ -33,13 +33,13 @@ class SIORelation extends ILCRelation
       if ((flag & 1<<31) != 0) out.writeFloat(relation.getWeight());
    }
    
-   public LCObject getTo()
+   public LCObject getFrom()
    {
       if (from == null) from = (LCObject) f.getObject();
       return from;
    }
    
-   public LCObject getFrom()
+   public LCObject getTo()
    {
       if (to == null) to = (LCObject) t.getObject();
       return to;
