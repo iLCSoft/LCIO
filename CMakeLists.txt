@@ -11,12 +11,14 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.4.6 )
 MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
 # allow more human readable "if then else" constructs
 SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
-# enable testing
-ENABLE_TESTING()
 ########################################################
 
 # project name
 PROJECT( LCIO )
+
+# enable testing
+ENABLE_TESTING()
+INCLUDE(CTest)
 
 # project version
 SET( LCIO_MAJOR_VERSION 1 )
