@@ -1328,10 +1328,10 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     for( int i=0 ; i< nPrint ; i++ ){
       Vertex* v = dynamic_cast<Vertex*>( col->getElementAt( i ) ) ;
       
-      if( i==0) { cout<<header(v); }
+      if( i==0) { cout<<header(*v); }
       //cout<<lcshort(v,col);
       cout<<lcshort(v);
-      if(i==nPrint-1){ cout<<tail(v); }
+      if(i==nPrint-1){ cout<<tail(*v); }
     }
   }
 
