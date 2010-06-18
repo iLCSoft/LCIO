@@ -4,9 +4,15 @@
 # @author Jan Engels, DESY
 #################################
 
+#SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
+
+SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${AID_GEN_CXX_HEADERS_DIR}" )
+
 INCLUDE_DIRECTORIES (
     "${LCIO_SOURCE_DIR}/sio/include"
     "${LCIO_SOURCE_DIR}/src/cpp/include"
+    "${AID_GEN_CXX_HEADERS_DIR}"
 )
 
 SET( LCIO_CPPFORT_SRCS
@@ -63,15 +69,6 @@ SET( LCIO_IMPL_SRCS
   ./src/IMPL/VertexImpl.cc
 )
 
-ADD_CUSTOM_COMMAND(
-    OUTPUT "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
-    COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    COMMENT "Generating header files with ant aid.generate..."
-)
-
-SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${LCIO_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
-
 SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
 )
@@ -126,6 +123,72 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/PIDHandler.cc
 )
 
+# EVENT aid files
+FILE( GLOB aid_headers "${LCIO_SOURCE_DIR}/src/aid/EVENT/*.aid" )
+
+SET( EVENT_AID_HEADERS_DEP_LIST ) 
+
+FOREACH( aid_file ${aid_headers} )
+
+    #MESSAGE( STATUS "looping: ${aid_file}" )
+
+    GET_FILENAME_COMPONENT( aid_file_basename ${aid_file} NAME_WE )
+
+    SET( gen_header_file "${AID_GEN_CXX_HEADERS_DIR}/EVENT/${aid_file_basename}.h" )
+
+    LIST( APPEND EVENT_AID_HEADERS_DEP_LIST "${gen_header_file}" )
+    LIST( APPEND EVENT_AID_HEADERS_DEP_LIST "${aid_file}" )
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${gen_header_file}"
+        #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        #COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
+        DEPENDS "${aid_file}"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        COMMENT "Generating header file ${aid_file_basename}.h"
+    )
+
+    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
+    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES GENERATED TRUE )
+
+ENDFOREACH()
+
+# IO aid files
+FILE( GLOB aid_headers "${LCIO_SOURCE_DIR}/src/aid/IO/*.aid" )
+
+SET( IO_AID_HEADERS_DEP_LIST ) 
+
+FOREACH( aid_file ${aid_headers} )
+
+    #MESSAGE( STATUS "looping: ${aid_file}" )
+
+    GET_FILENAME_COMPONENT( aid_file_basename ${aid_file} NAME_WE )
+
+    SET( gen_header_file "${AID_GEN_CXX_HEADERS_DIR}/IO/${aid_file_basename}.h" )
+
+    LIST( APPEND IO_AID_HEADERS_DEP_LIST "${gen_header_file}" )
+    LIST( APPEND IO_AID_HEADERS_DEP_LIST "${aid_file}" )
+
+    ADD_CUSTOM_COMMAND(
+        OUTPUT "${gen_header_file}"
+        #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        DEPENDS "${aid_file}"
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        COMMENT "Generating header file ${aid_file_basename}.h"
+    )
+
+    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
+    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES GENERATED TRUE )
+
+ENDFOREACH()
+
+SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
+SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
+
+
+
 #------ require proper C++ -------
 ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
@@ -159,8 +222,6 @@ ADD_LIBRARY( lib_LCIO
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
 )
-
-ADD_DEPENDENCIES( lib_LCIO "${LCIO_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
 
 SET_TARGET_PROPERTIES( lib_LCIO PROPERTIES
     # create *nix style library versions + symbolic links
@@ -409,6 +470,8 @@ INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include
   PATTERN "*CPPFORT*" EXCLUDE
   PATTERN "*CVS*" EXCLUDE)
 
+# install generated c++ headers (from aid files)
+INSTALL(DIRECTORY ${LCIO_BINARY_DIR}/include/ DESTINATION include )
 
 
 

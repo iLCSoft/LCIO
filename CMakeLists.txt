@@ -90,44 +90,44 @@ ELSE()
 ENDIF()
 
 # set environment variables to generate header files and jar library
-SET( ENV{JDK_HOME} "${JAVA_HOME}" )
-SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
-SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
-SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
+#SET( ENV{JDK_HOME} "${JAVA_HOME}" )
+#SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
+#SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
+#SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
 
 # generate header files ( ant aid.generate )
-IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
-
-    MESSAGE( STATUS "Generating header files with ant aid.generate..." )
-    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
-        ARGS aid.generate
-        OUTPUT_VARIABLE out_tmp
-        RETURN_VALUE out_ret )
-    # check if everything went ok
-    IF( NOT out_ret )
-        MESSAGE( STATUS "Header files successfully generated..." )
-    ELSE()
-        MESSAGE( STATUS "Error generating header files!!" )
-        MESSAGE( FATAL_ERROR "${out_tmp}" )
-    ENDIF()
-ENDIF()
+#IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
+#
+#    MESSAGE( STATUS "Generating header files with ant aid.generate..." )
+#    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
+#        ARGS aid.generate
+#        OUTPUT_VARIABLE out_tmp
+#        RETURN_VALUE out_ret )
+#    # check if everything went ok
+#    IF( NOT out_ret )
+#        MESSAGE( STATUS "Header files successfully generated..." )
+#    ELSE()
+#        MESSAGE( STATUS "Error generating header files!!" )
+#        MESSAGE( FATAL_ERROR "${out_tmp}" )
+#    ENDIF()
+#ENDIF()
 
 # generate lcio jar library ( ant aid )
-IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
-
-    MESSAGE( STATUS "Generating lcio jar library with ant aid..." )
-    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
-        ARGS aid
-        OUTPUT_VARIABLE out_tmp
-        RETURN_VALUE out_ret )
-    # check if everything went ok
-    IF( NOT out_ret )
-        MESSAGE( STATUS "lcio jar library successfully generated..." )
-    ELSE()
-        MESSAGE( STATUS "Error generating lcio.jar!!" )
-        MESSAGE( FATAL_ERROR "${out_tmp}" )
-    ENDIF()
-ENDIF()
+#IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
+#
+#    MESSAGE( STATUS "Generating lcio jar library with ant aid..." )
+#    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
+#        ARGS aid
+#        OUTPUT_VARIABLE out_tmp
+#        RETURN_VALUE out_ret )
+#    # check if everything went ok
+#    IF( NOT out_ret )
+#        MESSAGE( STATUS "lcio jar library successfully generated..." )
+#    ELSE()
+#        MESSAGE( STATUS "Error generating lcio.jar!!" )
+#        MESSAGE( FATAL_ERROR "${out_tmp}" )
+#    ENDIF()
+#ENDIF()
 
 
 # add custom target for building all documentation
@@ -167,17 +167,6 @@ IF( UNIX )
             COMMENT "Generating header files with ant aid.generate..."
             VERBATIM )
         
-        # moved to src/cpp/CMakeLists.txt
-        #ADD_CUSTOM_COMMAND(
-        #    OUTPUT "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
-        #    COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
-        #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        #    COMMENT "Generating header files with ant aid.generate..."
-        #    VERBATIM )
-        
-        #ADD_CUSTOM_TARGET( headers DEPENDS
-        #        "${PROJECT_BINARY_DIR}/src/cpp/include/EVENT/LCIO.h" )
-
         # create "always out-of-date" jar target
         ADD_CUSTOM_TARGET( jar
             COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
@@ -194,8 +183,13 @@ IF( UNIX )
 
         # tell make clean to also erase lcio.jar
         SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-            "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h"
+            "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT;${PROJECT_SOURCE_DIR}/src/cpp/include/IO"
         )
+
+        # unfortunately this does not work with *.java
+        #SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+        #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io"
+        #)
 
         #JAVADOC
         IF( JAVA_DOC )
@@ -314,12 +308,15 @@ ENDIF()
 
 # installation rules
 #IF( INSTALL_JAR )
-#    # make sure jar is built before calling make install
 #    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
 #    # install jar
 #    INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
 #ENDIF()
-INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib OPTIONAL )
+#INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib OPTIONAL )
+# make sure jar is built before calling make install
+INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
+INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
+
 IF( INSTALL_DOC )
     # make sure documentation is built before make install is called
     INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
