@@ -145,11 +145,14 @@ FOREACH( aid_file ${aid_headers} )
     ADD_CUSTOM_COMMAND(
         OUTPUT "${gen_header_file}"
         #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
-        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp
+        '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar'
+        org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property
+        config CPPHeaderGenerator "${aid_file}" > /dev/null
         #COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
         DEPENDS "${aid_file}"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Generating header file ${aid_file_basename}.h"
+        COMMENT "Generating header file EVENT/${aid_file_basename}.h"
     )
 
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
@@ -176,10 +179,13 @@ FOREACH( aid_file ${aid_headers} )
     ADD_CUSTOM_COMMAND(
         OUTPUT "${gen_header_file}"
         #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
-        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
+        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp
+        '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar'
+        org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property
+        config CPPHeaderGenerator "${aid_file}" > /dev/null
         DEPENDS "${aid_file}"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Generating header file ${aid_file_basename}.h"
+        COMMENT "Generating header file IO/${aid_file_basename}.h"
     )
 
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
