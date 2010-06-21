@@ -135,6 +135,7 @@ ADD_CUSTOM_TARGET( doc )
 
 # code for *nix only!
 IF( UNIX )
+
     # find shell
     FIND_PROGRAM( SH
       sh
@@ -147,71 +148,66 @@ IF( UNIX )
     )
     MARK_AS_ADVANCED( SH )
 
-    IF( SH )
-        # generate shell script for setting environment
-        # and calling ant aid
-        IF( NOT EXISTS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
-            MESSAGE( STATUS "Generating LCIO env init script..." )
-            FILE( WRITE "${PROJECT_BINARY_DIR}/lcio_env_init.sh"
-                "export LCIO=${PROJECT_SOURCE_DIR}\n"
-                "export JDK_HOME=${JAVA_HOME}\n"
-                "export JAVA_HOME=${JAVA_HOME}\n"
-                "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
-                "eval $*" )
-         ENDIF()
+    IF( NOT SH )
+        MESSAGE( FATAL_ERROR "unix shell not found" )
+    ENDIF()
 
-        # create "always out-of-date" headers target
-        ADD_CUSTOM_TARGET( headers
-            COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
+
+    # generate shell script for setting environment
+    # and calling ant aid
+    IF( NOT EXISTS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
+        MESSAGE( STATUS "Generating LCIO env init script..." )
+        FILE( WRITE "${PROJECT_BINARY_DIR}/lcio_env_init.sh"
+            "export LCIO=${PROJECT_SOURCE_DIR}\n"
+            "export JDK_HOME=${JAVA_HOME}\n"
+            "export JAVA_HOME=${JAVA_HOME}\n"
+            "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
+            "eval $*" )
+     ENDIF()
+
+    # create "always out-of-date" headers target
+    ADD_CUSTOM_TARGET( headers
+        COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        COMMENT "Generating header files with ant aid.generate..."
+        VERBATIM )
+    
+    # create "always out-of-date" jar target
+    ADD_CUSTOM_TARGET( jar
+        COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
+        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+        COMMENT "Building lcio jar library..."
+        VERBATIM )
+
+    # create custom target for cleaning class files
+    #ADD_CUSTOM_TARGET( jar_clean
+    #    COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant clean
+    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    #    COMMENT "Cleaning java classes with ant clean..."
+    #    VERBATIM )
+
+    # tell make clean to also erase lcio.jar
+    SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+        "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT;${PROJECT_SOURCE_DIR}/src/cpp/include/IO"
+    )
+
+    # unfortunately this does not work with *.java
+    #SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+    #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io"
+    #)
+
+    #JAVADOC
+    IF( JAVA_DOC )
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${PROJECT_SOURCE_DIR}/doc/api/index.html"
+            COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant doc
             WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-            COMMENT "Generating header files with ant aid.generate..."
+            COMMENT "Building Java API Documentation..."
             VERBATIM )
         
-        # create "always out-of-date" jar target
-        ADD_CUSTOM_TARGET( jar
-            COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-            COMMENT "Building lcio jar library..."
-            VERBATIM )
-
-        # create custom target for cleaning class files
-        #ADD_CUSTOM_TARGET( jar_clean
-        #    COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant clean
-        #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        #    COMMENT "Cleaning java classes with ant clean..."
-        #    VERBATIM )
-
-        # tell make clean to also erase lcio.jar
-        SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-            "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT;${PROJECT_SOURCE_DIR}/src/cpp/include/IO"
-        )
-
-        # unfortunately this does not work with *.java
-        #SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-        #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io"
-        #)
-
-        #JAVADOC
-        IF( JAVA_DOC )
-            ADD_CUSTOM_COMMAND(
-                OUTPUT "${PROJECT_SOURCE_DIR}/doc/api/index.html"
-                COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant doc
-                WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-                COMMENT "Building Java API Documentation..."
-                VERBATIM )
-            
-            ADD_CUSTOM_TARGET( doc_java DEPENDS "${PROJECT_SOURCE_DIR}/doc/api/index.html" )
-            # tell doc target to call doc_java
-            ADD_DEPENDENCIES( doc doc_java )
-        ENDIF()
-    ELSE()
-        MESSAGE( STATUS "Unix Shell needed for calling ant not found!!" )
-        IF( INSTALL_DOC )
-            MESSAGE( STATUS "WARNING: INSTALL_DOC forced to OFF and doc_java disabled!" )
-            SET( INSTALL_DOC OFF )
-        ELSE()
-            MESSAGE( STATUS "WARNING: doc_java target disabled!" )
-        ENDIF()
+        ADD_CUSTOM_TARGET( doc_java DEPENDS "${PROJECT_SOURCE_DIR}/doc/api/index.html" )
+        # tell doc target to call doc_java
+        ADD_DEPENDENCIES( doc doc_java )
     ENDIF()
 ENDIF()
 
