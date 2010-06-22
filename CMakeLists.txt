@@ -352,9 +352,12 @@ IF( BUILD_WITH_DCAP )
       MESSAGE( FATAL_ERROR "Check for DCAP: DCAP_HOME not set!! "
               "Please call cmake with -DDCAP_HOME=<path_to_DCAP>" )
   ENDIF()
-  INCLUDE_DIRECTORIES( ${DCAP_HOME}/include )
-  # moved to sio/CMakeLists.txt
+  
+  # --------- moved to sio/CMakeLists.txt --------
+  #INCLUDE_DIRECTORIES( ${DCAP_HOME}/include )
   #ADD_DEFINITIONS( "-DSIO_USE_DCAP" )
+  # ----------------------------------------------
+
   FIND_LIBRARY( DCAP_LIB NAMES dcap PATHS ${DCAP_HOME}/lib NO_DEFAULT_PATH )
   LINK_LIBRARIES( ${DCAP_LIB} ) 
 ENDIF()
