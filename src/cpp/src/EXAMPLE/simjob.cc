@@ -65,14 +65,15 @@ int main(int argc, char** argv ){
       
       if( argc > 1 ) { FILEN = argv[1] ; }
       
-      lcWrt->setCompressionLevel( 0 ) ;
+      //      lcWrt->setCompressionLevel(0 ) ;
 
       if( rn==0 ){
-	//	lcWrt->setCompressionLevel( 0 ) ;
+	// turn off compression for first run ...
+	lcWrt->setCompressionLevel( 0 ) ;             
 	lcWrt->open( FILEN , LCIO::WRITE_NEW )  ;
 
       }else{
-	//	lcWrt->setCompressionLevel( 9  ) ;  
+	lcWrt->setCompressionLevel( 9  ) ;  
 	lcWrt->open( FILEN , LCIO::WRITE_APPEND )  ;
       }
       // NB: in order to test writing multiple files we create a new LCWriter

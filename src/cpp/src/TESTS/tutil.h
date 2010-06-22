@@ -1,6 +1,8 @@
 #include <iostream>
 //#include <cstring>
 #include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
 
 class TEST{
   

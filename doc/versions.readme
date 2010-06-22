@@ -2,6 +2,88 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+==========
+ v01-51
+==========
+   
+  TO DO:
+  -----
+	* tools/freehep-sio-2.1-SNAPSHOT.jar: Latest snapshot of
+	  freehep-sio library. Should be updated to non-SNAPSHOT version
+	  before release
+
+
+
+  changes to EDM:
+  --------------
+     
+     - SimTrackerHit and TrackerHit:
+
+       -  renamed get/setdEdx() in  to get/setEDep() 
+          - energy deposited in the hit in GeV
+          - getdEdx() is deprecated and will result in a printed WARNING
+
+     - TrackerHit:
+
+         - added get/setEdepError()
+
+
+     - TrackerPulse:
+  
+         - added getCovarianceMatrix() for measurement errors of getCharge() and 
+           getTime()   [LCIO-72]
+
+
+  new features:
+  --------------
+
+    - improved direct access to events, by introducing 
+      additional records LCIOindex, LCIORandomAccess written on close()
+      ( no need for fast skip or creation of table of contents on open() )
+
+       - implemented in C++ and Java
+
+       - the binary 'addRandomAccess' can be used to add random access
+         records to existing older files (if stored in writable file system) 
+
+
+    - new ostream operator<<(T)  for LCIO classes in UTIL/Operators.h
+      e.g.:
+         cout << ((MCParticle*) c->getElementAt(i) )  << endl ; 
+ 
+   
+
+    - improved cmake support for LCIO developers  (J.Engels)
+
+        - generation of *.h files w/o ant 
+          -> proper dependiencies are observed for re-compiling
+
+        - add target for building reference manual
+
+
+    - LCWarning utility class for printing 'deprecated' warnings for   
+      n times per job
+
+
+    - made compatible w/ fcc 4.3.3
+
+
+    - lsh.cc: quit if CTRL-D (EOF) is pressed
+      (http://bugs.freehep.org/browse/LCIO-58)
+
+
+  bug fixes:
+  ----------
+    - SIORelation.java: exchanged getFrom() and getTo()
+      (SIODump had 'from' and 'to' exchanged)
+
+    - LCTOOLS.cc: protected against missing tracks and clusters (null pointers)
+      -> fixes seg. faults in dumpevent 
+
+
+//***********************************************************************
+
+
 =====================
  v01-12-03
 =====================

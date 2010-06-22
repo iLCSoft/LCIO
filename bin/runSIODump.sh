@@ -1,7 +1,7 @@
 #!/bin/sh
 
 LOCALCLASSPATH=$LCIO/lib/lcio.jar:$LCIO/tools/sio.jar:$LCIO/tools/jdom.jar:$LCIO/tools/saxpath.jar
-LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-sio-2.0.jar:$LCIO/tools/freehep-xdr-2.0.3.jar
+LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-sio-2.1-SNAPSHOT.jar:$LCIO/tools/freehep-xdr-2.0.4-SNAPSHOT.jar
 LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/jaxen-jdom.jar:$LCIO/tools/jaxen-core.jar:$LCIO/tools/jel.jar
 
 # OS specific support for Cygwin 

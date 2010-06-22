@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_record.cc,v 1.5 2008-05-28 14:02:09 engels Exp $
+// CVS $Id: SIO_record.cc,v 1.6 2010-06-22 13:49:54 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO record.                          
 // ----------------------------------------------------------------------------
@@ -145,9 +145,9 @@ std::pair< std::string const, SIO_block* >
     entry( *s_name, block );
 
 //
-// Insert the entry.  This may or may not succeed depending on whether the
-// name pre-exists.
+// Insert the new entry.
 //
+
 status = connectMap.insert( entry );
 if( status.second )
 {
@@ -160,13 +160,25 @@ if( status.second )
 }
 else
 {
-    if( verbosity >= SIO_ERRORS )
+  //fg:  no need to keep old block handler if user wants to connect a new one
+
+  status.first->second = block ;
+
+    if( verbosity >= SIO_ALL )
     {
         std::cout << "SIO: [/"  << name << "/" << entry.first << "] "
-                  << "Already connected"
+                  << "connected new handler "
                   << std::endl;
     }
-    return( SIO_RECORD_DUPCONNECT );
+
+
+//     if( verbosity >= SIO_ERRORS )
+//     {
+//         std::cout << "SIO: [/"  << name << "/" << entry.first << "] "
+//                   << "Already connected"
+//                   << std::endl;
+//     }
+//    return( SIO_RECORD_DUPCONNECT );
 }
 
 //

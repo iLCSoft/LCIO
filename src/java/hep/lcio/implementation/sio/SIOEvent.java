@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.44 2007-11-07 20:46:22 jeremy Exp $
+ * @version $Id: SIOEvent.java,v 1.45 2010-06-22 13:49:56 gaede Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -595,11 +595,12 @@ class SIOEvent extends ILCEvent
       }
    }
    
-   static void write(LCEvent event, SIOWriter writer) throws IOException
+   static long write(LCEvent event, SIOWriter writer) throws IOException
    {
-      writer.createRecord(SIOFactory.eventHeaderRecordName, SIOFactory.compressionMode);
+      long recordLocation = writer.createRecord(SIOFactory.eventHeaderRecordName, SIOFactory.compressionMode);
       SIOEvent.writeData(event, writer, true);
       writer.createRecord(SIOFactory.eventRecordName, SIOFactory.compressionMode);
       SIOEvent.writeData(event, writer, false);
+      return recordLocation;
    }
 }

@@ -1,2 +1,2 @@
 @echo off
-java -cp %LCIO%/lib/lcio.jar;%LCIO%/tools/sio.jar;%LCIO%/tools/jdom.jar;%LCIO%/tools/saxpath.jar;%LCIO%/tools/jaxen-jdom.jar;%LCIO%/tools/jaxen-core.jar;%LCIO%/tools/jel.jar hep.lcio.util.SIODump %*
+java -cp "%LCIO%/lib/lcio.jar;%LCIO%/tools/freehep-sio-2.1-SNAPSHOT.jar;%LCIO%/tools/freehep-xdr-2.0.4-SNAPSHOT.jar;%LCIO%/tools/jdom.jar;%LCIO%/tools/saxpath.jar;%LCIO%/tools/jaxen-jdom.jar;%LCIO%/tools/jaxen-core.jar;%LCIO%/tools/jel.jar" hep.lcio.util.SIODump %*

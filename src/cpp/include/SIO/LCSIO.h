@@ -3,11 +3,86 @@
 
 #include "LCIOTypes.h"
 
-class SIO_stream ;
+#include "SIO_record.h" 
+#include "SIO_definitions.h"
 
 #include <string>
 
+// record and block names used in LCIO-SIO
+#define LCSIO_RUNRECORDNAME    "LCRunHeader"
+#define LCSIO_RUNBLOCKNAME     "RunHeader"
+#define LCSIO_EVENTRECORDNAME  "LCEvent"
+#define LCSIO_EVENTBLOCKNAME   "Event"
+#define LCSIO_HEADERRECORDNAME "LCEventHeader"
+#define LCSIO_HEADERBLOCKNAME  "EventHeader"
+
+#define LCSIO_ACCESSRECORDNAME "LCIORandomAccess"
+#define LCSIO_ACCESSBLOCKNAME  "LCIORandomAccess"
+#define LCSIO_RANDOMACCESS_SIZE 136 
+#define LCSIO_INDEXRECORDNAME "LCIOIndex"
+#define LCSIO_INDEXBLOCKNAME  "LCIOIndex"
+
+
+class SIO_stream ;
+
 namespace SIO {
+
+  class LCSIO ;
+
+  /** Manager class that holds instances of all known LCIO-SIO records.
+   *  Provides Unpack class for setting subsets of records to be unpacked.
+   *  Every new record type needs to be added here in SIORecords::ID and 
+   *  SIORecords::Unpack.
+   */
+  class SIORecords {
+
+    friend class LCSIO ;
+  public:
+    
+    enum ID{
+      Event=0,
+      Header,
+      Run,
+      Access,
+      Index,
+      NumberOfRecords 
+    } ;
+    //-----------------------------------------------
+    /** Helper class that sets the unpack flag of known SIO records
+     *  as specified by the constructor. After an object of this class goes out of 
+     *  scope the original setting is restored. This is needed to have multiple
+     *  read streams (event overlay).
+     */
+    class Unpack{
+    public:
+      static const unsigned Event  = 0x0001 << SIORecords::Event ;
+      static const unsigned Header = 0x0001 << SIORecords::Header ;
+      static const unsigned Run    = 0x0001 << SIORecords::Run ;
+      static const unsigned Access = 0x0001 << SIORecords::Access ;
+      static const unsigned Index  = 0x0001 << SIORecords::Index ;
+
+      static const unsigned All = 0xFFFFFFFF ; 
+      
+      Unpack( unsigned recordFlag ) ;
+      ~Unpack() ;
+
+    protected:
+      bool _flags[ NumberOfRecords ] ;  
+    };
+    //-----------------------------------------------
+
+
+    SIO_record* operator[](size_t idx) ;
+
+    void setCompress( bool flag=true ) ;
+
+  protected:
+    void add(SIO_record*& rec, const char* name) ;
+
+    SIO_record* _records[ NumberOfRecords ] ;
+
+    SIORecords() ;
+  } ;
 
 
 #define LCSIO_READ( rec, pnt ) status = LCSIO::read( (rec), (pnt)  ); if( !(status & 1) ) return status;
@@ -26,14 +101,17 @@ namespace SIO {
   
   public :
   
-    // define some names of records and blocks
-    static const char* RUNRECORDNAME ; 
-    static const char* RUNBLOCKNAME ; 
-    static const char* EVENTRECORDNAME ; 
-    static const char* EVENTBLOCKNAME;
-    static const char* HEADERRECORDNAME ; 
-    static const char* HEADERBLOCKNAME;
-    static const char* FILE_EXTENSION ;
+    static SIORecords& records() ;
+
+//     // define some names of records and blocks
+//     static const char* RUNRECORDNAME ; 
+//     static const char* RUNBLOCKNAME ; 
+//     static const char* EVENTRECORDNAME ; 
+//     static const char* EVENTBLOCKNAME;
+//     static const char* HEADERRECORDNAME ; 
+//     static const char* HEADERBLOCKNAME;
+
+     static const char* FILE_EXTENSION ;
 
     /** the compression mode for SIO
      */
@@ -92,6 +170,13 @@ namespace SIO {
      */
     static std::string getValidSIOName(const std::string& aName ) ;
     //    static const char* getValidSIOName(const std::string& aName ) ;
+
+
+    /**Seek stream to the given absolute position - if pos<0 from end of file.
+     * @throw IOException
+     */
+    static void seekStream( SIO_stream* stream , EVENT::long64 pos) ;
+
 
   private:
 

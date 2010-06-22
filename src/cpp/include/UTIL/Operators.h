@@ -38,7 +38,7 @@
 // EXP: UNDER DEVELOPMENT!!!
 //
 // @author engels
-// @version $Id: Operators.h,v 1.3 2010-06-18 13:43:14 gaede Exp $
+// @version $Id: Operators.h,v 1.4 2010-06-22 13:49:55 gaede Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace UTIL{

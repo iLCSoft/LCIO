@@ -13,25 +13,25 @@ import hep.lcio.io.LCReader;
 import hep.lcio.io.LCRunListener;
 
 import java.io.EOFException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.16 2007-11-09 08:18:32 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.17 2010-06-22 13:49:56 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
    private List eventListeners = new ArrayList();
    private List runListeners = new ArrayList();
-   private SIOReader reader;
-
-   private String[] _filenames ;
-   private int _currentIndex ;
+   protected SIOReader reader;
+   private List<String> filenames;
+   private int currentFile;
 
    public void close() throws IOException
    {
@@ -40,7 +40,9 @@ class SIOLCReader implements LCReader
 
    public void open(String filename) throws IOException
    {
-      reader = new SIOReader(new FileInputStream(filename));
+      filenames = Collections.singletonList(filename);
+      currentFile=0;
+      reader = new SIOReader(filename);
    }
 
     /** Opens a list of files for reading (read-only). All subsequent
@@ -50,12 +52,12 @@ class SIOLCReader implements LCReader
      *
      * @throws IOException
      */
-    public void open(String[] filenames) throws IOException{
-	_filenames = filenames ;
-	_currentIndex=0 ;
-	open( _filenames[ _currentIndex ] );
-    }
-
+   public void open(String[] files) throws IOException
+   {
+      filenames = Arrays.asList(files);
+      currentFile=0;
+      reader = new SIOReader(filenames.get(currentFile));
+   }
 
    public LCEvent readEvent(int runNumber, int evtNumber) throws IOException
    {
@@ -65,7 +67,7 @@ class SIOLCReader implements LCReader
          {            
             SIORecord record = reader.readRecord();
             String name = record.getRecordName();
-            if (SIOFactory.eventHeaderRecordName.equals(name)) continue;
+            if (!SIOFactory.eventHeaderRecordName.equals(name)) continue;
 
             SIOEvent event = new SIOEvent(record,LCIO.READ_ONLY);
             if (event.getRunNumber() == runNumber && event.getEventNumber() == evtNumber)
@@ -78,9 +80,7 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-	if( _filenames != null  && ++_currentIndex < _filenames.length ){
-	    close() ;
-	    open( _filenames[ _currentIndex ] ) ;
+	if( nextFile() ) {
 	    return readEvent( runNumber, evtNumber) ;
 	} 
 	return null;
@@ -105,32 +105,25 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-	if( _filenames != null  && ++_currentIndex < _filenames.length ){
-	    close() ;
-	    open( _filenames[ _currentIndex ] ) ;
+	if( nextFile() ){
 	    return readNextEvent( accessMode ) ;
 	} 
          return null;
       }
    }
 
-   public void skipNEvents(int n) 
+   public void skipNEvents(int n) throws IOException
    {
-      int nEvents = 0 ;
-	  try
-	  {
-	     while( nEvents < n )
-	     {
-		    SIORecord record = reader.readRecord();
-		    String name = record.getRecordName();
-		    if ( ! name.equals( SIOFactory.eventHeaderRecordName) )
-			   continue;
-             ++nEvents ;
-	     }
-	  }
-	  catch (IOException x)
-	  {
- 	  }
+      //FIXME: This does not work for multiple files
+      int nEvents = 0;
+      while( nEvents < n )
+      {
+        SIORecord record = reader.readRecord();
+        String name = record.getRecordName();
+        if ( ! name.equals( SIOFactory.eventHeaderRecordName) )
+           continue;
+        ++nEvents ;
+      }
    }
    public LCEvent readNextEvent() throws IOException
    {
@@ -154,22 +147,20 @@ class SIOLCReader implements LCReader
                continue;
 
             SIOBlock block = record.getBlock();
-			int major = block.getMajorVersion() ;
-			int minor = block.getMinorVersion() ;
-			if (( major < 1) && ( minor < 8))
+            int major = block.getMajorVersion() ;
+            int minor = block.getMinorVersion() ;
+            if (( major < 1) && ( minor < 8))
                throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
-	    // FIX ME: need to set access mode here....
+            // FIXME: need to set access mode here....
             return new SIORunHeader(block.getData(),major,minor);
          }
       }
       catch (EOFException x)
       {
-	if( _filenames != null  && ++_currentIndex < _filenames.length ){
-	    close() ;
-	    open( _filenames[ _currentIndex ] ) ;
-	    return readNextRunHeader( accessMode ) ;
-	} 
+        if(nextFile() ){
+            return readNextRunHeader( accessMode ) ;
+        }
          return null;
       }
    }
@@ -194,17 +185,17 @@ class SIOLCReader implements LCReader
                {
                   SIOBlock block = record.getBlock();
 
-     			  int major = block.getMajorVersion() ;
-	    		  int minor = block.getMinorVersion() ;
-		    	  if (( major < 1) && ( minor < 8))
+                  int major = block.getMajorVersion() ;
+                  int minor = block.getMinorVersion() ;
+                  if (( major < 1) && ( minor < 8))
                      throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
 
                   SIORunHeader header = new SIORunHeader(block.getData(),major,minor);
                   for (int i = 0; i < l; i++){
-		      // FIX ME: need to set access mode here....
+		      // FIXME: need to set access mode here....
                      ((LCRunListener) runListeners.get(i)).processRunHeader(header);
                      ((LCRunListener) runListeners.get(i)).modifyRunHeader(header);
-		          }
+                  }
                }
             }
             else if (record.getRecordName().equals(SIOFactory.eventHeaderRecordName))
@@ -216,18 +207,17 @@ class SIOLCReader implements LCReader
 		  // fg20070813 changed order of update and process to be consistent with C++
 		  // (needed for Marlin modifying processors )
 		  event.setReadOnly(false);
-                 event.readData(reader.readRecord());
-                 for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).modifyEvent(event); }
-                 for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).processEvent(event); }
+                  event.readData(reader.readRecord());
+                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).modifyEvent(event); }
+                  for (int i = 0; i < l; i++){ ((LCEventListener) eventListeners.get(i)).processEvent(event); }
                }
             }
          }
       }
       catch (EOFException x)
       {
-	if( _filenames != null  && ++_currentIndex < _filenames.length ){
-	    close() ;
-	    open( _filenames[ _currentIndex ] ) ;
+	if( nextFile() ){
+            // FIXME: We need to subtract the number of records already read
 	    readStream( maxRecords ) ;
 	} 
 
@@ -237,7 +227,6 @@ class SIOLCReader implements LCReader
             throw x;
       }
    }
-
    public void registerLCEventListener(LCEventListener ls)
    {
       eventListeners.add(ls);
@@ -258,4 +247,13 @@ class SIOLCReader implements LCReader
       runListeners.remove(ls);
    }
 
+   private boolean nextFile() throws IOException
+   {
+      if (++currentFile < filenames.size()) {
+          close();
+          reader = new SIOReader(filenames.get(currentFile));
+          return true;
+      }
+      else return false;
+   }
 }

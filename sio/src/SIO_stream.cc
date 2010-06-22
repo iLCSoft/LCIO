@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_stream.cc,v 1.8 2009-10-27 16:01:17 gaede Exp $
+// CVS $Id: SIO_stream.cc,v 1.9 2010-06-22 13:49:54 gaede Exp $
 // ----------------------------------------------------------------------------
 // => Controller for a single SIO stream.                          
 // ----------------------------------------------------------------------------
@@ -433,7 +433,7 @@ int
     z_stat;
 
 static char
-    SIO_filemode[3][3] = { "rb", "wb", "ab" };
+  SIO_filemode[4][3] = { "rb", "wb", "ab","r+" };
 
 //
 // Can't open what ain't closed!
@@ -452,17 +452,17 @@ if( state == SIO_STATE_OPEN || state == SIO_STATE_ERROR )
 //
 // Can't open in mode undefined.
 //
-if( i_mode == SIO_MODE_UNDEFINED )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot open in mode SIO_MODE_UNDEFINED"
-                  << std::endl;
-    }
-    return( SIO_STREAM_BADMODE );
-}
-
+ if( i_mode == SIO_MODE_UNDEFINED )
+   {
+     if( verbosity >= SIO_ERRORS )
+       {
+	 std::cout << "SIO: ["  << name << "//] "
+		   << "Cannot open in mode SIO_MODE_UNDEFINED"
+		   << std::endl;
+       }
+     return( SIO_STREAM_BADMODE );
+   }
+ 
 //
 // Open the file.
 //
@@ -573,29 +573,36 @@ return( SIO_STREAM_SUCCESS );
 }
 
 
+//fg: need ftell for direct access 
+SIO_64BITINT SIO_stream::currentPosition() { 
+
+  return  FTELL( handle ) ; 
+}
 
 //
 //fg: add method to position the file pointer
 //
-unsigned int SIO_stream::seek(SIO_64BITINT pos) {  
+unsigned int SIO_stream::seek(SIO_64BITINT pos, int whence) {  
   
   unsigned int status;
   
-  //
-  // This must be a readable stream!
-  //
-  if( mode != SIO_MODE_READ ) {
+  //fg:  also need the seek in 'append' mode ( delete old file record )
+//   //
+//   // This must be a readable stream!
+//   //
+//   if( mode != SIO_MODE_READ ) {
     
-    if( verbosity >= SIO_ERRORS ) {
+//     //    if( verbosity >= SIO_ERRORS ) {
+//     if( true ) {
       
-      std::cout << "SIO: ["  << name << "//] "
-		<< "Cannot seek (stream is write only)"
-		<< std::endl;
-    }
-    return( SIO_STREAM_WRITEONLY );
-  }
+//       std::cout << "SIO: ["  << name << "//] "
+// 		<< "Cannot seek (stream is write only)"
+// 		<< std::endl;
+//     }
+//     return( SIO_STREAM_WRITEONLY );
+//   }
 
-  status = FSEEK( handle, pos , SEEK_SET )  ;
+  status = FSEEK( handle, pos , whence )  ;
   
   if( status != 0 ) {
     
@@ -610,7 +617,26 @@ unsigned int SIO_stream::seek(SIO_64BITINT pos) {
     return( SIO_STREAM_EOF );
   }
   
+//   //FIXME: debug...
+//   std::cout << " SIO_stream::seek( " << pos << ", " << whence << " ) - ftell : " << FTELL( handle ) 
+// 	    << " stream-state: " << state << std::endl ;
+
   return( SIO_STREAM_SUCCESS );
+}
+
+unsigned int SIO_stream::reset(SIO_64BITINT pos){
+
+  unsigned int status;
+
+  status = seek( pos ) ;
+
+  if( status == SIO_STREAM_SUCCESS ){
+
+    // if we can seek the file  the stream should be fine ...
+    state = SIO_STATE_OPEN ;
+  }
+
+  return status ;
 }
 
 
@@ -1158,6 +1184,11 @@ rec_name = i_name;
 buffer = bufloc;
 
 //
+// Save begin of record (current file end) 
+//
+recPos = FTELL( handle ) ;
+
+//
 // Output: 1) A placeholder for the record header length.
 //         2) A 'framing' marker (to help in debugging).
 //         3) An options word.
@@ -1213,6 +1244,12 @@ if( !(status & 1) )
 ucmp_length = (buffer - bufloc) - head_length;
 SIO_functions::copy( UCHR_CAST(&ucmp_length), (bufloc + ucmp_length_off),
                      SIO_LEN_QB,              1                        );
+
+// //debug
+// std::cout << "*************** SIO: ["  << name << "/" << rec_name << "/] "
+// << "writing record -  compressed : "  << compress 
+// << std::endl;
+
 
 //
 // Write out the complete record.

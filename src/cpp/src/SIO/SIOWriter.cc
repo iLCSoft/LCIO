@@ -11,6 +11,9 @@
 //#include "SIO/SIOLCRelationHandler.h" 
 #include "SIO/SIORunHeaderHandler.h" 
 
+#include "SIO/SIORandomAccessHandler.h"
+#include "SIO/SIOIndexHandler.h"
+
 #include "LCIOSTLTypes.h"
 
 #include "SIO_streamManager.h" 
@@ -32,12 +35,6 @@ using namespace IMPL ;
 
 namespace SIO {
 
-  SIO_record * SIOWriter::_evtRecord = 0 ;
-  SIO_record * SIOWriter::_hdrRecord = 0 ;
-  SIO_record * SIOWriter::_runRecord = 0 ;
-  
-
-
   SIOWriter::SIOWriter() :  _stream(0),
 			    _compressionLevel(-1), 
 			    _hdrHandler(0), 
@@ -57,24 +54,21 @@ namespace SIO {
 //     SIO_blockManager::setVerbosity(  SIO_ERRORS ) ;
 
 
-    _runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
-    _hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
+    _runHandler = new SIORunHeaderHandler( LCSIO_RUNBLOCKNAME  ) ;
+    _hdrHandler = new SIOEventHandler( LCSIO_HEADERBLOCKNAME ) ;
   
+//     _evtRecord = LCSIO::records()[ SIORecords::Event ] ;
+//     _hdrRecord = LCSIO::records()[ SIORecords::Header ] ;
+//     _runRecord = LCSIO::records()[ SIORecords::Run ] ;
+    
+    LCSIO::records() ; // initialize global SIO records
+
     LCIOExceptionHandler::createInstance() ;
 
   }
 
   SIOWriter::~SIOWriter(){
     
-    // delete and disconnect all existing handlers (SIO_blocks)
-    //     typedef std::vector< SIOCollectionHandler* >::iterator CHI ;
-    //     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
-    //       _evtRecord->disconnect( *ch );
-    //       delete *ch ;
-    //     }
-    //     _runRecord->disconnect( _runHandler ) ;
-    //     _hdrRecord->disconnect( _hdrHandler ) ;
-    //     //delete evtP ;
     delete _hdrHandler ;
     delete _runHandler ;
     SIO_blockManager::clear();
@@ -138,38 +132,51 @@ namespace SIO {
     // SIO_stream takes any value and maps it to [-1,0,1...,9]
     _stream->setCompressionLevel( _compressionLevel ) ;
     
-    
+
     unsigned int  status = 0  ;
+    
+
     switch( writeMode ) 
       {
       case EVENT::LCIO::WRITE_NEW : 
+
 	status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_NEW ) ; 
+
 	break ;
+
       case EVENT::LCIO::WRITE_APPEND : 
-	status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_APPEND ) ; 
+
+	// try to read the last LCIORandomAccess record at the end --------------------
+	status  = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ; 
+
+	if( status != SIO_STREAM_SUCCESS ) 
+	  throw IOException( std::string( "[SIOWriter::open()] Can't open stream for reading TOC: "
+					  + sioFilename ) ) ;
+
+	bool hasRandomAccess = _raMgr.initAppend( _stream ) ;
+	
+ 	_stream->close() ;
+
+	if( hasRandomAccess ) {
+	  status  = _stream->open( sioFilename.c_str() , SIO_MODE_READ_WRITE ) ; // SIO_MODE_WRITE_APPEND ) ; 
+	  // position at the beginnning of the file record which will then be overwritten with the next record ...
+	  LCSIO::seekStream( _stream, -LCSIO_RANDOMACCESS_SIZE ) ; 
+	} else {
+
+	  // --- old files: ll simjopen the file in append mode 	
+	  status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_APPEND ) ; 
+
+	}
+
 	break ;
       }
 
     if( !(status &1) )
       throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " 
 				      +  sioFilename ) ) ;
-      
-     // tell SIO the record names if not yet known 
-     if( (_runRecord = SIO_recordManager::get( LCSIO::RUNRECORDNAME )) == 0 )
-     _runRecord = SIO_recordManager::add( LCSIO::RUNRECORDNAME ) ;
-
-     if( (_hdrRecord = SIO_recordManager::get( LCSIO::HEADERRECORDNAME )) == 0 )
-     _hdrRecord = SIO_recordManager::add( LCSIO::HEADERRECORDNAME ) ;
-
-     if( (_evtRecord = SIO_recordManager::get( LCSIO::EVENTRECORDNAME )) ==0 ) 
-     _evtRecord = SIO_recordManager::add( LCSIO::EVENTRECORDNAME ) ;
-
-
-     
-     _hdrRecord->setCompress( _compressionLevel != 0 ) ;
-     _evtRecord->setCompress( _compressionLevel != 0 ) ;
-     _runRecord->setCompress( _compressionLevel != 0 ) ; 
-     
+    
+    
+    LCSIO::records().setCompress( _compressionLevel != 0 ) ;  
   }
 
   void SIOWriter::setCompressionLevel(int level) {
@@ -179,32 +186,26 @@ namespace SIO {
 
   void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)  throw(IOException, std::exception) {
 
-    // create a new handler for every new run 
-    
-//     if( !_runHandler){
-//       _runHandler = dynamic_cast<SIORunHeaderHandler*> 
-// 	( SIO_blockManager::get( LCSIO::RUNBLOCKNAME  ) ) ;
-      
-//       if( _runHandler == 0 ) 
-// 	_runHandler = new SIORunHeaderHandler( LCSIO::RUNBLOCKNAME  ) ;
-      
-    _runRecord->disconnect(LCSIO::RUNBLOCKNAME ) ;
-    _runRecord->connect( _runHandler );
-//     }
 
-
+    SIO_record* runRecord = LCSIO::records()[ SIORecords::Run ] ;
+    runRecord->connect( _runHandler );
 
     _runHandler->setRunHeader(  hdr ) ;
     
     if( _stream->getState()== SIO_STATE_OPEN ){
       
-      _hdrRecord->setCompress( _compressionLevel != 0 ) ;
-      _evtRecord->setCompress( _compressionLevel != 0 ) ;
-      _runRecord->setCompress( _compressionLevel != 0 ) ; 
+      LCSIO::records().setCompress( _compressionLevel != 0 ) ; 
       
       // write LCRunHeader record
-      unsigned int status =  _stream->write( LCSIO::RUNRECORDNAME    ) ;
+      unsigned int status =  _stream->write( LCSIO_RUNRECORDNAME    ) ;
       
+
+      // store position for random access records
+      _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , _stream->lastRecordStart() ) ;
+
+//       std::cout << " writeRunHeader " << hdr->getRunNumber()   << " at position : " << _stream->lastRecordStart()  
+// 		<< std::endl ;
+
       if( !(status & 1)  )
 	throw IOException( std::string( "[SIOWriter::writeRunHeader] couldn't write run header to stream: "
 					+  *_stream->getName() ) ) ;
@@ -223,31 +224,15 @@ namespace SIO {
    */
   void SIOWriter::setUpHandlers(const LCEvent * evt){
   
-    // connect handlers to the record
-    // create them if needed, i.e. they are not already in SIO_blockManager !
     
-    //if( ! _hdrHandler ){
-    // should this go ? - create your own handler ....
-    //       _hdrHandler = dynamic_cast<SIOEventHandler*> 
-    // 	( SIO_blockManager::get( LCSIO::HEADERBLOCKNAME  ) ) ;
-    //       if( ! _hdrHandler )
-    // 	_hdrHandler = new SIOEventHandler( LCSIO::HEADERBLOCKNAME ) ;
-    //      _hdrRecord->connect( _hdrHandler ) ;
-    //} 
-    
-    _hdrRecord->disconnect( LCSIO::HEADERBLOCKNAME ) ;
-    _hdrRecord->connect( _hdrHandler ) ;
-    
-    
-    //     // disconnect old handlers from last event first 
-    //     typedef std::vector< SIO_block* >::iterator CHI ;
-    //     for( CHI ch = _connectedBlocks.begin() ; ch !=  _connectedBlocks.end() ; ch++){
-    //       _evtRecord->disconnect( *ch );
-    //     }
-    //     _connectedBlocks.clear() ;
+    //    _hdrRecord->disconnect( LCSIO_HEADERBLOCKNAME ) ;
+
+    SIO_record* hdrRecord = LCSIO::records()[ SIORecords::Header ] ;
+    hdrRecord->connect( _hdrHandler ) ;
     
     // need to disconnect all blocks for multiple I/O streams
-    _evtRecord->disconnectAll() ;
+    SIO_record* evtRecord = LCSIO::records()[ SIORecords::Event ] ;
+    evtRecord->disconnectAll() ;
     
     const std::vector<std::string>* strVec = evt->getCollectionNames() ;
     
@@ -266,8 +251,9 @@ namespace SIO {
 	  if( ch == 0 ) {
 	    ch =  new SIOCollectionHandler( *name, col->getTypeName())  ;
 	  }
-	  _evtRecord->connect( ch ) ;
-// 	  _connectedBlocks.push_back( ch ) ;  
+
+	  evtRecord->connect( ch ) ;
+
 	  ch->setCollection( col ) ; 
 	  
 	} 
@@ -275,43 +261,13 @@ namespace SIO {
 	  delete ch ;
 	  ch =  0 ;
 	}
-
+	
       }
-      
-
-
-
     } 
-
-//     //--- fg20040504 added relation handlers
-//     const StringVec* relNames = evt->getRelationNames() ;
-    
-//     for( StringVec::const_iterator relName = relNames->begin() ; relName != relNames->end() ; relName++){
-      
-      
-//       //      std::cout << " relation name:  " << *relName << std::endl ;
-
-//       SIORelationHandler* rh = dynamic_cast<SIORelationHandler*> 
-// 	( SIO_blockManager::get( relName->c_str() )  ) ;
-      
-//       LCRelation* rel = evt->getRelation( *relName ) ;
-//       //      LCRelationImpl* relImpl = dynamic_cast<LCRelationImpl*> ( rel ) ; 
-//       //      std::cout << " relation " << *relName << " casted  to LCRelationImpl  : " <<  relImpl << std::endl ;
-
-//       if( rh == 0 ) {
-// 	rh = new SIORelationHandler( *relName ) ;
-//       }
-//       _evtRecord->connect( rh ) ;
-//       _connectedBlocks.push_back( rh ) ;  
-//       rh->setRelation( rel ) ; 
-//     } 
-//     //--- fg20040504 ------
-    
   }
 
   void SIOWriter::writeEvent(const LCEvent* evt)  throw(IOException, std::exception) {
 
-    
     
     //here we set up the collection handlers 
     
@@ -321,9 +277,7 @@ namespace SIO {
       throw IOException(  "[SIOWriter::writeEvent] could not set up handlers " ) ;
     }
 
-    _hdrRecord->setCompress( _compressionLevel != 0 ) ;
-    _evtRecord->setCompress( _compressionLevel != 0 ) ;
-    _runRecord->setCompress( _compressionLevel != 0 ) ; 
+    LCSIO::records().setCompress( _compressionLevel != 0 ) ; 
 
     if( _stream->getState()== SIO_STATE_OPEN ){
    
@@ -332,8 +286,15 @@ namespace SIO {
 
       unsigned int  status = 0  ;
 
+
       // write LCEventHeader record
-      status =  _stream->write( LCSIO::HEADERRECORDNAME    ) ;
+      status =  _stream->write( LCSIO_HEADERRECORDNAME    ) ;
+
+      _raMgr.add( RunEvent(  evt->getRunNumber(), evt->getEventNumber()  ) , _stream->lastRecordStart() ) ;
+
+//       std::cout << " writeEventHeader " << evt->getRunNumber() << " - " << evt->getEventNumber()    
+//  		<< " at position : " << _stream->lastRecordStart()  
+//  		<< std::endl ;      
 
       if( ! (status & 1) )
 	throw IOException(  std::string("[SIOWriter::writeEvent] couldn't write event header to stream: "
@@ -341,7 +302,7 @@ namespace SIO {
       
       
       // write the event record
-      status =  _stream->write( LCSIO::EVENTRECORDNAME    ) ;
+      status =  _stream->write( LCSIO_EVENTRECORDNAME    ) ;
 
       if( ! (status & 1) )
 	throw IOException(  std::string("[SIOWriter::writeEvent] couldn't write event header to stream: "
@@ -357,6 +318,10 @@ namespace SIO {
 
   void SIOWriter::close() throw (IOException, std::exception) {
   
+    
+    _raMgr.writeRandomAccessRecords( _stream ) ;
+
+
     const std::string* streamName  = _stream->getName() ;
 
     int status  =  SIO_streamManager::remove( _stream ) ;

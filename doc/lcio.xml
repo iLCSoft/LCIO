@@ -12,6 +12,91 @@
 	length: mm, energy: GeV and time ns
 -->
 <sio>
+  <record name="LCIORandomAccess">
+     There are two types of LCIORandomAccess records
+       file record -- one per file, always first record on file
+       index record -- one or more per file, points to associated LCIOIndex record
+     <block name="LCIORandomAccess" major="1" minor="13">
+         <data type="int" name="runMin"/>
+         <data type="int" name="eventMin"/>
+         <data type="int" name="runMax"/>
+         <data type="int" name="eventMax"/>
+         <data type="int" name="nRunHeaders"/>
+         <data type="int" name="nEvents"/>
+         <data type="int" name="recordsAreInOrder"/>
+         <data type="long" name="indexLocation">
+            Location in file of associated index. Always null for file record.
+         </data>
+         <data type="long" name="prevLocation">
+            For file record location of first index record in file
+            For index record location of previous index record (or null if first)
+         </data>
+         <data type="long" name="nextLocation">
+            For file record location of last index record in file
+            For index record location of next index record (or null if last)
+         </data>
+         <data type="long" name="firstRecordLocation">
+             For index record location of the first record associated with this block
+         </data>
+	 <data type="int" name="recordSize"> ( 0xabcd0000 | sizeOfLCIORandomAccessRecord ) </data>
+     </block>
+  </record>
+  <record name="LCIOIndex">
+     <block name="LCIOIndex" major="1" minor="13">
+         <data type="int" name="controlWord">
+            Bit 0 = single Run
+            Bit 1 = long offset required
+            Bit 2 = LCParameters included - not yet implemented
+         </data>
+         <data type="int" name="runMin"/>
+         <data type="long" name="baseOffset"/>
+         <data type="int" name="size"/>
+         <!-- if condition="(controlWord&amp;2)==1">
+            <data type="short" name="nIntParameters"/>
+            <repeat count="nIntParameters">
+                <data type="string" name="key">key (name) of parameter</data>
+            </repeat>
+            <data type="short" name="nFloatParameters"/>
+            <repeat count="nFloatParameters">
+                <data type="string" name="key">key (name) of parameter</data>
+            </repeat>
+            <data type="short" name="nStringParameters"/>
+            <repeat count="nStringParameters">
+                <data type="string" name="key">key (name) of parameter</data>
+            </repeat>
+         </if -->
+         <repeat count="size">
+             <if condition="(controlWord&amp;1)==0">
+                <data type="int" name="runOffset">
+                    Relative to runMin
+                </data>
+             </if>
+             <data type="int" name="eventNumber">
+                Event number, or -1 for run header records
+             </data>
+             <if condition="(controlWord&amp;2)==1">
+                <data type="long" name="locationOffset">
+                    Relative to baseOffset
+                </data>
+             <else/>
+                <data type="int" name="locationOffset">
+                    Relative to baseOffset
+                </data>
+             </if>
+             <if condition="(controlWord&amp;4)==1">
+                <repeat count="nIntParameters">
+                    <data type="int" name="value"/>
+                </repeat>
+                <repeat count="nFloatParameters">
+                    <data type="float" name="value"/>
+                </repeat>
+                <repeat count="nStringParameters">
+                    <data type="string" name="value"/>
+                </repeat>
+             </if>
+         </repeat>
+     </block>
+  </record>
   <record name="LCRunHeader">
      <block name="RunHeader" major="1" minor="13">
         <data type="int" name="runNumber"></data>
