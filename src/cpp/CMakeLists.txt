@@ -4,17 +4,17 @@
 # @author Jan Engels, DESY
 #################################
 
-#SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
+SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
 SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
 
 SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${AID_GEN_CXX_HEADERS_DIR}" )
-
 
 INCLUDE_DIRECTORIES ( BEFORE "${AID_GEN_CXX_HEADERS_DIR}" )
 
 INCLUDE_DIRECTORIES (
     "${LCIO_SOURCE_DIR}/sio/include"
-    "${LCIO_SOURCE_DIR}/src/cpp/include"
+    "${LCIO_CXX_HEADERS_DIR}"
 #    "${AID_GEN_CXX_HEADERS_DIR}"
 )
 
@@ -130,72 +130,133 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/PIDHandler.cc
 )
 
-# EVENT aid files
-FILE( GLOB aid_headers "${LCIO_SOURCE_DIR}/src/aid/EVENT/*.aid" )
 
-SET( EVENT_AID_HEADERS_DEP_LIST ) 
+# ==== a macro for adding root dict objects ====================================
+# returns ROOT_DICT_LIB_SRCS: list including all generated srcs
+##
+SET( DICT_OUTPUT_DIR "${PROJECT_BINARY_DIR}/dict" )
+FILE( MAKE_DIRECTORY ${DICT_OUTPUT_DIR} )
+SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DICT_OUTPUT_DIR}" )
+MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
 
-FOREACH( aid_file ${aid_headers} )
+    #MESSAGE( STATUS "ADD_ROOT_DICT_OBJ: ${header_full_path} ${header_base_path}" )
+    #MESSAGE( STATUS "ADD_ROOT_DICT_OBJ: ${header_base_path}" )
 
-    #MESSAGE( STATUS "looping: ${aid_file}" )
+    IF( NOT DICT_OUTPUT_DIR )
+        MESSAGE( FATAL_ERROR "DICT_OUTPUT_DIR not set" )
+    ENDIF()
 
-    GET_FILENAME_COMPONENT( aid_file_basename ${aid_file} NAME_WE )
+    # generate a basename from the header + relative path, e.g.:
+    # include/EVENT/TrackerPulse.h  -->>  include_EVENT_TrackerPulse
+    #GET_FILENAME_COMPONENT( header_basename ${header_base_path} NAME_WE )
+    STRING( REPLACE "/" "_" dict_basename ${header_base_path} )
+    STRING( REPLACE ".h" "" dict_basename ${dict_basename} )
 
-    SET( gen_header_file "${AID_GEN_CXX_HEADERS_DIR}/EVENT/${aid_file_basename}.h" )
+    SET( dict_hdr "${dict_basename}_Linkdef.h" )
+    SET( dict_hdr_file "${DICT_OUTPUT_DIR}/${dict_hdr}" )
 
-    LIST( APPEND EVENT_AID_HEADERS_DEP_LIST "${gen_header_file}" )
-    LIST( APPEND EVENT_AID_HEADERS_DEP_LIST "${aid_file}" )
+    SET( dict_src "${dict_basename}_dict.cxx" )
+    SET( dict_src_file "${DICT_OUTPUT_DIR}/${dict_src}" )
+
+    # generate dict header file
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  ${dict_hdr_file}
+        COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#pragma link C++ defined_in \\\"${header_base_path}\\\"\; >${dict_hdr}"
+        #ARGS -E echo "\\#pragma link C++ defined_in ${header_base_path}\; >${dict_hdr}"
+        WORKING_DIRECTORY "${DICT_OUTPUT_DIR}"
+        DEPENDS ${header_full_path}
+        COMMENT "generating ${dict_hdr}"
+    )
+
+    # generate dict source file
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  ${dict_src_file}
+        #COMMAND ${ROOT_HOME}/bin/rootcint
+        #COMMAND $ENV{ROOTSYS}/bin/rootcint
+        COMMAND rootcint
+        ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT
+        -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_hdr_file}
+        WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
+        DEPENDS ${dict_hdr_file}
+        #COMMENT "generating ${dict_src}"
+        COMMENT "generating ${dict_src}"
+    )
+
+    LIST( APPEND ROOT_DICT_LIB_SRCS ${dict_src_file} )
+
+ENDMACRO()
+#===================================================================
+
+
+
+# ==== a macro for generating header files ==================
+#AID_GEN_CXX_HEADERS_DIR must be set
+MACRO( ADD_AID_HEADER aid_header_full_path aid_header_base_path )
+
+    #MESSAGE( STATUS "ADD_AID_HEADER: ${aid_header_full_path} ${aid_header_base_path}" )
+    #MESSAGE( STATUS "ADD_AID_HEADER: ${aid_header_base_path}" )
+
+    IF( NOT AID_GEN_CXX_HEADERS_DIR )
+        MESSAGE( FATAL_ERROR "AID_GEN_CXX_HEADERS_DIR not set" )
+    ENDIF()
+
+    GET_FILENAME_COMPONENT( header_basename ${aid_header_base_path} NAME_WE )
+    GET_FILENAME_COMPONENT( header_basepath ${aid_header_base_path} PATH )
+
+    #MESSAGE( STATUS "ADD_AID_HEADER: ${header_basepath}/${header_basename}" )
+
+    SET( gen_header_file "${AID_GEN_CXX_HEADERS_DIR}/${header_basepath}/${header_basename}.h" )
+
+    LIST( APPEND AID_HEADERS_DEP_LIST "${gen_header_file}" )
+    LIST( APPEND AID_HEADERS_DEP_LIST "${aid_header_full_path}" )
 
     ADD_CUSTOM_COMMAND(
         OUTPUT "${gen_header_file}"
-        #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
-        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp
+        COMMAND ${SH} ARGS "${LCIO_ENV_INIT}" java -cp
         '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar'
-        org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property
-        config CPPHeaderGenerator "${aid_file}" > /dev/null
-        #COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid.generate
-        DEPENDS "${aid_file}"
+        org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_header_full_path}" > /dev/null
+        #COMMAND ${SH} ARGS "${LCIO_ENV_INIT}" ant aid.generate
+        DEPENDS "${aid_header_full_path}"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Generating header file EVENT/${aid_file_basename}.h"
+        COMMENT "Generating header file ${header_basepath}/${header_basename}.h"
     )
 
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES GENERATED TRUE )
 
+    ADD_ROOT_DICT_OBJ( ${gen_header_file} ${header_basepath}/${header_basename}.h )
+
+ENDMACRO()
+
+
+# EVENT aid files
+FILE( GLOB aid_headers "${LCIO_AID_HEADERS_DIR}/EVENT/*.aid" )
+
+FOREACH( aid_file ${aid_headers} )
+
+    FILE( RELATIVE_PATH aid_file_basepath ${LCIO_AID_HEADERS_DIR} ${aid_file} )
+
+    ADD_AID_HEADER( ${aid_file} ${aid_file_basepath} )
+
 ENDFOREACH()
+
+SET( EVENT_AID_HEADERS_DEP_LIST ${AID_HEADERS_DEP_LIST} )
+SET( AID_HEADERS_DEP_LIST )
 
 # IO aid files
-FILE( GLOB aid_headers "${LCIO_SOURCE_DIR}/src/aid/IO/*.aid" )
-
-SET( IO_AID_HEADERS_DEP_LIST ) 
+FILE( GLOB aid_headers "${LCIO_AID_HEADERS_DIR}/IO/*.aid" )
 
 FOREACH( aid_file ${aid_headers} )
 
-    #MESSAGE( STATUS "looping: ${aid_file}" )
+    FILE( RELATIVE_PATH aid_file_basepath ${LCIO_AID_HEADERS_DIR} ${aid_file} )
 
-    GET_FILENAME_COMPONENT( aid_file_basename ${aid_file} NAME_WE )
-
-    SET( gen_header_file "${AID_GEN_CXX_HEADERS_DIR}/IO/${aid_file_basename}.h" )
-
-    LIST( APPEND IO_AID_HEADERS_DEP_LIST "${gen_header_file}" )
-    LIST( APPEND IO_AID_HEADERS_DEP_LIST "${aid_file}" )
-
-    ADD_CUSTOM_COMMAND(
-        OUTPUT "${gen_header_file}"
-        #COMMAND echo "run: ${SH} ${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar' org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property config CPPHeaderGenerator "${aid_file}"
-        COMMAND ${SH} ARGS "${PROJECT_BINARY_DIR}/lcio_env_init.sh" java -cp
-        '${LCIO_SOURCE_DIR}/tools/freehep-base.jar:${LCIO_SOURCE_DIR}/tools/freehep-aid.jar:${LCIO_SOURCE_DIR}/tools/freehep-buildtools.jar'
-        org.freehep.aid.Aid -directory '${AID_GEN_CXX_HEADERS_DIR}/' -property
-        config CPPHeaderGenerator "${aid_file}" > /dev/null
-        DEPENDS "${aid_file}"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Generating header file IO/${aid_file_basename}.h"
-    )
-
-    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
-    #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES GENERATED TRUE )
+    ADD_AID_HEADER( ${aid_file} ${aid_file_basepath} )
 
 ENDFOREACH()
+
+SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_DEP_LIST} )
+SET( AID_HEADERS_DEP_LIST )
 
 SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS
     "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
@@ -302,6 +363,7 @@ IF( BUILD_LCIO_EXAMPLES )
 ENDIF()
 
 
+
 #------ create a root dictionary -----------------------------
 IF( BUILD_ROOTDICT )
 #-----------------------------------------------------------------
@@ -323,25 +385,12 @@ IF( BUILD_ROOTDICT )
     FILE( GLOB_RECURSE lcio_headers include/*.h )
     
     # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers include/empty_ignore.h include/SIO/*.h
+    FILE( GLOB_RECURSE exclude_headers include/empty_ignore.h include/EVENT/*.h include/IO/*.h include/SIO/*.h
     include/CPPFORT/*.h include/UTIL/CellIDDecoder.h include/UTIL/LCWarning.h )
     
     # remove items to exclude
     LIST( REMOVE_ITEM lcio_headers ${exclude_headers} )
     
-    SET( DICT_OUTPUT_DIR "${PROJECT_BINARY_DIR}/dict" )
-    
-    # create output directory
-#    ADD_CUSTOM_COMMAND(
-#      OUTPUT  "${DICT_OUTPUT_DIR}"
-#      COMMAND "${CMAKE_COMMAND}"
-#      ARGS -E make_directory "${DICT_OUTPUT_DIR}"
-#      COMMENT "create directory ${DICT_OUTPUT_DIR}"
-#      )
-    file(MAKE_DIRECTORY ${DICT_OUTPUT_DIR})
-
-
-
     SET( dict_lib_srcs )
     
     # FIXME variables must be set by FindROOT.cmake
@@ -354,60 +403,23 @@ IF( BUILD_ROOTDICT )
     
     
     FOREACH( lcio_hdr ${lcio_headers} )
+
+      #MESSAGE( STATUS "processing header file: ${lcio_hdr}" )
       
       # get the relative path
-      #FILE( RELATIVE_PATH lcio_hdr_rel_path "${PROJECT_SOURCE_DIR}" ${lcio_hdr} )
-      #STRING( REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" lcio_hdr_rel_path ${lcio_hdr} )
-      FILE( RELATIVE_PATH lcio_hdr_rel_path "${CMAKE_CURRENT_SOURCE_DIR}" ${lcio_hdr} )
-      
-      # generate a basename from the header + relative path, e.g.:
-      # include/EVENT/TrackerPulse.h  -->>  include_EVENT_TrackerPulse
-      STRING( REPLACE "/" "_" dict_basename ${lcio_hdr_rel_path} )
-      STRING( REPLACE ".h" "" dict_basename ${dict_basename} )
-      
-      
-      SET( dict_hdr "${dict_basename}_Linkdef.h" )
-      SET( dict_hdr_file "${DICT_OUTPUT_DIR}/${dict_hdr}" )
-      
-      SET( dict_src "${dict_basename}_dict.cxx" )
-      SET( dict_src_file "${DICT_OUTPUT_DIR}/${dict_src}" )
-      
-      # generate dict header file
-      ADD_CUSTOM_COMMAND(
-	OUTPUT  ${dict_hdr_file}
-	COMMAND ${CMAKE_COMMAND}
-	ARGS -E echo "\\#pragma link C++ defined_in \\\"${lcio_hdr_rel_path}\\\"\; >${dict_hdr}"
-	#ARGS -E echo "\\#pragma link C++ defined_in ${lcio_hdr_rel_path}\; >${dict_hdr}"
-	WORKING_DIRECTORY "${DICT_OUTPUT_DIR}"
-	DEPENDS ${lcio_hdr}  # ${DICT_OUTPUT_DIR}
-	COMMENT "generating ${dict_hdr}"
-	)
-      
-      # generate dict source file
-      ADD_CUSTOM_COMMAND(
-	OUTPUT  ${dict_src_file}
-	#COMMAND ${ROOT_HOME}/bin/rootcint
-	#COMMAND $ENV{ROOTSYS}/bin/rootcint
-	COMMAND rootcint
-	ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT -Iinclude ${lcio_hdr_rel_path} ${dict_hdr_file}
-	WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-	DEPENDS ${dict_hdr_file}
-	COMMENT "generating ${dict_src}"
-	)
-      
-      LIST( APPEND dict_lib_srcs ${dict_src_file} )
+      #STRING( REPLACE "${LCIO_CXX_HEADERS_DIR}" "" lcio_hdr_rel_path ${lcio_hdr} )
+      FILE( RELATIVE_PATH lcio_hdr_rel_path "${LCIO_CXX_HEADERS_DIR}" ${lcio_hdr} )
+
+      #MESSAGE( STATUS "header file relpath: ${lcio_hdr_rel_path}" )
+
+      ADD_ROOT_DICT_OBJ( ${lcio_hdr} ${lcio_hdr_rel_path} )
+     
     ENDFOREACH()
-    
+
     INCLUDE_DIRECTORIES( "${DICT_OUTPUT_DIR}" )
     INCLUDE_DIRECTORIES( "${ROOT_INCLUDE_DIRS}" )
-    # FIXME next line should not be needed
-    # xxx_dict.h files should have:
-    # #include "IOIMPL/TrackerRawDataIOImpl.h"
-    # instead of:
-    # #include "include/IOIMPL/TrackerRawDataIOImpl.h"
-    INCLUDE_DIRECTORIES( "${CMAKE_CURRENT_SOURCE_DIR}" )
-    
-    ADD_LIBRARY( lib_LCIODICT ${dict_lib_srcs} ${LCIO_RIO_SRCS} )
+   
+    ADD_LIBRARY( lib_LCIODICT ${ROOT_DICT_LIB_SRCS} ${LCIO_RIO_SRCS} )
     INSTALL( TARGETS lib_LCIODICT DESTINATION lib )
  
 
@@ -452,7 +464,7 @@ ADD_CUSTOM_TARGET( tests )
 # custom command to generate jar library
 ADD_CUSTOM_COMMAND(
     OUTPUT "${PROJECT_SOURCE_DIR}/lib/lcio.jar"
-    COMMAND ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ant aid
+    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     COMMENT "generating lcio.jar"
 )
@@ -462,6 +474,8 @@ ADD_CUSTOM_TARGET( lib_jar DEPENDS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
 
 # jar lib is needed for java tests
 ADD_DEPENDENCIES( tests lib_jar )
+
+ADD_DEPENDENCIES( tests bin )
 
 # ==== a macro for adding binaries from the TESTS directory =====
 MACRO( ADD_LCIO_CTEST file )
@@ -494,7 +508,7 @@ INSTALL( TARGETS lib_LCIOF77 DESTINATION lib PERMISSIONS
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE )
 
-INSTALL(DIRECTORY ${LCIO_SOURCE_DIR}/src/cpp/include/ DESTINATION include 
+INSTALL(DIRECTORY ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include 
   PATTERN "*~" EXCLUDE
   #PATTERN "*empty_ignore.h" EXCLUDE
   PATTERN "*SIO*" EXCLUDE
@@ -525,10 +539,10 @@ SET_TESTS_PROPERTIES( t_c_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+e
 # ----------------------------------------------------------------------
 
 # ------ java tests -----------------------------------------------------
-ADD_TEST( t_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
-ADD_TEST( t_j_ana_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
-ADD_TEST( t_j_rec_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
-ADD_TEST( t_j_ana_j_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
+ADD_TEST( t_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
+ADD_TEST( t_j_ana_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
+ADD_TEST( t_j_rec_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
+ADD_TEST( t_j_ana_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
 
 SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created[ ]+10[ ]+runs with[ ]+100[ ]+events" )
 SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
@@ -540,8 +554,8 @@ SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+e
 # ------ c++/java ana/sim mixed tests -----------------------------------------------------
 ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
 ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
-ADD_TEST( t_j_ana_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
-ADD_TEST( t_j_ana_c_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
+ADD_TEST( t_j_ana_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
+ADD_TEST( t_j_ana_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
 
 SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
 SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
@@ -553,7 +567,7 @@ SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+e
 
 # ------ c++/java sim/rec mixed tests -----------------------------------------------------
 ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
-ADD_TEST( t_j_rec_c_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
+ADD_TEST( t_j_rec_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
 ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
 ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
 
@@ -565,17 +579,12 @@ SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]
 
 
 
-ADD_LCIO_CTEST( test_example ) 
-ADD_LCIO_CTEST( test_calohit )
-ADD_LCIO_CTEST( test_trackerhit )
-ADD_LCIO_CTEST( test_trackerpulse )
-ADD_LCIO_CTEST( test_randomaccess) 
-
-
 # TODO runSIODump.sh and runrandomtests.sh
 
 
 IF( BUILD_F77_TESTJOBS )
+
+    ADD_DEPENDENCIES( tests f77 )
     
     # ------ fortran tests ------------------------------------------------------------
     ADD_TEST( t_f_sim "${EXECUTABLE_OUTPUT_PATH}/simjob_F" f_sim.slcio )
@@ -603,8 +612,8 @@ IF( BUILD_F77_TESTJOBS )
     # ------------------------------------------------------------------------------------------------------------------------------
 
     # ------ java/fortran ana/sim mixed tests -----------------------------------------------------
-    ADD_TEST( t_j_ana_f_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
-    ADD_TEST( t_j_ana_f_rec ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
+    ADD_TEST( t_j_ana_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
+    ADD_TEST( t_j_ana_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
     ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
     ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
 
@@ -629,3 +638,13 @@ IF( BUILD_F77_TESTJOBS )
     # ------------------------------------------------------------------------------------------------------------------------------
 
 ENDIF()
+
+
+# ===== TESTS in src/cpp/src/TESTS =================
+ADD_LCIO_CTEST( test_example ) 
+ADD_LCIO_CTEST( test_calohit )
+ADD_LCIO_CTEST( test_trackerhit )
+ADD_LCIO_CTEST( test_trackerpulse )
+ADD_LCIO_CTEST( test_randomaccess) 
+# ==================================================
+
