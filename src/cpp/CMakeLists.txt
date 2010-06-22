@@ -479,12 +479,7 @@ ENDMACRO()
 #===================================================================
 
 
-ADD_LCIO_CTEST( test_example ) 
-ADD_LCIO_CTEST( test_calohit )
-ADD_LCIO_CTEST( test_trackerhit )
-ADD_LCIO_CTEST( test_trackerpulse )
-ADD_TEST( t_simjob "${EXECUTABLE_OUTPUT_PATH}/simjob" )
-ADD_LCIO_CTEST( test_randomaccess) 
+#ADD_TEST( t_simjob "${EXECUTABLE_OUTPUT_PATH}/simjob" )
 
 
 #------------- install the library and the (public) header files -------
@@ -529,8 +524,6 @@ SET_TESTS_PROPERTIES( t_c_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClu
 SET_TESTS_PROPERTIES( t_c_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
 # ----------------------------------------------------------------------
 
-
-
 # ------ java tests -----------------------------------------------------
 ADD_TEST( t_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
 ADD_TEST( t_j_ana_j_sim ${SH} "${PROJECT_BINARY_DIR}/lcio_env_init.sh" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
@@ -571,9 +564,15 @@ SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]
 # ------------------------------------------------------------------------------------------------------------------------------
 
 
+
+ADD_LCIO_CTEST( test_example ) 
+ADD_LCIO_CTEST( test_calohit )
+ADD_LCIO_CTEST( test_trackerhit )
+ADD_LCIO_CTEST( test_trackerpulse )
+ADD_LCIO_CTEST( test_randomaccess) 
+
+
 # TODO runSIODump.sh and runrandomtests.sh
-
-
 
 
 IF( BUILD_F77_TESTJOBS )

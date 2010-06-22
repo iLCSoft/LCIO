@@ -122,7 +122,7 @@ int main(int argc, char** argv ){
 
     try{
 
-       lcReader->open( "simjob.slcio" ) ;
+       lcReader->open( "c_sim.slcio" ) ;
       
       LCEvent* evt = lcReader->readEvent( 3 , 4 ) ;
 
