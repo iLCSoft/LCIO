@@ -33,12 +33,11 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// override some operators to enable one to send objects to the output stream (e.g. cout << vertexObj << endl;
-// 
-// EXP: UNDER DEVELOPMENT!!!
+// Define operators for convenient printing of LCIO objects.
 //
-// @author engels
-// @version $Id: Operators.h,v 1.4 2010-06-22 13:49:55 gaede Exp $
+//
+// @author J Engels, H. Hoelbe
+// @version $Id: Operators.h,v 1.5 2010-06-22 15:44:54 gaede Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 namespace UTIL{
@@ -176,33 +175,7 @@ namespace UTIL{
   }
 */
 
-
-
-
-
-
-
-
-//hauke 2010 (end)
-
-
-
-
-//  std::ostream& operator<<( std::ostream& out, const EVENT::CalorimeterHit*  c);
-
-
-  //std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHit*);
-//  std::ostream& operator<<( std::ostream& out, const EVENT::MCParticleImpl*);
-  
-  /** operator for short output of a vertex object (e.g. cout << lcshort(vertexObj) << endl; ) */
  
-  //EXP: INDEX MAP - UNDER DEVELOPMENT
-  //std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Vertex, EVENT::LCCollection>& sV);
-  
-
-  //deprecated
-  //std::string brief( const EVENT::Vertex* v);
-  
 
 }//namespace
 
