@@ -317,7 +317,8 @@ IF( BUILD_ROOTDICT )
     FILE( GLOB_RECURSE lcio_headers include/*.h )
     
     # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers include/empty_ignore.h include/SIO/*.h include/CPPFORT/*.h include/UTIL/CellIDDecoder.h)
+    FILE( GLOB_RECURSE exclude_headers include/empty_ignore.h include/SIO/*.h
+    include/CPPFORT/*.h include/UTIL/CellIDDecoder.h include/UTIL/LCWarning.h )
     
     # remove items to exclude
     LIST( REMOVE_ITEM lcio_headers ${exclude_headers} )
