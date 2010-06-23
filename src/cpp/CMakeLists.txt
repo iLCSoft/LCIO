@@ -4,12 +4,6 @@
 # @author Jan Engels, DESY
 #################################
 
-SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
-SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
-SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
-
-SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${AID_GEN_CXX_HEADERS_DIR}" )
-
 INCLUDE_DIRECTORIES ( BEFORE "${AID_GEN_CXX_HEADERS_DIR}" )
 
 INCLUDE_DIRECTORIES (
@@ -131,65 +125,6 @@ SET( LCIO_UTIL_SRCS
 )
 
 
-# ==== a macro for adding root dict objects ====================================
-# returns ROOT_DICT_LIB_SRCS: list including all generated srcs
-##
-SET( DICT_OUTPUT_DIR "${PROJECT_BINARY_DIR}/dict" )
-FILE( MAKE_DIRECTORY ${DICT_OUTPUT_DIR} )
-SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DICT_OUTPUT_DIR}" )
-MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
-
-    #MESSAGE( STATUS "ADD_ROOT_DICT_OBJ: ${header_full_path} ${header_base_path}" )
-    #MESSAGE( STATUS "ADD_ROOT_DICT_OBJ: ${header_base_path}" )
-
-    IF( NOT DICT_OUTPUT_DIR )
-        MESSAGE( FATAL_ERROR "DICT_OUTPUT_DIR not set" )
-    ENDIF()
-
-    # generate a basename from the header + relative path, e.g.:
-    # include/EVENT/TrackerPulse.h  -->>  include_EVENT_TrackerPulse
-    #GET_FILENAME_COMPONENT( header_basename ${header_base_path} NAME_WE )
-    STRING( REPLACE "/" "_" dict_basename ${header_base_path} )
-    STRING( REPLACE ".h" "" dict_basename ${dict_basename} )
-
-    SET( dict_hdr "${dict_basename}_Linkdef.h" )
-    SET( dict_hdr_file "${DICT_OUTPUT_DIR}/${dict_hdr}" )
-
-    SET( dict_src "${dict_basename}_dict.cxx" )
-    SET( dict_src_file "${DICT_OUTPUT_DIR}/${dict_src}" )
-
-    # generate dict header file
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  ${dict_hdr_file}
-        COMMAND ${CMAKE_COMMAND}
-        ARGS -E echo "\\#pragma link C++ defined_in \\\"${header_base_path}\\\"\; >${dict_hdr}"
-        #ARGS -E echo "\\#pragma link C++ defined_in ${header_base_path}\; >${dict_hdr}"
-        WORKING_DIRECTORY "${DICT_OUTPUT_DIR}"
-        DEPENDS ${header_full_path}
-        COMMENT "generating ${dict_hdr}"
-    )
-
-    # generate dict source file
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  ${dict_src_file}
-        #COMMAND ${ROOT_HOME}/bin/rootcint
-        #COMMAND $ENV{ROOTSYS}/bin/rootcint
-        COMMAND rootcint
-        ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT
-        -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_hdr_file}
-        WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
-        DEPENDS ${dict_hdr_file}
-        #COMMENT "generating ${dict_src}"
-        COMMENT "generating ${dict_src}"
-    )
-
-    LIST( APPEND ROOT_DICT_LIB_SRCS ${dict_src_file} )
-
-ENDMACRO()
-#===================================================================
-
-
-
 # ==== a macro for generating header files ==================
 #AID_GEN_CXX_HEADERS_DIR must be set
 MACRO( ADD_AID_HEADER aid_header_full_path aid_header_base_path )
@@ -225,7 +160,7 @@ MACRO( ADD_AID_HEADER aid_header_full_path aid_header_base_path )
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES HEADER_FILE_ONLY TRUE )
     #SET_SOURCE_FILES_PROPERTIES( "${gen_header_file}" PROPERTIES GENERATED TRUE )
 
-    ADD_ROOT_DICT_OBJ( ${gen_header_file} ${header_basepath}/${header_basename}.h )
+    #ADD_ROOT_DICT_OBJ( ${gen_header_file} ${header_basepath}/${header_basename}.h )
 
 ENDMACRO()
 
@@ -364,102 +299,11 @@ ENDIF()
 
 
 
-#------ create a root dictionary -----------------------------
-IF( BUILD_ROOTDICT )
-#-----------------------------------------------------------------
-
-  INCLUDE( ${PROJECT_SOURCE_DIR}/FindROOT.cmake )
-
-
-  IF( ROOT_FOUND )
-    
-    
-    SET( ENV{ROOTSYS} "${ROOT_HOME}" )
-    SET( ENV{PATH} $ENV{ROOTSYS}/bin:$ENV{PATH} )
-    SET( ENV{LD_LIBRARY_PATH} $ENV{ROOTSYS}/lib:$ENV{LD_LIBRARY_PATH} )
-    
-    
-    #TODO test ROOT_FOUND and ${ROOT_HOME}/bin/rootcint
-    
-    # list of headers
-    FILE( GLOB_RECURSE lcio_headers include/*.h )
-    
-    # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers include/empty_ignore.h include/EVENT/*.h include/IO/*.h include/SIO/*.h
-    include/CPPFORT/*.h include/UTIL/CellIDDecoder.h include/UTIL/LCWarning.h )
-    
-    # remove items to exclude
-    LIST( REMOVE_ITEM lcio_headers ${exclude_headers} )
-    
-    SET( dict_lib_srcs )
-    
-    # FIXME variables must be set by FindROOT.cmake
-    #SET( cint_script "${PROJECT_BINARY_DIR}/rootcint.cmake" )
-    #FILE( WRITE "${cint_script}" "# little script to run rootcint\n" )
-    #FILE( APPEND "${cint_script}" "SET( ENV{ROOTSYS} ${ROOT_HOME} )\n" )
-    #FILE( APPEND "${cint_script}" "SET( ENV{PATH} \$ENV{ROOTSYS}/bin:\$ENV{PATH} )\n" )
-    #FILE( APPEND "${cint_script}" "SET( ENV{LD_LIBRARY_PATH} \$ENV{ROOTSYS}/lib:\$ENV{LD_LIBRARY_PATH} )\n" )
-    #FILE( APPEND "${cint_script}" "EXEC_PROGRAM( rootcint -f \${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT -Iinclude \${lcio_hdr_rel_path} \${dict_hdr_file} )\n" )
-    
-    
-    FOREACH( lcio_hdr ${lcio_headers} )
-
-      #MESSAGE( STATUS "processing header file: ${lcio_hdr}" )
-      
-      # get the relative path
-      #STRING( REPLACE "${LCIO_CXX_HEADERS_DIR}" "" lcio_hdr_rel_path ${lcio_hdr} )
-      FILE( RELATIVE_PATH lcio_hdr_rel_path "${LCIO_CXX_HEADERS_DIR}" ${lcio_hdr} )
-
-      #MESSAGE( STATUS "header file relpath: ${lcio_hdr_rel_path}" )
-
-      ADD_ROOT_DICT_OBJ( ${lcio_hdr} ${lcio_hdr_rel_path} )
-     
-    ENDFOREACH()
-
-    INCLUDE_DIRECTORIES( "${DICT_OUTPUT_DIR}" )
-    INCLUDE_DIRECTORIES( "${ROOT_INCLUDE_DIRS}" )
-   
-    ADD_LIBRARY( lib_LCIODICT ${ROOT_DICT_LIB_SRCS} ${LCIO_RIO_SRCS} )
-    INSTALL( TARGETS lib_LCIODICT DESTINATION lib )
- 
-
-   IF( APPLE )
-     SET( ROOT_DICT_LINK_FLAGS "-single_module -undefined dynamic_lookup -bind_at_load")
-#     ADD_LIBRARY( lib_LCIO ${LCIO_RIO_SRCS} )
-   ELSE( APPLE )
-     SET( ROOT_DICT_LINK_FLAGS " " )
-   ENDIF( APPLE )
-    
-    SET_TARGET_PROPERTIES( lib_LCIODICT PROPERTIES
-      # create *nix style library versions + symbolic links
-      VERSION ${LCIO_VERSION}
-      SOVERSION ${LCIO_SOVERSION}
-      # allow creating static and shared libs without conflicts
-      CLEAN_DIRECT_OUTPUT 1
-      # avoid conflicts between library and binary target names
-      OUTPUT_NAME lcioDict
-      LINKER_FLAGS ${ROOT_DICT_LINK_FLAGS}
-      )
-    
-    ADD_CUSTOM_TARGET( dict DEPENDS  lib_LCIODICT )
-
-    TARGET_LINK_LIBRARIES( lib_LCIODICT ${ROOT_LIBRARIES} lib_LCIO)
-
-
-  ELSE( ROOT_FOUND ) 
-
-     MESSAGE( STATUS " NO ROOT found :-( " ) 
-
-     
-  ENDIF( ROOT_FOUND )
-ENDIF( BUILD_ROOTDICT )
-#----------------------------------------------
-
-
-
 # create symbolic target for calling targets test_XXX
 ADD_CUSTOM_TARGET( tests )
 
+# call make tests before make install
+#INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS tests)" )
 
 # custom command to generate jar library
 ADD_CUSTOM_COMMAND(
@@ -510,6 +354,7 @@ INSTALL( TARGETS lib_LCIOF77 DESTINATION lib PERMISSIONS
 
 INSTALL(DIRECTORY ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include 
   PATTERN "*~" EXCLUDE
+  PATTERN "*.txt" EXCLUDE
   #PATTERN "*empty_ignore.h" EXCLUDE
   PATTERN "*SIO*" EXCLUDE
   PATTERN "*CPPFORT*" EXCLUDE
