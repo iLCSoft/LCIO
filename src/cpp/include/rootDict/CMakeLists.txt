@@ -48,7 +48,9 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
     # generate dict header file
     ADD_CUSTOM_COMMAND(
         OUTPUT  ${dict_hdr_file}
-        COMMAND ${CMAKE_COMMAND} ARGS -E make_directory "${DICT_OUTPUT_DIR}"
+        # cmake 2.4 doesn't know make_directory
+        #COMMAND ${CMAKE_COMMAND} ARGS -E make_directory "${DICT_OUTPUT_DIR}"
+        COMMAND mkdir ARGS -p ${DICT_OUTPUT_DIR}
         COMMAND ${CMAKE_COMMAND}
         ARGS -E echo "\\#pragma link C++ defined_in \\\"${header_base_path}\\\"\; >${DICT_OUTPUT_DIR}/${dict_hdr}"
         #ARGS -E echo "\\#pragma link C++ defined_in ${header_base_path}\; >${DICT_OUTPUT_DIR}/${dict_hdr}"
