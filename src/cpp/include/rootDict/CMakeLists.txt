@@ -64,13 +64,11 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
         OUTPUT  ${dict_src_file}
         #COMMAND ${ROOT_HOME}/bin/rootcint
         #COMMAND $ENV{ROOTSYS}/bin/rootcint
-        #COMMAND ${SH} ${ROOT_ENV_INIT} ${ROOT_CINT} ### somehow rootcint does not like to be called with full path !! ...
-        COMMAND ${SH} ${ROOT_ENV_INIT} rootcint
+        COMMAND ${SH} ${ROOT_ENV_INIT} ${ROOT_CINT}
         ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT
         -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_hdr_file}
         WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
         DEPENDS ${dict_hdr_file}
-        #COMMENT "generating ${dict_src}"
         COMMENT "generating ${dict_src}"
     )
 
@@ -85,6 +83,7 @@ SET( ROOT_CINT ROOT_CINT-NOTFOUND )
 FIND_PROGRAM( ROOT_CINT
     rootcint
     ${ROOT_HOME}/bin
+    NO_DEFAULT_PATH
 )
 
 
