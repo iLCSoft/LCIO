@@ -37,9 +37,14 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
     # use the CMake FindJava.cmake module
     FIND_PACKAGE( Java )
     
+    #MESSAGE( STATUS "JAVA_RUNTIME: ${JAVA_RUNTIME}" )
+    #MESSAGE( STATUS "JAVA_COMPILE: ${JAVA_COMPILE}" )
+    #MESSAGE( STATUS "JAVA_ARCHIVE: ${JAVA_ARCHIVE}" )
+    
     IF( JAVA_RUNTIME AND JAVA_COMPILE AND JAVA_ARCHIVE )
 
         IF( UNIX AND NOT APPLE )
+        
             # look for the readlink binary
             FIND_PROGRAM( READLINK_BIN readlink )
             MARK_AS_ADVANCED( READLINK_BIN )
@@ -59,6 +64,43 @@ IF( NOT DEFINED ENV{JDK_HOME} AND
             ENDIF()
 
             GET_FILENAME_COMPONENT( JAVA_HOME ${JAVA_BIN_PATH} PATH )
+        ELSE()
+
+            SET( JAVA_HOME_MAC JAVA_HOME_MAC-NOTFOUND )
+            FIND_PROGRAM( JAVA_HOME_MAC
+                java_home
+                /usr/libexec/
+            )
+
+            IF( JAVA_HOME_MAC )
+     
+                EXEC_PROGRAM( "${JAVA_HOME_MAC}"
+                    OUTPUT_VARIABLE JAVA_HOME
+                    RETURN_VALUE out_ret
+                )
+
+                IF( out_ret )
+                    IF( NOT JAVA_FIND_QUIETLY )
+                        MESSAGE( STATUS "Error executing java_home" )
+                    ENDIF()
+                ENDIF()
+
+                SET( JAVA_BIN_PATH JAVA_BIN_PATH-NOTFOUND )
+                FIND_PATH( JAVA_BIN_PATH
+                    javac
+                    ${JAVA_HOME}/bin
+                    ${JAVA_HOME}/Commands
+                    NO_DEFAULT_PATH )
+                
+                IF( NOT JAVA_BIN_PATH AND NOT JAVA_FIND_QUIETLY )
+                    MESSAGE( STATUS "${JAVA_HOME} is not a valid path for Java!!" )
+                ENDIF()
+
+            ELSE()
+                IF( NOT JAVA_FIND_QUIETLY )
+                    MESSAGE( STATUS "Failed to autodetect Java!!" )
+                ENDIF()
+            ENDIF()
 
         ENDIF()
     ELSE()
@@ -113,7 +155,7 @@ ELSE()
     FIND_PATH( JAVA_BIN_PATH
         javac
         ${JAVA_HOME}/bin
-        ${JAVA_HOME}/Commands   # FIXME MacOS
+        ${JAVA_HOME}/Commands
         NO_DEFAULT_PATH )
     
     IF( NOT JAVA_BIN_PATH AND NOT JAVA_FIND_QUIETLY )
