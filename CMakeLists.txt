@@ -153,8 +153,7 @@ IF( UNIX )
     ENDIF()
 
 
-    # generate shell script for setting environment
-    # and calling ant aid
+    # generate shell script for setting lcio environment
     SET( LCIO_ENV_INIT "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
     IF( NOT EXISTS ${LCIO_ENV_INIT} )
         MESSAGE( STATUS "Generating LCIO env init script..." )
@@ -163,7 +162,8 @@ IF( UNIX )
             "export JDK_HOME=${JAVA_HOME}\n"
             "export JAVA_HOME=${JAVA_HOME}\n"
             "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
-            "eval $*" )
+            "eval $*\n"
+        )
      ENDIF()
 
     # create "always out-of-date" headers target

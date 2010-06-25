@@ -64,7 +64,8 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
         OUTPUT  ${dict_src_file}
         #COMMAND ${ROOT_HOME}/bin/rootcint
         #COMMAND $ENV{ROOTSYS}/bin/rootcint
-        COMMAND ${ROOT_CINT}
+        #COMMAND ${SH} ${ROOT_ENV_INIT} ${ROOT_CINT} ### somehow rootcint does not like to be called with full path !! ...
+        COMMAND ${SH} ${ROOT_ENV_INIT} rootcint
         ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT
         -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_hdr_file}
         WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
@@ -101,6 +102,18 @@ IF( ROOT_FOUND AND ROOT_CINT )
     #FILE( APPEND "${cint_script}" "SET( ENV{LD_LIBRARY_PATH} \$ENV{ROOTSYS}/lib:\$ENV{LD_LIBRARY_PATH} )\n" )
     #FILE( APPEND "${cint_script}" "EXEC_PROGRAM( rootcint -f \${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT -Iinclude \${lcio_hdr_rel_path} \${dict_hdr_file} )\n" )
 
+    # generate shell script for setting root environment
+    SET( ROOT_ENV_INIT "${PROJECT_BINARY_DIR}/root_env_init.sh" )
+    IF( NOT EXISTS ${ROOT_ENV_INIT} )
+        MESSAGE( STATUS "Generating ROOT env init script..." )
+        FILE( WRITE "${ROOT_ENV_INIT}"
+            "# script to initialize root environment\n"
+            "export ROOTSYS=${ROOT_HOME}\n"
+            "export PATH=$ROOTSYS/bin:$PATH\n"
+            "export LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH\n"
+            "eval $*\n"
+        )
+     ENDIF()
 
 
     # EVENT aid files
