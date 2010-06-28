@@ -99,6 +99,30 @@
                     </includes> 
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.freehep</groupId>
+                <artifactId>freehep-aid-plugin</artifactId>
+                <version>2.0.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <id>generate-event-headers</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/aid/EVENT/</sourceDirectory>
+                            <targetDirectory>${basedir}/src/java/hep/lcio/event/</targetDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-io-headers</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <sourceDirectory>${basedir}/src/aid/IO/</sourceDirectory>
+                            <targetDirectory>${basedir}/src/java/hep/lcio/IO/</targetDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+
+            </plugin>
         </plugins>
     </build>
     <dependencies>
