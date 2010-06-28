@@ -129,6 +129,9 @@ ENDIF()
 #    ENDIF()
 #ENDIF()
 
+SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
+SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
 
 # add custom target for building all documentation
 ADD_CUSTOM_TARGET( doc )
@@ -176,6 +179,10 @@ IF( UNIX )
     # create "always out-of-date" jar target
     ADD_CUSTOM_TARGET( jar
         COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+        COMMAND ${CMAKE_COMMAND} -E remove_directory
+        "${LCIO_CXX_HEADERS_DIR}/EVENT"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory
+        "${LCIO_CXX_HEADERS_DIR}/IO"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
         COMMENT "Building lcio jar library..."
         VERBATIM )
@@ -194,7 +201,7 @@ IF( UNIX )
 
     # unfortunately this does not work with *.java
     #SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-    #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io"
+    #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io/*java"
     #)
 
     #JAVADOC
@@ -362,11 +369,6 @@ IF( BUILD_WITH_DCAP )
   FIND_LIBRARY( DCAP_LIB NAMES dcap PATHS ${DCAP_HOME}/lib NO_DEFAULT_PATH )
   LINK_LIBRARIES( ${DCAP_LIB} ) 
 ENDIF()
-
-SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
-SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
-SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
-SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${AID_GEN_CXX_HEADERS_DIR}" )
 
 ADD_SUBDIRECTORY( sio sio )
 ADD_SUBDIRECTORY( src/cpp lcio )
