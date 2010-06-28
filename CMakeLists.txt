@@ -180,10 +180,11 @@ IF( UNIX )
     # create "always out-of-date" jar target
     ADD_CUSTOM_TARGET( jar
         COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
-        COMMAND ${CMAKE_COMMAND} -E remove_directory
-        "${LCIO_CXX_HEADERS_DIR}/EVENT"
-        COMMAND ${CMAKE_COMMAND} -E remove_directory
-        "${LCIO_CXX_HEADERS_DIR}/IO"
+        # cmake 2.4 does not know remove_directory
+        #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
+        #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
+        COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
+        COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
         COMMENT "Building lcio jar library..."
         VERBATIM )
@@ -382,6 +383,19 @@ ADD_CUSTOM_TARGET( uninstall
     #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.class"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.java"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.java"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/manual.ps"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/manual.pdf"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+    # cmake 2.4 does not know remove_directory
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/api"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/manual_html"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
+    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/api"
+    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/manual_html"
+    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
+    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
     COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
