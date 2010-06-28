@@ -3,7 +3,8 @@
 #include "EVENT/ReconstructedParticle.h"
 
 ////////////////////////////////////////////////////////////////////////////////
-// EXP: UNDER DEVELOPMENT!!!
+// Operators for convenient printing of LCIO objects
+
 ////////////////////////////////////////////////////////////////////////////////
 
 using namespace std;
@@ -182,7 +183,7 @@ namespace UTIL{
 
 
   const std::string& header(const EVENT::TrackerHit &){ //hauke
-    static std::string _vtxh("    [id]    | position (x,y,z)            | dEdx    | time    |type \n");
+    static std::string _vtxh("    [id]    | position (x,y,z)            | EDep    | time    |type \n");
     return _vtxh;
   }
   
@@ -196,7 +197,7 @@ namespace UTIL{
     using namespace std;
     out << " [" << setfill('0') << setw(8) << hex<< part->id() << "] |" << dec;
     out << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
-    out << part->getdEdx() << "|";
+    out << part->getEDep() << "|";
     out << part->getTime() << "|";
     out << noshowpos << setw(4) << part->getType() << endl;
     return out;
@@ -208,7 +209,7 @@ namespace UTIL{
   }
 
   const std::string& header(const EVENT::SimTrackerHit &){ //hauke
-    static std::string _vtxh(" CellID  | position (x,y,z)            |  dEdx   |  time   |PDG of MCParticle|   px    ,   py    ,   pz    |path length \n");
+    static std::string _vtxh(" CellID  | position (x,y,z)            |  EDep   |  time   |PDG of MCParticle|   px    ,   py    ,   pz    |path length \n");
     return _vtxh;
   }
   
@@ -222,7 +223,7 @@ namespace UTIL{
     using namespace std;
     out << noshowpos << " " << setw(8) << hex << hit->getCellID() << "|";
     out << showpos << scientific << setprecision (2) << setfill(' ') << hit->getPosition()[0]<<","<<hit->getPosition()[1]<<","<<hit->getPosition()[2]<<"|";
-    out << hit->getdEdx() << "|";
+    out << hit->getEDep() << "|";
     out << hit->getTime() << "|";
     if(hit->getMCParticle()){
         out << setw(17) << hit->getMCParticle()->getPDG() << "|";
@@ -1065,7 +1066,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> 
     tmp.str("");
     tmp << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
     out << setw(30) << left << "Position (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
-    out << setw(30) << left << "dE/dx " << setfill(' ') << right << setw(40) << hit->getdEdx() << endl;
+    out << setw(30) << left << "E_deposited " << setfill(' ') << right << setw(40) << hit->getEDep() << endl;
     out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
     out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
     out << noshowpos;
@@ -1105,7 +1106,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimTrackerHi
     tmp.str("");
     tmp  << dec << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
     out <<setw(30) << std::left << "Position [mm] (x,y,z) " << dec << setfill(' ') << right <<setw(40) << tmp.str() << endl;
-    out <<setw(30) << std::left << "dE/dx [GeV]" << setfill(' ') << right <<setw(40) << hit->getdEdx() << endl;
+    out <<setw(30) << std::left << "dE/dx [GeV]" << setfill(' ') << right <<setw(40) << hit->getEDep() << endl;
     out <<setw(30) << std::left << "Time [ns]" << setfill(' ') << right <<setw(40) << hit->getTime() << endl;
     if(hit->getMCParticle() != NULL){
         out <<std::setw(30) << std::left << "PDG of MCParticle " << setfill(' ') << right <<setw(40) << hit->getMCParticle()->getPDG() << std::endl;
