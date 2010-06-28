@@ -105,24 +105,30 @@
                 <version>2.0.1-SNAPSHOT</version>
                 <executions>
                     <execution>
-                        <id>generate-event-headers</id>
+                        <id>generate-event-interfaces</id>
                         <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
                         <configuration>
                             <sourceDirectory>${basedir}/src/aid/EVENT/</sourceDirectory>
-                            <targetDirectory>${basedir}/src/java/hep/lcio/event/</targetDirectory>
+                            <targetDirectory>${basedir}/src/java/</targetDirectory>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>generate-io-headers</id>
+                        <id>generate-io-interfaces</id>
                         <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>                        
                         <configuration>
                             <sourceDirectory>${basedir}/src/aid/IO/</sourceDirectory>
-                            <targetDirectory>${basedir}/src/java/hep/lcio/IO/</targetDirectory>
+                            <targetDirectory>${basedir}/src/java/</targetDirectory>
                         </configuration>
                     </execution>
                 </executions>
-
             </plugin>
+
         </plugins>
     </build>
     <dependencies>
