@@ -131,6 +131,7 @@ ENDIF()
 
 SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
 SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
 SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
 
 # add custom target for building all documentation
@@ -195,14 +196,10 @@ IF( UNIX )
     #    VERBATIM )
 
     # tell make clean to also erase lcio.jar
+    # unfortunately ADDITIONAL_MAKE_CLEAN_FILES does not work with regexp, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
     SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
         "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT;${PROJECT_SOURCE_DIR}/src/cpp/include/IO"
     )
-
-    # unfortunately this does not work with *.java
-    #SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-    #    "${PROJECT_SOURCE_DIR}/src/java/hep/lcio/event/*java;${PROJECT_SOURCE_DIR}/src/java/hep/lcio/io/*java"
-    #)
 
     #JAVADOC
     IF( JAVA_DOC )
@@ -385,7 +382,14 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
                 IMMEDIATE @ONLY )
 
 # create uninstall target
-ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
+ADD_CUSTOM_TARGET( uninstall
+    COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
+    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/{io,event}/*.{java,class}"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.java"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.class"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.java"
+    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.class"
+)
 
 # create configuration file from .in file
 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/LCIOConfig.cmake.in"
