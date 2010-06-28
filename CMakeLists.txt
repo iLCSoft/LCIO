@@ -188,13 +188,6 @@ IF( UNIX )
         COMMENT "Building lcio jar library..."
         VERBATIM )
 
-    # create custom target for cleaning class files
-    #ADD_CUSTOM_TARGET( jar_clean
-    #    COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
-    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    #    COMMENT "Cleaning java classes with ant clean..."
-    #    VERBATIM )
-
     # tell make clean to also erase lcio.jar
     # unfortunately ADDITIONAL_MAKE_CLEAN_FILES does not work with regexp, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
     SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
@@ -385,10 +378,12 @@ CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 ADD_CUSTOM_TARGET( uninstall
     COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
     #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/{io,event}/*.{java,class}"
+    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.class"
+    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.class"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.java"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.class"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.java"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.class"
+    COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
 
 # create configuration file from .in file
