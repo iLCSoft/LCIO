@@ -89,28 +89,35 @@ ELSE()
     MESSAGE( FATAL_ERROR "Please set JAVA_HOME correctly!!" )
 ENDIF()
 
+
+SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
+SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
+SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
+
+
 # set environment variables to generate header files and jar library
-#SET( ENV{JDK_HOME} "${JAVA_HOME}" )
-#SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
-#SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
-#SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
+SET( ENV{JDK_HOME} "${JAVA_HOME}" )
+SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
+SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
+SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
 
 # generate header files ( ant aid.generate )
-#IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT/LCIO.h" )
-#
-#    MESSAGE( STATUS "Generating header files with ant aid.generate..." )
-#    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
-#        ARGS aid.generate
-#        OUTPUT_VARIABLE out_tmp
-#        RETURN_VALUE out_ret )
-#    # check if everything went ok
-#    IF( NOT out_ret )
-#        MESSAGE( STATUS "Header files successfully generated..." )
-#    ELSE()
-#        MESSAGE( STATUS "Error generating header files!!" )
-#        MESSAGE( FATAL_ERROR "${out_tmp}" )
-#    ENDIF()
-#ENDIF()
+IF( NOT EXISTS "${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h" )
+
+    MESSAGE( STATUS "Generating header files with ant aid.generate..." )
+    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
+        ARGS aid.generate
+        OUTPUT_VARIABLE out_tmp
+        RETURN_VALUE out_ret )
+    # check if everything went ok
+    IF( NOT out_ret )
+        MESSAGE( STATUS "Header files successfully generated..." )
+    ELSE()
+        MESSAGE( STATUS "Error generating header files!!" )
+        MESSAGE( FATAL_ERROR "${out_tmp}" )
+    ENDIF()
+ENDIF()
 
 # generate lcio jar library ( ant aid )
 #IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
@@ -128,14 +135,6 @@ ENDIF()
 #        MESSAGE( FATAL_ERROR "${out_tmp}" )
 #    ENDIF()
 #ENDIF()
-
-SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
-SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
-SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
-SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
-
-# add custom target for building all documentation
-ADD_CUSTOM_TARGET( doc )
 
 # code for *nix only!
 IF( UNIX )
@@ -170,6 +169,47 @@ IF( UNIX )
         )
      ENDIF()
 
+
+    # c++ headers are needed for documentation
+    #ADD_CUSTOM_COMMAND(
+    #    OUTPUT  "${LCIO_CXX_HEADERS_DIR}/EVENT" # "${LCIO_CXX_HEADERS_DIR}/IO"
+    #    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
+    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    #    COMMENT "Generating header files with ant aid.generate..."
+    #    VERBATIM
+    #)
+
+    # generate cmake script for calling ant aid.generate
+    #SET( DOC_GEN_HEADERS "${PROJECT_BINARY_DIR}/doc_gen_headers.cmake" )
+    #IF( NOT EXISTS "${DOC_GEN_HEADERS}" )
+    #    MESSAGE( STATUS "Generating ${DOC_GEN_HEADERS}" )
+    #    FILE( WRITE "${DOC_GEN_HEADERS}"
+    #        "IF( NOT EXISTS ${LCIO_CXX_HEADERS_DIR}/EVENT )\n"
+    #        "EXEC_PROGRAM( ${SH} ${PROJECT_SOURCE_DIR} ARGS ${LCIO_ENV_INIT} ant aid.generate )\n"
+    #        "ENDIF( NOT EXISTS ${LCIO_CXX_HEADERS_DIR}/EVENT )\n"
+    #    )
+    #ENDIF()
+
+
+    #ADD_CUSTOM_TARGET( doc
+    #    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
+    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    #    COMMENT "Generating header files for documentation..."
+    #    VERBATIM
+    #)
+
+    #ADD_CUSTOM_TARGET( doc
+    #    COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
+    #    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
+    #    COMMENT "Generating header files for documentation..."
+    #    VERBATIM
+    #)
+
+    # add custom target for building all documentation
+    #ADD_CUSTOM_TARGET( doc DEPENDS "${LCIO_CXX_HEADERS_DIR}/EVENT" )
+
+    ADD_CUSTOM_TARGET( doc )
+
     # create "always out-of-date" headers target
     ADD_CUSTOM_TARGET( headers
         COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
@@ -183,8 +223,9 @@ IF( UNIX )
         # cmake 2.4 does not know remove_directory
         #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
         #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
-        COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
-        COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
+        # cannot be removed due to documentation
+        #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
+        #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
         COMMENT "Building lcio jar library..."
         VERBATIM )
@@ -192,13 +233,14 @@ IF( UNIX )
     # tell make clean to also erase lcio.jar
     # unfortunately ADDITIONAL_MAKE_CLEAN_FILES does not work with regexp, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
     SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-        "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${PROJECT_SOURCE_DIR}/src/cpp/include/EVENT;${PROJECT_SOURCE_DIR}/src/cpp/include/IO"
+        "${PROJECT_SOURCE_DIR}/lib/lcio.jar;" # ${LCIO_CXX_HEADERS_DIR}/EVENT;${LCIO_CXX_HEADERS_DIR}/IO"
     )
 
     #JAVADOC
     IF( JAVA_DOC )
         ADD_CUSTOM_COMMAND(
             OUTPUT "${PROJECT_SOURCE_DIR}/doc/api/index.html"
+            #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
             COMMAND ${SH} ARGS "${LCIO_ENV_INIT}" ant doc
             WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
             COMMENT "Building Java API Documentation..."
@@ -225,6 +267,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     # c++ documentation
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
+        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
         COMMAND "${DOXYGEN_EXECUTABLE}"
         WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api"
         COMMENT "Building C++ API Documentation..."
@@ -242,8 +285,13 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
             "${PROJECT_BINARY_DIR}/manual"
         VERBATIM )
 
+    SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+        "${PROJECT_BINARY_DIR}/manual"
+    )
+
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${PROJECT_SOURCE_DIR}/doc/manual.pdf"
+        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
         COMMAND "${DVIPS_CONVERTER}" ARGS -q -o manual.ps manual.dvi
@@ -268,6 +316,7 @@ IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
     ADD_CUSTOM_COMMAND(
         #OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
         OUTPUT  "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps" "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
         # FIXME: latex returns error, using | xargs at the end ignores the exit code error
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
         COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
@@ -387,15 +436,28 @@ ADD_CUSTOM_TARGET( uninstall
     COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/manual.pdf"
     COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps"
     COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+
+    # cmake 2.4 does not know remove_directory
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
+    
     # cmake 2.4 does not know remove_directory
     #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/api"
     #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/manual_html"
     #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
     #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
+
+    #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/{EVENT,IO}
+    COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
+    COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
+
+    COMMAND rm -rf "${PROJECT_BINARY_DIR}/manual"
+
     COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/api"
     COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/manual_html"
     COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
     COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
+    
     COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
