@@ -10,7 +10,7 @@ import hep.lcio.implementation.event.ILCCollection;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCCollection.java,v 1.3 2007-11-07 20:46:22 jeremy Exp $
+ * @version $Id: SIOLCCollection.java,v 1.4 2010-06-29 22:27:54 tonyj Exp $
  */
 class SIOLCCollection extends ILCCollection
 {
@@ -44,12 +44,13 @@ class SIOLCCollection extends ILCCollection
    /** for collections that hold subsets resolve the stored pointers (SIORefs)*/
    public void resolve()
    {
-      for (Iterator i = tempObjects.iterator(); i.hasNext();)
-      {
-         add(((SIORef) i.next()).getObject());
+      if (tempObjects != null) {
+         for (Iterator i = tempObjects.iterator(); i.hasNext();)
+         {
+            add(((SIORef) i.next()).getObject());
+         }
+         tempObjects = null;
       }
-      tempObjects = null;
-
    }
    
    
