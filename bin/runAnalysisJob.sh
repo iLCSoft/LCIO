@@ -1,7 +1,6 @@
 #!/bin/sh
 
-LOCALCLASSPATH=$LCIO/lib/lcio.jar:$LCIO/tools/sio.jar
-LOCALCLASSPATH=$LOCALCLASSPATH:$LCIO/tools/freehep-sio-2.1-SNAPSHOT.jar:$LCIO/tools/freehep-xdr-2.0.4-SNAPSHOT.jar
+LOCALCLASSPATH=$LCIO/lib/lcio.jar:$LCIO/tools/freehep-sio-2.1.jar:$LCIO/tools/freehep-xdr-2.0.4.jar
 
 # OS specific support for Cygwin 
 cygwin=false;

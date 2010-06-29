@@ -27,7 +27,7 @@ SET( ILC_HOME "/afs/desy.de/group/it/ilcsoft"
 
 #  ---- SL4 
 # Path to Java
-SET( JAVA_HOME "${ILC_HOME}/java/1.6.0"
+SET( JAVA_HOME "/usr/lib/jvm/java-6-sun"
     CACHE PATH "Path to Java" FORCE )
 
 #  ---- SL3 
@@ -59,6 +59,7 @@ SET( JAVA_HOME "${ILC_HOME}/java/1.6.0"
 # set cmake build type, default value is: RelWithDebInfo
 # possible options are: None Debug Release RelWithDebInfo MinSizeRel
 #SET( CMAKE_BUILD_TYPE "Debug" CACHE STRING "Choose the type of build" FORCE )
+SET( BUILD_32BIT_COMPATIBLE OFF CACHE BOOL "Set to OFF to build 64 bit libraries" FORCE)
 
 #############################################################################
 # Advanced options
