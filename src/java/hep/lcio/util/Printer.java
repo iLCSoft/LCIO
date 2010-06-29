@@ -471,7 +471,7 @@ public class Printer
 				TrackerHit hit = (TrackerHit)coll.getElementAt(i);
 		        
 		        //ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] \n",
-		        ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n",
+		        ps.format(" [%08x] | (%5.3e,%5.3e,%5.3e) | %5.3e | [%d] | %4.3e | %4.3e \n",
 		        				Integer.valueOf(hit.hashCode()),
 		        				Double.valueOf(hit.getPosition()[0]), 
 		        				Double.valueOf(hit.getPosition()[1]), 
