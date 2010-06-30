@@ -61,6 +61,15 @@
     <build> 
         <sourceDirectory>src/java</sourceDirectory>
         <defaultGoal>install</defaultGoal>
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>doc/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>            
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -81,6 +90,7 @@
                     </excludes>	 
                 </configuration>
             </plugin>
+<!--
             <plugin>
                 <groupId>org.freehep</groupId>
                 <artifactId>freehep-jas-plugin</artifactId>
@@ -99,6 +109,7 @@
                     </includes> 
                 </configuration>
             </plugin>
+-->
             <plugin>
                 <groupId>org.freehep</groupId>
                 <artifactId>freehep-aid-plugin</artifactId>
@@ -179,7 +190,12 @@
         <dependency>
             <groupId>jdom</groupId>
             <artifactId>jdom</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
