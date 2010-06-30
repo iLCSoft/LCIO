@@ -64,6 +64,9 @@
       (http://bugs.freehep.org/browse/LCIO-58)
 
 
+    - added support for Java builds with Maven (J.McCormick)
+
+
   bug fixes:
   ----------
     - SIORelation.java: exchanged getFrom() and getTo()
@@ -72,6 +75,7 @@
     - LCTOOLS.cc: protected against missing tracks and clusters (null pointers)
       -> fixes seg. faults in dumpevent 
 
+    - SIOLCCollection.java fixed bug with subset collections
 
 //***********************************************************************
 
