@@ -51,11 +51,12 @@ import org.apache.commons.cli.PosixParser;
  * 
  * @see hep.lcio.util.PrintEvent print
  * -dump lcio file (similar to C++ dump cmd)
- *
- * FIXME: Implement all of the above commands.
+ * 
+ * @see hep.lcio.util.RunCommandHandler
+ * -run a class within the LCIO distribution
  * 
  * @author jeremym
- * @version $Id: CommandLineTool.java,v 1.16 2008-02-06 23:37:39 jeremy Exp $
+ * @version $Id: CommandLineTool.java,v 1.17 2010-06-30 17:35:30 jeremy Exp $
  */
 public class CommandLineTool
 {
@@ -101,6 +102,7 @@ public class CommandLineTool
 		addCommandHandler(new PrintCommandHandler());
         addCommandHandler(new SelectCommandHandler());
         addCommandHandler(new SizeCommandHandler());
+        addCommandHandler(new RunCommandHandler());
 	}
 	
 	/**
