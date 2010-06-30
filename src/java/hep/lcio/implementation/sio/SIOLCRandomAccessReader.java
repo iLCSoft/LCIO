@@ -26,17 +26,19 @@ class SIOLCRandomAccessReader extends SIOLCReader {
     public void open(String filename) throws IOException {
         super.open(filename);
         // Peek at the last record to see if this file supports random access
-        try {
-            //FIXME: Should not hardwire record length
-            SIORecord record = reader.readRecord( - RandomAccessBlock.LCRANDOMACCESSRECORDSIZE );
-            if ("LCIORandomAccess".equals(record.getRecordName())) {
-                randomAccess = new FileRandomAccessSupport(reader, record);
+        if (reader.isRandomAccess()) {
+            try {
+                //FIXME: Should not hardwire record length
+                SIORecord record = reader.readRecord( - RandomAccessBlock.LCRANDOMACCESSRECORDSIZE );
+                if ("LCIORandomAccess".equals(record.getRecordName())) {
+                    randomAccess = new FileRandomAccessSupport(reader, record);
+                }
+            } catch (IOException x) {
+                // OK, just assume random access is not supported
+            } finally {
+                reader.seek(0);
             }
-            reader.seek(0);
-        } catch (IOException x) {
-            // OK, just assume random access is not supported
         }
-
     }
 
     @Override
