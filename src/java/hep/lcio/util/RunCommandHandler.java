@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
- * @version $Id: RunCommandHandler.java,v 1.1 2010-06-30 17:35:30 jeremy Exp $
+ * @version $Id: RunCommandHandler.java,v 1.2 2010-06-30 20:56:12 jeremy Exp $
  */
 public class RunCommandHandler extends CommandHandler 
 {
@@ -30,28 +30,37 @@ public class RunCommandHandler extends CommandHandler
         for (Method method : klass.getMethods())
         {
             // Check if this looks like the main method.
-            // FIXME: Could have overloaded main methods with different signature,
-            //        so need to check for single String array as parameter.
             if (method.getName().equals("main"))
             {
                 int modifiers = method.getModifiers();
-                Modifier modifier = new Modifier();
-                if (modifier.isStatic(modifiers) && modifier.isPublic(modifiers))
+                if (Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers))
                 {
-                    mainMethod = method;
-                    break;
+                    if (method.getParameterTypes().length == 1)
+                    {
+                        Class paramType = method.getParameterTypes()[0];                    
+                        if (paramType.equals((new String[0]).getClass()))                        
+                        {
+                            mainMethod = method;
+                            break;
+                        }
+                    }
                 }
             }
         }
         
+        // The main method was not found.
+        if (mainMethod == null)
+            throw new RuntimeException("The class " + klass.toString() + " doesn't have a main method.");
+        
         // Setup the arguments and invoke the main routine.
         Object pargs[] = new Object[1];
-        pargs[0] = args.toArray(new String[0]);        
+        pargs[0] = args.toArray(new String[0]);
         mainMethod.invoke(object, pargs);
     }
 
     public void parse(String[] argv) throws Exception 
     {
+        // Need at least name of class to run.
         if (argv.length < 1)
             throw new RuntimeException("Not enough arguments.  Missing class name to run.");
         
@@ -61,7 +70,7 @@ public class RunCommandHandler extends CommandHandler
         // New argument list.
         args = new ArrayList<String>();
         
-        // Add command line arguments.
+        // Add extra command line arguments.
         if (argv.length > 1)
         {            
             for (int i=1; i<argv.length; i++)
