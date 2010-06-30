@@ -6,7 +6,7 @@ import hep.lcio.event.TrackerPulse;
 /**
  *
  * @author tonyj
- * @version $Id: ITrackerPulse.java,v 1.4 2010-05-12 14:50:01 engels Exp $
+ * @version $Id: ITrackerPulse.java,v 1.5 2010-06-30 00:12:51 tonyj Exp $
  */
 public class ITrackerPulse extends ILCObject implements TrackerPulse
 {
@@ -18,10 +18,8 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
    protected TrackerData correctedData;
    protected float time;
    //protected float timeError;
-   protected static int covMatrixSize=3;
-   protected float[] covMatrix = new float[covMatrixSize];
+   protected float[] covMatrix = new float[3];
    
- 
    
    /**
     * @return Returns the cellID0.
@@ -82,7 +80,7 @@ public class ITrackerPulse extends ILCObject implements TrackerPulse
 
    public void setCovMatrix(float[] matrix)
    {
-      if (matrix.length != covMatrixSize) throw new IllegalArgumentException();
+      if (matrix.length != covMatrix.length) throw new IllegalArgumentException();
       checkAccess();
       this.covMatrix = matrix;
    }
