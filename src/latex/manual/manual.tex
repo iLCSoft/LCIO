@@ -136,20 +136,32 @@ If you want to use CMake for building LCIO you need at least CMake version 2.4.6
 %  * CMake is open source
 %\end{verbatim}
 
-If you want to build LCIO using CMak make sure that the cmake command is in your path, e.g.\\
+If you want to build LCIO using CMake, make sure that the cmake command is in your path, e.g.\\
 
 \verb|export PATH=Path_to_CMake/bin:$PATH|\\\\
 
-then edit the file BuildSetup.cmake and adjust it to your needs, e.g specify that LCIO should be built with CLHEP support\\\\
-
-The issue the following commands:
+Then issue the following commands:
 \begin{verbatim}
   mkdir build           # <-- create an out-of-source directory for the build
   cd build
-  cmake -C ../BuildSetup.cmake ..
+  cmake ..              # check build options ( change options with: cmake -DOPTION=ON|OFF ..   or use: ccmake .. )
   make install
 \end{verbatim}
 
+Options may also be specified in a file. Take BuildSetup.cmake as an example and modify it to your needs. Use it as follows:
+\begin{verbatim}
+  mkdir build           # <-- create an out-of-source directory for the build
+  cd build
+  cmake -C BuildSetup.cmake ..              # read pre-set options and variables from the file BuildSetup.cmake
+  make install
+\end{verbatim}
+
+It is possible to use more than one file, whereby options and variables specified in previous files get overwritten by later ones.. e.g.:
+\begin{verbatim}
+  cmake -C BuildSetup.cmake -C /afs/desy.de/group/it/ilcsoft/v01-08-01/ILCSoft.cmake .. # take all options from BuildSetup.cmake and ILCSoft.cmake
+\end{verbatim}
+
+In this case ILCSoft.cmake overwrites options from BuildSetup.cmake (in the case where there are common options in both files)
 
 \subsubsection{Building LCIO with ant}
 
@@ -286,7 +298,7 @@ from the LCIO homepage~\cite{lcio_home}, see (\ref{sec_api}).\\
 
 If you are using CMake (see \ref{build_lcio}) all documentation gets built and installed
 by default, when you type "make install". If you don't want this, \\
-set \verb|INSTALL_DOC| in your BuildSetup.cmake to OFF, afterwards you can still call the doc targets:
+set the cmake option  \verb|INSTALL_DOC| to OFF, afterwards you can still call the doc targets:
 \begin{verbatim}
   make doc              <-- build all documentation (doc_cpp + doc_java + doc_manual)
   make doc_cpp          <-- C++ API documentation
