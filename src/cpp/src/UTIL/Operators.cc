@@ -88,6 +88,919 @@ namespace UTIL{
   }
 */
 
+
+
+//--
+//-- begin new ----
+//-------------------------
+  const std::string& header(const EVENT::LCCollection &){ //hauke
+    static std::string _vtxh("| Number of elements | Type name |    Flag     | Is transient | Is default | Is subset |\n");
+    return _vtxh;
+  }
+
+  const std::string& tail(const EVENT::LCCollection &){ //hauke
+    static std::string _vtxt("|--------------------|-----------|-------------|--------------|------------|-----------|\n");
+    return _vtxt;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCCollection>& sV){ //hauke
+    const EVENT::LCCollection* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "|" << dec << setw(20) << setfill(' ') << hit->getNumberOfElements();
+    out << "|" << dec << setw(11) << setfill(' ') << hit->getTypeName();
+    out << "|" << hex << setw(13) << setfill(' ') << hit->getFlag();
+    out << "|" << dec << setw(14) << setfill(' ') << hit->isTransient();
+    out << "|" << dec << setw(12) << setfill(' ') << hit->isDefault();
+    out << "|" << dec << setw(11) << setfill(' ') << hit->isSubset() << "|" << endl;
+    return out;
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCCollection> l) { //hauke
+    const EVENT::LCCollection *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCCollection " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCCOLLECTION){
+            out << "Warning: collection not of type " << LCIO::LCCOLLECTION << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "Number of elements" << right <<  setw(40)<< dec << hit->getNumberOfElements() << endl;
+    out << setw(30) << setfill(' ') << left << "Type name"<< setfill(' ') << right << setw(40) << hit->getTypeName() << endl;
+    out << setw(30) << setfill(' ') << left << "Flag"<< setfill(' ') << right << setw(40) << hex << hit->getFlag() << endl;
+    out << setw(30) << setfill(' ') << left << "Is transient"<< setfill(' ') << right << setw(40) << dec << hit->isTransient()  << endl;
+    out << setw(30) << setfill(' ') << left << "Is default"<< setfill(' ') << right << setw(40) << hit->isDefault() << endl;
+    out << setw(30) << setfill(' ') << left << "Is subset"<< setfill(' ') << right << setw(40) << hit->isSubset() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCCollection &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+ const std::string& header(const EVENT::LCEvent &){ //hauke
+    static std::string _vtxh("| Run number  |Event number |Detector name| Time stamp  |  Weight     |\n");
+    return _vtxh;
+  }
+
+  const std::string& tail(const EVENT::LCEvent &){ //hauke
+    static std::string _vtxt("|-------------|-------------|-------------|-------------|-------------|\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCEvent>& sV){ //hauke
+    const EVENT::LCEvent* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "|" << hex << setw(13) << setfill(' ') << hit->getRunNumber();
+    out << "|" << hex << setw(13) << setfill(' ') << hit->getEventNumber();
+    out << "|" << dec << setw(13) << setfill(' ') << hit->getDetectorName();
+    out << "|" << dec << setw(13) << setfill(' ') << hit->getTimeStamp();
+    out << "|" << dec << setw(13) << setfill(' ') << hit->getWeight() << "|" << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCEvent> l) { //hauke
+    const EVENT::LCEvent *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCEvent " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCEVENT){
+            out << "Warning: collection not of type " << LCIO::LCEVENT << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    //sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Run number" << right << setw(40) <<hex << hit->getRunNumber() << endl;
+    out << setw(30) << setfill(' ') << left << "Event number"<< setfill(' ') << right << setw(40) << dec << hit->getEventNumber() << endl;
+    out << setw(30) << setfill(' ') << left << "Detector name"<< setfill(' ') << right << setw(40) << hit->getDetectorName() << endl;
+    out << setw(30) << setfill(' ') << left << "Time stamp"<< setfill(' ') << right << setw(40) << hit->getTimeStamp() << endl;
+    out << setw(30) << setfill(' ') << left << "Weight"<< setfill(' ') << right << setw(40) << hit->getWeight() << endl;
+
+    out << setw(30) << setfill(' ') << left << "Collection Names" << endl;
+    const std::vector< std::string >* strVec = hit->getCollectionNames() ;
+    for(std::vector< std::string >::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
+        out << "      " << "Name: " << setw(20) << left << *name;
+        out << " Type: " << left << setw(10) <<  hit->getCollection( *name )->getTypeName();
+        out << " Number of Elements: "<< left << setw(20) << hit->getCollection( *name )->getNumberOfElements() << endl;
+    }
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCEvent  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+
+//-------------------------
+  const std::string& header(const EVENT::LCFlag &){ //hauke
+    static std::string _vtxh("|    Flag    |");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCFlag &){ //hauke
+    static std::string _vtxt("|------------|\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCFlag>& sV){ //hauke
+    const EVENT::LCFlag* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "|" << hex << setw(8) << setfill(' ') << hit->getFlag() << "|" << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCFlag> l) { //hauke
+    const EVENT::LCFlag *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCFlag " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+      // if(col->getTypeName() != LCIO::LCFLAG){
+      //      out << "Warning: collection not of type " << LCIO::LCFLAG << endl ;
+      //      return(out);
+      //  }
+      //not part of lcio?
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "Flag" << right << hex << setw(40) << hit->getFlag() << dec << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCFlag  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::LCGenericObject &){ //hauke
+    static std::string _vtxh(" [   id   ] | Number of ints|Number of floats|     Type   |\n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCGenericObject &){ //hauke
+    static std::string _vtxt(" -------------|---------------|----------------|------------|\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCGenericObject>& sV){ //hauke
+    const EVENT::LCGenericObject* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
+    out << " |" << dec << setw(15) << setfill(' ') << hit->getNInt();
+    out << "|" << setw(16) << setfill(' ') << hit->getNDouble();
+    out << "|" << setw(12) << setfill(' ') << hit->getDataDescription() << "|" << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCGenericObject> l) { //hauke
+    const EVENT::LCGenericObject *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCGenericObject " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCGENERICOBJECT){
+            out << "Warning: collection not of type " << LCIO::LCGENERICOBJECT << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+    out << setw(30) << setfill(' ') << left << "Number of integer values"<< setfill(' ') << right << setw(40) << hit->getNInt() << endl;
+    out << setw(30) << setfill(' ') << left << "Number of float values"<< setfill(' ') << right << setw(40) << hit->getNDouble() << endl;
+    out << setw(30) << setfill(' ') << left << "Type name"<< setfill(' ') << right << setw(40) << hit->getTypeName() << endl;
+    out << setw(30) << setfill(' ') << left << "Description"<< setfill(' ') << right << setw(40) << hit->getDataDescription() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCGenericObject  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::LCIntVec &){ //hauke
+    static std::string _vtxh(" [  Id   ] \n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCIntVec &){ //hauke
+    static std::string _vtxt("-----------\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCIntVec>& sV){ //hauke
+    const EVENT::LCIntVec* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCIntVec> l) { //hauke
+    const EVENT::LCIntVec *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCIntVec " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCINTVEC){
+            out << "Warning: collection not of type " << LCIO::LCINTVEC << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCIntVec  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::LCObject &){ //hauke
+    static std::string _vtxh(" [  Id   ] \n");
+    return _vtxh;
+  }
+
+  const std::string& tail(const EVENT::LCObject &){ //hauke
+    static std::string _vtxt("-----------\n");
+    return _vtxt;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCObject>& sV){ //hauke
+    const EVENT::LCObject* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
+    return out;
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCObject> l) { //hauke
+    const EVENT::LCObject *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCObject " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        //if(col->getTypeName() != LCIO::LCOBJECT){
+        //    out << "Warning: collection not of type " << LCIO::LCOBJECT << endl ;
+        //    return(out);
+        //}
+        //not part of lcio?
+
+        //print collection flags
+    }
+
+    //print object attributs
+    sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCObject  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+  const std::string& header(const EVENT::LCParameters &){ //hauke
+    static std::string _vtxh("-----\n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCParameters &){ //hauke
+    static std::string _vtxt("-----\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCParameters>& sV){ //hauke
+    //const EVENT::LCParameters* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "| " << hex << setw(8) << setfill(' ')<< " |";
+    return out;
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCParameters> l) { //hauke
+    //const EVENT::LCParameters *params = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCParameters " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        //if(col->getTypeName() != LCIO::LCPARAMETERS){
+        //    out << "Warning: collection not of type " << LCIO::LCPARAMETERS << endl ;
+        //    return(out);
+        //}
+        //not part of LCIO?
+
+        //print collection flags
+
+    }
+
+
+    // from lctools
+/*
+    StringVec intKeys ;
+    int nIntParameters = params.getIntKeys( intKeys ).size() ;
+    for(int i=0; i< nIntParameters ; i++ ){
+      IntVec intVec ;
+      params.getIntVals(  intKeys[i], intVec ) ;
+      int nInt  = intVec.size()  ;
+      out << " parameter " << intKeys[i] << " [int]: " ;
+
+      if( nInt == 0 ){
+    out << " [empty] " << std::endl ;
+      }
+      for(int j=0; j< nInt ; j++ ){
+    out << intVec[j] << ", " ;
+      }
+      out << endl ;
+    }
+    StringVec floatKeys ;
+    int nFloatParameters = params.getFloatKeys( floatKeys ).size() ;
+    for(int i=0; i< nFloatParameters ; i++ ){
+      FloatVec floatVec ;
+      params.getFloatVals(  floatKeys[i], floatVec ) ;
+      int nFloat  = floatVec.size()  ;
+      out << " parameter " << floatKeys[i] << " [float]: " ;
+      if( nFloat == 0 ){
+    out << " [empty] " << std::endl ;
+      }
+      for(int j=0; j< nFloat ; j++ ){
+    out << floatVec[j] << ", " ;
+      }
+      out << endl ;
+    }
+    StringVec stringKeys ;
+    int nStringParameters = params.getStringKeys( stringKeys ).size() ;
+    for(int i=0; i< nStringParameters ; i++ ){
+      StringVec stringVec ;
+      params.getStringVals(  stringKeys[i], stringVec ) ;
+      int nString  = stringVec.size()  ;
+      out << " parameter " << stringKeys[i] << " [string]: " ;
+      if( nString == 0 ){
+    out << " [empty] " << std::endl ;
+      }
+      for(int j=0; j< nString ; j++ ){
+    out << stringVec[j] << ", " ;
+      }
+      out << endl ;
+   }
+*/
+    // end
+
+    //sstream << "0x" << hex << hit->id();
+    //out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+    //out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
+    //out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
+    return out;
+
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCParameters  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+  const std::string& header(const EVENT::LCRunHeader &){ //hauke
+    static std::string _vtxh(" [ Run number ] | Detector name | Description | Parameters |\n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCRunHeader &){ //hauke
+    static std::string _vtxt("----------------|---------------|-------------|------------|\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCRunHeader>& sV){ //hauke
+    const EVENT::LCRunHeader* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " [" << hex << setw(8) << setfill('0') << hit->getRunNumber() << "] ";
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getDetectorName();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getDescription();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getParameters() << "|" << endl;
+    return out;
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCRunHeader> l) { //hauke
+    const EVENT::LCRunHeader *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCRunHeader " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCRUNHEADER){
+            out << "Warning: collection not of type " << LCIO::LCRUNHEADER << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Run number"<< setfill(' ') << right << setw(40) << hex << hit->getRunNumber() <<dec << endl;
+    out << setw(30) << setfill(' ') << left << "Detector name"<< setfill(' ') << right << setw(40) << hex << hit->getDetectorName() <<dec << endl;
+    out << setw(30) << setfill(' ') << left << "Description"<< setfill(' ') << right << setw(40) << hex << hit->getDescription() <<dec << endl;
+    out << setw(30) << setfill(' ') << left << "Parameters"<< setfill(' ') << right << setw(40) << hex << hit->getParameters() <<dec << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCRunHeader  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+/*
+  const std::string& header(const EVENT::LCStrVec &){ //hauke
+    static std::string _vtxh("");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCStrVec &){ //hauke
+    static std::string _vtxt("\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCStrVec>& sV){ //hauke
+    const EVENT::LCStrVec* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " [" << hex << setw(8) << setfill('0');// << hit->id() << "] ";
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCStrVec> l) { //hauke
+    const EVENT::LCStrVec *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCStrVec " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::LCSTRVEC){
+            out << "Warning: collection not of type " << LCIO::LCSTRVEC << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    sstream << "0x" << hex << hit->id();
+    out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+    out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
+    out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCStrVec  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+*/
+//-------------------------
+  const std::string& header(const EVENT::ParticleID &){ //hauke
+    static std::string _vtxh("|   Type   |    PDG   | Likelihood |Algorithm type|");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::ParticleID &){ //hauke
+    static std::string _vtxt("\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::ParticleID>& sV){ //hauke
+    const EVENT::ParticleID* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "|" << dec << setw(10) << setfill(' ') << hit->getType();
+    out << "|" << dec << setw(10) << setfill(' ') << hit->getPDG();
+    out << "|" << dec << setw(12) << setfill(' ') << hit->getLikelihood();
+    out << "|" << dec << setw(14) << setfill(' ') << hit->getAlgorithmType();
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::ParticleID> l) { //hauke
+    const EVENT::ParticleID *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " ParticleID " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::PARTICLEID){
+            out << "Warning: collection not of type " << LCIO::PARTICLEID << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << dec << hit->getType() << endl;
+    out << setw(30) << setfill(' ') << left << "PDG"<< setfill(' ') << right << setw(40) << dec << hit->getPDG() << endl;
+    out << setw(30) << setfill(' ') << left << "Likelihood  "<< setfill(' ') << right << setw(40) << dec << hit->getLikelihood() << endl;
+    out << setw(30) << setfill(' ') << left << "Algorithm type"<< setfill(' ') << right << setw(40) << dec << hit->getAlgorithmType() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::ParticleID  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+  const std::string& header(const EVENT::RawCalorimeterHit &){ //hauke
+    static std::string _vtxh(" CellID0 | CellID1 | Amplitude | TimeStamp \n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::RawCalorimeterHit &){ //hauke
+    static std::string _vtxt("---------|---------|-----------|-----------\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::RawCalorimeterHit>& sV){ //hauke
+    const EVENT::RawCalorimeterHit* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID0();
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID1();
+    out << "|" << dec << setw(11) << setfill(' ') << hit->getAmplitude();
+    out << "|" << dec << setw(11) << setfill(' ') << hit->getTimeStamp() << "|" << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::RawCalorimeterHit> l) { //hauke
+    const EVENT::RawCalorimeterHit *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " RawCalorimeterHit " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::RAWCALORIMETERHIT){
+            out << "Warning: collection not of type " << LCIO::RAWCALORIMETERHIT << endl ;
+            return(out);
+        }
+        LCFlagImpl flag( col->getFlag() ) ;
+        out << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
+        out << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
+        out << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    out << setw(30) << setfill(' ') << left << "Amplitude"<< setfill(' ') << right << setw(40) << dec << hit->getAmplitude() << endl;
+    out << setw(30) << setfill(' ') << left << "TimeStamp"<< setfill(' ') << right << setw(40) << dec << hit->getTimeStamp() << endl;
+    return out;
+}
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::RawCalorimeterHit  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+// //TPCHit is depricated
+//  const std::string& header(const EVENT::TPCHit &){ //hauke
+//    static std::string _vtxh("");
+//    return _vtxh;
+//  }
+//  const std::string& tail(const EVENT::TPCHit &){ //hauke
+//    static std::string _vtxt("\n");
+//    return _vtxt;
+//  }
+//  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TPCHit>& sV){ //hauke
+//    const EVENT::TPCHit* hit = sV.obj;
+//    using namespace std;
+//    out << noshowpos;
+//    out << " [" << hex << setw(8) << setfill('0');// << hit->id() << "] ";
+//  }
+//
+//
+//  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TPCHit> l) {
+//    const EVENT::TPCHit *hit = l.object();
+//    const EVENT::LCCollection *col = l.collection();
+//
+//    using namespace std;
+//    stringstream sstream;
+//
+//    out << noshowpos;
+//    out << setw(41) << setfill('-') << right << " TPCHit " << setfill('-') << setw(29) << "-" << endl;
+//
+//    if(col != NULL){
+//        if(col->getTypeName() != LCIO::TPCHIT){
+//            out << "Warning: collection not of type " << LCIO::TPCHIT << endl ;
+//            return(out);
+//
+//        }
+//        //print collection flags
+//    }
+//
+//    //print object attributs
+//    //sstream << "0x" << hex << hit->id();
+//    //out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
+//    //out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
+//    //out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
+//}
+//
+//  std::ostream& operator<<( std::ostream& out, const EVENT::TPCHit  &hit){
+//    out<<lcio_long(hit,NULL);
+//    return out;
+//  }
+//
+//
+//-------------------------
+  const std::string& header(const EVENT::TrackerData &){ //hauke
+    static std::string _vtxh(" CellID0 | CellID1 | Time      \n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::TrackerData &){ //hauke
+    static std::string _vtxt("---------|---------|-----------\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerData>& sV){ //hauke
+    const EVENT::TrackerData* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID0();
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID1();
+    out << "|" << dec << setw(11) << setfill(' ') << hit->getTime() << "|" << endl;
+    return out;
+
+  }
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerData> l) { //hauke
+    const EVENT::TrackerData *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " TrackerData " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::TRACKERDATA){
+            out << "Warning: collection not of type " << LCIO::TRACKERDATA << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
+    return out;
+}
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerData  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::TrackerPulse &){ //hauke
+    static std::string _vtxh(" CellID0 | CellID1 | Time   | Charge | Quality \n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::TrackerPulse &){ //hauke
+    static std::string _vtxt("---------|---------|--------|--------|---------\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerPulse>& sV){ //hauke
+    const EVENT::TrackerPulse* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID0();
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID1();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getTime();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getCharge();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getQuality() << endl;
+    return out;
+  }
+
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerPulse> l) {//hauke
+    const EVENT::TrackerPulse *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " TrackerPulse " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::TRACKERPULSE){
+            out << "Warning: collection not of type " << LCIO::TRACKERPULSE << endl ;
+            return(out);
+        }
+        //print collection flags
+        LCFlagImpl flag( col->getFlag() ) ;
+        out << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
+    out << setw(30) << setfill(' ') << left << "Charge"<< setfill(' ') << right << setw(40) << dec << hit->getCharge() << endl;
+    out << setw(30) << setfill(' ') << left << "Quality"<< setfill(' ') << right << setw(40) << dec << hit->getQuality() << endl;
+    return out;
+}
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerPulse  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::TrackerRawData &){ //hauke
+    static std::string _vtxh(" CellID0 | CellID1 | Time   \n");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::TrackerRawData &){ //hauke
+    static std::string _vtxt("\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerRawData>& sV){ //hauke
+    const EVENT::TrackerRawData* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID0();
+    out << "| " << hex << setw(8) << setfill('0') << hit->getCellID1();
+    out << "|" << dec << setw(8) << setfill(' ') << hit->getTime() << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerRawData> l) { //hauke
+    const EVENT::TrackerRawData *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " TrackerRawData " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        if(col->getTypeName() != LCIO::TRACKERRAWDATA){
+            out << "Warning: collection not of type " << LCIO::TRACKERRAWDATA << endl ;
+            return(out);
+
+        }
+        //print collection flags
+    }
+
+    //print object attributs
+    out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
+    return out;
+}
+   std::ostream& operator<<( std::ostream& out, const EVENT::TrackerRawData  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+
+//-------------------------
+//-------------------------
+  const std::string& header(const EVENT::LCIO &){ //hauke
+    static std::string _vtxh("-------------------");
+    return _vtxh;
+  }
+  const std::string& tail(const EVENT::LCIO &){ //hauke
+    static std::string _vtxt("-------------------\n");
+    return _vtxt;
+  }
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCIO>& sV){ //hauke
+    //const EVENT::LCIO* hit = sV.obj;
+    using namespace std;
+    out << noshowpos;
+    out << " " << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCIO> l) { //hauke
+    //const EVENT::LCIO *hit = l.object();
+    const EVENT::LCCollection *col = l.collection();
+
+    using namespace std;
+    stringstream sstream;
+
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << " LCIO " << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){
+        //if(col->getTypeName() != LCIO::LCIO){
+        //    out << "Warning: collection not of type " << LCIO::LCIO << endl ;
+        //    return(out);
+        //}
+        //???
+
+        //print collection flags
+    }
+
+    //print object attributs
+    return out;
+}
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCIO  &hit){ //hauke
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
   const std::string& header(const EVENT::SimCalorimeterHit &){ //hauke
         static std::string _vtxh("    [id]    | cellId0| cellId1|  energy  |energyerr |        position (x,y,z)          |nMCParticles|\n\t\t-> MC contribution: prim. PDG|  energy  |   time   | sec. PDG\n");
     return _vtxh;
