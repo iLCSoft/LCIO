@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// CVS $Id: SIO_functions.h,v 1.5 2006-12-06 19:09:18 hvogt Exp $
+// CVS $Id: SIO_functions.h,v 1.6 2010-07-14 18:13:08 jeremy Exp $
 // ----------------------------------------------------------------------------
 // => Primitive functions for reading/writing SIO streams         
 // ----------------------------------------------------------------------------
@@ -68,11 +68,20 @@
 // Windows/NT    MIPS          _M_MRX000     VC  compiler  ? bytes
 // Windows/NT    PPC           _M_PPC        VC  compiler  4 bytes
 // ----------------------------------------------------------------------------
+//#if defined(__alpha__) || defined(_M_ALPHA) || defined(_LP64)
+// #define SIO_POINTER_DECL   size_t
+//#endif
+
+//#if defined(_AIX)      || defined(__i386__)  || defined(__sparc__) || defined(_M_IX86) || defined(_M_PPC) || defined(__APPLE_CC__)
+// #define SIO_POINTER_DECL   unsigned int
+//#endif
+
+// Old check was problematic because both macros could evaluate to true, and it would
+// also be possible that SIO_POINTER_DECL was not defined at all.  Change as needed.
+// --JM 
 #if defined(__alpha__) || defined(_M_ALPHA) || defined(_LP64)
  #define SIO_POINTER_DECL   size_t
-#endif
-
-#if defined(_AIX)      || defined(__i386__)  || defined(__sparc__) || defined(_M_IX86) || defined(_M_PPC) || defined(__APPLE_CC__)
+#else
  #define SIO_POINTER_DECL   unsigned int
 #endif
 
