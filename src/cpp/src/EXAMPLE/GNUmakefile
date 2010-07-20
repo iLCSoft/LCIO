@@ -69,6 +69,9 @@ $(BINDIR)/anajob: anajob.cc $(INSTALL)/liblcio.a
 $(BINDIR)/readcalibration: readcalibration.cc $(INSTALL)/liblcio.a
 	$(CXX) -o $(BINDIR)/readcalibration $(CPPFLAGS) readcalibration.cc  $(LIBS) 
 
+$(BINDIR)/addRandomAccess: addRandomAccess.cc $(INSTALL)/liblcio.a
+	$(CXX) -o $(BINDIR)/addRandomAccess $(CPPFLAGS) addRandomAccess.cc  $(LIBS) 
+
 # ----- building lsh has to be explicitly activated:
 ifndef BUILD_LCIO_SHELL 
 $(BINDIR)/lsh: lsh.cc $(INSTALL)/liblcio.a
