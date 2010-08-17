@@ -17,7 +17,7 @@ import java.util.TreeSet;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOEvent.java,v 1.45 2010-06-22 13:49:56 gaede Exp $
+ * @version $Id: SIOEvent.java,v 1.46 2010-08-17 22:26:56 jeremy Exp $
  */
 class SIOEvent extends ILCEvent
 {
@@ -47,7 +47,7 @@ class SIOEvent extends ILCEvent
       {
          String blockName = in.readString();
          String blockType = in.readString();
-         
+
          blockMap.put(blockName, blockType);
       }
       
@@ -83,6 +83,7 @@ class SIOEvent extends ILCEvent
          SIOInputStream in = block.getData();
          String name = block.getBlockName();
          String type = (String) blockMap.get(name);
+
          if (type == null) continue;
          //fg20050304 remove postfix _References for subset collections
          if( type.endsWith( SUBSETPOSTFIX ) )
@@ -322,6 +323,7 @@ class SIOEvent extends ILCEvent
             for (int i = 0; i < n; i++)
                ilc.add(new SIORelation(in,this, flags, major, minor));
             ilc.setOwner(this);
+            addCollection(ilc,name);
          }
          else
          {
