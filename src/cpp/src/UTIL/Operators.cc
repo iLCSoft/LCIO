@@ -1404,10 +1404,10 @@ namespace UTIL{
     out << endl;
 
     out << "Radius of innermost hit " << part->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " ;
-    for(l=0 ; l< part->getSubdetectorHitNumbers().size()-1 ; l++) {
+    for(l=0 ; l< part->getSubdetectorHitNumbers().size() ; l++) {
         out << part->getSubdetectorHitNumbers()[l] << ", " ;
     }
-    out << part->getSubdetectorHitNumbers()[l+1] << endl;
+    //    out << part->getSubdetectorHitNumbers()[l+1] << endl;
     return out;
   }
 
@@ -1763,12 +1763,12 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
 
     out << "Radius of innermost hit " << part->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " ;
     out << endl << "            ";
-    for(l=0 ; l< part->getSubdetectorHitNumbers().size()-1 ; l++) {
+    for(l=0 ; l< part->getSubdetectorHitNumbers().size() ; l++) {
         out << part->getSubdetectorHitNumbers()[l] << ", " ;
         if(!((l+1)%20)){out << endl << "            ";}
     }
-    if(!((l+2)%20)){out << endl << "            ";}
-    out << part->getSubdetectorHitNumbers()[l+1] << endl;
+//     if(!((l+2)%20)){out << endl << "            ";}
+//     out << part->getSubdetectorHitNumbers()[l+1] << endl;
 
     out << noshowpos;
     return(out);
