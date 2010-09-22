@@ -7,6 +7,9 @@
 
 #include "CalibrationConstant.h"
 
+// needed for gcc 4.4
+#include <cstdlib>
+
 static const char* FILEN ;
 
 //using namespace std ;
