@@ -159,6 +159,7 @@ IF( ROOT_FOUND AND ROOT_CINT )
         ${LCIO_CXX_HEADERS_DIR}/CPPFORT/*.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/CellIDDecoder.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
+        ${LCIO_CXX_HEADERS_DIR}/UTIL/Operators.h
     )
 
     # remove items to exclude
