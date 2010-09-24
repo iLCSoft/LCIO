@@ -1,6 +1,14 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+==========
+ v01-51-01
+==========
+     - patch release:
+         made compliant with gcc 4.4
+         bug fixes in UTIL::Operators 
+         fix in sio/SIOEvent.java (missing LCRelations)
+         made compliant with latest MacOSX (sio/include/SIO_functions.h)        
 
 ==========
  v01-51
