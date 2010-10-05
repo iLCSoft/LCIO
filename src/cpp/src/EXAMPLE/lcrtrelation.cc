@@ -18,6 +18,9 @@ using namespace lcio ;
 // a simple int extension 
 struct Index : LCIntExtension<Index> {} ;
 
+// a simple float extension 
+struct Mass : LCFloatExtension<Mass> {} ;
+
 // a vector of strings (pointers) that are owned by the object that is extended 
 struct ParticleIDs : LCOwnedExtensionVector<ParticleIDs,std::string> {};
 
@@ -75,6 +78,7 @@ int main(int argc, char** argv ){
       // make every particle know it's index in the collection 
       mcp->ext<Index>() = i ;   
 
+      mcp->ext<Mass>() = mcp->getMass() ;
 
       // assign a user object to each particle:
 
@@ -301,7 +305,7 @@ int main(int argc, char** argv ){
 	
 	MCParticle*  mcp = dynamic_cast<MCParticle*>( mcpcol->getElementAt(i) ) ;
 
-	std::cout <<  "   --- particle " << mcp->ext<Index>()   
+	std::cout <<  "   --- particle " << mcp->ext<Index>()  << " ( mass: " << mcp->ext<Mass>() << ") "
 		  <<  " daughters after merging : " ;
 
 

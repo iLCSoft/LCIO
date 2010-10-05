@@ -242,10 +242,11 @@ namespace lcrtrel{
 
   /** Special Extension that allows to write int extensions directly (not through a pointer !). */
   template <class U >
-  struct LCIntExtension{  // FIXME: need to check on 64 bit architecture...
+  struct LCIntExtension{  
     
-    typedef int ptr ;  // base pointer type 
-    
+    typedef long ptr ;  // base pointer type - use long to work for 64 bit (long is 32 on 32-bit systems/64 on 64bit systems)
+    typedef long& ext_type ;                
+
     typedef U tag ;     // this ensures that a new class instance is created for every user extension
     
     static const int allowed_to_call_ext = 1 ;
@@ -257,25 +258,31 @@ namespace lcrtrel{
     }
     static DeleteFPtr deletePtr() { return  &clean ; }  ;
 
-    typedef int& ext_type ;                
   };
 
 
-  /** Special Extension that allows to write float extensions directly (not through a pointer !). */
-  template <class U >
 
+  template <class U >
+  
   struct LCFloatExtension{// FIXME: need to check on 64 bit architecture...
 
+#ifdef  __i386__
     typedef float  ptr ;  // base pointer type 
-    typedef U tag ;     // this ensures that a new class instance is created for every user extension
     typedef float& ext_type ;     // return value of  ext<>()
-  
+
+#else  // use double on 64bit systems
+    typedef double  ptr ;  // base pointer type 
+    typedef double& ext_type ;     // return value of  ext<>()
+#endif    
+
+    typedef U tag ;     // this ensures that a new class instance is created for every user extension
+
     static const int allowed_to_call_ext = 1 ;
     static void clean(void *v) { }
     static ptr init() { return 0 ; }
     static DeleteFPtr deletePtr() { return  &clean ; }  ;
   };
-
+  
 
   //--------------------------------------------------------------------
 
