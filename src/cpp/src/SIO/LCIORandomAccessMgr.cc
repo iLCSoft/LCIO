@@ -258,6 +258,8 @@ namespace SIO{
       }      
     }
 
+    LCSIO::seekStream( stream, 0 ) ;// go to start of file
+
     return true ;
 
     //    std::cout << " ... LCIORandomAccess read from stream : "<< *ra << std::endl ;
@@ -332,7 +334,7 @@ namespace SIO{
       
       
       LCSIO::seekStream( stream, 0 ) ;// go to start of file
-      
+
     }// -- end of scope for unpacking evt header --
     
     //     std::cout << " LCIORandomAccessMgr::getEventMap() : done " << std::endl ;

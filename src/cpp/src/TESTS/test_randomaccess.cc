@@ -118,13 +118,23 @@ int main(int argc, char** argv ){
 
     LCReader* lcReader = LCFactory::getInstance()->createLCReader( IO::LCReader::directAccess ) ;
 
-    //    LCReader* lcReader = LCFactory::getInstance()->createLCReader( ) ;
+    // LCReader* lcReader = LCFactory::getInstance()->createLCReader( ) ;
 
     try{
-
-       lcReader->open( "c_sim.slcio" ) ;
       
-      LCEvent* evt = lcReader->readEvent( 3 , 4 ) ;
+      lcReader->open( "c_sim.slcio" ) ;
+      
+
+      // test that we can still use read next for runheaders .....
+      LCRunHeader* rHdr = lcReader->readNextRunHeader() ;
+      MYTEST( rHdr->getRunNumber() , 0 , " LCReader::readNextRunHeader() - run number is not 0" );
+      
+      LCEvent* evt = lcReader->readNextEvent() ;
+      MYTEST( evt->getEventNumber() , 0 , " LCReader::readNextEvent() - event number is not 0" );
+      MYTEST( evt->getRunNumber() , 0 , " LCReader::readNextEvent() - run number is not 0" );
+
+      
+      evt = lcReader->readEvent( 3 , 4 ) ;
 
       MYTEST( evt !=0  , true  , " LCReader::readEvent( 3 , 4  ) - evt is NULL" );
       MYTEST( evt->getRunNumber() , 3 , " LCReader::readEvent( 3, 4  ) - run number is not 3" );
