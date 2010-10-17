@@ -6,6 +6,7 @@
 ==========
      - patch release:
          made compliant with gcc 4.4
+         bug fix: readNextEvent/RunHeader did not work in direct access mode
          bug fixes in UTIL::Operators 
          bug fix in LCRTRelations for 64bit
          fix in sio/SIOEvent.java (missing LCRelations)
