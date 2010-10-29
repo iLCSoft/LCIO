@@ -2,6 +2,12 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 ==========
+ v01-51-02
+==========
+     - patch release:
+         fix for building the ROOT dictionary with ROOT 5.27.06
+
+==========
  v01-51-01
 ==========
      - patch release:

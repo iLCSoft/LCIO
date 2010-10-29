@@ -4,7 +4,7 @@ package hep.lcio.event ;
 @cpp{
 #define LCIO_MAJOR_VERSION 1
 #define LCIO_MINOR_VERSION 51
-#define LCIO_PATCH_LEVEL 1
+#define LCIO_PATCH_LEVEL 2
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
 
@@ -16,7 +16,7 @@ package hep.lcio.event ;
 /** Global constants used in LCIO.
  *
  * @author gaede
- * @version $Id: LCIO.aid,v 1.76 2010-10-07 15:28:34 gaede Exp $
+ * @version $Id: LCIO.aid,v 1.77 2010-10-29 10:26:09 gaede Exp $
  * @see LCObject
  * @see LCIO
  */
