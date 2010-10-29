@@ -39,24 +39,26 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
     STRING( REPLACE "/" "_" dict_basename ${header_base_path} )
     STRING( REPLACE ".h" "" dict_basename ${dict_basename} )
 
-    SET( dict_hdr "${dict_basename}_Linkdef.h" )
-    SET( dict_hdr_file "${DICT_OUTPUT_DIR}/${dict_hdr}" )
+    SET( dict_linkdef "${dict_basename}_Linkdef.h" )
+    SET( dict_linkdef_file "${DICT_OUTPUT_DIR}/${dict_linkdef}" )
 
     SET( dict_src "${dict_basename}_dict.cxx" )
     SET( dict_src_file "${DICT_OUTPUT_DIR}/${dict_src}" )
 
+    SET( dict_hdr "${dict_basename}_dict.h" )
+    SET( dict_hdr_file "${DICT_OUTPUT_DIR}/${dict_hdr}" )
+
     # generate dict header file
     ADD_CUSTOM_COMMAND(
-        OUTPUT  ${dict_hdr_file}
+        OUTPUT  ${dict_linkdef_file}
         # cmake 2.4 doesn't know make_directory
         #COMMAND ${CMAKE_COMMAND} ARGS -E make_directory "${DICT_OUTPUT_DIR}"
         COMMAND mkdir ARGS -p ${DICT_OUTPUT_DIR}
         COMMAND ${CMAKE_COMMAND}
-        ARGS -E echo "\\#pragma link C++ defined_in \\\"${header_base_path}\\\"\; >${DICT_OUTPUT_DIR}/${dict_hdr}"
-        #ARGS -E echo "\\#pragma link C++ defined_in ${header_base_path}\; >${DICT_OUTPUT_DIR}/${dict_hdr}"
+        ARGS -E echo "\\#pragma link C++ defined_in \\\"${header_base_path}\\\"\; >${dict_linkdef_file}"
         WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
-        DEPENDS ${header_full_path} # ${DICT_OUTPUT_DIR} # problem if calling cmake .. && make
-        COMMENT "generating ${dict_hdr}"
+        DEPENDS ${header_full_path} 
+        COMMENT "generating ${dict_linkdef}"
     )
 
     # generate dict source file
@@ -66,9 +68,19 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
         #COMMAND $ENV{ROOTSYS}/bin/rootcint
         COMMAND ${SH} ${ROOT_ENV_INIT} ${ROOT_CINT}
         ARGS -f ${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT
-        -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_hdr_file}
+        -I${AID_GEN_CXX_HEADERS_DIR} -I${LCIO_CXX_HEADERS_DIR} ${header_full_path} ${dict_linkdef_file}
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "  >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "//+++++++ fix an issue with unique global variables generated from cint \\(ROOT 5.27.06\\)  >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#define _ROOT_DICT_NAME ${dict_basename} >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#define _R__JOIN_\\(X,Y,Z\\) _NAME3_\\(X,Y,Z\\)  >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#define _R__UNIQUE_\\(X\\) _R__JOIN_\\( _ROOT_DICT_NAME , X, __LINE__\\)  >>${dict_hdr_file}"
         WORKING_DIRECTORY "${LCIO_BINARY_DIR}"
-        DEPENDS ${dict_hdr_file}
+        DEPENDS ${dict_linkdef_file}
         COMMENT "generating ${dict_src}"
     )
 
@@ -99,7 +111,7 @@ IF( ROOT_FOUND AND ROOT_CINT )
     #FILE( APPEND "${cint_script}" "SET( ENV{ROOTSYS} ${ROOT_HOME} )\n" )
     #FILE( APPEND "${cint_script}" "SET( ENV{PATH} \$ENV{ROOTSYS}/bin:\$ENV{PATH} )\n" )
     #FILE( APPEND "${cint_script}" "SET( ENV{LD_LIBRARY_PATH} \$ENV{ROOTSYS}/lib:\$ENV{LD_LIBRARY_PATH} )\n" )
-    #FILE( APPEND "${cint_script}" "EXEC_PROGRAM( rootcint -f \${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT -Iinclude \${lcio_hdr_rel_path} \${dict_hdr_file} )\n" )
+    #FILE( APPEND "${cint_script}" "EXEC_PROGRAM( rootcint -f \${dict_src_file} -c -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT -Iinclude \${lcio_hdr_rel_path} \${dict_linkdef_file} )\n" )
 
     # generate shell script for setting root environment
     SET( ROOT_ENV_INIT "${PROJECT_BINARY_DIR}/root_env_init.sh" )
