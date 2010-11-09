@@ -197,8 +197,9 @@ public class Printer
 		{
 			printer.print(coll, nprint);
 		}
-		else {
-			throw new RuntimeException("ERROR : Unknown type : " + typename);
+		else 
+		{
+		    System.out.println("WARNING: Unknown type " + typename + ".  Skipping printout.");
 		}
 		
 		ps.println();
