@@ -70,6 +70,7 @@ public class Printer
 		plist.add(new TrackerDataPrinter());
 		plist.add(new TrackerPulsePrinter());
 		plist.add(new TrackerRawDataPrinter());
+		plist.add(new LCRelationPrinter());
 		
 		for (int i=0; i<plist.size(); i++)
 		{
@@ -199,7 +200,7 @@ public class Printer
 		}
 		else 
 		{
-		    System.out.println("WARNING: Unknown type " + typename + ".  Skipping printout.");
+		    System.out.println("WARNING: Unknown type <" + typename + ">.  Skipping printout.");
 		}
 		
 		ps.println();
