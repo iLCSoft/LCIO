@@ -6,7 +6,7 @@ package hep.lcio.event ;
  *  @see TrackerData
  * 
  * @author gaede
- * @version $Id: TrackerPulse.aid,v 1.4 2010-05-12 14:50:00 engels Exp $
+ * @version $Id: TrackerPulse.aid,v 1.5 2010-11-11 09:35:27 engels Exp $
  */
 
 public interface TrackerPulse extends LCObject {
@@ -44,7 +44,7 @@ public interface TrackerPulse extends LCObject {
 
 
     /** Covariance matrix of the charge (c) and time (t) measurements. Stored as lower triangle matrix, i.e.
-     *  cov(c,c) , cov(t,c) , cov(t,t).
+     *  cov(c,c) , cov(t,c) , cov(t,t). Optional, check/set flag(LCIO::TRAWBIT_CM)==1.
      */
     public const FloatVec& getCovMatrix() const ;
 
