@@ -74,6 +74,12 @@ MACRO( ADD_ROOT_DICT_OBJ header_full_path header_base_path )
 	COMMAND ${CMAKE_COMMAND}
         ARGS -E echo "//+++++++ fix an issue with unique global variables generated from cint \\(ROOT 5.27.06\\)  >>${dict_hdr_file}"
 	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#undef _ROOT_DICT_NAME >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#undef _R__JOIN_ >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
+        ARGS -E echo "\\#undef _R__UNIQUE_ >>${dict_hdr_file}"
+	COMMAND ${CMAKE_COMMAND}
         ARGS -E echo "\\#define _ROOT_DICT_NAME ${dict_basename} >>${dict_hdr_file}"
 	COMMAND ${CMAKE_COMMAND}
         ARGS -E echo "\\#define _R__JOIN_\\(X,Y,Z\\) _NAME3_\\(X,Y,Z\\)  >>${dict_hdr_file}"
