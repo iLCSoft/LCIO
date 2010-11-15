@@ -2191,6 +2191,16 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> 
     out << setw(30) << left << "E_deposited " << setfill(' ') << right << setw(40) << hit->getEDep() << endl;
     out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
     out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
+
+    out << "Covariance of the position (x,y,z):" << endl ;
+    out << "   cov(x,x) , cov(y,x) , cov(y,y) , cov(z,x) , cov(z,y) , cov(z,z)" << endl ;
+
+    out << "   " << scientific << setprecision(2) ;
+    for( unsigned int i=0 ; i < (hit->getCovMatrix().size() - 1) ; i++ ){
+        out << hit->getCovMatrix()[i] << " , ";
+    }
+    out << hit->getCovMatrix()[ hit->getCovMatrix().size() ] << endl ;
+ 
     out << noshowpos;
 
     setflags(out, flags);

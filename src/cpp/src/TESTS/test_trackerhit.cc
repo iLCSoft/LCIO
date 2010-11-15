@@ -13,6 +13,8 @@
 #include "IMPL/TrackerHitImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
+//#include "UTIL/Operators.h"
+
 //#include <iostream>
 
 using namespace std ;
@@ -63,6 +65,10 @@ int main(int argc, char** argv ){
                 trkHit->setEDepError( (i+j)*.3 ) ;
                 double pos[3] = { i, j, i*j } ;
                 trkHit->setPosition( pos ) ;
+
+                float cov[3] = { i, j, i+j } ;
+                trkHit->setCovMatrix( cov );
+
                 trkHits->addElement( trkHit ) ;
             }
             evt->addCollection( trkHits , "TrackerHits") ;
@@ -100,6 +106,8 @@ int main(int argc, char** argv ){
 
                 TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
 
+                //std::cout << *trkHit << std::endl ;
+
                 //MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
                 MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
                 // remove float converstion and check what happens ;)
@@ -111,6 +119,13 @@ int main(int argc, char** argv ){
                 MYTEST( pos[0] , i , " pos[0] " ) ;
                 MYTEST( pos[1] , j , " pos[1] " ) ;
                 MYTEST( pos[2] , i*j , " pos[2] " ) ;
+
+
+                const FloatVec& cov = trkHit->getCovMatrix() ;
+
+                MYTEST( cov[0] , i , " cov[0] " ) ;
+                MYTEST( cov[1] , j , " cov[1] " ) ;
+                MYTEST( cov[2] , i+j , " cov[2] " ) ;
 
             }
         }

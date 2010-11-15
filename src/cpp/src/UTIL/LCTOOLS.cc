@@ -430,7 +430,7 @@ namespace UTIL {
     int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
     
     std::cout << endl
-	      << " [   id   ] | position (x,y,z)                | time      |type |   EDep    | EDepError" 
+	      << " [   id   ] | position (x,y,z)                | time      |type |   EDep    | EDepError | cov(x,x), cov(y,x), cov(y,y), cov(z,x), cov(z,y), cov(z,z)"
 	      << endl 
 	      << endl ;
     
@@ -444,7 +444,7 @@ namespace UTIL {
       // 	rawHitId = hit->getRawDataHit()->id()  ;
       
       //printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | %5.3e | [%d] | %4.3e | %4.3e \n" 
-      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | [%d] | %4.3e | %4.3e \n" 
+      printf(" [%8.8x] | (%5.3e,%5.3e,%5.3e) | %5.3e | [%d] | %4.3e | %4.3e |" 
 	     , hit->id() 
 	     , hit->getPosition()[0] 
 	     , hit->getPosition()[1] 
@@ -455,6 +455,12 @@ namespace UTIL {
          , hit->getEDep()
          , hit->getEDepError()
 	     ) ;
+
+      for( unsigned int j=0; j < (hit->getCovMatrix().size()-1); j++ ){
+        printf(" %4.2e,", hit->getCovMatrix()[j] ) ;
+      }
+      printf( " %4.2e\n", hit->getCovMatrix()[ hit->getCovMatrix().size() ] ) ;
+
 
       const LCObjectVec& rawHits = hit->getRawHits() ;
       cout << "    rawHits: " ;
