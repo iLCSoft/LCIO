@@ -6,6 +6,8 @@
 ==========
      - patch release:
          fix for building the ROOT dictionary with ROOT 5.27.06
+         fix for printing covariance matrix of TrackerHit in dumpevent
+         missing documentation of TRAWBIT_CM in TrackerPulse (EVENT)
 
 ==========
  v01-51-01
