@@ -23,7 +23,7 @@ import java.util.List;
 /**
  *
  * @author Tony Johnson
- * @version $Id: SIOLCReader.java,v 1.17 2010-06-22 13:49:56 gaede Exp $
+ * @version $Id: SIOLCReader.java,v 1.18 2010-12-07 14:23:10 gaede Exp $
  */
 class SIOLCReader implements LCReader
 {
@@ -59,8 +59,26 @@ class SIOLCReader implements LCReader
       reader = new SIOReader(filenames.get(currentFile));
    }
 
-   public LCEvent readEvent(int runNumber, int evtNumber) throws IOException
-   {
+
+
+   public LCRunHeader readRunHeader(int runNumber) throws IOException {
+	   return readRunHeader(runNumber, LCIO.READ_ONLY ) ;
+   }
+
+   public LCRunHeader readRunHeader(int runNumber, int accessMode)
+   		throws IOException {
+	   //fg: FIXME: reading dedicated run header not supported when not in direct access mode
+	   	return null ;
+   }
+   
+   public LCEvent readEvent(int runNumber, int evtNumber) throws IOException {
+	
+	   return readEvent(runNumber, evtNumber, LCIO.READ_ONLY );
+   }
+   
+   public LCEvent readEvent(int runNumber, int evtNumber, int accessMode)
+	 throws IOException {
+   
       try
       {
          for (;;)
@@ -69,7 +87,7 @@ class SIOLCReader implements LCReader
             String name = record.getRecordName();
             if (!SIOFactory.eventHeaderRecordName.equals(name)) continue;
 
-            SIOEvent event = new SIOEvent(record,LCIO.READ_ONLY);
+            SIOEvent event = new SIOEvent(record, accessMode );
             if (event.getRunNumber() == runNumber && event.getEventNumber() == evtNumber)
             {
                event.readData(reader.readRecord());
@@ -80,12 +98,12 @@ class SIOLCReader implements LCReader
       }
       catch (EOFException x)
       {
-	if( nextFile() ) {
-	    return readEvent( runNumber, evtNumber) ;
-	} 
-	return null;
+    	  if( nextFile() ) {
+    		  return readEvent( runNumber, evtNumber) ;
+	      } 
+	  return null;
       }
-   }
+    }
 
    public LCEvent readNextEvent(int accessMode) throws IOException
    {
@@ -256,4 +274,5 @@ class SIOLCReader implements LCReader
       }
       else return false;
    }
+
 }

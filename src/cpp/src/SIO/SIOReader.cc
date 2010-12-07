@@ -13,8 +13,6 @@
 
 #include "LCIOSTLTypes.h"
 
-#include "EVENT/LCIO.h"
-
 #include "SIO_streamManager.h" 
 #include "SIO_recordManager.h" 
 #include "SIO_blockManager.h" 
@@ -372,26 +370,62 @@ namespace SIO {
     
   }
 
-  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
+  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber) 
+    throw (IOException , std::exception) {
+
+    return readRunHeader( runNumber, EVENT::LCIO::READ_ONLY ) ;
+  }
+
+  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber, int accessMode) 
     throw (IOException , std::exception) {
     
-    
-//     EventMap::iterator it = _evtMap.find( EVENTKEY( runNumber,evtNumber ) ) ;
-//     if( it != _evtMap.end() ) {
-//       int status = _stream->seek( it->second ) ;
-      
-//       if( status != SIO_STREAM_SUCCESS ) 
-// 	throw IOException( std::string( "[SIOReader::readEvent()] Can't seek stream to"
-// 					" requested position" ) ) ;
-//       return readNextEvent() ;
-//     } 
-//     else 
-      
-//       return 0 ;
-
     if( _readEventMap ) {
       
- 
+      EVENT::long64 pos = _raMgr.getPosition(  RunEvent( runNumber, -1 ) ) ; 
+      
+      if( pos != RunEventMap::NPos ) {
+	
+	int status = _stream->seek( pos ) ;
+	
+	if( status != SIO_STREAM_SUCCESS ) 
+	  throw IOException( std::string( "[SIOReader::readRunHeader()] Can't seek stream to"
+					  " requested position" ) ) ;
+
+	return readNextRunHeader( accessMode ) ;
+
+      }  else {
+	
+	//       std::cout << " could not find run header " << runNumber << std::endl 
+	// 		<< _raMgr ;
+	
+	return 0 ;
+      }
+
+
+    } else {  // no event map ------------------
+
+
+      std::cout << " WARNING : LCReader::readRunHeader(run) called but not in direct access Mode  - " << std::endl 
+		<< " Too avoid this WARNING create the LCReader with: " << std::endl 
+		<< "       LCFactory::getInstance()->createLCReader( IO::LCReader::directAccess ) ; " << std::endl ;
+
+    }
+
+    return 0 ;
+  }
+
+
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
+    throw (IOException , std::exception) {
+
+    return readEvent( runNumber, evtNumber , EVENT::LCIO::READ_ONLY ) ;
+  }
+
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber, int accessMode) 
+    throw (IOException , std::exception) {
+    
+    if( _readEventMap ) {
+      
       EVENT::long64 pos = _raMgr.getPosition(  RunEvent( runNumber,evtNumber ) ) ; 
       
       if( pos != RunEventMap::NPos ) {
@@ -401,7 +435,7 @@ namespace SIO {
 	if( status != SIO_STREAM_SUCCESS ) 
 	  throw IOException( std::string( "[SIOReader::readEvent()] Can't seek stream to"
 					  " requested position" ) ) ;
-	return readNextEvent() ;
+	return readNextEvent( accessMode ) ;
       } 
       else {
 	

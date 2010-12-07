@@ -13,6 +13,7 @@
 
 #include "LCIORandomAccessMgr.h"
 #include "LCIOTypes.h"
+#include "EVENT/LCIO.h"
 
 
 class SIO_record ;
@@ -27,7 +28,7 @@ class SIOEventHandler ;
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version $Id: SIOReader.h,v 1.27 2010-06-22 13:49:55 gaede Exp $
+ * @version $Id: SIOReader.h,v 1.28 2010-12-07 14:23:09 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     
@@ -94,15 +95,40 @@ class SIOEventHandler ;
     virtual void skipNEvents(int n)   throw (IO::IOException, std::exception )  ;
 
 
-    /** Reads the specified event from file. 
-     *  To be used with care: events have to be read in sequential 
-     *  order (as LCIO has no direct access yet).
+
+    /** Reads the specified runHeader from file. Returns NULL if
+     *  the specified runHeader hasn't been found in the file.
+     *
+     * @throws IOException
+     */
+    virtual EVENT::LCRunHeader * readRunHeader(int runNumber ) 
+      throw (IO::IOException , std::exception) ;
+
+    /** Same as LCEvent* readRunHeader(int runNumber) 
+     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *
+     * @throws IOException
+     */
+    virtual EVENT::LCRunHeader * readRunHeader(int runNumber, int accessMode ) 
+      throw (IO::IOException , std::exception) ;
+
+    /** Reads the specified event from file. Returns NULL if
+     *  the specified event hasn't been found in the file.
      *
      * @throws IOException
      */
     virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) 
-      throw (IO::IOException, std::exception/*, EVENT::NotAvailableException */) ;
+      throw (IO::IOException, std::exception ) ;
 
+
+    /** Same as LCEvent* readEvent(int runNumber, int evtNumber) 
+     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *
+     * @throws IOException
+     */
+    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber, int accessMode) 
+      throw (IO::IOException, std::exception ) ;
+    
     /** Closes the output file/stream etc.
      *
      * @throws IOException

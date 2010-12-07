@@ -26,6 +26,15 @@ public class AnalysisJob
       LCReader lcReader = LCFactory.getInstance().createLCReader();
       lcReader.open(args);
 
+   /**fg: ... test code for direct access to run header .... 
+      for(int i=9 ; i > -1 ; --i)
+      {
+         LCRunHeader runHdr = lcReader.readRunHeader(i);
+         if (runHdr == null)
+            break;
+         System.out.println("  Run : " + runHdr.getRunNumber() + " - " + runHdr.getDetectorName() + ":  " + runHdr.getDescription());
+      }
+    */
       for (;;)
       {
          LCRunHeader runHdr = lcReader.readNextRunHeader();

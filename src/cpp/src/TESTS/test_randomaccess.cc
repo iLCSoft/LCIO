@@ -9,7 +9,9 @@
 // #include "EVENT/LCIO.h"
 // #include "IO/LCWriter.h"
 // #include "IMPL/LCEventImpl.h" 
-// #include "IMPL/LCCollectionVec.h"
+
+
+#include "IMPL/LCRunHeaderImpl.h"
 
 #include "SIO/LCIORandomAccess.h"
 #include "SIO/LCIORandomAccessMgr.h"
@@ -139,6 +141,24 @@ int main(int argc, char** argv ){
       MYTEST( evt !=0  , true  , " LCReader::readEvent( 3 , 4  ) - evt is NULL" );
       MYTEST( evt->getRunNumber() , 3 , " LCReader::readEvent( 3, 4  ) - run number is not 3" );
       MYTEST( evt->getEventNumber() , 4 , " LCReader::readEvent( 3, 4  ) - event number is not 4" );
+
+
+
+      // test direct access of run  headers
+      rHdr = lcReader->readRunHeader( 7 ) ;
+      MYTEST( rHdr->getRunNumber() , 7 , " LCReader::readRunHeader() - run number is not 7" );
+      rHdr = lcReader->readRunHeader( 3 ) ;
+      MYTEST( rHdr->getRunNumber() , 3 , " LCReader::readRunHeader() - run number is not 3" );
+
+      rHdr = lcReader->readRunHeader( 0 , EVENT::LCIO::UPDATE ) ;
+      //rHdr = lcReader->readRunHeader( 0 ) ;
+      IMPL::LCRunHeaderImpl* rhImpl = dynamic_cast< IMPL::LCRunHeaderImpl*> ( rHdr ) ;
+      bool notNull = rhImpl != 0 ;
+      MYTEST( notNull , true , " readRunHeader not of type IMPL::LCRunHeaderImpl " );
+
+      rhImpl->setRunNumber( 42 ) ;
+      MYTEST( rHdr->getRunNumber() , 42 , " LCReader::readRunHeader() - run number to changed to 42 in update mode " );
+ 
 
     }
     catch( Exception &e ){

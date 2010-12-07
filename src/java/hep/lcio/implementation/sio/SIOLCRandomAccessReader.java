@@ -89,16 +89,36 @@ class SIOLCRandomAccessReader extends SIOLCReader {
             return super.readNextRunHeader(accessMode);
         }
     }
+    public LCRunHeader readRunHeader(int runNumber, int accessMode)
+    throws IOException {
+        if (randomAccess != null) {
+            long position = randomAccess.findRunHeader(runNumber) ;
+            if (position < 0) {
+                throw new IOException(String.format("Run: %d not found", runNumber));
+            }
+            SIORecord record = reader.readRecord(position);
+            SIOBlock block = record.getBlock();
+            int major = block.getMajorVersion();
+            int minor = block.getMinorVersion();
+//            if ((major < 1) && (minor < 8)) {
+//                throw new IOException("Sorry: files created with versions older than v00-08" + " are no longer supported !");
+//            }
 
-    //FIXME: What about accessMode?
-    public LCEvent readEvent(int runNumber, int evtNumber) throws IOException {
+            // FIX ME: need to set access mode here....
+            return new SIORunHeader(block.getData(), major, minor);
+        } else {
+            return super.readRunHeader(runNumber );
+        }
+    }
+
+    public LCEvent readEvent(int runNumber, int evtNumber, int accessMode) throws IOException {
         if (randomAccess != null) {
             long position = randomAccess.findEvent(runNumber, evtNumber);
             if (position < 0) {
                 throw new IOException(String.format("Run: %d Event: %d not found", runNumber, evtNumber));
             }
             SIORecord record = reader.readRecord(position);
-            SIOEvent event = new SIOEvent(record, LCIO.READ_ONLY);
+            SIOEvent event = new SIOEvent(record, accessMode );
             event.readData(reader.readRecord());
             return event;
         } else {
@@ -117,7 +137,9 @@ class SIOLCRandomAccessReader extends SIOLCReader {
 
     private interface RandomAccessSupport {
 
-        long findNextRunHeader() throws IOException;
+    	long findNextRunHeader() throws IOException;
+    	
+    	long findRunHeader(int runNum ) throws IOException;
 
         void skipNEvents(int n) throws IOException;
 
@@ -157,6 +179,15 @@ class SIOLCRandomAccessReader extends SIOLCReader {
             reader = fileBlocks.get(location).reader;
             return fileBlocks.get(location).findEvent(run, event);
         }
+
+		public long findRunHeader(int runNum) throws IOException {
+			
+            RunEvent re = new RunEvent(runNum, -1 );
+
+          int location = Collections.binarySearch(fileRandomAccessBlocks, re);
+          reader = fileBlocks.get(location).reader;
+          return fileBlocks.get(location).findRunHeader(runNum);
+		}
     }
 
     private static class FileRandomAccessSupport implements RandomAccessSupport {
@@ -173,7 +204,21 @@ class SIOLCRandomAccessReader extends SIOLCReader {
             fileRandomAccessBlock = new RandomAccessBlock(record);
         }
 
-        public long findNextRunHeader() throws IOException {
+        public long findRunHeader(int runNum) throws IOException {
+            RunEvent re = new RunEvent( runNum, -1 );
+
+            RandomAccessBlock fab = findFileRandomAccessBlock();
+            if (!fab.contains(re)) {
+                return -1;
+            }
+
+            List<RandomAccessBlock> iab = findIndexRandomAccessBlocks();
+            int location = Collections.binarySearch(iab, re);
+            IndexBlock ib = findIndexBlock(iab.get(location));
+            return ib.getLocation(re);
+		}
+
+		public long findNextRunHeader() throws IOException {
             List<RandomAccessBlock> iab = findIndexRandomAccessBlocks();
             int iabIndex = findIndexOfRandomAccessBlockContaining(reader.getNextRecordPosition());
             for (RandomAccessBlock rab : iab.subList(iabIndex, iab.size())) {

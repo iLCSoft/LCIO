@@ -70,14 +70,34 @@ public interface LCReader {
      * @throws IOException
      */
     public void skipNEvents(int n) throws IOException;
-    /** Reads the specified event from file. 
-     *  To be used with care: events have to be read in sequential 
-     *  order (as LCIO has no direct access yet).  Returns NULL if
-     * 'EOF' read, i.e. the specified event hasn't been found in the file.
+
+    /** Reads the specified runHeader from file. Returns NULL if
+     *  the specified runHeader hasn't been found in the file.
+     *
+     * @throws IOException
+     */
+    public LCRunHeader* readRunHeader(int runNumber ) throws IOException  ;
+    
+    /** Same as LCEvent* readRunHeader(int runNumber) 
+     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *
+     * @throws IOException
+     */
+    public LCRunHeader* readRunHeader(int runNumber, int accessMode) throws IOException  ;
+
+    /** Reads the specified event from file. Returns NULL if
+     *  the specified event hasn't been found in the file.
      *
      * @throws IOException
      */
     public LCEvent* readEvent(int runNumber, int evtNumber) throws IOException  ;
+
+    /** Same as LCEvent* readEvent(int runNumber, int evtNumber) 
+     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *
+     * @throws IOException
+     */
+    public LCEvent* readEvent(int runNumber, int evtNumber, int accessMode) throws IOException  ;
 
     /** Closes the output file/stream etc.
      *
