@@ -142,6 +142,12 @@ class IndexBlock {
             long location = firstLocation + (longOffset ? sio.readLong() : sio.readInt());
             index.add(new IndexEntry(run, event, location));
         }
+        //fg: this needs to be sorted as later a binary search is used
+        //    in getLocation(RunEvent re)
+        //  - in case this is not wanted, than a linear search would have
+        //    to be used there 
+        Collections.sort( index ) ;
+        
         sio.close();
     }
 
