@@ -24,9 +24,6 @@
 #include "EVENT/LCRelation.h"
 #include "LCIOSTLTypes.h"
 
-// #ifdef USE_CLHEP
-// #include "UTIL/LCFourVector.h"
-// #endif
 #include "UTIL/LCObjectHandle.h"
 #include "UTIL/LCTime.h"
 #include "UTIL/CellIDDecoder.h"
@@ -1371,13 +1368,8 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     
     for( int i=0 ; i< nPrint ; i++ ){
       
-// #ifdef USE_CLHEP
-//       ReconstructedParticle4V recP( col->getElementAt( i ) ) ;
-// #else
       ReconstructedParticle* recP = 
       	dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
-// #endif
-
       
       int compound = recP->isCompound() ;
       int type =  recP->getType() ;

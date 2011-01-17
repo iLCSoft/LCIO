@@ -1,5 +1,3 @@
-#ifdef USE_CLHEP  // only if CLHEP is available !
-
 #include "UTIL/LCFourVector.h"
 #include "IMPL/MCParticleImpl.h"
 #include "IMPL/ReconstructedParticleImpl.h"
@@ -70,4 +68,4 @@ namespace UTIL{
   }
   
 } // end namespace
-#endif  // USE_CLHEP
+

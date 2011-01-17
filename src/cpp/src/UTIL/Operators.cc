@@ -38,9 +38,6 @@ using namespace EVENT;
 
 #include <sstream>
 
-// #ifdef USE_CLHEP
-// #include "UTIL/LCFourVector.h"
-// #endif
 #include "UTIL/LCObjectHandle.h"
 #include "UTIL/LCTime.h"
 #include "UTIL/CellIDDecoder.h"
