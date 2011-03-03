@@ -7,11 +7,12 @@
 	
      - implemented new methods:
 
-                  LCReader::getNumberOfRuns() 
+       		  LCReader::readRunHeader(int runNumber ) 
 
           -  C++ only:
                   LCReader::getNumberOfEvents() 
-       		  LCReader::readRunHeader(int runNumber ) 
+                  LCReader::getNumberOfRuns() 
+             (anajob now prints number of runs and events in the files it is going to read)
 
      - added access mode to  
          LCReader::readRunHeader(int runNumber, int accessMode ) 
