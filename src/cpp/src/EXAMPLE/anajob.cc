@@ -6,7 +6,6 @@
 
 #include <cstdlib>
 
-//static const char* FILEN = "recjob.slcio" ; // default file name 
 static std::vector<std::string> FILEN ; 
 
 using namespace std ;
@@ -36,16 +35,26 @@ int main(int argc, char** argv ){
   
   // first we read the run information
   
+
+  cout << "anajob:  will open and read from files: " << endl ;  
+
+  for(int i=0 ; i < nFiles ; i++){
+
+    lcReader->open( FILEN[i] ) ;
+
+    cout  << endl <<  "     "  << FILEN[i] 
+	  <<  "     [ number of runs: "    <<  lcReader->getNumberOfRuns() 
+	  <<       ", number of events: "  <<  lcReader->getNumberOfEvents() << " ] "   
+	  << endl 
+	  << endl ; 
+
+    lcReader->close() ;
+  }  
+
   
-  // for reading from one file only use sth. like:
-  //  const char* FILEN = "recjob.slcio" ;
+  // open list of files
   lcReader->open( FILEN ) ;
   
-
-  cout << " will open and read from files: " << endl ;  
-  for(int i=0 ; i < nFiles ; i++){
-    cout  << "     "  << FILEN[i] << endl ; 
-  }  
 
   LCRunHeader *runHdr ;
   

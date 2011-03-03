@@ -15,7 +15,7 @@ namespace SIO {
 /** Map that holds positions of Run and Event records.
  * 
  * @author gaede
- * @version $Id: RunEventMap.h,v 1.2 2010-06-22 13:49:54 gaede Exp $
+ * @version $Id: RunEventMap.h,v 1.3 2011-03-03 16:00:12 gaede Exp $
  */
   class RunEventMap {
 
@@ -58,9 +58,9 @@ namespace SIO {
     RunEvent maxRunEvent() ;
 
 
-    int getNumberOfEventRecords() { return _nEvt ; }
+    int getNumberOfEventRecords() const { return _nEvt ; }
 
-    int getNumberOfRunRecords()  { return _nRun ; }
+    int getNumberOfRunRecords() const  { return _nRun ; }
 
     // map funcitons
     size_t size() { return _map.size()  ; } 

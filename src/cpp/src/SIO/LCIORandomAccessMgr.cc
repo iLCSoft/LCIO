@@ -213,7 +213,7 @@ namespace SIO{
   }
 
 
-  bool LCIORandomAccessMgr::getEventMap( SIO_stream* stream ) {
+  bool LCIORandomAccessMgr::createEventMap( SIO_stream* stream ) {
 
     // check if the last record is LCIORandomAccess ( the file record )
     if( ! readLCIORandomAccessAt( stream , -LCSIO_RANDOMACCESS_SIZE) )  {

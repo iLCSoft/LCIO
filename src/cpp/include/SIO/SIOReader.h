@@ -28,7 +28,7 @@ class SIOEventHandler ;
 /** Concrete implementation of LCWriter using SIO.
  * 
  * @author gaede
- * @version $Id: SIOReader.h,v 1.28 2010-12-07 14:23:09 gaede Exp $
+ * @version $Id: SIOReader.h,v 1.29 2011-03-03 16:00:12 gaede Exp $
  */
   class SIOReader : public IO::LCReader {
     
@@ -89,11 +89,24 @@ class SIOEventHandler ;
     virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException, std::exception) ;
     
 
-    /** Skips the next n events from the current position. In fact simply reads the next n
-     *  event headers so that the next event read is the (n+1)-th event.
+    /** Return the number of events in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the number of events in the file that is currently open is returned. 
      */
-    virtual void skipNEvents(int n)   throw (IO::IOException, std::exception )  ;
+   virtual int getNumberOfEvents() throw (IO::IOException, std::exception ) ;
 
+
+    /** Return the number of runs (run headers) in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the number of runs (run headers) in the file that is currently open is returned. 
+     */
+    virtual int getNumberOfRuns() throw (IO::IOException, std::exception ) ;
+
+
+    /** Skips the next n events from the current position. In fact simply reads the next n
+      *  event headers so that the next event read is the (n+1)-th event.
+      */
+    virtual void skipNEvents(int n)   throw (IO::IOException, std::exception )  ;
 
 
     /** Reads the specified runHeader from file. Returns NULL if
@@ -121,7 +134,7 @@ class SIOEventHandler ;
       throw (IO::IOException, std::exception ) ;
 
 
-    /** Same as LCEvent* readEvent(int runNumber, int evtNumber) 
+    /** Same as LCEvent* readEvent(int runNumber, int evtNumber 
      *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
      *
      * @throws IOException
@@ -211,7 +224,7 @@ class SIOEventHandler ;
     unsigned int _currentFileIndex ;
 
     //    EventMap _evtMap ;
-    const bool _readEventMap ;
+    bool _readEventMap ;
     
     //    RunEventMap _reMap ;
     LCIORandomAccessMgr _raMgr ;

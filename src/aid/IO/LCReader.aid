@@ -65,8 +65,23 @@ public interface LCReader {
      */
     public LCEvent* readNextEvent(int accessMode) throws IOException ;
 
+    @ifdef cpp
 
-    /** Skips the next n events from the current position.
+    /** Return the number of events in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the number of events in the file that is currently open is returned. 
+     */
+     public int getNumberOfEvents() throws IOException;
+
+    /** Return the number of runs (run headers) in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the number of runs (run headers) in the file that is currently open is returned. 
+     */
+     public int getNumberOfRuns() throws IOException;
+
+    @endif
+
+  /** Skips the next n events from the current position.
      * @throws IOException
      */
     public void skipNEvents(int n) throws IOException;

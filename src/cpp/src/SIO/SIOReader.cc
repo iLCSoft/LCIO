@@ -164,8 +164,39 @@ namespace SIO {
   
   void SIOReader::getEventMap() {
 
-    _raMgr.getEventMap( _stream ) ;
+    _raMgr.createEventMap( _stream ) ;
   }
+
+
+
+  int SIOReader::getNumberOfEvents() throw (IOException, std::exception ) {
+
+    // create the event map if needed (i.e. not opened in direct access mode)
+    if( ! _readEventMap ){  
+      
+      _readEventMap = true ;
+      
+      getEventMap() ;
+    }
+
+    return _raMgr.getEventMap().getNumberOfEventRecords()  ;
+    
+  }
+
+  int SIOReader::getNumberOfRuns() throw (IOException, std::exception ) {
+
+    // create the event map if needed (i.e. not opened in direct access mode)
+    if( ! _readEventMap ){  
+      
+      _readEventMap = true ;
+      
+      getEventMap() ;
+    }
+
+    return _raMgr.getEventMap().getNumberOfRunRecords()  ;
+    
+  }
+
 
   //-------------------------------------------------------------------------------------------
 

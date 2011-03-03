@@ -32,7 +32,7 @@ namespace SIO {
  *   
  *
  * @author gaede
- * @version $Id: LCIORandomAccessMgr.h,v 1.2 2010-06-22 13:49:54 gaede Exp $
+ * @version $Id: LCIORandomAccessMgr.h,v 1.3 2011-03-03 16:00:12 gaede Exp $
  */
 
   class LCIORandomAccessMgr {
@@ -61,10 +61,14 @@ namespace SIO {
     }
 
     /** Get the run and event header map from the stream - either by reading the random access records or by recreating
-     * it for olf files.
+     *  it for old files.
      */
-    bool getEventMap(SIO_stream* s) ;
+    bool createEventMap(SIO_stream* s) ;
     
+    /** Return the event map  - it will be empty, if not yet created.
+     */
+    const RunEventMap& getEventMap() { return _runEvtMap ; }
+
     /** Initialize random access for append mode: read last LCIORandomAccess record if it exists - 
      *  recreate the RunEvent map from the file if not (old files).
      */

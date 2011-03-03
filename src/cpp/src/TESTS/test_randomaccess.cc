@@ -126,6 +126,10 @@ int main(int argc, char** argv ){
       
       lcReader->open( "c_sim.slcio" ) ;
       
+      MYTEST( lcReader->getNumberOfRuns() , 10 , " LCReader::getNumberOfRuns() - number of run headers is not 10" );
+
+      MYTEST( lcReader->getNumberOfEvents() , 100 , " LCReader::getNumberOfEvents() - number of events is not 100" );
+
 
       // test that we can still use read next for runheaders .....
       LCRunHeader* rHdr = lcReader->readNextRunHeader() ;

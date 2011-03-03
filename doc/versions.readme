@@ -2,9 +2,17 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 ==========
- v01-52
+ v01-52 - to be released
 ==========
-     - implemented method LCReader::readRunHeader(int runNumber ) 
+	
+     - implemented new methods:
+
+                  LCReader::getNumberOfRuns() 
+
+          -  C++ only:
+                  LCReader::getNumberOfEvents() 
+       		  LCReader::readRunHeader(int runNumber ) 
+
      - added access mode to  
          LCReader::readRunHeader(int runNumber, int accessMode ) 
          LCReader::readEvent(int runNumber, int evtNumber, int accessMode ) 
