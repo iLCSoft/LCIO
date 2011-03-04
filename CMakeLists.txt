@@ -33,7 +33,7 @@ OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples under src/cpp/src/
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 OPTION( BUILD_WITH_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF )
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
-#OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
+OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
 
 OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
 
@@ -351,15 +351,11 @@ ELSE()
 ENDIF()
 
 # installation rules
-#IF( INSTALL_JAR )
-#    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
-#    # install jar
-#    INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
-#ENDIF()
-#INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib OPTIONAL )
-# make sure jar is built before calling make install
-INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS jar)" )
-INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )
+IF( INSTALL_JAR )
+    # moved install( code ) instruction into src/java/CMakeLists.txt to fix
+    # problem of always rebuilding sources when typing 'make install'
+    ADD_SUBDIRECTORY( ./src/java )
+ENDIF()
 
 IF( INSTALL_DOC )
     # make sure documentation is built before make install is called
