@@ -1,521 +1,232 @@
-#################################
+########################################################
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-#################################
+CMAKE_MINIMUM_REQUIRED( VERSION 2.6 FATAL_ERROR )
+########################################################
 
-########################################################
-# CMake compatibility issues: don't modify this, please!
-CMAKE_MINIMUM_REQUIRED( VERSION 2.4.6 )
-#SET( CMAKE_BACKWARDS_COMPATIBILITY 2.4.6 )
-MARK_AS_ADVANCED(CMAKE_BACKWARDS_COMPATIBILITY)
-# allow more human readable "if then else" constructs
-SET( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
-########################################################
+
 
 # project name
 PROJECT( LCIO )
 
-# enable testing
-ENABLE_TESTING()
-INCLUDE(CTest)
 
 # project version
-SET( LCIO_MAJOR_VERSION 1 )
-SET( LCIO_MINOR_VERSION 51 )
-SET( LCIO_PATCH_LEVEL 2 )
+SET( LCIO_VERSION_MAJOR 1 )
+SET( LCIO_VERSION_MINOR 51 )
+SET( LCIO_VERSION_PATCH 3 )
 
-# project options
-OPTION( BUILD_SHARED_LIBS "Set to OFF to build static libraries" ON )
-OPTION( BUILD_32BIT_COMPATIBLE "Set to ON to build in 32 bit compatibility mode" OFF )
-OPTION( BUILD_LCIO_TESTS "Set to ON to build LCIO tests under src/cpp/src/TESTS" OFF )
-OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples under src/cpp/src/EXAMPLES" OFF )
-OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-OPTION( BUILD_WITH_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF )
-OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" ON )
-OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" ON )
 
+
+### DEPENDENCIES ############################################################
+
+FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
+
+# load default settings from ILCSOFT_CMAKE_MODULES
+INCLUDE( ilcsoft_default_settings )
+
+
+# JAVA (needed to generate c++ headers)
+#INCLUDE( ${PROJECT_SOURCE_DIR}/FindJAVA.cmake )
+INCLUDE( ${ILCSOFT_CMAKE_MODULES_ROOT}/FindJAVA.cmake )
+IF( NOT JAVA_FOUND )
+    MESSAGE( FATAL_ERROR "Failed to find Java! Please set JAVA_DIR=/path/to/java" )
+ENDIF()
+
+
+# ROOT
 OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
-
-
-# set default cmake build type to RelWithDebInfo
-IF( NOT CMAKE_BUILD_TYPE )
-    SET( CMAKE_BUILD_TYPE "RelWithDebInfo" )
-ENDIF()
-
-# set default install prefix to project root directory
-IF( CMAKE_INSTALL_PREFIX STREQUAL "/usr/local" )
-    SET( CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
-ENDIF()
-
-#---------------- 32/64 bit issues ---------------------------------------
-#INCLUDE( CheckTypeSize )
-#CHECK_TYPE_SIZE( "void*" SIZE_OF_VOID_P )
-
-IF( CMAKE_SIZEOF_VOID_P EQUAL 4 )
-    MESSAGE( STATUS "32 bit architecture detected" )
-ENDIF()
-
-IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    MESSAGE( STATUS "64 bit architecture detected" )
-
-    IF( BUILD_32BIT_COMPATIBLE )
-        IF( COMMAND SET_PROPERTY )
-            SET_PROPERTY(GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS 0)
-            SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32" )
-            #SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32" )
-            SET( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32" )
-            SET( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32" )
-            SET( CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -m32" )
-        ELSE()
-            MESSAGE( FATAL_ERROR "to build in 32 bit compatibility mode you need cmake >= 2.6" )
-        ENDIF()
-        MESSAGE( STATUS "Build in 32 bit compatibility mode" )
-    ELSE()
-        MESSAGE( STATUS "Build in native 64 bit mode" )
-    ENDIF()
-ENDIF()
-
-#-------------------------------------------------------------------------
-
-
-# include FindJAVA.cmake for finding Java
-
-INCLUDE( ${PROJECT_SOURCE_DIR}/FindJAVA.cmake )
-
-IF( JAVA_FOUND )
-    MESSAGE( STATUS "JAVA_HOME set to ${JAVA_HOME}" )
-ELSE()
-    MESSAGE( FATAL_ERROR "Please set JAVA_HOME correctly!!" )
+MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
+IF( BUILD_ROOTDICT )
+    FIND_PACKAGE( ROOT 5.27.06 REQUIRED ) # look for ROOT versions >= 5.27.06
 ENDIF()
 
 
-SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
-SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
-SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
-SET( AID_GEN_CXX_HEADERS_DIR "${LCIO_BINARY_DIR}/include" )
-
-
-# set environment variables to generate header files and jar library
-SET( ENV{JDK_HOME} "${JAVA_HOME}" )
-SET( ENV{JAVA_HOME} "${JAVA_HOME}" )
-SET( ENV{LCIO} "${PROJECT_SOURCE_DIR}" )
-SET( ENV{PATH} "${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$ENV{PATH}" )
-
-# generate header files ( ant aid.generate )
-IF( NOT EXISTS "${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h" )
-
-    MESSAGE( STATUS "Generating header files with ant aid.generate..." )
-    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
-        ARGS aid.generate
-        OUTPUT_VARIABLE out_tmp
-        RETURN_VALUE out_ret )
-    # check if everything went ok
-    IF( NOT out_ret )
-        MESSAGE( STATUS "Header files successfully generated..." )
-    ELSE()
-        MESSAGE( STATUS "Error generating header files!!" )
-        MESSAGE( FATAL_ERROR "${out_tmp}" )
-    ENDIF()
-ENDIF()
-
-# generate lcio jar library ( ant aid )
-#IF( NOT EXISTS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
+# DCAP (TODO put in FindDCAP.cmake)
+#OPTION( LCIO_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF )
+#MESSAGE( STATUS "LCIO_DCAP = ${LCIO_DCAP}" )
+#IF( LCIO_DCAP )
+#    FIND_LIBRARY( DCAP_LIBRARIES NAMES dcap PATHS ${DCAP_DIR}/lib NO_DEFAULT_PATH )
+#    IF( NOT DCAP_DIR )
+#        FIND_LIBRARY( DCAP_LIBRARIES NAMES dcap )
+#    ENDIF()
+#    FIND_PATH( DCAP_INCLUDE_DIRS NAMES dcap.h PATHS ${DCAP_DIR}/include NO_DEFAULT_PATH )
+#    IF( NOT DCAP_DIR )
+#        FIND_PATH( DCAP_INCLUDE_DIRS NAMES dcap.h )
+#    ENDIF()
 #
-#    MESSAGE( STATUS "Generating lcio jar library with ant aid..." )
-#    EXEC_PROGRAM( ant "${PROJECT_SOURCE_DIR}"
-#        ARGS aid
-#        OUTPUT_VARIABLE out_tmp
-#        RETURN_VALUE out_ret )
-#    # check if everything went ok
-#    IF( NOT out_ret )
-#        MESSAGE( STATUS "lcio jar library successfully generated..." )
+#    IF( DCAP_LIBRARIES AND DCAP_INCLUDE_DIRS )
+#        SET( DCAP_FOUND TRUE )
+#        LINK_LIBRARIES( ${DCAP_LIBRARIES} )
 #    ELSE()
-#        MESSAGE( STATUS "Error generating lcio.jar!!" )
-#        MESSAGE( FATAL_ERROR "${out_tmp}" )
+#        MESSAGE( SEND_ERROR "dcap not found. please set DCAP_DIR=/path/to/dcap or option LCIO_DCAP to OFF" )
 #    ENDIF()
 #ENDIF()
 
-# code for *nix only!
-IF( UNIX )
 
-    # find shell
-    FIND_PROGRAM( SH
-      sh
-      ${CYGWIN_INSTALL_PATH}/bin
-      /bin
-      /usr/bin
-      /usr/local/bin
-      /sbin
-      # FIXME add path to MacOS here
-    )
-    MARK_AS_ADVANCED( SH )
-
-    IF( NOT SH )
-        MESSAGE( FATAL_ERROR "unix shell not found" )
-    ENDIF()
+# UNIX SHELL (needed for calling LCIO_ENV_INIT script)
+FIND_PROGRAM( SH sh ${CYGWIN_INSTALL_PATH}/bin /bin /usr/bin /usr/local/bin /sbin )
+MARK_AS_ADVANCED( SH )
+IF( NOT SH )
+    MESSAGE( FATAL_ERROR "unix shell not found" )
+ENDIF()
 
 
-    # generate shell script for setting lcio environment
-    SET( LCIO_ENV_INIT "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
-    IF( NOT EXISTS ${LCIO_ENV_INIT} )
-        MESSAGE( STATUS "Generating LCIO env init script..." )
-        FILE( WRITE "${LCIO_ENV_INIT}"
-            "export LCIO=${PROJECT_SOURCE_DIR}\n"
-            "export JDK_HOME=${JAVA_HOME}\n"
-            "export JAVA_HOME=${JAVA_HOME}\n"
-            "export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH\n"
-            "eval $*\n"
-        )
-     ENDIF()
 
 
-    # c++ headers are needed for documentation
-    #ADD_CUSTOM_COMMAND(
-    #    OUTPUT  "${LCIO_CXX_HEADERS_DIR}/EVENT" # "${LCIO_CXX_HEADERS_DIR}/IO"
-    #    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
-    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    #    COMMENT "Generating header files with ant aid.generate..."
-    #    VERBATIM
-    #)
+### GENERATE ENVIRONMENT SCRIPT FOR CALLING ANT #############################
 
-    # generate cmake script for calling ant aid.generate
-    #SET( DOC_GEN_HEADERS "${PROJECT_BINARY_DIR}/doc_gen_headers.cmake" )
-    #IF( NOT EXISTS "${DOC_GEN_HEADERS}" )
-    #    MESSAGE( STATUS "Generating ${DOC_GEN_HEADERS}" )
-    #    FILE( WRITE "${DOC_GEN_HEADERS}"
-    #        "IF( NOT EXISTS ${LCIO_CXX_HEADERS_DIR}/EVENT )\n"
-    #        "EXEC_PROGRAM( ${SH} ${PROJECT_SOURCE_DIR} ARGS ${LCIO_ENV_INIT} ant aid.generate )\n"
-    #        "ENDIF( NOT EXISTS ${LCIO_CXX_HEADERS_DIR}/EVENT )\n"
-    #    )
-    #ENDIF()
+SET( LCIO_ENV_INIT "${PROJECT_BINARY_DIR}/lcio_env_init.sh" )
 
-
-    #ADD_CUSTOM_TARGET( doc
-    #    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
-    #    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    #    COMMENT "Generating header files for documentation..."
-    #    VERBATIM
-    #)
-
-    #ADD_CUSTOM_TARGET( doc
-    #    COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
-    #    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
-    #    COMMENT "Generating header files for documentation..."
-    #    VERBATIM
-    #)
-
-    # add custom target for building all documentation
-    #ADD_CUSTOM_TARGET( doc DEPENDS "${LCIO_CXX_HEADERS_DIR}/EVENT" )
-
-    ADD_CUSTOM_TARGET( doc )
-
-    # create "always out-of-date" headers target
-    ADD_CUSTOM_TARGET( headers
-        COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Generating header files with ant aid.generate..."
-        VERBATIM )
+IF( NOT EXISTS ${LCIO_ENV_INIT} )
+    MESSAGE( STATUS "Generating lcio_env_init.sh ..." )
     
-    # create "always out-of-date" jar target
-    ADD_CUSTOM_TARGET( jar
-        COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
-        # cmake 2.4 does not know remove_directory
-        #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
-        #COMMAND ${CMAKE_COMMAND} -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
-        # cannot be removed due to documentation
-        #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
-        #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMENT "Building lcio jar library..."
-        VERBATIM )
-
-    # tell make clean to also erase lcio.jar
-    # unfortunately ADDITIONAL_MAKE_CLEAN_FILES does not work with regexp, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
-    SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-        "${PROJECT_SOURCE_DIR}/lib/lcio.jar;" # ${LCIO_CXX_HEADERS_DIR}/EVENT;${LCIO_CXX_HEADERS_DIR}/IO"
+    FILE( WRITE "${LCIO_ENV_INIT}"
+"
+    # generated script for calling ant
+    export LCIO=${PROJECT_SOURCE_DIR}
+    export JDK_HOME=${JAVA_HOME}
+    export JAVA_HOME=${JAVA_HOME}
+    export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH
+    eval $*
+"
     )
 
-    #JAVADOC
-    IF( JAVA_DOC )
-        ADD_CUSTOM_COMMAND(
-            OUTPUT "${PROJECT_SOURCE_DIR}/doc/api/index.html"
-            #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
-            COMMAND ${SH} ARGS "${LCIO_ENV_INIT}" ant doc
-            WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-            COMMENT "Building Java API Documentation..."
-            VERBATIM )
-        
-        ADD_CUSTOM_TARGET( doc_java DEPENDS "${PROJECT_SOURCE_DIR}/doc/api/index.html" )
-        # tell doc target to call doc_java
-        ADD_DEPENDENCIES( doc doc_java )
-    ENDIF()
 ENDIF()
 
-IF( WIN32 )
-    MESSAGE( SEND_ERROR "Windows support not implemented yet!!!" )
-    #TODO generate script for calling ant.bat
-ENDIF()
 
-# doxygen and latex stuff
-FIND_PACKAGE( Doxygen )
-FIND_PACKAGE( LATEX )
 
-IF( LATEX_COMPILER AND MAKEINDEX_COMPILER AND PDFLATEX_COMPILER
-    AND DVIPS_CONVERTER AND LATEX2HTML_CONVERTER AND DOXYGEN_FOUND )
-    
-    # c++ documentation
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
-        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
-        COMMAND "${DOXYGEN_EXECUTABLE}"
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api"
-        COMMENT "Building C++ API Documentation..."
-        VERBATIM )
-    
-    ADD_CUSTOM_TARGET( doc_cpp DEPENDS "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html" )
 
-    # user manual
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${PROJECT_BINARY_DIR}/manual"
-        # first we copy directory from source tree to binary tree to
-        # keep the source tree unchanged
-        COMMAND "${CMAKE_COMMAND}" -E copy_directory
-            "${PROJECT_SOURCE_DIR}/src/latex/manual"
-            "${PROJECT_BINARY_DIR}/manual"
-        VERBATIM )
+### GENERATE HEADERS ( USING ANT ) ##########################################
 
-    SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-        "${PROJECT_BINARY_DIR}/manual"
-    )
+# directories where ant generates c++ and java headers
+SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
+SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
 
-    ADD_CUSTOM_COMMAND(
-        OUTPUT  "${PROJECT_SOURCE_DIR}/doc/manual.pdf"
-        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
-        COMMAND "${DVIPS_CONVERTER}" ARGS -q -o manual.ps manual.dvi
-        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode manual.tex
-        COMMAND "${LATEX2HTML_CONVERTER}" ARGS
-            -mkdir -dir manual_html -verbosity 0 -info 0 -no_auto_link -split 0 -no_navigation manual.tex
-        # copy files to doc directory
-        COMMAND "${CMAKE_COMMAND}" -E copy "manual.pdf"
-            "${PROJECT_SOURCE_DIR}/doc"
-        COMMAND "${CMAKE_COMMAND}" -E copy "manual.ps"
-            "${PROJECT_SOURCE_DIR}/doc"
-        COMMAND "${CMAKE_COMMAND}" -E copy_directory "manual_html"
-            "${PROJECT_SOURCE_DIR}/doc/manual_html"
-        DEPENDS "${PROJECT_BINARY_DIR}/manual"
-        WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/manual"
-        COMMENT "Building Documentation - Users Manual..."
-        VERBATIM )
+SET( LCIO_AID_HEADERS_OUTPUT_DIR "${LCIO_BINARY_DIR}/include" )
+SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
 
-    ADD_CUSTOM_TARGET( doc_manual DEPENDS "${PROJECT_SOURCE_DIR}/doc/manual.pdf" )
 
-    # reference manual
-    ADD_CUSTOM_COMMAND(
-        #OUTPUT  "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex/refman.dvi"
-        OUTPUT  "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps" "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
-        #COMMAND ${CMAKE_COMMAND} -P "${DOC_GEN_HEADERS}"
-        # FIXME: latex returns error, using | xargs at the end ignores the exit code error
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
-        COMMAND "${LATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
-        COMMAND "${DVIPS_CONVERTER}" ARGS -q -o refman.ps refman.dvi
-        # FIXME psnup should be detected
-        COMMAND "psnup" ARGS -q -2 refman.ps ${PROJECT_SOURCE_DIR}/doc/lciorefman.ps
-        COMMAND "echo" ARGS "reference manual created successfully"
-        COMMAND "${PDFLATEX_COMPILER}" ARGS -interaction=batchmode refman.tex | xargs
-        COMMAND "${CMAKE_COMMAND}" -E copy refman.pdf ${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
-        COMMENT "Building Documentation - Reference Manual..."
-        VERBATIM )
+## custom command to generate headers with ant
+#ADD_CUSTOM_COMMAND(
+#    OUTPUT "${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h"
+#    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
+#    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+#    COMMENT "Generating header files with ant aid.generate..."
+#)
+#
+## create "always out-of-date" headers target
+#ADD_CUSTOM_TARGET( headers
+#    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
+#    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+#    COMMENT "Generating header files with ant aid.generate..."
+#)
 
-    ADD_CUSTOM_TARGET( doc_refman DEPENDS
-        "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
-        "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps"
-        "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
-    )
-    
-    ADD_DEPENDENCIES( doc doc_cpp doc_manual doc_refman )
 
-ELSE()
-    IF( NOT DOXYGEN_FOUND )
-        MESSAGE( STATUS "Doxygen not found in your system!!" )
-    ELSE()
-        MESSAGE( STATUS "Latex or one of its tools (dvips, pdflatex, latex2html, makeindex) not found in your system!!" )
-    ENDIF()
-    IF( INSTALL_DOC )
-        MESSAGE( STATUS "WARNING: INSTALL_DOC forced to OFF" )
-        SET( INSTALL_DOC OFF )
-    ENDIF()
-ENDIF()
 
-# installation rules
-IF( INSTALL_JAR )
-    # moved install( code ) instruction into src/java/CMakeLists.txt to fix
-    # problem of always rebuilding sources when typing 'make install'
-    ADD_SUBDIRECTORY( ./src/java )
-ENDIF()
 
-IF( INSTALL_DOC )
-    # make sure documentation is built before make install is called
-    INSTALL( CODE "EXEC_PROGRAM(${CMAKE_BUILD_TOOL} ${PROJECT_BINARY_DIR} ARGS doc)" )
+### BUILD JAR LIBRARY (USING ANT ) ##########################################
 
-    # install documentation
-    INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/doc" DESTINATION . PATTERN "*CVS*" EXCLUDE )
-ENDIF()
+# custom command to generate jar library
+ADD_CUSTOM_COMMAND(
+    OUTPUT "${PROJECT_SOURCE_DIR}/lib/lcio.jar"
+    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    COMMENT "generating lcio.jar"
+)
 
-##########################################################################################
+# create target to create jar library
+ADD_CUSTOM_TARGET( jar DEPENDS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
 
-# library *nix style versioning
-SET( LCIO_SOVERSION "${LCIO_MAJOR_VERSION}.${LCIO_MINOR_VERSION}" )
-SET( LCIO_VERSION "${LCIO_SOVERSION}.${LCIO_PATCH_LEVEL}" )
+# create "always out-of-date" jar target
+ADD_CUSTOM_TARGET( jar_force
+    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    COMMENT "Building lcio jar library..."
+)
 
-# add install path to the rpath list
-SET( CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib" )
-MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH )
 
-# add install path to the rpath list (apple)
-IF( APPLE )
-    SET( CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib" )
-    MARK_AS_ADVANCED( CMAKE_INSTALL_NAME_DIR )
-ENDIF()
 
-# append link pathes to rpath list
-SET( CMAKE_INSTALL_RPATH_USE_LINK_PATH 1 )
-MARK_AS_ADVANCED( CMAKE_INSTALL_RPATH_USE_LINK_PATH )
 
-# build output directories
-SET( EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin" CACHE PATH "EXECUTABLE_OUTPUT_PATH" FORCE )
-SET( LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib" CACHE PATH "LIBRARY_OUTPUT_PATH" FORCE )
-MARK_AS_ADVANCED( EXECUTABLE_OUTPUT_PATH LIBRARY_OUTPUT_PATH )
+### REMOVE RESTS GENERATED BY ANT IN THE SOURCE-TREE ########################
 
-# input directories
-IF( BUILD_WITH_DCAP )
-  IF( NOT DEFINED DCAP_HOME )
-      MESSAGE( FATAL_ERROR "Check for DCAP: DCAP_HOME not set!! "
-              "Please call cmake with -DDCAP_HOME=<path_to_DCAP>" )
-  ENDIF()
-  
-  # --------- moved to sio/CMakeLists.txt --------
-  #INCLUDE_DIRECTORIES( ${DCAP_HOME}/include )
-  #ADD_DEFINITIONS( "-DSIO_USE_DCAP" )
-  # ----------------------------------------------
+# additional stuff to clean with 'make clean'
+# does not work with regexp's, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
+SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
+    "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${LCIO_CXX_HEADERS_DIR}/EVENT;${LCIO_CXX_HEADERS_DIR}/IO"
+)
 
-  FIND_LIBRARY( DCAP_LIB NAMES dcap PATHS ${DCAP_HOME}/lib NO_DEFAULT_PATH )
-  LINK_LIBRARIES( ${DCAP_LIB} ) 
-ENDIF()
-
-ADD_SUBDIRECTORY( sio sio )
-ADD_SUBDIRECTORY( src/cpp lcio )
-IF( BUILD_ROOTDICT )
-    ADD_SUBDIRECTORY( src/cpp/include/rootDict rootDict )
-ENDIF()
-IF( BUILD_F77_TESTJOBS )
-    ADD_SUBDIRECTORY( src/f77 f77 )
-ENDIF()
-
-# create uninstall configuration file 
-CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-                "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
-                IMMEDIATE @ONLY )
-
-# create uninstall target
-ADD_CUSTOM_TARGET( uninstall
-    COMMAND "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake"
-    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/{io,event}/*.{java,class}"
-    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.class"
-    #COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.class"
+# keep source tree clean
+ADD_CUSTOM_TARGET( uninstall_headers
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.java"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.java"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/manual.ps"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/manual.pdf"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.ps"
-    COMMAND "${CMAKE_COMMAND}" -E remove "${PROJECT_SOURCE_DIR}/doc/lciorefman.pdf"
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
+    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
 
-    # cmake 2.4 does not know remove_directory
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
-    
-    # cmake 2.4 does not know remove_directory
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/api"
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/manual_html"
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
-    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
-
-    #COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/{EVENT,IO}
-    COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/EVENT"
-    COMMAND rm -rf "${LCIO_CXX_HEADERS_DIR}/IO"
-
-    COMMAND rm -rf "${PROJECT_BINARY_DIR}/manual"
-
-    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/api"
-    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/manual_html"
-    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/html"
-    COMMAND rm -rf "${PROJECT_SOURCE_DIR}/doc/doxygen_api/latex"
-    
     COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 )
+ADD_DEPENDENCIES( uninstall uninstall_headers )
 
-# create configuration file from .in file
-CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/LCIOConfig.cmake.in"
-                "${PROJECT_BINARY_DIR}/LCIOConfig.cmake" @ONLY )
 
-# install configuration file
-INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOConfig.cmake" DESTINATION . )
 
-# display status message for important variables
-MESSAGE( STATUS )
-MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-MESSAGE( STATUS "BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS}" )
-MESSAGE( STATUS "CMAKE_INSTALL_PREFIX = ${CMAKE_INSTALL_PREFIX}" )
-MESSAGE( STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
-IF( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    MESSAGE( STATUS "BUILD_32BIT_COMPATIBLE = ${BUILD_32BIT_COMPATIBLE}" )
-ENDIF()
-MESSAGE( STATUS "BUILD_LCIO_TESTS = ${BUILD_LCIO_TESTS}" )
+
+
+### SUBDIRECTORIES ##########################################################
+
+# replaced by standard cmake variable BUILD_TESTING
+#OPTION( BUILD_LCIO_TESTS "Set to ON to build LCIO tests under src/cpp/src/TESTS" OFF )
+#MESSAGE( STATUS "BUILD_LCIO_TESTS = ${BUILD_LCIO_TESTS}" )
+
+OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
+
+
+# lcio/sio libraries
+ADD_SUBDIRECTORY( ./sio sio )
+ADD_SUBDIRECTORY( ./src/cpp lcio )
+
+
+# rootdict
+#IF( BUILD_ROOTDICT )
+#    ADD_SUBDIRECTORY( ./src/cpp/include/rootDict rootDict )
+#ENDIF()
+
+
+# lcio.jar
+OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
+MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
+IF( INSTALL_JAR )
+    INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
+    INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )# OPTIONAL )
+ENDIF()
+
+
+# fortran examples
+OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
-MESSAGE( STATUS "BUILD_WITH_DCAP = ${BUILD_WITH_DCAP}" )
-MESSAGE( STATUS "INSTALL_DOC = ${INSTALL_DOC}" )
-#MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
-MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
-MESSAGE( STATUS "Change a value with: cmake -D<Variable>=<Value>" )
-MESSAGE( STATUS "-------------------------------------------------------------------------------" )
-MESSAGE( STATUS )
-
-# force some variables that could be defined in the command line
-# to be written to cache
-SET( BUILD_SHARED_LIBS "${BUILD_SHARED_LIBS}" CACHE BOOL
-    "Set to OFF to build static libraries" FORCE )
-SET( CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH
-    "Where to install LCIO" FORCE )
-SET( CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-    "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel." FORCE )
-SET( BUILD_LCIO_TESTS "${BUILD_LCIO_TESTS}" CACHE BOOL
-    "Set to ON to build LCIO tests under src/cpp/src/TESTS" FORCE )
-SET( BUILD_LCIO_EXAMPLES "${BUILD_LCIO_EXAMPLES}" CACHE BOOL
-    "Set to ON to build LCIO examples under src/cpp/src/EXAMPLES" FORCE )
-SET( BUILD_F77_TESTJOBS "${BUILD_F77_TESTJOBS}" CACHE BOOL
-    "Set to ON to build LCIO F77 testbobs" FORCE )
-SET( BUILD_WITH_DCAP "${BUILD_WITH_DCAP}" CACHE BOOL
-    "Set to ON to build LCIO with dcap support (dCache)" FORCE )
-SET( DCAP_HOME "${DCAP_HOME}" CACHE PATH
-    "Set to dcap installation directory - only if BUILD_WITH_DCAP=ON" FORCE )
-SET( INSTALL_DOC "${INSTALL_DOC}" CACHE BOOL
-    "Set to OFF to skip build/install Documentation" FORCE )
-#SET( INSTALL_JAR "${INSTALL_JAR}" CACHE BOOL
-#    "Set to OFF to skip build/install lcio.jar" FORCE )
-SET( BUILD_ROOTDICT "${BUILD_ROOTDICT}" CACHE BOOL
-     "Set to ON to build LCIO ROOT dictionary" FORCE )
+IF( BUILD_F77_TESTJOBS )
+    ADD_SUBDIRECTORY( ./src/f77 f77 )
+ENDIF()
 
 
-# export build settings
-INCLUDE( CMakeExportBuildSettings )
-CMAKE_EXPORT_BUILD_SETTINGS( "LCIOBuildSettings.cmake" )
-INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOBuildSettings.cmake" DESTINATION lib/cmake )
 
-# export library dependencies (keep this as the last line in the file)
-EXPORT_LIBRARY_DEPENDENCIES( "LCIOLibDeps.cmake" )
-INSTALL( FILES "${PROJECT_BINARY_DIR}/LCIOLibDeps.cmake" DESTINATION lib/cmake )
+
+### DOCUMENTATION ###########################################################
+
+OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
+
+IF( INSTALL_DOC )
+    ADD_SUBDIRECTORY( ./doc )
+    INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} doc)" )
+ENDIF()
+
+
+
+# display some variables and write them to cache
+DISPLAY_STD_VARIABLES()
+
+
+# generate and install following configuration files
+GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake LCIOLibDeps.cmake )
+
