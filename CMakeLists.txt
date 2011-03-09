@@ -20,7 +20,8 @@ SET( LCIO_VERSION_PATCH 3 )
 
 ### DEPENDENCIES ############################################################
 
-FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
+#FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
+FIND_PACKAGE( ILCSOFT_CMAKE_MODULES REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
@@ -35,13 +36,12 @@ ENDIF()
 
 # ROOT
 OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
-MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
 IF( BUILD_ROOTDICT )
     FIND_PACKAGE( ROOT 5.27.06 REQUIRED ) # look for ROOT versions >= 5.27.06
 ENDIF()
 
 
-# DCAP (TODO put in FindDCAP.cmake)
+# DCAP
 #OPTION( LCIO_DCAP "Set to ON to build LCIO with dcap (dCache) support" OFF )
 #MESSAGE( STATUS "LCIO_DCAP = ${LCIO_DCAP}" )
 #IF( LCIO_DCAP )
@@ -106,6 +106,13 @@ SET( LCIO_AID_HEADERS_OUTPUT_DIR "${LCIO_BINARY_DIR}/include" )
 SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
 
 
+## create "always out-of-date" headers target
+#ADD_CUSTOM_TARGET( headers_force
+#    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
+#    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+#    COMMENT "Generating header files with ant aid.generate..."
+#)
+
 ## custom command to generate headers with ant
 #ADD_CUSTOM_COMMAND(
 #    OUTPUT "${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h"
@@ -114,17 +121,18 @@ SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
 #    COMMENT "Generating header files with ant aid.generate..."
 #)
 #
-## create "always out-of-date" headers target
-#ADD_CUSTOM_TARGET( headers
-#    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid.generate
-#    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-#    COMMENT "Generating header files with ant aid.generate..."
-#)
-
-
+## create target to create headers with ant
+#ADD_CUSTOM_TARGET( headers DEPENDS ${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h )
 
 
 ### BUILD JAR LIBRARY (USING ANT ) ##########################################
+
+# create "always out-of-date" jar target
+ADD_CUSTOM_TARGET( jar_force
+    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+    COMMENT "Building lcio jar library..."
+)
 
 # custom command to generate jar library
 ADD_CUSTOM_COMMAND(
@@ -135,15 +143,7 @@ ADD_CUSTOM_COMMAND(
 )
 
 # create target to create jar library
-ADD_CUSTOM_TARGET( jar DEPENDS "${PROJECT_SOURCE_DIR}/lib/lcio.jar" )
-
-# create "always out-of-date" jar target
-ADD_CUSTOM_TARGET( jar_force
-    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
-    WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-    COMMENT "Building lcio jar library..."
-)
-
+ADD_CUSTOM_TARGET( jar DEPENDS ${PROJECT_SOURCE_DIR}/lib/lcio.jar )
 
 
 
@@ -175,10 +175,8 @@ ADD_DEPENDENCIES( uninstall uninstall_headers )
 
 # replaced by standard cmake variable BUILD_TESTING
 #OPTION( BUILD_LCIO_TESTS "Set to ON to build LCIO tests under src/cpp/src/TESTS" OFF )
-#MESSAGE( STATUS "BUILD_LCIO_TESTS = ${BUILD_LCIO_TESTS}" )
 
 OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
-MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
 
 
 # lcio/sio libraries
@@ -186,15 +184,8 @@ ADD_SUBDIRECTORY( ./sio sio )
 ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
-# rootdict
-#IF( BUILD_ROOTDICT )
-#    ADD_SUBDIRECTORY( ./src/cpp/include/rootDict rootDict )
-#ENDIF()
-
-
 # lcio.jar
 OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
-MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
     INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )# OPTIONAL )
@@ -203,7 +194,6 @@ ENDIF()
 
 # fortran examples
 OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 IF( BUILD_F77_TESTJOBS )
     ADD_SUBDIRECTORY( ./src/f77 f77 )
 ENDIF()
@@ -214,7 +204,6 @@ ENDIF()
 ### DOCUMENTATION ###########################################################
 
 OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
-
 IF( INSTALL_DOC )
     ADD_SUBDIRECTORY( ./doc )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} doc)" )
@@ -224,6 +213,12 @@ ENDIF()
 
 # display some variables and write them to cache
 DISPLAY_STD_VARIABLES()
+
+MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
+MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
+MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
+MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
+MESSAGE( STATUS "" )
 
 
 # generate and install following configuration files
