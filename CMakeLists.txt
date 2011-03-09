@@ -27,8 +27,7 @@ INCLUDE( ilcsoft_default_settings )
 
 
 # JAVA (needed to generate c++ headers)
-#INCLUDE( ${PROJECT_SOURCE_DIR}/FindJAVA.cmake )
-INCLUDE( ${ILCSOFT_CMAKE_MODULES_ROOT}/FindJAVA.cmake )
+INCLUDE( ${PROJECT_SOURCE_DIR}/cmake/FindJAVA.cmake )
 IF( NOT JAVA_FOUND )
     MESSAGE( FATAL_ERROR "Failed to find Java! Please set JAVA_DIR=/path/to/java" )
 ENDIF()
