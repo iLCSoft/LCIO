@@ -20,7 +20,7 @@ namespace UTIL{
     _isSigned( signedWidth < 0 ) {
     
     // sanity check
-    if( offset < 0 || offset > 63 || offset+_width > 64 ) {
+    if( offset > 63 || offset+_width > 64 ) {
       
       std::stringstream s ;
       s << " BitFieldValue: out of range -  offset : " 
