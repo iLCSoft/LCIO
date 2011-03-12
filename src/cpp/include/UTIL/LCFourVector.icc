@@ -1,4 +1,3 @@
-#include "UTIL/LCFourVector.h"
 #include "IMPL/MCParticleImpl.h"
 #include "IMPL/ReconstructedParticleImpl.h"
 #include "Exceptions.h"
@@ -21,7 +20,8 @@ namespace UTIL{
 
   template<>
   inline LCFourVector<MCParticle>::LCFourVector( const MCParticle* mcPart ) : 
-    HepLorentzVector(mcPart->getMomentum()[0],
+     _lcObj( mcPart ),
+     HepLorentzVector(mcPart->getMomentum()[0],
 		     mcPart->getMomentum()[1],
 		     mcPart->getMomentum()[2],
 		     mcPart->getEnergy() )  
@@ -46,6 +46,7 @@ namespace UTIL{
 
   template<>
   inline LCFourVector<ReconstructedParticle>::LCFourVector( const ReconstructedParticle* part ): 
+    _lcObj( part ),
     HepLorentzVector(part->getMomentum()[0],
 		     part->getMomentum()[1],
 		     part->getMomentum()[2],
