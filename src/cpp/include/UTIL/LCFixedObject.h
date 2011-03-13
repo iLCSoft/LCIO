@@ -20,7 +20,7 @@ namespace UTIL{
    *  and LCGenericObject::getDataDescription().
    * 
    * @author gaede
-   * @version $Id: LCFixedObject.h,v 1.2 2005-02-25 17:27:45 gaede Exp $
+   * @version $Id: LCFixedObject.h,v 1.3 2011-03-13 12:41:49 gaede Exp $
    */
 
   template <int NINT, int NFLOAT, int NDOUBLE>
@@ -84,7 +84,7 @@ namespace UTIL{
     
 
     /** Return the id of the underlying LCGenericObjectImpl */
-    virtual int id() { return _obj->id() ; }
+    virtual int id() const { return _obj->id() ; }
      
 
     // ---- need to implement LCGenericObject interface:
