@@ -292,7 +292,7 @@ namespace UTIL{
       idv = &( static_cast< ClusterImpl* >(p)->getParticleIDs()  ) ; 
     }
     else{
-
+      
       throw Exception("PIDHandler::getParticleID LCObject is neither  ReconstructedParticleImpl nor ClusterImpl !") ;
     }
 
@@ -370,7 +370,11 @@ namespace UTIL{
       
       idv = &( static_cast< ClusterImpl* >(p)->getParticleIDs()  ) ; 
     }
-    
+    else{
+      
+      throw Exception("PIDHandler::setParticleID LCObject is neither  ReconstructedParticleImpl nor ClusterImpl !") ;
+    }
+ 
     const ParticleIDVec& pidV = *idv ;	 
     
     unsigned nPid = pidV.size() ;
