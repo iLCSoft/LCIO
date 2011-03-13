@@ -494,5 +494,11 @@ ADD_LCIO_CTEST( test_calohit )
 ADD_LCIO_CTEST( test_trackerhit )
 ADD_LCIO_CTEST( test_trackerpulse )
 ADD_LCIO_CTEST( test_randomaccess) 
+
+FIND_PACKAGE( CLHEP REQUIRED) 
+IF( CLHEP_FOUND )
+ADD_LCIO_CTEST( test_fourvector) 
+INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIRS} ) 
+ENDIF( CLHEP_FOUND )
 # ==================================================
 

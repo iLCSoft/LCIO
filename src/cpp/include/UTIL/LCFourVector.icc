@@ -20,17 +20,17 @@ namespace UTIL{
 
   template<>
   inline LCFourVector<MCParticle>::LCFourVector( const MCParticle* mcPart ) : 
-     _lcObj( mcPart ),
      HepLorentzVector(mcPart->getMomentum()[0],
 		     mcPart->getMomentum()[1],
 		     mcPart->getMomentum()[2],
-		     mcPart->getEnergy() )  
+		     mcPart->getEnergy() )  ,
+     _lcObj( mcPart )
   {
   }
   template<>
-  inline LCFourVector<MCParticle>::LCFourVector(LCObject* lcObj){
+  inline LCFourVector<MCParticle>::LCFourVector(const LCObject* lcObj){
     
-    _lcObj = dynamic_cast<MCParticle* >( lcObj ) ;
+    _lcObj = dynamic_cast<const MCParticle* >( lcObj ) ;
 
     if( _lcObj == 0 )
       throw Exception("Dynamic cast failed for LCFourVector() !") ;
@@ -45,18 +45,18 @@ namespace UTIL{
   }
 
   template<>
-  inline LCFourVector<ReconstructedParticle>::LCFourVector( const ReconstructedParticle* part ): 
-    _lcObj( part ),
+  inline LCFourVector<ReconstructedParticle>::LCFourVector(const ReconstructedParticle* part ): 
     HepLorentzVector(part->getMomentum()[0],
 		     part->getMomentum()[1],
 		     part->getMomentum()[2],
-		     part->getEnergy() )  
+		     part->getEnergy() ) , 
+    _lcObj( part )
   {
   }
   template<>
-  inline LCFourVector<ReconstructedParticle>::LCFourVector(LCObject* lcObj){
+  inline LCFourVector<ReconstructedParticle>::LCFourVector(const LCObject* lcObj){
     
-    _lcObj = dynamic_cast<ReconstructedParticle* >( lcObj ) ;
+    _lcObj = dynamic_cast<const ReconstructedParticle* >( lcObj ) ;
 
     if( _lcObj == 0 )
       throw Exception("Dynamic cast failed for LCFourVector() !") ;
