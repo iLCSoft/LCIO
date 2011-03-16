@@ -20,15 +20,16 @@ SET( LCIO_VERSION_PATCH 3 )
 
 ### DEPENDENCIES ############################################################
 
+LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+
 #FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
-FIND_PACKAGE( ILCSOFT_CMAKE_MODULES REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
 
 
 # JAVA (needed to generate c++ headers)
-INCLUDE( ${PROJECT_SOURCE_DIR}/cmake/FindJAVA.cmake )
+INCLUDE( FindJAVA4LCIO )
 IF( NOT JAVA_FOUND )
     MESSAGE( FATAL_ERROR "Failed to find Java! Please set JAVA_DIR=/path/to/java" )
 ENDIF()
