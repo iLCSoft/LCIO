@@ -270,6 +270,7 @@ ADD_LCIO_BIN( dumpevent )
 ADD_LCIO_BIN( copyfix ) 
 ADD_LCIO_BIN( stdhepjob ) 
 ADD_LCIO_BIN( addRandomAccess )
+ADD_LCIO_BIN( lcio_event_counter ) 
 
 
 
