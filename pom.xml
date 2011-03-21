@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>lcio</artifactId>
     <groupId>org.lcsim</groupId>
-    <name>LCIO</name>
+    <name>LCIO Java</name>
     <version>1.6-SNAPSHOT</version>
     <description>Compilation, tests, and dependencies for LCIO Java Library.</description>
     <scm>
