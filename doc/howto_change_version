@@ -3,15 +3,10 @@ To change the version of LCIO the following files have to be modified:
 
 
 CMakeLists.txt
-  SET( LCIO_MAJOR_VERSION 1 )
-  SET( LCIO_MINOR_VERSION 8 )
-  SET( LCIO_PATCH_LEVEL 2 )
+  SET( LCIO_VERSION_MAJOR 1 )
+  SET( LCIO_VERSION_MINOR 8 )
+  SET( LCIO_VERSION_PATCH 2 )
   
-sio/CMakeLists.txt
-  SET( SIO_MAJOR_VERSION 1 )
-  SET( SIO_MINOR_VERSION 8 )
-  SET( SIO_PATCH_LEVEL 2 )
-
 config/lcio.properties
   version=0.9
   dist.version=v00-09

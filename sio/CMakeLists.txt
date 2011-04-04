@@ -8,13 +8,13 @@
 PROJECT( SIO )
 
 # project version
-SET( SIO_MAJOR_VERSION 1 )
-SET( SIO_MINOR_VERSION 51 )
-SET( SIO_PATCH_LEVEL 2 )
+SET( SIO_VERSION_MAJOR ${LCIO_VERSION_MAJOR} )
+SET( SIO_VERSION_MINOR ${LCIO_VERSION_MINOR} )
+SET( SIO_VERSION_PATCH ${LCIO_VERSION_PATCH} )
 
 # library *nix style versioning
-SET( SIO_SOVERSION "${SIO_MAJOR_VERSION}.${SIO_MINOR_VERSION}" )
-SET( SIO_VERSION "${SIO_SOVERSION}.${SIO_PATCH_LEVEL}" )
+SET( SIO_SOVERSION "${SIO_VERSION_MAJOR}.${SIO_VERSION_MINOR}" )
+SET( SIO_VERSION "${SIO_SOVERSION}.${SIO_VERSION_PATCH}" )
 
 #INCLUDE(FindZLIB)
 FIND_PACKAGE( ZLIB REQUIRED )
@@ -29,10 +29,10 @@ IF( NOT BIG_ENDIAN )
     ADD_DEFINITIONS( "-D__LITTLE_ENDIAN__" )
 ENDIF()
 
-IF( BUILD_WITH_DCAP )
-    INCLUDE_DIRECTORIES( ${DCAP_HOME}/include )
-    ADD_DEFINITIONS( "-DSIO_USE_DCAP" )
-ENDIF()
+#IF( LCIO_DCAP )
+#    INCLUDE_DIRECTORIES( ${DCAP_INCLUDE_DIRS} )
+#    ADD_DEFINITIONS( "-DSIO_USE_DCAP" )
+#ENDIF()
 
 INCLUDE_DIRECTORIES(
     ${SIO_SOURCE_DIR}/include
@@ -40,13 +40,13 @@ INCLUDE_DIRECTORIES(
 )
 
 SET (SIO_SRCS
-  ${SIO_SOURCE_DIR}/src/SIO_block.cc
-  ${SIO_SOURCE_DIR}/src/SIO_blockManager.cc
-  ${SIO_SOURCE_DIR}/src/SIO_functions.cc
-  ${SIO_SOURCE_DIR}/src/SIO_record.cc
-  ${SIO_SOURCE_DIR}/src/SIO_recordManager.cc
-  ${SIO_SOURCE_DIR}/src/SIO_stream.cc
-  ${SIO_SOURCE_DIR}/src/SIO_streamManager.cc
+    ${SIO_SOURCE_DIR}/src/SIO_block.cc
+    ${SIO_SOURCE_DIR}/src/SIO_blockManager.cc
+    ${SIO_SOURCE_DIR}/src/SIO_functions.cc
+    ${SIO_SOURCE_DIR}/src/SIO_record.cc
+    ${SIO_SOURCE_DIR}/src/SIO_recordManager.cc
+    ${SIO_SOURCE_DIR}/src/SIO_stream.cc
+    ${SIO_SOURCE_DIR}/src/SIO_streamManager.cc
 )
 
 #------ require proper C++ -------
@@ -54,23 +54,8 @@ ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
 ADD_DEFINITIONS( "-Wno-long-long -Wno-sign-compare -fno-strict-aliasing" )
 
-ADD_LIBRARY( lib_SIO ${SIO_SRCS} )
 
-SET_TARGET_PROPERTIES( lib_SIO PROPERTIES
-    # create *nix style library versions + symbolic links
-    VERSION ${SIO_VERSION}
-    SOVERSION ${SIO_SOVERSION}
-    # allow creating static and shared libs without conflicts
-    CLEAN_DIRECT_OUTPUT 1
-    # avoid conflicts between library and binary target names
-    OUTPUT_NAME sio
-)
-
-TARGET_LINK_LIBRARIES( lib_SIO ${ZLIB_LIBRARIES} )
-
-# install library
-INSTALL( TARGETS lib_SIO DESTINATION lib PERMISSIONS
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE )
+ADD_SHARED_LIBRARY( sio ${SIO_SRCS} )
+TARGET_LINK_LIBRARIES( sio ${ZLIB_LIBRARIES} )
+INSTALL_SHARED_LIBRARY( sio DESTINATION lib )
 
