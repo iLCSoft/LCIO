@@ -120,7 +120,7 @@ namespace UTIL{
      *  If no MCParticle given a string describing the bits is returned:<br>
      *  
      */
-    static std::string getSimulatorStatusString(EVENT::MCParticle* mcp=0) ;
+    static std::string getSimulatorStatusString(const EVENT::MCParticle* mcp=0) ;
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
 
