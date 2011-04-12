@@ -173,6 +173,8 @@ public:
 // Get the number of events in the input file
 //
    long           numEvents()      const { return(numevts);                  };
+   long           numEventsExpected()      const { return(numevts_expect);   };
+
 //
 // Direct access to the event buffer. Note that using readEvent(void)
 // in combination with the functions below is faster than using

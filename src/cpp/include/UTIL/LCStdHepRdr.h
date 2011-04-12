@@ -33,6 +33,22 @@ namespace UTIL{
 	 */
 	~LCStdHepRdr() ;
 
+
+	/** Get number of events in the stdhep file.
+     *  This number is read from the file header (no guarantee that it is correct)
+    */
+    long getNumberOfEvents() const {
+      return _reader->numEvents() ;
+    }
+
+	/** Get total number of expected events in the whole set of stdhep files
+     *  from which this stdhep file belongs to.
+     *  This number is read from the file header (no guarantee that it is correct)
+    */
+    long getNumberOfTotalEventsExpected() const {
+      return _reader->numEventsExpected() ;
+    }
+
     /** Read an event and return an LCCollectionVec of MCParticles.
      * @deprecated please use updateEvent()
      */
