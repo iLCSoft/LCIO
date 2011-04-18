@@ -26,7 +26,7 @@ PTRTYPE lccahgetrawhit( PTRTYPE calhit ) ;
 int lccahsetcellid0( PTRTYPE calhit, int id0) ;
 int lccahsetcellid1( PTRTYPE calhit, int id1) ;
 int lccahsetenergy( PTRTYPE calhit, float en) ;
-int lccahsetenergyerr( PTRTYPE calhit, float en) ;
+int lccahsetenergyerr( PTRTYPE calhit, float enerr) ;
 int lccahsettime( PTRTYPE calhit, float time) ;
 int lccahsetposition( PTRTYPE calhit, float pos[3])  ;
 int lccahsettype( PTRTYPE calhit, int type ) ;
@@ -41,6 +41,7 @@ FCALLSCFUN1(INT, lccahid, LCCAHID, lccahid, CFORTRANPNTR )
 FCALLSCFUN1(INT, lccahgetcellid0, LCCAHGETCELLID0, lccahgetcellid0, CFORTRANPNTR ) 
 FCALLSCFUN1(INT, lccahgetcellid1, LCCAHGETCELLID1, lccahgetcellid1, CFORTRANPNTR ) 
 FCALLSCFUN1(FLOAT, lccahgetenergy, LCCAHGETENERGY, lccahgetenergy, CFORTRANPNTR ) 
+FCALLSCFUN1(FLOAT, lccahgetenergyerr, LCCAHGETENERGYERR, lccahgetenergyerr, CFORTRANPNTR ) 
 FCALLSCFUN1(FLOAT, lccahgettime, LCCAHGETTIME, lccahgettime, CFORTRANPNTR )
 FCALLSCFUN2(INT, lccahgetposition,LCCAHGETPOSITION,lccahgetposition, CFORTRANPNTR, FLOATV ) 
 FCALLSCFUN1(INT, lccahgettype, LCCAHGETTYPE, lccahgettype, CFORTRANPNTR )
@@ -50,6 +51,7 @@ FCALLSCFUN1(CFORTRANPNTR, lccahgetrawhit, LCCAHGETRAWHIT, lccahgetrawhit, CFORTR
 FCALLSCFUN2(INT, lccahsetcellid0,LCCAHSETCELLID0,lccahsetcellid0, CFORTRANPNTR, INT ) 
 FCALLSCFUN2(INT, lccahsetcellid1,LCCAHSETCELLID1,lccahsetcellid1, CFORTRANPNTR, INT ) 
 FCALLSCFUN2(INT, lccahsetenergy,LCCAHSETENERGY,lccahsetenergy, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lccahsetenergyerr,LCCAHSETENERGYERR,lccahsetenergyerr, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lccahsettime,LCCAHSETTIME,lccahsettime, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lccahsetposition,LCCAHSETPOSITION,lccahsetposition, CFORTRANPNTR, FLOATV ) 
 FCALLSCFUN2(INT, lccahsettype, LCCAHSETTYPE, lccahsettype, CFORTRANPNTR, INT ) 
