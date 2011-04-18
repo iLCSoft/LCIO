@@ -17,6 +17,7 @@ int     lcclugettype( PTRTYPE clu ) ;
 // int     lcclutesttype( PTRTYPE clu , int bit ) ;
 
 float   lcclugetenergy( PTRTYPE clu ) ;
+float   lcclugetenergyerr( PTRTYPE clu ) ;
 int     lcclugetposition( PTRTYPE clu, float* pos ) ;
 int     lcclugetpositionerror( PTRTYPE clu, float* poserr ) ;
 float   lcclugetitheta( PTRTYPE clu ) ;
@@ -35,6 +36,7 @@ PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
 
 int     lcclusettypebit( PTRTYPE clu, int index, int val ) ;
 int     lcclusetenergy( PTRTYPE clu, float energy ) ;
+int     lcclusetenergyerr( PTRTYPE clu, float enerr ) ;
 int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
 int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
 int     lcclusetitheta( PTRTYPE clu, float theta ) ;
@@ -60,6 +62,7 @@ FCALLSCFUN1(INT, lccluid, LCCLUID, lccluid, CFORTRANPNTR)
 FCALLSCFUN1(INT, lcclugettype, LCCLUGETTYPE, lcclugettype, CFORTRANPNTR) 
 // FCALLSCFUN2(INT, lcclutesttype, LCCLUTESTTYPE,lcclutesttype, CFORTRANPNTR, INT ) 
 FCALLSCFUN1(FLOAT, lcclugetenergy, LCCLUGETENERGY, lcclugetenergy, CFORTRANPNTR)
+FCALLSCFUN1(FLOAT, lcclugetenergyerr, LCCLUGETENERGYERR, lcclugetenergyerr, CFORTRANPNTR)
 FCALLSCFUN2(INT, lcclugetposition, LCCLUGETPOSITION, lcclugetposition, CFORTRANPNTR, FLOATV) 
 FCALLSCFUN2(INT, lcclugetpositionerror, LCCLUGETPOSITIONERROR, lcclugetpositionerror, CFORTRANPNTR, FLOATV) 
 FCALLSCFUN1(FLOAT, lcclugetitheta, LCCLUGETITHETA, lcclugetitheta, CFORTRANPNTR) 
@@ -75,6 +78,7 @@ FCALLSCFUN3(INT, lcclugethitcontributions, LCCLUGETHITCONTRIBUTIONS, lcclugethit
 
 FCALLSCFUN3(INT, lcclusettypebit, LCCLUSETTYPEBIT, lcclusettypebit, CFORTRANPNTR, INT, INT) 
 FCALLSCFUN2(INT, lcclusetenergy, LCCLUSETENERGY, lcclusetenergy, CFORTRANPNTR, FLOAT) 
+FCALLSCFUN2(INT, lcclusetenergyerr, LCCLUSETENERGYERR, lcclusetenergyerr, CFORTRANPNTR, FLOAT) 
 FCALLSCFUN2(INT, lcclusetposition, LCCLUSETPOSITION, lcclusetposition, CFORTRANPNTR, FLOATV) 
 FCALLSCFUN2(INT, lcclusetpositionerror, LCCLUSETPOSITIONERROR, lcclusetpositionerror, CFORTRANPNTR, FLOATV) 
 FCALLSCFUN2(INT, lcclusetitheta, LCCLUSETITHETA, lcclusetitheta, CFORTRANPNTR, FLOAT) 

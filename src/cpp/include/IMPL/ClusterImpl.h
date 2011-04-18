@@ -44,6 +44,10 @@ namespace IMPL {
      */
     virtual float getEnergy() const ;
 
+    /** Returns the error on the energy of the cluster.
+     */
+    virtual float getEnergyError() const ;
+
     /** Position of the cluster.
      */
     virtual const float* getPosition() const ;
@@ -107,6 +111,7 @@ namespace IMPL {
     //setters 
     void setTypeBit( int index , bool val=true) ;
     void setEnergy(float energy ) ;
+    void setEnergyError(float energyError ) ;
     void setPosition(float* position) ;
     void setPositionError(const EVENT::FloatVec &errpos) ;
     void setPositionError(const float* errpos) ;
@@ -142,6 +147,7 @@ namespace IMPL {
     //    std::string _type ;
     std::bitset<32> _type ;
     float _energy ;
+    float _energyError ;
     float _position[3] ;
     EVENT::FloatVec _errpos ;
     float _theta;

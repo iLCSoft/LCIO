@@ -39,6 +39,10 @@ public interface Cluster extends LCObject {
      */
     public float getEnergy() const ;	
 
+    /** Returns the error on the energy of the cluster.
+     */
+    public float getEnergyError() const ;	
+
     /** Position of the cluster.
      */
     public const float3V getPosition() const;

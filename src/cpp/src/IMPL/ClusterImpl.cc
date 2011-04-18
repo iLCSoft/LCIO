@@ -11,6 +11,7 @@ namespace IMPL{
   ClusterImpl::ClusterImpl() :
     _type(0),
     _energy(0),
+    _energyError(0),
     _theta(0),
     _phi(0) {
 
@@ -38,6 +39,7 @@ namespace IMPL{
 //   }
   
   float ClusterImpl::getEnergy() const{ return _energy;  }
+  float ClusterImpl::getEnergyError() const{ return _energyError;  }
   const float* ClusterImpl::getPosition() const{ return _position ; }
   const FloatVec & ClusterImpl::getPositionError() const{ return  _errpos ;  }
   float ClusterImpl::getITheta() const{ return _theta ;  }
@@ -68,6 +70,10 @@ namespace IMPL{
   void ClusterImpl::setEnergy(float energy ) { 
     checkAccess("ClusterImpl::setEnergy") ;
     _energy = energy ;  
+  }
+  void ClusterImpl::setEnergyError(float energyError ) { 
+    checkAccess("ClusterImpl::setEnergyError") ;
+    _energyError = energyError ;  
   }
   void ClusterImpl::setPosition(float* position) { 
     checkAccess("ClusterImpl::setPosition") ;

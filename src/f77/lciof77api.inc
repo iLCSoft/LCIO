@@ -171,12 +171,14 @@ c-----the Cluster interface
 
       integer lcclugettype, lcclugetposition
       integer lcclugetpositionerror, lcclugetdirectionerror
-      real    lcclugetenergy, lcclugetitheta, lcclugetiphi
+      real    lcclugetenergy, lcclugetenergyerr, lcclugetitheta
+      real    lcclugetiphi
       PTRTYPE lcclugetshape, lcclugetparticleids, lcclugetclusters
       PTRTYPE lcclugetcalorimeterhits, lcclugetsubdetectorenergies
       integer lcclugethitcontributions
 
-      integer lcclusettypebit, lcclusetenergy, lcclusetposition
+      integer lcclusettypebit, lcclusetenergy, lcclusetenergyerr
+      integer lcclusetposition
       integer lcclusetpositionerror,lcclusetitheta, lcclusetiphi
       integer lcclusetdirectionerror
       integer lcclusetshape

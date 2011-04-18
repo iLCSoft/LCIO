@@ -41,7 +41,10 @@ float lcclugetenergy( PTRTYPE cluster ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   return clu->getEnergy() ;
 }
-
+float lcclugetenergyerr( PTRTYPE cluster )  {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  return clu->getEnergyError() ;
+}
 int lcclugetposition( PTRTYPE cluster, float* pos )  {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   for( int i=0 ; i<3 ;  *pos++ = clu->getPosition()[i++]  ) ;
@@ -143,6 +146,12 @@ int lcclusettypebit( PTRTYPE cluster, int bit , int val) {
 int lcclusetenergy( PTRTYPE cluster, float energy ) {
   ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
   clu->setEnergy( energy ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcclusetenergyerr( PTRTYPE cluster, float enerr ) {
+  ClusterImpl* clu = f2c_pointer<ClusterImpl,LCObject>( cluster ) ;
+  clu->setEnergyError( enerr ) ;
   return LCIO::SUCCESS ;
 }
 

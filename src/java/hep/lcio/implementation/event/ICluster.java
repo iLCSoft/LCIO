@@ -16,6 +16,7 @@ public class ICluster extends ILCObject implements Cluster
    private static final float[] null6 = new float[6];
    
    protected float energy;
+   protected float energyError;
    protected float phi;
    protected float theta;
    protected int type;
@@ -47,6 +48,11 @@ public class ICluster extends ILCObject implements Cluster
    public float getEnergy()
    {
       return energy;
+   }
+
+   public float getEnergyError()
+   {
+      return energyError;
    }
    
    public float[] getHitContributions()
@@ -114,6 +120,12 @@ public class ICluster extends ILCObject implements Cluster
    {
       checkAccess();
       this.energy = energy;
+   }
+
+   public void setEnergyError(float energyError)
+   {
+      checkAccess();
+      this.energyError = energyError;
    }
    
    public void setIPhi(float phi)

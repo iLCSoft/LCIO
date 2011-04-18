@@ -26,6 +26,10 @@ class SIOCluster extends ICluster
    {
       type = in.readInt();
       energy = in.readFloat();
+      //if( 1000*major+minor > 1051)
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51)){
+        energyError = in.readFloat();
+      }
       position = new float[3];
       for (int i=0; i<3; i++) position[i] = in.readFloat();
       positionError = new float[6];
@@ -105,6 +109,7 @@ class SIOCluster extends ICluster
       {
          out.writeInt(cluster.getType());
          out.writeFloat(cluster.getEnergy());
+         out.writeFloat(cluster.getEnergyError());
          float[] p = cluster.getPosition();
          for (int i=0; i<3; i++) out.writeFloat(p[i]);
          p = cluster.getPositionError();
@@ -151,6 +156,7 @@ class SIOCluster extends ICluster
    {
       out.writeInt(type);
       out.writeFloat(energy);
+      out.writeFloat(energyError);
       for (int i=0; i<3; i++) out.writeFloat(position[i]);
       for (int i=0; i<6; i++) out.writeFloat(positionError[i]);
       out.writeFloat(theta);

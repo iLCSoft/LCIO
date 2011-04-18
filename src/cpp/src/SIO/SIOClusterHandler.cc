@@ -32,6 +32,11 @@ namespace SIO{
     cluster->setType( type ) ;  // type is bitset<32> - can't be set directly
 
     SIO_DATA( stream ,  &(cluster->_energy)  , 1 ) ;
+
+    if( _vers > SIO_VERSION_ENCODE( 1, 51 ) ){
+        SIO_DATA( stream ,  &(cluster->_energyError) , 1  ) ;
+    }
+
     SIO_DATA( stream ,  cluster->_position  , 3 ) ;
 
     float errpos[ NERRPOS ] ;
@@ -146,6 +151,7 @@ namespace SIO{
 
     LCSIO_WRITE( stream, cluster->getType()  ) ;
     LCSIO_WRITE( stream, cluster->getEnergy()  ) ;
+    LCSIO_WRITE( stream, cluster->getEnergyError()  ) ;
     float* pos = const_cast<float*> ( cluster->getPosition() ) ; 
     SIO_DATA( stream,  pos , 3 ) ;
 
