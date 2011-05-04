@@ -69,15 +69,24 @@ ENDMACRO( PREPARE_ROOT_DICT_HEADERS )
 # ----------------------------------------------------------------------------
 MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
 
+    SET( _input_headers ${ARGN} )
     SET( _linkdef_header "${ROOT_DICT_OUTPUT_DIR}/${_namespace}_Linkdef.h" )
 
-    IF( NOT EXISTS "${_linkdef_header}" )
-        FOREACH( _header ${ARGN} )
-            FILE( APPEND "${_linkdef_header}" "#pragma link C++ defined_in \"${_header}\";\n" )
-        ENDFOREACH()
-    ENDIF()
+    FOREACH( _header ${_input_headers} )
+        #FILE( APPEND "${_linkdef_header}" "#pragma link C++ defined_in \"${_header}\";\n" )
+        #SET( ${_namespace}_file_contents "${${_namespace}_file_contents} #pragma link C++ defined_in \\\"${_header}\\\"\\;\\\\n" )
+        SET( ${_namespace}_file_contents "${${_namespace}_file_contents} #pragma link C++ defined_in \\\"${_header}\\\"\\;" )
+    ENDFOREACH()
 
-    SET( ROOT_DICT_INPUT_HEADERS ${ARGN} ${_linkdef_header} )
+    ADD_CUSTOM_COMMAND(
+        OUTPUT ${_linkdef_header}
+        COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
+        COMMAND echo "${${_namespace}_file_contents}" > ${_linkdef_header}
+        DEPENDS ${_input_headers}
+        COMMENT "generating: ${_linkdef_header}"
+    )
+
+    SET( ROOT_DICT_INPUT_HEADERS ${_input_headers} ${_linkdef_header} )
 
 ENDMACRO()
 
@@ -115,9 +124,8 @@ MACRO( GEN_ROOT_DICT_SOURCES ROOT_DICT_INPUT_SOURCES )
         STRING( REGEX REPLACE "^(.*)\\.(.*)$" "\\1.h" _dict_hdr_file "${_dict_src_file}" )
         ADD_CUSTOM_COMMAND(
             OUTPUT  ${_dict_src_file} ${_dict_hdr_file}
-            COMMAND mkdir ARGS -p ${ROOT_DICT_OUTPUT_DIR}
-            COMMAND ${ROOT_CINT_WRAPPER}
-            ARGS -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${ROOT_DICT_INPUT_HEADERS}
+            COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
+            COMMAND ${ROOT_CINT_WRAPPER} -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${ROOT_DICT_INPUT_HEADERS}
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             DEPENDS ${ROOT_DICT_INPUT_HEADERS}
             COMMENT "generating: ${_dict_src_file} ${_dict_hdr_file}"
