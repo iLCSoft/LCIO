@@ -316,13 +316,13 @@ namespace UTIL {
       hit = dynamic_cast<TrackerHit*>(col->getElementAt(i)) ;
       cout << lcio_short<EVENT::TrackerHit>(hit,col);
       const LCObjectVec& rawHits = hit->getRawHits() ;
-      cout << "    rawHits: " ;
-      try{
-	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
-	      cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
-	    }
-        cout << endl;
-      }catch(std::exception& e){}
+      // cout << "    rawHits: " ;
+      // try{
+      // 	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
+      // 	      cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
+      // 	    }
+      //   cout << endl;
+      // }catch(std::exception& e){}
     }
     cout << tail(hit) << endl;
   }

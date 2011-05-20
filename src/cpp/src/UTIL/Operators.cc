@@ -296,13 +296,13 @@ namespace UTIL{
     out << " [" << hex << setw(8) << setfill('0') << obj->id() << "] ";
     out << setfill(' ') << dec;
     for(int j=0;j<obj->getNInt();j++){
-      cout << "i:" << obj->getIntVal( j ) << "; " ;
+      out << "i:" << obj->getIntVal( j ) << "; " ;
     }
     for(int j=0;j<obj->getNFloat();j++){
-      cout << "f:" << obj->getFloatVal( j ) << "; " ;
+      out << "f:" << obj->getFloatVal( j ) << "; " ;
     }
     for(int j=0;j<obj->getNDouble();j++){
-      cout << "d:" << obj->getDoubleVal( j ) << "; " ;
+      out << "d:" << obj->getDoubleVal( j ) << "; " ;
     }
     return out;
   }
@@ -364,7 +364,7 @@ namespace UTIL{
         out << ", ";
       }
       if( ! ( (j+1) % 10)  ){ 
-        std::cout << endl << "     ";
+        out << endl << "     ";
       }
     }
     out << endl;
@@ -867,11 +867,11 @@ namespace UTIL{
         out << "    --- unknown/default ----   ";
     }
 
-    std::cout << "chargeADC : " ;
+    out << "chargeADC : " ;
     const FloatVec& charge = hit->getChargeValues() ;
 
     for( unsigned j=0 ; j < charge.size() ; j++ ){
-      cout << charge[j] << "," ;
+      out << charge[j] << "," ;
     }
 
     out << endl;
@@ -1022,7 +1022,7 @@ namespace UTIL{
     out << " adc values: " ;
     const ShortVec& charge = hit->getADCValues() ;
     for( unsigned j=0 ; j < charge.size() ; j++ ) {
-      cout << charge[j] << "," ;
+      out << charge[j] << "," ;
     }
 
     out << endl;
@@ -1160,7 +1160,7 @@ namespace UTIL{
           if(flag.bitSet(LCIO::CHBIT_PDG)){
               out << hit->getPDGCont( k);
           }else{
-            cout << " no PDG";
+            out << " no PDG";
           }
         }catch(exception& e){
             out << e.what() << endl ;
@@ -1205,21 +1205,21 @@ namespace UTIL{
       printf("% 1.2e|" , part->getMass() ) ;
       printf("% 1.2e|" , part->getCharge() ) ;
 
-      cout << " [" ;
+      out << " [" ;
 
       for(unsigned int k=0;k<part->getParents().size();k++){
-            if(k>0) cout << "," ;
-            cout << p2i_map[ part->getParents()[k] ]  ;
+            if(k>0) out << "," ;
+            out << p2i_map[ part->getParents()[k] ]  ;
       }
-      cout << "] - [" ;
+      out << "] - [" ;
       for(unsigned int k=0;k<part->getDaughters().size();k++){
-            if(k>0) cout << "," ;
-            cout << p2i_map[ part->getDaughters()[k] ]  ;
+            if(k>0) out << "," ;
+            out << p2i_map[ part->getDaughters()[k] ]  ;
       }
-      cout << "] " << endl ;
+      out << "] " << endl ;
 
 
-    cout << endl
+    out << endl
      << "-------------------------------------------------------------------------------- "
      << endl ;
 }
@@ -1251,15 +1251,16 @@ namespace UTIL{
     }
     out << " " << showpos << scientific << setprecision(2) << part->getCovMatrix()[part->getCovMatrix().size()] << endl;
 
-    /*
     const LCObjectVec& rawHits = part->getRawHits();
-    cout << "    rawHits: ";
+    if( ! rawHits.empty() ){
+      out << "    rawHits: ";
+    }
     try{
         for( i=0 ; i < rawHits.size() ; i++ ){
-            cout << hex << "[" << rawHits[i]->id() << "], " <<  dec << endl;
+	  if( rawHits[i] == 0 ) continue ;
+	  out << hex << "[" << rawHits[i]->id() << "], " <<  dec << endl;
         }
     }catch(std::exception& e){}
-    */
 
     out << noshowpos << fixed;
     return out;
@@ -1432,34 +1433,34 @@ namespace UTIL{
 
     using namespace std;
 
-      cout << " [" << hex << setfill('0') << setw(8) << part->id() << "] ";
-      //cout << setfill (' ') << dec << setw(5) << index << "|";
-      cout << "|";
-      cout << setw(10) << part->getPDG() << "|"; 
-      cout << scientific << showpos << setprecision(2)
+      out << " [" << hex << setfill('0') << setw(8) << part->id() << "] ";
+      //out << setfill (' ') << dec << setw(5) << index << "|";
+      out << "|";
+      out << setw(10) << part->getPDG() << "|"; 
+      out << scientific << showpos << setprecision(2)
            << part->getMomentum()[0] << ", " << part->getMomentum()[1] << ", " << part->getMomentum()[2] << "|";
-      cout << noshowpos;
-      cout << part->getEnergy() << "|";
-      cout << fixed << setw(3) << part->getGeneratorStatus() << "|";
-      cout << LCTOOLS::getSimulatorStatusString(const_cast<EVENT::MCParticle *>(part) ).c_str() << "|";
-      cout << scientific << showpos << setprecision(2) 
+      out << noshowpos;
+      out << part->getEnergy() << "|";
+      out << fixed << setw(3) << part->getGeneratorStatus() << "|";
+      out << LCTOOLS::getSimulatorStatusString(const_cast<EVENT::MCParticle *>(part) ).c_str() << "|";
+      out << scientific << showpos << setprecision(2) 
            << part->getVertex()[0] << ", " << part->getVertex()[1] << ", " << part->getVertex()[2] << "|"; 
-      cout << scientific << showpos << setprecision(2)
+      out << scientific << showpos << setprecision(2)
            << part->getEndpoint()[0] << ", " << part->getEndpoint()[1] << ", " << part->getEndpoint()[2] << "|"; 
-      cout << part->getMass() << "|"; 
-      cout << part->getCharge() << "|";
-      cout << " [" ;
+      out << part->getMass() << "|"; 
+      out << part->getCharge() << "|";
+      out << " [" ;
 
       for(unsigned int k=0;k<part->getParents().size();k++){
-        if(k>0) cout << "," ;
-        cout << hex << setfill('0') << setw(8) << (part->getParents()[k])->id();
+        if(k>0) out << "," ;
+        out << hex << setfill('0') << setw(8) << (part->getParents()[k])->id();
       }
-      cout << "] - [" ;
+      out << "] - [" ;
       for(unsigned int k=0;k<part->getDaughters().size();k++){
-        if(k>0) cout << "," ;
-        cout << hex << setfill('0') << setw(8)<< (part->getDaughters()[k])->id();
+        if(k>0) out << "," ;
+        out << hex << setfill('0') << setw(8)<< (part->getDaughters()[k])->id();
       }
-      cout << "] " << endl;
+      out << "] " << endl;
 
     out << dec << noshowpos << setfill(' ');
     return out;
@@ -1658,7 +1659,7 @@ namespace UTIL{
             out << " hits ->";
             const TrackerHitVec& hits= trk->getTrackerHits() ;
             for(l=0;l<hits.size();l++){
-                out << "[" << setfill('0') << setw(8) <<  hits[l]->id() << "] ";
+	      out << "[" << setfill('0') << setw(8) <<  ( hits[l] ? hits[l]->id() : 0 ) << "] ";
             }
             out << endl;
         }
@@ -1712,38 +1713,41 @@ namespace UTIL{
 
     out << " errors (6 pos)/( 3 dir): (" ;
     for(int l=0;l<6;l++){
-      cout << setw(4) << clu->getPositionError()[l] << ", ";
+      out << setw(4) << clu->getPositionError()[l] << ", ";
     }
-    cout << ")/(";
+    out << ")/(";
     for(int l=0;l<3;l++){
-      cout << setw(4) << clu->getDirectionError()[l];
+      out << setw(4) << clu->getDirectionError()[l];
     }
-    cout << ")" << endl ;
-    cout << " clusters(e): " ;
+    out << ")" << endl ;
+    out << " clusters(e): " ;
     const ClusterVec& clusters = clu->getClusters() ;
     for(unsigned int l=0;l<clusters.size();l++){
-      cout << setw(4) << clusters[l]->getEnergy() << ", ";
+      out << setw(4) << ( clusters[l] ? clusters[l]->getEnergy() : 0. )  << ", ";
     }
-    cout << endl ;
-    cout <<" subdetector energies : " ;
+    out << endl ;
+    out <<" subdetector energies : " ;
     const FloatVec& sdE = clu->getSubdetectorEnergies() ;
     for(unsigned int l=0;l<sdE.size();l++){
-      printf("%4.2e, ",  sdE[l] ) ;
+      out << setw(4) <<  sdE[l]  << ", ";
     }
+    out << endl ;
 
 
     if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
-      cout << " hits ->";
+      out << " hits ->";
       const CalorimeterHitVec& hits= clu->getCalorimeterHits() ;
       const FloatVec& contr = clu->getHitContributions() ;
       for(unsigned int k=0;k<hits.size();k++){
-        cout << hex << hits[k]->id() << "(" << contr[k];
+	out << "[" << setfill('0' ) << hex << setw(8) <<  ( hits[k] ? hits[k]->id() : 0 ) << "]" 
+	    << "(" << scientific << setprecision (2) << showpos << dec << setfill(' ') << contr[k] << ") " ;
+	if( ! ( (k+1) % 10 ) ) out << std::endl ;
       }
     }
 
     out   << endl;
     
-    cout << dec <<  noshowpos;
+    out << dec <<  noshowpos;
     return out;
   }
 
@@ -1812,8 +1816,8 @@ namespace UTIL{
     using namespace std;
     const EVENT::LCRelation* v = sV.obj;
     out << noshowpos << setfill('0'); 
-    out << "| [" << setw(8) << hex << (v->getFrom())->id() << "] |";
-    out << " [" << setw(8) << hex << (v->getTo())->id() << "] |";
+    out << "| [" << setw(8) << hex << ( v->getFrom() ?  v->getFrom()->id() : 0 ) << "] |";
+    out << " [" << setw(8) << hex  << ( v->getTo() ?  v->getTo()->id() : 0 )  << "] |";
     out << " " << setw(8) << dec << v->getWeight() << "|";
     out << setfill(' ');
     out << endl;
@@ -1849,7 +1853,7 @@ namespace UTIL{
         out << ", ";
       }
       if( ! ( (j+1) % 10)  ){ 
-        std::cout << endl << "     ";
+        out << endl << "     ";
       }
     }
     out << endl;
@@ -1884,12 +1888,12 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::CalorimeterH
         out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
         LCTOOLS::printParameters(col->getParameters()); //todo
         LCFlagImpl flag(col->getFlag());
-        cout << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
-        cout << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
-        cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
-        cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
-        cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
-        cout << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
+        out << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
+        out << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
+        out << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
+        out << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
+        out << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+        out << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
     }
 
 
@@ -1945,7 +1949,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Cluster> l) 
         out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
         LCTOOLS::printParameters(col->getParameters());
         LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
+        out << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
 
     }
 
@@ -2018,7 +2022,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
         out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
         LCTOOLS::printParameters(col->getParameters());
         LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
+        out << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
 
     } 
 
@@ -2073,7 +2077,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
     out << endl << "Hits:       " << noshowpos;
     const TrackerHitVec& hits= part->getTrackerHits() ;
     for(l=0;l<hits.size();l++){
-        out << "[" << hits[l]->id() << "] ";
+      out << "[" << ( hits[l] ? hits[l]->id() : 0 ) << "] ";
         if(!((l+1)%7)){out << endl << "            ";}
     }
     out << endl;
@@ -2223,10 +2227,10 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimCalorimet
         LCTOOLS::printParameters(col->getParameters());
 
         LCFlagImpl flag( col->getFlag() ) ;
-        cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
-        cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-        cout << "     LCIO::CHBIT_ID1   :  " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
-        cout << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
+        out << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
+        out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+        out << "     LCIO::CHBIT_ID1   :  " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
+        out << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
     } 
     tmp << "0x" << hex << hit->id() << dec;
     out << setw(30) << setfill(' ') << std::left << "Id" <<   right << setw(40) << tmp.str() << endl;
@@ -2288,7 +2292,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> 
         LCTOOLS::printParameters(col->getParameters());
 
         LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+        out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
     } 
     tmp.str("");
     tmp << "0x" << hex << hit->id() << dec; 
@@ -2326,8 +2330,8 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimTrackerHi
         LCTOOLS::printParameters(col->getParameters());
 
         LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
-        cout << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
+        out << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+        out << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
     } 
 
     tmp.str("");
@@ -2458,7 +2462,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Vertex> ll){
     out << "Covariance Matrix          ";
     for(unsigned int i=0; i<v->getCovMatrix().size(); i++){
         out << v->getCovMatrix()[i] << (i<(v->getCovMatrix().size()-1)?", ":"\n");
-        if((! ((i+1)%3)) && i < v->getCovMatrix().size()- 1){ cout << endl << "                           "; }
+        if((! ((i+1)%3)) && i < v->getCovMatrix().size()- 1){ out << endl << "                           "; }
     }
     
     out << setw(30) << setfill(' ') << left << "Parameters";
@@ -2495,8 +2499,8 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::LCRelation> 
         }
     } 
 
-    out << setw(30) << setfill(' ') << left << "From [id]" <<   right << hex << (v->getFrom())->id() << endl;
-    out << setw(30) << setfill(' ') << left << "To [id]" <<   right << (v->getTo())->id()  << endl;
+    out << setw(30) << setfill(' ') << left << "From [id]" <<   right << hex << ( v->getFrom() ?  v->getFrom()->id() : 0 )  << endl;
+    out << setw(30) << setfill(' ') << left << "To [id]" <<   right << ( v->getTo() ?  v->getTo()->id() : 0 )   << endl;
     out << setw(30) << setfill(' ') << left << "Weight" <<   right << v->getWeight()  << endl;
 
     return out;
