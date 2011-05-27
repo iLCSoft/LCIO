@@ -31,10 +31,6 @@ int main(int argc, char** argv ){
     }
 
 
-    // create reader for lcio files
-    LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-
-
     // loop through the list of input files
     for(int i=0 ; i < nFiles ; i++){
 
@@ -62,15 +58,19 @@ int main(int argc, char** argv ){
         }
         // otherwise use lcReader
         else{
+            // create reader for lcio files
+            LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+
             lcReader->open( FILEN[i] ) ;
             total_events += lcReader->getNumberOfEvents() ;
             lcReader->close() ;
+
+            delete lcReader ;
         }
     }
 
     cout <<  total_events << endl ;
 
-    delete lcReader ;
     return 0 ;
 }
 
