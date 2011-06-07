@@ -1249,7 +1249,7 @@ namespace UTIL{
     for(i=0;i<(part->getCovMatrix().size()-1);i++){
         out << " " << showpos << scientific << setprecision(2) << part->getCovMatrix()[i] << ",";
     }
-    out << " " << showpos << scientific << setprecision(2) << part->getCovMatrix()[part->getCovMatrix().size()] << endl;
+    out << " " << showpos << scientific << setprecision(2) << part->getCovMatrix()[part->getCovMatrix().size()-1] << endl;
 
     const LCObjectVec& rawHits = part->getRawHits();
     if( ! rawHits.empty() ){
