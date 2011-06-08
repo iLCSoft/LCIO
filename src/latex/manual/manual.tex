@@ -49,8 +49,8 @@
 \begin{document}
 \pdfgraphics
 
-%\title{LCIO [v01-51] -  Users manual}
-\title{{\Huge\bf LCIO  -  Users manual} \\ v01-51}
+%\title{LCIO [v01-60] -  Users manual}
+\title{{\Huge\bf LCIO  -  Users manual} \\ v01-60}
 
 %\author{F. Gaede \\  DESY IT}
 %\author{F. Gaede, H. Vogt \\  DESY IT, DESY Zeuthen}
@@ -88,20 +88,12 @@ LCIO homepage~\cite{lcio_home}.
 
 \section{Installation}
 \subsection{Getting LCIO}
-If LCIO is not yet installed at your site you can get a recent copy from the CVS repository 
-via anonymous checkout or download a tar-file with the source code from the LCIO 
-homepage~\cite{lcio_home}. For the CVS checkout set the CVSROOT variable, e.g. on a Linux platform 
-running {\it bash}:
+If LCIO is not yet installed at your site you can get a recent copy from the SVN repository as
+follows {\it bash}:
 
 \begin{verbatim}
-  export CVSROOT=:pserver:anonymous@cvs.freehep.org:/cvs/lcio
-\end{verbatim}
-
-and then checkout a released version (see~\cite{lcio_home}), e.g.:
-\begin{verbatim}
-  mkdir lcio 
-  cd lcio
-  cvs co -d v01-51 -r v01-51 lcio
+  svn co svn://svn.freehep.org/lcio/tags/v01-60 lcio/v01-60 # checkout release v01-60
+  svn co svn://svn.freehep.org/lcio/trunk lcio/trunk # checkout trunk
 \end{verbatim}
 
 \subsection{Requirements}
@@ -111,22 +103,20 @@ API-files are generated from an abstract description for Java and C++ using the
 AID~\cite{ref_aid} tool. The build scripts used in LCIO also require that \verb$gcc$ and 
 \verb$gmake/make$ are installed.
 
-The C++ version of LCIO is developed and tested under SL3 and SL4 
-and builds under Windows/Cygwin and MacOSX.
+The C++ version of LCIO is developed and tested under Linux (SL4 and SL5 32 and 64bit)
+and also builds under Windows/Cygwin or MacOSX.
 
-As the -ansi switch is used it should be fairly easy to port it to other platforms with
+As the -ansi compiler flag is used it should be fairly easy to port it to other platforms with
 an ANSI compliant C++ compiler.\\\\
 
 \subsection{Building LCIO} \label{build_lcio}
 
-There are two build tools that can be used to build LCIO: ant and CMake~\cite{ref_cmake}. 
+There are two build tools that can be used to build LCIO: maven and CMake~\cite{ref_cmake}. 
 CMake~\cite{ref_cmake} has been introduced in version v01-11 to facilitate cross plattform support for 
-the C++ version. Building LCIO with CMake is the preferred way within the LDC ilcsoft framework, however
-the {\em classic} way of building LCIO with ant is still fully supported, in fact CMake also uses the ant commands for Java and 
-for generating the documentation.
+the C++ version. 
 
 \subsubsection{Building LCIO with CMake}
-If you want to use CMake for building LCIO you need at least CMake version 2.4.6.
+If you want to use CMake for building LCIO you need at least CMake version 2.6.
 
 %Some of the features CMake includes are:
 %\begin{verbatim}
@@ -148,33 +138,27 @@ Then issue the following commands:
   make install
 \end{verbatim}
 
-Options may also be specified in a file. Take BuildSetup.cmake as an example and modify it to your needs. Use it as follows:
+CMake options may also be specified in a separate file and read with the -C option. (please check the CMake~\cite{ref_cmake} documentation for more details)
 \begin{verbatim}
-  mkdir build           # <-- create an out-of-source directory for the build
-  cd build
-  cmake -C BuildSetup.cmake ..              # read pre-set options and variables from the file BuildSetup.cmake
-  make install
+  # ILCSoft.cmake is a configuration file generated for each ilcsoft reference installation. It contains the list of paths from all tools within the installation.
+  # in this example the BUILD_ROOTDICT option from LCIO is activated which requires the path to the ROOT package. This path is read from the ILCSoft.cmake configuration file.
+  cmake -C /afs/desy.de/project/ilcsoft/sw/i386_gcc41_sl5/v01-11/ILCSoft.cmake -DBUILD_ROOTDICT=ON ..
 \end{verbatim}
-
-It is possible to use more than one file, whereby options and variables specified in previous files get overwritten by later ones.. e.g.:
-\begin{verbatim}
-  cmake -C BuildSetup.cmake -C /afs/desy.de/group/it/ilcsoft/v01-08-01/ILCSoft.cmake .. # take all options from BuildSetup.cmake and ILCSoft.cmake
-\end{verbatim}
-
-In this case ILCSoft.cmake overwrites options from BuildSetup.cmake (in the case where there are common options in both files)
 
 \subsubsection{Building LCIO with ant}
+
+% TODO need to update this section for using maven
 
 A few variables have to be set depending on your development environment, e.g.
 \begin{itemize}
 \item{ {\bf Linux (and bash):} 
 \begin{verbatim} 
-  export LCIO=/lcio/v01-51                <-- modify as appropriate
+  export LCIO=/lcio/v01-60                <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
 
   export JDK_HOME=/usr/lib/j2sdk             <-- modify as appropriate
 
-  ( export CLHEP=/opt/products/CLHEP/2.0.2.2  <-- optionally use CLHEP four vectors with LCIO/C++) 
+  ( export CLHEP=/opt/products/CLHEP/2.0.4.5  <-- optionally use CLHEP four vectors with LCIO/C++) 
 \end{verbatim} 
 }
 %$ <- fixes syntax highlighting
@@ -182,7 +166,7 @@ A few variables have to be set depending on your development environment, e.g.
 \begin{verbatim}
   set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
 
-  set LCIO=c:/lcio/devel/v01-010-02        <-- modify as appropriate
+  set LCIO=c:/lcio/trunk                   <-- modify as appropriate
   set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
 
   set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
@@ -191,40 +175,12 @@ Note: Cygwin is only needed for gcc and make to build the C++ version.
 }
 \item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
 \begin{verbatim}
-  export LCIO=/cygdrive/c/lcio/devel/v01-51   <-- modify as appropriate
+  export LCIO=/cygdrive/c/lcio/trunk             <-- modify as appropriate
   export PATH=$LCIO/tools:$LCIO/bin:$PATH
   export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01      <-- modify as appropriate
 \end{verbatim} %$
 }
 \end{itemize}
-
-
-%In order to build LCIO you need to have a Java VM (version 1.4 or higher) installed 
-%on your platform. This is true even if you only want to install the C++ version as the 
-%API-files are generated from an abstract description for Java and C++ using the 
-%AID~\cite{ref_aid} tool.
-%The C++ version of LCIO is developed under (Suse) Linux with gcc2.95.3 and tested
-%as well with gcc3.2 on Linux and Windows/Cygwin. 
-%As the -ansi switch is used it should be fairly easy to port it to other platforms, that have
-%an ANSI compliant C++ compiler installed.
-
-%\subsection {Building the library}
-
-%A few variables have to be set, e.g. on windows:
-%\begin{verbatim}
-%  set LCIO=c:\tony\projects\v01-51\lcio      <-- modify as appropriate
-%  set JDK_HOME=c:\java\j2sdk1.4.1            <-- modify as appropriate
-%  set PATH=%LCIO%\tools;%PATH%
-%\end{verbatim}
-%or using {\it bash}:
-%\begin{verbatim}
-%  cd v01-51
-%  export LCIO=$PWD
-%  export JDK_HOME=/usr/lib/j2sdk          <-- modify as appropriate
-%  export PATH=$LCIO/tools:$PATH
-%\end{verbatim}
-%$ <- fixes syntax highlighting
-
 
 
 To build the Java and C++ versions use the following commands\footnote{When using the Cygwin shell you need to
@@ -246,15 +202,13 @@ or if starting over from a previously failed attempt to build LCIO:
 
 
 
-
 Both ways of building LCIO will create the following libraries and executables:
 
 \begin{verbatim}
  ./lib
       lcio.jar       <-- Java library (and executables)
-      liblcio.a      <-- C++ library
- ./sio/lib
-      libsio.a       <-- C++ version of sio 
+      liblcio.so     <-- C++ lcio library
+      libsio.so      <-- C++ sio library
 
  ./bin               <-- C++ examples and tools
       anajob
@@ -263,12 +217,16 @@ Both ways of building LCIO will create the following libraries and executables:
       readcalibration
       recjob
       simjob
+      lcio_event_counter
+      stdhepjob
+
  ./bin               <-- f77 examples
       anajob_F
       simjob_F
       recjob_F 
 
 \end{verbatim}
+
 
 \subsection {Checking the Installation}
 
@@ -288,22 +246,34 @@ The same for the Java - Linux version:
 or for the Java Windows (Cygwin) version:
 \begin{verbatim}
   runSimJob[.bat] simjob.sclio
-  runAnalysisJob[.bat] simjob.sclio
+  runAnalysisJob[.bat] simjob.slcio
 \end{verbatim}
+In case CMake has been used to build LCIO it is possible to run a small chain of tests by calling:
+\begin{verbatim}
+  make tests && make test
+\end{verbatim}
+
+
 
 \subsection {Building the documentation} \label{build_doc}
 
 A few targets are defined to build the documentation (see below), that is also available
 from the LCIO homepage~\cite{lcio_home}, see (\ref{sec_api}).\\
 
-If you are using CMake (see \ref{build_lcio}) all documentation gets built and installed
-by default, when you type "make install". If you don't want this, \\
-set the cmake option  \verb|INSTALL_DOC| to OFF, afterwards you can still call the doc targets:
+If you are using CMake (see \ref{build_lcio}) all documentation can be built and installed
+by setting the cmake option  \verb|INSTALL_DOC| to ON as follows:
+\begin{verbatim}
+  cmake -DINSTALL_DOC=ON ..
+  make install
+\end{verbatim}
+
+In order to build individual documentation components the following targets may be used:
 \begin{verbatim}
   make doc              <-- build all documentation (doc_cpp + doc_java + doc_manual)
   make doc_cpp          <-- C++ API documentation
   make doc_java         <-- Java API documentation
-  make doc_manual       <-- User manual
+  make doc_refman       <-- Reference manual
+  make doc_usrman       <-- User manual
 \end{verbatim}
 
 If you are not using CMake keep on reading the rest of this section on how to build
@@ -524,12 +494,12 @@ Generic class for calorimeter hits from a simulation program. Typically every ca
 will create a collection of this type. SimCalorimeterHits have a float energy amplitude and an int cellid,
 and optionally a 3d hit/cell position. 
 In order to study clustering and reconstruction algorithms there are links to the MCParticles that contributed 
-to the hit. There are two different levels of detail foreseen( check/set the flag LCIO.CHBIT\_PDG):
+to the hit. There are two different levels of detail foreseen( check/set the flag LCIO.CHBIT\_STEP):
 \begin{itemize}
-\item{LCIO.CHBIT\_PDG=0, normal mode: one MCParticle contribution for every MCParticle that contributed to the 
+\item{LCIO.CHBIT\_STEP=0, normal mode: one MCParticle contribution for every MCParticle that contributed to the 
 hit, i.e. there will be only one MCParticle contribution except for cells where showers from two particles 
 overlap.}
-\item{LCIO.CHBIT\_PDG=1, detailed mode: one contribution for every simulator step that contributed to the hit.
+\item{LCIO.CHBIT\_STEP=1, detailed mode: one contribution for every simulator step that contributed to the hit.
 Every contribution has the energy, time and PDG of the shower particle that caused  the energy deposit.
 This mode will result in a lot of entries per calorimeter hit and is intended for detailed studies only. }
 \end{itemize}
@@ -541,7 +511,7 @@ an optional second cellid (LCIO.CHBIT\_ID1=1).
 
 \subsubsection{SimTrackerHit}
 This is the generic class for storing simulated hits from tracking subdetectors. It records the spacepoint,  
-energy and time of the hit as well as a link to the  MCParticle that caused it.
+energy and time of the hit as well as a link to the MCParticle that caused it.
 
 \subsubsection{RawCalorimeterHit}
 This class is intended to be used for real calorimeter data, e.g. from test beam calorimeters.
