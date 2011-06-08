@@ -30,9 +30,19 @@ namespace IMPL {
     
     virtual int id() const { return simpleUID() ; }
 
-    /**Returns the detector specific (geometrical) cell id.
+    /** DEPRECATED: use @getCellID0()
      */
     virtual int getCellID() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    virtual int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  0 if information is not stored -  check the flag word (bit THBIT_ID1) 
+     *  of the collection. Default is to store only cellid0.
+     */
+    virtual int getCellID1() const ;
 
     /** Returns the hit  position.	
      */
@@ -72,9 +82,19 @@ namespace IMPL {
     virtual float getPathLength() const ;
 
     // ---------- setters ------------------------
-    /** Sets the cell id.
+    /** DEPRECATED: use @setCellID0
      */
     void setCellID( int id) ;
+
+    /** Sets the first cell id;
+     */
+    void setCellID0(int id0) ;
+
+    /** Sets the second cell id;
+     *  Only store if the flag word (bit THBIT_ID1) 
+     *  of the collection is set. Default is to store only cellid0.
+     */
+    void setCellID1(int id1) ;
 
     /** Sets the position.
      */
@@ -111,7 +131,8 @@ namespace IMPL {
     void setPathLength(float pathLength);
 
   protected:
-    int _cellID ;
+    int _cellID0 ;
+    int _cellID1 ;
     double _pos[3] ;
     //float _dEdx ; // DEPRECATED. renamed to _EDep
     float _EDep ;

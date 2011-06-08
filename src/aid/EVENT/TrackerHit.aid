@@ -24,6 +24,16 @@ public interface TrackerHit extends LCObject {
 }
 @endif
 
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+    
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::RTHBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
+
     /** The hit  position in [mm].	
      */
     public const double3V getPosition() const ;

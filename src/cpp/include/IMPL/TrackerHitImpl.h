@@ -30,6 +30,16 @@ namespace IMPL {
 
     virtual int id() const { return simpleUID() ; }
 
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    virtual int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  0 if information is not stored -  check the flag word (bit RTHBIT_ID1) 
+     *  of the collection. Default is to store only cellid0.
+     */
+    virtual int getCellID1() const ;
+
     /** The hit  position in [mm].	
      */
     virtual const double* getPosition() const ;
@@ -84,6 +94,17 @@ namespace IMPL {
 
 
     // setters 
+
+    /** Sets the first cell id;
+     */
+    void setCellID0(int id0) ;
+
+    /** Sets the second cell id;
+     *  Only store if the flag word (bit RTHBIT_ID1) 
+     *  of the collection is set. Default is to store only cellid0.
+     */
+    void setCellID1(int id1) ;
+  
     void setType(int type) ;
     void setPosition( double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
@@ -97,7 +118,10 @@ namespace IMPL {
 
 
 protected:
-  
+
+    int _cellID0 ;
+    int _cellID1 ;
+
     int _type ;
     double _pos[3] ;
     EVENT::FloatVec _cov ;

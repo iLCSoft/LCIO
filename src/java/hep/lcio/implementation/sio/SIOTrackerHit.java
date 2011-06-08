@@ -4,6 +4,7 @@ import hep.io.sio.SIOInputStream;
 import hep.io.sio.SIOOutputStream;
 import hep.io.sio.SIORef;
 
+import hep.lcio.event.LCIO;
 import hep.lcio.event.TrackerHit;
 
 import hep.lcio.implementation.event.ITrackerHit;
@@ -21,9 +22,17 @@ import java.util.ListIterator;
 class SIOTrackerHit extends ITrackerHit
 {
    private List tempHits;
-   SIOTrackerHit(SIOInputStream in, SIOEvent owner, int major, int minor) throws IOException
+   SIOTrackerHit(SIOInputStream in, int flags, SIOEvent owner, int major, int minor) throws IOException
    {
       setParent(owner);
+      
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52)){
+          cellID0 = in.readInt();
+          if( (flags & (1 << LCIO.RTHBIT_ID1)) != 0 ){
+              cellID1 = in.readInt();
+          }
+      }
+
       type = in.readInt();
       for (int i = 0; i < 3; i++)
          position[i] = in.readDouble();
@@ -72,14 +81,18 @@ class SIOTrackerHit extends ITrackerHit
       return super.getRawHits();
    }   
    
-   static void write(TrackerHit hit, SIOOutputStream out) throws IOException
+   static void write(TrackerHit hit, SIOOutputStream out, int flags) throws IOException
    {
       if (hit instanceof SIOTrackerHit)
       {
-         ((SIOTrackerHit) hit).write(out);
+         ((SIOTrackerHit) hit).write(out,flags);
       }
       else
       {
+         out.writeInt(hit.getCellID0());
+         if( (flags & (1 << LCIO.RTHBIT_ID1)) != 0 ){
+            out.writeInt(hit.getCellID1());
+         }
          out.writeInt(hit.getType());
          double[] pos = hit.getPosition();
          for (int i = 0; i < 3; i++)
@@ -105,8 +118,13 @@ class SIOTrackerHit extends ITrackerHit
       }
    }
    
-   private void write(SIOOutputStream out) throws IOException
+   private void write(SIOOutputStream out, int flags) throws IOException
    {
+     out.writeInt(getCellID0());
+     if( (flags & (1 << LCIO.RTHBIT_ID1)) != 0 ){
+        out.writeInt(getCellID1());
+     }
+
       out.writeInt(type);
       for (int i = 0; i < 3; i++)
          out.writeDouble(position[i]);

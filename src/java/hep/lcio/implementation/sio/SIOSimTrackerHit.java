@@ -24,7 +24,12 @@ class SIOSimTrackerHit extends ISimTrackerHit
    SIOSimTrackerHit(SIOInputStream in,int flags, SIOEvent owner,  int major, int minor) throws IOException
    {
       setParent(owner);
-      cellID = in.readInt();
+      cellID0 = in.readInt();
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52) ){
+          if( (flags & (1 << LCIO.THBIT_ID1)) != 0 ){
+            cellID1 = in.readInt();
+          }
+      }
       position[0] = in.readDouble();
       position[1] = in.readDouble();
       position[2] = in.readDouble();
@@ -61,7 +66,10 @@ class SIOSimTrackerHit extends ISimTrackerHit
          ((SIOSimTrackerHit) hit).write(out,flags);
       else
       {
-         out.writeInt(hit.getCellID());
+         out.writeInt(hit.getCellID0());
+         if( (flags & (1 << LCIO.THBIT_ID1)) != 0 ){
+            out.writeInt(hit.getCellID1());
+         }
          
          double[] pos = hit.getPosition();
          out.writeDouble(pos[0]);
@@ -86,7 +94,10 @@ class SIOSimTrackerHit extends ISimTrackerHit
    
    private void write(SIOOutputStream out,int flags) throws IOException
    {
-      out.writeInt(cellID);
+      out.writeInt(getCellID0());
+      if( (flags & (1 << LCIO.THBIT_ID1)) != 0 ){
+        out.writeInt(getCellID1());
+      }
       out.writeDouble(position[0]);
       out.writeDouble(position[1]);
       out.writeDouble(position[2]);

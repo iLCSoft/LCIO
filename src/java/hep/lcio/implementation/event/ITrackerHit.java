@@ -11,6 +11,8 @@ import hep.lcio.event.TrackerHit;
  */
 public class ITrackerHit extends ILCObject implements TrackerHit
 {
+   protected int cellID0;
+   protected int cellID1;
    protected double[] position = new double[3];
    protected float[] covMatrix = new float[6];
    //protected float dEdx; // DEPRECATED. renamed to EDep
@@ -21,6 +23,28 @@ public class ITrackerHit extends ILCObject implements TrackerHit
    protected int quality;
    protected List rawHits = new ArrayList() ;
    
+
+   public void setCellID0(int cellID)
+   {
+      checkAccess();
+      this.cellID0 = cellID;
+   }
+
+   public int getCellID0()
+   {
+      return cellID0;
+   }
+    public void setCellID1(int cellID)
+   {
+      checkAccess();
+      this.cellID1 = cellID;
+   }
+
+   public int getCellID1()
+   {
+      return cellID1;
+   }
+
    public double[] getPosition()
    {
       return position;

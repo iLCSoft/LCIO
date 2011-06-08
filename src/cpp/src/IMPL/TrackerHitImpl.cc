@@ -7,6 +7,8 @@ using namespace EVENT ;
 namespace IMPL {
   
   TrackerHitImpl::TrackerHitImpl() :
+    _cellID0(0),
+    _cellID1(0),
     _type(0),
     //_dEdx(0),
     _EDep(0),
@@ -25,6 +27,15 @@ namespace IMPL {
   
   TrackerHitImpl::~TrackerHitImpl(){  
   } 
+
+
+  int TrackerHitImpl::getCellID0() const {
+    return _cellID0 ;
+  }
+
+  int TrackerHitImpl::getCellID1() const {
+    return _cellID1 ;
+  }
 
   const double* TrackerHitImpl::getPosition() const {  return _pos ; } 
 
@@ -67,6 +78,15 @@ namespace IMPL {
     return _type ;
   }
 
+  void TrackerHitImpl::setCellID0(int id0){
+    checkAccess("TrackerHitImpl::setCellID0") ;
+    _cellID0 = id0 ;
+  }
+
+  void TrackerHitImpl::setCellID1(int id1){
+    checkAccess("TrackerHitImpl::setCellID1") ;
+    _cellID1 = id1 ;
+  }
 
   void TrackerHitImpl::setType(int type) { 
     checkAccess("TrackerHitImpl::setType") ;

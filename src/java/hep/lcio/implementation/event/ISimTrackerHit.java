@@ -16,21 +16,48 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
    //protected float dEdx; // DEPRECATED. renamed to EDep
    protected float EDep;
    protected float time;
-   protected int cellID;
+   //protected int cellID; // DEPRECATED. renamed to cellID0
+   protected int cellID0;
+   protected int cellID1;
    protected float[] momentum = new float[3] ;
    protected float pathLength;
    
+   // DEPRECATED. renamed to setcellID0
    public void setCellID(int cellID)
    {
-      checkAccess();
-      this.cellID = cellID;
+      //checkAccess();
+      //this.cellID = cellID;
+      setCellID0( cellID );
    }
    
+   // DEPRECATED. renamed to getcellID0
    public int getCellID()
    {
-      return cellID;
+      //return cellID;
+      return getCellID0();
    }
    
+   public void setCellID0(int cellID)
+   {
+      checkAccess();
+      this.cellID0 = cellID;
+   }
+   
+   public int getCellID0()
+   {
+      return cellID0;
+   }
+    public void setCellID1(int cellID)
+   {
+      checkAccess();
+      this.cellID1 = cellID;
+   }
+   
+   public int getCellID1()
+   {
+      return cellID1;
+   }
+
    public void setMCParticle(MCParticle mc)
    {
       checkAccess();
