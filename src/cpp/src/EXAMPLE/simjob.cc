@@ -210,7 +210,7 @@ int main(int argc, char** argv ){
 	// and PDG and cellid1
 	LCFlagImpl chFlag(0) ;
 	chFlag.setBit( LCIO::CHBIT_LONG ) ;
-	chFlag.setBit( LCIO::CHBIT_PDG ) ;
+	chFlag.setBit( LCIO::CHBIT_STEP ) ;
 	calVec->setFlag( chFlag.getFlag()  ) ;
 	
 	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6") ;// old Mokka convention
@@ -250,7 +250,7 @@ int main(int argc, char** argv ){
 	  // in order to access a MCParticle,  we need a dynamic cast as the 
 	  // LCCollection returns an LCIOObject - this is like vectors in Java 
 	  hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx )) , 
-					   0.314159, 0.1155 ) ; // no pdg
+					   0.314159, 0.1155, 1, pos ) ;
 	  
 	}
 	
@@ -264,7 +264,7 @@ int main(int argc, char** argv ){
 	  
 	  existingHit->addMCParticleContribution( dynamic_cast<MCParticle*>
 						  (mcVec->getElementAt(0)), 
-						  0.1, 0. ) ;
+						  0.1, 0. ) ; // no pdg
 	}
 
 // 	// ----- find the MCParticle with the largest contribution to the SimCalorimeterHits:

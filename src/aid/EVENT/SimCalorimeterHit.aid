@@ -38,6 +38,12 @@ public interface SimCalorimeterHit extends LCObject {
     public const float3V getPosition() const ;	
 
     
+    /** Returns the position where the energy deposited (step) occurred
+     * optional, only if bit LCIO::CHBIT_STEP is set.   
+     */
+    public const float3V getStepPosition( int i ) const ;
+    
+
     /** Returns the number of MC contributions to the hit. 0 if 
      * information is not stored. Renamed to getNMCContributions.
      * @deprecated
@@ -48,7 +54,7 @@ public interface SimCalorimeterHit extends LCObject {
 
     /** Returns the number of MC contributions to the hit. 0 if 
      * information is not stored. There are two levels of detail: if 
-     * collection flag bit LCIO.CHBIT_PDG==1 then all simulator steps' 
+     * collection flag bit LCIO.CHBIT_STEP==1 then all simulator steps' 
      * contributions to the hit are stored, otherwise there is only one 
      * contribution for every particle entering the calorimeter.
      */
@@ -65,7 +71,7 @@ public interface SimCalorimeterHit extends LCObject {
     public float getTimeCont(int i) const ;
     
     /** Returns the PDG code of the shower particle that caused this contribution.
-     *  Check the flag word bit LCIO.CHBIT_PDG of the collection whether this information 
+     *  Check the flag word bit LCIO.CHBIT_STEP of the collection whether this information 
      *  is available. 
      * @see getNMCContributions()
      */ 

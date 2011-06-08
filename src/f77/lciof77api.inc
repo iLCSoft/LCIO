@@ -265,6 +265,7 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_CHBIT_BARREL
       integer LCIO_CHBIT_ID1
       integer LCIO_CHBIT_PDG
+      integer LCIO_CHBIT_STEP
       integer LCIO_RCHBIT_LONG
       integer LCIO_RCHBIT_BARREL
       integer LCIO_RCHBIT_ID1
@@ -287,7 +288,8 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_WRITE_APPEND
 
       parameter (LCIO_CHBIT_LONG=31, LCIO_CHBIT_BARREL=30,
-     &           LCIO_CHBIT_PDG=28, LCIO_CHBIT_ID1=29)
+     &           LCIO_CHBIT_STEP=28, LCIO_CHBIT_PDG=28,
+     &           LCIO_CHBIT_ID1=29)
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
      &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28,
      &           LCIO_RCHBIT_TIME=27, LCIO_RCHBIT_ENERGY_ERROR=26)

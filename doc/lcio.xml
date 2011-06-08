@@ -16,7 +16,7 @@
      There are two types of LCIORandomAccess records
        file record -- one per file, always first record on file
        index record -- one or more per file, points to associated LCIOIndex record
-     <block name="LCIORandomAccess" major="1" minor="52">
+     <block name="LCIORandomAccess" major="1" minor="60">
          <data type="int" name="runMin"/>
          <data type="int" name="eventMin"/>
          <data type="int" name="runMax"/>
@@ -42,7 +42,7 @@
      </block>
   </record>
   <record name="LCIOIndex">
-     <block name="LCIOIndex" major="1" minor="52">
+     <block name="LCIOIndex" major="1" minor="60">
          <data type="int" name="controlWord">
             Bit 0 = single Run
             Bit 1 = long offset required
@@ -98,7 +98,7 @@
      </block>
   </record>
   <record name="LCRunHeader">
-     <block name="RunHeader" major="1" minor="52">
+     <block name="RunHeader" major="1" minor="60">
         <data type="int" name="runNumber"></data>
         <data type="string" name="detectorName"></data>
         <data type="string" name="description"></data>
@@ -110,7 +110,7 @@
      </block>
   </record>  
   <record name="LCEventHeader">
-     <block name="EventHeader" major="1" minor="52">
+     <block name="EventHeader" major="1" minor="60">
         <data type="int" name="runNumber"></data>
         <data type="int" name="eventNumber"></data>
         <data type="long" name="timeStamp"></data>
@@ -124,7 +124,7 @@
      </block>
   </record>  
   <record name="LCEvent">
-      <block name="MCParticle" major="1" minor="52">
+      <block name="MCParticle" major="1" minor="60">
          <data type="int" name="flags"> not yet used, Bits 0-15 user/application dependent</data>
          <include subroutine="namedParameters"/>
 	 <data type="int" name="nMC"></data>
@@ -171,7 +171,7 @@
             </if>
          </repeat>
       </block>
-      <block name="SimTrackerHit" major="1" minor="52">
+      <block name="SimTrackerHit" major="1" minor="60">
          <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, Bit 30 momentum (not) stored: 1(0), Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -198,7 +198,7 @@
            </if>
          </repeat>
       </block>
-      <block name="SimCalorimeterHit" major="1" minor="52">
+      <block name="SimCalorimeterHit" major="1" minor="60">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0; Bit 28 PDG = 1, no PDG =0, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
@@ -226,7 +226,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCFloatVec" major="1" minor="52">
+      <block name="LCFloatVec" major="1" minor="60">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -240,7 +240,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCIntVec" major="1" minor="52">
+      <block name="LCIntVec" major="1" minor="60">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -254,7 +254,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCStrVec" major="1" minor="52">
+      <block name="LCStrVec" major="1" minor="60">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -268,7 +268,7 @@
            </if>
          </repeat>
       </block>
-      <block name="RawCalorimeterHit" major="1" minor="52">
+      <block name="RawCalorimeterHit" major="1" minor="60">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0;Bit 28 = 1: don't store ptr tag;
 	      Bit 27 = 1: timeStamp stored; Bits 0-15 user/detector specific</data>
@@ -288,7 +288,7 @@
 	    </if>
          </repeat>
       </block>
-      <block name="CalorimeterHit" major="1" minor="52">
+      <block name="CalorimeterHit" major="1" minor="60">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0;
 	      Bit 27 = 1: timeStamp stored; Bit 26 = 1: energy error stored;
@@ -323,7 +323,7 @@
             </if>
          </repeat>
       </block>
-      <block name="TrackerHit" major="1" minor="52">
+      <block name="TrackerHit" major="1" minor="60">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -355,7 +355,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TPCHit" major="1" minor="52">
+      <block name="TPCHit" major="1" minor="60">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -381,7 +381,7 @@
             </if>
          </repeat>
       </block>
-      <block name="TrackerRawData" major="1" minor="52">
+      <block name="TrackerRawData" major="1" minor="60">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -399,7 +399,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerData" major="1" minor="52">
+      <block name="TrackerData" major="1" minor="60">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -417,7 +417,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerPulse" major="1" minor="52">
+      <block name="TrackerPulse" major="1" minor="60">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -442,7 +442,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="SiliconRawHit" major="1" minor="52">
+      <block name="SiliconRawHit" major="1" minor="60">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -454,7 +454,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-    <block name="Track" major="1" minor="52">
+    <block name="Track" major="1" minor="60">
       <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nTrack"/>
@@ -490,7 +490,7 @@
       <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="Cluster" major="1" minor="52">
+    <block name="Cluster" major="1" minor="60">
       <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nCluster"/>
@@ -547,7 +547,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="Vertex" major="1" minor="52">
+    <block name="Vertex" major="1" minor="60">
       <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nVertex"></data>
@@ -566,7 +566,7 @@
         <data type="ptag" name="this"></data>
     </repeat>
     </block>
-    <block name="ReconstructedParticle" major="1" minor="52">
+    <block name="ReconstructedParticle" major="1" minor="60">
       <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nObject"/>
@@ -642,7 +642,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="LCGenericObject" major="1" minor="52">
+    <block name="LCGenericObject" major="1" minor="60">
       <data type="int" name="flag"></data>
         <include subroutine="namedParameters"/>
         <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
@@ -669,7 +669,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="LCRelation" major="1" minor="52">
+    <block name="LCRelation" major="1" minor="60">
        <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
        <include subroutine="namedParameters"/>
        <data type="int" name="nRelations"/>
@@ -682,7 +682,7 @@
        </repeat>
     </block>
       <!-- generic block description for subset collections that hold references to existing objects -->
-      <block name="References" major="1" minor="52">
+      <block name="References" major="1" minor="60">
          <data type="int" name="flags"></data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nReferences"></data>

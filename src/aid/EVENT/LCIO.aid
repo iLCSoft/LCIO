@@ -3,7 +3,7 @@ package hep.lcio.event ;
 @ifdef cpp
 @cpp{
 #define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 52
+#define LCIO_MINOR_VERSION 60
 #define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
@@ -38,7 +38,8 @@ public interface LCIO{
     static const int CHBIT_LONG   = 31; // long(1) - short(0), (position)
     static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0)
     static const int CHBIT_ID1    = 29 ;  // cellid1 stored
-    static const int CHBIT_PDG    = 28 ;   // PDG(1) - no PDG(0) (detailed shower contributions)
+    static const int CHBIT_PDG    = 28 ;   // PDG(1) - no PDG(0) (detailed shower contributions) // DEPRECATED use: CHBIT_STEP
+    static const int CHBIT_STEP   = 28 ;   // detailed shower contributions 
 
     // (raw) calorimeter hit
     static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
@@ -117,7 +118,7 @@ public interface LCIO{
 @else
     // current version number of lcio
   public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 52 ;
+  public static const int MINORVERSION  = 60 ;
 
 
   // bits in flag words
@@ -125,7 +126,8 @@ public interface LCIO{
   public static const int CHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
   public static const int CHBIT_BARREL = 30 ;  // barrel(1) - endcap(0)
   public static const int CHBIT_ID1    = 29 ;  // cellid1 stored
-  public static const int CHBIT_PDG    = 28 ;  // PDG(1) - no PDG(0) (detailed shower contributions)
+  public static const int CHBIT_PDG    = 28 ;  // PDG(1) - no PDG(0) (detailed shower contributions) // DEPRECATED use: CHBIT_STEP
+  public static const int CHBIT_STEP   = 28 ;   // detailed shower contributions 
 
     // (raw) calorimeter hit
   public static const int RCHBIT_LONG   = 31 ;  // long(1) - short(0) , incl./excl. position
