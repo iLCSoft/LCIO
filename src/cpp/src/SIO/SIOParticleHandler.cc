@@ -86,6 +86,11 @@ namespace SIO {
     if( particle->_simstatus.test( MCParticle::BITEndpoint ) )  // bit 31
       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
+    if( _vers > SIO_VERSION_ENCODE( 1, 52) ){
+        SIO_DATA( stream ,  particle->_spin  , 3 ) ;
+        SIO_DATA( stream ,  particle->_colorFlow  , 2 ) ;
+    }
+    
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
@@ -143,6 +148,12 @@ namespace SIO {
     if( particle->getSimulatorStatus() &  (1<<MCParticle::BITEndpoint) )  // endpoint set !
       SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
 
+    LCSIO_WRITE( stream, (float) particle->getSpin()[0] ) ;
+    LCSIO_WRITE( stream, (float) particle->getSpin()[1] ) ;
+    LCSIO_WRITE( stream, (float) particle->getSpin()[2] ) ;
+
+    LCSIO_WRITE( stream, (int) particle->getColorFlow()[0] ) ;
+    LCSIO_WRITE( stream, (int) particle->getColorFlow()[1] ) ;
 
     return ( SIO_BLOCK_SUCCESS ) ;
 

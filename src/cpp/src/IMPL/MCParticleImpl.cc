@@ -32,6 +32,13 @@ namespace IMPL {
     _endpoint[0] = 0.0 ;
     _endpoint[1] = 0.0 ;
     _endpoint[2] = 0.0 ;
+
+    _spin[0] = 0.0 ;
+    _spin[1] = 0.0 ;
+    _spin[2] = 0.0 ;
+
+    _colorFlow[0] = 0 ;
+    _colorFlow[1] = 0 ;
   }
   
 //   MCParticleImpl::MCParticleImpl(const EVENT::MCParticle& p) :
@@ -188,6 +195,14 @@ namespace IMPL {
     return sqrt( _p[0]*_p[0] + _p[1]*_p[1] + _p[2]*_p[2] + _mass*_mass ) ;  
   }
 
+  const float* MCParticleImpl::getSpin() const { 
+    return _spin ;
+  }
+
+  const int* MCParticleImpl::getColorFlow() const { 
+    return _colorFlow ;
+  }
+
 
   int MCParticleImpl::getPDG() const { return _pdg ;}
   int MCParticleImpl::getGeneratorStatus() const { return _genstatus ;}
@@ -308,6 +323,19 @@ namespace IMPL {
     _endpoint[2] = endpoint[2] ;
   }
 
+  void MCParticleImpl::setSpin( float spin[3] ){
+    checkAccess("MCParticleImpl::setSpin") ;
+    _spin[0] = spin[0] ;
+    _spin[1] = spin[1] ;
+    _spin[2] = spin[2] ;
+  }
+
+  void MCParticleImpl::setColorFlow( int cflow[2] ){
+    checkAccess("MCParticleImpl::setColorFlow") ;
+    _colorFlow[0] = cflow[0] ;
+    _colorFlow[1] = cflow[1] ;
+  }
+  
   void MCParticleImpl::setCreatedInSimulation(bool val)         {   _simstatus[ BITCreatedInSimulation ] = val ;  }
   void MCParticleImpl::setBackscatter(bool val)                 {   _simstatus[ BITBackscatter ]  = val;          }
   void MCParticleImpl::setVertexIsNotEndpointOfParent(bool val) {   _simstatus[ BITVertexIsNotEndpointOfParent ]  = val; }

@@ -37,6 +37,14 @@ public interface MCParticle extends LCObject {
      */
     public double getEnergy() const;
 
+    /** Returns the spin // TODO
+     */
+    public const float3V getSpin() const;
+
+    /** Returns the color flow // TODO
+     */
+    public const int2V getColorFlow() const;
+
     /** Returns the parents of this particle. 
      */
     public const MCParticleVec& getParents() const ;

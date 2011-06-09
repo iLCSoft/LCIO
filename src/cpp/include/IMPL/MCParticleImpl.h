@@ -158,6 +158,16 @@ namespace IMPL {
      */
     virtual double getEnergy() const ;
 
+   /** Returns the spin
+     */
+    virtual const float* getSpin() const ;
+
+
+   /** Returns the color flow
+     */
+    virtual const int* getColorFlow() const ;
+
+
     // set methods
     /** Adds a parent particle. 
      */
@@ -214,6 +224,16 @@ namespace IMPL {
      */
     void setCharge( float c ) ;
 
+    /** Sets the spin
+      */
+    void setSpin( float spin[3] );
+
+    /** Sets the color flow
+      */
+    void setColorFlow( int cflow[2] );
+
+
+
     // setters for simulator status
     virtual void setCreatedInSimulation(bool val) ;
 
@@ -250,6 +270,8 @@ namespace IMPL {
     EVENT::MCParticleVec _parents ;
     EVENT::MCParticleVec _daughters ;
     bool _endpointSet ;
+    float _spin[3] ;
+    int _colorFlow[2] ;
 
 }; // class
 } // namespace IMPL

@@ -24,7 +24,35 @@ public class IMCParticle extends ILCObject implements MCParticle
    protected int generatorStatus;
    protected int pdg;
    protected int simulatorStatus;
+   protected float[] spin = new float[3];
+   protected int[] colorFlow = new int[2];
    
+   public void setSpin(float[] spin)
+   {
+      checkAccess();
+      if (spin.length != 3)
+         throw new IllegalArgumentException();
+      this.spin = spin;
+   }
+ 
+   public float[] getSpin()
+   {
+      return spin;
+   }
+
+   public void setColorFlow(int[] cflow)
+   {
+      checkAccess();
+      if (cflow.length != 2)
+         throw new IllegalArgumentException();
+      this.colorFlow = cflow;
+   }
+
+   public int[] getColorFlow()
+   {
+      return colorFlow;
+   }
+
    public void setCharge(float charge)
    {
       checkAccess();

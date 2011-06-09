@@ -75,6 +75,15 @@ class SIOMCParticle extends IMCParticle
          endpoint[1] = in.readDouble();
          endpoint[2] = in.readDouble();
       }
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52) ){
+
+          spin[0] = in.readFloat();
+          spin[1] = in.readFloat();
+          spin[2] = in.readFloat();
+
+          colorFlow[0] = in.readInt();
+          colorFlow[1] = in.readInt();
+      }
    }
    void resolve(int major, int minor)
    {
@@ -138,6 +147,15 @@ class SIOMCParticle extends IMCParticle
             out.writeDouble(endpoint[1]);
             out.writeDouble(endpoint[2]);
          }
+
+         float[] spin = hit.getSpin();
+         out.writeFloat((float)spin[0]);
+         out.writeFloat((float)spin[1]);
+         out.writeFloat((float)spin[2]);
+
+         int[] colorFlow = hit.getColorFlow();
+         out.writeInt(colorFlow[0]);
+         out.writeInt(colorFlow[1]);
       }
    }
 
@@ -168,5 +186,13 @@ class SIOMCParticle extends IMCParticle
          out.writeDouble(endpoint[1]);
          out.writeDouble(endpoint[2]);
       }
+
+     out.writeFloat((float)spin[0]);
+     out.writeFloat((float)spin[1]);
+     out.writeFloat((float)spin[2]);
+
+     out.writeInt(colorFlow[0]);
+     out.writeInt(colorFlow[1]);
+
    }
 }
