@@ -52,9 +52,13 @@ public interface LCIO{
     static const int TRAWBIT_ID1   = 31 ;  //  cellid1 stored
     static const int TRAWBIT_CM    = 30 ;  //  cov matrix stored(1) - not stored(0)
 
+    // raw tracker hit
+    static const int RTHBIT_ID1     = 31 ;  //  cellid1 stored
+
     // SimTrackerHit
-    static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0)
+    static const int THBIT_BARREL   = 31 ; // barrel(1) - endcap(0)
     static const int THBIT_MOMENTUM = 30 ; // momentum of particle stored(1) - not stored(0)
+    static const int THBIT_ID1      = 29 ; // cellid1 stored
 
     // Tracks
     static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0)
@@ -139,9 +143,13 @@ public interface LCIO{
   public static const int TRAWBIT_ID1   = 31 ;  //  cellid1 stored
   public static const int TRAWBIT_CM    = 30 ;  //  cov matrix stored(1) - not stored(0)
 
+  // raw tracker hit
+  public static const int RTHBIT_ID1    = 31 ;  //  cellid1 stored
+
   // SimTrackerHit
-  public static const int THBIT_BARREL = 31 ; // barrel(1) - endcap(0)
+  public static const int THBIT_BARREL   = 31 ; // barrel(1) - endcap(0)
   public static const int THBIT_MOMENTUM = 30 ; // momentum of particle stored(1) - not stored(0)
+  public static const int THBIT_ID1      = 29 ; // cellid1 stored
 
   // Tracks
   public static const int TRBIT_HITS = 31 ; // hits stored(1) - not stored(0)

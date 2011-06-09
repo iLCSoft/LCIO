@@ -167,7 +167,7 @@ class SIOEvent extends ILCEvent
             SIOLCCollection ilc = new SIOLCCollection(type, flags, n);
             ilc.setParameters( colParameters ) ;
             for (int i = 0; i < n; i++)
-               ilc.add(new SIOTrackerHit(in, this,major,minor));
+               ilc.add(new SIOTrackerHit(in, flags, this,major,minor));
             ilc.setOwner(this);
             addCollection(ilc, name);
          }
@@ -507,7 +507,7 @@ class SIOEvent extends ILCEvent
             else if (type.equals(LCIO.TRACKERHIT))
             {
                for (int i = 0; i < n; i++)
-                  SIOTrackerHit.write((TrackerHit) col.getElementAt(i), out);
+                  SIOTrackerHit.write((TrackerHit) col.getElementAt(i), out, flags);
             }
             else if (type.equals(LCIO.TPCHIT))
             {

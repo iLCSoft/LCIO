@@ -9,6 +9,9 @@
 #include "SIO_functions.h"
 #include "SIO_block.h"
 
+#include "EVENT/LCIO.h"
+#include "IMPL/LCFlagImpl.h"
+
 
 using namespace EVENT ;
 using namespace IMPL ;
@@ -24,6 +27,15 @@ namespace SIO{
         // create a new object :
         TrackerHitIOImpl* hit  = new TrackerHitIOImpl ;
         *objP = hit ;
+
+        LCFlagImpl lcFlag(_flag) ;
+
+        if( _vers > SIO_VERSION_ENCODE( 1, 52) ) {
+            SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
+            if( lcFlag.bitSet( LCIO::RTHBIT_ID1 ) ){
+                SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
+            }
+        }
 
         if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
             SIO_DATA( stream ,  &(hit->_type) , 1  ) ;
@@ -73,6 +85,14 @@ namespace SIO{
         unsigned int status ; 
 
         const TrackerHit* hit = dynamic_cast<const TrackerHit*>(obj)  ;
+
+        LCFlagImpl lcFlag(_flag) ;
+
+        LCSIO_WRITE( stream, hit->getCellID0()  ) ;
+
+        if( lcFlag.bitSet( LCIO::RTHBIT_ID1 ) ){
+            LCSIO_WRITE( stream, hit->getCellID1()  ) ;
+        }
 
         LCSIO_WRITE( stream ,  hit->getType() ) ;
 

@@ -24,6 +24,19 @@ LCWarning::LCWarning( ostream& outstream ) : _outstream(outstream) {
         "used DEPRECATED method SimTrackerHitImpl::setdEdx()\n"
         "please change your code to use SimTrackerHitImpl::setEDep() instead"
     );
+
+    registerWarning(
+        "SIMTRACKERHIT_DEPRECATED_GETCELLID",
+        "used DEPRECATED method SimTrackerHitImpl::getCellID()\n"
+        "please change your code to use SimTrackerHitImpl::getCellID0() instead"
+    );
+
+    registerWarning(
+        "SIMTRACKERHIT_DEPRECATED_SETCELLID",
+        "used DEPRECATED method SimTrackerHitImpl::setCellID()\n"
+        "please change your code to use SimTrackerHitImpl::setCellID0() instead"
+    );
+
     // ------------------------------------------------------------------------
 
 

@@ -27,7 +27,15 @@ namespace SIO{
     SimTrackerHitIOImpl* hit  = new SimTrackerHitIOImpl ;
     *objP = hit ;
 	
-    SIO_DATA( stream ,  &(hit->_cellID) , 1  ) ;
+    LCFlagImpl lcFlag(_flag) ;
+
+    SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
+    if( _vers > SIO_VERSION_ENCODE( 1, 52) ) {
+        if( lcFlag.bitSet( LCIO::THBIT_ID1 ) ){
+            SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
+        }
+    }
+
     SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 
     //SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
@@ -37,7 +45,7 @@ namespace SIO{
 
     SIO_PNTR( stream , &(hit->_particle)  ) ;
 
-    if( LCFlagImpl(_flag).bitSet( LCIO::THBIT_MOMENTUM ) ){
+    if( lcFlag.bitSet( LCIO::THBIT_MOMENTUM ) ){
       SIO_DATA( stream ,    hit->_p  , 3 ) ;
       if( _vers  > SIO_VERSION_ENCODE( 1 , 6 ) ) 
         SIO_DATA( stream ,    &(hit->_pathLength)  , 1 ) ;
@@ -64,7 +72,14 @@ namespace SIO{
     // by having a common collection of objects
     const SimTrackerHit* hit = dynamic_cast<const SimTrackerHit*>(obj)  ;
 
-    LCSIO_WRITE( stream, hit->getCellID()  ) ;
+    LCFlagImpl lcFlag(_flag) ;
+
+    LCSIO_WRITE( stream, hit->getCellID0()  ) ;
+
+    if( lcFlag.bitSet( LCIO::THBIT_ID1 ) ){
+        LCSIO_WRITE( stream, hit->getCellID1()  ) ;
+    }
+
     // as SIO doesn't provide a write function with const arguments
     // we have to cast away the constness 
     double* pos = const_cast<double*> ( hit->getPosition() ) ; 
@@ -75,7 +90,7 @@ namespace SIO{
     const MCParticle* part = hit->getMCParticle()  ;
     SIO_PNTR( stream , &part ) ;
 
-    if( LCFlagImpl(_flag).bitSet( LCIO::THBIT_MOMENTUM ) ){
+    if( lcFlag.bitSet( LCIO::THBIT_MOMENTUM ) ){
       float* p = const_cast<float*> ( hit->getMomentum() ) ; 
       SIO_DATA( stream , p  , 3 ) ;
       LCSIO_WRITE( stream , hit->getPathLength() ) ;

@@ -16,7 +16,16 @@ public interface SimTrackerHit extends LCObject {
 }
 @endif
 
-    /**Returns the detector specific (geometrical) cell id.
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+    
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::THBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
+    /** DEPRECATED: use @getCellID0()
      */
     public int getCellID() const ;
 

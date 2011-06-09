@@ -7,7 +7,8 @@ using namespace EVENT ;
 namespace IMPL {
   
   SimTrackerHitImpl::SimTrackerHitImpl() :
-    _cellID(0),
+    _cellID0(0),
+    _cellID1(0),
     //_dEdx(0),
     _EDep(0),
     _time(0),
@@ -24,7 +25,13 @@ namespace IMPL {
   SimTrackerHitImpl::~SimTrackerHitImpl(){  
   } 
 
-  int SimTrackerHitImpl::getCellID() const {  return _cellID ;}
+  // DEPRECATED. use getCellID0()
+  int SimTrackerHitImpl::getCellID() const {
+      UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_GETCELLID" ) ;
+      return getCellID0();
+  }
+  int SimTrackerHitImpl::getCellID0() const { return _cellID0 ; }
+  int SimTrackerHitImpl::getCellID1() const { return _cellID1 ; }
 
   const double * SimTrackerHitImpl::getPosition() const { return _pos ; }
 
@@ -48,8 +55,20 @@ namespace IMPL {
   const float* SimTrackerHitImpl::getMomentum() const { return _p ; }
 
   void SimTrackerHitImpl::setCellID( int id) {
-    checkAccess("SimTrackerHitImpl::setCellID") ;
-    _cellID = id ; 
+    UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_SETCELLID" ) ;
+    //checkAccess("SimTrackerHitImpl::setCellID") ;
+    //_cellID = id ;
+    setCellID0( id );
+  }
+
+  void SimTrackerHitImpl::setCellID0( int id0) {
+    checkAccess("SimTrackerHitImpl::setCellID0") ;
+    _cellID0 = id0 ; 
+  }
+
+  void SimTrackerHitImpl::setCellID1( int id1) {
+    checkAccess("SimTrackerHitImpl::setCellID1") ;
+    _cellID1 = id1 ; 
   }
 
   void SimTrackerHitImpl::setPosition( double pos[3]){ 
@@ -66,7 +85,7 @@ namespace IMPL {
 
     //checkAccess("SimTrackerHitImpl::setdEdx") ;
     //_dEdx = dedx ; 
-    SimTrackerHitImpl::setEDep( dedx ) ;
+    setEDep( dedx ) ;
   }
 
   void SimTrackerHitImpl::setEDep( float e )  {
