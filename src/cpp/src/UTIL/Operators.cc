@@ -1227,20 +1227,25 @@ namespace UTIL{
 
 
   const std::string& header(const EVENT::TrackerHit *){ //hauke
-    static std::string _vtxh(" [   id   ] | position (x,y,z)            | time    |[type]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
+    static std::string _vtxh(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
     return _vtxh;
   }
   
   const std::string& tail(const EVENT::TrackerHit *){ //hauke
-    static std::string _vtxt("------------|-----------------------------|---------|------|---------|---------|-----------------------------------------------------------------\n");
+    static std::string _vtxt("------------|--------|--------|-----------------------------|---------|------|---------|---------|-----------------------------------------------------------------\n");
     return _vtxt;
   }
 
   std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHit>& sV){ //hauke
     const EVENT::TrackerHit* part = sV.obj;
+    const EVENT::LCCollection* col =  sV.col;
+    LCFlagImpl flag(col->getFlag());
+
     using namespace std;
-    out << " [" << setfill('0') << setw(8) << hex<< part->id() << "] |" << dec;
-    out << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
+    out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
+    out << "|" << setw(8) << setfill('0') << part->getCellID0();
+    out << "|" << setw(8) << setfill('0') << part->getCellID1();
+    out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
     out << part->getTime() << "|";
     out << "[" << noshowpos << setw(4) << part->getType() << "]|";
     out << showpos << part->getEDep() << "|";
@@ -1253,16 +1258,25 @@ namespace UTIL{
 
     const LCObjectVec& rawHits = part->getRawHits();
     if( ! rawHits.empty() ){
-      out << "    rawHits: ";
+      out << "    rawHits ("<< rawHits.size() <<"): ";
     }
     try{
         for( i=0 ; i < rawHits.size() ; i++ ){
 	  if( rawHits[i] == 0 ) continue ;
-	  out << hex << "[" << rawHits[i]->id() << "], " <<  dec << endl;
+	  out << hex << "[" << rawHits[i]->id() << "], " <<  dec ;
         }
     }catch(std::exception& e){}
 
+    out << dec << endl ;
+    if(col->getParameters().getStringVal(LCIO::CellIDEncoding) != ""){
+        CellIDDecoder<TrackerHit> id(col);
+        out << "    id-fields: ("<< id(const_cast<EVENT::TrackerHit*>(part)).valueString() << ")" << std::endl ;
+    } else{
+        out << "    id-fields: --- unknown/default ----   ";
+    }
+
     out << noshowpos << fixed;
+    out << endl ;
     return out;
   }
 
@@ -1272,12 +1286,12 @@ namespace UTIL{
   }
 
   const std::string& header(const EVENT::SimTrackerHit *){ //hauke
-    static std::string _vtxh(" cellID [           indices             ]|  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  \n");
+    static std::string _vtxh(" [   id   ] |cellId0 |cellId1 |  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  \n");
     return _vtxh;
   }
   
   const std::string& tail(const EVENT::SimTrackerHit *){ //hauke
-    static std::string _vtxt("-----------------------------------------|---------------------------------|----------|----------|-----------------|-------------------|-------------\n");
+    static std::string _vtxt("------------|--------|--------|---------------------------------|----------|----------|-----------------|-------------------|-------------\n");
     return _vtxt;
   }
 
@@ -1292,16 +1306,24 @@ namespace UTIL{
     if(hit->getMCParticle()){
         pdgid = hit->getMCParticle()->getPDG() ;
     }
-    out << setw(8) << setfill('0') << hex << hit->getCellID() << setfill(' '); 
 
-    out << dec << "[";
-    if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
-        CellIDDecoder<SimTrackerHit> id(col);
-        out<< id(const_cast<EVENT::SimTrackerHit*>(hit)).valueString();     
-    } else{
-        out << "    --- unknown/default ----   ";
-    }
-    out <<  "]|(";
+    out << " [" << setfill('0') << setw(8) << hex<< hit->id() << "] " << dec;
+    out << "|" << hex << setw(8) << setfill('0') << hit->getCellID0();
+    out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
+
+
+
+    //out << setw(8) << setfill('0') << hex << hit->getCellID() << setfill(' '); 
+
+    //out << dec << "[";
+    //if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
+    //    CellIDDecoder<SimTrackerHit> id(col);
+    //    out<< id(const_cast<EVENT::SimTrackerHit*>(hit)).valueString();     
+    //} else{
+    //    out << "    --- unknown/default ----   ";
+    //}
+    //out <<  "]|(";
+    out <<  "|(";
 
     out << dec << showpos << setprecision(2) << scientific<< hit->getPosition()[0] << ", ";
     out << hit->getPosition()[1] << ", ";
@@ -1321,8 +1343,17 @@ namespace UTIL{
     }else{
         out << "|   unknown         |";
     }
+
     out << endl ;
 
+    if(col->getParameters().getStringVal(LCIO::CellIDEncoding) != ""){
+        CellIDDecoder<SimTrackerHit> id(col);
+        out << "        id-fields: ("<< id(const_cast<EVENT::SimTrackerHit*>(hit)).valueString() << ")" << std::endl ;
+    } else{
+        out << "        id-fields: --- unknown/default ----   ";
+    }
+
+    out << endl ;
 
 
 /*
