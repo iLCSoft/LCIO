@@ -91,7 +91,7 @@ namespace UTIL{
 
 
   //template to enable a "one-line" output 
-  template <class T> lcio_short<T> lcshort( const T* t, const EVENT::LCCollection* b){ return lcio_short<T>(t,b); }
+  template <class T> lcio_short<T> lcshort( const T* t, const EVENT::LCCollection* b=NULL){ return lcio_short<T>(t,b); }
 
   /** operator for detailed output of a vertex object (e.g. cout << vertexObj << endl; ) */
   /** for printing the header of a vertex object (e.g. cout << header(vertexObj) << endl; ) */
@@ -156,7 +156,7 @@ namespace UTIL{
   std::ostream& operator<<( std::ostream& out, const EVENT::LCFloatVec &);
 
   template <class T> 
-        const std::string & header(){return header((T)(0)); }
+        const std::string & header(){return header((T*)(0)); }
   template <class T> 
         const std::string & tail(){return tail((T)(0)); }
 
