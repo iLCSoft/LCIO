@@ -1082,7 +1082,7 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
     }
 
   std::cout << endl
-	    <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |  [parents] - [daughters] |"    
+	    <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |            spin             | colorflow | [parents] - [daughters]"    
 	    << endl 
 	    << endl ;
   
@@ -1112,6 +1112,15 @@ void LCTOOLS::printTrackerRawData(const EVENT::LCCollection* col ) {
 	     part->getEndpoint()[2] );
       printf("% 1.2e|" , part->getMass() ) ; 
       printf("% 1.2e|" , part->getCharge() ) ; 
+
+      printf("% 1.2e,% 1.2e,% 1.2e|" , 
+	     part->getSpin()[0] ,
+	     part->getSpin()[1] , 
+	     part->getSpin()[2] );
+
+      printf("  (%d, %d)   |" , 
+	     part->getColorFlow()[0] ,
+	     part->getColorFlow()[1] );
 
       cout << " [" ;
       
