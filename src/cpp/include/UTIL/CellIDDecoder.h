@@ -4,7 +4,7 @@
 //#include <vector>
 //#include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
-#include "EVENT/SimTrackerHit.h"
+//#include "EVENT/SimTrackerHit.h"
 #include "UTIL/BitField64.h"
 #include "lcio.h"
 #include <string>
@@ -106,28 +106,28 @@ namespace UTIL{
 
   
 
-  /** Provides access to the bit fields, e.g. <br>
-   *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
-   * Specialization for SimTrackerHits that have only one cellID.
-   */
-  template<>
-  inline const BitField64 & CellIDDecoder<SimTrackerHit>::operator()(const SimTrackerHit* hit ){  
-    
-    if( hit != _oldHit && hit ) {
-      
-      long64 val = long64( hit->getCellID() & 0xffffffff )  ;
-      
-      _b->setValue( val ) ;
-      
-      _oldHit = hit ;
-    }
-    
-    return  *_b ;
-  }
-  
-  
-  template <>
-  std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
+//  /** Provides access to the bit fields, e.g. <br>
+//   *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
+//   * Specialization for SimTrackerHits that have only one cellID.
+//   */
+//  template<>
+//  inline const BitField64 & CellIDDecoder<SimTrackerHit>::operator()(const SimTrackerHit* hit ){  
+//    
+//    if( hit != _oldHit && hit ) {
+//      
+//      long64 val = long64( hit->getCellID() & 0xffffffff )  ;
+//      
+//      _b->setValue( val ) ;
+//      
+//      _oldHit = hit ;
+//    }
+//    
+//    return  *_b ;
+//  }
+//  
+//  
+//  template <>
+//  std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
 
 } // namespace
 #endif

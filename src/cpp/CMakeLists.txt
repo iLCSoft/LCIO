@@ -100,7 +100,6 @@ SET( LCIO_SIO_SRCS
 
 SET( LCIO_UTIL_SRCS
   ./src/UTIL/BitField64.cc
-  ./src/UTIL/CellIDDecoder.cc
   ./src/UTIL/IndexMap.cc
   ./src/UTIL/LCRelationNavigator.cc
   ./src/UTIL/LCSplitWriter.cc

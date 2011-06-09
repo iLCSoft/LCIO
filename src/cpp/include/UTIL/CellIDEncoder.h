@@ -3,7 +3,7 @@
 
 #include "EVENT/LCCollection.h"
 #include "UTIL/BitField64.h"
-#include "IMPL/SimTrackerHitImpl.h"
+//#include "IMPL/SimTrackerHitImpl.h"
 #include "IMPL/LCFlagImpl.h"
 #include "lcio.h"
 #include <string>
@@ -18,6 +18,8 @@ namespace EVENT{
   class TrackerData ;
   class TrackerPulse ;
   class TrackerRawData ;
+  class SimTrackerHit ;
+  class TrackerHit ;
 }
 
 namespace UTIL{
@@ -47,6 +49,12 @@ namespace UTIL{
   /** specialization that returns the proper bit for the second cellid */
   template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerRawData>() ;
 
+  /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHit>() ;
+
+  /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::SimTrackerHit>() ;
+
 
   /** Helper function that sets cellid1 and cellid2  
    */
@@ -57,10 +65,11 @@ namespace UTIL{
     hit->setCellID1( high ) ;
   } 
  
-  /** Specialization for SimTrackerHits that have only one cellID */
-  template<> 
-  void CellIDEncoder_setCellID<IMPL::SimTrackerHitImpl>( IMPL::SimTrackerHitImpl* hit, 
-							 int low, int high);
+//  /** Specialization for SimTrackerHits that have only one cellID */
+//  template<> 
+//  void CellIDEncoder_setCellID<IMPL::SimTrackerHitImpl>( IMPL::SimTrackerHitImpl* hit, 
+//							 int low, int high);
+//
 
 
   /** Convenient class for encoding cellIDs for various hit objects.
