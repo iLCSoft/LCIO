@@ -3,7 +3,60 @@
 ---------------------------------------------------------------
 
 ==========
- v01-52 - to be released
+ v01-60
+==========
+
+    - added spin and color flow information to MCParticle: (c++ and java only)
+
+        float[3] getSpin()
+        int[2] getColorFlow()
+
+        void setSpin( float[3] )
+        void setColorFlow( int[2] )
+
+
+    - added cellID0 and cellID1 to TrackerHit and SimTrackerHit: (c++ and java only)
+        
+        int getCellID0()
+        int getCellID1()
+
+        void setCellID0( int )
+        void setCellID1( int )
+
+        * in SimTrackerHit the methods get/setCellID() were deprecated
+            these methods now call get/setCellID0()
+
+
+    - added get/setEnergyError to Cluster (c++/java/fortran)
+
+    - added ostream operators (H. Hoelbe)
+
+    - added example for creating a simple NTuple from MCParticle collection (examples/cpp/rootDict/writeNTuple.C)
+
+    - added new methods (C++ only):
+        LCReader::getNumberOfEvents()
+        LCReader::readRunHeader(int runNumber )
+
+    - added tool lcio_event_counter for counting events in slcio / stdhep files
+
+    - anajob now prints number of runs and events in the files it is going to read
+
+    - removed old makefiles used by ant.cpp
+
+    - improved CMakeLists.txt (compatible with ilcsoft v01-11)
+
+    - bug fixes:
+        fix printout of TrackerHit (last element of cov matrix was missing(wrong))
+        fixed typo in CalorimeterHit documentation (CHBIT should be RCHBIT)
+        some protections against NULL pointers (A.Sailer)
+        added missing fortran wrappers from cfortran.h for CalorimeterHit ( CPPFORT/lccah.h )
+        fixed several issues found by coverity (https://coverity.cern.ch)
+        fixed bug with unsorted indices for direct access (java) - to be reviewed
+
+
+
+==========
+ v01-52
 ==========
 	
      - implemented new methods:
