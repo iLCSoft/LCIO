@@ -26,6 +26,8 @@ int lcmcpgetmomentum( PTRTYPE mcparticle, double* p)  ;
 double lcmcpgetmass( PTRTYPE mcparticle )  ;
 float lcmcpgetcharge( PTRTYPE mcparticle )  ;
 double lcmcpgetenergy( PTRTYPE mcparticle )  ;
+int lcmcpgetspin( PTRTYPE mcparticle, float* spin ) ;
+int lcmcpgetcolorflow( PTRTYPE mcparticle, int* cflow ) ;
 
 int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
 // int lcmcpsetsecondparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
@@ -38,7 +40,8 @@ int lcmcpsetendpoint( PTRTYPE mcparticle, double pnt[3] ) ;
 int lcmcpsetmomentum( PTRTYPE mcparticle,  float p[3] );
 int lcmcpsetmass( PTRTYPE mcparticle, float m) ;
 int lcmcpsetcharge( PTRTYPE mcparticle, float c ) ;
-
+int lcmcpsetspin( PTRTYPE mcparticle, float* spin ) ;
+int lcmcpsetcolorflow( PTRTYPE mcparticle, int* cflow ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
@@ -60,6 +63,9 @@ FCALLSCFUN2(INT, lcmcpgetmomentum,LCMCPGETMOMENTUM,lcmcpgetmomentum, CFORTRANPNT
 FCALLSCFUN1(DOUBLE, lcmcpgetmass, LCMCPGETMASS, lcmcpgetmass, CFORTRANPNTR )
 FCALLSCFUN1(FLOAT, lcmcpgetcharge,LCMCPGETCHARGE,lcmcpgetcharge, CFORTRANPNTR ) 
 FCALLSCFUN1(DOUBLE, lcmcpgetenergy, LCMCPGETENERGY, lcmcpgetenergy, CFORTRANPNTR )
+FCALLSCFUN2(INT, lcmcpgetspin, LCMCPGETSPIN, lcmcpgetspin, CFORTRANPNTR, FLOATV)
+FCALLSCFUN2(INT, lcmcpgetcolorflow, LCMCPGETCOLORFLOW, lcmcpgetcolorflow, CFORTRANPNTR, INTV)
+
 
 FCALLSCFUN2(INT, lcmcpaddparent,LCMCPADDPARENT,lcmcpaddparent, CFORTRANPNTR, CFORTRANPNTR ) 
 // FCALLSCFUN2(INT, lcmcpsetsecondparent,LCMCPSETSECONDPARENT,lcmcpsetsecondparent, CFORTRANPNTR, CFORTRANPNTR ) 
@@ -72,5 +78,7 @@ FCALLSCFUN2(INT, lcmcpsetendpoint,LCMCPSETENDPOINT,lcmcpsetendpoint, CFORTRANPNT
 FCALLSCFUN2(INT, lcmcpsetmomentum,LCMCPSETMOMENTUM,lcmcpsetmomentum, CFORTRANPNTR, FLOATV ) 
 FCALLSCFUN2(INT, lcmcpsetmass,LCMCPSETMASS,lcmcpsetmass, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcmcpsetcharge, LCMCPSETCHARGE, lcmcpsetcharge, CFORTRANPNTR, FLOAT ) 
+FCALLSCFUN2(INT, lcmcpsetspin, LCMCPSETSPIN, lcmcpsetspin, CFORTRANPNTR, FLOATV)
+FCALLSCFUN2(INT, lcmcpsetcolorflow, LCMCPSETCOLORFLOW, lcmcpsetcolowflow, CFORTRANPNTR, INTV)
 }
 

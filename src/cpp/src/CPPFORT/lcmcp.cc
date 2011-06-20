@@ -88,6 +88,18 @@ double lcmcpgetenergy( PTRTYPE mcparticle )  {
   return mcp->getEnergy() ;  
 }
 
+int lcmcpgetspin( PTRTYPE mcparticle, float* spin )  {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  for( int i=0 ; i<3 ;  *spin++ = mcp->getSpin()[i++]  ) ;
+  return LCIO::SUCCESS ;
+}
+int lcmcpgetcolorflow( PTRTYPE mcparticle, int* cflow )  {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  for( int i=0 ; i<2 ;  *cflow++ = mcp->getColorFlow()[i++]  ) ;
+  return LCIO::SUCCESS ;
+}
+
+
 int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) {
   MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
   MCParticle* mom = f2c_pointer<MCParticle,LCObject>( parent ) ;
@@ -146,3 +158,14 @@ int lcmcpsetcharge( PTRTYPE mcparticle, float c ) {
   mcp->setCharge( c ) ;
   return LCIO::SUCCESS ;
 }
+int lcmcpsetspin( PTRTYPE mcparticle, float spin[3] ) {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  mcp->setSpin( spin ) ;
+  return LCIO::SUCCESS ;
+}
+int lcmcpsetcolorflow( PTRTYPE mcparticle, int cflow[2] ) {
+  MCParticleImpl* mcp = f2c_pointer<MCParticleImpl,LCObject>( mcparticle ) ;
+  mcp->setColorFlow( cflow ) ;
+  return LCIO::SUCCESS ;
+}
+

@@ -116,6 +116,7 @@ c-----the MCParticle interface
       integer lcmcpgetpdg, lcmcpgetgeneratorstatus
       integer lcmcpgetsimulatorstatus
       integer lcmcpgetvertex, lcmcpgetmomentum
+      integer lcmcpgetspin, lcmcpgetcolorflow
       real    lcmcpgettime, lcmcpgetcharge
       double precision lcmcpgetmass, lcmcpgetenergy
       integer lcmcpaddparent, lcmcpadddaughter 
@@ -123,6 +124,7 @@ c-----the MCParticle interface
       integer lcmcpsetsimulatorstatus, lcmcpsetvertex 
       integer lcmcpsetendpoint, lcmcpsetmomentum, lcmcpsetmass 
       integer lcmcpsetcharge
+      integer lcmcpsetspin, lcmcpsetcolorflow
 
 c-----the SimTrackerHit interface
       PTRTYPE lcsthcreate, lcsthgetmcparticle

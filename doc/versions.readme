@@ -6,7 +6,7 @@
  v01-60
 ==========
 
-    - added spin and color flow information to MCParticle: (c++ and java only)
+    - added spin and color flow information to MCParticle:
 
         float[3] getSpin()
         int[2] getColorFlow()
