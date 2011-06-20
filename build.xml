@@ -152,12 +152,6 @@
     <freehep.not.defined property="packages" message="Property 'packages' must be defined in 'config/${projectname}-${jar}.properties'. Examples 'packages=hep.wired.dim.*, hep.atlas.wired.*'"/>
   </target>
 
-  <target name="python" depends="init, cpp" description="&lt;python-target&lt;">
-    <exec dir="." executable="make" failOnError="true">
-      <arg line="-C ./src/python swig" />
-    </exec>
-  </target>
-
   <!-- =================================================================== -->
   <!-- Generates java from jj                                              -->
   <!-- =================================================================== -->
@@ -170,151 +164,11 @@
     
 
   <!-- =================================================================== -->
-  <!-- Generates cpp version of library                                    -->
-  <!-- =================================================================== -->
-
-   <target name="cpp" depends="init,cpp.windows,cpp.linux,cpp.osx" description="&lt;cpp-target&gt; creates cpp version of lcio">
-   </target>
-
-<!-- =================================================================== -->
-  <!-- Generates cpp version of library on OS X                           -->
-  <!-- =================================================================== -->
-
-   <target name="cpp.osx" depends="cpp.lcio.osx"/>
-   <target name="cpp.sio.osx" >
-     <exec dir="." executable="make" os="Mac OS X" failOnError="true">
-       <arg line="-C ./sio lib"/>
-     </exec>
-   </target>
-   <target name="cpp.lcio.osx" depends="cpp.sio.osx">
-     <exec dir="." executable="make" os="Mac OS X" failOnError="true">
-       <arg line="-C ./src/cpp all"/>
-     </exec>
-   </target>
-
- 
-  <!-- =================================================================== -->
-  <!-- Generates cpp version of library on linux                           -->
-  <!-- =================================================================== -->
-
-   <target name="cpp.linux" depends="cpp.lcio.linux"/>
-   <target name="cpp.sio.linux">
-     <exec dir="." executable="make" os="Linux" failOnError="true">
-       <arg line="-C ./sio lib"/>
-     </exec>
-   </target>
-   <target name="cpp.lcio.linux" depends="cpp.sio.linux">
-     <exec dir="." executable="make" os="Linux" failOnError="true">
-       <arg line="-C ./src/cpp all"/>
-     </exec>
-   </target>
-  
-  <!-- =================================================================== -->
-  <!-- Generates cpp version of library on windows                         -->
-  <!-- =================================================================== -->
-
-   <target name="cpp.windows" depends="cpp.lcio.windows"/>
-   <target name="cpp.sio.windows">
-     <exec dir="." executable="make" failonerror="true" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
-       <arg line="-C ./sio lib"/>
-     </exec>
-   </target>
-   <target name="cpp.lcio.windows" depends="cpp.sio.windows">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
-       <arg line="-C ./src/cpp all"/>
-     </exec>
-   </target>
- 
-
-  <!-- =================================================================== -->
-  <!-- Generates f77 examples                                              -->
-  <!-- =================================================================== -->
-
-   <target name="f77" depends="f77.windows,f77.linux" description="&lt;f77-target&gt; creates f77 examples lcio">
-   </target>
-
-
-   <target name="f77.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="make" os="Linux" failOnError="true">
-       <arg line="-C ./src/f77"/>
-     </exec>
-   </target>
-
-   <target name="f77.windows" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failOnError="true">
-       <arg line="-C ./src/f77"/>
-     </exec>
-   </target>
-
-   <target name="f77.clean" depends="f77.clean.windows,f77.clean.linux" description="&lt;f77-target&gt; cleans up f77 examples">
-   </target>
-
-
-   <target name="f77.clean.linux" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="make" os="Linux" failOnError="true">
-       <arg line="-C ./src/f77 clean"/>
-     </exec>
-   </target>
-
-   <target name="f77.clean.windows" description="&lt;cpp-target&gt; creates f77 examples">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failifexecutionfails="false">
-       <arg line="-C ./src/f77 clean"/>
-     </exec>
-   </target>
-
-  <!-- =================================================================== -->
-  <!-- Cleans cpp version of library                                    -->
-  <!-- =================================================================== -->
-
-   <target name="cpp.clean" depends="init,cpp.clean.windows,cpp.clean.linux" description="&lt;cpp-target&gt; cleans cpp version of lcio">
-   </target>
-
-
-  <!-- =================================================================== -->
-  <!-- Cleans cpp version of library on linux                           -->
-  <!-- =================================================================== -->
-
- 
-   <target name="cpp.clean.linux">
-     <exec dir="." executable="make" os="Linux">
-       <arg line="-C ./sio clean"/>
-     </exec>
-     <exec dir="." executable="make" os="Linux">
-       <arg line="-C ./src/cpp clean"/>
-     </exec>
-   </target>
-  
-  <!-- =================================================================== -->
-  <!-- Cleans cpp version of library on windows                         -->
-  <!-- =================================================================== -->
-
- 
-   <target name="cpp.clean.windows">
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failifexecutionfails="false">
-       <arg line="-C ./sio clean"/>
-     </exec>
-     <exec dir="." executable="make" os="Windows XP,Windows 2000,Windows NT,Windows 98" failifexecutionfails="false">
-       <arg line="-C ./src/cpp clean"/>
-     </exec>
-   </target>
- 
-
-  <!-- =================================================================== -->
   <!-- Generates documentation using                                       -->
   <!-- javadoc, doxygen, pdflatex, latex, latex2html                       -->
   <!-- =================================================================== -->
 
-   <target name="doc.all" depends="doc,cpp.doc,doc.manual,doc.ref" description="creates all documentation ">
-   </target>
-
-  <!-- =================================================================== -->
-  <!-- Generates cpp documentation using doxygen                           -->
-  <!-- =================================================================== -->
-
-
-   <target name="cpp.doc" description="creates API doc with doxygen (required in path)">
-     <exec dir="./doc/doxygen_api" executable="doxygen" failOnError="true">
-     </exec>
+   <target name="doc.all" depends="doc,doc.manual,doc.ref" description="creates all documentation ">
    </target>
 
   <!-- =================================================================== -->
@@ -912,7 +766,7 @@
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->
-  <target name="clean" depends="init, cpp.clean, f77.clean" description="&lt;    target&gt; cleans up the jar and class files">
+  <target name="clean" depends="init" description="&lt;    target&gt; cleans up the jar and class files">
     <freehep.defined property="jar" target="clean.jar"/>
     <freehep.not.defined property="jar" target="clean.all"/>
   </target>
