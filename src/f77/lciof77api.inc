@@ -273,8 +273,10 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_RCHBIT_NO_PTR
       integer LCIO_RCHBIT_TIME
       integer LCIO_RCHBIT_ENERGY_ERROR
+      integer LCIO_RTHBIT_ID1
       integer LCIO_THBIT_BARREL
       integer LCIO_THBIT_MOMENTUM
+      integer LCIO_THBIT_ID1
       integer LCIO_TRBIT_HITS
       integer LCIO_CLBIT_HITS
       integer LCIO_TPCBIT_RAW
@@ -293,8 +295,9 @@ c---- constants as defined in EVENT::LCIO
       parameter (LCIO_RCHBIT_LONG=31, LCIO_RCHBIT_BARREL=30,
      &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28,
      &           LCIO_RCHBIT_TIME=27, LCIO_RCHBIT_ENERGY_ERROR=26)
-      parameter (LCIO_THBIT_BARREL=31)
-      parameter (LCIO_THBIT_MOMENTUM=30)
+      parameter (LCIO_RTHBIT_ID1=31)
+      parameter (LCIO_THBIT_BARREL=31, LCIO_THBIT_MOMENTUM=30,
+     &           LCIO_THBIT_ID1=29)
       parameter (LCIO_TRBIT_HITS=31)
       parameter (LCIO_CLBIT_HITS=31)
       parameter (LCIO_TPCBIT_RAW=31, LCIO_TPCBIT_NO_PTR=30)

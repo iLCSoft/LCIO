@@ -26,6 +26,16 @@ int lcsthgetcellid( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   return sth->getCellID() ;
 }
+int lcsthgetcellid0( PTRTYPE hit ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  return sth->getCellID0() ;
+}
+
+int lcsthgetcellid1( PTRTYPE hit ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  return sth->getCellID1() ;
+}
+
 
 double lcsthgetposition( PTRTYPE hit, int index ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
@@ -68,6 +78,17 @@ int lcsthsetcellid( PTRTYPE hit, int id ){
   sth->setCellID( id ) ;
   return LCIO::SUCCESS ;
 }
+int lcsthsetcellid0( PTRTYPE hit, int id ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  sth->setCellID0( id ) ;
+  return LCIO::SUCCESS ;
+}
+int lcsthsetcellid1( PTRTYPE hit, int id ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  sth->setCellID1( id ) ;
+  return LCIO::SUCCESS ;
+}
+
 int lcsthsetposition( PTRTYPE hit, double pos[3] ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   sth->setPosition( pos ) ;

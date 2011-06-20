@@ -15,7 +15,7 @@
         void setColorFlow( int[2] )
 
 
-    - added cellID0 and cellID1 to TrackerHit and SimTrackerHit: (c++ and java only)
+    - added cellID0 and cellID1 to TrackerHit and SimTrackerHit:
         
         int getCellID0()
         int getCellID1()

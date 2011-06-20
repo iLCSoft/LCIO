@@ -75,6 +75,16 @@ int lctrhgetquality( PTRTYPE trhit )  {
   return trh->getQuality() ;
 }
 
+int lctrhgetcellid0( PTRTYPE trhit )  {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getCellID0() ;
+}
+int lctrhgetcellid1( PTRTYPE trhit )  {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  return trh->getCellID1() ;
+}
+
+
 PTRTYPE lctrhgetrawhits( PTRTYPE trhit ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
 //  const TPCHit& hit = trh->getRawHits();
@@ -132,6 +142,17 @@ int lctrhsetquality( PTRTYPE trhit, int q) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
   trh->setQuality( q ) ;
   return LCIO::SUCCESS ;
+}
+
+int lctrhsetcellid0( PTRTYPE trhit, int id0) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setCellID0( id0 ) ;
+  return  LCIO::SUCCESS ;
+}
+int lctrhsetcellid1( PTRTYPE trhit, int id1) {
+  TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
+  trh->setCellID1( id1 ) ;
+  return  LCIO::SUCCESS ;
 }
 
 int lctrhaddrawhit( PTRTYPE trhit, PTRTYPE rawhit ) {
