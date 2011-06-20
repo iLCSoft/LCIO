@@ -380,8 +380,10 @@ namespace EVENT
             static const int RCHBIT_ENERGY_ERROR;
             static const int TRAWBIT_ID1;
             static const int TRAWBIT_CM;
+            static const int RTHBIT_ID1;
             static const int THBIT_BARREL;
             static const int THBIT_MOMENTUM;
+            static const int THBIT_ID1;
             static const int TRBIT_HITS;
             static const int CLBIT_HITS;
             static const int TPCBIT_RAW;
