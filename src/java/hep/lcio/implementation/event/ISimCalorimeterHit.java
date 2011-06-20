@@ -68,6 +68,11 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
    {
       return pdg[i];
    }
+
+   public float[] getStepPosition(int i)
+   {
+      throw new RuntimeException("getStepPosition not yet implemented");
+   }
    
    public MCParticle getParticleCont(int i)
    {

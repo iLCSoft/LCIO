@@ -372,6 +372,7 @@ namespace EVENT
             static const int CHBIT_BARREL;
             static const int CHBIT_ID1;
             static const int CHBIT_PDG;
+            static const int CHBIT_STEP;
             static const int RCHBIT_LONG;
             static const int RCHBIT_BARREL;
             static const int RCHBIT_ID1;

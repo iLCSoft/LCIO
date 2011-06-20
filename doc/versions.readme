@@ -26,6 +26,13 @@
         * in SimTrackerHit the methods get/setCellID() were deprecated
             these methods now call get/setCellID0()
 
+    - added optional storing of the position where the energy deposition (step) occurred in SimCalorimeterHit
+        only if bit flag LCIO.CHBIT_STEP is set
+
+        float[3] getStepPosition( int i )
+
+        * LCIO.CHBIT_PDG was deprecated
+            should now use LCIO.CHBIT_STEP
 
     - added get/setEnergyError to Cluster (c++/java/fortran)
 

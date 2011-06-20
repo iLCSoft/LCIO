@@ -15,6 +15,7 @@ namespace IMPL {
     float Energy ;
     float Time ;
     int   PDG ;
+    float StepPosition[3] ;
   }  MCParticleCont  ;
   
   typedef std::vector< IMPL::MCParticleCont* > MCParticleContVec ;
@@ -72,6 +73,13 @@ namespace IMPL {
      */
     
     virtual const float * getPosition() const ;
+
+
+    /** Returns the position where the energy deposited (step) occurred
+     * optional, only if bit LCIO::CHBIT_STEP is set.
+     */
+    virtual const float* getStepPosition( int i ) const ;
+
     
     /** Returns the number of MC contributions to the hit. 0 if 
      * information is not stored. Renamed to getNMCContributions.
@@ -82,7 +90,7 @@ namespace IMPL {
     
     /** Returns the number of MC contributions to the hit. 0 if 
      * information is not stored. There are two levels of detail: if 
-     * collection flag bit LCIO.CHBIT_PDG==1 then all simulator steps' 
+     * collection flag bit LCIO.CHBIT_STEP==1 then all simulator steps' 
      * contributions to the hit are stored, otherwise there is only one 
      * contribution for every particle entering the calorimeter.
      */
@@ -99,7 +107,7 @@ namespace IMPL {
     virtual float getTimeCont(int i) const ;
 
     /** Returns the PDG code of the shower particle that caused this contribution.
-     *  Check the flag word bit LCIO.CHBIT_PDG of the collection whether this information 
+     *  Check the flag word bit LCIO.CHBIT_STEP of the collection whether this information 
      *  is available. 
      * @see getNMCContributions()
      */ 
@@ -141,12 +149,14 @@ namespace IMPL {
      *  <li>p!=0, pdg!=0, create a new MCParticleContribution in any case - this is used for 
      *      the detailed mode, where every simulator step produces a contribution.</li>
      *  </ol>
-     *  If you want to store the PDG of the secondary (case 3.) set the flag word bit LCIO::CHBIT_PDG.<br>
+     *  If you want to store the PDG and position of the secondary (case 3.) set the flag word bit LCIO::CHBIT_STEP.<br>
      */
     void addMCParticleContribution( EVENT::MCParticle *p,
 				    float en,
 				    float t,
-				    int pdg=0 ) ; 
+				    int pdg=0,
+                    float* sp=0
+                    ) ; 
 
   protected:
 

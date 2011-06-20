@@ -1109,7 +1109,7 @@ namespace UTIL{
   }
 
   const std::string& header(const EVENT::SimCalorimeterHit *){ //hauke
-        static std::string _vtxh(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | sec. PDG  \n");
+        static std::string _vtxh(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | sec. PDG | stepPosition (x,y,z) \n");
     return _vtxh;
   }
   
@@ -1157,8 +1157,11 @@ namespace UTIL{
           out << setw(10) << hit->getEnergyCont(k)<< "|";
           out << setw(6) << hit->getTimeCont(k) << "|";
 
-          if(flag.bitSet(LCIO::CHBIT_PDG)){
-              out << hit->getPDGCont( k);
+          if(flag.bitSet(LCIO::CHBIT_STEP)){
+              out << hit->getPDGCont( k ) << "| (" ;
+              out << hit->getStepPosition( k )[0] << ", " ;
+              out << hit->getStepPosition( k )[1] << ", " ;
+              out << hit->getStepPosition( k )[2] << ")" ;
           }else{
             out << " no PDG";
           }
@@ -2260,8 +2263,8 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimCalorimet
         LCFlagImpl flag( col->getFlag() ) ;
         out << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
         out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-        out << "     LCIO::CHBIT_ID1   :  " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
-        out << "     LCIO::CHBIT_PDG    : " << flag.bitSet( LCIO::CHBIT_PDG ) << endl ;
+        out << "     LCIO::CHBIT_ID1    : " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
+        out << "     LCIO::CHBIT_STEP   : " << flag.bitSet( LCIO::CHBIT_STEP ) << endl ;
     } 
     tmp << "0x" << hex << hit->id() << dec;
     out << setw(30) << setfill(' ') << std::left << "Id" <<   right << setw(40) << tmp.str() << endl;
