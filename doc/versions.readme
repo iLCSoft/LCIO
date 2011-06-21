@@ -68,6 +68,7 @@
     - removed old makefiles used by ant.cpp
 
     - improved CMakeLists.txt (compatible with ilcsoft v01-11)
+        - reduced build time of lcioDict library to 50%
 
     - bug fixes:
         fix printout of TrackerHit (last element of cov matrix was missing(wrong))
