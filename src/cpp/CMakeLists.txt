@@ -416,7 +416,7 @@ IF( BUILD_LCIO_EXAMPLES )
     ADD_LCIO_EXAMPLE( lsh )
     TARGET_LINK_LIBRARIES( bin_lsh ${CURSES_LIBRARY} ${READLINE_LIBRARY} )
   ELSE()
-    MESSAGE( "cannot build lsh: curses and/or readline libraries not found" )
+    MESSAGE( STATUS "cannot build lsh: curses and/or readline libraries not found" )
   ENDIF()
 ENDIF()
 # ============================================================================
@@ -618,7 +618,7 @@ IF( CLHEP_FOUND )
     INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIRS} ) 
     ADD_LCIO_TEST( test_fourvector) 
 ELSE()
-    MESSAGE( "cannot build test_fourvector: clhep not found" )
+    MESSAGE( STATUS "cannot build test_fourvector: clhep not found" )
 ENDIF( CLHEP_FOUND )
 
 # ============================================================================
