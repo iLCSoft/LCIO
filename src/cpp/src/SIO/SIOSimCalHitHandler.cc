@@ -53,16 +53,19 @@ namespace SIO{
       SIO_PNTR( stream , &(mcCon->Particle)  ) ;
       SIO_DATA( stream , &(mcCon->Energy) , 1 ) ;
       SIO_DATA( stream , &(mcCon->Time)   , 1 ) ;
-	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
 
-    if( _vers > SIO_VERSION_ENCODE( 1, 52 ) ){
-        if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
-            SIO_DATA( stream , &(mcCon->StepPosition[0])    , 1 ) ;
-            SIO_DATA( stream , &(mcCon->StepPosition[1])    , 1 ) ;
-            SIO_DATA( stream , &(mcCon->StepPosition[2])    , 1 ) ;
-        }
+      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_PDG ) ){  // BIT_PDG == BIT_STEP 
+	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
       }
 
+      if( _vers > SIO_VERSION_ENCODE( 1, 52 ) ){
+	if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
+	  SIO_DATA( stream , &(mcCon->StepPosition[0])    , 1 ) ;
+	  SIO_DATA( stream , &(mcCon->StepPosition[1])    , 1 ) ;
+	  SIO_DATA( stream , &(mcCon->StepPosition[2])    , 1 ) ;
+        }
+      }
+      
       hit->_vec.push_back(  mcCon  );
     }
 
@@ -107,13 +110,17 @@ namespace SIO{
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;
       LCSIO_WRITE( stream, hit->getTimeCont(i)  ) ;
-	  LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
 
       if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
-          const float* sp = hit->getStepPosition(i) ; 
-          LCSIO_WRITE( stream, sp[0] ) ;
-          LCSIO_WRITE( stream, sp[1] ) ;
-          LCSIO_WRITE( stream, sp[2] ) ;
+
+	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
+
+	// const float* sp = hit->getStepPosition(i) ; 
+	// LCSIO_WRITE( stream, sp[0] ) ;
+	// LCSIO_WRITE( stream, sp[1] ) ;
+	// LCSIO_WRITE( stream, sp[2] ) ;
+	float* sp = const_cast<float*> ( hit->getStepPosition(i) ) ; 
+	SIO_DATA( stream,  sp , 3 ) ;
       }
     }
     
