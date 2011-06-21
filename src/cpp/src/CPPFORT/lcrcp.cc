@@ -51,7 +51,7 @@ float lcrcpgetenergy( PTRTYPE recopart ) {
 
 int lcrcpgetcovmatrix( PTRTYPE recopart, float cvmtx[NCOVARIANCE] )  {
   ReconstructedParticleImpl* rcp = f2c_pointer<ReconstructedParticleImpl,LCObject>( recopart ) ;
-  for( int i=0 ; i<NCOVARIANCE ;  cvmtx[i] = rcp->getCovMatrix()[i++]  ) ;
+  for( int i=0 ; i<NCOVARIANCE ; i++ ) cvmtx[i] = rcp->getCovMatrix()[i] ;
   return LCIO::SUCCESS ;
 }
 

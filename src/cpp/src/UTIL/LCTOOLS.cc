@@ -315,7 +315,7 @@ namespace UTIL {
     for( int i=0 ; i< nPrint ; i++ ){
       hit = dynamic_cast<TrackerHit*>(col->getElementAt(i)) ;
       cout << lcio_short<EVENT::TrackerHit>(hit,col);
-      const LCObjectVec& rawHits = hit->getRawHits() ;
+      // const LCObjectVec& rawHits = hit->getRawHits() ;
       // cout << "    rawHits: " ;
       // try{
       // 	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {

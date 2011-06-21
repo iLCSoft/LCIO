@@ -29,13 +29,13 @@ int lctrhid( PTRTYPE trhit )  {
 
 int lctrhgetposition( PTRTYPE trhit, double dpos[3] ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  for( int i=0 ; i<3 ;  dpos[i] = trh->getPosition()[i++]  ) ;
+  for( int i=0 ; i<3 ;  i++ ) dpos[i] = trh->getPosition()[i] ;
   return LCIO::SUCCESS ;
 }
 
 int lctrhgetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  for( int i=0 ; i<TRKHITNCOVMATRIX ;  cvmtx[i] = trh->getCovMatrix()[i++]  ) ;
+  for( int i=0 ; i<TRKHITNCOVMATRIX ;  i++ ) cvmtx[i] = trh->getCovMatrix()[i] ;
   return LCIO::SUCCESS ;
 }
 

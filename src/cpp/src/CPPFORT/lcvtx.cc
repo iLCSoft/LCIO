@@ -56,7 +56,7 @@ int lcvtxgetposition( PTRTYPE vertex, float pos[3] ) {
 
 int lcvtxgetcovmatrix( PTRTYPE vertex, float cvmtx[VTXCOVMATRIX] )  {
   VertexImpl* vtx = f2c_pointer<VertexImpl,LCObject>( vertex ) ;
-  for( int i=0 ; i<VTXCOVMATRIX ;  cvmtx[i] = vtx->getCovMatrix()[i++]  ) ;
+  for( int i=0 ; i<VTXCOVMATRIX ;  i++ ) cvmtx[i] = vtx->getCovMatrix()[i] ;
   return LCIO::SUCCESS ;
 }
 
