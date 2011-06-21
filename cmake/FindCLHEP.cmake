@@ -47,7 +47,9 @@ IF( CLHEP_CONFIG_EXECUTABLE )
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     IF( _exit_code EQUAL 0 )
-        SEPARATE_ARGUMENTS( CLHEP_VERSION UNIX_COMMAND "${_output}" )
+        #SEPARATE_ARGUMENTS( CLHEP_VERSION UNIX_COMMAND "${_output}" ) # needs cmake >= 2.8
+        SET( CLHEP_VERSION ${_output} )
+        SEPARATE_ARGUMENTS( CLHEP_VERSION )
         LIST( REMOVE_AT CLHEP_VERSION 0 ) # remove CLHEP string from output of 'clhep-config --version'
         CHECK_PACKAGE_VERSION( CLHEP ${CLHEP_VERSION} )
     ELSE()

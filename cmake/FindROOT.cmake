@@ -50,7 +50,6 @@
 # @author Jan Engels, DESY
 ###############################################################################
 
-
 # find root-config
 SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )
@@ -74,6 +73,23 @@ ENDIF()
 
 
 IF( ROOT_CONFIG_EXECUTABLE )
+
+    # ==============================================
+    # ===          ROOT_PREFIX                   ===
+    # ==============================================
+
+    # get root prefix from root-config output
+    EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --prefix
+        OUTPUT_VARIABLE ROOT_ROOT
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        # clear variable if root-config exits with error
+        # it might contain garbage
+        SET( ROOT_ROOT )
+    ENDIF()
+
 
 
     # ==============================================

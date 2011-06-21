@@ -94,18 +94,22 @@ ENDMACRO()
 # ============================================================================
 # macro for generating root dict sources with rootcint
 #
+# arguments:
+#   dict_src_filename - filename of the dictionary source (to be generated)
+#
 # requires following variables:
-#       ROOT_DICT_INPUT_SOURCES - list of sources to generate
-#       ROOT_DICT_INPUT_HEADERS - list of headers needed to generate dict sources
+#       ROOT_DICT_INPUT_HEADERS - list of headers needed to generate dict source
 #           * if LinkDef.h is in the list it must be at the end !!
 #       ROOT_DICT_INCLUDE_DIRS - list of include dirs to pass to rootcint -I..
 #       ROOT_DICT_CINT_DEFINITIONS - extra definitions to pass to rootcint
-#       ROOT_DICT_OUTPUT_DIR - where sources should be generated
+#       ROOT_DICT_OUTPUT_DIR - where dictionary source should be generated
 #
 # returns:
-#       ROOT_DICT_OUTPUT_SOURCES - list containing all generated sources
+#       ROOT_DICT_OUTPUT_SOURCES - list containing generated source and other
+#           previously generated sources
+                                    
 # ----------------------------------------------------------------------------
-MACRO( GEN_ROOT_DICT_SOURCES ROOT_DICT_INPUT_SOURCES )
+MACRO( GEN_ROOT_DICT_SOURCE _dict_src_filename )
 
     # TODO check for ROOT_CINT_EXECUTABLE
 
@@ -116,23 +120,26 @@ MACRO( GEN_ROOT_DICT_SOURCES ROOT_DICT_INPUT_SOURCES )
         #SET( _dict_includes ${_dict_includes} -I${_inc} )
     ENDFOREACH()
 
+    STRING( REPLACE "/" "_" _dict_src_filename_nosc ${_dict_src_filename} )
+    SET( _dict_src_file ${ROOT_DICT_OUTPUT_DIR}/${_dict_src_filename_nosc} )
+    STRING( REGEX REPLACE "^(.*)\\.(.*)$" "\\1.h" _dict_hdr_file "${_dict_src_file}" )
+    ADD_CUSTOM_COMMAND(
+        OUTPUT  ${_dict_src_file} ${_dict_hdr_file}
+        COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
+        COMMAND ${ROOT_CINT_WRAPPER} -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${ROOT_DICT_INPUT_HEADERS}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        DEPENDS ${ROOT_DICT_INPUT_HEADERS}
+        COMMENT "generating: ${_dict_src_file} ${_dict_hdr_file}"
+    )
+    LIST( APPEND ROOT_DICT_OUTPUT_SOURCES ${_dict_src_file} )
 
+ENDMACRO()
+
+# for backwards compatibility
+MACRO( GEN_ROOT_DICT_SOURCES _dict_src_filename )
+    MESSAGE( "USING DEPRECATED GEN_ROOT_DICT_SOURCES. PLEASE USE GEN_ROOT_DICT_SOURCE instead." )
     SET( ROOT_DICT_OUTPUT_SOURCES )
-    FOREACH( _dict_src_filename ${ROOT_DICT_INPUT_SOURCES} )
-        STRING( REPLACE "/" "_" _dict_src_filename ${_dict_src_filename} )
-        SET( _dict_src_file ${ROOT_DICT_OUTPUT_DIR}/${_dict_src_filename} )
-        STRING( REGEX REPLACE "^(.*)\\.(.*)$" "\\1.h" _dict_hdr_file "${_dict_src_file}" )
-        ADD_CUSTOM_COMMAND(
-            OUTPUT  ${_dict_src_file} ${_dict_hdr_file}
-            COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
-            COMMAND ${ROOT_CINT_WRAPPER} -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${ROOT_DICT_INPUT_HEADERS}
-            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-            DEPENDS ${ROOT_DICT_INPUT_HEADERS}
-            COMMENT "generating: ${_dict_src_file} ${_dict_hdr_file}"
-        )
-        LIST( APPEND ROOT_DICT_OUTPUT_SOURCES ${_dict_src_file} )
-    ENDFOREACH()
-
-ENDMACRO( GEN_ROOT_DICT_SOURCES ROOT_DICT_INPUT_SOURCES )
+    GEN_ROOT_DICT_SOURCE( ${_dict_src_filename} )
+ENDMACRO()
 # ============================================================================
 
