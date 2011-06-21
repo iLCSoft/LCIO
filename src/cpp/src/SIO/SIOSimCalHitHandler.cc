@@ -53,14 +53,14 @@ namespace SIO{
       SIO_PNTR( stream , &(mcCon->Particle)  ) ;
       SIO_DATA( stream , &(mcCon->Energy) , 1 ) ;
       SIO_DATA( stream , &(mcCon->Time)   , 1 ) ;
-      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
 	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
 
     if( _vers > SIO_VERSION_ENCODE( 1, 52 ) ){
-	SIO_DATA( stream , &(mcCon->StepPosition[0])    , 1 ) ;
-	SIO_DATA( stream , &(mcCon->StepPosition[1])    , 1 ) ;
-	SIO_DATA( stream , &(mcCon->StepPosition[2])    , 1 ) ;
-    }
+        if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
+            SIO_DATA( stream , &(mcCon->StepPosition[0])    , 1 ) ;
+            SIO_DATA( stream , &(mcCon->StepPosition[1])    , 1 ) ;
+            SIO_DATA( stream , &(mcCon->StepPosition[2])    , 1 ) ;
+        }
       }
 
       hit->_vec.push_back(  mcCon  );
