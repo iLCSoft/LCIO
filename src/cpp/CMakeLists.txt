@@ -497,8 +497,20 @@ SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]
 # ----------------------------------------------------------------------------
 
 
-
-# TODO runSIODump.sh and runrandomtests.sh
+# ------ java sio dump tests -------------------------------------------------
+ADD_TEST( t_j_sio_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_sim.slcio )
+ADD_TEST( t_j_sio_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_rec.slcio )
+ADD_TEST( t_j_sio_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_sim.slcio )
+ADD_TEST( t_j_sio_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_rec.slcio )
+ADD_TEST( t_j_sio_j2c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j2c_rec.slcio )
+ADD_TEST( t_j_sio_c2j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c2j_rec.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
+SET_TESTS_PROPERTIES( t_j_sio_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+SET_TESTS_PROPERTIES( t_j_sio_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+SET_TESTS_PROPERTIES( t_j_sio_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+SET_TESTS_PROPERTIES( t_j_sio_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+SET_TESTS_PROPERTIES( t_j_sio_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+# ----------------------------------------------------------------------------
 
 
 IF( BUILD_F77_TESTJOBS )
@@ -556,6 +568,11 @@ IF( BUILD_F77_TESTJOBS )
     #SET_TESTS_PROPERTIES( t_c_ana_c2f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
     # ------------------------------------------------------------------------
 
+    ADD_TEST( t_j_sio_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_sim.slcio )
+    ADD_TEST( t_j_sio_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_rec.slcio )
+    SET_TESTS_PROPERTIES( t_j_sio_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
+    SET_TESTS_PROPERTIES( t_j_sio_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+
 ENDIF()
 
 # ==== add tests from the TESTS directory ====================================
@@ -582,6 +599,19 @@ ADD_LCIO_TEST( test_cluster )
 ADD_LCIO_TEST( test_trackerhit )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
+
+ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+
+ADD_TEST( t_j_sio_cluster ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml cluster.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_cluster PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+
+ADD_TEST( t_j_sio_trackerhits ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhits.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_trackerhits PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+
+ADD_TEST( t_j_sio_trackerpulses ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerpulses.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_trackerpulses PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+
 
 FIND_PACKAGE( CLHEP QUIET )
 IF( CLHEP_FOUND )
