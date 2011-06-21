@@ -169,6 +169,10 @@
                   <data type="double[3]" name="endpoint"/>
                </if>               
             </if>
+            <if condition="1000*major+minor&gt;1052">
+                <data type="float[3]" name="spin"></data>
+                <data type="int[2]" name="colorflow"></data>
+            </if>
          </repeat>
       </block>
       <block name="SimTrackerHit" major="1" minor="60">
@@ -176,7 +180,13 @@
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
-            <data type="int" name="cellID">Detector specific</data>
+            <data type="int" name="cellID0">Detector specific</data>
+            <if condition="1000*major+minor&gt;1052">
+        	    <if condition="(flags&amp;(1&lt;&lt;29)) != 0">
+                    <data type="int" name="cellId1">second word for cell id</data>
+                </if>
+            </if>
+
             <data type="double[3]" name="position"></data>
 
             <if condition="1000*major+minor&gt;1012">
@@ -328,6 +338,12 @@
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
+            <data type="int" name="cellID0">Detector specific</data>
+            <if condition="1000*major+minor&gt;1052">
+        	    <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+                    <data type="int" name="cellId1">second word for cell id</data>
+                </if>
+            </if>
             <if condition="1000*major+minor&gt;1002">
 	      <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
 	      TrackerHitTypeValue</data>
