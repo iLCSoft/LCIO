@@ -270,7 +270,7 @@ by setting the cmake option  \verb|INSTALL_DOC| to ON as follows:
 In order to build individual documentation components the following targets may be used:
 \begin{verbatim}
   make doc              <-- build all documentation (doc_cpp + doc_java + doc_manual)
-  make doc_cpp          <-- C++ API documentation
+  make doc_cpp          <-- C++ API documentation (needs {\em doxygen}~\cite{ref_doxygen})
   make doc_java         <-- Java API documentation
   make doc_refman       <-- Reference manual
   make doc_usrman       <-- User manual
@@ -284,15 +284,6 @@ You can create the documentation of the Java API with {\em javadoc}~\cite{ref_ja
   ant doc 
 \end{verbatim}
 and then open the file \verb|${LCIO}/doc/api/index.html| with your Browser. %$
-
-\vspace{\baselineskip}
-On Linux you can create the C++ API documentation (provided you have {\em doxygen}~\cite{ref_doxygen} 
-installed and in your \verb|$PATH|) %$
-with:
-\begin{verbatim}
-  ant cpp.doc      
-\end{verbatim}
-This creates the file \verb|${LCIO}/doc/doxygen_api/html/index.html|   %$
 
 \vspace{\baselineskip}
 And the current version of this manual is created with
