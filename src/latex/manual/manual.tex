@@ -134,7 +134,9 @@ Then issue the following commands:
 \begin{verbatim}
   mkdir build           # <-- create an out-of-source directory for the build
   cd build
-  cmake ..              # check build options ( change options with: cmake -DOPTION=ON|OFF ..   or use: ccmake .. )
+  cmake ..              # check build options ( change options with: cmake -DOPTION=ON|OFF .. )
+                        #  e.g. to also build the Java version, use: cmake -DINSTALL_JAR=ON ..
+                        #  optionally use: ccmake .. and configure interactively
   make install
 \end{verbatim}
 
