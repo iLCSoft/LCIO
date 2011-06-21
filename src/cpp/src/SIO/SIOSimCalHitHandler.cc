@@ -107,13 +107,13 @@ namespace SIO{
       
       LCSIO_WRITE( stream, hit->getEnergyCont(i)  ) ;
       LCSIO_WRITE( stream, hit->getTimeCont(i)  ) ;
-      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
-	LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
+	  LCSIO_WRITE( stream, hit->getPDGCont(i)  ) ;
 
-      const float* sp = hit->getStepPosition(i) ; 
-      LCSIO_WRITE( stream, sp[0] ) ;
-      LCSIO_WRITE( stream, sp[1] ) ;
-      LCSIO_WRITE( stream, sp[2] ) ;
+      if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
+          const float* sp = hit->getStepPosition(i) ; 
+          LCSIO_WRITE( stream, sp[0] ) ;
+          LCSIO_WRITE( stream, sp[1] ) ;
+          LCSIO_WRITE( stream, sp[2] ) ;
       }
     }
     
