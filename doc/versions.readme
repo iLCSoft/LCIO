@@ -6,6 +6,23 @@
  v01-60
 ==========
 
+     - implemented new methods:
+
+       		  LCReader::readRunHeader(int runNumber ) 
+
+          -  C++ only:
+                  LCReader::getNumberOfEvents() 
+                  LCReader::getNumberOfRuns() 
+             (anajob now prints number of runs and events in the files it is going to read)
+
+     - added access mode to  
+         LCReader::readRunHeader(int runNumber, int accessMode ) 
+         LCReader::readEvent(int runNumber, int evtNumber, int accessMode ) 
+     
+     - added example for creating a simple NTuple from MCParticle collection
+       (  ./examples/cpp/rootDict/writeNTuple.C )
+
+
     - added spin and color flow information to MCParticle:
 
         float[3] getSpin()
@@ -61,27 +78,7 @@
         fixed bug with unsorted indices for direct access (java) - to be reviewed
 
 
-
-==========
- v01-52
-==========
 	
-     - implemented new methods:
-
-       		  LCReader::readRunHeader(int runNumber ) 
-
-          -  C++ only:
-                  LCReader::getNumberOfEvents() 
-                  LCReader::getNumberOfRuns() 
-             (anajob now prints number of runs and events in the files it is going to read)
-
-     - added access mode to  
-         LCReader::readRunHeader(int runNumber, int accessMode ) 
-         LCReader::readEvent(int runNumber, int evtNumber, int accessMode ) 
-     
-     - added example for creating a simple NTuple from MCParticle collection
-       (  ./examples/cpp/rootDict/writeNTuple.C )
-
 
 ==========
  v01-51-02
