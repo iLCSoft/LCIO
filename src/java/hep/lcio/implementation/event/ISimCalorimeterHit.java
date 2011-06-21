@@ -1,5 +1,8 @@
 package hep.lcio.implementation.event;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hep.lcio.event.MCParticle;
 import hep.lcio.event.SimCalorimeterHit;
 
@@ -20,6 +23,8 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
    protected int cellId0;
    protected int cellId1;
    protected int nContributions;
+   //protected float[] step = new float[3];
+   protected List steps ;
    
    public void setCellID0(int cellID)
    {
@@ -71,7 +76,8 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
 
    public float[] getStepPosition(int i)
    {
-      throw new RuntimeException("getStepPosition not yet implemented");
+	  return (float[]) steps.toArray()[i] ;
+      ///throw new RuntimeException("getStepPosition not yet implemented");
    }
    
    public MCParticle getParticleCont(int i)
@@ -97,7 +103,10 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
       return time[i];
    }
    
-   public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg)
+   public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg){
+       addMCParticleContribution( p , energy, time , pdg,  null ) ;
+   }
+   public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg, float stepPos[])
    {
       checkAccess();
       
@@ -106,6 +115,10 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
       this.energyContrib[i] = energy;
       this.time[i] = time;
       this.pdg[i] = pdg;
+      
+      if( steps==null ) steps = new ArrayList() ;
+      if( stepPos == null ) stepPos = new float[3] ; 
+      steps.add( stepPos ) ;
    }
    
    private int getIndexForNextContrib()

@@ -11,6 +11,7 @@ import hep.lcio.event.SimCalorimeterHit;
 import hep.lcio.implementation.event.ISimCalorimeterHit;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 /**
@@ -49,9 +50,17 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          particle[i] = in.readPntr();
          energyContrib[i] = in.readFloat();
          time[i] = in.readFloat();
-         if (hasPDG)
-            pdg[i] = in.readInt();
-      }
+         if (hasPDG) {
+            if( steps == null ) steps = new ArrayList() ;
+        	pdg[i] = in.readInt();
+            float[] st = new float[3] ;
+            st[0] = in.readFloat();
+            st[1] = in.readFloat();
+            st[2] = in.readFloat();          
+            steps.add( st ) ;
+         }
+         
+         }
 	  double version  = (double) major + ( (double) minor ) /  10. ;
 	  if( version > 1.0 )
 	    in.readPTag(this);
@@ -90,9 +99,14 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
             out.writePntr(hit.getParticleCont(i));
             out.writeFloat(hit.getEnergyCont(i));
             out.writeFloat(hit.getTimeCont(i));
-            if (hasPDG)
+            if (hasPDG){
                out.writeInt(hit.getPDGCont(i));
-         }
+               float[] st = hit.getStepPosition(i) ;
+               out.writeFloat( st[0] ) ;
+               out.writeFloat( st[1] ) ;
+               out.writeFloat( st[2] ) ;
+            }
+        }
 		out.writePTag(hit);
       }
    }
@@ -117,8 +131,13 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          out.writePntr(getParticleCont(i));
          out.writeFloat(energyContrib[i]);
          out.writeFloat(time[i]);
-         if (hasPDG)
+         if (hasPDG){
             out.writeInt(pdg[i]);
+            float[] st = (float[]) steps.toArray()[i] ;
+            out.writeFloat( st[0]) ;
+            out.writeFloat( st[1]) ;
+            out.writeFloat( st[2]) ; 
+         }
       }
   	  out.writePTag(this);
    }

@@ -120,7 +120,13 @@ public class SimJob
 
                // in order to access a MCParticle,  we need a dynamic cast as the
                // LCCollection returns an LCIOObject - this is like vectors in Java
-               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(mcIndx), 0.314159f, 0.1155f, 121212);
+               float[] stepPos = new float[3] ;
+               stepPos[0] = (float) 1.1 ;
+               stepPos[1] = (float) 2.2 ;
+               stepPos[2] = (float) 3.3 ;
+               
+               
+               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(mcIndx), 0.314159f, 0.1155f, 121212, stepPos );
             }
 
             // and finally some tracker hits
