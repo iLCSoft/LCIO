@@ -53,11 +53,13 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          if (hasPDG) {
             if( steps == null ) steps = new ArrayList() ;
         	pdg[i] = in.readInt();
-            float[] st = new float[3] ;
-            st[0] = in.readFloat();
-            st[1] = in.readFloat();
-            st[2] = in.readFloat();          
-            steps.add( st ) ;
+            if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51)){
+                float[] st = new float[3] ;
+                st[0] = in.readFloat();
+                st[1] = in.readFloat();
+                st[2] = in.readFloat();          
+                steps.add( st ) ;
+            }
          }
          
          }
