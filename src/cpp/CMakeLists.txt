@@ -284,11 +284,11 @@ ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 
 IF( BUILD_ROOTDICT )
 
-    # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
-    INCLUDE( ${ROOT_DICT_MACROS_FILE} )
-
     # special rootcint definitions for lcio
     SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
+
+    # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
+    INCLUDE( ${ROOT_DICT_MACROS_FILE} )
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
