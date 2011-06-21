@@ -169,7 +169,7 @@
                   <data type="double[3]" name="endpoint"/>
                </if>               
             </if>
-            <if condition="1000*major+minor&gt;1052">
+            <if condition="1000*major+minor&gt;1051">
                 <data type="float[3]" name="spin"></data>
                 <data type="int[2]" name="colorflow"></data>
             </if>
@@ -181,7 +181,7 @@
          <data type="int" name="n"></data>
          <repeat count="n">
             <data type="int" name="cellID0">Detector specific</data>
-            <if condition="1000*major+minor&gt;1052">
+            <if condition="1000*major+minor&gt;1051">
         	    <if condition="(flags&amp;(1&lt;&lt;29)) != 0">
                     <data type="int" name="cellId1">second word for cell id</data>
                 </if>
@@ -229,7 +229,7 @@
 		<data type="float" name="time"></data>
 		<if condition="(flags&amp;(1&lt;&lt;28)) != 0">
 		   <data type="int" name="PDG"></data>
-           <if condition="1000*major+minor&gt;1052">
+           <if condition="1000*major+minor&gt;1051">
 		        <data type="float[3]" name="stepPosition"></data>
 		    </if>
 		</if>
@@ -342,7 +342,7 @@
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
          <repeat count="n">
-	   <if condition="1000*major+minor&gt;1052">
+	   <if condition="1000*major+minor&gt;1051">
  	     <data type="int" name="cellId0">Detector specific</data>
 	     <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
 	       <data type="int" name="cellId1">second word for cell id</data>

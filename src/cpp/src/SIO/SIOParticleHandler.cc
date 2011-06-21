@@ -86,7 +86,7 @@ namespace SIO {
     if( particle->_simstatus.test( MCParticle::BITEndpoint ) )  // bit 31
       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
     
-    if( _vers > SIO_VERSION_ENCODE( 1, 52) ){
+    if( _vers > SIO_VERSION_ENCODE( 1, 51) ){
         SIO_DATA( stream ,  particle->_spin  , 3 ) ;
         SIO_DATA( stream ,  particle->_colorFlow  , 2 ) ;
     }

@@ -75,7 +75,7 @@ class SIOMCParticle extends IMCParticle
          endpoint[1] = in.readDouble();
          endpoint[2] = in.readDouble();
       }
-      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52) ){
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51) ){
 
           spin[0] = in.readFloat();
           spin[1] = in.readFloat();

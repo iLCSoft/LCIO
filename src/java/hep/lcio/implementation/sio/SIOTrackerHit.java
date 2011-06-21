@@ -26,7 +26,7 @@ class SIOTrackerHit extends ITrackerHit
    {
       setParent(owner);
       
-      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52)){
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51)){
           cellID0 = in.readInt();
           if( (flags & (1 << LCIO.RTHBIT_ID1)) != 0 ){
               cellID1 = in.readInt();

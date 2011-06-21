@@ -58,7 +58,7 @@ namespace SIO{
 	SIO_DATA( stream , &(mcCon->PDG)    , 1 ) ;
       }
 
-      if( _vers > SIO_VERSION_ENCODE( 1, 52 ) ){
+      if( _vers > SIO_VERSION_ENCODE( 1, 51 ) ){
 	if( LCFlagImpl(_flag).bitSet( LCIO::CHBIT_STEP ) ){
 	  SIO_DATA( stream , &(mcCon->StepPosition[0])    , 1 ) ;
 	  SIO_DATA( stream , &(mcCon->StepPosition[1])    , 1 ) ;

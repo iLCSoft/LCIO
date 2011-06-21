@@ -30,7 +30,7 @@ namespace SIO{
 
         LCFlagImpl lcFlag(_flag) ;
 
-        if( _vers > SIO_VERSION_ENCODE( 1, 52) ) {
+        if( _vers > SIO_VERSION_ENCODE( 1, 51) ) {
             SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
             if( lcFlag.bitSet( LCIO::RTHBIT_ID1 ) ){
                 SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;

@@ -25,7 +25,7 @@ class SIOSimTrackerHit extends ISimTrackerHit
    {
       setParent(owner);
       cellID0 = in.readInt();
-      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,52) ){
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51) ){
           if( (flags & (1 << LCIO.THBIT_ID1)) != 0 ){
             cellID1 = in.readInt();
           }
