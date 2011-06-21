@@ -21,6 +21,7 @@ const char* LCIO::LCSTRVEC = "LCStrVec" ;
 const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
 const char* LCIO::LCINTVEC = "LCIntVec" ;
 const char* LCIO::TRACK= "Track" ; 
+const char* LCIO::TRACKSTATE= "TrackState" ; 
 const char* LCIO::CLUSTER = "Cluster" ; 
 const char* LCIO::RECONSTRUCTEDPARTICLE = "ReconstructedParticle" ; 
 const char* LCIO::LCRELATION = "LCRelation" ; 

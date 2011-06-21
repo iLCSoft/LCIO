@@ -1,0 +1,98 @@
+package hep.lcio.event;
+@ifdef cpp
+@cpp{
+class TrackState ;
+/**Vector of (pointers to) TrackStates.*/
+typedef std::vector<TrackState*> TrackStateVec ;
+}
+@endif
+
+/** The LCIO TrackState class.
+ * 
+ * @author gaede, engels
+ * @version $Id:$
+ */
+
+public interface TrackState extends LCObject {
+    
+
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TrackState lcobject_type ;
+
+}
+@endif
+
+@ifdef cpp
+@cpp{
+
+    /** Enumeration for refering to Locations
+     *  Example usage: TrackState::Location::AtIP
+    */
+    struct Location 
+    {
+        // don't forget to update size (below) when adding new entries to TrackStateLocationEnum !!
+        enum TrackStateLocationEnum
+        {
+            AtOther, // any location other than the ones defined below
+            AtIP,
+            AtFirstHit,
+            AtLastHit,
+            AtCalorimeter,
+            AtVertex
+        };
+
+        static int size(){
+            // number of options in TrackStateLocationEnum
+            return 6; // FIXME hard-coded
+        }
+    };
+}
+@endif
+
+
+     /** The location of the track state.
+     *   Location can be set to: AtIP, AtFirstHit, AtLastHit, AtCalorimeter, AtVertex, AtOther
+     */
+    public int getLocation() const ;	
+   
+    /** Impact paramter of the track
+     *  in (r-phi).
+     */
+    public float getD0() const ;	
+    
+    /** Phi of the track at the reference point.
+     * @see getReferencePoint
+     */
+    public float getPhi() const ;	
+    
+    /** Omega is the signed curvature of the track in [1/mm].
+     * The sign is that of the particle's charge.
+     */
+    public float getOmega() const ;	
+    
+    /** Impact paramter of the track
+     *  in (r-z).
+     */
+    public float getZ0() const ;	
+    
+    /** Lambda is the dip angle of the track in r-z at the reference point. 
+     * @see getReferencePoint
+     */
+    public float getTanLambda() const ;	
+    
+    
+    /** Covariance matrix of the track parameters. Stored as lower triangle matrix where
+     * the order of parameters is:   d0, phi, omega, z0, tan(lambda).
+     * So we have cov(d0,d0), cov( phi, d0 ), cov( phi, phi), ...
+     */
+    public const FloatVec& getCovMatrix() const ;
+    
+    
+    /** Reference point of the track parameters.
+     *  The default for the reference point is the point of closest approach.
+     */
+    public const float3V getReferencePoint() const;
+    
+}

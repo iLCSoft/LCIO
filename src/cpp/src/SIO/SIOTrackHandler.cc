@@ -4,6 +4,7 @@
 
 #include "EVENT/LCIO.h"
 #include "IOIMPL/TrackIOImpl.h"
+#include "IOIMPL/TrackStateIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
 #include "SIO_functions.h"
@@ -41,18 +42,42 @@ namespace SIO{
     SIO_DATA( stream ,  &type  , 1 ) ;
     trk->setType( type ) ;  // type is bitset<32> - can't be set directly
 
-    SIO_DATA( stream ,  &(trk->_d0)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_phi)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_omega)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_z0)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_tanLambda)  , 1 ) ;
+
+    // read TrackStates
+    int nTrackStates = 1 ; // set to 1 per default for backwards compatibility
+    
+
+    if( _vers >= SIO_VERSION_ENCODE( 2, 0)   ) {
+        SIO_DATA( stream ,  &nTrackStates  , 1 ) ;
+    }
 
 
-    float cov[NCOVMATRIX] ;
-    SIO_DATA( stream ,  cov  ,  NCOVMATRIX ) ;
-    trk->setCovMatrix( cov ) ;
+    for( int i=0 ; i<nTrackStates ; i++ ){
 
-    SIO_DATA( stream ,  trk->_reference  , 3 ) ;
+        // create new TrackState object
+        TrackStateIOImpl* trackstate = new TrackStateIOImpl ;
+
+        if( _vers >= SIO_VERSION_ENCODE( 2, 0)   ) {
+            SIO_DATA( stream ,  &(trackstate->_location)  , 1 ) ;
+        }
+
+        SIO_DATA( stream ,  &(trackstate->_d0)  , 1 ) ;
+        SIO_DATA( stream ,  &(trackstate->_phi)  , 1 ) ;
+        SIO_DATA( stream ,  &(trackstate->_omega)  , 1 ) ;
+        SIO_DATA( stream ,  &(trackstate->_z0)  , 1 ) ;
+        SIO_DATA( stream ,  &(trackstate->_tanLambda)  , 1 ) ;
+
+        float cov[15] ; // FIXME hardcoded 15
+        SIO_DATA( stream ,  cov  ,  15 ) ; // FIXME hardcoded 15
+        trackstate->setCovMatrix( cov ) ;
+
+        SIO_DATA( stream ,  trackstate->_reference  , 3 ) ; // FIXME hardcoded 3
+
+        trk->addTrackState( trackstate );
+
+    }
+
+
     //    SIO_DATA( stream ,  &(trk->_isReferencePointPCA )  , 1 ) ;
 
     SIO_DATA( stream ,  &(trk->_chi2)  , 1 ) ;
@@ -151,19 +176,30 @@ namespace SIO{
 
     LCSIO_WRITE( stream, trk->getType()  ) ;
 
-    LCSIO_WRITE( stream, trk->getD0()  ) ;
-    LCSIO_WRITE( stream, trk->getPhi()  ) ;
-    LCSIO_WRITE( stream, trk->getOmega()  ) ;
-    LCSIO_WRITE( stream, trk->getZ0()  ) ;
-    LCSIO_WRITE( stream, trk->getTanLambda()  ) ;
 
-    const FloatVec& cov = trk->getCovMatrix() ;
-    for(unsigned int i=0;i<cov.size();i++){
-      LCSIO_WRITE( stream, cov[i]  ) ;
+    // write TrackStates
+    const TrackStateVec& trackstates = trk->getTrackStates() ;
+    int nTrackStates=  trackstates.size() ;
+
+    SIO_DATA( stream, &nTrackStates , 1  ) ;
+
+    for( unsigned int i=0; i<trackstates.size() ; i++ ){
+
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getLocation()  ) ;
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getD0()  ) ;
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getPhi()  ) ;
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getOmega()  ) ;
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getZ0()  ) ;
+        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getTanLambda()  ) ;
+
+        const FloatVec& cov = trk->getTrackStates()[i]->getCovMatrix() ;
+        for(unsigned int j=0; j<cov.size() ; j++ ){
+          LCSIO_WRITE( stream, cov[j]  ) ;
+        }
+
+        float* pos = const_cast<float*> ( trk->getTrackStates()[i]->getReferencePoint() ) ; 
+        SIO_DATA( stream,  pos , 3 ) ;
     }
-
-    float* pos = const_cast<float*> ( trk->getReferencePoint() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
 
     LCSIO_WRITE( stream, trk->getChi2()  ) ;
     LCSIO_WRITE( stream, trk->getNdf()  ) ;

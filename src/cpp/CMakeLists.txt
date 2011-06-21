@@ -51,8 +51,11 @@ SET( LCIO_IMPL_SRCS
   ./src/IMPL/SimTrackerHitImpl.cc
   ./src/IMPL/TPCHitImpl.cc
   ./src/IMPL/TrackImpl.cc
+  ./src/IMPL/TrackStateImpl.cc
   ./src/IMPL/TrackerDataImpl.cc
   ./src/IMPL/TrackerHitImpl.cc
+  ./src/IMPL/TrackerHitPlaneImpl.cc
+  ./src/IMPL/TrackerHitZCylinderImpl.cc
   ./src/IMPL/TrackerPulseImpl.cc
   ./src/IMPL/TrackerRawDataImpl.cc
   ./src/IMPL/VertexImpl.cc
@@ -596,6 +599,7 @@ ENDMACRO()
 ADD_LCIO_TEST( test_example ) 
 ADD_LCIO_TEST( test_calohit )
 ADD_LCIO_TEST( test_cluster )
+ADD_LCIO_TEST( test_tracks )
 ADD_LCIO_TEST( test_trackerhit )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim

@@ -249,7 +249,8 @@ c-----the Track interface
       PTRTYPE lctrkgetsubdetectorhitnumbers
       integer lctrkdelete, lctrkid
       integer lctrkgettype, lctrkgetcovmatrix
-      integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
+c-----integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
+      integer lctrkgetreferencepoint
       real    lctrkgetomega, lctrkgettanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
       real    lctrkgetradiusofinnermosthit
@@ -257,7 +258,8 @@ c-----the Track interface
       integer lctrksettypebit, lctrksetomega, lctrksettanlambda
       integer lctrksetphi, lctrksetd0, lctrksetz0, lctrksetcovmatrix
       integer lctrksetreferencepoint, lctrksetchi2, lctrksetdedx
-      integer lctrksetisreferencepointpca, lctrksetndf
+c-----integer lctrksetisreferencepointpca, lctrksetndf
+      integer lctrksetndf
       integer lctrksetdedxerror, lctrkaddtrack, lctrkaddhit
       integer lctrksetradiusofinnermosthit,lctrksetsubdetectorhitnumbers
 

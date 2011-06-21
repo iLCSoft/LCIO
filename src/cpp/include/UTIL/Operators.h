@@ -11,6 +11,7 @@
 #include "EVENT/TrackerHit.h"
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/Track.h"
+#include "EVENT/TrackState.h"
 #include "EVENT/Cluster.h"
 
 
@@ -140,6 +141,11 @@ namespace UTIL{
   std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Track> &);
   std::ostream& operator<<( std::ostream& out, const EVENT::Track &);
 
+  const std::string& header( const EVENT::TrackState *);
+  const std::string& tail( const EVENT::TrackState *);
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackState> &);
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackState &);
+
   const std::string& header( const EVENT::Cluster *);
   const std::string& tail( const EVENT::Cluster *);
   std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Cluster> &);
@@ -181,6 +187,7 @@ namespace UTIL{
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::CalorimeterHit> l);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Cluster> l);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> l);
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackState> l);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::ReconstructedParticle> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimCalorimeterHit> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> ll);

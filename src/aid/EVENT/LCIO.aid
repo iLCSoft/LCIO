@@ -2,8 +2,8 @@ package hep.lcio.event ;
 
 @ifdef cpp
 @cpp{
-#define LCIO_MAJOR_VERSION 1
-#define LCIO_MINOR_VERSION 60
+#define LCIO_MAJOR_VERSION 2
+#define LCIO_MINOR_VERSION 0
 #define LCIO_PATCH_LEVEL 0
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
@@ -108,6 +108,7 @@ public interface LCIO{
     static const char* LCFLOATVEC ;
     static const char* LCINTVEC ;
     static const char* TRACK ;
+    static const char* TRACKSTATE ;
     static const char* CLUSTER ;
     static const char* RECONSTRUCTEDPARTICLE ;
     static const char* LCRELATION ;
@@ -121,8 +122,8 @@ public interface LCIO{
 }
 @else
     // current version number of lcio
-  public static const int MAJORVERSION  = 1 ; 
-  public static const int MINORVERSION  = 60 ;
+  public static const int MAJORVERSION  = 2 ; 
+  public static const int MINORVERSION  = 0 ;
 
 
   // bits in flag words
@@ -198,6 +199,7 @@ public interface LCIO{
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;
   public static const String TRACK = "Track";
+  public static const String TRACKSTATE = "TrackState";
   public static const String CLUSTER = "Cluster";
   public static const String RECONSTRUCTEDPARTICLE = "ReconstructedParticle";
   public static const String LCRELATION = "LCRelation" ;
