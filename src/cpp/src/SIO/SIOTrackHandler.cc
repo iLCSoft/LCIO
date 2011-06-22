@@ -67,11 +67,11 @@ namespace SIO{
         SIO_DATA( stream ,  &(trackstate->_z0)  , 1 ) ;
         SIO_DATA( stream ,  &(trackstate->_tanLambda)  , 1 ) ;
 
-        float cov[15] ; // FIXME hardcoded 15
-        SIO_DATA( stream ,  cov  ,  15 ) ; // FIXME hardcoded 15
+        float cov[15] ;
+        SIO_DATA( stream ,  cov  ,  15 ) ;
         trackstate->setCovMatrix( cov ) ;
 
-        SIO_DATA( stream ,  trackstate->_reference  , 3 ) ; // FIXME hardcoded 3
+        SIO_DATA( stream ,  trackstate->_reference  , 3 ) ;
 
         trk->addTrackState( trackstate );
 
