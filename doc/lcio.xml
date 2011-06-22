@@ -480,14 +480,32 @@
       <data type="int" name="nTrack"/>
       <repeat count="nTrack">
 	<data type="int" name="type">Type of Track, e.g. TPC, VTX, SIT</data>
-	<data type="float" name="d0">Impact Parameter in r-phi</data>
-	<data type="float" name="phi">Phi of track in r-phi</data>
-	<data type="float" name="omega">curvature signed with charge</data>
-	<data type="float" name="z0">Impact Parameter in r-z</data>
-	<data type="float" name="tanLambda">tangent of dip angle in r-z</data>
 
-	<data type="float[15]" name="covMatrix"> Covariance matrix</data>
-	<data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
+    <if condition="1000*major+minor&gt;1099">
+        <data type="int" name="nTrackStates"></data>
+        <repeat count="nTrackStates">
+           <data type="int" name="location">Location of the TrackState</data>
+            <data type="float" name="d0">Impact Parameter in r-phi</data>
+            <data type="float" name="phi">Phi of track in r-phi</data>
+            <data type="float" name="omega">curvature signed with charge</data>
+            <data type="float" name="z0">Impact Parameter in r-z</data>
+            <data type="float" name="tanLambda">tangent of dip angle in r-z</data>
+
+            <data type="float[15]" name="covMatrix"> Covariance matrix</data>
+            <data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
+
+        </repeat>
+    <else/>
+        <data type="float" name="d0">Impact Parameter in r-phi</data>
+        <data type="float" name="phi">Phi of track in r-phi</data>
+        <data type="float" name="omega">curvature signed with charge</data>
+        <data type="float" name="z0">Impact Parameter in r-z</data>
+        <data type="float" name="tanLambda">tangent of dip angle in r-z</data>
+
+        <data type="float[15]" name="covMatrix"> Covariance matrix</data>
+        <data type="float[3]" name="referencePoint">Reference point (x,y,z) </data>
+    </if>
+
 	<data type="float" name="chi2">chi**2 of fit</data>
 	<data type="int" name="ndf">ndf of fit</data>
 	<data type="float" name="dEdx">dEdx</data>
