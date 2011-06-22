@@ -45,7 +45,7 @@ public interface TrackState extends LCObject {
 
         static int size(){
             // number of options in TrackStateLocationEnum
-            return 6; // FIXME hard-coded
+            return 6;
         }
     };
 }
