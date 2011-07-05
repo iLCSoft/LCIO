@@ -22,6 +22,15 @@ public interface TrackerHitZCylinder extends TrackerHit {
 }
 @endif
 
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::RTHZBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
     /** Radius of cylinder.
      */
     public const float getR() const ;

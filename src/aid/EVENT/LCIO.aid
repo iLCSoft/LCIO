@@ -56,6 +56,12 @@ public interface LCIO{
     // raw tracker hit
     static const int RTHBIT_ID1     = 31 ;  //  cellid1 stored
 
+    // TrackerHitPlane
+    static const int RTHPBIT_ID1      = 31 ; // cellid1 stored
+
+    // TrackerHitZCylinder
+    static const int RTHZBIT_ID1      = 31 ; // cellid1 stored
+
     // SimTrackerHit
     static const int THBIT_BARREL   = 31 ; // barrel(1) - endcap(0)
     static const int THBIT_MOMENTUM = 30 ; // momentum of particle stored(1) - not stored(0)
@@ -148,6 +154,12 @@ public interface LCIO{
 
   // raw tracker hit
   public static const int RTHBIT_ID1    = 31 ;  //  cellid1 stored
+
+  // TrackerHitPlane
+  public static const int RTHPBIT_ID1    = 31 ;  //  cellid1 stored
+
+  // TrackerHitZCylinder
+  public static const int RTHZBIT_ID1    = 31 ;  //  cellid1 stored
 
   // SimTrackerHit
   public static const int THBIT_BARREL   = 31 ; // barrel(1) - endcap(0)

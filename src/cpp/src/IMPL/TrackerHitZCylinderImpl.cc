@@ -7,6 +7,9 @@ using namespace EVENT ;
 namespace IMPL {
   
   TrackerHitZCylinderImpl::TrackerHitZCylinderImpl() :
+    _cellID0(0),
+    _cellID1(0),
+
     _type(0),
     _r(0),
     _drphi(0),
@@ -56,6 +59,17 @@ namespace IMPL {
       //return _dEdx ;
       return getEDep();
   }
+
+  void TrackerHitZCylinderImpl::setCellID0(int id0){
+    checkAccess("TrackerHitZCylinderImpl::setCellID0") ;
+    _cellID0 = id0 ;
+  }
+
+  void TrackerHitZCylinderImpl::setCellID1(int id1){
+    checkAccess("TrackerHitZCylinderImpl::setCellID1") ;
+    _cellID1 = id1 ;
+  }
+
 
   void TrackerHitZCylinderImpl::setType(int type) { 
     checkAccess("TrackerHitZCylinderImpl::setType") ;

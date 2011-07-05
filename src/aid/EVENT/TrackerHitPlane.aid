@@ -25,6 +25,15 @@ public interface TrackerHitPlane extends TrackerHit {
 }
 @endif
 
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::RTHPBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
     /** Direction of first measurement - given as (theta, phi).
      *  Defines spanning vector of measurement plane. 	
      */

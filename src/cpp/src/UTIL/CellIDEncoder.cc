@@ -31,6 +31,12 @@ namespace UTIL{
   /** specialization that returns the proper bit for the second cellid */
   template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHit>() {  return LCIO::RTHBIT_ID1 ; }
  
+  /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHitPlane>() {  return LCIO::RTHPBIT_ID1 ; }
+
+   /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHitZCylinder>() {  return LCIO::RTHZBIT_ID1 ; }
+
 //  /** Specialization for SimTrackerHits that have only one cellID */
 //  //  template<> void CellIDEncoder<IMPL::SimTrackerHitImpl>::setCellID( IMPL::SimTrackerHitImpl* hit) {
 //  template<> 

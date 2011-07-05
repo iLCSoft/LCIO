@@ -20,6 +20,8 @@ namespace EVENT{
   class TrackerRawData ;
   class SimTrackerHit ;
   class TrackerHit ;
+  class TrackerHitPlane ;
+  class TrackerHitZCylinder ;
 }
 
 namespace UTIL{
@@ -51,6 +53,12 @@ namespace UTIL{
 
   /** specialization that returns the proper bit for the second cellid */
   template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHit>() ;
+
+  /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHitPlane>() ;
+
+  /** specialization that returns the proper bit for the second cellid */
+  template<> int CellIDEncoder_cellID1Bit<EVENT::TrackerHitZCylinder>() ;
 
   /** specialization that returns the proper bit for the second cellid */
   template<> int CellIDEncoder_cellID1Bit<EVENT::SimTrackerHit>() ;

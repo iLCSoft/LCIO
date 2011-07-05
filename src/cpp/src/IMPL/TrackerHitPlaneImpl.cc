@@ -7,6 +7,8 @@ using namespace EVENT ;
 namespace IMPL {
   
   TrackerHitPlaneImpl::TrackerHitPlaneImpl() :
+    _cellID0(0),
+    _cellID1(0),
     _type(0),
     _du(0),
     _dv(0),
@@ -55,6 +57,16 @@ namespace IMPL {
 
       //return _dEdx ;
       return getEDep();
+  }
+
+  void TrackerHitPlaneImpl::setCellID0(int id0){
+    checkAccess("TrackerHitPlaneImpl::setCellID0") ;
+    _cellID0 = id0 ;
+  }
+
+  void TrackerHitPlaneImpl::setCellID1(int id1){
+    checkAccess("TrackerHitPlaneImpl::setCellID1") ;
+    _cellID1 = id1 ;
   }
 
   void TrackerHitPlaneImpl::setType(int type) { 
