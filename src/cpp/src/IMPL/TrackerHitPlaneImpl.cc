@@ -26,7 +26,7 @@ namespace IMPL {
     _v[1] = 0. ;
     
     _cov.resize( TRKHITPLANENCOVMATRIX ) ;
-     for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
        _cov.push_back(0.0) ;
     }
   }
@@ -37,16 +37,7 @@ namespace IMPL {
   
   const FloatVec & TrackerHitPlaneImpl::getCovMatrix() const {
     
-    _cov.resize( TRKHITPLANENCOVMATRIX ) ;
-    
     // FIXME: compute errors in (x,y,z) 
-    _cov[0] = 0. ;
-    _cov[1] = 0. ;
-    _cov[2] = 0. ;
-    _cov[3] = 0. ;
-    _cov[4] = 0. ;
-    _cov[5] = 0. ;
-    
     return _cov ;
   }
   

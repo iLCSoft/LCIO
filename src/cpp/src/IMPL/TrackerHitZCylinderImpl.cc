@@ -25,8 +25,8 @@ namespace IMPL {
     _center[0] = 0. ;
     _center[1] = 0. ;
 
-   _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
-     for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+    _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
+    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
        _cov.push_back(0.0) ;
     }
 
@@ -38,16 +38,7 @@ namespace IMPL {
   
   const FloatVec & TrackerHitZCylinderImpl::getCovMatrix() const {
     
-    _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
-    
     // FIXME: compute errors in (x,y,z) 
-    _cov[0] = 0. ;
-    _cov[1] = 0. ;
-    _cov[2] = 0. ;
-    _cov[3] = 0. ;
-    _cov[4] = 0. ;
-    _cov[5] = 0. ;
-    
     return _cov ;
   }
   
