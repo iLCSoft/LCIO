@@ -68,7 +68,7 @@ IF( DOXYGEN_FOUND )
         OUTPUT  "${DOC_BIN_DIR}/html/index.html"
         COMMAND DOX_PROJECT_NUMBER="${${PROJECT_NAME}_VERSION}"
                 DOX_OUTPUT_DIRECTORY="${DOC_BIN_DIR}"
-                DOX_INPUT="${LCIO_AID_HEADERS_OUTPUT_DIR}"
+                #DOX_INPUT="${LCIO_AID_HEADERS_OUTPUT_DIR}"
                 "${DOXYGEN_EXECUTABLE}"
         WORKING_DIRECTORY ${DOC_SRC_DIR}/doxygen_api
         COMMENT "Building C++ API Documentation..."
