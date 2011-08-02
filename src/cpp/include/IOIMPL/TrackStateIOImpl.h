@@ -6,6 +6,7 @@
 // forward declaration
 namespace SIO{ 
   class SIOTrackStateHandler ;
+  class SIOTrackHandler ;
 }
 
 namespace IOIMPL {
