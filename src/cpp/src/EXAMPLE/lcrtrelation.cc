@@ -13,7 +13,7 @@ using namespace lcio ;
 
 // ------  define some structs for extensions and relations:-----------
 
-// NB: the first template argument of the parent class has to the class itself !
+// NB: the first template argument of the parent class has to be the class itself !
 
 // a simple int extension 
 struct Index : LCIntExtension<Index> {} ;
