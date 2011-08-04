@@ -490,46 +490,29 @@ namespace lcrtrel{
 
   protected:
 
-    //   /** Returns the reference to the pointer to the extension/relation object */
-    //   template <class V>
-    //   inline typename V::ptr & ptr() {
-    
-    //     typedef std::vector< typename V::ptr  > MyPtrVec ;
-    //     MyPtrVec* vec = (MyPtrVec*) _vec ;
-
-    //     unsigned id =  typeID<V>()  ;
-
-    //     if( ! (vec->size() > id )  ) {
-    //       vec->resize( id + 1 ) ;
-    //     }
-
-    //     typename V::ptr& p =  vec->operator[](id) ;
-
-    //     if( p == 0 ) 
-    //       p = V::init() ;
-
-    //     return  p ;
-    //   }
-  
-
 
     /** Returns the reference to the pointer to the extension/relation object */
     template <class V>
     typename V::ptr & ptr() {
-    
+      
+      // convert the pointer to the generic PtrMap to a Map that holds V::ptr objects
       typedef std::map< unsigned , typename V::ptr  > MyPtrMap ;
-    
-      MyPtrMap* map = (MyPtrMap*) &_map ;
-    
+      
+      // going through a pointer to char* avoids the strict-aliasing warning of gcc 
+      char* char_map = reinterpret_cast<char *> ( &_map ) ;
+      MyPtrMap* map = reinterpret_cast<MyPtrMap*>( char_map ) ;
+      
+      // MyPtrMap* map = (MyPtrMap*) &_map ;
+      
       typename MyPtrMap::iterator it = map->find( typeID<V>() ) ;
-    
+      
       if( it == map->end() )
 	it = map->insert( map->begin(), 
 			  std::make_pair(  typeID<V>() , V::init() )) ;
-    
+      
       return  it->second  ;
     }
-
+    
   private:
   
     static DPtrVec& cleaners(){
