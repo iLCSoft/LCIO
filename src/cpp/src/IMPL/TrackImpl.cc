@@ -7,7 +7,7 @@
 using namespace EVENT ;
 
 namespace IMPL {
-
+  
     TrackImpl::TrackImpl() :
         _type(0),
         //_isReferencePointPCA(0),
@@ -21,13 +21,39 @@ namespace IMPL {
 
         }
 
+  TrackImpl::TrackImpl(const TrackImpl& o) :
+    _type(o._type),
+    _chi2(o._chi2),
+    _ndf(o._ndf),
+    _dEdx(o._dEdx),
+    _dEdxError(o._dEdxError),
+    _radiusOfInnermostHit(o._radiusOfInnermostHit) { 
+    
+    std::copy( o._subdetectorHitNumbers.begin() ,  o._subdetectorHitNumbers.end() , std::back_inserter( _subdetectorHitNumbers ) ) ;
+    
+    std::copy( o._hits.begin() ,  o._hits.end() , std::back_inserter( _hits ) ) ;
+    
+    std::copy( o._tracks.begin() ,  o._tracks.end() , std::back_inserter( _tracks ) ) ;
+    
+    for( unsigned int i=0; i< o._trackStates.size() ; i++ ){
+      _trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
+    }
+  }
+
+
     TrackImpl::~TrackImpl() { 
 
         // delete track states in here ?
         for( unsigned int i=0; i<_trackStates.size() ; i++ ){
-            delete _trackStates[i] ;
-        }
 
+	  // std::cout << " *************** TrackImpl::~TrackImpl() @ " << this 
+	  // 	    << " -  _trackStates.size() : " << _trackStates.size() 
+	  // 	    << " - delete object at : " << _trackStates[i] 
+	  // 	    << std::endl ;
+	  
+	  delete _trackStates[i] ;
+        }
+	
         //     for( IndexMap::const_iterator iter = _indexMap.begin() ; iter != _indexMap.end() ; iter++ ){
         //       delete iter->second ;
         //     }
@@ -50,13 +76,19 @@ namespace IMPL {
     //const FloatVec& TrackImpl::getCovMatrix() const { return _covMatrix ; }
     //const float* TrackImpl::getReferencePoint() const { return _reference ; }
 
-    float TrackImpl::getD0() const { return _trackStates[0]->getD0() ; }
-    float TrackImpl::getPhi() const { return _trackStates[0]->getPhi() ; }
-    float TrackImpl::getOmega() const { return _trackStates[0]->getOmega() ; }
-    float TrackImpl::getZ0() const { return _trackStates[0]->getZ0() ; }
-    float TrackImpl::getTanLambda() const { return _trackStates[0]->getTanLambda() ; }
-    const FloatVec& TrackImpl::getCovMatrix() const { return _trackStates[0]->getCovMatrix() ; }
-    const float* TrackImpl::getReferencePoint() const { return _trackStates[0]->getReferencePoint() ; }
+    float TrackImpl::getD0() const {                    return ( _trackStates.size()>0 ? _trackStates[0]->getD0()             : 0 ) ;  }
+    float TrackImpl::getPhi() const {                   return ( _trackStates.size()>0 ? _trackStates[0]->getPhi()            : 0 ) ;  }
+    float TrackImpl::getOmega() const {                 return ( _trackStates.size()>0 ? _trackStates[0]->getOmega()          : 0 ) ;  }
+    float TrackImpl::getZ0() const {                    return ( _trackStates.size()>0 ? _trackStates[0]->getZ0()             : 0 ) ;  }
+    float TrackImpl::getTanLambda() const {             return ( _trackStates.size()>0 ? _trackStates[0]->getTanLambda()      : 0 ) ;  }
+    const FloatVec& TrackImpl::getCovMatrix() const {   
+      static const TrackStateImpl dummy ;
+      return ( _trackStates.size()>0 ? _trackStates[0]->getCovMatrix()      : dummy.getCovMatrix() ) ;  
+    }
+    const float* TrackImpl::getReferencePoint() const { 
+      static const TrackStateImpl dummy ;
+      return ( _trackStates.size()>0 ? _trackStates[0]->getReferencePoint() : dummy.getReferencePoint() ) ;  
+    }
 
 
     //bool  TrackImpl::isReferencePointPCA() const { 
@@ -316,6 +348,11 @@ namespace IMPL {
         }
         _trackStates.push_back( trkstate ) ;
     }
+
+  TrackStateVec & TrackImpl::trackStates()  {
+    checkAccess("TrackImpl::trackStates") ;
+    return _trackStates ;
+  } 
 
     IntVec & TrackImpl::subdetectorHitNumbers(){
         checkAccess("TrackImpl::subdetectorHitNumbers") ;

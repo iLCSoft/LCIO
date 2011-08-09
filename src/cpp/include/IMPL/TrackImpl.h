@@ -34,6 +34,12 @@ namespace IMPL {
      */
     TrackImpl() ;
     
+    /** Copy constructor - creates shallow copy, i.e. all data members are copied but pointers to other LCObjects
+     *  i.e. TrackerHits and Tracks are preserved.
+     */
+    TrackImpl( const TrackImpl& ) ; 
+    
+
     /// Destructor.
     virtual ~TrackImpl() ; 
     
@@ -182,6 +188,9 @@ namespace IMPL {
     virtual void  addTrackState( EVENT::TrackState* trkstate ) ;
     virtual void  addHit( EVENT::TrackerHit* hit) ;
 
+    // direct access to the track state vector 
+    virtual  EVENT::TrackStateVec & trackStates() ;
+
 
     virtual void  setRadiusOfInnermostHit( float r )  ;
 
@@ -221,6 +230,8 @@ namespace IMPL {
     EVENT::TrackerHitVec _hits ;
 
     EVENT::TrackStateVec _trackStates ;
+
+
 
 }; // class
 
