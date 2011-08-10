@@ -36,3 +36,16 @@ C Check for 32/64 bit architetures
 #define PTRTYPE integer
 #endif
 
+
+C fallback if no arch string is defined 
+#ifndef PTRTYPE
+#ifdef __SIZEOF_SIZE_T__
+C guess sizeof(size_t) is probably sizeof(void*)
+#define PTRTYPE integer*__SIZEOF_SIZE_T__
+#else
+C make a random guess, tends to work on 32 bit systems
+#define PTRTYPE integer
+#endif
+! ifdef __SIZEOF_SIZE_T__
+#endif 
+! ifndef  PTRTYPE

@@ -66,9 +66,9 @@ int main(int argc, char** argv ){
   
   MYTEST(  rcp->ext<SomeClass::Index>() ,  42, " ext<SomeClass::Index> == 42 " )  ;
   
-  mcp->ext<Mass>() = 42.12345 ;
+  mcp->ext<Mass>() = 42.12345f ;
   
-  MYTEST(  mcp->ext<Mass>() ,  42.12345, " ext<Mass> == 42.12345 " )  ;
+  MYTEST(  mcp->ext<Mass>() ,  42.12345f, " ext<Mass> == 42.12345f " )  ;
   
   
   mcp->ext<ParticleIDs>()->push_back(  new std::string("Pion") )  ;
