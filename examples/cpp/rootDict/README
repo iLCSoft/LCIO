@@ -30,7 +30,7 @@ Build instructions:
 #---- configure cmake
  
 cd ../../../ ; mkdir build ; cd build 
-cmake -D BUILD_ROOTDICT=1 -D ROOT_HOME=$ROOTSYS ..
+cmake -D BUILD_ROOTDICT=1 -D ROOT_DIR=$ROOTSYS ..
 
 #----- build and install
 
