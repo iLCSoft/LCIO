@@ -193,13 +193,13 @@ namespace UTIL{
   }
 
    
-  int LCTime::daysInYear( int year ) {
+  int LCTime::daysInYear( int year ) const {
     int d = DPY ;
     if( isLeapYear( year ) ) d++ ;
     return d ;
   }
   
-  int LCTime::daysInMonth( int month , int year ) {
+  int LCTime::daysInMonth( int month , int year ) const {
     
     if( month < 1 || month > 12 ) 
       return 0 ;
@@ -217,7 +217,7 @@ namespace UTIL{
 
 
 
-  std::string LCTime::getDateString() {
+  std::string LCTime::getDateString() const {
 
     std::stringstream out ;
 

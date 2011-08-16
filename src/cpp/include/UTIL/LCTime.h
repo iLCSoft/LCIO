@@ -52,54 +52,54 @@ namespace UTIL {
 
     /** Unix time ( s since 1.1.1970 00:00:00 ).
      */
-    int unixTime() { return ( _t / 1000000000LL ) ; } 
+    int unixTime() const { return ( _t / 1000000000LL ) ; } 
 
     /** 64bit time stamp as used in LCEvent::getTimestamp().
      */
-    EVENT::long64 timeStamp() { return _t ; } 
+    EVENT::long64 timeStamp() const { return _t ; } 
 
 
     /** True if the year is a leap year in the Gregorian calendar:<br> 
      *  year is multiple of 4 and not multiple of 100<br>
      *  or year is multiple of 400.
      */
-    bool isLeapYear( int year ) { return ( ( !( year % 4 ) &&  ( year%100 ) ) || !(year%400)   ) ; }
+    bool isLeapYear( int year ) const { return ( ( !( year % 4 ) &&  ( year%100 ) ) || !(year%400)   ) ; }
 
     /** The number if days in the given year in the Gregorian calendar. */
-    int daysInYear( int year ) ;
+    int daysInYear( int year ) const ;
 
     /** The number if days in the given month and year in the Gregorian calendar. */
-    int daysInMonth( int month , int year ) ;
+    int daysInMonth( int month , int year )  const ;
 
     /** Date in human readable format, e.g. 10.02.2005  10:54:29.123456789 :<br>
      *  dd.mm.yyyy  hh:mm:ss._ms_us_ns
      */
-    std::string getDateString() ;
+    std::string getDateString()  const ;
 
     /** Calendar time: year,month,day hour,min,sec and ns.
      */
-    const CalendarTime& calendarTime() { return _d ; } 
+    const CalendarTime& calendarTime()  const { return _d ; } 
 
     /** Calendar time:  year */
-    int  year() { return  _d.year  ; }
+    int  year() const { return  _d.year  ; }
     
     /** Calendar time:  month */
-    int  month() { return _d.month   ; }
+    int  month() const { return _d.month   ; }
     
     /** Calendar time:  day */
-    int  day() { return _d.day   ; }
+    int  day() const { return _d.day   ; }
     
     /** Calendar time:  hour */
-    int  hour() { return _d.hour   ; }
+    int  hour() const { return _d.hour   ; }
     
     /** Calendar time:  min */
-    int  min() { return _d.min   ; }
+    int  min() const { return _d.min   ; }
     
     /** Calendar time:  sec */
-    int  sec() { return _d.sec  ; }
+    int  sec() const { return _d.sec  ; }
     
     /** Calendar time:  ns */
-    int  ns() { return _d.ns   ; }
+    int  ns() const { return _d.ns   ; }
     
     /** Add the specified number of ns to the time.
      */
