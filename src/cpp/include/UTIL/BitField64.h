@@ -171,6 +171,9 @@ namespace UTIL {
      */
     void  setValue(lcio::long64 value ) { _value = value ; }
     
+    /** Reset - same as setValue(0) - useful if the same encoder is used for many objects.
+     */
+    void  reset() { _value = 0 ; }
 
     /** Acces to field through index 
      */
