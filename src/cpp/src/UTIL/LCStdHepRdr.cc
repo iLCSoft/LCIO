@@ -165,6 +165,7 @@ namespace UTIL{
     
     mcVec->parameters().setValue( EVTWGT_NAME ,  (float) evtWeight ) ;
 
+    mcVec->resize( NHEP ) ;
 
     for( int IHEP=0; IHEP<NHEP; IHEP++ )
       {
@@ -172,6 +173,10 @@ namespace UTIL{
 	//  Create a MCParticle and fill it from stdhep info
 	//
 	MCParticleImpl* mcp = new MCParticleImpl();
+
+	// and add it to the collection (preserving the order of the hepevt block)
+	mcVec->at(IHEP)  = mcp ;
+
 	//
 	//  PDGID
 	//
@@ -209,10 +214,19 @@ namespace UTIL{
 	//  Creation time (note the units)
 	//
 	mcp->setTime(_reader->T(IHEP)/c_light);
-	//
-	//  Add the particle to the collection vector
-	//
-	mcVec->push_back(mcp);
+
+
+	// add spin and color flow information if available 
+	if( _reader->isStdHepEv4() ){
+
+	  float spin[3] = { _reader->spinX( IHEP ) , _reader->spinY( IHEP ) ,  _reader->spinZ( IHEP )   } ;
+	  mcp->setSpin( spin ) ;
+
+	  int colorFlow[2] = {  _reader->colorflow( IHEP , 0 ) , _reader->colorflow( IHEP , 1 ) } ;
+	  mcp->setColorFlow( colorFlow ) ;
+
+	}
+
 
 
 // ------
@@ -277,6 +291,8 @@ namespace UTIL{
 // 	      (mcVec->getElementAt(lp));
 // 	    mcp->addParent(p);
 // 	  }
+
+
       }// End loop over particles
 
 
