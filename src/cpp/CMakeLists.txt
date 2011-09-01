@@ -601,6 +601,7 @@ ADD_LCIO_TEST( test_example )
 ADD_LCIO_TEST( test_calohit )
 ADD_LCIO_TEST( test_cluster )
 ADD_LCIO_TEST( test_tracks )
+ADD_LCIO_TEST( test_trackstate )
 ADD_LCIO_TEST( test_trackerhit )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
