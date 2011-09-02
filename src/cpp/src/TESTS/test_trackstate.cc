@@ -4,8 +4,8 @@
 
 #include "tutil.h"
 #include "lcio.h"
-//
-//#include "EVENT/LCIO.h"
+
+#include "EVENT/TrackState.h"
 #include "IMPL/TrackStateImpl.h"
 
 //#include "UTIL/Operators.h"
@@ -28,34 +28,92 @@ int main(int argc, char** argv ){
 
     try{
 
-        MYTEST.LOG( " testing TrackState " );
+        MYTEST.LOG( "testing TrackState" );
 
-        TrackStateImpl t,tt;
-        t.setOmega(2);
-        tt=t;
-        cout << "DEBUG t: " << t.getOmega() << endl;
-        cout << "DEBUG tt: " << tt.getOmega() << endl;
 
+
+        MYTEST.LOG( "test default constructor" );
+
+        TrackStateImpl a;
+
+        MYTEST( a.getLocation(), TrackStateImpl::Location::AtOther, "getLocation" ) ;
+        MYTEST( a.getD0(),  float( .0 ), "getD0" ) ;
+        MYTEST( a.getPhi(),  float( .0 ), "getPhi" ) ;
+        MYTEST( a.getOmega(),  float( .0 ), "getOmega" ) ;
+
+
+
+        MYTEST.LOG( "test constructor with arguments" );
 
         float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
         float ref[3] = { 1. , 2. , 3. } ;
 
-        //TrackStateImpl* trkstate = new TrackStateImpl(
-        //    k,                  // location
-        //    ( i*j*k * .1 ),     // d0
-        //    ( (i+j+k) * .3 ),   // phi
-        //    ( (i+j+k) * .1 ),   // omega
-        //    ( i*j*k * .1 ),     // z0
-        //    ( (i+j+k) * .2 ),   // tanlambda
-        //    cov,
-        //    ref
-        //);
+        TrackStateImpl b
+        (
+            TrackStateImpl::Location::AtLastHit,    // location
+            .1,   // d0
+            .2,   // phi
+            .3,   // omega
+            .4,   // z0
+            .5,   // tanlambda
+            cov,
+            ref
+        );
 
-        //MYTEST( trackstates[k]->getOmega(),  float( (i+j+k) * .1 ), "getOmega" ) ;
-        //MYTEST( trackstates[k]->getTanLambda(),  float( (i+j+k) * .2 ), "getTanLambda" ) ;
-        //MYTEST( trackstates[k]->getPhi(),  float( (i+j+k) * .3 ), "getPhi" ) ;
-        //MYTEST( trackstates[k]->getD0(),  float( i*j*k * .1 ), "getD0" ) ;
-        //MYTEST( trackstates[k]->getZ0(),  float( i*j*k * .1 ), "getZ0" ) ;
+        MYTEST( b.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( b.getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( b.getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( b.getOmega(),  float( .3 ), "getOmega" ) ;
+
+
+
+        MYTEST.LOG( "test default copy constructor" );
+
+        TrackStateImpl c(b);
+
+        MYTEST( c.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( c.getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( c.getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( c.getOmega(),  float( .3 ), "getOmega" ) ;
+
+
+
+        MYTEST.LOG( "test default assignment operator" );
+
+        TrackStateImpl d=b;
+
+        MYTEST( d.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( d.getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( d.getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( d.getOmega(),  float( .3 ), "getOmega" ) ;
+
+
+
+        MYTEST.LOG( "test default copy constructor using EVENT::TrackState pointer" );
+
+
+        EVENT::TrackState * p = new TrackStateImpl(d) ;
+
+        MYTEST( p->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( p->getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( p->getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( p->getOmega(),  float( .3 ), "getOmega" ) ;
+
+
+
+        MYTEST.LOG( "test default copy constructor using two EVENT::TrackState pointers" );
+
+
+        // the ugly way... have to use a dynamic or static_cast to TrackStateImpl..
+        EVENT::TrackState * pp = new TrackStateImpl(static_cast<TrackStateImpl&>(*p)) ;
+
+        MYTEST( pp->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( pp->getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( pp->getOmega(),  float( .3 ), "getOmega" ) ;
+
+
+
 
         //const FloatVec& cov = trackstates[k]->getCovMatrix() ;
 
