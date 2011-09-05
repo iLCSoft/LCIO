@@ -91,8 +91,7 @@ int main(int argc, char** argv ){
 
         MYTEST.LOG( "test default copy constructor using EVENT::TrackState pointer" );
 
-
-        EVENT::TrackState * p = new TrackStateImpl(d) ;
+        const EVENT::TrackState * p = new TrackStateImpl(d) ;
 
         MYTEST( p->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
         MYTEST( p->getD0(),  float( .1 ), "getD0" ) ;
@@ -100,12 +99,43 @@ int main(int argc, char** argv ){
         MYTEST( p->getOmega(),  float( .3 ), "getOmega" ) ;
 
 
+        const FloatVec& covv = p->getCovMatrix() ;
+
+        for( unsigned int i=0 ; i<covv.size() ; i++ ){
+            stringstream ss;
+            ss << " covv[" << i << "] " ;
+            MYTEST( covv[i] , float(i+1) , ss.str() ) ;
+        }
+
+        const float* refp = p->getReferencePoint() ;
+
+        for( unsigned int i=0 ; i<3 ; i++ ){
+            stringstream ss;
+            ss << " refp[" << i << "] " ;
+            MYTEST( refp[i] , float(i+1) , ss.str() ) ;
+        }
+
+
 
         MYTEST.LOG( "test default copy constructor using two EVENT::TrackState pointers" );
 
-
         // the ugly way... have to use a dynamic or static_cast to TrackStateImpl..
-        EVENT::TrackState * pp = new TrackStateImpl(static_cast<TrackStateImpl&>(*p)) ;
+        const EVENT::TrackState * pp = new TrackStateImpl(static_cast<const TrackStateImpl&>(*p)) ;
+
+        MYTEST( pp->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;
+        MYTEST( pp->getPhi(),  float( .2 ), "getPhi" ) ;
+        MYTEST( pp->getOmega(),  float( .3 ), "getOmega" ) ;
+
+        delete pp;
+        pp=NULL;
+
+
+
+        MYTEST.LOG( "test default copy constructor using two EVENT::TrackState pointers" );
+
+        // the nicer way... just passing the EVENT::TrackState object
+        pp = new TrackStateImpl( p ) ;
 
         MYTEST( pp->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
         MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;
@@ -113,49 +143,9 @@ int main(int argc, char** argv ){
         MYTEST( pp->getOmega(),  float( .3 ), "getOmega" ) ;
 
 
+        delete pp;
+        pp=NULL;
 
-
-        //const FloatVec& cov = trackstates[k]->getCovMatrix() ;
-
-        //for( unsigned int l=0 ; l<cov.size() ; l++ ){
-        //    stringstream ss;
-        //    ss << " cov[" << l << "] " ;
-        //    MYTEST( cov[l] , float(k+(l+1)) , ss.str() ) ;
-        //}
-
-        //const float* ref = trackstates[k]->getReferencePoint() ;
-
-        //for( unsigned int l=0 ; l<3 ; l++ ){
-        //    stringstream ss;
-        //    ss << " ref[" << l << "] " ;
-        //    MYTEST( ref[l] , float(k*(l+1)) , ss.str() ) ;
-        //}
-        //        
-        //// Test getClosestTrackState( float x, float y, float z )
-        //const TrackState* trackstate = trk->getClosestTrackState( 0, 0, 0 ) ;
-        //assert( trackstate != NULL );
-        //ref = trackstate->getReferencePoint() ;
-
-        ////std::cout << " closest trackstate " <<  endl << header(trackstate) << lcio_short<EVENT::TrackState>(trackstate) << endl ;
-
-        //for( unsigned int k=0 ; k<3 ; k++ ){
-        //    stringstream ss;
-        //    ss << " closest trackstate ref[" << k << "] " ;
-        //    MYTEST( ref[k] , float(k+1) , ss.str() ) ;
-        //}
-
-        //// Test getTrackState( int location )
-        //trackstate = trk->getTrackState( TrackState::Location::AtIP ) ;
-        //assert( trackstate != NULL );
-        //ref = trackstate->getReferencePoint() ;
-
-        ////std::cout << " trackstate AtIP" <<  endl << header(trackstate) << lcio_short<EVENT::TrackState>(trackstate) << endl ;
-
-        //for( unsigned int k=0 ; k<3 ; k++ ){
-        //    stringstream ss;
-        //    ss << " trackstate AtIP ref[" << k << "] " ;
-        //    MYTEST( ref[k] , float(k+1) , ss.str() ) ;
-        //}
 
     } catch( Exception &e ){
         MYTEST.FAILED( e.what() );

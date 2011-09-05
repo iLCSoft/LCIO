@@ -58,6 +58,23 @@ namespace IMPL {
         setReferencePoint(reference);
     }
 
+    TrackStateImpl::TrackStateImpl( const EVENT::TrackState *p ) :
+        //_location(p->getLocation()),
+        _d0(p->getD0()),
+        _phi(p->getPhi()),
+        _omega(p->getOmega()),
+        _z0(p->getZ0()),
+        _tanLambda(p->getTanLambda()),
+        _covMatrix(p->getCovMatrix())
+    {
+
+        setLocation( p->getLocation() );
+
+        setReferencePoint( p->getReferencePoint() );
+    }
+
+
+
 
     TrackStateImpl::~TrackStateImpl() { /* no-op */ } 
 
