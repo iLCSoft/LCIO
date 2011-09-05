@@ -147,6 +147,10 @@ int main(int argc, char** argv ){
         pp=NULL;
 
 
+        delete p;
+        p=NULL;
+
+
     } catch( Exception &e ){
         MYTEST.FAILED( e.what() );
     }
