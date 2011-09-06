@@ -19,6 +19,7 @@ namespace UTIL {
   const unsigned ILDCellID0::module = 3 ;
   const unsigned ILDCellID0::sensor = 4 ;
   
+  const int ILDDetID::NOTUSED   =   0 ;
   const int ILDDetID::VXD       =   1 ;
   const int ILDDetID::SIT       =   2 ;
   const int ILDDetID::FTD       =   3 ; 

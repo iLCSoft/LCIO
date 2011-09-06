@@ -87,6 +87,7 @@ namespace UTIL {
   struct ILDDetID{
     
     
+    static const int NOTUSED   ;
     static const int VXD       ;
     static const int SIT       ;
     static const int FTD       ; 
