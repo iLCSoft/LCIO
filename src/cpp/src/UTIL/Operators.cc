@@ -1683,7 +1683,7 @@ namespace UTIL{
 
 
   const std::string& header(const EVENT::Track *){ //hauke
-    static std::string _vtxh(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   \n");
+    static std::string _vtxh(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   |  ndf   \n");
     return _vtxh;
   }
 
@@ -1714,6 +1714,7 @@ namespace UTIL{
     out << ")|" << trk->getdEdx();
     out << " |" << trk->getdEdxError();
     out << " |" << trk->getChi2();
+    out << " |" << noshowpos << setw(5) << trk->getNdf() ; 
     out << endl;
     
     out << " errors: " << noshowpos;
