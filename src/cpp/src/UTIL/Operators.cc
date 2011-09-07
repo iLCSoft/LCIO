@@ -1770,13 +1770,13 @@ namespace UTIL{
 
 
   const std::string& header(const EVENT::Cluster *){ //hauke
-    static std::string _vtxh(" [   id   ] |type|  energy  |      position ( x,y,z)           |  itheta  |   iphi   \n");
+    static std::string _vtxh(" [   id   ] |type|  energy  |energyerr |      position ( x,y,z)           |  itheta  |   iphi   \n");
     return _vtxh;
   }
 
 
   const std::string& tail(const EVENT::Cluster *){ //hauke
-    static std::string _vtxt("------------|----|----------|----------------------------------|----------|----------\n");
+    static std::string _vtxt("------------|----|----------|----------|----------------------------------|----------|----------\n");
     return _vtxt;
   }
 
@@ -1789,7 +1789,7 @@ namespace UTIL{
     using namespace std;
     out << noshowpos <<  " [" << setfill('0') << setw(8) << hex << clu->id() << "] |" << dec;
     out << setfill(' ') << setw(4) << clu->getType() << "|";
-    out << showpos << scientific << setprecision(3) << clu->getEnergy() << "|";
+    out << showpos << scientific << setprecision(3) << clu->getEnergy() << "|" << clu->getEnergyError() << "|";
     out << clu->getPosition()[0] << ", " << clu->getPosition()[1] << ", " <<  clu->getPosition()[2] << "|";
     out << clu->getITheta() << "|";
     out << clu->getIPhi();
@@ -2041,6 +2041,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Cluster> l) 
     out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
     out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << clu->getType() << endl;
     out << setw(30) << left << "Energy [GeV]" << right << setw(40) << clu->getEnergy() << endl;
+    out << setw(30) << left << "EnergyError [GeV]" << right << setw(40) << clu->getEnergyError() << endl;
     tmp.str("");
     tmp  << dec << clu->getPosition()[0] << ", " << clu->getPosition()[1]  << ", " << clu->getPosition()[2]; 
     out << setw(30) << left << "Position [mm] (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
