@@ -2378,8 +2378,16 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimCalorimet
     tmp << "0x" << hex << hit->id() << dec;
     out << setw(30) << setfill(' ') << std::left << "Id" <<   right << setw(40) << tmp.str() << endl;
 
-    out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
-    out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    tmp.str("");
+    tmp << "0x" << hex << hit->getCellID0() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
+
+    //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    tmp.str("");
+    tmp << "0x" << hex << hit->getCellID1() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
+
     out << setw(30) << left << "Energy [GeV]" << right << setw(40) << dec << hit->getEnergy() << std::endl;
 
     tmp.str("");
@@ -2437,9 +2445,21 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> 
         LCFlagImpl flag( col->getFlag() ) ;
         out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
     } 
+    
     tmp.str("");
     tmp << "0x" << hex << hit->id() << dec; 
     out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
+    
+    //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+    tmp.str("");
+    tmp << "0x" << hex << hit->getCellID0() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
+
+    //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    tmp.str("");
+    tmp << "0x" << hex << hit->getCellID1() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
+
     tmp.str("");
     tmp << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
     out << setw(30) << left << "Position (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
@@ -2477,9 +2497,16 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimTrackerHi
         out << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
     } 
 
+    //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
     tmp.str("");
-    tmp << "0x" << hex << hit->getCellID() << dec;
-    out << setw(30) << setfill(' ') << std::left << "CellID" <<   right << setw(40) << tmp.str() << endl;
+    tmp << "0x" << hex << hit->getCellID0() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
+
+    //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+    tmp.str("");
+    tmp << "0x" << hex << hit->getCellID1() << dec;
+    out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
+
     tmp.str("");
     tmp  << dec << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
     out <<setw(30) << std::left << "Position [mm] (x,y,z) " << dec << setfill(' ') << right <<setw(40) << tmp.str() << endl;
