@@ -1,6 +1,19 @@
 #include "IMPL/TrackStateImpl.h"
 
 
+namespace EVENT{
+  // the standard requires static const ints to be defined aoutside the class declaration
+  // so we do this here :
+  const int TrackState::AtOther  ; 
+  const int TrackState::AtIP  ;							    
+  const int TrackState::AtFirstHit  ; 							    
+  const int TrackState::AtLastHit  ;							    
+  const int TrackState::AtCalorimeter  ;						    
+  const int TrackState::AtVertex  ;     
+  const int TrackState::LastLocation   ;     
+}
+
+
 using namespace EVENT ;
 
 namespace IMPL {
@@ -92,9 +105,9 @@ namespace IMPL {
     void  TrackStateImpl::setLocation( int location ){
         checkAccess("TrackStateImpl::setLocation") ;
 
-        if( location < 0 || location >= TrackState::Location::size() ){
-            throw( Exception( " TrackStateImpl::setLocation called with an undefined Location" )) ;
-        }
+        // if( location < 0 || location >= TrackState::Location::size() ){
+        //     throw( Exception( " TrackStateImpl::setLocation called with an undefined Location" )) ;
+        // }
 
         _location = location  ;
     } 

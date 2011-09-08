@@ -286,7 +286,7 @@ int main(int argc, char** argv ){
                 }
 
                 // Test getTrackState( int location )
-                trackstate = trk->getTrackState( TrackState::Location::AtIP ) ;
+                trackstate = trk->getTrackState( TrackState::AtIP ) ;
                 assert( trackstate != NULL );
                 ref = trackstate->getReferencePoint() ;
 

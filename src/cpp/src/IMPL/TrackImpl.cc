@@ -140,9 +140,9 @@ namespace IMPL {
 
     const TrackState* TrackImpl::getTrackState( int location ) const {
 
-        if( location < 0 || location >= TrackState::Location::size() ){
-            throw( Exception( " trying to use getTrackState with an undefined Location" )) ;
-        }
+        // if( location < 0 || location > TrackState::LastLocation ){
+        //     throw( Exception( " trying to use getTrackState with an undefined Location" )) ;
+        // }
 
         for( unsigned int i=0 ; i < _trackStates.size() ; i++ ){
             if( _trackStates[i]->getLocation() == location ){
@@ -339,7 +339,7 @@ namespace IMPL {
 
     void  TrackImpl::addTrackState( EVENT::TrackState* trkstate ) {
         checkAccess("TrackImpl::addTrackState") ;
-        if( trkstate->getLocation() != TrackState::Location::AtOther &&
+        if( trkstate->getLocation() != TrackState::AtOther &&
             getTrackState( trkstate->getLocation() ) != NULL )
         {
             std::stringstream ss;

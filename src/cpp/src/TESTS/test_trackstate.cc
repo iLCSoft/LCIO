@@ -36,7 +36,7 @@ int main(int argc, char** argv ){
 
         TrackStateImpl a;
 
-        MYTEST( a.getLocation(), TrackStateImpl::Location::AtOther, "getLocation" ) ;
+        MYTEST( a.getLocation(), TrackState::AtOther, "getLocation" ) ;
         MYTEST( a.getD0(),  float( .0 ), "getD0" ) ;
         MYTEST( a.getPhi(),  float( .0 ), "getPhi" ) ;
         MYTEST( a.getOmega(),  float( .0 ), "getOmega" ) ;
@@ -50,7 +50,7 @@ int main(int argc, char** argv ){
 
         TrackStateImpl b
         (
-            TrackStateImpl::Location::AtLastHit,    // location
+            TrackState::AtLastHit,    // location
             .1,   // d0
             .2,   // phi
             .3,   // omega
@@ -60,7 +60,7 @@ int main(int argc, char** argv ){
             ref
         );
 
-        MYTEST( b.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( b.getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( b.getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( b.getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( b.getOmega(),  float( .3 ), "getOmega" ) ;
@@ -71,7 +71,7 @@ int main(int argc, char** argv ){
 
         TrackStateImpl c(b);
 
-        MYTEST( c.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( c.getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( c.getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( c.getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( c.getOmega(),  float( .3 ), "getOmega" ) ;
@@ -82,7 +82,7 @@ int main(int argc, char** argv ){
 
         TrackStateImpl d=b;
 
-        MYTEST( d.getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( d.getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( d.getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( d.getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( d.getOmega(),  float( .3 ), "getOmega" ) ;
@@ -93,7 +93,7 @@ int main(int argc, char** argv ){
 
         const EVENT::TrackState * p = new TrackStateImpl(d) ;
 
-        MYTEST( p->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( p->getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( p->getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( p->getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( p->getOmega(),  float( .3 ), "getOmega" ) ;
@@ -122,7 +122,7 @@ int main(int argc, char** argv ){
         // the ugly way... have to use a dynamic or static_cast to TrackStateImpl..
         const EVENT::TrackState * pp = new TrackStateImpl(static_cast<const TrackStateImpl&>(*p)) ;
 
-        MYTEST( pp->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( pp->getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( pp->getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( pp->getOmega(),  float( .3 ), "getOmega" ) ;
@@ -137,7 +137,7 @@ int main(int argc, char** argv ){
         // the nicer way... just passing the EVENT::TrackState object
         pp = new TrackStateImpl( p ) ;
 
-        MYTEST( pp->getLocation(), TrackStateImpl::Location::AtLastHit, "getLocation" ) ;
+        MYTEST( pp->getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( pp->getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( pp->getOmega(),  float( .3 ), "getOmega" ) ;
