@@ -9,6 +9,21 @@
 #include <math.h> 
 #include <algorithm>
 
+namespace EVENT{
+
+  // the standard requires static const ints to be defined aoutside the class declaration
+  // so we do this here :
+  const int MCParticle::BITEndpoint ;
+  const int MCParticle::BITCreatedInSimulation ;
+  const int MCParticle::BITBackscatter  ;
+  const int MCParticle::BITVertexIsNotEndpointOfParent  ;
+  const int MCParticle::BITDecayedInTracker  ;
+  const int MCParticle::BITDecayedInCalorimeter  ;
+  const int MCParticle::BITLeftDetector  ;
+  const int MCParticle::BITStopped  ;
+  
+}
+
 using namespace EVENT ;
 
 namespace IMPL {
