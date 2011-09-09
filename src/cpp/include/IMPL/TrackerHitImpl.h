@@ -6,7 +6,7 @@
 
 #include "EVENT/TrackerHit.h"
 #include "IMPL/AccessChecked.h"
-#include "EVENT/TPCHit.h"
+//#include "EVENT/TPCHit.h"
 
 #define TRKHITNCOVMATRIX 6
 

@@ -62,12 +62,12 @@ int main(int argc, char** argv ){
 
                 TrackerHitPlaneImpl* trkHit = new TrackerHitPlaneImpl ;
 
-            //    trkHit->setEDep( i*j*117. ) ;
-            //    // trkHit->setdEdx( i*j*117. ) ;
-            //    trkHit->setEDepError( (i+j)*.3 ) ;
+                trkHit->setEDep( i*j*117. ) ;
+                // trkHit->setdEdx( i*j*117. ) ;
+                trkHit->setEDepError( (i+j)*.3 ) ;
 
-            //    //double pos[3] = { i, j, i*j } ;
-            //    //trkHit->setPosition( pos ) ;
+                double pos[3] = { i, j, i*j } ;
+                trkHit->setPosition( pos ) ;
 
             //    //float cov[3] = { i, j, i+j } ;
             //    //trkHit->setCovMatrix( cov );
@@ -101,36 +101,36 @@ int main(int argc, char** argv ){
 
             MYTEST(  evt->getEventNumber() ,  i , " event number "  ) ;
 
-            //LCCollection* trkHits = evt->getCollection( "TrackerPlaneHits") ;
+            LCCollection* trkHits = evt->getCollection( "TrackerPlaneHits") ;
 
-            //for(int j=0;j<NHITS;j++) {
+            for(int j=0;j<NHITS;j++) {
 
-            //    //std::cout << " testing hit " << j << std::endl ;
+                //std::cout << " testing hit " << j << std::endl ;
 
-            //    TrackerHitPlane* trkHit = dynamic_cast<TrackerHitPlane*>(trkHits->getElementAt(j)) ;
-            //    //std::cout << *trkHit << std::endl ;
+                TrackerHitPlane* trkHit = dynamic_cast<TrackerHitPlane*>(trkHits->getElementAt(j)) ;
+                //std::cout << *trkHit << std::endl ;
 
-            //    MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
+                MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
 
-            //    // MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
-            //    // remove float converstion and check what happens ;)
-            //    MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
-            //    //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;
+                // MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
+                // remove float converstion and check what happens ;)
+                MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
+                //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;
 
-            //    //const double* pos = trkHit->getPosition() ;
+                const double* pos = trkHit->getPosition() ;
 
-            //    //MYTEST( pos[0] , i , " pos[0] " ) ;
-            //    //MYTEST( pos[1] , j , " pos[1] " ) ;
-            //    //MYTEST( pos[2] , i*j , " pos[2] " ) ;
+                MYTEST( pos[0] , i , " pos[0] " ) ;
+                MYTEST( pos[1] , j , " pos[1] " ) ;
+                MYTEST( pos[2] , i*j , " pos[2] " ) ;
 
 
-            //    //const FloatVec& cov = trkHit->getCovMatrix() ;
+                //const FloatVec& cov = trkHit->getCovMatrix() ;
 
-            //    //MYTEST( cov[0] , i , " cov[0] " ) ;
-            //    //MYTEST( cov[1] , j , " cov[1] " ) ;
-            //    //MYTEST( cov[2] , i+j , " cov[2] " ) ;
+                //MYTEST( cov[0] , i , " cov[0] " ) ;
+                //MYTEST( cov[1] , j , " cov[1] " ) ;
+                //MYTEST( cov[2] , i+j , " cov[2] " ) ;
 
-            //}
+            }
         }
         lcRdr->close() ;
 

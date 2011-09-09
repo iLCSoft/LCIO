@@ -15,7 +15,9 @@ namespace IMPL {
     _EDep(0),
     _EDepError(0),
     _time(0),
-    _quality(0) {
+    _quality(0),
+    _rawHits(0)
+    {
     
     _pos[0] = 0. ;
     _pos[1] = 0. ;
@@ -25,10 +27,10 @@ namespace IMPL {
     _v[0] = 0. ;
     _v[1] = 0. ;
     
-    _cov.resize( TRKHITPLANENCOVMATRIX ) ;
-    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
-       _cov.push_back(0.0) ;
-    }
+    //_cov.resize( TRKHITPLANENCOVMATRIX ) ;
+    //for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+    //   _cov.push_back(0.0) ;
+    //}
   }
   
   TrackerHitPlaneImpl::~TrackerHitPlaneImpl(){  
@@ -123,19 +125,19 @@ namespace IMPL {
       _quality &= ~( 1 << bit ) ;
   }
 
-  void TrackerHitPlaneImpl::setCovMatrix( const FloatVec& cov ){
-    checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
-    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
-      _cov[i] = cov[i] ;
-    }
-  }
+  //void TrackerHitPlaneImpl::setCovMatrix( const FloatVec& cov ){
+  //  checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
+  //  for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+  //    _cov[i] = cov[i] ;
+  //  }
+  //}
 
-  void TrackerHitPlaneImpl::setCovMatrix( float cov[TRKHITPLANENCOVMATRIX]  ){
-    checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
-    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
-      _cov[i] = cov[i] ;
-    }
-  }
+  //void TrackerHitPlaneImpl::setCovMatrix( float cov[TRKHITPLANENCOVMATRIX]  ){
+  //  checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
+  //  for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+  //    _cov[i] = cov[i] ;
+  //  }
+  //}
 
 
 
