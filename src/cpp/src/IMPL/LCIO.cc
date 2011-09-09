@@ -53,6 +53,8 @@ namespace EVENT{
   const char* LCIO::TRACKERDATA = "TrackerData" ;
   const char* LCIO::TRACKERPULSE = "TrackerPulse" ;
   const char* LCIO::TRACKERHIT = "TrackerHit" ;
+  const char* LCIO::TRACKERHITPLANE = "TrackerHitPlane" ;
+  const char* LCIO::TRACKERHITZCYLINDER = "TrackerHitZCylinder" ;
   const char* LCIO::LCSTRVEC = "LCStrVec" ;
   const char* LCIO::LCFLOATVEC = "LCFloatVec" ;
   const char* LCIO::LCINTVEC = "LCIntVec" ;

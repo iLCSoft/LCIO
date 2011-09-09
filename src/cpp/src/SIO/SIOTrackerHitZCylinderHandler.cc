@@ -2,6 +2,7 @@
 
 #include "SIO/LCSIO.h"
 
+#include "EVENT/LCIO.h"
 #include "EVENT/TrackerHitZCylinder.h"
 #include "IOIMPL/TrackerHitZCylinderIOImpl.h"
 

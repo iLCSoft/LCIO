@@ -123,5 +123,20 @@ namespace IMPL {
       _quality &= ~( 1 << bit ) ;
   }
 
+  void TrackerHitPlaneImpl::setCovMatrix( const FloatVec& cov ){
+    checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
+    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+
+  void TrackerHitPlaneImpl::setCovMatrix( float cov[TRKHITPLANENCOVMATRIX]  ){
+    checkAccess("TrackerHitPlaneImpl::setCovMatrix") ;
+    for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+
+
 
 } // namespace IMPL

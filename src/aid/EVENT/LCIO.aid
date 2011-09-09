@@ -110,6 +110,8 @@ public interface LCIO{
     static const char* TRACKERDATA ;
     static const char* TRACKERPULSE ;
     static const char* TRACKERHIT ;
+    static const char* TRACKERHITPLANE ;
+    static const char* TRACKERHITZCYLINDER ;
     static const char* LCSTRVEC ;
     static const char* LCFLOATVEC ;
     static const char* LCINTVEC ;
@@ -207,6 +209,8 @@ public interface LCIO{
   public static const String TRACKERDATA = "TrackerData" ;
   public static const String TRACKERPULSE = "TrackerPulse" ;
   public static const String TRACKERHIT = "TrackerHit" ;
+  public static const String TRACKERHITPLANE = "TrackerHitPlane" ;
+  public static const String TRACKERHITZCYLINDER = "TrackerHitZCylinder" ;
   public static const String LCSTRVEC = "LCStrVec" ;
   public static const String LCFLOATVEC = "LCFloatVec" ;
   public static const String LCINTVEC = "LCIntVec" ;

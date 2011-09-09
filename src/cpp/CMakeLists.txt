@@ -89,6 +89,8 @@ SET( LCIO_SIO_SRCS
   ./src/SIO/SIOTrackHandler.cc
   ./src/SIO/SIOTrackerDataHandler.cc
   ./src/SIO/SIOTrackerHitHandler.cc
+  ./src/SIO/SIOTrackerHitZCylinderHandler.cc
+  ./src/SIO/SIOTrackerHitPlaneHandler.cc
   ./src/SIO/SIOTrackerPulseHandler.cc
   ./src/SIO/SIOTrackerRawDataHandler.cc
   ./src/SIO/SIOVertexHandler.cc
@@ -603,6 +605,8 @@ ADD_LCIO_TEST( test_cluster )
 ADD_LCIO_TEST( test_tracks )
 ADD_LCIO_TEST( test_trackstate )
 ADD_LCIO_TEST( test_trackerhit )
+ADD_LCIO_TEST( test_trackerhitplane )
+ADD_LCIO_TEST( test_trackerhitzcylinder )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
 

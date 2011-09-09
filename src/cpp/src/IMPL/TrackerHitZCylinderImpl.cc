@@ -124,5 +124,20 @@ namespace IMPL {
       _quality &= ~( 1 << bit ) ;
   }
 
+  void TrackerHitZCylinderImpl::setCovMatrix( const FloatVec& cov ){
+    checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
+    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+
+  void TrackerHitZCylinderImpl::setCovMatrix( float cov[TRKHITZCYLNCOVMATRIX]  ){
+    checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
+    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+      _cov[i] = cov[i] ;
+    }
+  }
+
+
 
 } // namespace IMPL

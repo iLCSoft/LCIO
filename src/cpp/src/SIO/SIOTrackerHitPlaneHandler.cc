@@ -1,5 +1,6 @@
 #include "SIO/SIOTrackerHitPlaneHandler.h"
 
+#include "EVENT/LCIO.h"
 #include "SIO/LCSIO.h"
 
 #include "EVENT/TrackerHitPlane.h"
