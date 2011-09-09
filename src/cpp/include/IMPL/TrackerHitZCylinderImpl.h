@@ -17,7 +17,7 @@ namespace IMPL {
  * @version $Id: $
  */
 
-  class TrackerHitZCylinderImpl : public EVENT::TrackerHit , public AccessChecked {
+  class TrackerHitZCylinderImpl : public EVENT::TrackerHitZCylinder , public AccessChecked {
 
   public: 
     // C'tor
