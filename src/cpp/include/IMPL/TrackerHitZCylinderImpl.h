@@ -127,8 +127,8 @@ namespace IMPL {
     void setTime( float t ) ;
     void setQuality( int quality ) ;
     void setQualityBit( int bit , bool val=true ) ;
-    void setCovMatrix( const EVENT::FloatVec& cov );
-    void setCovMatrix( float cov[TRKHITZCYLNCOVMATRIX]  );
+    //void setCovMatrix( const EVENT::FloatVec& cov );
+    //void setCovMatrix( float cov[TRKHITZCYLNCOVMATRIX]  );
 
 
 protected:

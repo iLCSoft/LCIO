@@ -17,7 +17,8 @@ namespace IMPL {
     _EDep(0),
     _EDepError(0),
     _time(0),
-    _quality(0) {
+    _quality(0),
+    _rawHits(0) {
     
     _pos[0] = 0. ;
     _pos[1] = 0. ;
@@ -25,10 +26,10 @@ namespace IMPL {
     _center[0] = 0. ;
     _center[1] = 0. ;
 
-    _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
-    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
-       _cov.push_back(0.0) ;
-    }
+    //_cov.resize( TRKHITZCYLNCOVMATRIX ) ;
+    //for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+    //   _cov.push_back(0.0) ;
+    //}
 
   }
   
@@ -124,19 +125,19 @@ namespace IMPL {
       _quality &= ~( 1 << bit ) ;
   }
 
-  void TrackerHitZCylinderImpl::setCovMatrix( const FloatVec& cov ){
-    checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
-    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
-      _cov[i] = cov[i] ;
-    }
-  }
+  //void TrackerHitZCylinderImpl::setCovMatrix( const FloatVec& cov ){
+  //  checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
+  //  for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+  //    _cov[i] = cov[i] ;
+  //  }
+  //}
 
-  void TrackerHitZCylinderImpl::setCovMatrix( float cov[TRKHITZCYLNCOVMATRIX]  ){
-    checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
-    for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
-      _cov[i] = cov[i] ;
-    }
-  }
+  //void TrackerHitZCylinderImpl::setCovMatrix( float cov[TRKHITZCYLNCOVMATRIX]  ){
+  //  checkAccess("TrackerHitZCylinderImpl::setCovMatrix") ;
+  //  for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
+  //    _cov[i] = cov[i] ;
+  //  }
+  //}
 
 
 

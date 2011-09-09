@@ -46,15 +46,13 @@ namespace SIO{
         SIO_DATA( stream, &(hit->_quality) , 1 ) ;
 
 
-        float cov[TRKHITZCYLNCOVMATRIX] ;
-        SIO_DATA( stream ,  cov  ,  TRKHITZCYLNCOVMATRIX ) ;
-        hit->setCovMatrix( cov ) ;
+        //float cov[TRKHITZCYLNCOVMATRIX] ;
+        //SIO_DATA( stream ,  cov  ,  TRKHITZCYLNCOVMATRIX ) ;
+        //hit->setCovMatrix( cov ) ;
 
         // rawHits
         int numberOfRawHits = 1 ; 
-        if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
-            SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
-        }
+        SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
 
         hit->_rawHits.resize( numberOfRawHits ) ;
 
@@ -103,10 +101,10 @@ namespace SIO{
         LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
         
-        const FloatVec& cov = hit->getCovMatrix() ;
-        for(unsigned int i=0;i<cov.size();i++){
-            LCSIO_WRITE( stream, cov[i]  ) ;
-        }
+        //const FloatVec& cov = hit->getCovMatrix() ;
+        //for(unsigned int i=0;i<cov.size();i++){
+        //    LCSIO_WRITE( stream, cov[i]  ) ;
+        //}
 
         const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
 
