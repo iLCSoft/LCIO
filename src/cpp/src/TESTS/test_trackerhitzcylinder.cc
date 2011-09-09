@@ -66,8 +66,8 @@ int main(int argc, char** argv ){
                 // trkHit->setdEdx( i*j*117. ) ;
                 trkHit->setEDepError( (i+j)*.3 ) ;
 
-                //double pos[3] = { i, j, i*j } ;
-                //trkHit->setPosition( pos ) ;
+                double pos[3] = { i, j, i*j } ;
+                trkHit->setPosition( pos ) ;
 
                 //float cov[3] = { i, j, i+j } ;
                 //trkHit->setCovMatrix( cov );
@@ -118,11 +118,11 @@ int main(int argc, char** argv ){
                 MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
                 //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;
 
-                //const double* pos = trkHit->getPosition() ;
+                const double* pos = trkHit->getPosition() ;
 
-                //MYTEST( pos[0] , i , " pos[0] " ) ;
-                //MYTEST( pos[1] , j , " pos[1] " ) ;
-                //MYTEST( pos[2] , i*j , " pos[2] " ) ;
+                MYTEST( pos[0] , i , " pos[0] " ) ;
+                MYTEST( pos[1] , j , " pos[1] " ) ;
+                MYTEST( pos[2] , i*j , " pos[2] " ) ;
 
 
                 //const FloatVec& cov = trkHit->getCovMatrix() ;
