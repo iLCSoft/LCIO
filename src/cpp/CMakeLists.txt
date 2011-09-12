@@ -243,11 +243,9 @@ SET_SOURCE_FILES_PROPERTIES(
 
 
 # -------- include directories -----------------------------------------------
-INCLUDE_DIRECTORIES(
-    "${LCIO_AID_HEADERS_OUTPUT_DIR}"
-    "${LCIO_SOURCE_DIR}/sio/include"
-    "${LCIO_CXX_HEADERS_DIR}"
-)
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_SOURCE_DIR}/sio/include" )
+INCLUDE_DIRECTORIES( "${LCIO_CXX_HEADERS_DIR}" )
 
 # install public headers
 INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include 
