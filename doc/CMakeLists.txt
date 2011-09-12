@@ -73,7 +73,8 @@ IF( DOXYGEN_FOUND )
         WORKING_DIRECTORY ${DOC_SRC_DIR}/doxygen_api
         COMMENT "Building C++ API Documentation..."
         DEPENDS ./doxygen_api/Doxyfile ./CMakeLists.txt
-                ${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h
+                ${LCIO_AID_HEADERS_OUTPUT_DIR}/EVENT/*
+                ${LCIO_AID_HEADERS_OUTPUT_DIR}/IO/*
     )
     
     ADD_CUSTOM_TARGET( doc_cpp DEPENDS "${DOC_BIN_DIR}/html/index.html" )
