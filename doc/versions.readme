@@ -2,6 +2,76 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+
+==========
+ v02-00
+==========
+    
+    - added multiple trackstates for Track
+        
+        - Original functions getX() of Track will return: trk.getTrackStates()[0].getX()
+        
+        - TrackState::getLocation() returns one of the predefined locations:
+            AtOther = 0 ; // any location other than the ones defined below         
+            AtIP = 1 ;
+            AtFirstHit = 2 ;
+            AtLastHit = 3 ;
+            AtCalorimeter = 4 ;
+            AtVertex = 5 ;
+            LastLocation = AtVertex  ;
+
+        - TrackState* getTrackState(int location)
+            returns the trackstate at the given location, where location is given by one
+            of the predefined locations specified above
+        
+        - TrackState* getClosestTrackState(float x, float y, float z)
+            returns the trackstate closest to the given location
+        
+        - getTrackState( TrackState::AtFirstHit )->getReferencePoint()
+        - getTrackState( TrackState::AtLastHit )->getReferencePoint()
+
+        - deprecated isReferecePointPCA()
+
+
+    - added TrackerHitPlane and TrackerHitZCylinder for extending the TrackerHit interface
+
+    - added BitField64::reset()
+
+    - added constructor in CellIDDecoder which takes a string argument for the encoding
+    
+    - added some useful definitions that are used in the ILD software framework
+        - in particular for encoding and decoding cellIDs.
+
+    - add spin and color flow information to MCParticle if available in stdhep file (LCStdHepRdr)
+    
+    - clarified use of addMCParticleContribution
+        - now two method signatures for standard mode and 'detailed' mode
+        - no excpetion is thrown if stepPos==Null in detailed mode - use (0.,0.,0.) instead
+
+
+
+    - new tests added:
+
+        - added some tests for the canonical ILD CellIDEncoding (under test_trackerhit)
+        - added tests for TrackerHitPlane and TrackerHitZCylinder classes
+        - added tests for the TrackState class
+        - added a test for LCRTRelations (extensions)
+
+
+
+    - bug fixes:
+
+        - added printout of ndf for tracks
+        - added printout of Cluster EnergyError
+        - added printout of TrackerHit and SimTrackerHit cellid's in LCIO_LONG operators
+        - fixed strict aliasing warning for RTRelations in gcc when compiled with -O3 (Release mode)
+        - fixed constness of member functions (LCTime)
+        - applied fortran patches for gcc4.4 on ubuntu 32bit (Phillip Klenze, MPI)
+        - removed generation of cpp headers in build.xml (from ant aid.generate target)
+        - removed duplicate FindJAVA.cmake module
+        - fixed path to MacroCheckPackageLibs.cmake and MacroCheckPackageVersion.cmake in LCIOConfig.cmake
+
+
 ==========
  v01-60
 ==========
