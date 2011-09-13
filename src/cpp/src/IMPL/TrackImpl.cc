@@ -36,7 +36,8 @@ namespace IMPL {
     std::copy( o._tracks.begin() ,  o._tracks.end() , std::back_inserter( _tracks ) ) ;
     
     for( unsigned int i=0; i< o._trackStates.size() ; i++ ){
-      _trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
+      //_trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
+      _trackStates.push_back( new TrackStateImpl(  o._trackStates[i] ) ) ; 
     }
   }
 
