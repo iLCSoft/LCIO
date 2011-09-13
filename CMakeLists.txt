@@ -153,15 +153,16 @@ ADD_CUSTOM_TARGET( jar DEPENDS ${PROJECT_SOURCE_DIR}/lib/lcio.jar )
 # additional stuff to clean with 'make clean'
 # does not work with regexp's, e.g. ${LCIO_JAVA_HEADERS_DIR}/event/*.java
 SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES
-    "${PROJECT_SOURCE_DIR}/lib/lcio.jar;${LCIO_CXX_HEADERS_DIR}/EVENT;${LCIO_CXX_HEADERS_DIR}/IO"
+    #"${PROJECT_SOURCE_DIR}/lib/lcio.jar;${LCIO_CXX_HEADERS_DIR}/EVENT;${LCIO_CXX_HEADERS_DIR}/IO"
+    "${PROJECT_SOURCE_DIR}/lib/lcio.jar"
 )
 
 # keep source tree clean
 ADD_CUSTOM_TARGET( uninstall_headers
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/io/*.java"
     COMMAND "${CMAKE_COMMAND}" -E remove "${LCIO_JAVA_HEADERS_DIR}/event/*.java"
-    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
-    COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/EVENT"
+    #COMMAND "${CMAKE_COMMAND}" -E remove_directory "${LCIO_CXX_HEADERS_DIR}/IO"
 
     COMMAND ${SH} "${LCIO_ENV_INIT}" ant clean
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"

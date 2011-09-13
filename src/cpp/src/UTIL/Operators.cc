@@ -2184,6 +2184,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
     out << setw(30) << setfill(' ') << left << "dEdx" << right << setw(40) << part->getdEdx() << endl;
     out << setw(30) << setfill(' ') << left << "dEdx Error" << right << setw(40) << part->getdEdxError() << endl;
     out << setw(30) << setfill(' ') << left << "Chi2" << right << setw(40) << part->getChi2() << endl;
+    out << setw(30) << setfill(' ') << left << "Ndf" << right << setw(40) << noshowpos << part->getNdf() << endl;
 
     out << "Errors:     " << showpos;
     unsigned int l;
