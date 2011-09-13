@@ -8,6 +8,8 @@
 #include "SIO/SIOClusterHandler.h" 
 #include "SIO/SIOTPCHitHandler.h" 
 #include "SIO/SIOTrackerHitHandler.h" 
+#include "SIO/SIOTrackerHitPlaneHandler.h" 
+#include "SIO/SIOTrackerHitZCylinderHandler.h" 
 #include "SIO/SIOParticleHandler.h" 
 #include "SIO/SIOStrVecHandler.h"
 #include "SIO/SIOFloatVecHandler.h" 
@@ -44,6 +46,8 @@ namespace SIO {
     _map[ LCIO::TRACKERDATA ] = new SIOTrackerDataHandler ;
     _map[ LCIO::TRACKERPULSE ] = new SIOTrackerPulseHandler ;
     _map[ LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
+    _map[ LCIO::TRACKERHITPLANE ] = new SIOTrackerHitPlaneHandler ;
+    _map[ LCIO::TRACKERHITZCYLINDER ] = new SIOTrackerHitZCylinderHandler ;
     _map[ LCIO::TRACK ] = new SIOTrackHandler ;
     _map[ LCIO::CLUSTER ] = new SIOClusterHandler ;
     _map[ LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;

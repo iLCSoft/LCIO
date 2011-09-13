@@ -8,6 +8,9 @@
 #include "EVENT/CalorimeterHit.h"
 #include "EVENT/RawCalorimeterHit.h"
 #include "EVENT/SimTrackerHit.h"
+#include "EVENT/TrackerHit.h"
+#include "EVENT/TrackerHitPlane.h"
+#include "EVENT/TrackerHitZCylinder.h"
 #include "EVENT/TPCHit.h"
 #include "EVENT/TrackerRawData.h"
 #include "EVENT/TrackerData.h"
@@ -56,6 +59,8 @@ namespace UTIL{
   template<> const char* lctypename<EVENT::TrackerData>() { return EVENT::LCIO::TRACKERDATA ; }
   template<> const char* lctypename<EVENT::TrackerPulse>() { return EVENT::LCIO::TRACKERPULSE ; }
   template<> const char* lctypename<EVENT::TrackerHit>() { return EVENT::LCIO::TRACKERHIT ; }
+  template<> const char* lctypename<EVENT::TrackerHitPlane>() { return EVENT::LCIO::TRACKERHITPLANE ; }
+  template<> const char* lctypename<EVENT::TrackerHitZCylinder>() { return EVENT::LCIO::TRACKERHITZCYLINDER ; }
   template<> const char* lctypename<EVENT::LCStrVec>() { return EVENT::LCIO::LCSTRVEC ; }
   template<> const char* lctypename<EVENT::LCFloatVec>() { return EVENT::LCIO::LCFLOATVEC ; }
   template<> const char* lctypename<EVENT::LCIntVec>() { return EVENT::LCIO::LCINTVEC ; }
@@ -95,6 +100,8 @@ namespace UTIL{
     if( dynamic_cast<const EVENT::TrackerData*>(o) != 0 ) return   lctypename<EVENT::TrackerData>() ;
     if( dynamic_cast<const EVENT::TrackerPulse*>(o) != 0 ) return   lctypename<EVENT::TrackerPulse>() ;
     if( dynamic_cast<const EVENT::TrackerHit*>(o) != 0 ) return   lctypename<EVENT::TrackerHit>() ;
+    if( dynamic_cast<const EVENT::TrackerHitPlane*>(o) != 0 ) return   lctypename<EVENT::TrackerHitPlane>() ;
+    if( dynamic_cast<const EVENT::TrackerHitZCylinder*>(o) != 0 ) return   lctypename<EVENT::TrackerHitZCylinder>() ;
     if( dynamic_cast<const EVENT::LCStrVec*>(o) != 0 ) return   lctypename<EVENT::LCStrVec>() ;
     if( dynamic_cast<const EVENT::LCFloatVec*>(o) != 0 ) return   lctypename<EVENT::LCFloatVec>() ;
     if( dynamic_cast<const EVENT::LCIntVec*>(o) != 0 ) return   lctypename<EVENT::LCIntVec>() ;

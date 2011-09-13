@@ -87,10 +87,10 @@ int lctrkgetreferencepoint( PTRTYPE track, float* refpoint ) {
   return LCIO::SUCCESS ;
 }
 
-int lctrkisreferencepointpca( PTRTYPE track ) {
-  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  return trk->isReferencePointPCA() ;
-}
+//int lctrkisreferencepointpca( PTRTYPE track ) {
+//  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//  return trk->isReferencePointPCA() ;
+//}
 
 float lctrkgetchi2( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
@@ -202,11 +202,11 @@ int lctrksetreferencepoint( PTRTYPE track, float refpoint[3] ) {
   return LCIO::SUCCESS ;
 }
 
-int lctrksetisreferencepointpca( PTRTYPE track , int val) { 
-  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
-  trk->setIsReferencePointPCA( val ) ;
-  return LCIO::SUCCESS ;
-}
+//int lctrksetisreferencepointpca( PTRTYPE track , int val) { 
+//  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+//  trk->setIsReferencePointPCA( val ) ;
+//  return LCIO::SUCCESS ;
+//}
 
 int lctrksetchi2( PTRTYPE track, float chi2) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;

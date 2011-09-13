@@ -1,0 +1,52 @@
+package hep.lcio.event;
+
+/** A tracker hit on a planar surface -
+ *  the hit is stored as:<br>
+ *  x,y,z, u(theta, phi), v(theta,phi), du, dv <br>
+ *  where (x,y,z) is the position in global cartesian coordinates, u,v are the
+ *  the meassurement directions (unit vectors, spanning the plane) and du,dv are
+ *  the measurement errors along these directions. The order of u and v should follow 
+ *  the global cartesian coordinates x, y and z, e.g. in case of a plane parallel
+ *  to the z-axis, u lies in the x-y plane and v is along z.
+ * 
+ * @implements TrackerHit
+ * 
+ * @author gaede
+ * @version $Id:$
+ */
+
+public interface TrackerHitPlane extends TrackerHit {
+    
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TrackerHitPlane lcobject_type ;
+
+}
+@endif
+
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::RTHPBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
+    /** Direction of first measurement - given as (theta, phi).
+     *  Defines spanning vector of measurement plane. 	
+     */
+    public const float2V getU() const ;
+
+    /** Direction of second measurement - given as (theta, phi).
+     *  Defines spanning vector of measurement plane.	
+     */
+    public const float2V getV() const ;
+
+    /** Measurement error along u */
+    public float getdU() const ;
+
+    /** Measurement error along v */
+    public float getdV() const ;
+}

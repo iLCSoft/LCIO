@@ -9,14 +9,35 @@
 
 namespace IMPL {
   
+
   // helper class for particle contributions to hits
-  typedef struct MCParticleCont_S{
+  struct MCParticleCont{
+    MCParticleCont():
+      Particle(0) ,
+      Energy(0.) ,
+      Time(0.) ,
+      PDG(0)  {   
+      StepPosition[0] = 0. ;
+      StepPosition[1] = 0. ;
+      StepPosition[2] = 0. ;
+    }
+
+    MCParticleCont( EVENT::MCParticle* part,  float e,float t,int pdg, const float* step ) :
+      Particle( part ) ,
+      Energy(e) ,
+      Time(t) ,
+      PDG(pdg)  {   
+      StepPosition[0] = step[0] ;
+      StepPosition[1] = step[1] ;
+      StepPosition[2] = step[2] ;
+    }
+    
     EVENT::MCParticle* Particle ;
     float Energy ;
     float Time ;
     int   PDG ;
     float StepPosition[3] ;
-  }  MCParticleCont  ;
+  } ;
   
   typedef std::vector< IMPL::MCParticleCont* > MCParticleContVec ;
   
@@ -139,24 +160,32 @@ namespace IMPL {
      */
     void setPosition(float pos[3])  ;
     
-    /** Adds an MCParticle contribution to the hit.
-     *  There are three different ways to use this method:<br>
-     *  <ol>
-     *  <li>p==0, just add the energy to the total energy - create no MCParticleContribution.
-     *      Note: this results in non standard LCIO files - use one of the following:</li>
-     *  <li>p!=0, pdg==0, add the energy contribution for this primary MCParticle if it exists, 
-     *      create a new contribution if it doesn't</li>
-     *  <li>p!=0, pdg!=0, create a new MCParticleContribution in any case - this is used for 
-     *      the detailed mode, where every simulator step produces a contribution.</li>
-     *  </ol>
-     *  If you want to store the PDG and position of the secondary (case 3.) set the flag word bit LCIO::CHBIT_STEP.<br>
+
+    /** Adds an MCParticle contribution to the hit - contributions for the same MCParticle are combined into one,
+     *  where the energy is accumulated and the time is the energy weighted mean time.
+     *  Use this method for the standard LCIO mode, where one energy contribution per primary particle entering the 
+     *  calorimeter is stored.
+     */
+    void addMCParticleContribution( EVENT::MCParticle *p,
+				    float en,
+				    float t ) ; 
+    
+
+    /** Adds a detailed MCParticle contribution to the hit. This method should be used for the detailed mode, where 
+     *  one MCParticleContribution is stored for every simulator step.<br>
+     *  If stepPos==0, (0,0,0) will be stored.
+     *  NB: The flag word bit LCIO::CHBIT_STEP (or LCIO::CHBIT_PDG) has to be set, in order for the PDG and step 
+     *  position to be stored. 
      */
     void addMCParticleContribution( EVENT::MCParticle *p,
 				    float en,
 				    float t,
-				    int pdg=0,
-                    float* sp=0
-                    ) ; 
+				    int pdg, 
+				    float* stepPos=0
+				    ) ; 
+    
+    
+
 
   protected:
 

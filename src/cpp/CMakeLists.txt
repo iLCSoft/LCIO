@@ -51,8 +51,11 @@ SET( LCIO_IMPL_SRCS
   ./src/IMPL/SimTrackerHitImpl.cc
   ./src/IMPL/TPCHitImpl.cc
   ./src/IMPL/TrackImpl.cc
+  ./src/IMPL/TrackStateImpl.cc
   ./src/IMPL/TrackerDataImpl.cc
   ./src/IMPL/TrackerHitImpl.cc
+  ./src/IMPL/TrackerHitPlaneImpl.cc
+  ./src/IMPL/TrackerHitZCylinderImpl.cc
   ./src/IMPL/TrackerPulseImpl.cc
   ./src/IMPL/TrackerRawDataImpl.cc
   ./src/IMPL/VertexImpl.cc
@@ -86,6 +89,8 @@ SET( LCIO_SIO_SRCS
   ./src/SIO/SIOTrackHandler.cc
   ./src/SIO/SIOTrackerDataHandler.cc
   ./src/SIO/SIOTrackerHitHandler.cc
+  ./src/SIO/SIOTrackerHitZCylinderHandler.cc
+  ./src/SIO/SIOTrackerHitPlaneHandler.cc
   ./src/SIO/SIOTrackerPulseHandler.cc
   ./src/SIO/SIOTrackerRawDataHandler.cc
   ./src/SIO/SIOVertexHandler.cc
@@ -113,6 +118,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/CellIDEncoder.cc
   ./src/UTIL/CollectionParameterMap.cc
   ./src/UTIL/PIDHandler.cc
+  ./src/UTIL/ILDConf.cc
 )
 
 
@@ -237,11 +243,9 @@ SET_SOURCE_FILES_PROPERTIES(
 
 
 # -------- include directories -----------------------------------------------
-INCLUDE_DIRECTORIES(
-    "${LCIO_AID_HEADERS_OUTPUT_DIR}"
-    "${LCIO_SOURCE_DIR}/sio/include"
-    "${LCIO_CXX_HEADERS_DIR}"
-)
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_SOURCE_DIR}/sio/include" )
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
 
 # install public headers
 INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include 
@@ -596,10 +600,13 @@ ENDMACRO()
 ADD_LCIO_TEST( test_example ) 
 ADD_LCIO_TEST( test_calohit )
 ADD_LCIO_TEST( test_cluster )
+ADD_LCIO_TEST( test_tracks )
+ADD_LCIO_TEST( test_trackstate )
 ADD_LCIO_TEST( test_trackerhit )
+ADD_LCIO_TEST( test_trackerhitplane )
+ADD_LCIO_TEST( test_trackerhitzcylinder )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
-ADD_LCIO_TEST( test_RTextension ) 
 
 ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
 SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )

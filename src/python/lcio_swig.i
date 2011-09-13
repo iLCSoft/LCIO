@@ -382,6 +382,8 @@ namespace EVENT
             static const int TRAWBIT_ID1;
             static const int TRAWBIT_CM;
             static const int RTHBIT_ID1;
+            static const int RTHPBIT_ID1;
+            static const int RTHZBIT_ID1;
             static const int THBIT_BARREL;
             static const int THBIT_MOMENTUM;
             static const int THBIT_ID1;

@@ -1,0 +1,47 @@
+package hep.lcio.event;
+
+/** A tracker hit on a cylindrical surface that runs parallel to the z-axis -
+ *  the hit is stored as:<br>
+ *  x,y,z, R, center(x,y), dRPhi, dz <br>
+ *  where (x,y,z) is the position in global cartesian coordinates, R is the radius of the cylinder 
+ *  and center(x,y) its center, dRphi and z are the measurement errors.
+ * 
+ * @implements TrackerHit
+ * 
+ * @author gaede
+ * @version $Id:$
+ */
+
+public interface TrackerHitZCylinder extends TrackerHit {
+    
+@ifdef cpp
+@cpp{
+    /** Useful typedef for template programming with LCIO */
+    typedef TrackerHitZCylinder lcobject_type ;
+
+}
+@endif
+
+   /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     */
+    public int getCellID0() const ;
+
+    /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
+     *  Optional, check/set flag(LCIO::RTHZBIT_ID1)==1.
+     */
+    public int getCellID1() const ;
+
+    /** Radius of cylinder.
+     */
+    public const float getR() const ;
+    
+    /** Center of cylinder in RPhi-plane - given as (x,y).
+     */
+    public const float2V getCenter() const ;
+    
+    /** Measurement error along RPhi */
+    public float getdRPhi() const ;
+    
+    /** Measurement error along z */
+    public float getdZ() const ;
+}

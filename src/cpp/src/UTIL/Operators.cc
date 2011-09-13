@@ -25,6 +25,7 @@ using namespace EVENT;
 #include "EVENT/LCIntVec.h"
 #include "IMPL/LCFlagImpl.h"
 #include "EVENT/Track.h"
+#include "EVENT/TrackState.h"
 #include "EVENT/Cluster.h"
 #include "EVENT/ReconstructedParticle.h"
 #include "EVENT/Vertex.h"
@@ -1634,8 +1635,55 @@ namespace UTIL{
     return(out);
   }
 
+
+  // ------------------- TrackState -------------------------------------------------------------------------
+
+  const std::string& header(const EVENT::TrackState *){
+    static std::string _h(" [   id   ] |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        \n");
+    return _h;
+  }
+
+  const std::string& tail(const EVENT::TrackState *){
+    static std::string _t("------------|----------|----------|----------|-----------|-----------|-------------------------------- \n");
+    return _t;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackState>& sV){
+    const EVENT::TrackState *trk = sV.obj;
+
+    using namespace std;
+    out << noshowpos <<  " [" << setfill('0') << setw(8) << hex<< trk->id() << "] ";
+    out << scientific << setprecision (2) << showpos << dec << setfill(' ');
+    out << " |" << trk->getD0(); 
+    out << " |" << trk->getPhi(); 
+    out << " |" << trk->getOmega();
+    out << " |" <<setprecision (3) << trk->getZ0();
+    out << " |" << trk->getTanLambda();
+    out << " |(" << setprecision(2) << trk->getReferencePoint()[0] << ", " << trk->getReferencePoint()[1] << ", " <<trk->getReferencePoint()[2];
+    out << endl;
+    
+    out << " cov matrix: " << noshowpos;
+    unsigned int l;
+    for(l=0;l<14;l++){ //FIXME hardcoded 14
+        out << trk->getCovMatrix()[l] << ", ";
+    }
+    out << trk->getCovMatrix()[14] << endl; //FIXME hardcoded 14
+
+    out << endl;
+    return out;
+  }
+
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackState &part){
+    out << lcio_long(part,NULL);
+    return(out);
+  }
+
+  // ------------------- Track -------------------------------------------------------------------------
+
+
   const std::string& header(const EVENT::Track *){ //hauke
-    static std::string _vtxh(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   \n");
+    static std::string _vtxh(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   |  ndf   \n");
     return _vtxh;
   }
 
@@ -1666,6 +1714,7 @@ namespace UTIL{
     out << ")|" << trk->getdEdx();
     out << " |" << trk->getdEdxError();
     out << " |" << trk->getChi2();
+    out << " |" << noshowpos << setw(5) << trk->getNdf() ; 
     out << endl;
     
     out << " errors: " << noshowpos;
@@ -2035,6 +2084,65 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Cluster> l) 
 }
 
 
+
+// -------------------- TrackState ------------------------------------------------------------
+
+std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackState> ll){
+    const EVENT::TrackState *part = ll.object();
+    const EVENT::LCCollection *col = ll.collection();
+
+    using namespace std;
+    stringstream tmp;
+
+    //out << scientific << setprecision (2) << showpos;
+    out << noshowpos;
+    out << setw(41) << setfill('-') << right << "-- TrackState ---" << setfill('-') << setw(29) << "-" << endl;
+
+    if(col != NULL){ 
+        if(col->getTypeName() != LCIO::TRACKSTATE){
+            out << "Warning: collection not of type " << LCIO::TRACKSTATE << endl ;
+            return(out);
+
+        }
+        tmp.str(""); 
+        tmp << "0x" << hex << col->getFlag() << dec;
+        out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
+        LCTOOLS::printParameters(col->getParameters());
+    } 
+
+    tmp << hex << setfill('0') << setw(8) << part->id();
+    out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
+    out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
+    out << setw(30) << setfill(' ') << left << "Phi" << right << setw(40) << part->getPhi() << endl;
+    out << setw(30) << setfill(' ') << left << "Omega" << right << setw(40) << part->getOmega() << endl;
+    out << setw(30) << setfill(' ') << left << "Z0" << right << setw(40) << part->getZ0() << endl;
+    out << setw(30) << setfill(' ') << left << "Tan Lambda" << right << setw(40) << part->getTanLambda() << endl;
+
+    tmp.str("");
+    tmp  << dec << part->getReferencePoint()[0] << ", " << part->getReferencePoint()[1]  << ", " << part->getReferencePoint()[2]; 
+    out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
+
+    out << "Cov matrix:     " << showpos;
+    unsigned int l;
+    for(l=0;l<14;l++){ // FIXME hard-coded 14
+        out << part->getCovMatrix()[l];
+        if(! ((l+1)%5)){ // FIXME hard-coded 5
+            out << endl << "            ";
+        } else{
+            out << ", ";
+        }
+    }
+    if(!((l+2)%5)){out << endl << "            ";} // FIXME hard-coded 5
+    out << part->getCovMatrix()[l+1] << endl;
+
+    out << noshowpos;
+    return(out);
+}
+
+
+// -------------------- Track -----------------------------------------------------------------
+
+
 std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
     const EVENT::Track *part = ll.object();
     const EVENT::LCCollection *col = ll.collection();
@@ -2076,6 +2184,7 @@ std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Track> ll){
     out << setw(30) << setfill(' ') << left << "dEdx" << right << setw(40) << part->getdEdx() << endl;
     out << setw(30) << setfill(' ') << left << "dEdx Error" << right << setw(40) << part->getdEdxError() << endl;
     out << setw(30) << setfill(' ') << left << "Chi2" << right << setw(40) << part->getChi2() << endl;
+    out << setw(30) << setfill(' ') << left << "Ndf" << right << setw(40) << noshowpos << part->getNdf() << endl;
 
     out << "Errors:     " << showpos;
     unsigned int l;

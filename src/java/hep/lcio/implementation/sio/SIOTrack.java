@@ -4,8 +4,10 @@ import hep.io.sio.SIOInputStream;
 import hep.io.sio.SIOOutputStream;
 import hep.io.sio.SIORef;
 import hep.lcio.event.Track;
+import hep.lcio.event.TrackState;
 import hep.lcio.event.TrackerHit;
 import hep.lcio.implementation.event.ITrack;
+import hep.lcio.implementation.event.ITrackState;
 import hep.lcio.implementation.event.ITrackerHit;
 import hep.lcio.event.LCIO;
 import java.io.IOException;
@@ -28,17 +30,50 @@ class SIOTrack extends ITrack
       int typeWord = in.readInt();
       setType( typeWord) ;
       
-      d0 = in.readFloat();
-      phi = in.readFloat();
-      omega = in.readFloat();
-      z0 = in.readFloat();
-      tanLambda = in.readFloat();
-      covMatrix = new float[15];
-      for (int i=0; i<covMatrix.length; i++) covMatrix[i] = in.readFloat();
-      referencePoint = new float[3];
-      referencePoint[0] = in.readFloat();
-      referencePoint[1] = in.readFloat();
-      referencePoint[2] = in.readFloat();
+      // read TrackStates
+      int nTrackStates = 1 ; // set to 1 per default for backwards compatibility
+
+      if( SIOVersion.encode(major,minor) >= SIOVersion.encode(2,0)){
+          nTrackStates = in.readInt();
+      }
+
+      for( int i=0 ; i<nTrackStates ; i++ ){
+
+        // TODO put this code into SIOTrackState.java ?
+        ITrackState ts = new ITrackState() ;
+
+        if( SIOVersion.encode(major,minor) >= SIOVersion.encode(2,0)){
+            ts.setLocation( in.readInt() );
+        }
+
+        ts.setD0( in.readFloat() );
+        ts.setPhi( in.readFloat() );
+        ts.setOmega( in.readFloat() );
+        ts.setZ0( in.readFloat() );
+        ts.setTanLambda( in.readFloat() );
+        float[] covMatrix = new float[15]; // FIXME hardcoded 15 
+        for (int j=0; j<covMatrix.length; j++) covMatrix[j] = in.readFloat();
+        ts.setCovMatrix( covMatrix ) ;
+        float[] referencePoint = new float[3]; // FIXME hardcoded 3
+        for (int j=0; j<referencePoint.length; j++) referencePoint[j] = in.readFloat();
+        ts.setReferencePoint( referencePoint ) ;
+        
+        getTrackStates().add( ts ) ;
+      }
+
+      //d0 = in.readFloat();
+      //phi = in.readFloat();
+      //omega = in.readFloat();
+      //z0 = in.readFloat();
+      //tanLambda = in.readFloat();
+      //covMatrix = new float[15];
+      //for (int i=0; i<covMatrix.length; i++) covMatrix[i] = in.readFloat();
+      //referencePoint = new float[3];
+      //referencePoint[0] = in.readFloat();
+      //referencePoint[1] = in.readFloat();
+      //referencePoint[2] = in.readFloat();
+
+
       chi2 = in.readFloat();
       ndf = in.readInt() ;
       dEdx = in.readFloat();
@@ -78,17 +113,41 @@ class SIOTrack extends ITrack
       else
       {
          out.writeInt(track.getType());
-         out.writeFloat(track.getD0());
-         out.writeFloat(track.getPhi());
-         out.writeFloat(track.getOmega());
-         out.writeFloat(track.getZ0());
-         out.writeFloat(track.getTanLambda());
-         float[] covMatrix = track.getCovMatrix();
-         for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
-         float[] referencePoint = track.getReferencePoint();
-         out.writeFloat(referencePoint[0]);
-         out.writeFloat(referencePoint[1] );
-         out.writeFloat(referencePoint[2]);
+
+         // write out TrackStates
+         List trackstates = track.getTrackStates();
+         out.writeInt( trackstates.size() );
+
+         for (Iterator it = trackstates.iterator(); it.hasNext(); ){
+
+             ITrackState trackstate = (ITrackState) it.next();
+
+             // TODO put this code into SIOTrackState.java ?
+             out.writeFloat(trackstate.getLocation());
+             out.writeFloat(trackstate.getD0());
+             out.writeFloat(trackstate.getPhi());
+             out.writeFloat(trackstate.getOmega());
+             out.writeFloat(trackstate.getZ0());
+             out.writeFloat(trackstate.getTanLambda());
+             float[] covMatrix = trackstate.getCovMatrix();
+             for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
+             float[] referencePoint = trackstate.getReferencePoint();
+             for (int i=0; i<referencePoint.length; i++) out.writeFloat(referencePoint[i]);
+         }
+
+         //out.writeFloat(track.getD0());
+         //out.writeFloat(track.getPhi());
+         //out.writeFloat(track.getOmega());
+         //out.writeFloat(track.getZ0());
+         //out.writeFloat(track.getTanLambda());
+         //float[] covMatrix = track.getCovMatrix();
+         //for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
+         //float[] referencePoint = track.getReferencePoint();
+         //out.writeFloat(referencePoint[0]);
+         //out.writeFloat(referencePoint[1] );
+         //out.writeFloat(referencePoint[2]);
+
+
          out.writeFloat(track.getChi2());
          out.writeInt(track.getNdf());
          out.writeFloat(track.getdEdx());
@@ -121,15 +180,39 @@ class SIOTrack extends ITrack
    private void write(SIOOutputStream out, int flag) throws IOException
    {
       out.writeInt( getType() );
-      out.writeFloat(d0);
-      out.writeFloat(phi);
-      out.writeFloat(omega);
-      out.writeFloat(z0);
-      out.writeFloat(tanLambda);
-      for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
-      out.writeFloat(referencePoint[0]);
-      out.writeFloat(referencePoint[1] );
-      out.writeFloat(referencePoint[2]);
+
+     // write out TrackStates
+     List trackstates = getTrackStates();
+     out.writeInt( trackstates.size() );
+
+     for (Iterator it = trackstates.iterator(); it.hasNext(); ){
+
+         ITrackState trackstate = (ITrackState) it.next();
+
+         // TODO put this code into SIOTrackState.java ?
+         out.writeFloat(trackstate.getLocation());
+         out.writeFloat(trackstate.getD0());
+         out.writeFloat(trackstate.getPhi());
+         out.writeFloat(trackstate.getOmega());
+         out.writeFloat(trackstate.getZ0());
+         out.writeFloat(trackstate.getTanLambda());
+         float[] covMatrix = trackstate.getCovMatrix();
+         for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
+         float[] referencePoint = trackstate.getReferencePoint();
+         for (int i=0; i<referencePoint.length; i++) out.writeFloat(referencePoint[i]);
+     }
+
+      //out.writeFloat(d0);
+      //out.writeFloat(phi);
+      //out.writeFloat(omega);
+      //out.writeFloat(z0);
+      //out.writeFloat(tanLambda);
+      //for (int i=0; i<covMatrix.length; i++) out.writeFloat(covMatrix[i]);
+      //out.writeFloat(referencePoint[0]);
+      //out.writeFloat(referencePoint[1] );
+      //out.writeFloat(referencePoint[2]);
+
+
       out.writeFloat(chi2);
       out.writeFloat(ndf);
       out.writeFloat(dEdx);

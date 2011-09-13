@@ -30,6 +30,17 @@ namespace UTIL{
   class CellIDDecoder {
     
   public:  
+
+    /** Constructor takes encoding string as argument.
+     */
+  CellIDDecoder( const std::string& encoder_str ) : _oldHit(0) {
+      
+      if( encoder_str.length() == 0 ){
+      	throw( Exception( "CellIDDecoder : string of length zero provided as encoder string" ) ) ;
+      }
+      _b = new BitField64( encoder_str ) ; 
+      
+    }
     
     /** Constructor reads encoding string from collection parameter LCIO::CellIDEncoding.
      */

@@ -249,7 +249,8 @@ c-----the Track interface
       PTRTYPE lctrkgetsubdetectorhitnumbers
       integer lctrkdelete, lctrkid
       integer lctrkgettype, lctrkgetcovmatrix
-      integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
+c-----integer lctrkgetreferencepoint, lctrkgetisreferencepointpca
+      integer lctrkgetreferencepoint
       real    lctrkgetomega, lctrkgettanlambda, lctrkgetphi, lctrkgetd0
       real    lctrkgetz0, lctrkgetchi2, lctrkgetdedx, lctrkgetdedxerror
       real    lctrkgetradiusofinnermosthit
@@ -257,7 +258,8 @@ c-----the Track interface
       integer lctrksettypebit, lctrksetomega, lctrksettanlambda
       integer lctrksetphi, lctrksetd0, lctrksetz0, lctrksetcovmatrix
       integer lctrksetreferencepoint, lctrksetchi2, lctrksetdedx
-      integer lctrksetisreferencepointpca, lctrksetndf
+c-----integer lctrksetisreferencepointpca, lctrksetndf
+      integer lctrksetndf
       integer lctrksetdedxerror, lctrkaddtrack, lctrkaddhit
       integer lctrksetradiusofinnermosthit,lctrksetsubdetectorhitnumbers
 
@@ -275,6 +277,8 @@ c---- constants as defined in EVENT::LCIO
       integer LCIO_RCHBIT_TIME
       integer LCIO_RCHBIT_ENERGY_ERROR
       integer LCIO_RTHBIT_ID1
+      integer LCIO_RTHPBIT_ID1
+      integer LCIO_RTHZBIT_ID1
       integer LCIO_THBIT_BARREL
       integer LCIO_THBIT_MOMENTUM
       integer LCIO_THBIT_ID1
@@ -298,6 +302,8 @@ c---- constants as defined in EVENT::LCIO
      &           LCIO_RCHBIT_ID1=29, LCIO_RCHBIT_NO_PTR=28,
      &           LCIO_RCHBIT_TIME=27, LCIO_RCHBIT_ENERGY_ERROR=26)
       parameter (LCIO_RTHBIT_ID1=31)
+      parameter (LCIO_RTHPBIT_ID1=31)
+      parameter (LCIO_RTHZBIT_ID1=31)
       parameter (LCIO_THBIT_BARREL=31, LCIO_THBIT_MOMENTUM=30,
      &           LCIO_THBIT_ID1=29)
       parameter (LCIO_TRBIT_HITS=31)

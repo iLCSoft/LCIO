@@ -12,8 +12,11 @@
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/TrackerHitImpl.h"
 #include "IMPL/LCFlagImpl.h"
-
 //#include "UTIL/Operators.h"
+
+#include "UTIL/CellIDEncoder.h"
+#include "UTIL/CellIDDecoder.h"
+#include "UTIL/ILDConf.h"
 
 //#include <iostream>
 
@@ -58,18 +61,37 @@ int main(int argc, char** argv ){
 
             LCCollectionVec* trkHits = new LCCollectionVec( LCIO::TRACKERHIT )  ;
 
+	    ILDCellIDEncoder<TrackerHitImpl> idEnc( "readoutUnit:8,daqChannel:16,"  ,   trkHits ) ;
+	    //   this is effectively the same as:
+	    //	 CellIDEncoder<TrackerHitImpl> idEnc( ILDCellID0::encoder_string + ",readoutUnit:8,daqChannel:16"  ,   trkHits ) ;
+
+
+
             for(int j=0;j<NHITS;j++){
-                TrackerHitImpl* trkHit = new TrackerHitImpl ;
-                //trkHit->setEDep( i*j*117. ) ;
-                trkHit->setdEdx( i*j*117. ) ;
-                trkHit->setEDepError( (i+j)*.3 ) ;
-                double pos[3] = { i, j, i*j } ;
-                trkHit->setPosition( pos ) ;
+	      
+	      TrackerHitImpl* trkHit = new TrackerHitImpl ;
 
-                float cov[3] = { i, j, i+j } ;
-                trkHit->setCovMatrix( cov );
+	      idEnc.reset() ;
 
-                trkHits->addElement( trkHit ) ;
+	      idEnc[ ILDCellID0::subdet ]  = ILDDetID::FTD ;
+	      idEnc[ ILDCellID0::layer  ]  = j % 100 ; 
+	      idEnc[ ILDCellID0::side   ]  = ILDDetID::bwd ; 
+	      idEnc[ ILDCellID0::module ]  = j / 100 + 1 ; 
+	      idEnc[ ILDCellID0::sensor ]  = j % 4  ; 
+	      idEnc["daqChannel"] =  j*8 ;
+	      
+	      idEnc.setCellID( trkHit ) ;
+
+	      trkHit->setEDep( i*j*117. ) ;
+	      // trkHit->setdEdx( i*j*117. ) ;
+	      trkHit->setEDepError( (i+j)*.3 ) ;
+	      double pos[3] = { i, j, i*j } ;
+	      trkHit->setPosition( pos ) ;
+	      
+	      float cov[3] = { i, j, i+j } ;
+	      trkHit->setCovMatrix( cov );
+	      
+	      trkHits->addElement( trkHit ) ;
             }
             evt->addCollection( trkHits , "TrackerHits") ;
 
@@ -100,16 +122,28 @@ int main(int argc, char** argv ){
 
             LCCollection* trkHits = evt->getCollection( "TrackerHits") ;
 
+	    CellIDDecoder<TrackerHit> idDec( trkHits ) ;
+
             for(int j=0;j<NHITS;j++) {
 
                 //std::cout << " testing hit " << j << std::endl ;
 
                 TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
 
+
+		MYTEST( idDec(trkHit)[ ILDCellID0::subdet ]  , ILDDetID::FTD , " cellID(trkHit) == ( ILDDetID::FTD  ) " ) ;
+		MYTEST( idDec(trkHit)[ ILDCellID0::layer  ]  , j % 100       , " cellID(trkHit) == ( j % 100        ) " ) ; 
+		MYTEST( idDec(trkHit)[ ILDCellID0::side   ]  , ILDDetID::bwd , " cellID(trkHit) == ( ILDDetID::bwd  ) " ) ; 
+		MYTEST( idDec(trkHit)[ ILDCellID0::module ]  , j / 100 + 1   , " cellID(trkHit) == ( j / 100 + 1    ) " ) ; 
+		MYTEST( idDec(trkHit)[ ILDCellID0::sensor ]  , j % 4         , " cellID(trkHit) == ( j % 4          ) " ) ; 
+		MYTEST( idDec(trkHit)["daqChannel"]          , j*8           , " cellID(trkHit) == ( j*8            ) " ) ;
+
+
                 //std::cout << *trkHit << std::endl ;
 
-                //MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
-                MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
+                MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
+
+		// MYTEST( trkHit->getdEdx() ,  i*j*117. , "dEdx" ) ;
                 // remove float converstion and check what happens ;)
                 MYTEST( trkHit->getEDepError() ,  float((i+j)*.3) , "EDepError" ) ;
                 //MYTEST( trkHit->getEDepError() ,  (i+j)*.3 , "EDepError" ) ;

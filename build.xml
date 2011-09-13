@@ -236,9 +236,9 @@
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.java.dir} -property config JavaClassGenerator ${aid.java.classes}"/>
     </java>
-    <java classpath="${aid.classpath}" classname="${aid.class}">
+    <!--java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.cpp.dir} -property config CPPHeaderGenerator ${aid.includes} ${aid.cpp.includes}"/>
-    </java>
+    </java-->
     <java classpath="${aid.classpath}" classname="${aid.class}">
         <arg line="-directory ${aid.jni.dir} -property config JNIHeaderGenerator ${aid.jni.includes}"/>
     </java>

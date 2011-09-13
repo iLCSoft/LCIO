@@ -37,11 +37,11 @@ public interface MCParticle extends LCObject {
      */
     public double getEnergy() const;
 
-    /** Returns the spin // TODO
+    /** Returns the spin (helicity) vector of the particle.
      */
     public const float3V getSpin() const;
 
-    /** Returns the color flow // TODO
+    /** Returns the color flow as defined by the generator.
      */
     public const int2V getColorFlow() const;
 
