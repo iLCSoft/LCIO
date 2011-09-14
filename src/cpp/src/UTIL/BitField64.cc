@@ -23,8 +23,8 @@ namespace UTIL{
     if( offset > 63 || offset+_width > 64 ) {
       
       std::stringstream s ;
-      s << " BitFieldValue: out of range -  offset : " 
-	<< offset  << " width " << _width ; 
+      s << " BitFieldValue '" << _name << "': out of range -  offset : " 
+	<< offset  << " width " << _width  ; 
       
       throw( Exception( s.str() ) ) ;
     }
@@ -78,8 +78,8 @@ namespace UTIL{
     if( in < _minVal || in > _maxVal  ) {
       
       std::stringstream s ;
-      s << " BitFieldValue: out of range : " << in 
-	<< " for width " << _width ; 
+      s << " BitFieldValue '" << _name << "': out of range : " << in 
+	<< " for width " << _width  ; 
       
       throw( Exception( s.str() ) );
     }
@@ -181,7 +181,7 @@ namespace UTIL{
     if( _joined & bfv->mask()  ) {
       
       std::stringstream s ;
-      s << " BitFieldValue: bits already used " << std::hex << _joined
+      s << " BitFieldValue::addField(" << name << "): bits already used " << std::hex << _joined
 	<< " for mask " <<  bfv->mask()   ; 
 
       throw( Exception( s.str() ) ) ;
