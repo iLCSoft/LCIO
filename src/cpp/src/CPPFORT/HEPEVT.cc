@@ -10,7 +10,7 @@ using namespace lcio ;
 
 namespace HEPEVTIMPL{
 
-  void HEPEVT::fromHepEvt(LCEvent * evt){
+  void HEPEVT::fromHepEvt(LCEvent * evt, const char* mcpColName){
 
       float* p = new float[3] ;
 
@@ -61,8 +61,12 @@ namespace HEPEVTIMPL{
         }
       }
 
+      std::string colName("MCParticle") ;
+      if( mcpColName != 0 )
+	colName = mcpColName ;
+
       // add all collection to the event
-      evt->addCollection( (LCCollection*) mcVec , "MCParticle" ) ;
+      evt->addCollection( (LCCollection*) mcVec , colName ) ;
 
       // now fill pointers for MCParticle collection
       LCEventImpl* evtimpl = reinterpret_cast<LCEventImpl*>(evt) ;
@@ -78,7 +82,7 @@ namespace HEPEVTIMPL{
 
 /* ============================================================================================================= */
 
-  void HEPEVT::toHepEvt(const LCEvent* evt){
+  void HEPEVT::toHepEvt(const LCEvent* evt, const char* mcpColName){
 
       int* kmax      = new int ;
       double* maxxyz = new double;
@@ -87,8 +91,12 @@ namespace HEPEVTIMPL{
       // set event number in stdhep COMMON
       FTNhep.nevhep = evt->getEventNumber() ;
 
+      std::string colName("MCParticle") ;
+      if( mcpColName != 0 )
+	colName = mcpColName ;
+
       // fill MCParticles into stdhep COMMON
-      LCCollection* mcVec = evt->getCollection( LCIO::MCPARTICLE )  ;
+      LCCollection* mcVec = evt->getCollection( colName )  ;
       FTNhep.nhep = mcVec->getNumberOfElements() ;
       int* NMCPART = &FTNhep.nhep ;
 

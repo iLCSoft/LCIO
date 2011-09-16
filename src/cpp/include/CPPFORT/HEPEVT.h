@@ -33,8 +33,8 @@ namespace HEPEVTIMPL{
      * fromHepEvt reads from COMMON /HEPEVT/.
      * toHepEvt fills COMMON /HEPEVT/.
      */
-    static void fromHepEvt(EVENT::LCEvent* evt) ;
-    static void toHepEvt(const EVENT::LCEvent* evt) ;
+    static void fromHepEvt(EVENT::LCEvent* evt, const char* mcColName=0) ;
+    static void toHepEvt(const EVENT::LCEvent* evt, const char* mcColName=0) ;
 
   }; // class
 
