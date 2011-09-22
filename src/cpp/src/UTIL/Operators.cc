@@ -1326,7 +1326,7 @@ namespace UTIL{
         for(int k=0;k < hit->getNMCContributions();k++){
             try{
                 out << "           ->" << setfill(' ') << right << "                 ";
-                out << setw(11) << hit->getParticleCont(k)->getPDG() << "|";
+                out << setw(11) << ( hit->getParticleCont(k) ? hit->getParticleCont(k)->getPDG()  : 0 ) << "|";
                 out << setw(10) << hit->getEnergyCont(k)<< "|";
                 out << setw(6) << hit->getTimeCont(k) << "|";
 
@@ -1412,7 +1412,7 @@ namespace UTIL{
         for(int k=0;k < hit->getNMCContributions();k++){
             try{
                 out << setw(30) << left << "Particle Number" << right << setw(40) << k << endl;
-                out << setw(30) << left << "                Prim. PDG" << right << setw(40) << hit->getParticleCont( k)->getPDG() << endl;
+                out << setw(30) << left << "                Prim. PDG" << right << setw(40) << ( hit->getParticleCont(k) ? hit->getParticleCont(k)->getPDG()  : 0 ) << endl;
                 out << setw(30) << left << "                Energy [GeV]" << right << setw(40) << hit->getEnergyCont(k) << endl;
                 out << setw(30) << left << "                Time" << right << setw(40) << hit->getTimeCont(k) << endl;
                 out << setw(30) << left << "                Sec. PDG" << right << setw(40) << hit->getPDGCont(k) << endl;
