@@ -1,66 +1,6 @@
 #ifndef LCIO_OPERATORS_H
 #define LCIO_OPERATORS_H 1
 
-//#include "EVENT/LCCollection.h"
-#include "EVENT/Vertex.h"
-#include "EVENT/ReconstructedParticle.h"
-#include "EVENT/SimCalorimeterHit.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/SimTrackerHit.h"
-//#include "IMPL/MCParticleImpl.h"
-#include "EVENT/TrackerHit.h"
-#include "EVENT/ReconstructedParticle.h"
-#include "EVENT/Track.h"
-#include "EVENT/TrackState.h"
-#include "EVENT/Cluster.h"
-
-
-//#include "UTIL/IndexMap.h"
-
-#include <iostream>
-#include <iomanip>
-#include <string>
-
-
-//hauke
-#include "EVENT/CalorimeterHit.h"
-#include "EVENT/LCFlag.h"
-#include "EVENT/LCIntVec.h"
-#include "EVENT/LCRunHeader.h"
-#include "EVENT/RawCalorimeterHit.h"
-#include "EVENT/TPCHit.h"
-#include "EVENT/TrackerPulse.h"
-#include "EVENT/Cluster.h"
-#include "EVENT/LCFloatVec.h"
-#include "EVENT/LCObject.h"
-//#include "EVENT/LCStrVec.h"
-#include "EVENT/ReconstructedParticle.h"
-#include "EVENT/Track.h"
-#include "EVENT/TrackerRawData.h"
-#include "EVENT/LCCollection.h"
-#include "EVENT/LCGenericObject.h"
-#include "EVENT/LCParameters.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/SimCalorimeterHit.h"
-#include "EVENT/TrackerData.h"
-#include "EVENT/Vertex.h"
-#include "EVENT/LCEvent.h"
-#include "EVENT/LCIO.h"
-#include "EVENT/LCRelation.h"
-#include "EVENT/ParticleID.h"
-#include "EVENT/SimTrackerHit.h"
-#include "EVENT/TrackerHit.h"
-
-#include "EVENT/LCRelation.h"
-#include "EVENT/LCFloatVec.h"
-
-#include "EVENT/LCEvent.h"
-//#include "EVENT/MCParticle.h"
-//#include "EVENT/LCParameters.h"
-//#include "EVENT/LCRunHeader.h"
-//end hauke
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Define operators for convenient printing of LCIO objects.
 //
@@ -68,6 +8,44 @@
 // @author J Engels, H. Hoelbe
 // @version $Id: Operators.h,v 1.8.2.1 2011-03-04 14:09:07 engels Exp $
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+#include "EVENT/ReconstructedParticle.h"
+#include "EVENT/SimCalorimeterHit.h"
+#include "EVENT/MCParticle.h"
+#include "EVENT/SimTrackerHit.h"
+#include "EVENT/TrackerHit.h"
+#include "EVENT/TrackerHitPlane.h"
+#include "EVENT/TrackerHitZCylinder.h"
+#include "EVENT/Track.h"
+#include "EVENT/TrackState.h"
+#include "EVENT/Cluster.h"
+#include "EVENT/CalorimeterHit.h"
+#include "EVENT/LCFlag.h"
+#include "EVENT/LCIntVec.h"
+#include "EVENT/LCRunHeader.h"
+#include "EVENT/RawCalorimeterHit.h"
+//#include "EVENT/TPCHit.h"
+#include "EVENT/TrackerPulse.h"
+#include "EVENT/LCFloatVec.h"
+#include "EVENT/LCObject.h"
+#include "EVENT/TrackerRawData.h"
+#include "EVENT/LCCollection.h"
+#include "EVENT/LCGenericObject.h"
+#include "EVENT/LCParameters.h"
+#include "EVENT/TrackerData.h"
+#include "EVENT/LCEvent.h"
+#include "EVENT/LCIO.h"
+#include "EVENT/LCRelation.h"
+#include "EVENT/ParticleID.h"
+#include "EVENT/Vertex.h"
+//#include "EVENT/LCStrVec.h"
+
+
+#include <iostream>
+#include <iomanip>
+#include <string>
+
 
 namespace UTIL{
 
@@ -115,6 +93,16 @@ namespace UTIL{
   const std::string& tail( const EVENT::TrackerHit *);
   std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHit>& sV);
   std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHit &);
+
+  const std::string& header( const EVENT::TrackerHitPlane *);
+  const std::string& tail( const EVENT::TrackerHitPlane *);
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHitPlane>& sV);
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitPlane &);
+
+  const std::string& header( const EVENT::TrackerHitZCylinder *);
+  const std::string& tail( const EVENT::TrackerHitZCylinder *);
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHitZCylinder>& sV);
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitZCylinder &);
 
   const std::string& header( const EVENT::SimTrackerHit *);
   const std::string& tail( const EVENT::SimTrackerHit *);
@@ -191,6 +179,8 @@ namespace UTIL{
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::ReconstructedParticle> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimCalorimeterHit> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHit> ll);
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHitPlane> ll);
+  std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TrackerHitZCylinder> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::SimTrackerHit> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::MCParticle> ll);
   std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::Vertex> ll);
