@@ -37,7 +37,7 @@ namespace SIO{
         SIO_DATA( stream, &(hit->_type) , 1 ) ;
         SIO_DATA( stream, hit->_pos     , 3 ) ;
         SIO_DATA( stream, hit->_center  , 2 ) ;
-        SIO_DATA( stream, &(hit->_r)    , 1 ) ;
+        //SIO_DATA( stream, &(hit->_r)    , 1 ) ;
         SIO_DATA( stream, &(hit->_drphi), 1 ) ;
         SIO_DATA( stream, &(hit->_dz)   , 1 ) ;
         SIO_DATA( stream, &(hit->_EDep) , 1 ) ;
@@ -92,7 +92,7 @@ namespace SIO{
         float* center = const_cast<float*> ( hit->getCenter() ) ; 
         SIO_DATA( stream,  center , 2 ) ;
 
-        LCSIO_WRITE( stream, hit->getR()  ) ;
+        //LCSIO_WRITE( stream, hit->getR()  ) ;
         LCSIO_WRITE( stream, hit->getdRPhi()  ) ;
         LCSIO_WRITE( stream, hit->getdZ()  ) ;
         LCSIO_WRITE( stream, hit->getEDep()  ) ;
