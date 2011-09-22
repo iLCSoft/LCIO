@@ -11,7 +11,7 @@ namespace IMPL {
     _cellID1(0),
 
     _type(0),
-    _r(0),
+    //_r(0),
     _drphi(0),
     _dz(0),
     _EDep(0),
@@ -81,10 +81,10 @@ namespace IMPL {
     _center[1] = yc ;
   } 
   
-  void TrackerHitZCylinderImpl::setR( float r ){ 
-    checkAccess("TrackerHitZCylinderImpl::setR") ;
-    _r = r ;
-  } 
+  //void TrackerHitZCylinderImpl::setR( float r ){ 
+  //  checkAccess("TrackerHitZCylinderImpl::setR") ;
+  //  _r = r ;
+  //} 
   
   void TrackerHitZCylinderImpl::setdRPhi(float drphi ){ 
     checkAccess("TrackerHitZCylinderImpl::setdRPhi") ;

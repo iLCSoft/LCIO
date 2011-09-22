@@ -1674,12 +1674,14 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerHitZCylinder *){
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|    r    |  dRPhi  |    dZ   |q|    center (x,y)   |\n");
+        //static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|    r    |  dRPhi  |    dZ   |q|    center (x,y)   |\n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|  dRPhi  |    dZ   |q|    center (x,y)   |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHitZCylinder *){
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|---------|-|-------------------|\n");
+        //static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|---------|-|-------------------|\n");
+        static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|-|-------------------|\n");
         return _t;
     }
 
@@ -1696,7 +1698,7 @@ namespace UTIL{
         out << "[" << noshowpos << setw(4) << part->getType() << "]|";
         out << showpos << part->getEDep() << "|";
         out << part->getEDepError() << "|";
-        out << part->getR() << "|";
+        //out << part->getR() << "|";
         out << part->getdRPhi() << "|";
         out << part->getdZ() << "|";
         out << part->getQuality() << "|";
@@ -1775,7 +1777,7 @@ namespace UTIL{
         out << setw(30) << left << "EDepError " << setfill(' ') << right << setw(40) << hit->getEDepError() << endl;
         out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
         out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
-        out << setw(30) << left << "r " << setfill(' ') << right << setw(40) << hit->getR() << endl;
+        //out << setw(30) << left << "r " << setfill(' ') << right << setw(40) << hit->getR() << endl;
         out << setw(30) << left << "dRPhi " << setfill(' ') << right << setw(40) << hit->getdRPhi() << endl;
         out << setw(30) << left << "dZ " << setfill(' ') << right << setw(40) << hit->getdZ() << endl;
         out << setw(30) << left << "Center(x,y) " << setfill(' ') << right << setw(40) << hit->getCenter()[0] << "," << hit->getCenter()[1] << endl;

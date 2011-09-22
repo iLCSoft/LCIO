@@ -33,7 +33,7 @@ public interface TrackerHitZCylinder extends TrackerHit {
 
     /** Radius of cylinder.
      */
-    public const float getR() const ;
+    //public const float getR() const ;
     
     /** Center of cylinder in RPhi-plane - given as (x,y).
      */

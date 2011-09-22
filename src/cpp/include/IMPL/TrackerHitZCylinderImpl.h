@@ -46,7 +46,7 @@ namespace IMPL {
 
     /** Radius of cylinder.
      */
-    virtual const float getR() const {  return _r ; }  ;
+    //virtual const float getR() const {  return _r ; }  ;
 
     /** Center of cylinder in RPhi-plane - given as (x,y).
      */
@@ -119,7 +119,7 @@ namespace IMPL {
     void setPosition( double pos[3]) ;
     void setCenter( float c[2] ) { setCenter( c[0] , c[1] ) ; };
     void setCenter( float xc, float yc);
-    void setR( float r );
+    //void setR( float r );
     void setdRPhi( float drphi );
     void setdZ( float dz );
     void setEDep( float e ) ;
@@ -139,7 +139,7 @@ protected:
     int _type ;
     double _pos[3] ;
     float  _center[2] ;
-    float  _r;
+    //float  _r;
     float  _drphi ;
     float  _dz ;
     float _EDep ;
