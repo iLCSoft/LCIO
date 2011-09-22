@@ -64,6 +64,14 @@ namespace UTIL{
      */
     static void printTrackerHits(const EVENT::LCCollection* col ) ;
 
+    /** Complete printout of all TrackerHits in the collection.
+     */
+    static void printTrackerHitPlane(const EVENT::LCCollection* col ) ;
+
+    /** Complete printout of all TrackerHits in the collection.
+     */
+    static void printTrackerHitZCylinder(const EVENT::LCCollection* col ) ;
+
     /** Complete printout of all SimCalorimeterHits in the collection.
      */
     static void printSimCalorimeterHits(const EVENT::LCCollection* col ) ;
