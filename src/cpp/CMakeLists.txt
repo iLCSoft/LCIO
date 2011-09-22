@@ -614,11 +614,20 @@ SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 2
 ADD_TEST( t_j_sio_cluster ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml cluster.slcio )
 SET_TESTS_PROPERTIES( t_j_sio_cluster PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
 
+ADD_TEST( t_j_sio_tracks ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml tracks.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_tracks PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+
 ADD_TEST( t_j_sio_trackerhits ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhits.slcio )
 SET_TESTS_PROPERTIES( t_j_sio_trackerhits PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
 
 ADD_TEST( t_j_sio_trackerpulses ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerpulses.slcio )
 SET_TESTS_PROPERTIES( t_j_sio_trackerpulses PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+
+ADD_TEST( t_j_sio_trackerhitplane ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitplane.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_trackerhitplane PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+
+ADD_TEST( t_j_sio_trackerhitzcylinder ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitzcylinder.slcio )
+SET_TESTS_PROPERTIES( t_j_sio_trackerhitzcylinder PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
 
 
 FIND_PACKAGE( CLHEP QUIET )
