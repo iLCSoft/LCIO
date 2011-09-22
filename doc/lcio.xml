@@ -375,6 +375,81 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
+      <block name="TrackerHitPlane" major="2" minor="0">
+         <data type="int" name="flags">Bits 0-15 user/detector specific</data>
+         <include subroutine="namedParameters"/>
+         <data type="int" name="n"></data>
+         <repeat count="n">
+	   <if condition="1000*major+minor&gt;1051">
+ 	     <data type="int" name="cellId0">Detector specific</data>
+	     <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+	       <data type="int" name="cellId1">second word for cell id</data>
+	     </if>
+	   </if>
+	   <if condition="1000*major+minor&gt;1002">
+	     <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
+	     TrackerHitTypeValue</data>
+	   </if>
+	   <data type="double[3]" name="position"></data>
+	   <!--data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data-->
+	   <data type="float[2]" name="u"></data>
+	   <data type="float[2]" name="v"></data>
+	   <data type="float" name="dU">Measurement error along u</data>
+	   <data type="float" name="dV">Measurement error along uMeasurement error along v</data>
+	   <data type="float" name="EDep">energy deposited on the hit</data>
+	   <data type="float" name="EDepError">error measured on EDep</data>
+       <data type="float" name="time"></data>
+            <if condition="1000*major+minor&gt;1011">
+            <data type="int" name="quality">quality flag word</data>
+            </if>
+            <if condition="1000*major+minor&gt;1002">
+              <data type="int" name="nRawHits">number of raw hits</data>
+              <repeat count="nRawHits">
+	        <data type="pntr" name="rawHit"></data>
+              </repeat>
+            <else/> 
+              <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
+            </if>
+            <data type="ptag" name="this"></data>
+         </repeat>
+      </block>
+      <block name="TrackerHitZCylinder" major="2" minor="0">
+         <data type="int" name="flags">Bits 0-15 user/detector specific</data>
+         <include subroutine="namedParameters"/>
+         <data type="int" name="n"></data>
+         <repeat count="n">
+	   <if condition="1000*major+minor&gt;1051">
+ 	     <data type="int" name="cellId0">Detector specific</data>
+	     <if condition="(flags&amp;(1&lt;&lt;31)) != 0">
+	       <data type="int" name="cellId1">second word for cell id</data>
+	     </if>
+	   </if>
+	   <if condition="1000*major+minor&gt;1002">
+	     <data type="int" name="type">Type of Track - encoded in parameters TrackerHitTypeName and
+	     TrackerHitTypeValue</data>
+	   </if>
+	   <data type="double[3]" name="position"></data>
+	   <!--data type="float[6]" name="covariance">Covariance Matrix of position (x,y,z)</data-->
+	   <data type="float[2]" name="center"></data>
+	   <data type="float" name="dRPhi">Measurement error along RPhi</data>
+	   <data type="float" name="dZ">Measurement error along z</data>
+	   <data type="float" name="EDep">energy deposited on the hit</data>
+	   <data type="float" name="EDepError">error measured on EDep</data>
+       <data type="float" name="time"></data>
+            <if condition="1000*major+minor&gt;1011">
+            <data type="int" name="quality">quality flag word</data>
+            </if>
+            <if condition="1000*major+minor&gt;1002">
+              <data type="int" name="nRawHits">number of raw hits</data>
+              <repeat count="nRawHits">
+	        <data type="pntr" name="rawHit"></data>
+              </repeat>
+            <else/> 
+              <data type="pntr" name="rawHit">pointer to TPCHit,...</data>
+            </if>
+            <data type="ptag" name="this"></data>
+         </repeat>
+      </block>
       <block name="TPCHit" major="2" minor="0">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
