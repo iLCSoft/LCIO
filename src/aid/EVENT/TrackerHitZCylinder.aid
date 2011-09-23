@@ -2,10 +2,11 @@ package hep.lcio.event;
 
 /** A tracker hit on a cylindrical surface that runs parallel to the z-axis -
  *  the hit is stored as:<br>
- *  x,y,z, R, center(x,y), dRPhi, dz <br>
- *  where (x,y,z) is the position in global cartesian coordinates, R is the radius of the cylinder 
- *  and center(x,y) its center, dRphi and z are the measurement errors.
- * 
+ *  x,y,z, center(x,y), dRPhi, dz <br>
+ *  where (x,y,z) is the position in global cartesian coordinates,  center(x,y) is the center of the cylinder and
+ *  Rphi and z are the measurement errors.
+ *  Note the radius of the cylinder is given by R=sqrt( dx^2c+ dy^2 ) and dx=x-x_c, dy=y-y_c.
+ *
  * @implements TrackerHit
  * 
  * @author gaede
