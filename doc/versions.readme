@@ -125,12 +125,6 @@
 
     - added ostream operators (H. Hoelbe)
 
-    - added example for creating a simple NTuple from MCParticle collection (examples/cpp/rootDict/writeNTuple.C)
-
-    - added new methods (C++ only):
-        LCReader::getNumberOfEvents()
-        LCReader::readRunHeader(int runNumber )
-
     - added tool lcio_event_counter for counting events in slcio / stdhep files
 
     - anajob now prints number of runs and events in the files it is going to read
