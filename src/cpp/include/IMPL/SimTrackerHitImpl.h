@@ -134,10 +134,9 @@ namespace IMPL {
     int _cellID0 ;
     int _cellID1 ;
     double _pos[3] ;
-    //float _dEdx ; // DEPRECATED. renamed to _EDep
     float _EDep ;
     float _time ;
-    EVENT::MCParticle* _particle ;
+    EVENT::MCParticle* _particle ;   //! <-- fixme: ROOT cannot handle this pointer !!????
     float _p[3] ;
     float _pathLength ;
 
