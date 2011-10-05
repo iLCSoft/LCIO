@@ -73,15 +73,13 @@ MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
     SET( _linkdef_header "${ROOT_DICT_OUTPUT_DIR}/${_namespace}_Linkdef.h" )
 
     FOREACH( _header ${_input_headers} )
-        #FILE( APPEND "${_linkdef_header}" "#pragma link C++ defined_in \"${_header}\";\n" )
-        #SET( ${_namespace}_file_contents "${${_namespace}_file_contents} #pragma link C++ defined_in \\\"${_header}\\\"\\;\\\\n" )
-        SET( ${_namespace}_file_contents "${${_namespace}_file_contents} #pragma link C++ defined_in \\\"${_header}\\\"\\;" )
+        SET( ${_namespace}_file_contents "${${_namespace}_file_contents}\\#pragma link C++ defined_in \\\"${_header}\\\"\\;\\\\n" )
     ENDFOREACH()
 
     ADD_CUSTOM_COMMAND(
         OUTPUT ${_linkdef_header}
         COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
-        COMMAND echo "${${_namespace}_file_contents}" > ${_linkdef_header}
+        COMMAND echo -e "${${_namespace}_file_contents}" > ${_linkdef_header}
         DEPENDS ${_input_headers}
         COMMENT "generating: ${_linkdef_header}"
     )
