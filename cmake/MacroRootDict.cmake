@@ -79,7 +79,7 @@ MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
     ADD_CUSTOM_COMMAND(
         OUTPUT ${_linkdef_header}
         COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
-        COMMAND echo -e "${${_namespace}_file_contents}" > ${_linkdef_header}
+        COMMAND printf "${${_namespace}_file_contents}" > ${_linkdef_header}
         DEPENDS ${_input_headers}
         COMMENT "generating: ${_linkdef_header}"
     )
