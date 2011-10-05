@@ -50,7 +50,12 @@
 # @author Jan Engels, DESY
 ###############################################################################
 
-# find root-config
+
+
+# ==============================================
+# ===        ROOT_CONFIG_EXECUTABLE          ===
+# ==============================================
+
 SET( ROOT_CONFIG_EXECUTABLE ROOT_CONFIG_EXECUTABLE-NOTFOUND )
 MARK_AS_ADVANCED( ROOT_CONFIG_EXECUTABLE )
 FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config PATHS ${ROOT_DIR}/bin NO_DEFAULT_PATH )
@@ -58,38 +63,13 @@ IF( NOT ROOT_DIR )
     FIND_PROGRAM( ROOT_CONFIG_EXECUTABLE root-config )
 ENDIF()
 
-# find rootcint
-SET( ROOT_CINT_EXECUTABLE ROOT_CINT_EXECUTABLE-NOTFOUND )
-MARK_AS_ADVANCED( ROOT_CINT_EXECUTABLE )
-FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint PATHS ${ROOT_DIR}/bin NO_DEFAULT_PATH )
-IF( NOT ROOT_DIR )
-    FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint )
-ENDIF()
 
 IF( NOT ROOT_FIND_QUIETLY )
     MESSAGE( STATUS "Check for ROOT_CONFIG_EXECUTABLE: ${ROOT_CONFIG_EXECUTABLE}" )
-    MESSAGE( STATUS "Check for ROOT_CINT_EXECUTABLE: ${ROOT_CINT_EXECUTABLE}" )
 ENDIF()
 
 
 IF( ROOT_CONFIG_EXECUTABLE )
-
-    # ==============================================
-    # ===          ROOT_PREFIX                   ===
-    # ==============================================
-
-    # get root prefix from root-config output
-    EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --prefix
-        OUTPUT_VARIABLE ROOT_ROOT
-        RESULT_VARIABLE _exit_code
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-    )
-    IF( NOT _exit_code EQUAL 0 )
-        # clear variable if root-config exits with error
-        # it might contain garbage
-        SET( ROOT_ROOT )
-    ENDIF()
-
 
 
     # ==============================================
@@ -118,6 +98,79 @@ IF( ROOT_CONFIG_EXECUTABLE )
 
 
     # ==============================================
+    # ===          ROOT_PREFIX                   ===
+    # ==============================================
+
+    # get root prefix from root-config output
+    EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --prefix
+        OUTPUT_VARIABLE ROOT_PREFIX
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        # clear variable if root-config exits with error
+        # it might contain garbage
+        SET( ROOT_PREFIX )
+    ENDIF()
+
+    # PKG_ROOT variables are a cmake standard
+    # since this package is also called ROOT the variable name
+    # becomes ROOT_ROOT ...
+    SET( ROOT_ROOT ${ROOT_PREFIX} )
+
+
+
+    # ==============================================
+    # ===          ROOT_BIN_DIR                  ===
+    # ==============================================
+
+    # get bindir from root-config output
+    EXECUTE_PROCESS( COMMAND "${ROOT_CONFIG_EXECUTABLE}" --bindir
+        OUTPUT_VARIABLE ROOT_BIN_DIR
+        RESULT_VARIABLE _exit_code
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    IF( NOT _exit_code EQUAL 0 )
+        # clear variable if root-config exits with error
+        # it might contain garbage
+        SET( ROOT_BIN_DIR )
+    ENDIF()
+
+
+
+    # ==============================================
+    # ===          ROOT_EXECUTABLE               ===
+    # ==============================================
+
+
+    SET( ROOT_EXECUTABLE ROOT_EXECUTABLE-NOTFOUND )
+    MARK_AS_ADVANCED( ROOT_EXECUTABLE )
+    FIND_PROGRAM( ROOT_EXECUTABLE root PATHS ${ROOT_BIN_DIR} NO_DEFAULT_PATH )
+
+    IF( NOT ROOT_FIND_QUIETLY )
+        MESSAGE( STATUS "Check for ROOT_EXECUTABLE: ${ROOT_EXECUTABLE}" )
+    ENDIF()
+
+
+
+
+    # ==============================================
+    # ===          ROOT_CINT_EXECUTABLE          ===
+    # ==============================================
+
+
+    # find rootcint
+    SET( ROOT_CINT_EXECUTABLE ROOT_CINT_EXECUTABLE-NOTFOUND )
+    MARK_AS_ADVANCED( ROOT_CINT_EXECUTABLE )
+    FIND_PROGRAM( ROOT_CINT_EXECUTABLE rootcint PATHS ${ROOT_BIN_DIR} NO_DEFAULT_PATH )
+
+    IF( NOT ROOT_FIND_QUIETLY )
+        MESSAGE( STATUS "Check for ROOT_CINT_EXECUTABLE: ${ROOT_CINT_EXECUTABLE}" )
+    ENDIF()
+
+
+
+    # ==============================================
     # ===          ROOT_INCLUDE_DIR              ===
     # ==============================================
 
@@ -128,7 +181,7 @@ IF( ROOT_CONFIG_EXECUTABLE )
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     IF( NOT _exit_code EQUAL 0 )
-        # clear _inc_dir if root-config exits with error
+        # clear variable if root-config exits with error
         # it might contain garbage
         SET( _inc_dir )
     ENDIF()
@@ -156,7 +209,7 @@ IF( ROOT_CONFIG_EXECUTABLE )
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     IF( NOT _exit_code EQUAL 0 )
-        # clear ROOT_LIBRARY_DIR if root-config exits with error
+        # clear variable if root-config exits with error
         # it might contain garbage
         SET( ROOT_LIBRARY_DIR )
     ENDIF()
