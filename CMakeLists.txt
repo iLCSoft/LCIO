@@ -201,6 +201,8 @@ IF( BUILD_F77_TESTJOBS )
 ENDIF()
 
 
+# directory containing lcio tests
+ADD_SUBDIRECTORY( ./tests )
 
 
 ### DOCUMENTATION ###########################################################
