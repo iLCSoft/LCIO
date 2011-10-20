@@ -172,10 +172,32 @@ IF( BUILD_ROOTDICT )
     #    COMMAND ${SH} "${LCIO_ENV_INIT}" ${ROOT_EXECUTABLE} -l -b -q anajobTest.C
     #)
 
-    ADD_TEST( t_root_anajob ${SH} "${LCIO_ENV_INIT}" ${ROOT_EXECUTABLE} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/anajobTest.C )
-    ADD_TEST( t_root_writeTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_EXECUTABLE} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeTreeTest.C )
-    ADD_TEST( t_root_writeEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_EXECUTABLE} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeEventTreeTest.C )
-    ADD_TEST( t_root_readEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_EXECUTABLE} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/readEventTreeTest.C )
+    IF(APPLE)
+        SET( LD_LIBRARY_PATH_VAR DYLD_LIBRARY_PATH )
+        # hack needed for mac, creates symlinks:
+        # liblcio.so -> liblcio.dylib
+        # liblcioDict.so -> liblcioDict.dylib
+        # gSystem->Load( liblcio.dylib ) doesn't work (only looks for .so extension)
+        EXECUTE_PROCESS(
+            COMMAND "${CMAKE_COMMAND}" -E create_symlink liblcio.dylib liblcio.so 
+            COMMAND "${CMAKE_COMMAND}" -E create_symlink liblcioDict.dylib liblcioDict.so 
+            WORKING_DIRECTORY "${LIBRARY_OUTPUT_PATH}"
+        )
+    ELSE()
+        SET( LD_LIBRARY_PATH_VAR LD_LIBRARY_PATH )
+    ENDIF()
+    SET( LD_LIBRARY_PATH_CONTENTS $ENV{${LD_LIBRARY_PATH_VAR}} )
+    #MESSAGE( STATUS "LD_LIBRARY_PATH_CONTENTS: ${LD_LIBRARY_PATH_CONTENTS}" )
+
+    # need to create a wrapper which sets LD_LIBRARY_PATH so that root macros
+    # are able to find lcio libraries in the build directory. Otherwise
+    # 'make test' would only work after calling 'make install'
+    SET( ROOT_WRAPPER ${LD_LIBRARY_PATH_VAR}=${LIBRARY_OUTPUT_PATH}:${LD_LIBRARY_PATH_CONTENTS} ${ROOT_EXECUTABLE} )
+
+    ADD_TEST( t_root_anajob ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/anajobTest.C )
+    ADD_TEST( t_root_writeTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeTreeTest.C )
+    ADD_TEST( t_root_writeEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeEventTreeTest.C )
+    ADD_TEST( t_root_readEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/readEventTreeTest.C )
 
     SET_TESTS_PROPERTIES( t_root_anajob PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
     SET_TESTS_PROPERTIES( t_root_writeTree PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
