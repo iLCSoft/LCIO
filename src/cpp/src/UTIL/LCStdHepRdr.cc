@@ -434,6 +434,54 @@ namespace UTIL{
 	// 	  }
 
       }// End second loop over particles
+
+    // ==========================================================================
+    // Dieser Code sucht nach Eintraegen mit Generatorstatus 2, die keine Zerfallsteilchen haben und testet,
+    // ob die Inkonsistenz mit einem im Folgenden auftretenden Generatorcode 94 reparierbar ist. (B. Vormwald)
+    int nic = 0;
+    for( int IHEP=0; IHEP<NHEP; IHEP++ ){
+
+        MCParticleImpl* mcp = dynamic_cast<MCParticleImpl*>(mcVec->getElementAt(IHEP));
+
+        // find inconsistencies
+        if ((mcp->getGeneratorStatus()==2)&&(mcp->getDaughters().size()==0)){
+            //printf("inconsistency found in line %i (nic: %i->%i)\n", IHEP,nic,nic+1);
+            nic++;
+        }
+
+        //try to repair inconsistencies when a 94 is present!
+        if ((nic>0) && (mcp->getPDG()==94)) {
+            //printf("generator status 94 found in line %i\n",IHEP);
+
+            int parentid = _reader->mother1(IHEP)%10000 - 1;
+            //printf("found first parent in line %i\n",parentid);
+            MCParticleImpl* parent;
+
+            //check if inconsistency appeared within lines [firstparent -> (IHEP-1)]
+            //if yes, fix relation!
+            for (unsigned int nextparentid = parentid; IHEP-nextparentid>0; nextparentid++){
+                //printf("     check line %i ", nextparentid);
+                parent =  dynamic_cast<MCParticleImpl*>(mcVec->getElementAt(nextparentid));
+                if((parent->getGeneratorStatus()==2)&&(parent->getDaughters().size()==0)){
+                    mcp->addParent(parent);
+                    //printf(" -> relation fixed\n");
+                    nic--;
+                }
+                //else {
+                //    if (parent->getDaughters()[0]==mcp){
+                //        printf(" -> relation checked\n");
+                //    }
+                //    else {
+                //        printf(" -> other relation\n");
+                //    }
+                //}
+            }
+        }
+    }
+    //if (nic>0) printf("WARNING: %i inconsistencies in event\n", nic);
+    // ==========================================================================
+
+
     //
     //  Return the collection
     //
