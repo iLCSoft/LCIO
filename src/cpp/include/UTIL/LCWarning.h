@@ -28,10 +28,10 @@ public:
      *  txt = "the world will end tomorrow, leave the room immediately and go get some fun ;)"
      *  max = the maximum amount of times to display the warning
      */
-    void registerWarning( const std::string id, const std::string txt, int max=10 ) ;
+    void registerWarning( const std::string& id, const std::string& txt, int max=10 ) ;
 
     /** print the warning text associated to the given id */
-    void printWarning( const std::string id ) ;
+    void printWarning( const std::string& id ) ;
 
 private:
     // singleton settings

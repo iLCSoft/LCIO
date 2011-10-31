@@ -99,7 +99,7 @@ LCWarning::LCWarning( ostream& outstream ) : _outstream(outstream) {
 
 
 
-void LCWarning::registerWarning( const string id, const string txt, int max ) {
+void LCWarning::registerWarning( const string& id, const string& txt, int max ) {
 
     if( _warning_cfg.find( id ) != _warning_cfg.end() ){
         throw EVENT::Exception( std::string( "Warning [ "+id+" ] was already registered") ); 
@@ -114,7 +114,7 @@ void LCWarning::registerWarning( const string id, const string txt, int max ) {
 
 
 
-void LCWarning::printWarning( const string id ) {
+void LCWarning::printWarning( const string& id ) {
 
     // if max limit has been reached for displaying the warning, just return and do nothing.
     if( _warning_cfg[ id ].counter <= 0 ){ return ; }
