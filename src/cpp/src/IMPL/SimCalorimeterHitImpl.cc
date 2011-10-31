@@ -134,7 +134,7 @@ namespace IMPL{
     _energy = en ;
   }
 
-  void SimCalorimeterHitImpl::setPosition(float pos[3]){
+  void SimCalorimeterHitImpl::setPosition(const float pos[3]){
     checkAccess("SimCalorimeterHitImpl::setPosition") ;
     _position[0] = pos[0] ;
     _position[1] = pos[1] ;

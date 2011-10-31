@@ -94,7 +94,7 @@ namespace IMPL {
     _type= type ; 
   }
 
-  void TrackerHitImpl::setPosition( double pos[3]){ 
+  void TrackerHitImpl::setPosition( const double pos[3]){ 
     checkAccess("TrackerHitImpl::setPosition") ;
     _pos[0] = pos[0] ; 
     _pos[1] = pos[1] ; 
@@ -146,7 +146,7 @@ namespace IMPL {
       _cov[i] = cov[i] ;
     }
   }
-  void TrackerHitImpl::setCovMatrix( float cov[TRKHITNCOVMATRIX]  ){
+  void TrackerHitImpl::setCovMatrix( const float cov[TRKHITNCOVMATRIX]  ){
     checkAccess("TrackerHitImpl::setCovMatrix") ;
     for(int i=0;i<TRKHITNCOVMATRIX;i++){
       _cov[i] = cov[i] ;

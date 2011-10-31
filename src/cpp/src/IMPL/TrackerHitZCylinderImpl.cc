@@ -68,7 +68,7 @@ namespace IMPL {
     _type= type ; 
   }
 
-  void TrackerHitZCylinderImpl::setPosition( double pos[3]){ 
+  void TrackerHitZCylinderImpl::setPosition( const double pos[3]){ 
     checkAccess("TrackerHitZCylinderImpl::setPosition") ;
     _pos[0] = pos[0] ; 
     _pos[1] = pos[1] ; 

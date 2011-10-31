@@ -75,7 +75,7 @@ namespace IMPL {
     void setAlgorithmType( std::string type ) ;
     void setChi2( float chi2 ) ;
     void setProbability( float probability ) ;
-    void setPosition( float vpos[3] ) ;
+    void setPosition( const float vpos[3] ) ;
     void setPosition( float px, float py, float pz ) ;
     void setCovMatrix( const float* cov ) ;
     void setCovMatrix( const EVENT::FloatVec & ) ;

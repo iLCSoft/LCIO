@@ -112,7 +112,7 @@ namespace IMPL {
     void setTypeBit( int index , bool val=true) ;
     void setEnergy(float energy ) ;
     void setEnergyError(float energyError ) ;
-    void setPosition(float* position) ;
+    void setPosition(const float* position) ;
     void setPositionError(const EVENT::FloatVec &errpos) ;
     void setPositionError(const float* errpos) ;
     void setITheta(float theta) ;

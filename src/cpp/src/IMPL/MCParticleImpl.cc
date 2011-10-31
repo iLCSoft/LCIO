@@ -295,7 +295,7 @@ namespace IMPL {
     _simstatus = status ;
   } 
 
-  void MCParticleImpl::setVertex( double vtx[3] ){
+  void MCParticleImpl::setVertex( const double vtx[3] ){
     checkAccess("MCParticleImpl::setVertex") ;
     _vertex[0] = vtx[0] ;
     _vertex[1] = vtx[1] ;
@@ -306,13 +306,13 @@ namespace IMPL {
     _time = time ; 
   }
   
-  void MCParticleImpl::setMomentum( float p[3] ){
+  void MCParticleImpl::setMomentum( const float p[3] ){
     checkAccess("MCParticleImpl::setMomentum") ;
     _p[0] = p[0] ;
     _p[1] = p[1] ;
     _p[2] = p[2] ;
   }
-  void MCParticleImpl::setMomentum( double p[3] ){
+  void MCParticleImpl::setMomentum( const double p[3] ){
     checkAccess("MCParticleImpl::setMomentum") ;
     _p[0] = p[0] ;
     _p[1] = p[1] ;
@@ -328,7 +328,7 @@ namespace IMPL {
     _charge = c ;  
   } 
 
-  void MCParticleImpl::setEndpoint( double endpoint[3] ){
+  void MCParticleImpl::setEndpoint( const double endpoint[3] ){
     checkAccess("MCParticleImpl::setEndpoint") ;
 
     _simstatus.set( BITEndpoint ) ; 
@@ -338,14 +338,14 @@ namespace IMPL {
     _endpoint[2] = endpoint[2] ;
   }
 
-  void MCParticleImpl::setSpin( float spin[3] ){
+  void MCParticleImpl::setSpin( const float spin[3] ){
     checkAccess("MCParticleImpl::setSpin") ;
     _spin[0] = spin[0] ;
     _spin[1] = spin[1] ;
     _spin[2] = spin[2] ;
   }
 
-  void MCParticleImpl::setColorFlow( int cflow[2] ){
+  void MCParticleImpl::setColorFlow( const int cflow[2] ){
     checkAccess("MCParticleImpl::setColorFlow") ;
     _colorFlow[0] = cflow[0] ;
     _colorFlow[1] = cflow[1] ;

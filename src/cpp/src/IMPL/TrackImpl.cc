@@ -250,7 +250,7 @@ namespace IMPL {
         ((TrackStateImpl*)_trackStates[0])->setTanLambda( tanLambda ) ;
     } 
 
-    void  TrackImpl::setCovMatrix( float* cov ){ 
+    void  TrackImpl::setCovMatrix( const float* cov ){ 
         //checkAccess("TrackImpl::setCovMatrix") ;
         //for(int i=0;i<TRKNCOVMATRIX;i++) {
         //  _covMatrix[i] = cov[i]  ; 
@@ -287,7 +287,7 @@ namespace IMPL {
         ((TrackStateImpl*)_trackStates[0])->setCovMatrix( cov ) ;
     } 
 
-    void  TrackImpl::setReferencePoint( float* rPnt){ 
+    void  TrackImpl::setReferencePoint( const float* rPnt){ 
         //checkAccess("TrackImpl::setReferencePoint") ;
         //for(int i=0;i<3;i++) {
         //  _reference[i] = rPnt[i]  ; 

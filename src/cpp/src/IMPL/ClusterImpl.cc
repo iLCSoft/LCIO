@@ -75,7 +75,7 @@ namespace IMPL{
     checkAccess("ClusterImpl::setEnergyError") ;
     _energyError = energyError ;  
   }
-  void ClusterImpl::setPosition(float* position) { 
+  void ClusterImpl::setPosition(const float* position) { 
     checkAccess("ClusterImpl::setPosition") ;
     for(int i=0;i<3;i++) { _position[i] = position[i]  ;  }
   }

@@ -173,9 +173,9 @@ namespace IMPL {
     virtual void  setOmega( float omega ) ;                     // stored in TrackState
     virtual void  setZ0( float z0 ) ;                           // stored in TrackState
     virtual void  setTanLambda( float tanLambda ) ;             // stored in TrackState
-    virtual void  setCovMatrix( float* cov ) ;                  // stored in TrackState
+    virtual void  setCovMatrix( const float* cov ) ;            // stored in TrackState
     virtual void  setCovMatrix( const EVENT::FloatVec& cov ) ;  // stored in TrackState
-    virtual void  setReferencePoint( float* rPnt) ;             // stored in TrackState
+    virtual void  setReferencePoint( const float* rPnt) ;       // stored in TrackState
 
     //virtual void  setIsReferencePointPCA( bool val ) ;
 

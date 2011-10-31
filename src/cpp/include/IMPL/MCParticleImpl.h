@@ -197,7 +197,7 @@ namespace IMPL {
 
      /** Sets the production vertex.
      */
-    void setVertex( double vtx[3] ) ;
+    void setVertex( const double vtx[3] ) ;
     
     /** Sets the createion time.
      */
@@ -206,19 +206,19 @@ namespace IMPL {
      /** Sets the particle endpoint.
       *  
       */
-    void setEndpoint( double pnt[3] ) ;
+    void setEndpoint( const double pnt[3] ) ;
     
     /** Sets the momentum.
       */
-    void setMomentum( float p[3] );
+    void setMomentum( const float p[3] );
 
     /** Sets the momentum.
      */
-    void setMomentum( double p[3] );
+    void setMomentum( const double p[3] );
 
     /** Sets the mass.
      */
-    void setMass( float m) ;
+    void setMass( float m ) ;
 
     /** Sets the charge.
      */
@@ -226,11 +226,11 @@ namespace IMPL {
 
     /** Sets the spin
       */
-    void setSpin( float spin[3] );
+    void setSpin( const float spin[3] );
 
     /** Sets the color flow
       */
-    void setColorFlow( int cflow[2] );
+    void setColorFlow( const int cflow[2] );
 
 
 

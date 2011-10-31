@@ -98,7 +98,7 @@ namespace IMPL {
 
     /** Sets the position.
      */
-    void setPosition( double pos[3])  ;
+    void setPosition( const double pos[3])  ;
 
     /** Sets dE/dx.
      *  @deprecated
@@ -120,7 +120,7 @@ namespace IMPL {
 
     /** Sets the momentum of the particle at the hit's position.
      */
-    void setMomentum( float p[3] ) ;
+    void setMomentum( const float p[3] ) ;
 
     /** Sets the momentum of the particle at the hit's position.
      */

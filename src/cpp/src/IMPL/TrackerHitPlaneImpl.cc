@@ -67,7 +67,7 @@ namespace IMPL {
     _type= type ; 
   }
 
-  void TrackerHitPlaneImpl::setPosition( double pos[3]){ 
+  void TrackerHitPlaneImpl::setPosition( const double pos[3]){ 
     checkAccess("TrackerHitPlaneImpl::setPosition") ;
     _pos[0] = pos[0] ; 
     _pos[1] = pos[1] ; 

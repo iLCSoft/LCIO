@@ -158,7 +158,7 @@ namespace IMPL {
     
     /** Sets the position. Not stored if LCIO.CHBIT_LONG isn't set.
      */
-    void setPosition(float pos[3])  ;
+    void setPosition(const float pos[3])  ;
     
 
     /** Adds an MCParticle contribution to the hit - contributions for the same MCParticle are combined into one,

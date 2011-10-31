@@ -106,9 +106,9 @@ namespace IMPL {
     void setCellID1(int id1) ;
   
     void setType(int type) ;
-    void setPosition( double pos[3]) ;
+    void setPosition( const double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
-    void setCovMatrix( float cov[TRKHITNCOVMATRIX]  );
+    void setCovMatrix( const float cov[TRKHITNCOVMATRIX]  );
     void setdEdx( float dedx ) ; // DEPRECATED. renamed to setEDep()
     void setEDep( float e ) ;
     void setEDepError( float e ) ;

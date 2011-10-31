@@ -71,7 +71,7 @@ namespace IMPL {
     _cellID1 = id1 ; 
   }
 
-  void SimTrackerHitImpl::setPosition( double pos[3]){ 
+  void SimTrackerHitImpl::setPosition( const double pos[3]){ 
     checkAccess("SimTrackerHitImpl::setPosition") ;
     _pos[0] = pos[0] ; 
     _pos[1] = pos[1] ; 
@@ -103,7 +103,7 @@ namespace IMPL {
     _particle = particle; 
   }
 
-  void SimTrackerHitImpl::setMomentum( float p[3] )  { 
+  void SimTrackerHitImpl::setMomentum( const float p[3] )  { 
 
     setMomentum( p[0], p[1], p[2] ) ; 
   }

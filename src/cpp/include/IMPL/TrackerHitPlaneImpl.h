@@ -118,10 +118,10 @@ namespace IMPL {
      */
     void setCellID1(int id1) ;
     void setType(int type) ;
-    void setPosition( double pos[3]) ;
-    void setU( float u[2] ) { setU( u[0] , u[1] ) ; }
+    void setPosition( const double pos[3]) ;
+    void setU( const float u[2] ) { setU( u[0] , u[1] ) ; }
     void setU( float theta, float phi);
-    void setV( float v[2] ) { setV( v[0] , v[1] ) ; };
+    void setV( const float v[2] ) { setV( v[0] , v[1] ) ; };
     void setV( float theta, float phi);
     void setdU( float du );
     void setdV( float dv );

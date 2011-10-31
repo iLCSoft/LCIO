@@ -58,7 +58,7 @@ namespace IMPL{
     _probability = probability ;
   }
  
-  void VertexImpl::setPosition( float vpos[3] ){
+  void VertexImpl::setPosition( const float vpos[3] ){
     setPosition( vpos[0], vpos[1], vpos[2] ) ;
   }
 

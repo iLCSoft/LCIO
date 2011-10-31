@@ -116,8 +116,8 @@ namespace IMPL {
     void setCellID1(int id1) ;
 
     void setType(int type) ;
-    void setPosition( double pos[3]) ;
-    void setCenter( float c[2] ) { setCenter( c[0] , c[1] ) ; };
+    void setPosition( const double pos[3]) ;
+    void setCenter( const float c[2] ) { setCenter( c[0] , c[1] ) ; };
     void setCenter( float xc, float yc);
     //void setR( float r );
     void setdRPhi( float drphi );
