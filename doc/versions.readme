@@ -3,6 +3,19 @@
 ---------------------------------------------------------------
 
 
+============
+ v02-00-01
+============
+
+    - patch release including following patches/bug fixes:
+
+        - fixed constness of 'getter' methods' parameters
+        - root dictionary library not beeing built correctly
+        - src/cpp/include/IMPL/SimTrackerHitImpl.h: - workaround for ROOT bug ( don't store MCParcticle pointer )
+        - src/cpp/include/rootDict/rootio_templates.h: - added missing template instantiations for vectors of LCIO classes
+        - src/cpp/src/UTIL/LCStdHepRdr.cc: applied patch which tries to fix mc particles with gen status 2 and no daughters where a PDG of 94 is present (B. Vormwald)
+
+
 ==========
  v02-00
 ==========

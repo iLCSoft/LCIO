@@ -4,7 +4,7 @@ package hep.lcio.event ;
 @cpp{
 #define LCIO_MAJOR_VERSION 2
 #define LCIO_MINOR_VERSION 0
-#define LCIO_PATCH_LEVEL 0
+#define LCIO_PATCH_LEVEL 1
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
 
