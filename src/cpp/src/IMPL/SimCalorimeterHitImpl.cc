@@ -146,12 +146,17 @@ namespace IMPL{
 							 float en,
 							 float t ) {
     
+    checkAccess("SimCalorimeterHitImpl::addMCParticleContribution") ;
+
+   _energy += en ;
+
     static const float nullStep[3] = { 0.,0.,0. } ;
 
     // if we already have the particle, just add the energy
     for( std::vector<MCParticleCont*>::iterator it=_vec.begin(), End = _vec.end() ; it != End ; ++it ) {
       
-      if( (*it)->Particle == p ) { 
+ 
+    if( (*it)->Particle == p ) { 
 	
     	(*it)->Energy += en ;
 	return ;
@@ -171,9 +176,13 @@ namespace IMPL{
 							 float* stepPos
 							 )  {
   
+    checkAccess("SimCalorimeterHitImpl::addMCParticleContribution") ;
+
+   _energy += en ;
+
     static const float nullStep[3] = { 0.,0.,0. } ;
     
-    // add a new contribution :
+     // add a new contribution :
 
     _vec.push_back( new MCParticleCont( p , en , t , pdg ,  ( stepPos ? stepPos : nullStep )  )  )  ;
 
