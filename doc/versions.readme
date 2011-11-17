@@ -14,6 +14,7 @@
         - src/cpp/include/IMPL/SimTrackerHitImpl.h: - workaround for ROOT bug ( don't store MCParcticle pointer )
         - src/cpp/include/rootDict/rootio_templates.h: - added missing template instantiations for vectors of LCIO classes
         - src/cpp/src/UTIL/LCStdHepRdr.cc: applied patch which tries to fix mc particles with gen status 2 and no daughters where a PDG of 94 is present (B. Vormwald)
+        - SimCalorimeterHit::addMCParticleContribution did not add energy contribution to hit energy ( -> Mokka created sim hits with zero energy ...)
 
 
 ==========
