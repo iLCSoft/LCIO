@@ -969,7 +969,7 @@ namespace UTIL {
 
             if( i==0) { cout<<header(v); }
             //cout<<lcshort(v,col);
-            //cout<<lcshort(v);
+            cout << lcshort(v);
             if(i==nPrint-1){ cout<<tail(v); }
         }
     }
