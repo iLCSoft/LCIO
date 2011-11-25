@@ -58,18 +58,18 @@ namespace UTIL {
     
     /** Constructor for using the canonical cellID0 as defined in ILDCellID0::encoder_string - cellID1 will not be used.
      */
-    ILDCellIDEncoder( LCCollection* col) : 
+    ILDCellIDEncoder( EVENT::LCCollection* col) : 
       CellIDEncoder<T>( ILDCellID0::encoder_string, col ) {}
-
+    
 
     /** Constructor that prepends given ILDCellID0::encoder_string to the given encoding string.
      *  Throws an Exception if called with an empty string. 
      */
-    ILDCellIDEncoder( const std::string& cellIDEncoding ,  LCCollection* col) : 
+    ILDCellIDEncoder( const std::string& cellIDEncoding ,  EVENT::LCCollection* col) : 
       CellIDEncoder<T>( std::string( ILDCellID0::encoder_string + "," + cellIDEncoding )  , col ) { 
       
       if(  cellIDEncoding.size() == 0 ){
-	throw Exception(" ILDCellIDEncoder::ILDCellIDEncoder: cannot initilize with empty string ! " ) ;
+	throw EVENT::Exception(" ILDCellIDEncoder::ILDCellIDEncoder: cannot initilize with empty string ! " ) ;
       }
     }
   } ;

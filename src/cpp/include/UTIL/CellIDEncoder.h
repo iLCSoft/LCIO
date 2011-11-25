@@ -3,12 +3,11 @@
 
 #include "EVENT/LCCollection.h"
 #include "UTIL/BitField64.h"
-//#include "IMPL/SimTrackerHitImpl.h"
 #include "IMPL/LCFlagImpl.h"
-#include "lcio.h"
+
 #include <string>
 
-using namespace lcio ;
+//using namespace lcio ;
 
 //forward declarations for template specializations 
 namespace EVENT{
@@ -104,13 +103,13 @@ namespace UTIL{
     
     /** Constructor, sets collection parameter LCIO::CellIDEncoding to the given encoding string.
      */
-    CellIDEncoder( const std::string& cellIDEncoding ,  LCCollection* col) :
+    CellIDEncoder( const std::string& cellIDEncoding ,  EVENT::LCCollection* col) :
 
       BitField64( cellIDEncoding  ),
 
       _col( col ) {
       
-	_col->parameters().setValue( LCIO::CellIDEncoding , cellIDEncoding ) ;
+      _col->parameters().setValue( EVENT::LCIO::CellIDEncoding , cellIDEncoding ) ;
 
 	setCellIDFlag() ;
     }
@@ -128,7 +127,7 @@ namespace UTIL{
       
       if(  bit >= 0 ) {
 	
-	LCFlagImpl f( _col->getFlag() ) ;
+	IMPL::LCFlagImpl f( _col->getFlag() ) ;
 	
 	if( highestBit() > 31 ) {
 	  
@@ -149,7 +148,7 @@ namespace UTIL{
     //    int cellID1Bit() { return -1 ; }
 
  
-    LCCollection* _col ;
+    EVENT::LCCollection* _col ;
     T* _oldHit ;
   } ; 
   

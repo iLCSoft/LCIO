@@ -1,4 +1,7 @@
 #include "UTIL/CellIDEncoder.h"
+#include "lcio.h"
+
+using EVENT::LCIO ;
 
 namespace UTIL{
 
