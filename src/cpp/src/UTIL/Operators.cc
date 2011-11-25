@@ -2498,7 +2498,7 @@ namespace UTIL{
         out << " |" << trk->getD0(); 
         out << " |" << trk->getPhi(); 
         out << " |" << trk->getOmega();
-        out << " |" <<setprecision (3) << trk->getZ0();
+        out << " |" << setprecision (3) << trk->getZ0();
         out << " |" << trk->getTanLambda();
         out << " |(" << setprecision(2) << trk->getReferencePoint()[0] << ", " << trk->getReferencePoint()[1] << ", " <<trk->getReferencePoint()[2];
         out << endl;
@@ -2523,7 +2523,6 @@ namespace UTIL{
         //out << scientific << setprecision (2) << showpos;
         out << noshowpos;
         out << setw(41) << setfill('-') << right << "-- TrackState ---" << setfill('-') << setw(29) << "-" << endl;
-
         if(col != NULL){ 
             if(col->getTypeName() != LCIO::TRACKSTATE){
                 out << "Warning: collection not of type " << LCIO::TRACKSTATE << endl ;
@@ -2536,7 +2535,19 @@ namespace UTIL{
             LCTOOLS::printParameters(col->getParameters());
         } 
 
+	tmp.str("") ;
+	switch( part->getLocation() ){
+	case EVENT::TrackState::AtOther         :   tmp <<  "AtOther"        ;   break ;
+	case EVENT::TrackState::AtIP            :   tmp <<  "AtIP"           ;   break ;
+	case EVENT::TrackState::AtFirstHit      :   tmp <<  "AtFirstHit"     ;   break ;
+	case EVENT::TrackState::AtLastHit       :   tmp <<  "AtLastHit"      ;   break ;
+	case EVENT::TrackState::AtCalorimeter   :   tmp <<  "AtCalorimeter " ;   break ;
+	case EVENT::TrackState::AtVertex        :   tmp <<  "AtVertex"       ;   break ;
+	}
+	out << setw(30) << setfill(' ') << left << "Location" << right << setw(40) << tmp.str() << endl;
+	tmp.str("") ;
         tmp << hex << setfill('0') << setw(8) << part->id();
+
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
         out << setw(30) << setfill(' ') << left << "Phi" << right << setw(40) << part->getPhi() << endl;
@@ -2642,13 +2653,13 @@ namespace UTIL{
             }
         }
 
-        out << " radius of innermost hit " << trk->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " << setfill(' ') << dec << fixed;
+        out << " radius of innermost hit " << trk->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " 
+	    << setfill(' ') << dec << fixed ;
         for(l=0 ; l< trk->getSubdetectorHitNumbers().size(); l++) {
-            out << trk->getSubdetectorHitNumbers()[l];
-            if(l < trk->getSubdetectorHitNumbers().size()-1){
-                out << ", ";
-            }
-
+	  out << trk->getSubdetectorHitNumbers()[l];
+	  if(l < trk->getSubdetectorHitNumbers().size()-1){
+	    out << ", ";
+	  }
         }
         out << endl;
 
@@ -2683,38 +2694,41 @@ namespace UTIL{
         tmp << hex << setfill('0') << setw(8) << part->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "Type" << right << setw(40) << part->getType() << endl;
-        out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
-        out << setw(30) << setfill(' ') << left << "Phi" << right << setw(40) << part->getPhi() << endl;
-        out << setw(30) << setfill(' ') << left << "Omega" << right << setw(40) << part->getOmega() << endl;
-        out << setw(30) << setfill(' ') << left << "Z0" << right << setw(40) << part->getZ0() << endl;
-        out << setw(30) << setfill(' ') << left << "Tan Lambda" << right << setw(40) << part->getTanLambda() << endl;
-
-        tmp.str("");
-        tmp  << dec << part->getReferencePoint()[0] << ", " << part->getReferencePoint()[1]  << ", " << part->getReferencePoint()[2]; 
-        out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
+        // out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
+        // out << setw(30) << setfill(' ') << left << "Phi" << right << setw(40) << part->getPhi() << endl;
+        // out << setw(30) << setfill(' ') << left << "Omega" << right << setw(40) << part->getOmega() << endl;
+        // out << setw(30) << setfill(' ') << left << "Z0" << right << setw(40) << part->getZ0() << endl;
+        // out << setw(30) << setfill(' ') << left << "Tan Lambda" << right << setw(40) << part->getTanLambda() << endl;
+        // tmp.str("");
+        // tmp  << dec << part->getReferencePoint()[0] << ", " << part->getReferencePoint()[1]  << ", " << part->getReferencePoint()[2]; 
+        // out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "dEdx" << right << setw(40) << part->getdEdx() << endl;
         out << setw(30) << setfill(' ') << left << "dEdx Error" << right << setw(40) << part->getdEdxError() << endl;
         out << setw(30) << setfill(' ') << left << "Chi2" << right << setw(40) << part->getChi2() << endl;
         out << setw(30) << setfill(' ') << left << "Ndf" << right << setw(40) << noshowpos << part->getNdf() << endl;
 
-        out << "Errors:     " << showpos;
-        unsigned int l;
-        for(l=0;l<14;l++){
-            out << part->getCovMatrix()[l];
-            if(! ((l+1)%5)){
-                out << endl << "            ";
-            } else{
-                out << ", ";
-            }
-        }
-        if(!((l+2)%5)){out << endl << "            ";}
-        out << part->getCovMatrix()[l+1] << endl;
+        // out << "Errors:     " << showpos;
+        // unsigned int l;
+        // for(l=0;l<14;l++){
+        //     out << part->getCovMatrix()[l];
+        //     if(! ((l+1)%5)){
+        //         out << endl << "            ";
+        //     } else{
+        //         out << ", ";
+        //     }
+        // }
+        // if(!((l+2)%5)){out << endl << "            ";}
+        // out << part->getCovMatrix()[l+1] << endl;
 
+	for(unsigned i=0,N=part->getTrackStates().size() ; i<N ; ++i ){
+
+	  out << *part->getTrackStates()[i] ;
+	}
 
 
         out << "Tracks(id): " ;
         const TrackVec& tracks = part->getTracks() ;
-        for(l=0;l<tracks.size();l++){
+        for(unsigned l=0;l<tracks.size();l++){
             if( tracks[l] != 0  )
                 out << tracks[l]->id();
             else
@@ -2731,20 +2745,27 @@ namespace UTIL{
 
         out << endl << "Hits:       " << noshowpos;
         const TrackerHitVec& hits= part->getTrackerHits() ;
-        for(l=0;l<hits.size();l++){
+        for(unsigned l=0;l<hits.size();l++){
             out << "[" << ( hits[l] ? hits[l]->id() : 0 ) << "] ";
             if(!((l+1)%7)){out << endl << "            ";}
         }
         out << endl;
 
         out << "Radius of innermost hit " << part->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " ;
-        out << endl << "            ";
-        for(l=0 ; l< part->getSubdetectorHitNumbers().size()-1 ; l++) {
-            out << part->getSubdetectorHitNumbers()[l] << ", " ;
-            if(!((l+1)%20)){out << endl << "            ";}
+	out << endl << "            ";
+        // for(l=0 ; l< part->getSubdetectorHitNumbers().size()-1 ; l++) {
+        //     out << part->getSubdetectorHitNumbers()[l] << ", " ;
+        //     if(!((l+1)%20)){out << endl << "            ";}
+        // }
+        // if(!((l+2)%20)){out << endl << "            ";}
+        // out << part->getSubdetectorHitNumbers()[l+1] << endl;
+        for(unsigned l=0 ; l< part->getSubdetectorHitNumbers().size(); l++) {
+	  out << part->getSubdetectorHitNumbers()[l];
+	  if(l < part->getSubdetectorHitNumbers().size()-1){
+	    out << ", ";
+	  }
         }
-        if(!((l+2)%20)){out << endl << "            ";}
-        out << part->getSubdetectorHitNumbers()[l+1] << endl;
+        out << endl;
 
         out << noshowpos;
         return(out);
