@@ -62,7 +62,7 @@ static const int min_args = 2 ;
 
 // getopt string
 // ':' after an option means that option requires an argument
-static const char *optString = "s:n:x:m:M:h?" ;
+static const char *optString = "s:n:x:m:M:pvh?" ;
 
 // getopt long options declarations
 static const struct option longOpts[] = {
@@ -456,7 +456,16 @@ int main(int argc, char** argv ){
     try{
         while( (evt = lcReader->readNextEvent()) != 0 )
         {
-            hits = evt->getCollection( opts.colName );
+            try
+            {
+                hits = evt->getCollection( opts.colName );
+            }
+            catch( lcio::DataNotAvailableException& e )
+            {
+                cerr << "error in event [" << opts.eventsTotal << "] no hits were found" << endl;
+                //cerr << e.what() << endl ;
+            }
+
             if( hits )
             {
                 int nHits = hits->getNumberOfElements() ;
@@ -496,7 +505,8 @@ int main(int argc, char** argv ){
             }
         }
     }
-    catch( IOException& e )
+    catch( lcio::IOException& e )
+    //catch( ... )
     {
         cerr << "io error when reading data : " << e.what() << endl ;
     }
