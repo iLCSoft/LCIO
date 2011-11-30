@@ -117,13 +117,17 @@ void display_usage( const char* progName, const std::string& errmsg = "" )
         << endl
         << "    --relhiterror : relative error for hits, e.g. if exphits = 100 and relhiterror = 0.1, valid range will be [90 - 110]"
         << endl
-        << "    --absevterror : absolute error for events, e.g. if absevterror = 3 means hit checking may fail at most in 3 events"
+        << "    --absevterror : absolute error for events, e.g. absevterror = 3 means that at most 3 events may fail (**)"
         << endl
-        << "    --relevterror : relative error for events, e.g. if relevterror = 0.1 means hit checking may fail for at most 10% of the total events where hits were found"
-        << endl << endl << endl
-        << "  NOTES:"
+        << "    --relevterror : relative error for events, e.g. relevterror = 0.1 means that at most 10% of the total events may fail (**)"
         << endl << endl
-        << "    --minhits and --maxhits options always have priority over other options!"
+        << "    (*)  --minhits and --maxhits options always have priority over other options!"
+        << endl
+        << "    (**) --absevterror and --relevterror are both influenced by --pedantic option, i.e."
+        << endl
+        << "           not only the events which fail the checking of hits are counted as failed, "
+        << endl
+        << "           but also the ones which do not contain any hits"
         << endl << endl << endl
         << "  EXAMPLES:"
         << endl << endl
@@ -397,6 +401,13 @@ int main(int argc, char** argv ){
             {
                 opts.maxhits = opts.exphits ;
             }
+        }
+    }
+    else // expected hits option not set
+    {
+        if( opts.abshiterror > 0 || opts.relhiterror > 0 )
+        {
+            display_usage( argv[0], "exphits option must be set if using abshiterror or relhiterror" );
         }
     }
 
