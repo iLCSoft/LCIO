@@ -408,6 +408,7 @@ ADD_LCIO_EXAMPLE( copyfix )
 ADD_LCIO_EXAMPLE( stdhepjob ) 
 ADD_LCIO_EXAMPLE( addRandomAccess )
 ADD_LCIO_EXAMPLE( lcio_event_counter ) 
+ADD_LCIO_EXAMPLE( lcio_check_colhits )
 
 IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
