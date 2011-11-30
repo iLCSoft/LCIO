@@ -462,7 +462,7 @@ int main(int argc, char** argv ){
             }
             catch( lcio::DataNotAvailableException& e )
             {
-                cerr << "error in event [" << opts.eventsTotal << "] no hits were found" << endl;
+                //cerr << "error in event [" << opts.eventsTotal << "] no hits were found" << endl;
                 //cerr << e.what() << endl ;
                 hits = NULL ;
             }
@@ -530,7 +530,7 @@ int main(int argc, char** argv ){
     }
     if( opts.eventsFailed > 0 )
     {
-        cout << "found " << opts.eventsFailed  << " events were hit checking has failed" << endl ;
+        cout << opts.eventsFailed  << " event" << (opts.eventsFailed==1?" has":"s have") << " failed" << endl ;
     }
 
 
