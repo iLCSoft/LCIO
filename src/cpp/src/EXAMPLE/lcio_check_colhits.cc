@@ -321,7 +321,10 @@ int main(int argc, char** argv ){
         opt = getopt_long( argc, argv, optString, longOpts, &longIndex );
     }
 
-    if( argc <= min_args )
+    // argc also includes command line options
+    // optind is set to the index of the first positional command line argument
+    // so (argc - optind) == total number of command line arguments (without options)
+    if( (argc - optind) < min_args )
     {
         display_usage( argv[0], "wrong number of arguments" );
     }
@@ -405,7 +408,7 @@ int main(int argc, char** argv ){
 
     // collection name
     opts.colName = argv[optind] ;
-    optind++;
+    optind++; // increment optind to the next argument
 
     // and finally the remaining list of lcio files
     opts.inputFiles    = argv + optind;
