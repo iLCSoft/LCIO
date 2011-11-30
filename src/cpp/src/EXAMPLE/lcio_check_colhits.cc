@@ -464,9 +464,10 @@ int main(int argc, char** argv ){
             {
                 cerr << "error in event [" << opts.eventsTotal << "] no hits were found" << endl;
                 //cerr << e.what() << endl ;
+                hits = NULL ;
             }
 
-            if( hits )
+            if( hits != NULL )
             {
                 int nHits = hits->getNumberOfElements() ;
                 // cout << opts.colName << " : " << nHits << endl;
