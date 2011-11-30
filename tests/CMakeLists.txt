@@ -279,5 +279,51 @@ ELSE()
     MESSAGE( STATUS "cannot build test_fourvector: clhep not found" )
 ENDIF( CLHEP_FOUND )
 
+
+# ==== add some tests for checking number of hits in lcio collections ========
+ADD_TEST( NAME t_c_check_colhit_args1 COMMAND bin_lcio_check_colhits )
+SET_TESTS_PROPERTIES( t_c_check_colhit_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
+ADD_TEST( NAME t_c_check_colhit_args2 COMMAND bin_lcio_check_colhits MCParticle )
+SET_TESTS_PROPERTIES( t_c_check_colhit_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
+
+ADD_TEST( NAME t_c_check_colhit_noopts COMMAND bin_lcio_check_colhits MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle hits in 100 events" )
+
+# one option at a time
+ADD_TEST( NAME t_c_check_colhit_minhits1 COMMAND bin_lcio_check_colhits --minhits 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_c_check_colhit_minhits2 COMMAND bin_lcio_check_colhits --minhits 102 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_minhits2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_maxhits1 COMMAND bin_lcio_check_colhits --maxhits 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_c_check_colhit_maxhits2 COMMAND bin_lcio_check_colhits --maxhits 100 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_maxhits2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_exphits1 COMMAND bin_lcio_check_colhits --exphits 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_c_check_colhit_exphits2 COMMAND bin_lcio_check_colhits --exphits 100 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_exphits2 PROPERTIES WILL_FAIL TRUE )
+
+# more options at once
+ADD_TEST( NAME t_c_check_colhit_abshiterror1 COMMAND bin_lcio_check_colhits --exphits 100 --abshiterror 2 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_c_check_colhit_abshiterror2 COMMAND bin_lcio_check_colhits --exphits 100 --abshiterror 1 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_abshiterror2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_relhiterror1 COMMAND bin_lcio_check_colhits --exphits 100 --relhiterror .02 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_c_check_colhit_relhiterror2 COMMAND bin_lcio_check_colhits --exphits 100 --relhiterror .0001 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_relhiterror2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_absevterror1 COMMAND bin_lcio_check_colhits --exphits 101 --absevterror 100 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_c_check_colhit_absevterror2 COMMAND bin_lcio_check_colhits --exphits 101 --absevterror 99 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_absevterror2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_relevterror1 COMMAND bin_lcio_check_colhits --exphits 101 --relevterror .5 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_c_check_colhit_relevterror2 COMMAND bin_lcio_check_colhits --exphits 101 --relevterror .49 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_relevterror2 PROPERTIES WILL_FAIL TRUE )
+
+ADD_TEST( NAME t_c_check_colhit_maxevents1 COMMAND bin_lcio_check_colhits --maxevents 150 -m101 -M102 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_c_check_colhit_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle hits in 150 events" )
+
+ADD_TEST( NAME t_c_check_colhit_maxevents2 COMMAND bin_lcio_check_colhits -x 101 -s 50 -n 50 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_c_check_colhit_maxevents3 COMMAND bin_lcio_check_colhits -x 102 -s 98 -n 10 --absevterror 2 MCParticle c_sim.slcio c_rec.slcio )
+
 # ============================================================================
 
