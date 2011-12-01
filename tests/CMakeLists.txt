@@ -287,7 +287,7 @@ ADD_TEST( NAME t_c_check_colhit_args2 COMMAND bin_lcio_check_colhits MCParticle 
 SET_TESTS_PROPERTIES( t_c_check_colhit_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 
 ADD_TEST( NAME t_c_check_colhit_noopts COMMAND bin_lcio_check_colhits MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle hits in 100 events" )
+SET_TESTS_PROPERTIES( t_c_check_colhit_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle hit\\(s\\) in 100 event\\(s\\)" )
 
 # one option at a time
 ADD_TEST( NAME t_c_check_colhit_minhits1 COMMAND bin_lcio_check_colhits --minhits 101 MCParticle c_sim.slcio )
@@ -320,7 +320,7 @@ ADD_TEST( NAME t_c_check_colhit_relevterror2 COMMAND bin_lcio_check_colhits --ex
 SET_TESTS_PROPERTIES( t_c_check_colhit_relevterror2 PROPERTIES WILL_FAIL TRUE )
 
 ADD_TEST( NAME t_c_check_colhit_maxevents1 COMMAND bin_lcio_check_colhits --maxevents 150 -m101 -M102 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle hits in 150 events" )
+SET_TESTS_PROPERTIES( t_c_check_colhit_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle hit\\(s\\) in 150 event\\(s\\)" )
 
 ADD_TEST( NAME t_c_check_colhit_maxevents2 COMMAND bin_lcio_check_colhits -x 101 -s 50 -n 50 MCParticle c_sim.slcio c_rec.slcio )
 ADD_TEST( NAME t_c_check_colhit_maxevents3 COMMAND bin_lcio_check_colhits -x 102 -s 98 -n 10 --absevterror 2 MCParticle c_sim.slcio c_rec.slcio )
