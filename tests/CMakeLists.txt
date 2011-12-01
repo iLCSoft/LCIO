@@ -280,50 +280,50 @@ ELSE()
 ENDIF( CLHEP_FOUND )
 
 
-# ==== add some tests for checking number of hits in lcio collections ========
-ADD_TEST( NAME t_c_check_colhit_args1 COMMAND bin_lcio_check_colhits )
-SET_TESTS_PROPERTIES( t_c_check_colhit_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
-ADD_TEST( NAME t_c_check_colhit_args2 COMMAND bin_lcio_check_colhits MCParticle )
-SET_TESTS_PROPERTIES( t_c_check_colhit_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
+# ==== add some tests for checking number of elements in lcio collections ========
+ADD_TEST( NAME t_check_col_elements_args1 COMMAND bin_lcio_check_col_elements )
+SET_TESTS_PROPERTIES( t_check_col_elements_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
+ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements MCParticle )
+SET_TESTS_PROPERTIES( t_check_col_elements_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 
-ADD_TEST( NAME t_c_check_colhit_noopts COMMAND bin_lcio_check_colhits MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle hit\\(s\\) in 100 event\\(s\\)" )
+ADD_TEST( NAME t_check_col_elements_noopts COMMAND bin_lcio_check_col_elements MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle element\\(s\\) in 100 event\\(s\\)" )
 
 # one option at a time
-ADD_TEST( NAME t_c_check_colhit_minhits1 COMMAND bin_lcio_check_colhits --minhits 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_c_check_colhit_minhits2 COMMAND bin_lcio_check_colhits --minhits 102 MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_minhits2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_minelements1 COMMAND bin_lcio_check_col_elements --minelements 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_minelements2 COMMAND bin_lcio_check_col_elements --minelements 102 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_minelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_maxhits1 COMMAND bin_lcio_check_colhits --maxhits 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_c_check_colhit_maxhits2 COMMAND bin_lcio_check_colhits --maxhits 100 MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_maxhits2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_maxelements1 COMMAND bin_lcio_check_col_elements --maxelements 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_maxelements2 COMMAND bin_lcio_check_col_elements --maxelements 100 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_maxelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_exphits1 COMMAND bin_lcio_check_colhits --exphits 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_c_check_colhit_exphits2 COMMAND bin_lcio_check_colhits --exphits 100 MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_exphits2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_expelements1 COMMAND bin_lcio_check_col_elements --expelements 101 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_expelements2 COMMAND bin_lcio_check_col_elements --expelements 100 MCParticle c_sim.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_expelements2 PROPERTIES WILL_FAIL TRUE )
 
 # more options at once
-ADD_TEST( NAME t_c_check_colhit_abshiterror1 COMMAND bin_lcio_check_colhits --exphits 100 --abshiterror 2 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_c_check_colhit_abshiterror2 COMMAND bin_lcio_check_colhits --exphits 100 --abshiterror 1 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_abshiterror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_abselementerror1 COMMAND bin_lcio_check_col_elements --expelements 100 --abselementerror 2 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_abselementerror2 COMMAND bin_lcio_check_col_elements --expelements 100 --abselementerror 1 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_abselementerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_relhiterror1 COMMAND bin_lcio_check_colhits --exphits 100 --relhiterror .02 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_c_check_colhit_relhiterror2 COMMAND bin_lcio_check_colhits --exphits 100 --relhiterror .0001 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_relhiterror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_relelementerror1 COMMAND bin_lcio_check_col_elements --expelements 100 --relelementerror .02 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_relelementerror2 COMMAND bin_lcio_check_col_elements --expelements 100 --relelementerror .0001 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_relelementerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_absevterror1 COMMAND bin_lcio_check_colhits --exphits 101 --absevterror 100 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_c_check_colhit_absevterror2 COMMAND bin_lcio_check_colhits --exphits 101 --absevterror 99 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_absevterror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_abseventerror1 COMMAND bin_lcio_check_col_elements --expelements 101 --abseventerror 100 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_abseventerror2 COMMAND bin_lcio_check_col_elements --expelements 101 --abseventerror 99 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_abseventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_relevterror1 COMMAND bin_lcio_check_colhits --exphits 101 --relevterror .5 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_c_check_colhit_relevterror2 COMMAND bin_lcio_check_colhits --exphits 101 --relevterror .49 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_relevterror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_releventerror1 COMMAND bin_lcio_check_col_elements --expelements 101 --releventerror .5 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_releventerror2 COMMAND bin_lcio_check_col_elements --expelements 101 --releventerror .49 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_releventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_c_check_colhit_maxevents1 COMMAND bin_lcio_check_colhits --maxevents 150 -m101 -M102 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_c_check_colhit_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle hit\\(s\\) in 150 event\\(s\\)" )
+ADD_TEST( NAME t_check_col_elements_maxevents1 COMMAND bin_lcio_check_col_elements --maxevents 150 -m101 -M102 MCParticle c_sim.slcio c_rec.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle element\\(s\\) in 150 event\\(s\\)" )
 
-ADD_TEST( NAME t_c_check_colhit_maxevents2 COMMAND bin_lcio_check_colhits -x 101 -s 50 -n 50 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_c_check_colhit_maxevents3 COMMAND bin_lcio_check_colhits -x 102 -s 98 -n 10 --absevterror 2 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_maxevents2 COMMAND bin_lcio_check_col_elements -x 101 -s 50 -n 50 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_maxevents3 COMMAND bin_lcio_check_col_elements -x 102 -s 98 -n 10 --abseventerror 2 MCParticle c_sim.slcio c_rec.slcio )
 
 # ============================================================================
 
