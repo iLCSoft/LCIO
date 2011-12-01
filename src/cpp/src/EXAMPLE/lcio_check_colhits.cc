@@ -22,6 +22,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <cmath>
 
 // lcio includes
 #include "lcio.h"
@@ -380,7 +381,7 @@ int main(int argc, char** argv ){
         {
             if( opts.relhiterror > 0 )
             {
-                opts.abshiterror = (int)(opts.exphits*opts.relhiterror) ;
+                opts.abshiterror = (int)round(opts.exphits*opts.relhiterror) ;
                 // in case the expression above rounds to 0 we need to set it to 1
                 // to ensure minhits and maxhits are set appropriately
                 if( opts.abshiterror == 0 )
@@ -605,7 +606,7 @@ int main(int argc, char** argv ){
     {
         if( opts.relevterror > 0 )
         {
-            opts.absevterror = (int)(opts.eventsTotal*opts.relevterror) ;
+            opts.absevterror = (int)round(opts.eventsTotal*opts.relevterror) ;
         }
 
         if( opts.eventsFailed > opts.absevterror )
