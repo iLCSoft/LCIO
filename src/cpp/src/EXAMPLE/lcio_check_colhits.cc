@@ -41,6 +41,7 @@ struct opts_t {
     int inputFilesNum;      // # of INPUT_FILE(S)
     int verbosity;          // -v option
     bool pedantic;          // -p option
+    bool average;           // -a option
     int startevent;         // --startevent option
     int maxevents;          // --maxevents option
     int exphits;            // --exphits option
@@ -62,12 +63,13 @@ static const int min_args = 2 ;
 
 // getopt string
 // ':' after an option means that option requires an argument
-static const char *optString = "s:n:x:m:M:pvh?" ;
+static const char *optString = "s:n:x:m:M:pavh?" ;
 
 // getopt long options declarations
 static const struct option longOpts[] = {
     { "verbose", no_argument, NULL, 'v' },
     { "pedantic", no_argument, NULL, 'p' },
+    { "average", no_argument, NULL, 'a' },
     { "startevent", required_argument, NULL, 's' },
     { "maxevents", required_argument, NULL, 'n' },
     { "exphits", required_argument, NULL, 'x' },
@@ -101,7 +103,11 @@ void display_usage( const char* progName, const std::string& errmsg = "" )
         << endl << endl
         << "    -v, --verbose  : increase verbosity (use -vvv for debugging)"
         << endl
-        << "    -p, --pedantic : pedantic mode (events which contain no hits are counted as failed events)"
+        << "    -p, --pedantic : events which contain no hits are counted as failed events and"
+        << endl
+        << "                     not ignored for calculating the average number of hits"
+        << endl
+        << "    -a, --average : use this option to check the average number of hits instead of treating events individually"
         << endl
         << "    -s, --startevent  : start event number (default = 0)"
         << endl
@@ -122,12 +128,12 @@ void display_usage( const char* progName, const std::string& errmsg = "" )
         << "    --relevterror : relative error for events, e.g. relevterror = 0.1 means that at most 10% of the total events may fail (**)"
         << endl << endl
         << "    (*)  --minhits and --maxhits options always have priority over other options!"
-        << endl
-        << "    (**) --absevterror and --relevterror are both influenced by --pedantic option, i.e."
+        << endl << endl
+        << "    (**) --absevterror and --relevterror options are both influenced by --pedantic option, i.e."
         << endl
         << "           not only the events which fail the checking of hits are counted as failed, "
         << endl
-        << "           but also the ones which do not contain any hits"
+        << "           but also the ones which do not contain any hits."
         << endl << endl << endl
         << "  EXAMPLES:"
         << endl << endl
@@ -139,9 +145,11 @@ void display_usage( const char* progName, const std::string& errmsg = "" )
         << endl
         << "    " << progName << " --exphits 101 MCParticle simjob.slcio"
         << endl << endl
-        << "    check that MCParticle collections in simjob.slcio contain 100 +- 1 hits in all events:"
+        << "    check that the average number of hits from the MCParticle collections in simjob.slcio lies between [99-101]"
         << endl
-        << "    " << progName << " --exphits 100 --abshiterror 1 MCParticle simjob.slcio"
+        << "    # note that --abshiterror 1 can be left out as checking for the exact average doesn't really make much sense.."
+        << endl
+        << "    " << progName << " -a --exphits 100 --abshiterror 1 MCParticle simjob.slcio"
         << endl << endl
         << "    check that MCParticle collections in simjob.slcio contain 100 +- 3% hits in all events --> [97-103]:"
         << endl
@@ -164,6 +172,7 @@ void showopts( void )
 {
     //cout << "COLLECTION_NAME: " << opts.colName << endl ;
     cout << "pedantic: " << opts.pedantic << endl ;
+    cout << "average: " << opts.average << endl ;
     cout << "startevent: " << opts.startevent << endl ;
     cout << "maxevents: " << opts.maxevents << endl ;
     cout << "minhits: " << opts.minhits << endl ;
@@ -173,7 +182,10 @@ void showopts( void )
     cout << "relhiterror: " << opts.relhiterror << endl ;
     cout << "absevterror: " << opts.absevterror << endl ;
     cout << "relevterror: " << opts.relevterror << endl ;
+    cout << "hitsTotal: " << opts.hitsTotal << endl ;
+    cout << "eventsTotal: " << opts.eventsTotal << endl ;
     cout << "eventsFailed: " << opts.eventsFailed << endl ;
+    cout << "eventsSkipped: " << opts.eventsSkipped << endl ;
 }
 
 //enum loglevels { DEBUG, INFO, WARNING, ERROR };
@@ -191,6 +203,7 @@ int main(int argc, char** argv ){
     opts.inputFiles = NULL;   // INPUT_FILE(S)
     opts.inputFilesNum = 0;   // # of INPUT_FILE(S)
     opts.pedantic = false;
+    opts.average = false;
     opts.startevent = 0;      // 0 == not set
     opts.maxevents = 0;       // 0 == not set
     opts.minhits = 0;         // 0 == not set
@@ -219,6 +232,10 @@ int main(int argc, char** argv ){
 
             case 'p':
                 opts.pedantic = true;
+                break;
+
+            case 'a':
+                opts.average = true;
                 break;
 
             case 'v':
@@ -348,6 +365,12 @@ int main(int argc, char** argv ){
         display_usage( argv[0], "absevterror and relevterror options are mutually exclusive" );
     }
 
+    if( (opts.absevterror > 0 || opts.relevterror > 0 ) && opts.average )
+    {
+        display_usage( argv[0], "average option cannot be used in conjunction with absevterror or relevterror options" );
+    }
+
+
 
     // check if the expected hits option is set
     if( opts.exphits > 0 )
@@ -394,12 +417,24 @@ int main(int argc, char** argv ){
             if( opts.minhits == 0 )
             {
                 opts.minhits = opts.exphits ;
+                if( opts.average )
+                {
+                    // if average option is used we need to add a +-1 range
+                    // to ensure that the avg float number lies between minhits and maxhits
+                    opts.minhits-- ;
+                }
             }
 
             // if maxhits option is set it always overwrites other options
             if( opts.maxhits == 0 )
             {
                 opts.maxhits = opts.exphits ;
+                if( opts.average )
+                {
+                    // if average option is used we need to add a +-1 range
+                    // to ensure that the avg float number lies between minhits and maxhits
+                    opts.maxhits++ ;
+                }
             }
         }
     }
@@ -513,39 +548,72 @@ int main(int argc, char** argv ){
     }
     // -------- end of event loop -----------
 
+    // free lcReader
+    lcReader->close();
+    delete lcReader ;
+
+
+    // --------------- show some stats -------------------------------------------------------------------------
+
+    float avg = 0 ;
+
     if( opts.eventsTotal > 0 )
     {
-        cout << "found " << opts.hitsTotal << " " << opts.colName << " hits in " << opts.eventsTotal << " events" << endl ;
-        cout << "avg number of " << opts.colName << " hits per event: " << (float)opts.hitsTotal/opts.eventsTotal << endl ;
+
+        if( opts.pedantic )
+        {
+            avg = (float)opts.hitsTotal / opts.eventsTotal ;
+        }
+        else
+        {
+            avg = (float)opts.hitsTotal / (opts.eventsTotal - opts.eventsSkipped) ;
+        }
+
+        cout << "found " << opts.hitsTotal << " " << opts.colName << " hit(s) in " << opts.eventsTotal << " event(s)" << endl ;
+        cout << "avg number of " << opts.colName << " hits per event (depending on pedantic option): " << avg << endl ;
 
         if( opts.eventsSkipped )
         {
-            cout << "found " << opts.eventsSkipped << " events containg no hits from " << opts.colName << endl ;
-            cout << "avg number of " << opts.colName << " hits per event (only events including hits): " << (float)opts.hitsTotal/(opts.eventsTotal-opts.eventsSkipped) << endl ;
+            cout << "found " << opts.eventsSkipped << " event(s) containg no hits from " << opts.colName << endl ;
         }
+
+        if( opts.eventsFailed > 0 )
+        {
+            cout << opts.eventsFailed  << " event" << (opts.eventsFailed==1?" has":"s have") << " failed" << endl ;
+        }
+
     }
     else
     {
         cerr << "no events were found!" << endl ;
     }
-    if( opts.eventsFailed > 0 )
+
+    //showopts() ;
+
+    if( opts.average )
     {
-        cout << opts.eventsFailed  << " event" << (opts.eventsFailed==1?" has":"s have") << " failed" << endl ;
+        if( avg < opts.minhits )
+        {
+            return EXIT_FAILURE ;
+        }
+        if( (opts.maxhits > 0) && (avg > opts.maxhits) )
+        {
+            return EXIT_FAILURE ;
+        }
+    }
+    else
+    {
+        if( opts.relevterror > 0 )
+        {
+            opts.absevterror = (int)(opts.eventsTotal*opts.relevterror) ;
+        }
+
+        if( opts.eventsFailed > opts.absevterror )
+        {
+            return EXIT_FAILURE ;
+        }
     }
 
-
-    lcReader->close();
-    delete lcReader ;
-
-    if( opts.relevterror > 0 )
-    {
-        opts.absevterror = (int)(opts.eventsTotal*opts.relevterror) ;
-    }
-
-    if( opts.eventsFailed > opts.absevterror )
-    {
-        return EXIT_FAILURE;
-    }
 
     return EXIT_SUCCESS;
 }
