@@ -3,6 +3,13 @@
 ---------------------------------------------------------------
 
 
+============
+ HEAD
+============
+
+    - added lcio_check_col_elements tool for checking the number of elements from a given collection in a set of lcio files,
+
+
 
 ============
  v02-00-01
