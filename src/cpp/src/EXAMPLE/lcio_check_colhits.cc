@@ -171,7 +171,11 @@ void display_usage( const char* progName, const std::string& errmsg = "" )
 
 void showopts( void )
 {
-    //cout << "COLLECTION_NAME: " << opts.colName << endl ;
+    cout << endl;
+    cout << "-----------------------------------" << endl ;
+    cout << "debug infos:" << endl ;
+    cout << "-----------------------------------" << endl ;
+    cout << "collectionName: " << opts.colName << endl ;
     cout << "pedantic: " << opts.pedantic << endl ;
     cout << "average: " << opts.average << endl ;
     cout << "startevent: " << opts.startevent << endl ;
@@ -187,6 +191,8 @@ void showopts( void )
     cout << "eventsTotal: " << opts.eventsTotal << endl ;
     cout << "eventsFailed: " << opts.eventsFailed << endl ;
     cout << "eventsSkipped: " << opts.eventsSkipped << endl ;
+    cout << "-----------------------------------" << endl ;
+    cout << endl << endl ;
 }
 
 //enum loglevels { DEBUG, INFO, WARNING, ERROR };
@@ -570,8 +576,11 @@ int main(int argc, char** argv ){
             avg = (float)opts.hitsTotal / (opts.eventsTotal - opts.eventsSkipped) ;
         }
 
+        cout << endl ;
+        cout << "-----------------------------------------------------------" << endl ;
+        cout << endl ;
         cout << "found " << opts.hitsTotal << " " << opts.colName << " hit(s) in " << opts.eventsTotal << " event(s)" << endl ;
-        cout << "avg number of " << opts.colName << " hits per event (depending on pedantic option): " << avg << endl ;
+        cout << "avg number of " << opts.colName << " hits per event: " << avg << endl ;
 
         if( opts.eventsSkipped )
         {
@@ -589,7 +598,9 @@ int main(int argc, char** argv ){
         cerr << "no events were found!" << endl ;
     }
 
-    //showopts() ;
+    showopts() ;
+
+    cout << "-----------------------------------------------------------" << endl ;
 
     if( opts.average )
     {
