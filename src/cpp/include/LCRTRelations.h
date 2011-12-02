@@ -437,14 +437,20 @@ namespace lcrtrel{
      *  LCExtensionVector, LCExtensionList,...
      */
     template <class V>
-    inline typename V::ext_type  ext() { 
+    inline typename V::ext_type ext() { 
 
-      //      static char check[ V::allowed_to_call_ext] ;
       can_call_ext<V::allowed_to_call_ext>::check() ;
 
       return  ptr<V>() ;
     }
-  
+
+    template <class V>
+    inline const typename V::ext_type ext() const { 
+      
+      can_call_ext<V::allowed_to_call_ext>::check() ;
+
+      return  ptr<V>() ;
+    }
 
     /** Provides read access to relations - the object types and their connectivity 
      *  are defined by the class V which has to be a subtype of either 
@@ -493,7 +499,7 @@ namespace lcrtrel{
 
     /** Returns the reference to the pointer to the extension/relation object */
     template <class V>
-    typename V::ptr & ptr() {
+    typename V::ptr & ptr() const {
       
       // convert the pointer to the generic PtrMap to a Map that holds V::ptr objects
       typedef std::map< unsigned , typename V::ptr  > MyPtrMap ;
@@ -501,8 +507,6 @@ namespace lcrtrel{
       // going through a pointer to char* avoids the strict-aliasing warning of gcc 
       char* char_map = reinterpret_cast<char *> ( &_map ) ;
       MyPtrMap* map = reinterpret_cast<MyPtrMap*>( char_map ) ;
-      
-      // MyPtrMap* map = (MyPtrMap*) &_map ;
       
       typename MyPtrMap::iterator it = map->find( typeID<V>() ) ;
       
@@ -512,15 +516,15 @@ namespace lcrtrel{
       
       return  it->second  ;
     }
-    
+
   private:
   
-    static DPtrVec& cleaners(){
+    static DPtrVec& cleaners() {
       static DPtrVec v ;
       return v ;
     }
   
-    inline unsigned nextID(DeleteFPtr cp){
+    inline unsigned nextID(DeleteFPtr cp) const {
       static unsigned id(0) ;
 
       //     std::cout << " ---- nextID " << id+1  << " - delete Ptr  " 
@@ -532,7 +536,7 @@ namespace lcrtrel{
     }
   
     template <class T>
-    inline unsigned typeID(){
+    inline unsigned typeID() const {
       static const unsigned uid  = nextID( T::deletePtr() ) ;
 
       return uid ;
@@ -540,7 +544,7 @@ namespace lcrtrel{
   
   
     //   PtrVec* _vec ; 
-    PtrMap _map ;
+    mutable PtrMap _map ;
   
   } ;
   
