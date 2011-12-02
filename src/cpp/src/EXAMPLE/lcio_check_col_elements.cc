@@ -596,6 +596,7 @@ int main(int argc, char** argv ){
     else
     {
         cerr << "no events were found!" << endl ;
+        return EXIT_FAILURE ;
     }
 
     showopts() ;
@@ -625,7 +626,6 @@ int main(int argc, char** argv ){
             return EXIT_FAILURE ;
         }
     }
-
 
     return EXIT_SUCCESS;
 }
