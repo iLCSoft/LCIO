@@ -84,8 +84,8 @@ public interface TrackState extends LCObject {
     public const FloatVec& getCovMatrix() const ;
     
     
-    /** Reference point of the track parameters.
-     *  The default for the reference point is the point of closest approach.
+    /** Reference point of the track parameters, e.g. the origin at the IP, or the position
+     *  of the first/last hits or the entry point into the calorimeter.
      */
     public const float3V getReferencePoint() const;
     

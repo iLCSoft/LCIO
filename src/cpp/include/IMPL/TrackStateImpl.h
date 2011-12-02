@@ -75,9 +75,8 @@ namespace IMPL {
      */
     virtual const EVENT::FloatVec & getCovMatrix() const ;
 
-    /** Reference point of the track parameters.
-     *  The default for the reference point is the point of closest approach.
-     *  @see isReferencPointPCA() 
+    /** Reference point of the track parameters, e.g. the origin at the IP, or the position
+     *  of the first/last hits or the entry point into the calorimeter.
      */
     virtual const float* getReferencePoint() const ;
    
