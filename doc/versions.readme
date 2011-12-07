@@ -4,10 +4,16 @@
 
 
 ============
- HEAD
+ v02-00-02
 ============
 
-    - added lcio_check_col_elements tool for checking the number of elements from a given collection in a set of lcio files,
+    - patch release including following patches/bug fixes:
+        - added printout of all TrackStates for Track
+        - removed "using namespace lcio " from src/cpp/include/UTIL/CellIDEncoder.h
+            -> avoid 'implicit' using declarations that might lead to ambiguous declarations of Exception
+        - updated documentation od reference point in TrackState
+        - allow runtime extensions also to be read on const pointers to LCObjects (made typemap mutable)
+        - added lcio_check_col_elements tool for checking the number of elements from a given collection in a set of lcio files
 
 
 
