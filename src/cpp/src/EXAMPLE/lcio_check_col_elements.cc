@@ -491,8 +491,8 @@ int main(int argc, char** argv ){
     }
 
 
-    LCEvent* event ;
-    LCCollection* elements = NULL;
+    LCEvent* event = NULL ;
+    LCCollection* elements = NULL ;
 
     //----------- the event loop -----------
     try{
