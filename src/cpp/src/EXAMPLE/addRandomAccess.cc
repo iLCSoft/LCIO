@@ -1,7 +1,9 @@
 #include "lcio.h"
 
 #include "IO/LCWriter.h"
-//#include "EVENT/LCIO.h"
+
+// position of record name for last random access record
+#define LCSIO_RANDOMACCESS_SIZE 112
 
 #include <iostream>
 #include <sstream>
@@ -27,16 +29,61 @@ int main(int argc, char** argv ){
       std::cout << " usage:  addRandomAccess <input-file1> [[input-file2],...]" << std::endl ;
       exit(1) ;
     }
-    for(int i=1 ; i < argc ; i++){
+
+    int firstFile = 1 ;
+    bool force = false ;
+    std::string firstArg( argv[1] ) ;
+    
+    if( firstArg == "-f" ){ // force: 'undocumented' feature for fixing files with broken TOC (SplitWriter)
+      firstFile++ ;
+      std::cout << "  ====== called with -f (force) : will create a TOC for direct access in any case ! " << std::endl ;
+      force = true ;
+    }
+    
+    for(int i=firstFile ; i < argc ; i++){
       FILEN.push_back( argv[i] )  ;
     }
 
-    int nFiles = argc-1 ;
+    int nFiles = argc - firstFile ;
 
     for( int i=0 ; i <nFiles ; ++i ) {
 
       try{
       
+
+	if( force) { // --------------------------------------------------------------------------------------------
+	  //           if called with force  we rename the last LCIORandomAcces record so that it is ignored and the
+	  //           file treated as an old one w/o direct access....
+	  
+	  FILE* f = fopen( FILEN[i].c_str()  , "r+") ;
+	  
+	  if( f != 0 ){
+	    
+	    fseek( f ,  -( LCSIO_RANDOMACCESS_SIZE ) , SEEK_END ) ; 
+	    std::string bla("") ;
+	    bla.resize(17) ;
+	    
+	    int status = fread( &bla[0] , sizeof(char) , 16 , f ) ;
+	    
+	    //	    std::cout << "  ====== read : [" << bla << "]" << std::endl ; 
+	    
+	    if( !strcmp( bla.c_str() , "LCIORandomAccess")  ){ 
+	      
+	      
+	      status = fseek( f ,  -(16) , SEEK_CUR ) ;
+	      
+	      bla = "LCIORandomIGNORE" ;
+	      
+	      status = fwrite( &bla[0] , 1 , 16 , f ) ;
+	      
+	      //	      std::cout << "  --------- wrote " << bla << " to file - bytes written " << status << std::endl; 
+	    } 
+	  }
+
+	  fclose( f ) ;
+	} //---------- end if(force) --------------------------------------------------------------------------------
+
+
 	lcWrt->open( FILEN[i] , LCIO::WRITE_APPEND )  ;
 
 	lcWrt->close() ;

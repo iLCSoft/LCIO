@@ -38,6 +38,22 @@ namespace SIO{
       delete _fileRecord ;
   }
 
+  void LCIORandomAccessMgr::clear() {
+    
+    _runEvtMap.clear() ;
+    
+    for( std::list<LCIORandomAccess* >::iterator i = _list.begin() ; i != _list.end() ; ++i ){ 
+      delete *i ; 
+    }
+    
+    _list.clear() ;
+    
+    if( _fileRecord != 0 ) {
+      delete _fileRecord ;
+      _fileRecord = 0 ;
+    }
+  }
+  
   LCIORandomAccess* LCIORandomAccessMgr::createFromEventMap() {
 
     LCIORandomAccess* ra = new LCIORandomAccess  ;
@@ -148,7 +164,7 @@ namespace SIO{
       return false ;
     }
     
-    //    std::cout << " ...  LCIORandomAccess record found - return true ;-) " << std::endl ;
+    // std::cout << " ...  LCIORandomAccess record found - return true ;-) " << std::endl ;
 
     return true ;
   }
@@ -215,6 +231,8 @@ namespace SIO{
 
   bool LCIORandomAccessMgr::createEventMap( SIO_stream* stream ) {
 
+    //std::cout << " --- check LCIORandomAccess record at " <<   -LCSIO_RANDOMACCESS_SIZE  << std::endl ;
+
     // check if the last record is LCIORandomAccess ( the file record )
     if( ! readLCIORandomAccessAt( stream , -LCSIO_RANDOMACCESS_SIZE) )  {
 
@@ -225,15 +243,19 @@ namespace SIO{
     _fileRecord = _list.back() ;
     _list.pop_back()  ;
 
-    // no read first LCIORandomAccess record 
-    readLCIORandomAccessAt( stream ,   _fileRecord->_nextLocation    ) ; // start of last LCIORandomAccessRecord	
+    EVENT::long64 raPos = _fileRecord->_nextLocation ;
 
+    //std::cout << " --- now read first LCIORandomAccess record at " <<  raPos  << std::endl ;
 
-    // and then read all remaining LCIORandomAccess records
+    readLCIORandomAccessAt( stream ,  raPos  ) ; // start of last LCIORandomAccessRecord	
 
     const LCIORandomAccess* ra = lastLCIORandomAccess() ;
 
-    EVENT::long64 raPos = ra->getPrevLocation() ;
+    //std::cout << " read ra at " << raPos << " : \n" << *ra << std::endl ;
+
+    // and then read all remaining LCIORandomAccess records
+
+    raPos = ra->getPrevLocation() ;
 
     EVENT::long64 indexPos = ra->getIndexLocation() ;
     
@@ -245,9 +267,9 @@ namespace SIO{
 
 	ra = lastLCIORandomAccess() ;
 
-	raPos = ra->getPrevLocation() ;	
+	//std::cout << " read ra at " << raPos << " : \n" << *ra << std::endl ;
 
-	//	std::cout << " read ra at " << ra << " : " << *ra << "  - prevPos : " << raPos << std::endl ;
+	raPos = ra->getPrevLocation() ;	
 
 	EVENT::long64 indexPos = ra->getIndexLocation() ;
 

@@ -74,6 +74,8 @@ namespace SIO {
     template <class InputIterator>
     void insert(InputIterator b, InputIterator e) { _map.insert( b , e  ) ; } 
 
+    void clear() {  _map.clear() ; _nRun=0 ; _nEvt =0 ; }
+
   protected: 
 
     MapType _map ;

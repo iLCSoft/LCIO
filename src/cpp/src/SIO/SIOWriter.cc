@@ -330,6 +330,8 @@ namespace SIO {
       throw IOException(  std::string("[SIOWriter::close] couldn't close stream  : "
 				      + *streamName  )) ;
 
+    _raMgr.clear() ;
+
   }
 
   void SIOWriter::flush() throw (IOException, std::exception) {

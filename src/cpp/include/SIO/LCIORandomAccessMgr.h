@@ -79,6 +79,9 @@ namespace SIO {
      */
     void writeRandomAccessRecords(SIO_stream* stream) ;
 
+    /** Clear all lists and maps before closing a file */
+    void clear() ;
+
   protected:
     
     /** Prepare an LCIORandomAccess object from the current contents of RunEventMap (all file locations set to 0). */

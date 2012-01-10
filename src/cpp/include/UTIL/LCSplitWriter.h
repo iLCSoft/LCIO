@@ -10,8 +10,6 @@ namespace UTIL{
   /** LCWriter wrapper that automatically splits files if a given
    *  number of bytes is exceeded. File names are extended by
    *  a file number of the form .000 - .999 ... <br>
-   *  Note: this is experimental beta code - please use for testing only !
-   * 
    * @author gaede
    * @version $Id: LCSplitWriter.h,v 1.2 2007-11-09 21:00:55 gaede Exp $
    */
