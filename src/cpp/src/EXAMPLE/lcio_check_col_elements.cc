@@ -573,7 +573,10 @@ int main(int argc, char** argv ){
         }
         else
         {
-            avg = (float)opts.elementsTotal / (opts.eventsTotal - opts.eventsSkipped) ;
+            if( opts.eventsTotal != opts.eventsSkipped )
+            {
+                avg = (float)opts.elementsTotal / (opts.eventsTotal - opts.eventsSkipped) ;
+            }
         }
 
         cout << endl ;
