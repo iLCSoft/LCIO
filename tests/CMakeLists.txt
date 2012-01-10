@@ -248,6 +248,7 @@ ADD_LCIO_TEST( test_trackerhitplane )
 ADD_LCIO_TEST( test_trackerhitzcylinder )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
+ADD_LCIO_TEST( test_splitting )
 
 ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
 SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
@@ -280,7 +281,17 @@ ELSE()
 ENDIF( CLHEP_FOUND )
 
 
+# ==== lcio_event_counter tests  ========
+# needs output from t_c_sim and test_splitting
+ADD_TEST( NAME t_lcio_event_counter COMMAND bin_lcio_event_counter c_sim.slcio )
+SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "100" )
+
+ADD_TEST( NAME t_lcio_event_counter_splitting COMMAND bin_lcio_event_counter splitting.000.slcio splitting.001.slcio splitting.002.slcio )
+SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "10" )
+
+
 # ==== add some tests for checking number of elements in lcio collections ========
+# this tests need output from t_c_sim and t_c_rec
 ADD_TEST( NAME t_check_col_elements_args1 COMMAND bin_lcio_check_col_elements )
 SET_TESTS_PROPERTIES( t_check_col_elements_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements MCParticle )
