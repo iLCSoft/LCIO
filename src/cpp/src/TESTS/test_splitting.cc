@@ -15,6 +15,7 @@
 #include "IMPL/LCFlagImpl.h"
 
 //#include <iostream>
+#include <cstdio>
 
 using namespace std ;
 using namespace lcio ;
@@ -41,11 +42,23 @@ int main(int argc, char** argv ){
 
         MYTEST.LOG( "test splitting" );
 
+
+        vector<string> inputFilesVec ;
+        inputFilesVec.push_back( FILE_BASENAME + ".000" + FILE_EXTENSION );
+        inputFilesVec.push_back( FILE_BASENAME + ".001" + FILE_EXTENSION );
+        inputFilesVec.push_back( FILE_BASENAME + ".002" + FILE_EXTENSION );
+
+        // remove files if needed
+        for(int i=0 ; i<inputFilesVec.size() ; i++){
+            remove( inputFilesVec[i].c_str() );
+        }
+
         // create sio writer
         //LCWriter* lcWrt = LCFactory::getInstance()->createLCWriter()  ;
         LCWriter* lcWrt = new LCSplitWriter( LCFactory::getInstance()->createLCWriter(), SPLIT_SIZE_KB*1024  ) ;
 
-        lcWrt->open( FILE_BASENAME + FILE_EXTENSION ) ;
+        //lcWrt->open( FILE_BASENAME + FILE_EXTENSION, LCIO::WRITE_NEW ) ;
+        lcWrt->open( FILE_BASENAME + FILE_EXTENSION );
 
         // EventLoop - create some events and write them to the file
         for(int i=0;i<NEVENT;i++){
@@ -81,11 +94,6 @@ int main(int argc, char** argv ){
 
         // create sio reader
         LCReader* lcRdr = LCFactory::getInstance()->createLCReader()  ;
-
-        vector<string> inputFilesVec ;
-        inputFilesVec.push_back( FILE_BASENAME + ".000" + FILE_EXTENSION );
-        inputFilesVec.push_back( FILE_BASENAME + ".001" + FILE_EXTENSION );
-        inputFilesVec.push_back( FILE_BASENAME + ".002" + FILE_EXTENSION );
 
         lcRdr->open( inputFilesVec ) ;
 
