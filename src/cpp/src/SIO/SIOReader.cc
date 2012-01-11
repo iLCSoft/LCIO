@@ -267,7 +267,11 @@ namespace SIO {
     }
     
     // set the proper acces mode before returning the event
-    (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
+    if( *_runP != 0 ) {
+
+        (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
+    }
+
     return *_runP ;
   }
   
