@@ -579,6 +579,11 @@ int main(int argc, char** argv ){
             }
         }
 
+        if( opts.releventerror > 0 )
+        {
+            opts.abseventerror = (int)round(opts.eventsTotal*opts.releventerror) ;
+        }
+
         cout << endl ;
         cout << "-----------------------------------------------------------" << endl ;
         cout << endl ;
@@ -619,11 +624,6 @@ int main(int argc, char** argv ){
     }
     else
     {
-        if( opts.releventerror > 0 )
-        {
-            opts.abseventerror = (int)round(opts.eventsTotal*opts.releventerror) ;
-        }
-
         if( opts.eventsFailed > opts.abseventerror )
         {
             return EXIT_FAILURE ;
