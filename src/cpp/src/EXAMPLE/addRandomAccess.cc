@@ -7,8 +7,9 @@
 
 #include <iostream>
 #include <sstream>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 using namespace lcio ;
 
