@@ -556,6 +556,10 @@ namespace SIO {
   
   void SIOReader::close() throw (IOException, std::exception ){
   
+    _raMgr.clear() ;
+
+    _readEventMap = false ;
+
     int status  =  SIO_streamManager::remove( _stream ) ;
     
     if(! (status &1) ) //  return LCIO::ERROR ;
