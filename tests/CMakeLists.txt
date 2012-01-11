@@ -289,6 +289,15 @@ SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "1
 ADD_TEST( NAME t_lcio_event_counter_splitting COMMAND bin_lcio_event_counter splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "10" )
 
+# ==== lcio_split_file tests  ========
+# needs output from test_trackerhit
+ADD_TEST( NAME t_lcio_split_file_write COMMAND bin_lcio_split_file trackerhits.slcio trackerhits_split.slcio 100000 )
+SET_TESTS_PROPERTIES( t_lcio_split_file_write PROPERTIES PASS_REGULAR_EXPRESSION "10 events copied" )
+ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob trackerhits_split.000.slcio trackerhits_split.001.slcio )
+SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
+
+
+
 
 # ==== add some tests for checking number of elements in lcio collections ========
 # this tests need output from t_c_sim and t_c_rec
