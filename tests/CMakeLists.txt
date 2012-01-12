@@ -282,9 +282,8 @@ ENDIF( CLHEP_FOUND )
 
 
 # ==== lcio_event_counter tests  ========
-# needs output from t_c_sim and test_splitting
-ADD_TEST( NAME t_lcio_event_counter COMMAND bin_lcio_event_counter c_sim.slcio )
-SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "100" )
+ADD_TEST( NAME t_lcio_event_counter COMMAND bin_lcio_event_counter tracks.slcio )
+SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "3" )
 
 ADD_TEST( NAME t_lcio_event_counter_splitting COMMAND bin_lcio_event_counter splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "10" )
@@ -294,7 +293,6 @@ SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION 
 
 
 # ==== lcio_split_file tests  ========
-# needs output from test_trackerhit
 #ADD_TEST( NAME t_lcio_split_file_write COMMAND bin_lcio_split_file trackerhits.slcio trackerhits_split.slcio 100000 )
 #SET_TESTS_PROPERTIES( t_lcio_split_file_write PROPERTIES PASS_REGULAR_EXPRESSION "10 events copied" )
 #ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob trackerhits_split.000.slcio trackerhits_split.001.slcio )
@@ -304,53 +302,56 @@ SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION 
 
 
 # ==== add some tests for checking number of elements in lcio collections ========
-# this tests need output from t_c_sim and t_c_rec
 ADD_TEST( NAME t_check_col_elements_args1 COMMAND bin_lcio_check_col_elements )
 SET_TESTS_PROPERTIES( t_check_col_elements_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
-ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements MCParticle )
+ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements Tracks )
 SET_TESTS_PROPERTIES( t_check_col_elements_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 
-ADD_TEST( NAME t_check_col_elements_nocol COMMAND bin_lcio_check_col_elements NonExistingCollection c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_nocol COMMAND bin_lcio_check_col_elements NonExistingCollection tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_nocol PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_noopts COMMAND bin_lcio_check_col_elements MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_check_col_elements_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle element\\(s\\) in 100 event\\(s\\)" )
+ADD_TEST( NAME t_check_col_elements_noopts COMMAND bin_lcio_check_col_elements Tracks tracks.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 30 Tracks element\\(s\\) in 3 event\\(s\\)" )
 
 # one option at a time
-ADD_TEST( NAME t_check_col_elements_minelements1 COMMAND bin_lcio_check_col_elements --minelements 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_check_col_elements_minelements2 COMMAND bin_lcio_check_col_elements --minelements 102 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_minelements1 COMMAND bin_lcio_check_col_elements --minelements 10 Tracks tracks.slcio )
+ADD_TEST( NAME t_check_col_elements_minelements2 COMMAND bin_lcio_check_col_elements --minelements 11 Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_minelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_maxelements1 COMMAND bin_lcio_check_col_elements --maxelements 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_check_col_elements_maxelements2 COMMAND bin_lcio_check_col_elements --maxelements 100 MCParticle c_sim.slcio )
+ADD_TEST( NAME t_check_col_elements_maxelements1 COMMAND bin_lcio_check_col_elements --maxelements 10 Tracks tracks.slcio )
+ADD_TEST( NAME t_check_col_elements_maxelements2 COMMAND bin_lcio_check_col_elements --maxelements 09 Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_maxelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_expelements1 COMMAND bin_lcio_check_col_elements --expelements 101 MCParticle c_sim.slcio )
-ADD_TEST( NAME t_check_col_elements_expelements2 COMMAND bin_lcio_check_col_elements --expelements 100 MCParticle c_sim.slcio )
-SET_TESTS_PROPERTIES( t_check_col_elements_expelements2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_expelements1 COMMAND bin_lcio_check_col_elements --expelements 10 Tracks tracks.slcio )
+ADD_TEST( NAME t_check_col_elements_expelements2 COMMAND bin_lcio_check_col_elements --expelements 10 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_expelements3 COMMAND bin_lcio_check_col_elements --expelements 11 Tracks tracks.slcio )
+ADD_TEST( NAME t_check_col_elements_expelements4 COMMAND bin_lcio_check_col_elements --expelements 09 Tracks tracks.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_expelements3 PROPERTIES WILL_FAIL TRUE )
+SET_TESTS_PROPERTIES( t_check_col_elements_expelements4 PROPERTIES WILL_FAIL TRUE )
 
 # more options at once
-ADD_TEST( NAME t_check_col_elements_abselementerror1 COMMAND bin_lcio_check_col_elements --expelements 100 --abselementerror 2 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_check_col_elements_abselementerror2 COMMAND bin_lcio_check_col_elements --expelements 100 --abselementerror 1 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_check_col_elements_abselementerror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_abselementerror1 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 8 --abselementerror 1 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_abselementerror2 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 9 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_abselementerror3 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 5 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_abselementerror3 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_relelementerror1 COMMAND bin_lcio_check_col_elements --expelements 100 --relelementerror .02 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_check_col_elements_relelementerror2 COMMAND bin_lcio_check_col_elements --expelements 100 --relelementerror .0001 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_check_col_elements_relelementerror2 PROPERTIES WILL_FAIL TRUE )
+ADD_TEST( NAME t_check_col_elements_relelementerror1 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 7 --relelementerror .01 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_relelementerror2 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 6 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_relelementerror3 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 5 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_relelementerror3 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_abseventerror1 COMMAND bin_lcio_check_col_elements --expelements 101 --abseventerror 100 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_check_col_elements_abseventerror2 COMMAND bin_lcio_check_col_elements --expelements 101 --abseventerror 99 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_abseventerror1 COMMAND bin_lcio_check_col_elements -p -x 10 --abseventerror 3 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_abseventerror2 COMMAND bin_lcio_check_col_elements -p -x 10 --abseventerror 2 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_abseventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_releventerror1 COMMAND bin_lcio_check_col_elements --expelements 101 --releventerror .5 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_check_col_elements_releventerror2 COMMAND bin_lcio_check_col_elements --expelements 101 --releventerror .49 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_releventerror1 COMMAND bin_lcio_check_col_elements -p -x 10 --releventerror .5 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( NAME t_check_col_elements_releventerror2 COMMAND bin_lcio_check_col_elements -p -x 10 --releventerror .4 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_releventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_maxevents1 COMMAND bin_lcio_check_col_elements --maxevents 150 -m101 -M102 MCParticle c_sim.slcio c_rec.slcio )
-SET_TESTS_PROPERTIES( t_check_col_elements_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 15200 MCParticle element\\(s\\) in 150 event\\(s\\)" )
-
-ADD_TEST( NAME t_check_col_elements_maxevents2 COMMAND bin_lcio_check_col_elements -x 101 -s 50 -n 50 MCParticle c_sim.slcio c_rec.slcio )
-ADD_TEST( NAME t_check_col_elements_maxevents3 COMMAND bin_lcio_check_col_elements -x 102 -s 98 -n 10 --abseventerror 2 MCParticle c_sim.slcio c_rec.slcio )
+ADD_TEST( NAME t_check_col_elements_maxevents1 COMMAND bin_lcio_check_col_elements --maxevents 4 Tracks tracks.slcio cluster.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 30 Tracks element\\(s\\) in 4 event\\(s\\)" )
+ADD_TEST( NAME t_check_col_elements_maxevents2 COMMAND bin_lcio_check_col_elements --startevent 2 --maxevents 2 Tracks tracks.slcio cluster.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_maxevents2 PROPERTIES PASS_REGULAR_EXPRESSION "found 10 Tracks element\\(s\\) in 2 event\\(s\\)" )
 
 # ============================================================================
 
