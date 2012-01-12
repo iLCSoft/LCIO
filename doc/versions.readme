@@ -4,10 +4,27 @@
 
 
 ============
+ v02-00-03
+============
+
+    - patch release including following patches/bug fixes:
+
+          - bug fix for writing random access records with LCSplitWriter ( all but first file had corrupt TOC for random access)
+            ( added clear() method to LCIORandomAccessMgr called when closing a file in LCWriter )
+          - added 'undocumented' option -f to addRandomAccess.cc that will force the recreation of the random access records 
+            -> can be used to fix files on writeable storage
+          - added tool lcio_split_file.cc to split large files
+          - bug fixed in lcio_check_col_elements where tests would still pass with a non-existing collection
+
+          - improved testing
+
+
+============
  v02-00-02
 ============
 
     - patch release including following patches/bug fixes:
+
         - added printout of all TrackStates for Track
         - removed "using namespace lcio " from src/cpp/include/UTIL/CellIDEncoder.h
             -> avoid 'implicit' using declarations that might lead to ambiguous declarations of Exception
