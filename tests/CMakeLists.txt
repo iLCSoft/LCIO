@@ -310,6 +310,9 @@ SET_TESTS_PROPERTIES( t_check_col_elements_args1 PROPERTIES PASS_REGULAR_EXPRESS
 ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements MCParticle )
 SET_TESTS_PROPERTIES( t_check_col_elements_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 
+ADD_TEST( NAME t_check_col_elements_nocol COMMAND bin_lcio_check_col_elements NonExistingCollection c_sim.slcio )
+SET_TESTS_PROPERTIES( t_check_col_elements_nocol PROPERTIES WILL_FAIL TRUE )
+
 ADD_TEST( NAME t_check_col_elements_noopts COMMAND bin_lcio_check_col_elements MCParticle c_sim.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 10100 MCParticle element\\(s\\) in 100 event\\(s\\)" )
 

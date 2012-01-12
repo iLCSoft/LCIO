@@ -592,14 +592,19 @@ int main(int argc, char** argv ){
 
         if( opts.eventsSkipped )
         {
-            cout << "found " << opts.eventsSkipped << " event(s) containg no elements from " << opts.colName << endl ;
+            cout << opts.eventsSkipped << " event(s) contained no elements from " << opts.colName << endl ;
         }
 
         if( opts.eventsFailed > 0 )
         {
-            cout << opts.eventsFailed  << " event" << (opts.eventsFailed==1?" has":"s have") << " failed" << endl ;
+            cout << opts.eventsFailed  << " event" << (opts.eventsFailed==1?" has":"s have") << " failed matching the expected number of elements" << endl ;
         }
 
+        if( opts.eventsTotal == opts.eventsSkipped )
+        {
+            cerr << "no " << opts.colName << " collection was found!" << endl ;
+            return EXIT_FAILURE ;
+        }
     }
     else
     {
@@ -617,6 +622,7 @@ int main(int argc, char** argv ){
         {
             return EXIT_FAILURE ;
         }
+
         if( (opts.maxelements > 0) && (avg > opts.maxelements) )
         {
             return EXIT_FAILURE ;
