@@ -123,7 +123,7 @@ class SIOTrack extends ITrack
              ITrackState trackstate = (ITrackState) it.next();
 
              // TODO put this code into SIOTrackState.java ?
-             out.writeFloat(trackstate.getLocation());
+             out.writeInt(trackstate.getLocation());
              out.writeFloat(trackstate.getD0());
              out.writeFloat(trackstate.getPhi());
              out.writeFloat(trackstate.getOmega());
