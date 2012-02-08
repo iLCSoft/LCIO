@@ -38,4 +38,11 @@ namespace UTIL {
   const int ILDDetID::barrel    =   0 ;
   const int ILDDetID::fwd       =   1 ;
   
+  
+  // type specifyers for LCIO TrackerHits used in the context of ILD reconstruction code
+  
+  const int ILDTrkHitType::NOTUSED               = 0 ;
+  const int ILDTrkHitType::COMPOSITE_SPACEPOINT  = 1073741824 ; // bit 30
+  
+  
 }

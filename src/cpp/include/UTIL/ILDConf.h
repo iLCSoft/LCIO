@@ -109,5 +109,18 @@ namespace UTIL {
     static const int fwd       ;
   } ;
   
-} // namespace gear
+ /** Define integer constants for identifying lcio tracker hits used in the context of ILD reconstruction code
+   *  
+   *  S.J. Aplin, DESY, 2012
+   *  @version $Id:$
+   */
+
+  struct ILDTrkHitType{
+    static const int NOTUSED    ;
+    static const int COMPOSITE_SPACEPOINT  ; // i.e. a 3D space-point composed of two independent strip measurements
+  } ;
+
+
+
+} // namespace UTIL
 #endif // ifndef UTIL_ILDConf_H
