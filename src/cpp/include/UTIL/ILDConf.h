@@ -118,6 +118,8 @@ namespace UTIL {
   struct ILDTrkHitType{
     static const int NOTUSED    ;
     static const int COMPOSITE_SPACEPOINT  ; // i.e. a 3D space-point composed of two independent strip measurements
+    static const int ONE_DIMENSIONAL;        // e.g. a strip measurment
+    
   } ;
 
 

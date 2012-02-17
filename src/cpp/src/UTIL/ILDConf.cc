@@ -43,6 +43,6 @@ namespace UTIL {
   
   const int ILDTrkHitType::NOTUSED               = 0 ;
   const int ILDTrkHitType::COMPOSITE_SPACEPOINT  = 1073741824 ; // bit 30
-  
+  const int ILDTrkHitType::ONE_DIMENSIONAL       =  536870912 ; // bit 29
   
 }
