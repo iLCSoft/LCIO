@@ -3,11 +3,20 @@
 ---------------------------------------------------------------
 
 ============
- HEAD
+ HEAD  =>  v02-01 !?
 ============
 
+    - minor release including following addons:
+       - added helper srtructs to UTIL/ILDConf:
+         ILDTrkHitTypeBit
+         ILDTrkHitQualityBit
+       - added helper class UTIL::BitSet32
+         extension of std::bitset<32> for conveninent setting and 
+         checking bits in flag words
+       -> to replace LCFlagImpl (changed in examples and LCTOOLS)
 
-
+    
+ 
 ============
  v02-00-03
 ============

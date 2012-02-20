@@ -41,8 +41,12 @@ namespace UTIL {
   
   // type specifyers for LCIO TrackerHits used in the context of ILD reconstruction code
   
-  const int ILDTrkHitType::NOTUSED               = 0 ;
-  const int ILDTrkHitType::COMPOSITE_SPACEPOINT  = 1073741824 ; // bit 30
-  const int ILDTrkHitType::ONE_DIMENSIONAL       =  536870912 ; // bit 29
+  const int ILDTrkHitTypeBit::COMPOSITE_SPACEPOINT  = 30 ;
+  const int ILDTrkHitTypeBit::ONE_DIMENSIONAL       = 29 ;
   
+
+  const int ILDTrkHitQualityBit::USED_IN_FIT            = 30 ;
+  const int ILDTrkHitQualityBit::USED_IN_TRACK          = 29 ;
+  const int ILDTrkHitQualityBit::DOUBLE_HIT_CANDIDATE   = 28 ;
+  const int ILDTrkHitQualityBit::GOOD                   = 27 ;
 }

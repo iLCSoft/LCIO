@@ -19,13 +19,14 @@
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/VertexImpl.h" 
 //#include "IMPL/ParticleIDImpl.h" 
-#include "IMPL/LCFlagImpl.h" 
+//#include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
 #include "UTIL/PIDHandler.h"
 //#include "UTIL/IndexMap.h"
 #include "IMPL/LCRelationImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"
+#include "UTIL/BitSet32.h"
 
 #include "CalibrationConstant.h"
 
@@ -124,12 +125,6 @@ public:
 
     LCCollection* tpcHits = evt->getCollection( tpcHitName) ;
 
-    // here we set the pointer flag bit that is needed to be able to point from
-    // the generic TrckerHit to the raw data TrackerRawData
-    //fg20040824 -> THE LOGIC IS REVERSED - NO NEED TO SET A BIT TO GET THE POINTER FLAG
-    //     LCFlagImpl tpcFlag( tpcHits->getFlag() ) ;
-    //     tpcFlag.setBit( LCIO::TPCBIT_PTR ) ;
-    //     tpcHits->setFlag( tpcFlag.getFlag()  ) ;
     
     LCCollectionVec* trkhitVec = new LCCollectionVec( LCIO::TRACKERHIT )  ;
     int nTrackerRawDatas = tpcHits->getNumberOfElements() ;
@@ -178,9 +173,11 @@ public:
     LCCollectionVec* trkVec = new LCCollectionVec( LCIO::TRACK )  ;
 
     // if we want to point back to the hits we need to set the flag
-    LCFlagImpl trkFlag(0) ;
-    trkFlag.setBit( LCIO::TRBIT_HITS ) ;
-    trkVec->setFlag( trkFlag.getFlag()  ) ;
+    // LCFlagImpl trkFlag(0) ;
+    // trkFlag.setBit( LCIO::TRBIT_HITS ) ;
+    // trkVec->setFlag( trkFlag.getFlag()  ) ;
+
+    trkVec->setFlag( UTIL::make_bitset32(  LCIO::TRBIT_HITS ) ) ;
     
 
     int nTrk = 5 ;
@@ -260,14 +257,6 @@ public:
     // in order to be able to point back to hits, we need to create 
     // generic CalorimeterHits from the SimCalorimeterHits first
 
-    // here we set the pointer flag bit that is needed to be able to point from
-    // the generic Clusters to the 'raw data' CalorimeterHits
-    //-> this should be done automatically in a future release
-    //fg20040824 -> THE LOGIC IS REVERSED - NO NEED TO SET A BIT TO GET THE POINTER FLAG
-    //     LCFlagImpl calFlag( calHits->getFlag() ) ;
-    //     calFlag.setBit( LCIO::RCHBIT_PTR ) ;
-    //     calHits->setFlag( calFlag.getFlag()  ) ;
-    
 
     LCCollectionVec* scRel = new LCCollectionVec(LCIO::LCRELATION ) ;
     scRel->parameters().setValue( "RelationFromType" ,  LCIO::CALORIMETERHIT ) ;
@@ -301,9 +290,10 @@ public:
     evt->addCollection( calHits , "CalorimeterHits") ;
     //     evt->addCollection( modifiedSimCalHits , "ModifiedSimCalorimeterHits") ;
 
-    LCFlagImpl relFlag(0) ;
-    relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
-    scRel->setFlag( relFlag.getFlag()  ) ;
+    // LCFlagImpl relFlag(0) ;
+    // relFlag.setBit( LCIO::LCREL_WEIGHTED ) ;
+    // scRel->setFlag( relFlag.getFlag()  ) ;
+    scRel->setFlag( UTIL::make_bitset32(  LCIO::LCREL_WEIGHTED )) ;
 
     evt->addCollection( scRel , "CalorimeterHitsSimRel" ) ;
     //    evt->addRelation( scRel , "CalorimeterHitsSimRel" ) ;
@@ -366,10 +356,11 @@ public:
     // -------------------------------------------------------------------------------------
     
     // if we want to point back to the hits we need to set the flag
-    LCFlagImpl clusterFlag(0) ;
-    clusterFlag.setBit( LCIO::CLBIT_HITS ) ;
-    clusterVec->setFlag( clusterFlag.getFlag()  ) ;
-    
+    // LCFlagImpl clusterFlag(0) ;
+    // clusterFlag.setBit( LCIO::CLBIT_HITS ) ;
+    // clusterVec->setFlag( clusterFlag.getFlag()  ) ;
+    clusterVec->setFlag( UTIL::make_bitset32( LCIO::CLBIT_HITS )) ; 
+   
     StringVec shapeParams ;
     shapeParams.push_back("Shape_trans") ;
     shapeParams.push_back("Shape_long") ;

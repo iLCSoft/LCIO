@@ -5,6 +5,8 @@
 #include <string>
 #include "CellIDEncoder.h"
 
+#include "BitSet32.h"
+
 // Some useful definitions that are used in the ILD software framework - in particular for
 // encoding and decoding cellIDs.
 
@@ -109,17 +111,28 @@ namespace UTIL {
     static const int fwd       ;
   } ;
   
- /** Define integer constants for identifying lcio tracker hits used in the context of ILD reconstruction code
+  /** Define integer constants for bits of the the lcio tracker hit type  used in the context of ILD reconstruction code
    *  
    *  S.J. Aplin, DESY, 2012
    *  @version $Id:$
    */
-
-  struct ILDTrkHitType{
-    static const int NOTUSED    ;
+  
+  struct ILDTrkHitTypeBit{
     static const int COMPOSITE_SPACEPOINT  ; // i.e. a 3D space-point composed of two independent strip measurements
     static const int ONE_DIMENSIONAL;        // e.g. a strip measurment
     
+  } ;
+
+  /** Define integer constants for bits of the the lcio tracker hit quality  used in the context of ILD reconstruction code
+   *  
+   *  F.Gaede, DESY, 2012
+   *  @version $Id:$
+   */
+  struct ILDTrkHitQualityBit{
+    static const int USED_IN_FIT ;
+    static const int USED_IN_TRACK ;
+    static const int DOUBLE_HIT_CANDIDATE ;
+    static const int GOOD ;
   } ;
 
 

@@ -11,7 +11,7 @@
 #include "IMPL/SimCalorimeterHitImpl.h"
 #include "IMPL/SimTrackerHitImpl.h"
 #include "IMPL/MCParticleImpl.h" 
-#include "IMPL/LCFlagImpl.h" 
+//#include "IMPL/LCFlagImpl.h" 
 #include "IMPL/LCTOOLS.h"
 
 #include "IMPL/TrackerRawDataImpl.h"
@@ -23,8 +23,8 @@
 //#include "UTIL/BitField64.h"
 #include "UTIL/CellIDEncoder.h"
 #include "UTIL/LCTypedVector.h"
-
 #include "UTIL/LCSplitWriter.h"
+#include "UTIL/BitSet32.h"
 
 // #include "UTIL/LCIOTypeInfo.h"
 
@@ -208,11 +208,15 @@ int main(int argc, char** argv ){
       
 	// set flag for long format (including position )
 	// and PDG and cellid1
-	LCFlagImpl chFlag(0) ;
-	chFlag.setBit( LCIO::CHBIT_LONG ) ;
-	chFlag.setBit( LCIO::CHBIT_STEP ) ;
-	calVec->setFlag( chFlag.getFlag()  ) ;
+	// LCFlagImpl chFlag(0) ;
+	// chFlag.setBit( LCIO::CHBIT_LONG ) ;
+	// chFlag.setBit( LCIO::CHBIT_STEP ) ;
+	// calVec->setFlag( chFlag.getFlag()  ) ;
 	
+	calVec->setFlag( UTIL::make_bitset32(  LCIO::CHBIT_LONG, LCIO::CHBIT_STEP ) );
+
+
+
 	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6") ;// old Mokka convention
 
 // 	std::string cellIDEncoding( "M:3,S-1:3,I:9,J:9,K-1:6,Bla:34:6") ;// for testing cellid1
@@ -302,10 +306,10 @@ int main(int argc, char** argv ){
 	LCCollectionVec* extFVec = new LCCollectionVec( LCIO::LCFLOATVEC )  ;
 	LCCollectionVec* extIVec = new LCCollectionVec( LCIO::LCINTVEC )  ;
 
-	LCFlagImpl thFlag(0) ;
-	thFlag.setBit( LCIO::THBIT_MOMENTUM ) ;
-	trkVec->setFlag( thFlag.getFlag()  ) ;
-	
+	// LCFlagImpl thFlag(0) ;
+	// thFlag.setBit( LCIO::THBIT_MOMENTUM ) ;
+	// trkVec->setFlag( thFlag.getFlag()  ) ;
+	trkVec->setFlag( UTIL::make_bitset32( LCIO::THBIT_MOMENTUM ) ) ; 
 
 	LCTypedVector<MCParticle> mcpTV( mcVec ) ;
 

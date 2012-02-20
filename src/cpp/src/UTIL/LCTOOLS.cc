@@ -31,7 +31,8 @@
 #include "EVENT/LCGenericObject.h"
 #include "EVENT/LCRelation.h"
 
-#include "IMPL/LCFlagImpl.h"
+//#include "IMPL/LCFlagImpl.h"
+#include "UTIL/BitSet32.h"
 #include "LCIOSTLTypes.h"
 
 #include <map>
@@ -243,8 +244,8 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::TRBIT_HITS : " << flag.test( LCIO::TRBIT_HITS ) << endl ;
 
         int nTracks =  col->getNumberOfElements() ;
         int nPrint = nTracks > MAX_HITS ? MAX_HITS : nTracks ;
@@ -277,9 +278,9 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
-        cout << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
+        cout << "     LCIO::THBIT_MOMENTUM : " << flag.test( LCIO::THBIT_MOMENTUM ) << endl ;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -312,8 +313,8 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
 
 
         int nHits =  col->getNumberOfElements() ;
@@ -355,8 +356,8 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
 
 
         int nHits =  col->getNumberOfElements() ;
@@ -398,8 +399,8 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
 
 
         int nHits =  col->getNumberOfElements() ;
@@ -439,8 +440,8 @@ namespace UTIL {
         cout << endl 
             << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::TRAWBIT_ID1    : " << flag.test( LCIO::TRAWBIT_ID1 ) << endl ;
 
         printParameters( col->getParameters() ) ;
 
@@ -475,8 +476,8 @@ namespace UTIL {
         cout << endl 
             << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::TRAWBIT_ID1    : " << flag.test( LCIO::TRAWBIT_ID1 ) << endl ;
 
         printParameters( col->getParameters() ) ;
 
@@ -511,9 +512,9 @@ namespace UTIL {
         cout << endl 
             << "  flag:  0x" << hex  << col->getFlag() << dec << endl ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 )
-            << "     LCIO::TRAWBIT_CM     : " << flag.bitSet( LCIO::TRAWBIT_CM ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::TRAWBIT_ID1    : " << flag.test( LCIO::TRAWBIT_ID1 )
+            << "     LCIO::TRAWBIT_CM     : " << flag.test( LCIO::TRAWBIT_CM ) << endl ;
 
         printParameters( col->getParameters() ) ;
 
@@ -550,9 +551,9 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "  -> LCIO::TPCBIT_RAW   : " << flag.bitSet( LCIO::TPCBIT_RAW ) << endl ;
-        cout << "  -> LCIO::TPCBIT_NO_PTR   : " << flag.bitSet( LCIO::TPCBIT_NO_PTR ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "  -> LCIO::TPCBIT_RAW   : " << flag.test( LCIO::TPCBIT_RAW ) << endl ;
+        cout << "  -> LCIO::TPCBIT_NO_PTR   : " << flag.test( LCIO::TPCBIT_NO_PTR ) << endl ;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -579,7 +580,7 @@ namespace UTIL {
                 << hit->getCharge() << " | ["
                 << hit->getQuality() << "] "
                 << std::endl ;
-            if( flag.bitSet( LCIO::TPCBIT_RAW ) ){
+            if( flag.test( LCIO::TPCBIT_RAW ) ){
 
                 int nWords = hit->getNRawDataWords() ;
                 std::cout << "  ->  " ;
@@ -728,11 +729,11 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
-        cout << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-        cout << "     LCIO::CHBIT_ID1    : " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
-        cout << "     LCIO::CHBIT_STEP   : " << flag.bitSet( LCIO::CHBIT_STEP ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "  -> LCIO::CHBIT_LONG   : " << flag.test( LCIO::CHBIT_LONG ) << endl ;
+        cout << "     LCIO::CHBIT_BARREL : " << flag.test( LCIO::CHBIT_BARREL ) << endl ;
+        cout << "     LCIO::CHBIT_ID1    : " << flag.test( LCIO::CHBIT_ID1 ) << endl ;
+        cout << "     LCIO::CHBIT_STEP   : " << flag.test( LCIO::CHBIT_STEP ) << endl ;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -768,13 +769,13 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
-        cout << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
-        cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
-        cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
-        cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
-        cout << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "  -> LCIO::RCHBIT_LONG   : " << flag.test( LCIO::RCHBIT_LONG ) << endl ;
+        cout << "     LCIO::RCHBIT_BARREL : " << flag.test( LCIO::RCHBIT_BARREL ) << endl ;
+        cout << "     LCIO::RCHBIT_ID1    : " << flag.test( LCIO::RCHBIT_ID1 ) << endl ;
+        cout << "     LCIO::RCHBIT_TIME   : " << flag.test( LCIO::RCHBIT_TIME ) << endl ;
+        cout << "     LCIO::RCHBIT_NO_PTR : " << flag.test( LCIO::RCHBIT_NO_PTR ) << endl ;
+        cout << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.test( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -809,11 +810,11 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
+        BitSet32 flag( col->getFlag() ) ;
 
-        cout << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
-        cout << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
-        cout << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+        cout << "     LCIO::RCHBIT_ID1    : " << flag.test( LCIO::RCHBIT_ID1 ) << endl ;
+        cout << "     LCIO::RCHBIT_TIME   : " << flag.test( LCIO::RCHBIT_TIME ) << endl ;
+        cout << "     LCIO::RCHBIT_NO_PTR : " << flag.test( LCIO::RCHBIT_NO_PTR ) << endl ;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -847,8 +848,8 @@ namespace UTIL {
 
         printParameters( col->getParameters() ) ;
 
-        LCFlagImpl flag( col->getFlag() ) ;
-        cout << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
+        BitSet32 flag( col->getFlag() ) ;
+        cout << "     LCIO::CLBIT_HITS : " << flag.test( LCIO::CLBIT_HITS ) << endl ;
 
         int nClusters =  col->getNumberOfElements() ;
         int nPrint = nClusters > MAX_HITS ? MAX_HITS : nClusters ;
@@ -1113,7 +1114,7 @@ namespace UTIL {
         int nLCGenericObjects =  col->getNumberOfElements() ;
         int nPrint = nLCGenericObjects > MAX_HITS ? MAX_HITS : nLCGenericObjects ;
 
-        //bool isFixedSize  =  LCFlagImpl( col->getFlag() ).bitSet( LCIO::GOBIT_FIXED );
+        //bool isFixedSize  =  BitSet32( col->getFlag() ).test( LCIO::GOBIT_FIXED );
 
         cout << endl;
         LCGenericObject* obj=NULL;
