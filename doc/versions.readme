@@ -13,8 +13,9 @@
        - added helper class UTIL::BitSet32
          extension of std::bitset<32> for conveninent setting and 
          checking bits in flag words
-       -> to replace LCFlagImpl (changed in examples and LCTOOLS)
-
+        -> to replace LCFlagImpl (changed in examples and LCTOOLS)
+       - added helper methods make_bitset(), set_bit() and unset_bit()
+         
     
  
 ============

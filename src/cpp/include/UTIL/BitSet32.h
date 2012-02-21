@@ -76,8 +76,25 @@ namespace UTIL {
 		     1 << bit4 ) ;
   }
   
-  
+  /** Convenient helper to set a bit in a given int  - for example:<br>
+   *   trkHit->setType( set_bit( trkHit->getType() ,  UTIL::ILDTrkHitTypeBit::ONE_DIMENSIONAL ) ) ;
+   */
+  inline int set_bit( int flag , int bit ){
+    BitSet32 bs( flag ) ;
+    bs.set( bit ) ;
+    return (int) bs ;
+  }
+
+  /** Convenient helper to unset a bit in a given int  - for example:<br>
+   *   trkHit->setType( set_bit( trkHit->getType() ,  UTIL::ILDTrkHitTypeBit::ONE_DIMENSIONAL ) ) ;
+   */
+  inline int unset_bit( int flag , int bit ){
+    BitSet32 bs( flag ) ;
+    bs.set( bit, 0 ) ;
+    return (int) bs ;
+  }
+
+
+
 }
-
-
 #endif
