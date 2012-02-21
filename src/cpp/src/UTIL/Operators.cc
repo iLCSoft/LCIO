@@ -11,6 +11,7 @@
 #include "UTIL/CellIDDecoder.h"
 #include "UTIL/PIDHandler.h"
 #include "UTIL/LCTOOLS.h"
+#include "UTIL/BitSet32.h"
 
 #include "EVENT/TPCHit.h"
 #include "EVENT/TrackerRawData.h"
@@ -33,7 +34,7 @@
 #include "EVENT/LCRelation.h"
 #include "EVENT/LCEvent.h"
 
-#include "IMPL/LCFlagImpl.h"
+//#include "IMPL/LCFlagImpl.h"
 #include "LCIOSTLTypes.h"
 
 #include <map>
@@ -272,7 +273,7 @@ namespace UTIL{
 
     const std::string& header(const EVENT::LCGenericObject *obj, const EVENT::LCCollection *col){ //hauke
         //const EVENT::LCCollection *col = &v;
-        bool isFixedSize  =  LCFlagImpl( col->getFlag() ).bitSet( LCIO::GOBIT_FIXED);
+        bool isFixedSize  =  BitSet32( col->getFlag() ).test( LCIO::GOBIT_FIXED);
         stringstream header;
         header.str("");
 
@@ -969,10 +970,10 @@ namespace UTIL{
                 out << "Warning: collection not of type " << LCIO::RAWCALORIMETERHIT << endl ;
                 return(out);
             }
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
-            out << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
-            out << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::RCHBIT_ID1    : " << flag.test( LCIO::RCHBIT_ID1 ) << endl ;
+            out << "     LCIO::RCHBIT_TIME   : " << flag.test( LCIO::RCHBIT_TIME ) << endl ;
+            out << "     LCIO::RCHBIT_NO_PTR : " << flag.test( LCIO::RCHBIT_NO_PTR ) << endl ;
             //print collection flags
         }
 
@@ -1186,8 +1187,8 @@ namespace UTIL{
                 return(out);
             }
             //print collection flags
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::TRAWBIT_ID1    : " << flag.bitSet( LCIO::TRAWBIT_ID1 ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::TRAWBIT_ID1    : " << flag.test( LCIO::TRAWBIT_ID1 ) << endl ;
         }
 
         //print object attributs
@@ -1299,14 +1300,14 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::SimCalorimeterHit>& sV){ //hauke
         const EVENT::SimCalorimeterHit* hit = sV.obj;
         const EVENT::LCCollection* col =  sV.col;
-        LCFlagImpl flag(col->getFlag());
+        BitSet32 flag(col->getFlag());
 
         out << noshowpos;
         out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
         out << "|" << hex << setw(8) << setfill('0') << hit->getCellID0();
         out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
         out << "|" << dec << setprecision(3) << scientific << showpos << hit->getEnergy(); 
-        if(flag.bitSet( LCIO::CHBIT_LONG )){
+        if(flag.test( LCIO::CHBIT_LONG )){
             out << "|" << dec << setprecision(3) << scientific << showpos
                 << hit->getPosition()[0] << ", " << hit->getPosition()[1] << ", " << hit->getPosition()[2]; 
         }else{
@@ -1330,7 +1331,7 @@ namespace UTIL{
                 out << setw(10) << hit->getEnergyCont(k)<< "|";
                 out << setw(6) << hit->getTimeCont(k) << "|";
 
-                if(flag.bitSet(LCIO::CHBIT_STEP)){
+                if(flag.test(LCIO::CHBIT_STEP)){
                     out << hit->getPDGCont( k ) << "| (" ;
                     out << hit->getStepPosition( k )[0] << ", " ;
                     out << hit->getStepPosition( k )[1] << ", " ;
@@ -1371,11 +1372,11 @@ namespace UTIL{
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "  -> LCIO::CHBIT_LONG   : " << flag.bitSet( LCIO::CHBIT_LONG ) << endl ;
-            out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
-            out << "     LCIO::CHBIT_ID1    : " << flag.bitSet( LCIO::CHBIT_ID1 ) << endl ;
-            out << "     LCIO::CHBIT_STEP   : " << flag.bitSet( LCIO::CHBIT_STEP ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "  -> LCIO::CHBIT_LONG   : " << flag.test( LCIO::CHBIT_LONG ) << endl ;
+            out << "     LCIO::CHBIT_BARREL : " << flag.test( LCIO::CHBIT_BARREL ) << endl ;
+            out << "     LCIO::CHBIT_ID1    : " << flag.test( LCIO::CHBIT_ID1 ) << endl ;
+            out << "     LCIO::CHBIT_STEP   : " << flag.test( LCIO::CHBIT_STEP ) << endl ;
         } 
         tmp << "0x" << hex << hit->id() << dec;
         out << setw(30) << setfill(' ') << std::left << "Id" <<   right << setw(40) << tmp.str() << endl;
@@ -1395,8 +1396,8 @@ namespace UTIL{
         tmp.str("");
         tmp  << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
         if(col != NULL){ 
-            LCFlagImpl flag(col->getFlag());
-            if(flag.bitSet(LCIO::CHBIT_LONG)){
+            BitSet32 flag(col->getFlag());
+            if(flag.test(LCIO::CHBIT_LONG)){
                 out <<setw(30) << left << showpos << "Position (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
             }
             else{
@@ -1438,19 +1439,19 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]||[qual.]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHit *){ //hauke
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|-----------------------------------------------------------------\n");
+        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|-----------------------------------------------------------------\n");
         return _t;
     }
 
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHit>& sV){ //hauke
         const EVENT::TrackerHit* part = sV.obj;
         const EVENT::LCCollection* col =  sV.col;
-        LCFlagImpl flag(col->getFlag());
+        BitSet32 flag(col->getFlag());
 
         out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
@@ -1458,6 +1459,7 @@ namespace UTIL{
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
         out << part->getTime() << "|";
         out << "[" << noshowpos << setw(4) << part->getType() << "]|";
+        out << "[" << noshowpos << setw(4) << part->getQuality() << "]|";
         out << showpos << part->getEDep() << "|";
         out << part->getEDepError() << "|";
         unsigned int i;
@@ -1498,7 +1500,7 @@ namespace UTIL{
         out << noshowpos;
         out << setw(41) <<  setfill('-') << right << " TrackerHit " << setfill('-') << setw(29) << "-" << endl;
         if(col != NULL){ 
-            if(col->getTypeName() != LCIO::TRACKERHIT){
+            if(col->getTypeame() != LCIO::TRACKERHIT){
                 out << "Warning: collection not of type " << LCIO::TRACKERHIT << endl ;
                 return(out);
 
@@ -1508,8 +1510,8 @@ namespace UTIL{
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::CHBIT_BARREL : " << flag.test( LCIO::CHBIT_BARREL ) << endl ;
         } 
 
         tmp.str("");
@@ -1531,7 +1533,8 @@ namespace UTIL{
         out << setw(30) << left << "Position (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
         out << setw(30) << left << "E_deposited " << setfill(' ') << right << setw(40) << hit->getEDep() << endl;
         out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
-        out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
+        out << setw(30) << left << "Type    " << setfill(' ') << right << setw(40) << BitSet32( hit->getType() ) << endl;
+        out << setw(30) << left << "Quality " << setfill(' ') << right << setw(40) << BitSet32( hit->getQuality() )<< endl;
         out << noshowpos;
 
         return(out);
@@ -1550,19 +1553,19 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerHitPlane *){
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|   du    |   dv    |q|  u (theta, phi)   |  v (theta, phi)\n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|   du    |   dv    |q|  u (theta, phi)   |  v (theta, phi)\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHitPlane *){
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|-|-------------------|-------------------|\n");
+        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|-------------------|\n");
         return _t;
     }
 
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHitPlane>& sV){
         const EVENT::TrackerHitPlane* part = sV.obj;
         const EVENT::LCCollection* col =  sV.col;
-        LCFlagImpl flag(col->getFlag());
+        BitSet32 flag(col->getFlag());
 
         out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
@@ -1570,6 +1573,7 @@ namespace UTIL{
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
         out << part->getTime() << "|";
         out << "[" << noshowpos << setw(4) << part->getType() << "]|";
+        out << "[" << noshowpos << setw(4) << part->getQuality() << "]|";
         out << showpos << part->getEDep() << "|";
         out << part->getEDepError() << "|";
         out << part->getdU() << "|";
@@ -1627,8 +1631,8 @@ namespace UTIL{
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
-            //LCFlagImpl flag( col->getFlag() ) ;
-            //out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+            //BitSet32 flag( col->getFlag() ) ;
+            //out << "     LCIO::CHBIT_BARREL : " << flag.test( LCIO::CHBIT_BARREL ) << endl ;
         } 
 
         tmp.str("");
@@ -1651,7 +1655,8 @@ namespace UTIL{
         out << setw(30) << left << "EDep " << setfill(' ') << right << setw(40) << hit->getEDep() << endl;
         out << setw(30) << left << "EDepError " << setfill(' ') << right << setw(40) << hit->getEDepError() << endl;
         out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
-        out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
+        out << setw(30) << left << "Type    " << setfill(' ') << right << setw(40) << BitSet32( hit->getType() ) << endl;
+        out << setw(30) << left << "Quality " << setfill(' ') << right << setw(40) << BitSet32( hit->getQuality() )<< endl;
         out << setw(30) << left << "dU " << setfill(' ') << right << setw(40) << hit->getdU() << endl;
         out << setw(30) << left << "dV " << setfill(' ') << right << setw(40) << hit->getdV() << endl;
         out << setw(30) << left << "U " << setfill(' ') << right << setw(40) << hit->getU()[0] << "," << hit->getU()[1] << endl;
@@ -1675,20 +1680,19 @@ namespace UTIL{
 
     const std::string& header(const EVENT::TrackerHitZCylinder *){
         //static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|    r    |  dRPhi  |    dZ   |q|    center (x,y)   |\n");
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|  dRPhi  |    dZ   |q|    center (x,y)   |\n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|  dRPhi  |    dZ   |q|    center (x,y)   |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHitZCylinder *){
-        //static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|---------|-|-------------------|\n");
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|---------|---------|---------|---------|-|-------------------|\n");
+        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|\n");
         return _t;
     }
 
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackerHitZCylinder>& sV){
         const EVENT::TrackerHitZCylinder* part = sV.obj;
         const EVENT::LCCollection* col =  sV.col;
-        LCFlagImpl flag(col->getFlag());
+        BitSet32 flag(col->getFlag());
 
         out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
@@ -1696,6 +1700,7 @@ namespace UTIL{
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
         out << part->getTime() << "|";
         out << "[" << noshowpos << setw(4) << part->getType() << "]|";
+        out << "[" << noshowpos << setw(4) << part->getQuality() << "]|";
         out << showpos << part->getEDep() << "|";
         out << part->getEDepError() << "|";
         //out << part->getR() << "|";
@@ -1752,8 +1757,8 @@ namespace UTIL{
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
-            //LCFlagImpl flag( col->getFlag() ) ;
-            //out << "     LCIO::CHBIT_BARREL : " << flag.bitSet( LCIO::CHBIT_BARREL ) << endl ;
+            //BitSet32 flag( col->getFlag() ) ;
+            //out << "     LCIO::CHBIT_BARREL : " << flag.test( LCIO::CHBIT_BARREL ) << endl ;
         } 
 
         tmp.str("");
@@ -1776,7 +1781,8 @@ namespace UTIL{
         out << setw(30) << left << "EDep " << setfill(' ') << right << setw(40) << hit->getEDep() << endl;
         out << setw(30) << left << "EDepError " << setfill(' ') << right << setw(40) << hit->getEDepError() << endl;
         out << setw(30) << left << "Time " << setfill(' ') << right << setw(40) << hit->getTime() << endl;
-        out << setw(30) << left << "Type " << setfill(' ') << right << setw(40) << hit->getType() << endl;
+        out << setw(30) << left << "Type    " << setfill(' ') << right << setw(40) << BitSet32( hit->getType() ) << endl;
+        out << setw(30) << left << "Quality " << setfill(' ') << right << setw(40) << BitSet32( hit->getQuality() )<< endl;
         //out << setw(30) << left << "r " << setfill(' ') << right << setw(40) << hit->getR() << endl;
         out << setw(30) << left << "dRPhi " << setfill(' ') << right << setw(40) << hit->getdRPhi() << endl;
         out << setw(30) << left << "dZ " << setfill(' ') << right << setw(40) << hit->getdZ() << endl;
@@ -1813,8 +1819,8 @@ namespace UTIL{
         const EVENT::SimTrackerHit* hit =  sV.obj;
         const EVENT::LCCollection* col =  sV.col;
 
-        LCFlagImpl flag(col->getFlag()) ;
-        bool pStored = flag.bitSet(LCIO::THBIT_MOMENTUM);
+        BitSet32 flag(col->getFlag()) ;
+        bool pStored = flag.test(LCIO::THBIT_MOMENTUM);
 
         int pdgid = 0;
         if(hit->getMCParticle()){
@@ -1907,9 +1913,9 @@ namespace UTIL{
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::THBIT_BARREL : " << flag.bitSet( LCIO::THBIT_BARREL ) << endl ;
-            out << "     LCIO::THBIT_MOMENTUM : " << flag.bitSet( LCIO::THBIT_MOMENTUM ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
+            out << "     LCIO::THBIT_MOMENTUM : " << flag.test( LCIO::THBIT_MOMENTUM ) << endl ;
         } 
 
         //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
@@ -1936,8 +1942,8 @@ namespace UTIL{
 
         tmp  << hit->getMomentum()[0] << ", " << hit->getMomentum()[1]  << ", " << hit->getMomentum()[2]; 
         if(col != NULL){ 
-            LCFlagImpl flag(col->getFlag());
-            if(flag.bitSet(LCIO::THBIT_MOMENTUM)){
+            BitSet32 flag(col->getFlag());
+            if(flag.test(LCIO::THBIT_MOMENTUM)){
                 out <<setw(40) << left << "Momentum [GeV] (x,y,z) [not verified]" << setfill(' ') << right <<setw(30) << tmp.str() << endl;
             }else{
                 out <<setw(30) << left << "Momentum [GeV] (x,y,z)" << setfill(' ') << right <<setw(40) << "not available"  << endl;
@@ -1977,7 +1983,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::CalorimeterHit>& sV){ //hauke
         const EVENT::CalorimeterHit* hit = sV.obj;
         const EVENT::LCCollection *col = sV.col;
-        LCFlagImpl flag( col->getFlag() ) ;
+        BitSet32 flag( col->getFlag() ) ;
 
         out << noshowpos;
 
@@ -1986,7 +1992,7 @@ namespace UTIL{
         out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
         out << "|" << dec << setprecision(3) << scientific << showpos << hit->getEnergy(); 
         out << "|" << dec << setprecision(3) << scientific << hit->getEnergyError(); 
-        if( flag.bitSet( LCIO::CHBIT_LONG ) ){
+        if( flag.test( LCIO::CHBIT_LONG ) ){
             out << "|" << dec << setprecision(3) << scientific << showpos
                 << hit->getPosition()[0] << ", " << hit->getPosition()[1] << ", " << hit->getPosition()[2]; 
         }else{
@@ -2022,13 +2028,13 @@ namespace UTIL{
             tmp << "0x" << hex << col->getFlag() << dec;
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters()); //todo
-            LCFlagImpl flag(col->getFlag());
-            out << "  -> LCIO::RCHBIT_LONG   : " << flag.bitSet( LCIO::RCHBIT_LONG ) << endl ;
-            out << "     LCIO::RCHBIT_BARREL : " << flag.bitSet( LCIO::RCHBIT_BARREL ) << endl ;
-            out << "     LCIO::RCHBIT_ID1    : " << flag.bitSet( LCIO::RCHBIT_ID1 ) << endl ;
-            out << "     LCIO::RCHBIT_TIME   : " << flag.bitSet( LCIO::RCHBIT_TIME ) << endl ;
-            out << "     LCIO::RCHBIT_NO_PTR : " << flag.bitSet( LCIO::RCHBIT_NO_PTR ) << endl ;
-            out << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.bitSet( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
+            BitSet32 flag(col->getFlag());
+            out << "  -> LCIO::RCHBIT_LONG   : " << flag.test( LCIO::RCHBIT_LONG ) << endl ;
+            out << "     LCIO::RCHBIT_BARREL : " << flag.test( LCIO::RCHBIT_BARREL ) << endl ;
+            out << "     LCIO::RCHBIT_ID1    : " << flag.test( LCIO::RCHBIT_ID1 ) << endl ;
+            out << "     LCIO::RCHBIT_TIME   : " << flag.test( LCIO::RCHBIT_TIME ) << endl ;
+            out << "     LCIO::RCHBIT_NO_PTR : " << flag.test( LCIO::RCHBIT_NO_PTR ) << endl ;
+            out << "     LCIO::RCHBIT_ENERGY_ERROR  : " << flag.test( LCIO::RCHBIT_ENERGY_ERROR ) << endl ;
         }
 
 
@@ -2045,8 +2051,8 @@ namespace UTIL{
         tmp.str("");
         tmp  << hit->getPosition()[0] << ", " << hit->getPosition()[1]  << ", " << hit->getPosition()[2]; 
         if(col != NULL){ 
-            LCFlagImpl flag(col->getFlag());
-            if(flag.bitSet(LCIO::CHBIT_LONG)){
+            BitSet32 flag(col->getFlag());
+            if(flag.test(LCIO::CHBIT_LONG)){
                 out <<setw(30) << left << showpos << "Position (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
             }
             else{
@@ -2600,11 +2606,11 @@ namespace UTIL{
 
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::Track>& sV){ //hauke
         const EVENT::Track *trk = sV.obj;
-        LCFlagImpl flag;
+        BitSet32 flag(0) ;
 
         if(sV.col != NULL){
             const EVENT::LCCollection *col = sV.col;
-            flag=LCFlagImpl(col->getFlag());
+            flag=BitSet32(col->getFlag());
         }
 
         out << noshowpos <<  " [" << setfill('0') << setw(8) << hex<< trk->id() << "] ";
@@ -2643,7 +2649,7 @@ namespace UTIL{
 
         out << endl;
         if(sV.col != NULL){
-            if(flag.bitSet(LCIO::TRBIT_HITS)){
+            if(flag.test(LCIO::TRBIT_HITS)){
                 out << " hits ->";
                 const TrackerHitVec& hits= trk->getTrackerHits() ;
                 for(l=0;l<hits.size();l++){
@@ -2686,8 +2692,8 @@ namespace UTIL{
             tmp << "0x" << hex << col->getFlag() << dec;
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::TRBIT_HITS : " << flag.bitSet( LCIO::TRBIT_HITS ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::TRBIT_HITS : " << flag.test( LCIO::TRBIT_HITS ) << endl ;
 
         } 
 
@@ -2797,7 +2803,7 @@ namespace UTIL{
         const EVENT::Cluster * clu = sV.obj;
         const EVENT::LCCollection *col = sV.col;
 
-        LCFlagImpl flag( col->getFlag() ) ;
+        BitSet32 flag( col->getFlag() ) ;
 
         out << noshowpos <<  " [" << setfill('0') << setw(8) << hex << clu->id() << "] |" << dec;
         out << setfill(' ') << setw(4) << clu->getType() << "|";
@@ -2829,7 +2835,7 @@ namespace UTIL{
         out << endl ;
 
 
-        if( flag.bitSet( LCIO::CLBIT_HITS ) ) {
+        if( flag.test( LCIO::CLBIT_HITS ) ) {
             out << " hits ->";
             const CalorimeterHitVec& hits= clu->getCalorimeterHits() ;
             const FloatVec& contr = clu->getHitContributions() ;
@@ -2866,8 +2872,8 @@ namespace UTIL{
             tmp << "0x" << hex << col->getFlag() << dec;
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
-            LCFlagImpl flag( col->getFlag() ) ;
-            out << "     LCIO::CLBIT_HITS : " << flag.bitSet( LCIO::CLBIT_HITS ) << endl ;
+            BitSet32 flag( col->getFlag() ) ;
+            out << "     LCIO::CLBIT_HITS : " << flag.test( LCIO::CLBIT_HITS ) << endl ;
 
         }
 
