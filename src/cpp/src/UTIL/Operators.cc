@@ -1500,7 +1500,7 @@ namespace UTIL{
         out << noshowpos;
         out << setw(41) <<  setfill('-') << right << " TrackerHit " << setfill('-') << setw(29) << "-" << endl;
         if(col != NULL){ 
-            if(col->getTypeame() != LCIO::TRACKERHIT){
+            if(col->getTypeName() != LCIO::TRACKERHIT){
                 out << "Warning: collection not of type " << LCIO::TRACKERHIT << endl ;
                 return(out);
 
