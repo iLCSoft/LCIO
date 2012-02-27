@@ -3,11 +3,11 @@
 ---------------------------------------------------------------
 
 ============
- HEAD  =>  v02-01 !?
+ v02-01 
 ============
 
     - minor release including following addons:
-       - added helper srtructs to UTIL/ILDConf:
+       - added helper structs to UTIL/ILDConf:
          ILDTrkHitTypeBit
          ILDTrkHitQualityBit
        - added helper class UTIL::BitSet32
