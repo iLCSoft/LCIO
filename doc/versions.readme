@@ -15,6 +15,10 @@
          checking bits in flag words
         -> to replace LCFlagImpl (changed in examples and LCTOOLS)
        - added helper methods make_bitset(), set_bit() and unset_bit()
+
+    - bug fixes:
+       - in /trunk/src/java/hep/lcio/implementation/sio/SIOTrack.java:
+            out.writeFloat(trackstate.getLocation()); -> writeInt
          
     
  
