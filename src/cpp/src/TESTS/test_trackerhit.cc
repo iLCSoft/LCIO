@@ -88,7 +88,7 @@ int main(int argc, char** argv ){
 	      double pos[3] = { i, j, i*j } ;
 	      trkHit->setPosition( pos ) ;
 	      
-	      float cov[3] = { i, j, i+j } ;
+	      float cov[TRKHITNCOVMATRIX] = { i, j, i+j , 2*i, 2*j, 2*(i+j) } ;
 	      trkHit->setCovMatrix( cov );
 	      
 	      trkHits->addElement( trkHit ) ;
