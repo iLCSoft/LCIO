@@ -42,35 +42,26 @@ typedef EVENT::long64 long64 ;
  
 namespace SIO {
 
-  
-  //   #define DEBUG 1
-  
+
   SIOReader::SIOReader( int lcReaderFlag ) :
-    _readEventMap( lcReaderFlag & LCReader::directAccess  )
-    //     :     
-    //     _myFilenames(0), 
-    //     _currentFileIndex(0) 
-  {
-    _myFilenames = 0 ;
-    _currentFileIndex = 0 ;
-
-    _evtP = new LCEventIOImpl* ;
-    *_evtP = 0 ;
-
-    _runP = new LCRunHeaderIOImpl* ;
-    *_runP = 0 ;
+    _dummyRecord(0), _stream(0) , _defaultEvt(0) ,
+    _myFilenames(0), _currentFileIndex(0) ,
+    _readEventMap( lcReaderFlag & LCReader::directAccess  ) {
+    
+    _evt = 0 ;
+    _run = 0 ;
 
 
-    _runHandler = new SIORunHeaderHandler( LCSIO_RUNBLOCKNAME, _runP ) ;
-    _evtHandler = new SIOEventHandler( LCSIO_HEADERBLOCKNAME, _evtP ) ;
+    _runHandler = new SIORunHeaderHandler( LCSIO_RUNBLOCKNAME, &_run ) ;
+    _evtHandler = new SIOEventHandler( LCSIO_HEADERBLOCKNAME, &_evt ) ;
     
 
     // debug
     //     std::cout << " _runHandler created : " << _runHandler 
-    // 	      << " with _runP " << _runP
+    // 	      << " with &_run " << &_run
     // 	      << std::endl ;
     //     std::cout << " _evtHandler created : " << _evtHandler 
-    // 	      << " with _evtP " << _evtP
+    // 	      << " with &_evt " << &_evt
     // 	      << std::endl ;
     
 
@@ -93,10 +84,8 @@ namespace SIO {
 
   SIOReader::~SIOReader(){
     
-    delete *_evtP ;
-    delete *_runP ;    
-    delete _evtP ;
-    delete _runP ;    
+    delete  _evt ;
+    delete  _run ;    
     delete  _runHandler ;
     delete  _evtHandler ;
 
@@ -267,21 +256,21 @@ namespace SIO {
     }
     
     // set the proper acces mode before returning the event
-    if( *_runP != 0 ) {
+    if( _run != 0 ) {
 
-        (*_runP)->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
+        _run->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
     }
 
-    return *_runP ;
+    return _run ;
   }
   
   void SIOReader::setUpHandlers(){
 
-    // use event *_evtP to setup the block readers from header information ....
-    const std::vector<std::string>* strVec = (*_evtP)->getCollectionNames() ;
+    // use event _evt to setup the block readers from header information ....
+    const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       
-      const LCCollection* col = (*_evtP)->getCollection( *name ) ;
+      const LCCollection* col = _evt->getCollection( *name ) ;
 
 
       // check if block handler exists in manager
@@ -293,7 +282,7 @@ namespace SIO {
 	
 	// create collection handler for event
 	try{
-	  ch =  new SIOCollectionHandler( *name, col->getTypeName() , _evtP )  ;
+	  ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_evt )  ;
 	  // calls   SIO_blockManager::add( ch )  in the c'tor !
 	}
 	catch(Exception& ex){   // unsuported type !
@@ -304,7 +293,7 @@ namespace SIO {
       }
       // else { // handler already exists
       if( ch != 0 )
-	ch->setEvent( _evtP ) ; 
+	ch->setEvent( &_evt ) ; 
       //      }
     }
   }
@@ -347,7 +336,7 @@ namespace SIO {
       }
       
 //       //---debug------------------------
-//       LCEventIOImpl* evt = *_evtP ; 
+//       LCEventIOImpl* evt = _evt ; 
 //       const StringVec* colNames = evt->getCollectionNames() ;
 //       for( StringVec::const_iterator it = colNames->begin() ;
 //       it != colNames->end() ; it++) {
@@ -361,13 +350,13 @@ namespace SIO {
 //       //---debug------------------------
 
       // set the proper acces mode before returning the event
-       (*_evtP)->setAccessMode( accessMode ) ;
+       _evt->setAccessMode( accessMode ) ;
       
 //       // restore the daughter relations from the parent relations
-//       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+//       SIOParticleHandler::restoreParentDaughterRelations( _evt ) ;
        postProcessEvent() ;
      
-      return *_evtP ;      
+      return _evt ;      
     }
   }
   
@@ -494,13 +483,13 @@ namespace SIO {
       bool runFound = false ;
       bool evtFound = false ;
       // check current run - if any
-      if( *_runP != 0 ){
-	if( (*_runP)->getRunNumber() == runNumber ) runFound = true ;
+      if( _run != 0 ){
+	if( _run->getRunNumber() == runNumber ) runFound = true ;
       }
       // skip through run headers until run found or EOF
       while (!runFound ) {
 	if( readNextRunHeader() == 0 ) break ; 
-	runFound = ( (*_runP)->getRunNumber() == runNumber ) ;
+	runFound = ( _run->getRunNumber() == runNumber ) ;
       }
       if( !runFound ){
 	//       std::stringstream message ;
@@ -521,7 +510,7 @@ namespace SIO {
 	    return 0 ;
 	  }
 	  
-	  evtFound = ( (*_evtP)->getEventNumber() == evtNumber ) ;
+	  evtFound = ( _evt->getEventNumber() == evtNumber ) ;
 	}
       }// -- end of scope for unpacking evt header --
       
@@ -539,14 +528,14 @@ namespace SIO {
 	
 	// set the proper acces mode before returning the event
 	// FIXME : need update mode as well
-	// (*_evtP)->setAccessMode( accessMode ) ;
-	(*_evtP)->setAccessMode( LCIO::READ_ONLY ) ;
+	// _evt->setAccessMode( accessMode ) ;
+	_evt->setAccessMode( LCIO::READ_ONLY ) ;
 	
 	//       // restore the daughter relations from the parent relations
-	//       SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+	//       SIOParticleHandler::restoreParentDaughterRelations( _evt ) ;
 	postProcessEvent() ;
 	
-	return *_evtP ;      
+	return _evt ;      
       }
      
 
@@ -633,11 +622,11 @@ namespace SIO {
 	std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
 	while( iter != _runListeners.end() ){
 
-	  (*_runP)->setReadOnly( false ) ;
-	  (*iter)->modifyRunHeader( *_runP ) ;
+	  _run->setReadOnly( false ) ;
+	  (*iter)->modifyRunHeader( _run ) ;
 
-	  (*_runP)->setReadOnly( true ) ;
-	  (*iter)->processRunHeader( *_runP ) ;
+	  _run->setReadOnly( true ) ;
+	  (*iter)->processRunHeader( _run ) ;
 	  
 	  iter++ ;
 	}
@@ -651,16 +640,16 @@ namespace SIO {
 	while( iter != _evtListeners.end() ){
 
 // 	  // restore the daughter relations from the parent relations
-// 	  SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+// 	  SIOParticleHandler::restoreParentDaughterRelations( _evt ) ;
 	  postProcessEvent() ;
 
 	  // fg20070813 changed order of update and process (needed for 
 	  // Marlin modifying processors )
-	  (*_evtP)->setAccessMode( LCIO::UPDATE ) ;
-	  (*iter)->modifyEvent( *_evtP ) ;
+	  _evt->setAccessMode( LCIO::UPDATE ) ;
+	  (*iter)->modifyEvent( _evt ) ;
 
-	  (*_evtP)->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
-	  (*iter)->processEvent( *_evtP ) ;
+	  _evt->setAccessMode( LCIO::READ_ONLY ) ; // set the proper acces mode
+	  (*iter)->processEvent( _evt ) ;
 
 
 	  iter++ ;
@@ -672,9 +661,9 @@ namespace SIO {
   
   void  SIOReader::postProcessEvent() {
     // restore the daughter relations from the parent relations
-    SIOParticleHandler::restoreParentDaughterRelations( *_evtP ) ;
+    SIOParticleHandler::restoreParentDaughterRelations( _evt ) ;
 //     // fill the relation map from intermediate vector
-//     SIOLCRelationHandler::fillRelationMap(  *_evtP ) ;
+//     SIOLCRelationHandler::fillRelationMap(  _evt ) ;
   }
 
 } // namespace
