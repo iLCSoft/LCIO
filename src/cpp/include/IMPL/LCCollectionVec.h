@@ -26,12 +26,12 @@ namespace IMPL {
   class LCCollectionVec : public EVENT::LCCollection , public EVENT::LCObjectVec 
     , public AccessChecked {
     
-    //  protected:
-  public: // changed for ROOT dictionary
+  protected:
+    //  public: // changed for ROOT dictionary
     /**  Default Constructor is protected  - every LCCollection needs to know the type
      *   of its elements.
      */
-    LCCollectionVec() {  /* no default c'tor */ }
+    LCCollectionVec() : _flag(0) {  /* no default c'tor */ }
     
   public:
     

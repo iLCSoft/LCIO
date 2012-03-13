@@ -214,8 +214,8 @@ class SIOEventHandler ;
   private:
     
     IOIMPL::LCEventIOImpl *_defaultEvt ; // used to add collections when reading 
-    IOIMPL::LCEventIOImpl **_evtP ;
-    IOIMPL::LCRunHeaderIOImpl **_runP ;
+    IOIMPL::LCEventIOImpl *_evt ;
+    IOIMPL::LCRunHeaderIOImpl *_run ;
 
     std::set<IO::LCRunListener*> _runListeners ;
     std::set<IO::LCEventListener*> _evtListeners ;

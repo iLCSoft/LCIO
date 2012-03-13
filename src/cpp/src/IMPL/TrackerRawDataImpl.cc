@@ -11,6 +11,7 @@ namespace IMPL{
   TrackerRawDataImpl::TrackerRawDataImpl() : 
     _cellID0(0) ,
     _cellID1(0) ,
+    _channelID(0),
     _time(0){
   }    
 

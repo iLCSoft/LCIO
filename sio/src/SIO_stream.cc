@@ -62,6 +62,9 @@ reserve   = i_reserve;
 state     = SIO_STATE_CLOSED;
 verbosity = i_verbosity;
 
+pointedAt = NULL ;
+pointerTo = NULL ;
+
 compLevel = Z_DEFAULT_COMPRESSION ;
 }
 

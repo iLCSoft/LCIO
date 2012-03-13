@@ -26,8 +26,10 @@ namespace UTIL{
 // Constructor opens file, destructor closes file. Once opened for
 // reading, the file cannot be written to, and v.v.
 //
-lStdHep::lStdHep(const char *filename, bool open_for_write) : lXDR(filename, open_for_write),
-   version(0), title(0), comment(0), date(0), closingDate(0), blockIds(0), blockNames(0)
+lStdHep::lStdHep(const char *filename, bool open_for_write) : 
+  lXDR(filename, open_for_write),
+  ntot(0),version(0),title(0),comment(0),date(0),closingDate(0),numevts_expect(0),numevts(0),
+  firstTable(0),dimTable(0),nNTuples(0),nBlocks(0),blockIds(0),blockNames(0)
 {
    if (open_for_write) {
       setError(LSH_NOTSUPPORTED);
@@ -359,11 +361,13 @@ long lStdHep::EventTable::print(FILE *fp)
 }
 
 lStdHep::Event::Event() :
-   isEmpty(1), blockid(0), ntot(0), version(0), blockIds(0),
-   ptrBlocks(0), nevhep(0), nhep(0), isthep(0), idhep(0),
-   jmohep(0), jdahep(0), phep(0), vhep(0), eventweight(0.0),
-   alphaqed(0.0), alphaqcd(0.0), scale(0), spin(0), colorflow(0),
-   idrup(0)
+   isEmpty(0), blockid(0),ntot(0),version(0),evtnum(0),storenum(0),runnum(0),
+   trigMask(0),nBlocks(0),dimBlocks(0),nNTuples(0),dimNTuples(0),blockIds(0),
+   ptrBlocks(0),nevhep(0),nhep(0),isthep(0),idhep(0),jmohep(0),jdahep(0),phep(0),
+   vhep(0),eventweight(0),alphaqed(0),alphaqcd(0),scale(0),spin(0),colorflow(0),idrup(0),
+   bnevtreq(0),bnevtgen(0),bnevtwrt(0),bstdecom(0),bstdxsec(0),bstdseed1(0),bstdseed2(0),
+   enevtreq(0),enevtgen(0),enevtwrt(0),estdecom(0),estdxsec(0),estdseed1(0),estdseed2(0)
+ 
 {
    return;
 }

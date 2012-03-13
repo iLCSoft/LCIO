@@ -18,12 +18,14 @@ namespace SIO  {
 
   SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name) : 
     SIO_block( name.c_str() ),
-    _rhP(0) {
+    _rhP(0), 
+    _hdr(0) {
   }
 
   SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** aRhP) : 
     SIO_block( name.c_str() ),
-    _rhP( aRhP ) {
+    _rhP( aRhP ), 
+    _hdr(0) {
     
     *_rhP = 0 ;
   }

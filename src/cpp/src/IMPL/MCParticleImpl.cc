@@ -36,7 +36,8 @@ namespace IMPL {
     _charge(0),
     _time(0),
     _parents(0),
-    _daughters(0)
+    _daughters(0),
+    _endpointSet(false)
   {
     _vertex[0] = 0.0 ;
     _vertex[1] = 0.0 ;

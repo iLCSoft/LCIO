@@ -149,7 +149,7 @@ namespace UTIL{
 
  
     EVENT::LCCollection* _col ;
-    T* _oldHit ;
+    //    T* _oldHit ;
   } ; 
   
 

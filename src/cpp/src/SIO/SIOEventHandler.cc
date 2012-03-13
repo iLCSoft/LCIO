@@ -23,12 +23,14 @@ namespace SIO  {
 
   SIOEventHandler::SIOEventHandler(const std::string& name) : 
     SIO_block( name.c_str() ),
-    _evtP(0) {
+    _evtP(0), 
+    _evt(0) {
   }
 
   SIOEventHandler::SIOEventHandler(const std::string& name, LCEventIOImpl** anEvtP) : 
     SIO_block( name.c_str() ),
-    _evtP( anEvtP ) {
+    _evtP( anEvtP ), 
+    _evt(0) {
  
     *_evtP = 0 ;
  }
