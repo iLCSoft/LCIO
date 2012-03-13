@@ -77,7 +77,7 @@ namespace HEPEVTIMPL{
         FTNhep1.mcpointerv[j] = reinterpret_cast<PTRTYPE>( getmcVec->getElementAt( j ) ) ;
       }
 
-      delete p ;
+      delete[] p ;
   }  // end of fromHepEvt
 
 /* ============================================================================================================= */
