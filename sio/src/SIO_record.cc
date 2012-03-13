@@ -501,7 +501,13 @@ while( stream->buffer < stream->recmax )
         return( SIO_STREAM_NOALLOC );
     }
 
-    SIO_DATA( stream, tmploc, tmplen );
+    //SIO_DATA( stream, tmploc, tmplen );
+    //fg: keep coverity happy be deleting the temp memory in case of a read error
+    status = SIO_functions::data( stream, tmploc, tmplen ); 
+    if( !(status & 1) ) {
+      free( tmploc );
+      return status;
+    }
     tmploc[tmplen]   = '\0';
     block            = SIO_blockManager::get( tmploc );
     stream->blk_name = tmploc;
