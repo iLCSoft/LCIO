@@ -780,7 +780,14 @@ while( requested == false )
         return( SIO_STREAM_NOALLOC );
     }
 
-    SIO_DATA( this, tmploc, name_length );
+    //    SIO_DATA( this, tmploc, name_length );
+    //fg: keep coverity happy be deleting the temp memory in case of a read error
+    status = SIO_functions::data(  this, tmploc, name_length );
+    if( !(status & 1) ) {
+      free( tmploc );
+      return status;
+    }
+
     tmploc[name_length]  = '\0';
     *record              = SIO_recordManager::get( tmploc );
     rec_name             = tmploc;
