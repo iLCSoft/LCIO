@@ -254,6 +254,7 @@ double *lXDR::readFloatArray(long &length)
       }
    }
    _error = LXDR_SUCCESS;
+   delete [] st;
    return(s);
 }
 
