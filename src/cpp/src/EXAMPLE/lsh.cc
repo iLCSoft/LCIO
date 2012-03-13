@@ -655,7 +655,7 @@ int main(int argc, char** argv ) {
   
   // initialisation
   cout << setprecision(3) << fixed;
-  lcReader = LCFactory::getInstance()->createLCReader() ;
+  lcReader = LCFactory::getInstance()->createLCReader( IO::LCReader::directAccess ) ;
   egg = temp;
   
   fun_open(argv[1]);         // opening new file and preparing general information
@@ -667,7 +667,7 @@ int main(int argc, char** argv ) {
   do {
 //     string commandBuf;
     vector<string> commandVec;
-    
+    commandVec.reserve( 1024 ) ;
 
     /** read input */
 //    /** ohne readline **/
@@ -726,8 +726,11 @@ int main(int argc, char** argv ) {
         if ((commandVec[cvSize-2] == "|") || (commandVec[cvSize-2] == ">")) {
         pageOutput = true; 
         data.save = true;
-        strcpy(data.filename, commandVec[cvSize-1].c_str());
-      }  
+	//        strcpy(data.filename, commandVec[cvSize-1].c_str());
+	//fg: cannot use strcpy w/o memory allocation - assign filename directly from vector 
+	//    as a workaround (works as long as commandVec does not change...)
+        data.filename = &commandVec[cvSize-1][0] ;
+	}  
     }
     
     
