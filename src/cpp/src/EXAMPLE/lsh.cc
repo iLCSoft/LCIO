@@ -71,6 +71,7 @@ bool pageOutput = false;
 
 string pager = "less";
 string egg   = "egg";
+string prompt = "";
 
 // memorie for objects
 LCReader* lcReader;
@@ -83,8 +84,9 @@ LCCollection *col;
  * PROMPT
  */
 const char * print_prompt() {
-  string prompt = "";
   
+  prompt.clear() ;
+
   vector<level>::iterator levelIt;
   vector<level>::iterator levelItEnd = position.end();
   for( levelIt = position.begin(); levelIt != levelItEnd ; levelIt++ ){
