@@ -27,7 +27,7 @@ namespace IMPL {
     , public AccessChecked {
     
   protected:
-    //  public: // changed for ROOT dictionary
+    //  public: // used to be needed for ROOT dictionary (no longer !?)
     /**  Default Constructor is protected  - every LCCollection needs to know the type
      *   of its elements.
      */
