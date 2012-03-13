@@ -26,7 +26,7 @@ namespace SIO {
   }
   SIO_record* SIORecords::operator[](size_t idx){
 
-    if( idx > NumberOfRecords ) 
+    if( idx >= NumberOfRecords ) 
       throw IO::IOException( " Out of range in SIORecords::operator[](size_t i)" ) ;
 
     return _records[ idx ] ;
