@@ -65,6 +65,8 @@ verbosity = i_verbosity;
 pointedAt = NULL ;
 pointerTo = NULL ;
 
+recPos = 0 ;
+
 compLevel = Z_DEFAULT_COMPRESSION ;
 }
 
