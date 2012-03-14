@@ -26,9 +26,10 @@ namespace IMPL {
   class LCCollectionVec : public EVENT::LCCollection , public EVENT::LCObjectVec 
     , public AccessChecked {
     
-  protected:
-    //  public: // used to be needed for ROOT dictionary (no longer !?)
-    /**  Default Constructor is protected  - every LCCollection needs to know the type
+    
+   public: // this is needed for the auto generated streamer in the ROOT dictionary !!!
+    //protected 
+    /**  Default Constructor should be protected - every LCCollection needs to know the type
      *   of its elements.
      */
     LCCollectionVec() : _flag(0) {  /* no default c'tor */ }
