@@ -3,6 +3,15 @@
 ---------------------------------------------------------------
 
 ============
+ v02-01-01 
+============
+
+   - patch release with fixes for issues identified by coverity
+     ( https://coverity.cern.ch/defects/index.htm?projectId=10017 )
+      - uninitialized c'tors and memory leaks
+
+
+============
  v02-01 
 ============
 
