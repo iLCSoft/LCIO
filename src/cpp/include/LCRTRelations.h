@@ -154,7 +154,7 @@ namespace lcrtrel_helper{
     inline static void add( T& t, S s) { t = s ; }
 
     template <class T, class S>
-    inline static void remove( T& t, S s) { t = 0 ; }
+    inline static void remove( T& t, S ) { t = 0 ; }
   };
 
   //-----------end of  internal helper typdefs, function and classes ----------
@@ -251,7 +251,7 @@ namespace lcrtrel{
     
     static const int allowed_to_call_ext = 1 ;
     
-    static void clean(void *v) { }
+    static void clean(void *) { }
 
     static ptr init() { 
       return 0 ; 
@@ -278,7 +278,7 @@ namespace lcrtrel{
     typedef U tag ;     // this ensures that a new class instance is created for every user extension
 
     static const int allowed_to_call_ext = 1 ;
-    static void clean(void *v) { }
+    static void clean(void *) { }
     static ptr init() { return 0 ; }
     static DeleteFPtr deletePtr() { return  &clean ; }  ;
   };
