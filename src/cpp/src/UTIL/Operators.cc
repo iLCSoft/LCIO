@@ -2084,22 +2084,22 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::MCParticle *){ //hauke
-        static std::string _h(" [   id   ] |      PDG |     px,     py,        pz     | energy |gen|[simstat]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
+        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | energy |gen|[simstat]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::MCParticle *){ //hauke
-        static std::string _t("------------|----------|-------------------------------|--------|---|---------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
+        static std::string _t("------------|-----|-------------------------------|--------|---|---------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
         return _t;
     }
 
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::MCParticle>& sV){ //hauke
         const EVENT::MCParticle* part = sV.obj;
 
-        out << " [" << hex << setfill('0') << setw(8) << part->id() << "] ";
+        out << " [" << hex << setfill('0') << setw(8) << part->id() << "] "<< dec ;
         //out << setfill (' ') << dec << setw(5) << index << "|";
         out << "|";
-        out << setw(10) << part->getPDG() << "|"; 
+        out << setfill(' ')<< setw(5) << part->getPDG() << "|"; 
         out << scientific << showpos << setprecision(2)
             << part->getMomentum()[0] << ", " << part->getMomentum()[1] << ", " << part->getMomentum()[2] << "|";
         out << noshowpos;
