@@ -3,6 +3,14 @@
 ---------------------------------------------------------------
 
 ============
+ v02-01-02 
+============
+
+    - fixed short print out of MCParticle
+    - fixed warnings w/ unused variables (in function argument list)
+
+
+============
  v02-01-01 
 ============
 
