@@ -79,6 +79,6 @@ FCALLSCFUN2(INT, lcmcpsetmomentum,LCMCPSETMOMENTUM,lcmcpsetmomentum, CFORTRANPNT
 FCALLSCFUN2(INT, lcmcpsetmass,LCMCPSETMASS,lcmcpsetmass, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcmcpsetcharge, LCMCPSETCHARGE, lcmcpsetcharge, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcmcpsetspin, LCMCPSETSPIN, lcmcpsetspin, CFORTRANPNTR, FLOATV)
-FCALLSCFUN2(INT, lcmcpsetcolorflow, LCMCPSETCOLORFLOW, lcmcpsetcolowflow, CFORTRANPNTR, INTV)
+FCALLSCFUN2(INT, lcmcpsetcolorflow, LCMCPSETCOLORFLOW, lcmcpsetcolorflow, CFORTRANPNTR, INTV)
 }
 
