@@ -9,6 +9,7 @@
     - fixed short print out of MCParticle
     - fixed warnings w/ unused variables (in function argument list)
     - fix in LCStdhepReader.cc (B.Vormwald) for dealing with multiple 94 objects
+    - fixed typo in CPPFORT/lcmcp.h : lcmcpsetcolowflow -> lcmcpsetcolorflow
 
 ============
  v02-01-01 
