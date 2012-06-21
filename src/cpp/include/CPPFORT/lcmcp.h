@@ -40,8 +40,8 @@ int lcmcpsetendpoint( PTRTYPE mcparticle, double pnt[3] ) ;
 int lcmcpsetmomentum( PTRTYPE mcparticle,  float p[3] );
 int lcmcpsetmass( PTRTYPE mcparticle, float m) ;
 int lcmcpsetcharge( PTRTYPE mcparticle, float c ) ;
-int lcmcpsetspin( PTRTYPE mcparticle, float* spin ) ;
-int lcmcpsetcolorflow( PTRTYPE mcparticle, int* cflow ) ;
+int lcmcpsetspin( PTRTYPE mcparticle, float spin[3] ) ;
+int lcmcpsetcolorflow( PTRTYPE mcparticle, int cflow[2] ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
