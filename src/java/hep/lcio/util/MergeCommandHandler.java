@@ -163,7 +163,7 @@ public class MergeCommandHandler extends CommandHandler
 		// Set the maximum number of merged events.
 		if (cl.hasOption("e"))
 		{
-			def_ntoread = Integer.parseInt(cl.getOptionValue("n"));
+			def_ntoread = Integer.parseInt(cl.getOptionValue("e"));
 		}
 	}
 
