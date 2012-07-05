@@ -29,11 +29,12 @@ namespace UTIL{
       _wrt( wrt ), 
       _maxBytes(maxBytes),
       _baseFilename(""),
+      _filename(""),
       _extension(""),
-      _count(0) {    
+      _count(0) ,    
+      _lastCount(4294967295UL) {    
     }    
-    
-    
+   
     /** Destructor.
      */
     virtual ~LCSplitWriter() {;}
@@ -123,8 +124,10 @@ namespace UTIL{
     IO::LCWriter*  _wrt ;
     EVENT::long64 _maxBytes ;
     std::string _baseFilename ;
+    std::string _filename ;
     std::string _extension ;
     unsigned _count ;
+    unsigned _lastCount ;
     
   }; // class
   

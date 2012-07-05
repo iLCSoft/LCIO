@@ -85,18 +85,15 @@ namespace UTIL{
 
 
 
-    const std::string&   LCSplitWriter::getFilename() { 
-
-      static unsigned  int lastCount =  4294967295UL ;
-      static std::string filename ;
-
-      if( _count != lastCount ) 
-	filename = std::string( _baseFilename + "." + getCountingString( _count ) + _extension )  ; 
-
-      lastCount = _count ;
-
-      return filename ;
-    } 
+  const std::string&   LCSplitWriter::getFilename() { 
+    
+    if( _count != _lastCount ) 
+      _filename = std::string( _baseFilename + "." + getCountingString( _count ) + _extension )  ; 
+    
+    _lastCount = _count ;
+    
+    return _filename ;
+  } 
 
 
 
