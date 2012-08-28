@@ -3,6 +3,13 @@
 ---------------------------------------------------------------
 
 ============
+ HEAD
+============
+
+    - added LCIO_JAVA_USE_MAVEN option to build lcio.jar library using maven
+
+
+============
  v02-01-02 
 ============
 
