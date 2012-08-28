@@ -126,11 +126,14 @@ SET( LCIO_AID_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/aid" )
 #ADD_CUSTOM_TARGET( headers DEPENDS ${LCIO_CXX_HEADERS_DIR}/EVENT/LCIO.h )
 
 
-### BUILD JAR LIBRARY (USING ANT ) ##########################################
+### BUILD JAR LIBRARY (USING ANT OR MAVEN) ##################################
+
+SET( LCIO_JAVA_BUILD_CMD "ant aid" )
+#SET( LCIO_JAVA_BUILD_CMD "mvn clean install" )
 
 # create "always out-of-date" jar target
 ADD_CUSTOM_TARGET( jar_force
-    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+    COMMAND ${SH} "${LCIO_ENV_INIT}" "${LCIO_JAVA_BUILD_CMD}"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     COMMENT "Building lcio jar library..."
 )
@@ -138,7 +141,7 @@ ADD_CUSTOM_TARGET( jar_force
 # custom command to generate jar library
 ADD_CUSTOM_COMMAND(
     OUTPUT "${PROJECT_SOURCE_DIR}/lib/lcio.jar"
-    COMMAND ${SH} "${LCIO_ENV_INIT}" ant aid
+    COMMAND ${SH} "${LCIO_ENV_INIT}" "${LCIO_JAVA_BUILD_CMD}"
     WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
     COMMENT "generating lcio.jar"
 )
