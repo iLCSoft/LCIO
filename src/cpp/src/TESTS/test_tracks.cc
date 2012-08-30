@@ -14,6 +14,7 @@
 #include "IMPL/TrackStateImpl.h"
 
 #include "UTIL/Operators.h"
+#include "UTIL/LCIterator.h"
 
 #include <sstream>
 #include <assert.h>
@@ -163,15 +164,20 @@ int main(int argc, char** argv ){
 
             MYTEST(  evt->getEventNumber() ,  i , " event number "  ) ;
 
-            LCCollection* tracks = evt->getCollection( "Tracks") ;
+            // LCCollection* tracks = evt->getCollection( "Tracks") ;
 
-            MYTEST.LOG(" reading back Tracks (one TrackState only) " ) ;
+            // MYTEST.LOG(" reading back Tracks (one TrackState only) " ) ;
 
-            for( int j=0 ; j<NTRACKS ; j++ ){
+            // for( int j=0 ; j<NTRACKS ; j++ ){
 
-                //std::cout << " testing track " << j << std::endl ;
+            //     //std::cout << " testing track " << j << std::endl ;
 
-                Track* trk = dynamic_cast<Track*>(tracks->getElementAt(j)) ;
+            //     Track* trk = dynamic_cast<Track*>(tracks->getElementAt(j)) ;
+
+	    int j=0 ;
+
+	    LCIterator<Track> it( evt, "Tracks"  ) ;
+	    while( Track* trk = it.next() ) {
 
                 MYTEST( trk->getOmega(),  float( (i+j) * .1 ), "getOmega" ) ;
                 MYTEST( trk->getTanLambda(),  float( (i+j) * .2 ), "getTanLambda" ) ;
@@ -200,7 +206,14 @@ int main(int argc, char** argv ){
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
 
+		++j ;
             }
+
+	    stringstream ss;
+	    ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "Tracks using the LCIterator<Track>.\n" ; 
+	      MYTEST.LOG( ss.str()  ) ;
+
+
 
             LCCollection* tracksWithMultipleStates = evt->getCollection( "TracksWithMultipleStates") ;
 
