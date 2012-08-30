@@ -49,8 +49,8 @@
 \begin{document}
 \pdfgraphics
 
-%\title{LCIO [v02-01] -  Users manual}
-\title{{\Huge\bf LCIO  -  Users manual} \\ v02-01}
+%\title{LCIO [v02-02] -  Users manual}
+\title{{\Huge\bf LCIO  -  Users manual} \\ v02-02}
 
 %\author{F. Gaede \\  DESY IT}
 %\author{F. Gaede, H. Vogt \\  DESY IT, DESY Zeuthen}
@@ -112,6 +112,7 @@ an ANSI compliant C++ compiler.\\\\
 \subsection{Building LCIO} \label{build_lcio}
 
 There are two build tools that can be used to build LCIO: maven and CMake~\cite{ref_cmake}. 
+
 CMake~\cite{ref_cmake} has been introduced in version v01-11 to facilitate cross plattform support for 
 the C++ version. 
 
@@ -142,64 +143,73 @@ Then issue the following commands:
 
 CMake options may also be specified in a separate file and read with the -C option. (please check the CMake~\cite{ref_cmake} documentation for more details)
 \begin{verbatim}
-  # ILCSoft.cmake is a configuration file generated for each ilcsoft reference installation. It contains the list of paths from all tools within the installation.
-  # in this example the BUILD_ROOTDICT option from LCIO is activated which requires the path to the ROOT package. This path is read from the ILCSoft.cmake configuration file.
-  cmake -C /afs/desy.de/project/ilcsoft/sw/i386_gcc41_sl5/v01-11/ILCSoft.cmake -DBUILD_ROOTDICT=ON ..
+  # ILCSoft.cmake is a configuration file generated for each ilcsoft reference installation.
+  # It contains the list of paths from all tools within the installation.
+  # in this example the BUILD_ROOTDICT option from LCIO is activated which requires the 
+  # path to the ROOT package. This path is read from the ILCSoft.cmake configuration file.
+
+  cmake -C /afs/desy.de/project/ilcsoft/sw/i386_gcc41_sl5/v01-11/ILCSoft.cmake \
+        -DBUILD_ROOTDICT=ON ..
+
 \end{verbatim}
 
-\subsubsection{Building LCIO with ant}
+%\subsubsection{Building LCIO with ant}
+%Obsolete.
 
-% TODO need to update this section for using maven
+%A few variables have to be set depending on your development environment, e.g.
+%\begin{itemize}
+%\item{ {\bf Linux (and bash):} 
+%\begin{verbatim} 
+%  export LCIO=/lcio/v02-02                <-- modify as appropriate
+%  export PATH=$LCIO/tools:$LCIO/bin:$PATH
+%
+%  export JDK_HOME=/usr/lib/j2sdk             <-- modify as appropriate
+%
+%  ( export CLHEP=/opt/products/CLHEP/2.0.4.5  <-- optionally use CLHEP four vectors with LCIO/C++) 
+%\end{verbatim} 
+%}
+%%$ <- fixes syntax highlighting
+%\item{ {\bf Windows/Cygwin - DOS shell:} 
+%\begin{verbatim}
+%  set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
+%
+%  set LCIO=c:/lcio/trunk                   <-- modify as appropriate
+%  set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
+%
+%  set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
+%\end{verbatim}
+%Note: Cygwin is only needed for gcc and make to build the C++ version.
+%}
+%\item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
+%\begin{verbatim}
+%  export LCIO=/cygdrive/c/lcio/trunk             <-- modify as appropriate
+%  export PATH=$LCIO/tools:$LCIO/bin:$PATH
+%  export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01      <-- modify as appropriate
+%\end{verbatim} %$
+%}
+%\end{itemize}
+%To build the Java and C++ versions use the following commands\footnote{When using the Cygwin shell you need to
+%call the Windows version of ant with its full name, i.e. {\em ant.bat cpp}.}:
+%\begin{verbatim}
+%  ant aid.generate     <-- generates common API
+%  ant cpp              <-- creates C++ version
+%  ant aid              <-- creates Java version
+%  ant f77              <-- builds f77 examples
+%\end{verbatim}
+%or all in one:
+%\begin{verbatim}
+%  ant aid cpp f77
+%\end{verbatim}
+%or if starting over from a previously failed attempt to build LCIO:
+%\begin{verbatim}
+%  ant clean aid cpp f77
+%\end{verbatim}
 
-A few variables have to be set depending on your development environment, e.g.
-\begin{itemize}
-\item{ {\bf Linux (and bash):} 
-\begin{verbatim} 
-  export LCIO=/lcio/v02-01                <-- modify as appropriate
-  export PATH=$LCIO/tools:$LCIO/bin:$PATH
+\subsubsection{Building LCIO with Maven}
+Download and install Maven (http://maven.apache.org/download.html) and then type
 
-  export JDK_HOME=/usr/lib/j2sdk             <-- modify as appropriate
-
-  ( export CLHEP=/opt/products/CLHEP/2.0.4.5  <-- optionally use CLHEP four vectors with LCIO/C++) 
-\end{verbatim} 
-}
-%$ <- fixes syntax highlighting
-\item{ {\bf Windows/Cygwin - DOS shell:} 
 \begin{verbatim}
-  set PATH=c:/cygwin/bin;%PATH%            <-- modify as appropriate
-
-  set LCIO=c:/lcio/trunk                   <-- modify as appropriate
-  set JDK_HOME=c:/j2sdk1.4.1_01            <-- modify as appropriate 
-
-  set PATH=%LCIO%/tools;%LCIO%/bin;%PATH%
-\end{verbatim}
-Note: Cygwin is only needed for gcc and make to build the C++ version.
-}
-\item{ {\bf Windows/Cygwin - Cygwin shell (bash):} 
-\begin{verbatim}
-  export LCIO=/cygdrive/c/lcio/trunk             <-- modify as appropriate
-  export PATH=$LCIO/tools:$LCIO/bin:$PATH
-  export JDK_HOME=/cygdrive/c/j2sdk1.4.1_01      <-- modify as appropriate
-\end{verbatim} %$
-}
-\end{itemize}
-
-
-To build the Java and C++ versions use the following commands\footnote{When using the Cygwin shell you need to
-call the Windows version of ant with its full name, i.e. {\em ant.bat cpp}.}:
-\begin{verbatim}
-  ant aid.generate     <-- generates common API
-  ant cpp              <-- creates C++ version
-  ant aid              <-- creates Java version
-  ant f77              <-- builds f77 examples
-\end{verbatim}
-or all in one:
-\begin{verbatim}
-  ant aid cpp f77
-\end{verbatim}
-or if starting over from a previously failed attempt to build LCIO:
-\begin{verbatim}
-  ant clean aid cpp f77
+   mvn clean install
 \end{verbatim}
 
 
@@ -211,7 +221,7 @@ Both ways of building LCIO will create the following libraries and executables:
       lcio.jar       <-- Java library (and executables)
       liblcio.so     <-- C++ lcio library
       libsio.so      <-- C++ sio library
-
+      
  ./bin               <-- C++ examples and tools
       anajob
       copyfix
