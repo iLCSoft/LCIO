@@ -2500,7 +2500,7 @@ namespace UTIL{
         const EVENT::TrackState *trk = sV.obj;
 
         out << noshowpos <<  " [" << setfill('0') << setw(8) << hex<< trk->id() << "] ";
-        out << scientific << setprecision (2) << showpos << dec << setfill(' ');
+        out << scientific << setprecision(6) << showpos << dec << setfill(' ');
         out << " |" << trk->getD0(); 
         out << " |" << trk->getPhi(); 
         out << " |" << trk->getOmega();
@@ -2553,29 +2553,29 @@ namespace UTIL{
 	out << setw(30) << setfill(' ') << left << "Location" << right << setw(40) << tmp.str() << endl;
 	tmp.str("") ;
         tmp << hex << setfill('0') << setw(8) << part->id();
-
-        out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
-        out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
-        out << setw(30) << setfill(' ') << left << "Phi" << right << setw(40) << part->getPhi() << endl;
-        out << setw(30) << setfill(' ') << left << "Omega" << right << setw(40) << part->getOmega() << endl;
-        out << setw(30) << setfill(' ') << left << "Z0" << right << setw(40) << part->getZ0() << endl;
-        out << setw(30) << setfill(' ') << left << "Tan Lambda" << right << setw(40) << part->getTanLambda() << endl;
+	out << scientific << setprecision(6) ;
+        out << setw(30) << setfill(' ') << left << "Id"          << right << setw(40) << tmp.str() << endl;
+        out << setw(30) << setfill(' ') << left << "D0"          << right << setw(40) << part->getD0() << endl;
+        out << setw(30) << setfill(' ') << left << "Phi"         << right << setw(40) << part->getPhi() << endl;
+        out << setw(30) << setfill(' ') << left << "Omega"       << right << setw(40) << part->getOmega() << endl;
+        out << setw(30) << setfill(' ') << left << "Z0"          << right << setw(40) << part->getZ0() << endl;
+        out << setw(30) << setfill(' ') << left << "Tan Lambda"  << right << setw(40) << part->getTanLambda() << endl;
 
         tmp.str("");
         tmp  << dec << part->getReferencePoint()[0] << ", " << part->getReferencePoint()[1]  << ", " << part->getReferencePoint()[2]; 
         out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
 
-        out << "Cov matrix:     " << showpos;
+        out << "Cov matrix:" << showpos << scientific << setprecision(6) << setw(15) << setfill(' ')  ;
         unsigned int l;
         for(l=0;l<14;l++){ // FIXME hard-coded 14
             out << part->getCovMatrix()[l];
-            if(! ((l+1)%5)){ // FIXME hard-coded 5
-                out << endl << "            ";
+            if(! ( (l+1)%5 ) ){ // FIXME hard-coded 5
+	      out << endl << "             " ;
             } else{
                 out << ", ";
             }
         }
-        if(!((l+2)%5)){out << endl << "            ";} // FIXME hard-coded 5
+        if(!((l+2)%5)){out << endl << "             " ;} // FIXME hard-coded 5
         out << part->getCovMatrix()[l+1] << endl;
 
         out << noshowpos;
