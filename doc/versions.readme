@@ -3,9 +3,19 @@
 ---------------------------------------------------------------
 
 ============
- HEAD
+  v02-02
 ============
+    - added new class LCIterator<T> for convenient loops over collections, e.g.:
 
+        for(  LCIterator<Track> it( evt, "Tracks" ) ;  Track* trk = it.next()  ; ) {
+   
+           std::cout << trk->getTrackState( TrackState::AtIP ) << std::endl  ;
+        }
+       
+        - added small test/example to ./src/cpp/src/TESTS/test_tracks.cc
+
+    - Operators.cc: fixed scientific format for Track/TrackState 
+   
     - added LCIO_JAVA_USE_MAVEN option to build lcio.jar library using maven
 
 

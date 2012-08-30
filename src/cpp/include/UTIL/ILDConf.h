@@ -4,6 +4,7 @@
 
 #include <string>
 #include "CellIDEncoder.h"
+#include "CellIDDecoder.h"
 
 #include "BitSet32.h"
 
@@ -24,8 +25,17 @@ namespace UTIL {
   struct ILDCellID0 {
     
     /** The canonical encoding string to be used for writing the CellID0 with the CellIDEncoder<T>: 
-     *   <pre>"subdet:5,side:-2,layer:9,module:8:sensor:8"</pre> 
-     */
+      *   <pre>"subdet:5,side:-2,layer:9,module:8:sensor:8"</pre> 
+      *
+      *  Use the CellIdDecoder to access the elements:
+      *  <pre>
+      *     CellIDDecoder<TrackerHit> idDec( trkHitCol ) ;
+      *      // ...
+      *      TrackerHit* hit = (TrackerHit*) trkHitCol.getElementAt( i ) ;
+      *
+      *      int layer  = idDec( hit )[ ILDCellID0::layer ] ;
+      *  </pre>
+      */
     static const std::string encoder_string ; 
     
     /** Index of the field subdet in encoder_string - sub detector Id as defined in DetID, e.g. DetID::VXD or DetID::FTD. 
@@ -135,7 +145,7 @@ namespace UTIL {
     static const int GOOD ;
   } ;
 
-
+  
 
 } // namespace UTIL
 #endif // ifndef UTIL_ILDConf_H
