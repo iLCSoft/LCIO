@@ -1,0 +1,41 @@
+*********************************************************************
+* Simple example displaying the ReconstrucedParticle collection
+* with ROOT/OGL
+*
+* F.Gaede, DESY, 2012
+***************************************************************
+
+
+ 1. Building the example:
+
+ -  initialize your iLCSoft release, e.g.
+
+   source /afs/desy.de/project/ilcsoft/sw/x86_64_gcc41_sl5/v01-15/init_ilcsoft.sh 
+ 
+ - create a build directory and build with cmake
+
+   mkdir build
+   cd build 
+   cmake -C $ILCSOFT/ILCSoft.cmake .. 
+   make install
+   cd ..
+
+
+ 2. Run on reconstructed LCIO files:
+
+ 
+ ./lcio_draw_event /afs/desy.de/group/it/.i386_linux26/ilcsoft/data/REC01-06_ppr004_e1e1h_w20612_250_ILD_00_LCP_ep-1.0_em-1.0_Slac_250_SM_0001.000.slcio  PandoraPFOs 3
+ 
+   to display the third event in the file, or 
+
+  ./lcio_draw_event /afs/desy.de/group/it/.i386_linux26/ilcsoft/data/REC01-06_ppr004_e2e2h_w20617_250_ILD_00_LCP_ep+1.0_em-1.0_Slac_250_SM_0001.000.slcio PandoraPFOs   4020617  42 
+
+    to display event 42 in run 4020617
+ 
+
+
+
+ A text file "lcio_draw_event.txt"  with all hit coordinates is created in the local directory for
+ optional further processing.
+
+ 

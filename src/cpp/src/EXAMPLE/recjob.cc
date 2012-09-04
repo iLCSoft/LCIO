@@ -316,7 +316,7 @@ public:
       for(int j=0; j < nCalHits ; j++){
 	CalorimeterHit* calHit = dynamic_cast<CalorimeterHit*>( calHits->getElementAt(j) ) ;
 	
-	std::cout << "   relations for object " << hex << calHit->id()  
+	std::cout << "   relations for object " << dec << calHit->id()  
 	  ; // << std::endl ;
 	
 	const LCObjectVec& simHits = rel.getRelatedToObjects( calHit ) ;
