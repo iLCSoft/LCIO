@@ -15,6 +15,10 @@
         - added small test/example to ./src/cpp/src/TESTS/test_tracks.cc
 
     - Operators.cc: fixed scientific format for Track/TrackState 
+
+    - changed TrackState (convenience) copy constructor argument type to reference instead of pointer
+
+    - fixed potential memory leak by adding Track's assignment operator (c++ rule of three)
    
     - added LCIO_JAVA_USE_MAVEN option to build lcio.jar library using maven
 
