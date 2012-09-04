@@ -29,8 +29,8 @@ namespace IMPL {
     TrackStateImpl() ;
     TrackStateImpl(int location, float d0, float phi, float omega, float z0, float tanLambda, const float* covMatrix, const float* reference) ;
     TrackStateImpl(int location, float d0, float phi, float omega, float z0, float tanLambda, const EVENT::FloatVec& covMatrix, const float* reference) ;
-    /** Copy constructor which takes as an argument an EVENT::TrackState pointer */
-    TrackStateImpl(const EVENT::TrackState *p );
+    /** Copy constructor which takes as an argument an EVENT::TrackState reference */
+    TrackStateImpl(const EVENT::TrackState &p );
 
 
     

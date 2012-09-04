@@ -135,7 +135,7 @@ int main(int argc, char** argv ){
         MYTEST.LOG( "test default copy constructor using two EVENT::TrackState pointers" );
 
         // the nicer way... just passing the EVENT::TrackState object
-        pp = new TrackStateImpl( p ) ;
+        pp = new TrackStateImpl( *p ) ;
 
         MYTEST( pp->getLocation(), TrackState::AtLastHit, "getLocation" ) ;
         MYTEST( pp->getD0(),  float( .1 ), "getD0" ) ;

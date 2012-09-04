@@ -37,7 +37,7 @@ namespace IMPL {
     
     for( unsigned int i=0; i< o._trackStates.size() ; i++ ){
       //_trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
-      _trackStates.push_back( new TrackStateImpl(  o._trackStates[i] ) ) ; 
+      _trackStates.push_back( new TrackStateImpl(  *o._trackStates[i] ) ) ; 
     }
   }
 
