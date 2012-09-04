@@ -59,7 +59,9 @@ int main(int argc, char** argv ){
             evt->setEventNumber( i ) ;
 
             LCCollectionVec* tracks = new LCCollectionVec( LCIO::TRACK )  ;
+            LCCollectionVec* tracksCopies = new LCCollectionVec( LCIO::TRACK )  ;
             LCCollectionVec* tracksWithMultipleStates = new LCCollectionVec( LCIO::TRACK )  ;
+            LCCollectionVec* tracksWithMultipleStatesCopies = new LCCollectionVec( LCIO::TRACK )  ;
 
             for( int j=0 ; j<NTRACKS ; j++ ){
 
@@ -79,7 +81,7 @@ int main(int argc, char** argv ){
 
                 float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
                 trk->setCovMatrix( cov ) ;
-                
+
                 float ref[3] = { 1. , 2. , 3. } ;
                 trk->setReferencePoint( ref ) ;
 
@@ -89,7 +91,10 @@ int main(int argc, char** argv ){
                     trk->addTrack( dynamic_cast<TrackImpl*> ( (*tracks)[ tracks->size() - 2 ] ) ) ;
                 }
 
+                TrackImpl* trkc = new TrackImpl(*trk) ;
+
                 tracks->addElement( trk ) ;
+                tracksCopies->addElement( trkc ) ;
             }
 
             for( int j=0 ; j<NTRACKS ; j++ ){
@@ -110,7 +115,7 @@ int main(int argc, char** argv ){
 
                 float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
                 trk->setCovMatrix( cov ) ;
-                
+
                 float ref[3] = { 1. , 2. , 3. } ;
                 trk->setReferencePoint( ref ) ;
 
@@ -121,23 +126,28 @@ int main(int argc, char** argv ){
                     float ref[3] = { k*1. , k*2. , k*3. } ;
 
                     TrackStateImpl* trkstate = new TrackStateImpl(
-                        k,                  // location
-                        ( i*j*k * .1 ),     // d0
-                        ( (i+j+k) * .3 ),   // phi
-                        ( (i+j+k) * .1 ),   // omega
-                        ( i*j*k * .1 ),     // z0
-                        ( (i+j+k) * .2 ),   // tanlambda
-                        cov,
-                        ref
-                    );
+                            k,                  // location
+                            ( i*j*k * .1 ),     // d0
+                            ( (i+j+k) * .3 ),   // phi
+                            ( (i+j+k) * .1 ),   // omega
+                            ( i*j*k * .1 ),     // z0
+                            ( (i+j+k) * .2 ),   // tanlambda
+                            cov,
+                            ref
+                            );
                     trk->addTrackState( trkstate ) ;
                 }
 
+                TrackImpl* trkc = new TrackImpl(*trk) ;
+
                 tracksWithMultipleStates->addElement( trk ) ;
+                tracksWithMultipleStatesCopies->addElement( trkc ) ;
             }
 
             evt->addCollection( tracks , "Tracks") ;
+            evt->addCollection( tracksCopies , "TracksCopies") ;
             evt->addCollection( tracksWithMultipleStates , "TracksWithMultipleStates") ;
+            evt->addCollection( tracksWithMultipleStatesCopies , "TracksWithMultipleStatesCopies") ;
 
             lcWrt->writeEvent(evt) ;
 
@@ -146,6 +156,7 @@ int main(int argc, char** argv ){
 
 
         lcWrt->close() ;
+        delete lcWrt;
 
         MYTEST.LOG(" reading back Tracks from file " ) ;
 
@@ -174,10 +185,10 @@ int main(int argc, char** argv ){
 
             //     Track* trk = dynamic_cast<Track*>(tracks->getElementAt(j)) ;
 
-	    int j=0 ;
+            int j=0 ;
 
-	    LCIterator<Track> it( evt, "Tracks"  ) ;
-	    while( Track* trk = it.next() ) {
+            LCIterator<Track> it( evt, "Tracks"  ) ;
+            while( Track* trk = it.next() ) {
 
                 MYTEST( trk->getOmega(),  float( (i+j) * .1 ), "getOmega" ) ;
                 MYTEST( trk->getTanLambda(),  float( (i+j) * .2 ), "getTanLambda" ) ;
@@ -206,16 +217,58 @@ int main(int argc, char** argv ){
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
 
-		++j ;
+                ++j ;
             }
 
-	    stringstream ss;
-	    ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "Tracks using the LCIterator<Track>.\n" ; 
-	      MYTEST.LOG( ss.str()  ) ;
+            stringstream ss;
+            ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "Tracks using the LCIterator<Track>.\n" ; 
+            MYTEST.LOG( ss.str()  ) ;
+
+
+            j=0 ;
+
+            LCIterator<Track> itc( evt, "TracksCopies"  ) ;
+            while( Track* trk = itc.next() ) {
+
+                MYTEST( trk->getOmega(),  float( (i+j) * .1 ), "getOmega" ) ;
+                MYTEST( trk->getTanLambda(),  float( (i+j) * .2 ), "getTanLambda" ) ;
+                MYTEST( trk->getPhi(),  float( (i+j) * .3 ), "getPhi" ) ;
+                MYTEST( trk->getD0(),  float( i * .1 ), "getD0" ) ;
+                MYTEST( trk->getZ0(),  float( j * .1 ), "getZ0" ) ;
+
+                MYTEST( trk->getChi2(), float(1.01) , "getChi2" ) ;
+                MYTEST( trk->getNdf(), 42 , "getNdf" ) ;
+                MYTEST( trk->getdEdx(), float(3.14159265) , "getdEdx" ) ;
+                MYTEST( trk->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trk->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
+
+                const FloatVec& cov = trk->getCovMatrix() ;
+
+                for( unsigned int k=0 ; k<cov.size() ; k++ ){
+                    stringstream ss;
+                    ss << " cov[" << k << "] " ;
+                    MYTEST( cov[k] , float(k+1) , ss.str() ) ;
+                }
+                const float* ref = trk->getReferencePoint() ;
+
+                for( unsigned int k=0 ; k<3 ; k++ ){
+                    stringstream ss;
+                    ss << " ref[" << k << "] " ;
+                    MYTEST( ref[k] , float(k+1) , ss.str() ) ;
+                }
+
+                ++j ;
+            }
+
+            ss.str("");
+            ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "TracksCopies using the LCIterator<Track>.\n" ; 
+            MYTEST.LOG( ss.str()  ) ;
+
 
 
 
             LCCollection* tracksWithMultipleStates = evt->getCollection( "TracksWithMultipleStates") ;
+            LCCollection* tracksWithMultipleStatesCopies = evt->getCollection( "TracksWithMultipleStatesCopies") ;
 
             MYTEST.LOG(" reading back TracksWithMultipleStates " ) ;
 
@@ -253,7 +306,6 @@ int main(int argc, char** argv ){
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
 
-
                 // more than one trackstate
                 const TrackStateVec& trackstates = trk->getTrackStates() ;
 
@@ -284,7 +336,71 @@ int main(int argc, char** argv ){
                         MYTEST( ref[l] , float(k*(l+1)) , ss.str() ) ;
                     }
                 }
-                
+
+
+
+                // ---------- test copies -------------------------------
+                Track* trkc = dynamic_cast<Track*>(tracksWithMultipleStatesCopies->getElementAt(j)) ;
+                MYTEST( trkc->getOmega(),  float( (i+j) * .1 ), "getOmega" ) ;
+                MYTEST( trkc->getTanLambda(),  float( (i+j) * .2 ), "getTanLambda" ) ;
+                MYTEST( trkc->getPhi(),  float( (i+j) * .3 ), "getPhi" ) ;
+                MYTEST( trkc->getD0(),  float( i * .1 ), "getD0" ) ;
+                MYTEST( trkc->getZ0(),  float( j * .1 ), "getZ0" ) ;
+
+                MYTEST( trkc->getChi2(), float(1.01) , "getChi2" ) ;
+                MYTEST( trkc->getNdf(), 42 , "getNdf" ) ;
+                MYTEST( trkc->getdEdx(), float(3.14159265) , "getdEdx" ) ;
+                MYTEST( trkc->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trkc->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
+
+                const FloatVec& covc = trkc->getCovMatrix() ;
+
+                for( unsigned int k=0 ; k<covc.size() ; k++ ){
+                    stringstream ss;
+                    ss << " cov[" << k << "] " ;
+                    MYTEST( covc[k] , float(k+1) , ss.str() ) ;
+                }
+
+                ref = trkc->getReferencePoint() ;
+
+                for( unsigned int k=0 ; k<3 ; k++ ){
+                    stringstream ss;
+                    ss << " ref[" << k << "] " ;
+                    MYTEST( ref[k] , float(k+1) , ss.str() ) ;
+                }
+
+                // more than one trackstate
+                const TrackStateVec& trackstatesc = trkc->getTrackStates() ;
+
+                for( unsigned int k=1 ; k<trackstatesc.size() ; k++ ){
+
+                    MYTEST( trackstatesc[k]->getOmega(),  float( (i+j+k) * .1 ), "getOmega" ) ;
+                    MYTEST( trackstatesc[k]->getTanLambda(),  float( (i+j+k) * .2 ), "getTanLambda" ) ;
+                    MYTEST( trackstatesc[k]->getPhi(),  float( (i+j+k) * .3 ), "getPhi" ) ;
+                    MYTEST( trackstatesc[k]->getD0(),  float( i*j*k * .1 ), "getD0" ) ;
+                    MYTEST( trackstatesc[k]->getZ0(),  float( i*j*k * .1 ), "getZ0" ) ;
+
+                    const FloatVec& cov = trackstatesc[k]->getCovMatrix() ;
+
+                    for( unsigned int l=0 ; l<cov.size() ; l++ ){
+                        stringstream ss;
+                        ss << " cov[" << l << "] " ;
+                        MYTEST( cov[l] , float(k+(l+1)) , ss.str() ) ;
+                    }
+
+                    const float* ref = trackstatesc[k]->getReferencePoint() ;
+
+                    for( unsigned int l=0 ; l<3 ; l++ ){
+                        stringstream ss;
+                        ss << " ref[" << l << "] " ;
+                        MYTEST( ref[l] , float(k*(l+1)) , ss.str() ) ;
+                    }
+                }
+
+                // ---------- end test copies -------------------------------
+
+
+
                 // Test getClosestTrackState( float x, float y, float z )
                 const TrackState* trackstate = trk->getClosestTrackState( 0, 0, 0 ) ;
                 assert( trackstate != NULL );
@@ -314,14 +430,15 @@ int main(int argc, char** argv ){
 
         }
         lcRdr->close() ;
+        delete lcRdr;
 
 
-    } catch( Exception &e ){
-        MYTEST.FAILED( e.what() );
+        } catch( Exception &e ){
+            MYTEST.FAILED( e.what() );
+        }
+
+        return 0;
     }
 
-    return 0;
-}
-
-//=============================================================================
+    //=============================================================================
 
