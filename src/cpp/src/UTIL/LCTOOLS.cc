@@ -331,7 +331,7 @@ namespace UTIL {
             // cout << "    rawHits: " ;
             // try{
             // 	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
-            // 	      cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
+            // 	      cout << dec << "[" << rawHits[j]->id() << "], " <<  dec ;
             // 	    }
             //   cout << endl;
             // }catch(std::exception& e){}
@@ -374,7 +374,7 @@ namespace UTIL {
             // cout << "    rawHits: " ;
             // try{
             // 	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
-            // 	      cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
+            // 	      cout << dec << "[" << rawHits[j]->id() << "], " <<  dec ;
             // 	    }
             //   cout << endl;
             // }catch(std::exception& e){}
@@ -417,7 +417,7 @@ namespace UTIL {
             // cout << "    rawHits: " ;
             // try{
             // 	    for( unsigned j=0 ; j < rawHits.size() ; j++ ) {
-            // 	      cout << hex << "[" << rawHits[j]->id() << "], " <<  dec ;
+            // 	      cout << dec << "[" << rawHits[j]->id() << "], " <<  dec ;
             // 	    }
             //   cout << endl;
             // }catch(std::exception& e){}

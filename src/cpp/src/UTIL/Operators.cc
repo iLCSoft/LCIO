@@ -62,7 +62,7 @@ namespace UTIL{
     UTIL::IndexMap im(col,"AlgorithmNames","AlgorithmTypes");
 
     out << setfill('0');
-    out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
+    out << " [" << setw(8) << dec << v->id() << "] | " << v->isPrimary()<< " | ";
     out << setfill(' ') << setw(17) << left << im.decode( v->getAlgorithmType() ) << " | ";
 
     out << setfill('0') << right << scientific << setprecision(3) << v->getChi2() << " | " << v->getProbability() << " | " <<
@@ -162,8 +162,8 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCEvent>& sV){ //hauke
         const EVENT::LCEvent* hit = sV.obj;
         out << noshowpos;
-        out << "|" << hex << setw(13) << setfill(' ') << hit->getRunNumber();
-        out << "|" << hex << setw(13) << setfill(' ') << hit->getEventNumber();
+        out << "|" << dec << setw(13) << setfill(' ') << hit->getRunNumber();
+        out << "|" << dec << setw(13) << setfill(' ') << hit->getEventNumber();
         out << "|" << dec << setw(13) << setfill(' ') << hit->getDetectorName();
         out << "|" << dec << setw(13) << setfill(' ') << hit->getTimeStamp();
         out << "|" << dec << setw(13) << setfill(' ') << hit->getWeight() << "|" << endl;
@@ -190,8 +190,8 @@ namespace UTIL{
         }
 
         //print object attributs
-        //sstream << "0x" << hex << hit->id();
-        out << setw(30) << setfill(' ') << left << "Run number" << right << setw(40) <<hex << hit->getRunNumber() << endl;
+        //sstream << dec << hit->id();
+        out << setw(30) << setfill(' ') << left << "Run number" << right << setw(40) << dec << hit->getRunNumber() << endl;
         out << setw(30) << setfill(' ') << left << "Event number"<< setfill(' ') << right << setw(40) << dec << hit->getEventNumber() << endl;
         out << setw(30) << setfill(' ') << left << "Detector name"<< setfill(' ') << right << setw(40) << hit->getDetectorName() << endl;
         out << setw(30) << setfill(' ') << left << "Time stamp"<< setfill(' ') << right << setw(40) << hit->getTimeStamp() << endl;
@@ -298,7 +298,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCGenericObject>& sV){ //hauke
         const EVENT::LCGenericObject* obj = sV.obj;
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << obj->id() << "] ";
+        out << " [" << dec << setw(8) << setfill('0') << obj->id() << "] ";
         out << setfill(' ') << dec;
         for(int j=0;j<obj->getNInt();j++){
             out << "i:" << obj->getIntVal( j ) << "; " ;
@@ -332,7 +332,7 @@ namespace UTIL{
         }
 
         //print object attributs
-        sstream << "0x" << hex << hit->id();
+        sstream << dec << hit->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
         out << setw(30) << setfill(' ') << left << "Number of integer values"<< setfill(' ') << right << setw(40) << hit->getNInt() << endl;
         out << setw(30) << setfill(' ') << left << "Number of float values"<< setfill(' ') << right << setw(40) << hit->getNDouble() << endl;
@@ -366,7 +366,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCIntVec>& sV){ //hauke
         const EVENT::LCIntVec* vec = sV.obj;
         out << noshowpos; 
-        out << "| [" << setfill('0') << setw(8) << hex << vec->id() << "] |";
+        out << "| [" << setfill('0') << setw(8) << dec << vec->id() << "] |";
         for(unsigned int j=0;j< vec->size();j++){
             out << setfill(' ') << right << setw(8) << (*vec)[j];
             if( j<vec->size()-1){ 
@@ -400,7 +400,7 @@ namespace UTIL{
         }
 
         //print object attributs
-        sstream << "0x" << hex << hit->id();
+        sstream << dec << hit->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
         return out;
     }
@@ -431,7 +431,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCFloatVec>& sV){
         const EVENT::LCFloatVec* vec = sV.obj;
         out << noshowpos; 
-        out << " [" << setfill('0') << setw(8) << hex << vec->id() << "] |";
+        out << " [" << setfill('0') << setw(8) << dec << vec->id() << "] |";
         for(unsigned int j=0;j< vec->size();j++){
             out << setfill(' ') << right << setw(8) << (*vec)[j];
             if( j<vec->size()-1){ 
@@ -461,7 +461,7 @@ namespace UTIL{
             }
         } 
         tmp.str("");
-        tmp << "0x" << hex << v->id() << dec;
+        tmp << dec << v->id() << dec;
         out << setw(30) << setfill(' ') << left << "Id" <<   right <<  tmp.str() << endl;
 
         return out;
@@ -493,7 +493,7 @@ namespace UTIL{
        std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCStrVec>& sV){ //hauke
        const EVENT::LCStrVec* hit = sV.obj;
        out << noshowpos;
-       out << " [" << hex << setw(8) << setfill('0');// << hit->id() << "] ";
+       out << " [" << dec << setw(8) << setfill('0');// << hit->id() << "] ";
        }
 
 
@@ -517,7 +517,7 @@ namespace UTIL{
     }
 
     //print object attributs
-    sstream << "0x" << hex << hit->id();
+    sstream << dec << hit->id();
     out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
     out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
     out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
@@ -549,7 +549,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCObject>& sV){ //hauke
         const EVENT::LCObject* hit = sV.obj;
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] ";
         return out;
     }
 
@@ -573,7 +573,7 @@ namespace UTIL{
         }
 
         //print object attributs
-        sstream << "0x" << hex << hit->id();
+        sstream << dec << hit->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
         return out;
     }
@@ -679,7 +679,7 @@ namespace UTIL{
          */
         // end
 
-        //sstream << "0x" << hex << hit->id();
+        //sstream << dec << hit->id();
         //out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
         //out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
         //out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
@@ -712,8 +712,8 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCRelation>& sV){
         const EVENT::LCRelation* v = sV.obj;
         out << noshowpos << setfill('0'); 
-        out << "| [" << setw(8) << hex << ( v->getFrom() ?  v->getFrom()->id() : 0 ) << "] |";
-        out << " [" << setw(8) << hex  << ( v->getTo() ?  v->getTo()->id() : 0 )  << "] |";
+        out << "| [" << setw(8) << dec << ( v->getFrom() ?  v->getFrom()->id() : 0 ) << "] |";
+        out << " [" << setw(8) << dec  << ( v->getTo() ?  v->getTo()->id() : 0 )  << "] |";
         out << " " << setw(8) << dec << v->getWeight() << "|";
         out << setfill(' ');
         out << endl;
@@ -735,7 +735,7 @@ namespace UTIL{
             }
         } 
 
-        out << setw(30) << setfill(' ') << left << "From [id]" <<   right << hex << ( v->getFrom() ?  v->getFrom()->id() : 0 )  << endl;
+        out << setw(30) << setfill(' ') << left << "From [id]" <<   right << dec << ( v->getFrom() ?  v->getFrom()->id() : 0 )  << endl;
         out << setw(30) << setfill(' ') << left << "To [id]" <<   right << ( v->getTo() ?  v->getTo()->id() : 0 )   << endl;
         out << setw(30) << setfill(' ') << left << "Weight" <<   right << v->getWeight()  << endl;
 
@@ -767,7 +767,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCRunHeader>& sV){ //hauke
         const EVENT::LCRunHeader* hit = sV.obj;
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->getRunNumber() << "] ";
+        out << " [" << dec << setw(8) << setfill('0') << hit->getRunNumber() << "] ";
         out << "|" << dec << setw(8) << setfill(' ') << hit->getDetectorName();
         out << "|" << dec << setw(8) << setfill(' ') << hit->getDescription();
         out << "|" << dec << setw(8) << setfill(' ') << hit->getParameters() << "|" << endl;
@@ -793,11 +793,11 @@ namespace UTIL{
         }
 
         //print object attributs
-        sstream << "0x" << hex << hit->id();
-        out << setw(30) << setfill(' ') << left << "Run number"<< setfill(' ') << right << setw(40) << hex << hit->getRunNumber() <<dec << endl;
-        out << setw(30) << setfill(' ') << left << "Detector name"<< setfill(' ') << right << setw(40) << hex << hit->getDetectorName() <<dec << endl;
-        out << setw(30) << setfill(' ') << left << "Description"<< setfill(' ') << right << setw(40) << hex << hit->getDescription() <<dec << endl;
-        out << setw(30) << setfill(' ') << left << "Parameters"<< setfill(' ') << right << setw(40) << hex << hit->getParameters() <<dec << endl;
+        sstream << dec << hit->id();
+        out << setw(30) << setfill(' ') << left << "Run number"<< setfill(' ') << right << setw(40) << dec << hit->getRunNumber() <<dec << endl;
+        out << setw(30) << setfill(' ') << left << "Detector name"<< setfill(' ') << right << setw(40) << dec << hit->getDetectorName() <<dec << endl;
+        out << setw(30) << setfill(' ') << left << "Description"<< setfill(' ') << right << setw(40) << dec << hit->getDescription() <<dec << endl;
+        out << setw(30) << setfill(' ') << left << "Parameters"<< setfill(' ') << right << setw(40) << dec << hit->getParameters() <<dec << endl;
         return out;
     }
 
@@ -938,9 +938,9 @@ namespace UTIL{
         const EVENT::LCCollection *col = sV.col;
 
         out << noshowpos;
-        out << " [" << setw(8) << setfill('0') << hex << hit->id();
-        out << "| " << hex << setw(8) << setfill('0') << hit->getCellID0();
-        out << "| " << hex << setw(8) << setfill('0') << hit->getCellID1();
+        out << " [" << setw(8) << setfill('0') << dec << hit->id();
+        out << "| " << dec << setw(8) << setfill('0') << hit->getCellID0();
+        out << "| " << dec << setw(8) << setfill('0') << hit->getCellID1();
         out << "|" << dec << setw(11) << setfill(' ') << hit->getAmplitude();
         out << "|" << dec << setw(11) << setfill(' ') << hit->getTimeStamp() << "|" << endl;
 
@@ -978,8 +978,8 @@ namespace UTIL{
         }
 
         //print object attributs
-        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
-        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         out << setw(30) << setfill(' ') << left << "Amplitude"<< setfill(' ') << right << setw(40) << dec << hit->getAmplitude() << endl;
         out << setw(30) << setfill(' ') << left << "TimeStamp"<< setfill(' ') << right << setw(40) << dec << hit->getTimeStamp() << endl;
         return out;
@@ -1011,7 +1011,7 @@ namespace UTIL{
        std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TPCHit>& sV){ //hauke
        const EVENT::TPCHit* hit = sV.obj;
        out << noshowpos;
-       out << " [" << hex << setw(8) << setfill('0');// << hit->id() << "] ";
+       out << " [" << dec << setw(8) << setfill('0');// << hit->id() << "] ";
        }
 
        std::ostream& operator<<( std::ostream& out, const LCIO_LONG<EVENT::TPCHit> l) {
@@ -1033,7 +1033,7 @@ namespace UTIL{
     }
 
     //print object attributs
-    //sstream << "0x" << hex << hit->id();
+     //sstream  << dec << hit->id();
     //out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << sstream.str() << endl;
     //out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << hit->getType() << endl;
     //out << setw(30) << left << "Energy [GeV]" << right << setw(40) << hit->getEnergy() << endl;
@@ -1067,9 +1067,9 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
 
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] |";
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID0() << " |";
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID1() << " |";
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] |";
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID0() << " |";
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID1() << " |";
         out << " " << dec << setw(8) << setfill(' ') << hit->getTime() << " |"; 
 
         if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
@@ -1109,8 +1109,8 @@ namespace UTIL{
         }
 
         //print object attributs
-        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
-        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
         return out;
     }
@@ -1142,17 +1142,17 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
 
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] |"; 
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID0() << " |";
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID1() << " |";
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] |"; 
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID0() << " |";
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID1() << " |";
         out << dec << setw(6) << setfill(' ') << hit->getTime() << "|";
         out << dec << setw(8) << setfill(' ') << hit->getCharge() << "|";
         out << dec << setw(10) << setfill(' ') << hit->getQuality() << endl;
         TrackerData* corr =  hit->getTrackerData() ;
         if( corr != 0 ){
-            out << "|" << hex << setfill('0') << setw(10)  << corr->id() << "]";
+            out << "|" << dec << setfill('0') << setw(10)  << corr->id() << "]";
         }else{
-            out << "|[" << hex << setfill('0') << setw(10)  << '0' << "]";
+            out << "|[" << dec << setfill('0') << setw(10)  << '0' << "]";
         }
 
         if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
@@ -1192,8 +1192,8 @@ namespace UTIL{
         }
 
         //print object attributs
-        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
-        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
         out << setw(30) << setfill(' ') << left << "Charge"<< setfill(' ') << right << setw(40) << dec << hit->getCharge() << endl;
         out << setw(30) << setfill(' ') << left << "Quality"<< setfill(' ') << right << setw(40) << dec << hit->getQuality() << endl;
@@ -1227,9 +1227,9 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
 
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] |";
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID0() << " |";
-        out << " " << hex << setw(8) << setfill('0') << hit->getCellID1() << " |";
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] |";
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID0() << " |";
+        out << " " << dec << setw(8) << setfill('0') << hit->getCellID1() << " |";
         out << " " << dec << setw(8) << setfill(' ') << hit->getTime() << " |"; 
 
         if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
@@ -1268,8 +1268,8 @@ namespace UTIL{
         }
 
         //print object attributs
-        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
-        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
+        out << setw(30) << setfill(' ') << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
         return out;
     }
@@ -1303,9 +1303,9 @@ namespace UTIL{
         BitSet32 flag(col->getFlag());
 
         out << noshowpos;
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID0();
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] ";
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID0();
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID1();
         out << "|" << dec << setprecision(3) << scientific << showpos << hit->getEnergy(); 
         if(flag.test( LCIO::CHBIT_LONG )){
             out << "|" << dec << setprecision(3) << scientific << showpos
@@ -1378,17 +1378,17 @@ namespace UTIL{
             out << "     LCIO::CHBIT_ID1    : " << flag.test( LCIO::CHBIT_ID1 ) << endl ;
             out << "     LCIO::CHBIT_STEP   : " << flag.test( LCIO::CHBIT_STEP ) << endl ;
         } 
-        tmp << "0x" << hex << hit->id() << dec;
+        tmp << dec << hit->id() << dec;
         out << setw(30) << setfill(' ') << std::left << "Id" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp << dec << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp << dec << hit->getCellID1() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
 
         out << setw(30) << left << "Energy [GeV]" << right << setw(40) << dec << hit->getEnergy() << std::endl;
@@ -1453,7 +1453,7 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
         BitSet32 flag(col->getFlag());
 
-        out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
+        out << " [" << setfill('0') << setw(8) << dec << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
         out << "|" << setw(8) << setfill('0') << part->getCellID1();
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
@@ -1475,7 +1475,7 @@ namespace UTIL{
         try{
             for( i=0 ; i < rawHits.size() ; i++ ){
                 if( rawHits[i] == 0 ) continue ;
-                out << hex << "[" << rawHits[i]->id() << "], " <<  dec ;
+                out << dec << "[" << rawHits[i]->id() << "], " <<  dec ;
             }
         }catch(std::exception& e){}
 
@@ -1515,17 +1515,17 @@ namespace UTIL{
         } 
 
         tmp.str("");
-        tmp << "0x" << hex << hit->id() << dec; 
+        tmp << dec << hit->id() << dec;
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp  << dec << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp  << dec << hit->getCellID1() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
 
         tmp.str("");
@@ -1567,7 +1567,7 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
         BitSet32 flag(col->getFlag());
 
-        out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
+        out << " [" << setfill('0') << setw(8) << dec << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
         out << "|" << setw(8) << setfill('0') << part->getCellID1();
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
@@ -1596,7 +1596,7 @@ namespace UTIL{
         try{
             for( i=0 ; i < rawHits.size() ; i++ ){
                 if( rawHits[i] == 0 ) continue ;
-                out << hex << "[" << rawHits[i]->id() << "], " <<  dec ;
+                out << dec << "[" << rawHits[i]->id() << "], " <<  dec ;
             }
         }catch(std::exception& e){}
 
@@ -1636,17 +1636,17 @@ namespace UTIL{
         } 
 
         tmp.str("");
-        tmp << "0x" << hex << hit->id() << dec; 
+        tmp  << dec << hit->id() << dec; 
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp  << dec << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp  << dec << hit->getCellID1() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
 
         tmp.str("");
@@ -1694,7 +1694,7 @@ namespace UTIL{
         const EVENT::LCCollection* col =  sV.col;
         BitSet32 flag(col->getFlag());
 
-        out << " [" << setfill('0') << setw(8) << hex << part->id() << "] ";
+        out << " [" << setfill('0') << setw(8) << dec << part->id() << "] ";
         out << "|" << setw(8) << setfill('0') << part->getCellID0();
         out << "|" << setw(8) << setfill('0') << part->getCellID1();
         out << "|" << showpos << scientific << setprecision (2) << part->getPosition()[0] << ","<< part->getPosition()[1] << "," << part->getPosition()[2] << "|"; 
@@ -1722,7 +1722,7 @@ namespace UTIL{
         try{
             for( i=0 ; i < rawHits.size() ; i++ ){
                 if( rawHits[i] == 0 ) continue ;
-                out << hex << "[" << rawHits[i]->id() << "], " <<  dec ;
+                out << dec << "[" << rawHits[i]->id() << "], " <<  dec ;
             }
         }catch(std::exception& e){}
 
@@ -1762,17 +1762,17 @@ namespace UTIL{
         } 
 
         tmp.str("");
-        tmp << "0x" << hex << hit->id() << dec; 
+        tmp  << dec << hit->id() << dec; 
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp  << dec << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp  << dec << hit->getCellID1() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
 
         tmp.str("");
@@ -1827,13 +1827,13 @@ namespace UTIL{
             pdgid = hit->getMCParticle()->getPDG() ;
         }
 
-        out << " [" << setfill('0') << setw(8) << hex<< hit->id() << "] " << dec;
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID0();
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
+        out << " [" << setfill('0') << setw(8) << dec<< hit->id() << "] " << dec;
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID0();
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID1();
 
 
 
-        //out << setw(8) << setfill('0') << hex << hit->getCellID() << setfill(' '); 
+        //out << setw(8) << setfill('0') << dec << hit->getCellID() << setfill(' '); 
 
         //out << dec << "[";
         //if(col->getParameters().getStringVal(  LCIO::CellIDEncoding ) != ""){
@@ -1877,7 +1877,7 @@ namespace UTIL{
 
 
         /*
-           out << noshowpos << " " << setw(8) << hex << hit->getCellID() << "|";
+           out << noshowpos << " " << setw(8) << dec << hit->getCellID() << "|";
            out << showpos << scientific << setprecision (2) << setfill(' ') << hit->getPosition()[0]<<","<<hit->getPosition()[1]<<","<<hit->getPosition()[2]<<"|";
            out << hit->getEDep() << "|";
            out << hit->getTime() << "|";
@@ -1909,7 +1909,7 @@ namespace UTIL{
 
             }
             tmp.str(""); 
-            tmp << "0x" << hex << col->getFlag() << dec;
+            tmp << col->getFlag() << dec;
             out << setw(30) << setfill(' ') << left << "Collection Flag" << right << setw(40) <<  tmp.str() << endl;
             LCTOOLS::printParameters(col->getParameters());
 
@@ -1918,14 +1918,14 @@ namespace UTIL{
             out << "     LCIO::THBIT_MOMENTUM : " << flag.test( LCIO::THBIT_MOMENTUM ) << endl ;
         } 
 
-        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << hex << hit->getCellID0() << endl;
+        //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID0" <<   right << setw(40) << tmp.str() << endl;
 
-        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << hex << hit->getCellID1() << endl;
+        //out << setw(30) << left << "CellID1"<< setfill(' ') << right << setw(40) << dec << hit->getCellID1() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp << hit->getCellID1() << dec;
         out << setw(30) << setfill(' ') << std::left << "CellID1" <<   right << setw(40) << tmp.str() << endl;
 
         tmp.str("");
@@ -1934,12 +1934,13 @@ namespace UTIL{
         out <<setw(30) << std::left << "dE/dx [GeV]" << setfill(' ') << right <<setw(40) << hit->getEDep() << endl;
         out <<setw(30) << std::left << "Time [ns]" << setfill(' ') << right <<setw(40) << hit->getTime() << endl;
         if(hit->getMCParticle() != NULL){
-            out <<std::setw(30) << std::left << "PDG of MCParticle " << setfill(' ') << right <<setw(40) << hit->getMCParticle()->getPDG() << std::endl;
+          out <<std::setw(30) << std::left << "PDG of MCParticle " << setfill(' ') << right <<setw(40) << hit->getMCParticle()->getPDG() << std::endl;
+          out <<std::setw(30) << std::left << "ID  of MCParticle " << setfill(' ') << right <<setw(40) << hit->getMCParticle()->id() << std::endl;
         }else{
             out <<std::setw(30) << std::left << "PDG of MCParticle " << setfill(' ') << right <<setw(40) << "[Empty]"  << std::endl;
         }
 
-
+        tmp.str("");
         tmp  << hit->getMomentum()[0] << ", " << hit->getMomentum()[1]  << ", " << hit->getMomentum()[2]; 
         if(col != NULL){ 
             BitSet32 flag(col->getFlag());
@@ -1987,9 +1988,9 @@ namespace UTIL{
 
         out << noshowpos;
 
-        out << " [" << hex << setw(8) << setfill('0') << hit->id() << "] ";
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID0();
-        out << "|" << hex << setw(8) << setfill('0') << hit->getCellID1();
+        out << " [" << dec << setw(8) << setfill('0') << hit->id() << "] ";
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID0();
+        out << "|" << dec << setw(8) << setfill('0') << hit->getCellID1();
         out << "|" << dec << setprecision(3) << scientific << showpos << hit->getEnergy(); 
         out << "|" << dec << setprecision(3) << scientific << hit->getEnergyError(); 
         if( flag.test( LCIO::CHBIT_LONG ) ){
@@ -2040,10 +2041,10 @@ namespace UTIL{
 
         //out << setw(30) << setfill(' ') << left << "ID" <<   right << setw(40) << hit->getId() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID0() << dec;
+        tmp  << hit->getCellID0() << dec;
         out << setw(30) << setfill(' ') << left << "CellId0" <<   right << setw(40) << tmp.str() << endl;
         tmp.str("");
-        tmp << "0x" << hex << hit->getCellID1() << dec;
+        tmp << hit->getCellID1() << dec;
 
         out << setw(30) << setfill(' ') << left << "CellId1" <<   right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "Energy [GeV]" <<   right << setw(40) << dec << hit->getEnergy() << endl;
@@ -2096,7 +2097,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::MCParticle>& sV){ //hauke
         const EVENT::MCParticle* part = sV.obj;
 
-        out << " [" << hex << setfill('0') << setw(8) << part->id() << "] "<< dec ;
+        out << " [" << dec << setfill('0') << setw(8) << part->id() << "] "<< dec ;
         //out << setfill (' ') << dec << setw(5) << index << "|";
         out << "|";
         out << setfill(' ')<< setw(5) << part->getPDG() << "|"; 
@@ -2116,12 +2117,12 @@ namespace UTIL{
 
         for(unsigned int k=0;k<part->getParents().size();k++){
             if(k>0) out << "," ;
-            out << hex << setfill('0') << setw(8) << (part->getParents()[k])->id();
+            out << dec << setfill('0') << setw(8) << (part->getParents()[k])->id();
         }
         out << "] - [" ;
         for(unsigned int k=0;k<part->getDaughters().size();k++){
             if(k>0) out << "," ;
-            out << hex << setfill('0') << setw(8)<< (part->getDaughters()[k])->id();
+            out << dec << setfill('0') << setw(8)<< (part->getDaughters()[k])->id();
         }
         out << "] " << endl;
 
@@ -2151,7 +2152,7 @@ namespace UTIL{
         } 
 
         tmp.str(""); 
-        tmp << "0x" << hex << mcp->id() << dec;
+        tmp << mcp->id() << dec;
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
         out << setw(30) << left << "PDG"<< setfill(' ') << right << setw(40) << mcp->getPDG() << endl;
         out << setw(30) << std::left << "Energy [GeV]" << right << setw(40) << mcp->getEnergy() << endl;
@@ -2259,7 +2260,7 @@ namespace UTIL{
         const EVENT::ReconstructedParticle * part = sV.obj;
         stringstream tmp;
 
-        out << noshowpos <<  " [" << setfill('0') << setw(8) << hex << part->id() << "] |" << dec;
+        out << noshowpos <<  " [" << setfill('0') << setw(8) << dec << part->id() << "] |" << dec;
         out << setfill(' ') << setw(3) << part->isCompound() << "|";
         out << setfill(' ') << setw(4) << part->getType() << "|";
 
@@ -2278,7 +2279,7 @@ namespace UTIL{
         tmp << part->getReferencePoint()[0] << ", " << part->getReferencePoint()[1] << ", " << part->getReferencePoint()[2];
         out << tmp.str() << "|";
 
-        out << hex << setw(7) << setfill('0');
+        out << dec << setw(7) << setfill('0');
         if(part->getParticleIDUsed() != 0 ){
             out << part->getParticleIDUsed()->id();
         }else{ 
@@ -2303,9 +2304,9 @@ namespace UTIL{
         out << "    particles ( [   id   ] ):" ;
         for(unsigned int l=0;l<part->getParticles().size();l++){
             if(l == part->getParticles().size()-1){
-                out << hex <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "]";
+                out << dec <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "]";
             }else{
-                out << hex <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "], ";
+                out << dec <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "], ";
             }
 
             //printf("[%8.8x], ", part->getParticles()[l]->id() ) ;
@@ -2315,9 +2316,9 @@ namespace UTIL{
         out << "    tracks ( [   id   ] ): " ;
         for(unsigned int l=0;l<part->getTracks().size();l++){
             if(l == part->getTracks().size()-1){
-                out << hex << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
+                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
             }else{
-                out << hex << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
+                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
             }
 
             //printf("[%8.8x], ",  part->getTracks()[l]->id() );
@@ -2327,9 +2328,9 @@ namespace UTIL{
         out << "    clusters ( [   id   ] ): " ;
         for(unsigned int l=0;l<part->getClusters().size();l++){
             if(l == part->getClusters().size()-1){
-                out << hex <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
+                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
             }else{
-                out << hex <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
+                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
             }
 
             //printf("[%8.8x], ",  part->getClusters()[l]->id() );
@@ -2338,7 +2339,7 @@ namespace UTIL{
         out << "    particle ids ( [id], PDG, (type)): " ;
         for(unsigned int l=0;l<part->getParticleIDs().size();l++){
             ParticleID* pid = part->getParticleIDs()[l] ;
-            out << hex <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") ";
+            out << dec <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") ";
             //printf("[%8.8x], %6.6d, (%6.6d)  ",  pid->id() , pid->getPDG() , pid->getType() ) ;
         }
         out << endl ;
@@ -2355,7 +2356,7 @@ namespace UTIL{
             evr = dynamic_cast<ReconstructedParticle*>(ev->getAssociatedParticle());
         }
 
-        out << setfill('0') << noshowpos << hex;
+        out << setfill('0') << noshowpos << dec;
         out << "    vertices: startVertex( id:[ " << setw(8) << (sv !=0? sv->id(): 0);
         out << "id_aRP: "<< setw(8) << ((sv != 0 && svr != 0) ? svr->id() : 0 );
         out <<  "]  endVertex( id:[" << setw(8) << ( ev != 0 ? ev->id() : 0 );
@@ -2387,7 +2388,7 @@ namespace UTIL{
         } 
 
         tmp.str("");
-        tmp<<"0x" << hex << part->id() << dec;
+        tmp<<"0x" << dec << part->id() << dec;
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
         out << dec << setw(30) << setfill(' ') << left << "Compound" <<   right << setw(40) << part->isCompound() << endl;
         out << setw(30) << setfill(' ') << left << "Type" <<   right << setw(40) << part->getType() << endl;
@@ -2412,8 +2413,8 @@ namespace UTIL{
 
         if(part->getParticleIDUsed() != 0 ){
             tmp.str("");
-            tmp << "0x" << hex << part->getParticleIDUsed()->id() << dec;
-            out << hex << right << setw(40) << tmp.str() << endl;
+            tmp  << dec << part->getParticleIDUsed()->id() << dec;
+            out << dec << right << setw(40) << tmp.str() << endl;
         }else{ 
             out << right << setw(40) << 0 << endl;
         }
@@ -2433,9 +2434,9 @@ namespace UTIL{
         out << endl << "Particles id:    ";
         for(unsigned int l=0;l<part->getParticles().size();l++){
             if(l == part->getParticles().size()-1){
-                out << hex <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "]";
+                out << dec <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "]";
             }else{
-                out << hex <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "], ";
+                out << dec <<  setfill('0') << "[" <<setw(8) << part->getParticles()[l]->id() << "], ";
             }
             if(! ((l+1)%4)) { out << endl <<"                 ";}
         }
@@ -2445,9 +2446,9 @@ namespace UTIL{
         for(unsigned int l=0;l<part->getTracks().size();l++){
             if(! ((l+1)%5)){ out << endl << "                 ";}
             if(l == part->getTracks().size()-1){
-                out << hex << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
+                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
             }else{
-                out << hex << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
+                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
             }
 
         }
@@ -2457,16 +2458,16 @@ namespace UTIL{
             if(! ((l+1)%5)){ out << endl << "                 ";}
 
             if(l == part->getClusters().size()-1){
-                out << hex <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
+                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
             }else{
-                out << hex <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
+                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
             }
 
         }
         out << endl << "Particle ids ( [id], PDG, (type)): " << endl;
         for(unsigned int l=0;l<part->getParticleIDs().size();l++){
             ParticleID* pid = part->getParticleIDs()[l] ;
-            out << hex << "                 " <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") " << endl;
+            out << dec << "                 " <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") " << endl;
         }
         out << endl ;
 
@@ -2499,7 +2500,7 @@ namespace UTIL{
     std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::TrackState>& sV){
         const EVENT::TrackState *trk = sV.obj;
 
-        out << noshowpos <<  " [" << setfill('0') << setw(8) << hex<< trk->id() << "] ";
+        out << noshowpos <<  " [" << setfill('0') << setw(8) << dec<< trk->id() << "] ";
         out << scientific << setprecision(6) << showpos << dec << setfill(' ');
         out << " |" << trk->getD0(); 
         out << " |" << trk->getPhi(); 
@@ -2552,7 +2553,7 @@ namespace UTIL{
 	}
 	out << setw(30) << setfill(' ') << left << "Location" << right << setw(40) << tmp.str() << endl;
 	tmp.str("") ;
-        tmp << hex << setfill('0') << setw(8) << part->id();
+        tmp << dec << setfill('0') << setw(8) << part->id();
 	out << scientific << setprecision(6) ;
         out << setw(30) << setfill(' ') << left << "Id"          << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "D0"          << right << setw(40) << part->getD0() << endl;
@@ -2613,8 +2614,8 @@ namespace UTIL{
             flag=BitSet32(col->getFlag());
         }
 
-        out << noshowpos <<  " [" << setfill('0') << setw(8) << hex<< trk->id() << "] ";
-        out << "| " << hex << setw(8) << trk->getType();
+        out << noshowpos <<  " [" << setfill('0') << setw(8) << dec<< trk->id() << "] ";
+        out << "| " << dec << setw(8) << trk->getType();
         out << scientific << setprecision (2) << showpos << dec << setfill(' ');
         out << " |" << trk->getD0(); 
         out << " |" << trk->getPhi(); 
@@ -2641,9 +2642,9 @@ namespace UTIL{
 
         for(l=0;l<tracks.size();l++){
             if( tracks[l] != 0  )
-                out << "[" << setfill('0') << setw(8) << hex << tracks[l]->id() << "]";
+                out << "[" << setfill('0') << setw(8) << dec << tracks[l]->id() << "]";
             else
-                out << "[" << setfill('0') << setw(8) << hex << 0 << "]";
+                out << "[" << setfill('0') << setw(8) << dec << 0 << "]";
             if(l < tracks.size()-1){ out << ", ";}
         }
 
@@ -2697,7 +2698,7 @@ namespace UTIL{
 
         } 
 
-        tmp << hex << setfill('0') << setw(8) << part->id();
+        tmp << dec << setfill('0') << setw(8) << part->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "Type" << right << setw(40) << part->getType() << endl;
         // out << setw(30) << setfill(' ') << left << "D0" << right << showpos << setw(40) << part->getD0() << endl;
@@ -2805,7 +2806,7 @@ namespace UTIL{
 
         BitSet32 flag( col->getFlag() ) ;
 
-        out << noshowpos <<  " [" << setfill('0') << setw(8) << hex << clu->id() << "] |" << dec;
+        out << noshowpos <<  " [" << setfill('0') << setw(8) << dec << clu->id() << "] |" << dec;
         out << setfill(' ') << setw(4) << clu->getType() << "|";
         out << showpos << scientific << setprecision(3) << clu->getEnergy() << "|" << clu->getEnergyError() << "|";
         out << clu->getPosition()[0] << ", " << clu->getPosition()[1] << ", " <<  clu->getPosition()[2] << "|";
@@ -2840,7 +2841,7 @@ namespace UTIL{
             const CalorimeterHitVec& hits= clu->getCalorimeterHits() ;
             const FloatVec& contr = clu->getHitContributions() ;
             for(unsigned int k=0;k<hits.size();k++){
-                out << "[" << setfill('0' ) << hex << setw(8) <<  ( hits[k] ? hits[k]->id() : 0 ) << "]" 
+                out << "[" << setfill('0' ) << dec << setw(8) <<  ( hits[k] ? hits[k]->id() : 0 ) << "]" 
                     << "(" << scientific << setprecision (2) << showpos << dec << setfill(' ') << contr[k] << ") " ;
                 if( ! ( (k+1) % 10 ) ) out << std::endl ;
             }
@@ -2878,7 +2879,7 @@ namespace UTIL{
         }
 
 
-        tmp << "0x" << hex << clu->id();
+        tmp  << dec << clu->id();
         out << setw(30) << setfill(' ') << left << "Id" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "Type"<< setfill(' ') << right << setw(40) << clu->getType() << endl;
         out << setw(30) << left << "Energy [GeV]" << right << setw(40) << clu->getEnergy() << endl;
@@ -2951,7 +2952,7 @@ namespace UTIL{
         const EVENT::Vertex* v = sV.obj;
         out << noshowpos; 
         out << setfill('0');
-        out << " [" << setw(8) << hex << v->id() << "] | " << v->isPrimary()<< " | ";
+        out << " [" << setw(8) << dec << v->id() << "] | " << v->isPrimary()<< " | ";
         out << setfill(' ') << setw(17) << left << v->getAlgorithmType() << " | ";
         out << showpos;
 
@@ -2959,7 +2960,7 @@ namespace UTIL{
             v->getPosition()[0] << ", " << v->getPosition()[1] << ", " << v->getPosition()[2] << " | [" ;
 
         out << setw(3) << v->getParameters().size() << "] | [";
-        out << setw(8) << hex << (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) << "]\n";
+        out << setw(8) << dec << (v->getAssociatedParticle()!=NULL?v->getAssociatedParticle()->id():0) << "]\n";
 
         out << noshowpos; 
         return out;
@@ -2981,7 +2982,7 @@ namespace UTIL{
         } 
 
         tmp.str("");
-        tmp << "0x" << hex << v->id() << dec;
+        tmp  << dec << v->id() << dec;
 
         out << setw(30) << setfill(' ') << left << "Id" <<   right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "Is Primary Vertex" <<   right << setw(40) << (v->isPrimary() ? "yes":"no") << endl;
