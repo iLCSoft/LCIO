@@ -38,6 +38,7 @@ namespace IMPL {
      *  i.e. TrackerHits and Tracks are preserved.
      */
     TrackImpl( const TrackImpl& ) ; 
+    const TrackImpl& operator = ( const TrackImpl& o ) ; // operator =
     
 
     /// Destructor.

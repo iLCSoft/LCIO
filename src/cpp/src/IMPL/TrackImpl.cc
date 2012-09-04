@@ -21,25 +21,39 @@ namespace IMPL {
 
         }
 
-  TrackImpl::TrackImpl(const TrackImpl& o) :
-    _type(o._type),
-    _chi2(o._chi2),
-    _ndf(o._ndf),
-    _dEdx(o._dEdx),
-    _dEdxError(o._dEdxError),
-    _radiusOfInnermostHit(o._radiusOfInnermostHit) { 
+  // copy constructor
+  TrackImpl::TrackImpl(const TrackImpl& o)
+  { 
+
+      *this = o ; // call operator =
     
+  }
+
+    const TrackImpl & TrackImpl::operator = ( const TrackImpl &o )
+    {
+    _type = o._type ;
+    _chi2 = o._chi2 ;
+    _ndf = o._ndf ;
+    _dEdx = o._dEdx ;
+    _dEdxError = o._dEdxError ;
+    _radiusOfInnermostHit = o._radiusOfInnermostHit ;
+
     std::copy( o._subdetectorHitNumbers.begin() ,  o._subdetectorHitNumbers.end() , std::back_inserter( _subdetectorHitNumbers ) ) ;
-    
+
     std::copy( o._hits.begin() ,  o._hits.end() , std::back_inserter( _hits ) ) ;
-    
+
     std::copy( o._tracks.begin() ,  o._tracks.end() , std::back_inserter( _tracks ) ) ;
-    
+
     for( unsigned int i=0; i< o._trackStates.size() ; i++ ){
       //_trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
-      _trackStates.push_back( new TrackStateImpl(  *o._trackStates[i] ) ) ; 
+      _trackStates.push_back( new TrackStateImpl(  *o._trackStates[i] ) ) ;
     }
-  }
+
+    // return back the object
+    // needed when calling multiple assignments,
+    // e.g. a = b = c ;
+    return o ;
+    }
 
 
     TrackImpl::~TrackImpl() { 
