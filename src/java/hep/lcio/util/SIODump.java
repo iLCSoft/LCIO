@@ -343,7 +343,7 @@ public class SIODump {
         return new Library(staticLib, dynamicLib, null, resolver, null);
     }
 
-    public class Resolver implements DVResolver {
+    public class Resolver extends DVMap {
 
         private Map values;
 
