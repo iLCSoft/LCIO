@@ -36,6 +36,8 @@ using namespace IO ;
 using namespace IOIMPL ;
 using namespace IMPL ;
 
+#include <assert.h>
+
 typedef EVENT::long64 long64 ;
 
 //#define EVENTKEY(RN,EN)  ( EVENT::long64( RN ) << 32 ) | EN 
@@ -186,6 +188,56 @@ namespace SIO {
     
   }
 
+  void SIOReader::getRuns(EVENT::IntVec & runs) {
+    
+    int nRun = this->getNumberOfRuns()  ;
+    
+    runs.resize( nRun ) ;
+
+    const RunEventMap& map =  _raMgr.getEventMap() ;
+
+    RunEventMap::Map_cIT it = map.begin() ;   
+    
+    // std::cout << " SIOReader::getRuns() - nRuns =  " << nRun << std::endl ;
+
+    for(int i=0 ; i <nRun ; ++i, ++it){
+
+      runs[i] = it->first.RunNum ;
+
+      // std::cout << " SIOReader::getRuns() - i=" << i << " run=" << runs[i] << std::endl ;
+
+      assert(  it->first.EvtNum  == -1 ) ;     
+    }
+  }
+
+
+  void SIOReader::getEvents(EVENT::IntVec & events) {
+
+
+    int nRun = this->getNumberOfRuns()  ;
+    int nEvt = this->getNumberOfEvents()  ;
+
+    events.resize(  2 * nEvt ) ;
+
+    const RunEventMap& map =  _raMgr.getEventMap() ;
+
+    // std::cout << " SIOReader::getEvents() - nRuns =  " << nRun 
+    // 	      << " nEvents = " << nEvt << std::endl ;
+
+    RunEventMap::Map_cIT it = map.begin() ;   
+
+    for(int i=0 ; i <nRun ; ++i , ++it ) ;
+
+    for(int i=0 ; i < nEvt ; ++i , ++it ){
+      
+      events[ 2*i     ] = it->first.RunNum ;
+      events[ 2*i + 1 ] = it->first.EvtNum ;
+      
+      //      std::cout << " SIOReader::getEvents() - i =  " << i/2 << " runnum = " <<   events[ 2*i     ] << " evetnum = " << events[ 2*i + 1 ]  << std::endl ;
+      
+      assert( it->first.EvtNum   != -1 ) ; 
+    }
+  }
 
   //-------------------------------------------------------------------------------------------
 

@@ -111,7 +111,7 @@ int main(int argc, char** argv ){
     }
 
 
-    MYTEST.LOG( "  -------------------------------------    test random access in file simjob.slcio - file must exist in : "  ) ;
+    MYTEST.LOG( "  -------------------------------------    test random access in file c_sim.slcio - file must exist in : "  ) ;
     std::system("pwd") ;
 
     // simjob.slcio has written 100 events in 10 runs, closing and re-opening the file after every run 
@@ -131,7 +131,27 @@ int main(int argc, char** argv ){
       MYTEST( lcReader->getNumberOfEvents() , 100 , " LCReader::getNumberOfEvents() - number of events is not 100" );
 
 
-      // test that we can still use read next for runheaders .....
+      IntVec runs ;
+      IntVec events ;
+
+      lcReader->getRuns( runs ) ;
+      lcReader->getEvents( events ) ;
+
+      MYTEST( runs.size() , 10 , " LCReader::getRuns( runs )  - size 'runs' is not 10" );
+
+      MYTEST( events.size()  , 200 , " LCReader::getEvents( events ) - size of 'events' is not 200" );
+
+      // for(int i=0,nElements= events.size() /2 ; i < nElements ; ++i){
+      // 	std::cout << " test_random_access - i*2 =  " << i*2 << " runnum = " 
+      // 		  <<   events[ 2*i     ] << " 2*i + 1  " <<  2*i + 1 <<  " evtnum = " << events[ 2*i + 1 ]  << std::endl ;
+      // }
+
+      MYTEST( events[ 42 * 2 ], 4 , " LCReader::getEvents( events ) - events[ 42 * 2 ] is not run 4 " );
+
+      MYTEST( events[ 42 * 2 + 1 ], 2 , " LCReader::getEvents( events ) - events[ 42 * 2  +1 ] is not event 2 " );
+
+
+     // test that we can still use read next for runheaders .....
       LCRunHeader* rHdr = lcReader->readNextRunHeader() ;
       MYTEST( rHdr->getRunNumber() , 0 , " LCReader::readNextRunHeader() - run number is not 0" );
       

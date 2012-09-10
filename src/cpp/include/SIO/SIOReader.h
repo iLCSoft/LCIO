@@ -103,6 +103,21 @@ class SIOEventHandler ;
     virtual int getNumberOfRuns() throw (IO::IOException, std::exception ) ;
 
 
+    /** Return the run numbers of the runs (run headers) in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the run numbers of the runs (run headers) in the file that is currently open is returned. 
+     */
+    virtual void getRuns(EVENT::IntVec & runs) ;
+
+    /** Return the run and event numbers of the events in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the  run and event numbers of the events in the file that is currently open are returned.
+     *  The size of the vector events will be twice the number of events, where i-th run number
+     *  will be in events[2*i] and the i-th event number in  events[2*i+].
+     */
+    virtual void getEvents(EVENT::IntVec & events) ;
+
+
     /** Skips the next n events from the current position. In fact simply reads the next n
       *  event headers so that the next event read is the (n+1)-th event.
       */

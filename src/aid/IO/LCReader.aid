@@ -66,18 +66,33 @@ public interface LCReader {
     public LCEvent* readNextEvent(int accessMode) throws IOException ;
 
     @ifdef cpp
-
+	
     /** Return the number of events in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
      *  the number of events in the file that is currently open is returned. 
      */
      public int getNumberOfEvents() throws IOException;
-
+    
     /** Return the number of runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
      *  the number of runs (run headers) in the file that is currently open is returned. 
      */
      public int getNumberOfRuns() throws IOException;
+     
+    /** Return the run numbers of the runs (run headers) in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the run numbers of the runs (run headers) in the file that is currently open is returned. 
+     */
+    public void getRuns( IntVec& runs ) ;
+
+    /** Return the run and event numbers of the events in the file - the file has to be open. In
+     *  case several input files are specified in the open() method - 
+     *  the  run and event numbers of the events in the file that is currently open are returned.
+     *  The size of the vector events will be twice the number of events, where i-th run number
+     *  will be in events[2*i] and the i-th event number in  events[2*i+].
+     */
+    public void getEvents( IntVec& events ) ;
+
 
     @endif
 
