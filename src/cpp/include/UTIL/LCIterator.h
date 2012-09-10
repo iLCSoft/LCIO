@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include <typeinfo>
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
 
