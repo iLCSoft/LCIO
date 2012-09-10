@@ -21,6 +21,7 @@ namespace EVENT{
   const int MCParticle::BITDecayedInCalorimeter  ;
   const int MCParticle::BITLeftDetector  ;
   const int MCParticle::BITStopped  ;
+  const int MCParticle::BITOverlay  ;
   
 }
 
@@ -237,6 +238,7 @@ namespace IMPL {
   bool MCParticleImpl::isDecayedInCalorimeter() const     { return   _simstatus[ BITDecayedInCalorimeter ] ; }
   bool MCParticleImpl::hasLeftDetector() const            { return   _simstatus[ BITLeftDetector ]  ;        }
   bool MCParticleImpl::isStopped() const                  { return   _simstatus[ BITStopped ] ;              }
+  bool MCParticleImpl::isOverlay() const                  { return   _simstatus[ BITOverlay ] ;              }
   
 
 
@@ -359,6 +361,7 @@ namespace IMPL {
   void MCParticleImpl::setDecayedInCalorimeter(bool val)        {   _simstatus[ BITDecayedInCalorimeter ]  = val; }
   void MCParticleImpl::setHasLeftDetector(bool val)             {   _simstatus[ BITLeftDetector ]  = val ;        }
   void MCParticleImpl::setStopped(bool val)                     {   _simstatus[ BITStopped ]  = val;              }
+  void MCParticleImpl::setOverlay(bool val)                     {   _simstatus[ BITOverlay ]  = val;              }
 
 
 } /// namespace IMPl

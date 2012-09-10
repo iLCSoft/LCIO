@@ -2085,12 +2085,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::MCParticle *){ //hauke
-        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | energy |gen|[simstat]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
+        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | energy |gen|[simstat ]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::MCParticle *){ //hauke
-        static std::string _t("------------|-----|-------------------------------|--------|---|---------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
+        static std::string _t("------------|-----|-------------------------------|--------|---|----------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
         return _t;
     }
 

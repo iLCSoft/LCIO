@@ -97,6 +97,7 @@ namespace IMPL {
      * @see isDecayedInCalorimeter() 
      * @see hasLeftDetector() 
      * @see isStopped() 
+     * @see isOverlay() 
      */
     virtual int getSimulatorStatus() const ;
 
@@ -128,6 +129,9 @@ namespace IMPL {
      */
     virtual bool isStopped() const ;
 
+    /** True if the particle has been overlayed by the simulation (or digitization)  program.
+     */
+    virtual bool isOverlay() const ;
 
     /** Returns the production vertex of the particle.
      */
@@ -248,6 +252,8 @@ namespace IMPL {
     virtual void setHasLeftDetector(bool val) ;
 
     virtual void setStopped(bool val) ;
+
+    virtual void setOverlay(bool val) ;
 
   protected:
 

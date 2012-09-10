@@ -1180,7 +1180,7 @@ namespace UTIL {
         }
 
         std::cout << endl
-            <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |            spin             | colorflow | [parents] - [daughters]"    
+            <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat ]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |            spin             | colorflow | [parents] - [daughters]"    
             << endl 
             << endl ;
 
@@ -1387,12 +1387,13 @@ namespace UTIL {
                 << " c: decayed in calorimeter"
                 << " l: has left detector"
                 << " s: stopped"
+                << " o: overlay"
                 << std::endl ;
 
             return str.str() ;
         }
 
-        std::string s("[   0   ]") ;
+        std::string s("[    0   ]") ;
 
         if( mcp->getSimulatorStatus() == 0 ) 
 
@@ -1426,6 +1427,10 @@ namespace UTIL {
             s[7]='s' ;
         else
             s[7]=' ' ;
+        if( mcp->isOverlay() )
+            s[8]='o' ;
+        else
+            s[8]=' ' ;
 
         return s ;
     }

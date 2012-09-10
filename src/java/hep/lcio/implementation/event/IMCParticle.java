@@ -256,8 +256,13 @@ public class IMCParticle extends ILCObject implements MCParticle
    public boolean isStopped()
    {
       return bitTest(simulatorStatus,BITStopped);
-      
    }
+
+   public boolean isOverlay()
+   {
+      return bitTest(simulatorStatus,BITOverlay);
+   }
+
    private void setBit(int bit, boolean value)
    {
       checkAccess();
@@ -291,6 +296,11 @@ public class IMCParticle extends ILCObject implements MCParticle
    public void setStopped(boolean val)
    {
       setBit(BITStopped,val);
+   }
+   
+   public void setOverlay(boolean val)
+   {
+      setBit(BITOverlay,val);
    }
    
    public void setVertexIsNotEndpointOfParent(boolean val)
