@@ -3,6 +3,32 @@
 ---------------------------------------------------------------
 
 ============
+  v02-03
+============
+  
+   - added new flag bit to simulator status word:
+     MCParticle::BITOverlay=23 and methods
+     MCParticle::isOverlay() 
+     MCParticle::setOverlay(bool v)
+     - print as 'o' in LCTOOLS/Operators
+  
+   -  added new methods (in C++)
+       LCReader::getRuns(EVENT::IntVec & runs)  and
+        LCReader::getEvents(EVENT::IntVec & events) 
+      that return the run and event numbers in a given file
+      - to be used in randomly reading events for bg overlay
+      - implemented in SIOReader
+      - minimal testing in test_randomaccess.cc
+
+
+   - changed the gnu jel dependency in pom.xml to 2.0.1 from 0.9
+     plus small change in SIODump.java
+
+   - added example cpp/draw_event: displays one event in 
+     ROOT-OGL and writes ascii file
+
+
+============
   v02-02
 ============
     - added new class LCIterator<T> for convenient loops over collections, e.g.:
