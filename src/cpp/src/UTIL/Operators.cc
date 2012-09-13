@@ -2577,7 +2577,7 @@ namespace UTIL{
             }
         }
         if(!((l+2)%5)){out << endl << "             " ;} // FIXME hard-coded 5
-        out << part->getCovMatrix()[l+1] << endl;
+        out << part->getCovMatrix()[14] << endl; // FIXME hard-coded 14
 
         out << noshowpos;
         return(out);
