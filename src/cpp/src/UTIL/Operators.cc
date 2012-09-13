@@ -2510,12 +2510,21 @@ namespace UTIL{
         out << " |(" << setprecision(2) << trk->getReferencePoint()[0] << ", " << trk->getReferencePoint()[1] << ", " <<trk->getReferencePoint()[2];
         out << endl;
 
-        out << " cov matrix: " << noshowpos;
-        unsigned int l;
-        for(l=0;l<14;l++){ //FIXME hardcoded 14
-            out << trk->getCovMatrix()[l] << ", ";
+        out << " cov matrix: " << showpos << scientific << setprecision(6) << setw(15) << setfill(' ')  ;
+
+	// print cov matrix as lower triangle matrix  
+        for( unsigned l=0 , N=trk->getCovMatrix().size(), ncolumns = 1 , nele =1 ; l <N ; ++l , ++nele) {
+	  out << trk->getCovMatrix()[l];
+	  if(! ( (nele) % ncolumns ) ){ 
+	    nele = 0 ;
+	    ++ncolumns ;
+	    out << " | " ; // separator for row
+	  } else {
+	    out << ", ";
+	  } 
         }
-        out << trk->getCovMatrix()[14] << endl; //FIXME hardcoded 14
+	out << endl ;
+
 
         out << endl;
         return out;
@@ -2567,17 +2576,21 @@ namespace UTIL{
         out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
 
         out << "Cov matrix:" << showpos << scientific << setprecision(6) << setw(15) << setfill(' ')  ;
-        unsigned int l;
-        for(l=0;l<14;l++){ // FIXME hard-coded 14
-            out << part->getCovMatrix()[l];
-            if(! ( (l+1)%5 ) ){ // FIXME hard-coded 5
-	      out << endl << "             " ;
-            } else{
-                out << ", ";
-            }
+
+
+	// print cov matrix as lower triangle matrix 
+        for( unsigned l=0 , N=part->getCovMatrix().size(), ncolumns = 1 , nele =1 ; l <N ; ++l , ++nele) {
+
+	  out << part->getCovMatrix()[l];
+
+	  if(! ( (nele) % ncolumns ) ){ 
+	    nele = 0 ;
+	    ++ncolumns ;
+	    out << endl << "             " ;
+	  } else {
+	    out << ", ";
+	  } 
         }
-        if(!((l+2)%5)){out << endl << "             " ;} // FIXME hard-coded 5
-        out << part->getCovMatrix()[14] << endl; // FIXME hard-coded 14
 
         out << noshowpos;
         return(out);
@@ -2629,18 +2642,25 @@ namespace UTIL{
         out << " |" << noshowpos << setw(5) << trk->getNdf() ; 
         out << endl;
 
-        out << " errors: " << noshowpos;
-        unsigned int l;
-        for(l=0;l<14;l++){
-            out << trk->getCovMatrix()[l] << ", ";
-        }
-        out << trk->getCovMatrix()[14] << endl;
+        out << " errors: "  << showpos << scientific << setprecision(6) << setw(15) << setfill(' ')  ; 
 
+	// print cov matrix as lower triangle matrix  
+        for( unsigned l=0 , N=trk->getCovMatrix().size(), ncolumns = 1 , nele =1 ; l <N ; ++l , ++nele) {
+	  out << trk->getCovMatrix()[l];
+	  if(! ( (nele) % ncolumns ) ){ 
+	    nele = 0 ;
+	    ++ncolumns ;
+	    out << " | " ; // separator for row
+	  } else {
+	    out << ", ";
+	  } 
+        }
+	out << endl ;
 
         out << " tracks(id): " ;
         const TrackVec& tracks = trk->getTracks() ;
 
-        for(l=0;l<tracks.size();l++){
+        for(unsigned l=0;l<tracks.size();l++){
             if( tracks[l] != 0  )
                 out << "[" << setfill('0') << setw(8) << dec << tracks[l]->id() << "]";
             else
@@ -2653,7 +2673,7 @@ namespace UTIL{
             if(flag.test(LCIO::TRBIT_HITS)){
                 out << " hits ->";
                 const TrackerHitVec& hits= trk->getTrackerHits() ;
-                for(l=0;l<hits.size();l++){
+                for(unsigned l=0;l<hits.size();l++){
                     out << "[" << setfill('0') << setw(8) <<  ( hits[l] ? hits[l]->id() : 0 ) << "] ";
                 }
                 out << endl;
@@ -2662,7 +2682,7 @@ namespace UTIL{
 
         out << " radius of innermost hit " << trk->getRadiusOfInnermostHit() << " / mm , " << " subdetector Hit numbers : " 
 	    << setfill(' ') << dec << fixed ;
-        for(l=0 ; l< trk->getSubdetectorHitNumbers().size(); l++) {
+        for(unsigned l=0 ; l< trk->getSubdetectorHitNumbers().size(); l++) {
 	  out << trk->getSubdetectorHitNumbers()[l];
 	  if(l < trk->getSubdetectorHitNumbers().size()-1){
 	    out << ", ";
