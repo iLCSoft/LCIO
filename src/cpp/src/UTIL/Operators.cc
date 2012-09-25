@@ -2247,12 +2247,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::ReconstructedParticle *){ //hauke
-        static std::string _h(" [   id   ] |com|type|     momentum( px,py,pz)       | energy | mass   | charge |        position ( x,y,z)      |pidUsed\n");
+        static std::string _h(" [   id   ] |com|type|     momentum( px,py,pz)       | energy | mass   | charge |        position ( x,y,z)      |pidUsed|GoodnessOfPID|\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::ReconstructedParticle *){ //hauke
-        static std::string _t("------------|---|----|-------------------------------|--------|--------|--------|-------------------------------|--------\n");
+        static std::string _t("------------|---|----|-------------------------------|--------|--------|--------|-------------------------------|-------|-------------|\n");
         return _t;
     }
 
@@ -2285,6 +2285,8 @@ namespace UTIL{
         }else{ 
             out << 0;
         }
+	out << "|" << setw(13) << setfill(' ') << scientific << part->getGoodnessOfPID() << "|" << endl;
+
         out << endl;
 
         out << "    covariance( px,py,pz,E) : (" ;
@@ -2419,6 +2421,8 @@ namespace UTIL{
             out << right << setw(40) << 0 << endl;
         }
 
+	out << setw(30) << setfill(' ') << left << "GoodnessOfPID"  <<   right << setw(40) << part->getGoodnessOfPID() << endl;
+	
         out <<         "Covariance p,E:  "; //??? 
 
         for(int l=0;l<10;l++){
