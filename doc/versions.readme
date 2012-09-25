@@ -21,7 +21,8 @@
       - minimal testing in test_randomaccess.cc
  
    - in Operators.cc:
-     print covariance matrix as lower triangle matrix for Track and TrackState
+     - print covariance matrix as lower triangle matrix for Track and TrackState
+     - added GoodnessOfPID to dumpe of ReconstructedParticle
 
    - changed the gnu jel dependency in pom.xml to 2.0.1 from 0.9
      plus small change in SIODump.java
