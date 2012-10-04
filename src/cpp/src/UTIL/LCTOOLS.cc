@@ -1189,7 +1189,7 @@ namespace UTIL {
 
             MCParticle* part =  dynamic_cast<MCParticle*>( col->getElementAt( index ) ) ;
 
-            printf("[%8.8x]", part->id() );
+            printf("[%8.8d]", part->id() );
             printf("%5d|"   , index );
             printf("%10d|" , part->getPDG() );
             printf("% 1.2e,% 1.2e,% 1.2e|" , 
