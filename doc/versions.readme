@@ -2,6 +2,14 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+
+============
+  v02-03-01
+============
+
+  - changed printout of ID for MCParticles from hex to dec
+    in LCTOOLS::printMCParticles() (used e.g. in dumpevent ) 
+
 ============
   v02-03
 ============
