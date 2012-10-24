@@ -1,5 +1,5 @@
 ////////////////////////////////////////
-//  test lcio::Cluster
+//  test splitting
 ////////////////////////////////////////
 
 #include "tutil.h"
@@ -29,7 +29,7 @@ static string FILE_BASENAME = "splitting" ;
 static string FILE_EXTENSION = ".slcio" ;
 
 // replace mytest with the name of your test
-const static string testname="test_cluster";
+const static string testname="test_splitting";
 
 //=============================================================================
 

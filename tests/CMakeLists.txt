@@ -281,6 +281,18 @@ ELSE()
 ENDIF( CLHEP_FOUND )
 
 
+# ==== lcio_split_file tests  ========
+#ADD_TEST( NAME t_lcio_split_file_write COMMAND bin_lcio_split_file trackerhits.slcio trackerhits_split.slcio 100000 )
+#SET_TESTS_PROPERTIES( t_lcio_split_file_write PROPERTIES PASS_REGULAR_EXPRESSION "10 events copied" )
+#ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob trackerhits_split.000.slcio trackerhits_split.001.slcio )
+#SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
+
+
+# ==== lcio_merge_files tests  ========
+ADD_TEST( NAME t_lcio_merge_files COMMAND bin_lcio_merge_files merged.slcio splitting.000.slcio splitting.001.slcio splitting.002.slcio )
+SET_TESTS_PROPERTIES( t_lcio_merge_files PROPERTIES PASS_REGULAR_EXPRESSION "merged 10 events from 3 input files." )
+
+
 # ==== lcio_event_counter tests  ========
 ADD_TEST( NAME t_lcio_event_counter COMMAND bin_lcio_event_counter tracks.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "3" )
@@ -291,13 +303,8 @@ SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXP
 ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
 
-
-# ==== lcio_split_file tests  ========
-#ADD_TEST( NAME t_lcio_split_file_write COMMAND bin_lcio_split_file trackerhits.slcio trackerhits_split.slcio 100000 )
-#SET_TESTS_PROPERTIES( t_lcio_split_file_write PROPERTIES PASS_REGULAR_EXPRESSION "10 events copied" )
-#ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob trackerhits_split.000.slcio trackerhits_split.001.slcio )
-#SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
-
+ADD_TEST( NAME t_lcio_event_counter_merged COMMAND bin_lcio_event_counter merged.slcio )
+SET_TESTS_PROPERTIES( t_lcio_event_counter_merged PROPERTIES PASS_REGULAR_EXPRESSION "10" )
 
 
 

@@ -410,6 +410,7 @@ ADD_LCIO_EXAMPLE( addRandomAccess )
 ADD_LCIO_EXAMPLE( lcio_event_counter ) 
 ADD_LCIO_EXAMPLE( lcio_check_col_elements )
 ADD_LCIO_EXAMPLE( lcio_split_file ) 
+ADD_LCIO_EXAMPLE( lcio_merge_files ) 
 
 IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
