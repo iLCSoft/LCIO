@@ -289,75 +289,75 @@ ENDIF( CLHEP_FOUND )
 
 
 # ==== lcio_merge_files tests  ========
-ADD_TEST( NAME t_lcio_merge_files COMMAND bin_lcio_merge_files merged.slcio splitting.000.slcio splitting.001.slcio splitting.002.slcio )
+ADD_TEST( t_lcio_merge_files "${EXECUTABLE_OUTPUT_PATH}/lcio_merge_files" merged.slcio splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_merge_files PROPERTIES PASS_REGULAR_EXPRESSION "merged 10 events from 3 input files." )
 
 
 # ==== lcio_event_counter tests  ========
-ADD_TEST( NAME t_lcio_event_counter COMMAND bin_lcio_event_counter tracks.slcio )
+ADD_TEST( t_lcio_event_counter "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" tracks.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "3" )
 
-ADD_TEST( NAME t_lcio_event_counter_splitting COMMAND bin_lcio_event_counter splitting.000.slcio splitting.001.slcio splitting.002.slcio )
+ADD_TEST( t_lcio_event_counter_splitting "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "10" )
 
-ADD_TEST( NAME t_lcio_split_file_read COMMAND bin_anajob splitting.000.slcio splitting.001.slcio splitting.002.slcio )
+ADD_TEST( t_lcio_split_file_read "${EXECUTABLE_OUTPUT_PATH}/anajob" splitting.000.slcio splitting.001.slcio splitting.002.slcio )
 SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
 
-ADD_TEST( NAME t_lcio_event_counter_merged COMMAND bin_lcio_event_counter merged.slcio )
+ADD_TEST( t_lcio_event_counter_merged "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" merged.slcio )
 SET_TESTS_PROPERTIES( t_lcio_event_counter_merged PROPERTIES PASS_REGULAR_EXPRESSION "10" )
 
 
 
 # ==== add some tests for checking number of elements in lcio collections ========
-ADD_TEST( NAME t_check_col_elements_args1 COMMAND bin_lcio_check_col_elements )
+ADD_TEST( t_check_col_elements_args1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" )
 SET_TESTS_PROPERTIES( t_check_col_elements_args1 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
-ADD_TEST( NAME t_check_col_elements_args2 COMMAND bin_lcio_check_col_elements Tracks )
+ADD_TEST( t_check_col_elements_args2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" Tracks )
 SET_TESTS_PROPERTIES( t_check_col_elements_args2 PROPERTIES PASS_REGULAR_EXPRESSION "error: wrong number of arguments" )
 
-ADD_TEST( NAME t_check_col_elements_nocol COMMAND bin_lcio_check_col_elements NonExistingCollection tracks.slcio )
+ADD_TEST( t_check_col_elements_nocol "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" NonExistingCollection tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_nocol PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_noopts COMMAND bin_lcio_check_col_elements Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_noopts "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_noopts PROPERTIES PASS_REGULAR_EXPRESSION "found 30 Tracks element\\(s\\) in 3 event\\(s\\)" )
 
 # one option at a time
-ADD_TEST( NAME t_check_col_elements_minelements1 COMMAND bin_lcio_check_col_elements --minelements 10 Tracks tracks.slcio )
-ADD_TEST( NAME t_check_col_elements_minelements2 COMMAND bin_lcio_check_col_elements --minelements 11 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_minelements1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --minelements 10 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_minelements2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --minelements 11 Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_minelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_maxelements1 COMMAND bin_lcio_check_col_elements --maxelements 10 Tracks tracks.slcio )
-ADD_TEST( NAME t_check_col_elements_maxelements2 COMMAND bin_lcio_check_col_elements --maxelements 09 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_maxelements1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --maxelements 10 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_maxelements2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --maxelements 09 Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_maxelements2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_expelements1 COMMAND bin_lcio_check_col_elements --expelements 10 Tracks tracks.slcio )
-ADD_TEST( NAME t_check_col_elements_expelements2 COMMAND bin_lcio_check_col_elements --expelements 10 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_expelements3 COMMAND bin_lcio_check_col_elements --expelements 11 Tracks tracks.slcio )
-ADD_TEST( NAME t_check_col_elements_expelements4 COMMAND bin_lcio_check_col_elements --expelements 09 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_expelements1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --expelements 10 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_expelements2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --expelements 10 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_expelements3 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --expelements 11 Tracks tracks.slcio )
+ADD_TEST( t_check_col_elements_expelements4 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --expelements 09 Tracks tracks.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_expelements3 PROPERTIES WILL_FAIL TRUE )
 SET_TESTS_PROPERTIES( t_check_col_elements_expelements4 PROPERTIES WILL_FAIL TRUE )
 
 # more options at once
-ADD_TEST( NAME t_check_col_elements_abselementerror1 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 8 --abselementerror 1 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_abselementerror2 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 9 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_abselementerror3 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 5 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_abselementerror1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 8 --abselementerror 1 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_abselementerror2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 9 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_abselementerror3 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 5 --abselementerror 2 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_abselementerror3 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_relelementerror1 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 7 --relelementerror .01 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_relelementerror2 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 6 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_relelementerror3 COMMAND bin_lcio_check_col_elements -n 4 -p -a -x 5 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_relelementerror1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 7 --relelementerror .01 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_relelementerror2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 6 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_relelementerror3 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -n 4 -p -a -x 5 --relelementerror .3 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_relelementerror3 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_abseventerror1 COMMAND bin_lcio_check_col_elements -p -x 10 --abseventerror 3 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_abseventerror2 COMMAND bin_lcio_check_col_elements -p -x 10 --abseventerror 2 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_abseventerror1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -p -x 10 --abseventerror 3 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_abseventerror2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -p -x 10 --abseventerror 2 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_abseventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_releventerror1 COMMAND bin_lcio_check_col_elements -p -x 10 --releventerror .5 Tracks tracks.slcio cluster.slcio )
-ADD_TEST( NAME t_check_col_elements_releventerror2 COMMAND bin_lcio_check_col_elements -p -x 10 --releventerror .4 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_releventerror1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -p -x 10 --releventerror .5 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_releventerror2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" -p -x 10 --releventerror .4 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_releventerror2 PROPERTIES WILL_FAIL TRUE )
 
-ADD_TEST( NAME t_check_col_elements_maxevents1 COMMAND bin_lcio_check_col_elements --maxevents 4 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_maxevents1 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --maxevents 4 Tracks tracks.slcio cluster.slcio )
+ADD_TEST( t_check_col_elements_maxevents2 "${EXECUTABLE_OUTPUT_PATH}/lcio_check_col_elements" --startevent 2 --maxevents 2 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_maxevents1 PROPERTIES PASS_REGULAR_EXPRESSION "found 30 Tracks element\\(s\\) in 4 event\\(s\\)" )
-ADD_TEST( NAME t_check_col_elements_maxevents2 COMMAND bin_lcio_check_col_elements --startevent 2 --maxevents 2 Tracks tracks.slcio cluster.slcio )
 SET_TESTS_PROPERTIES( t_check_col_elements_maxevents2 PROPERTIES PASS_REGULAR_EXPRESSION "found 10 Tracks element\\(s\\) in 2 event\\(s\\)" )
 
 # ============================================================================
