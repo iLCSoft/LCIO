@@ -7,10 +7,6 @@ CMakeLists.txt
   SET( LCIO_VERSION_MINOR 8 )
   SET( LCIO_VERSION_PATCH 2 )
   
-config/lcio.properties
-  version=0.9
-  dist.version=v00-09
-
 src/aid/EVENT/LCIO.aid
   #define LCIO_MAJOR_VERSION 1
   #define LCIO_MINOR_VERSION 8
@@ -18,6 +14,11 @@ src/aid/EVENT/LCIO.aid
 
   public static const int MAJORVERSION  = 0 ; 
   public static const int MINORVERSION  = 9 ; 
+
+
+config/lcio.properties
+  version=0.9
+  dist.version=v00-09
 
 
 src/cpp/include/lcio.h
