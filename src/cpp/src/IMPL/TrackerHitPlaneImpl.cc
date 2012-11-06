@@ -27,10 +27,7 @@ namespace IMPL {
     _v[0] = 0. ;
     _v[1] = 0. ;
     
-    //_cov.resize( TRKHITPLANENCOVMATRIX ) ;
-    //for(int i=0;i<TRKHITPLANENCOVMATRIX;i++){
-    //   _cov.push_back(0.0) ;
-    //}
+    _cov.resize( TRKHITPLANENCOVMATRIX ) ;
   }
   
   TrackerHitPlaneImpl::~TrackerHitPlaneImpl(){  

@@ -56,7 +56,8 @@ int main(int argc, char** argv ){
             evt->setRunNumber( 4711  ) ;
             evt->setEventNumber( i ) ;
 
-            LCCollectionVec* trkHits = new LCCollectionVec( LCIO::TRACKERHITPLANE )  ;
+	    //            LCCollectionVec* trkHits = new LCCollectionVec(  LCIO::TRACKERHIT )  ;
+            LCCollectionVec* trkHits = new LCCollectionVec(  LCIO::TRACKERHITPLANE )  ;
 
             for(int j=0;j<NHITS;j++){
 
@@ -69,8 +70,8 @@ int main(int argc, char** argv ){
                 double pos[3] = { i, j, i*j } ;
                 trkHit->setPosition( pos ) ;
 
-            //    //float cov[3] = { i, j, i+j } ;
-            //    //trkHit->setCovMatrix( cov );
+		// float cov[6] = { i, j, i+j ,  2*i, 2*j, 2*(i+j) , } ;
+		// trkHit->setCovMatrix( cov );
 
                 trkHits->addElement( trkHit ) ;
             }
@@ -107,7 +108,9 @@ int main(int argc, char** argv ){
 
                 //std::cout << " testing hit " << j << std::endl ;
 
-                TrackerHitPlane* trkHit = dynamic_cast<TrackerHitPlane*>(trkHits->getElementAt(j)) ;
+	      TrackerHitPlane* trkHit = dynamic_cast<TrackerHitPlane*>(trkHits->getElementAt(j)) ;
+	      //               TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
+
                 //std::cout << *trkHit << std::endl ;
 
                 MYTEST( trkHit->getEDep() ,  i*j*117. , "EDep" ) ;
@@ -124,11 +127,18 @@ int main(int argc, char** argv ){
                 MYTEST( pos[2] , i*j , " pos[2] " ) ;
 
 
-                //const FloatVec& cov = trkHit->getCovMatrix() ;
+                const FloatVec& cov = trkHit->getCovMatrix() ;
+		
+		// covariance should be size 6
+		MYTEST( cov.size()  , 6 , " cov.size() != 6" ) ;
 
-                //MYTEST( cov[0] , i , " cov[0] " ) ;
-                //MYTEST( cov[1] , j , " cov[1] " ) ;
-                //MYTEST( cov[2] , i+j , " cov[2] " ) ;
+                MYTEST( cov[0] , 0 , " cov[0] " ) ;
+                MYTEST( cov[1] , 0 , " cov[1] " ) ;
+                MYTEST( cov[2] , 0 , " cov[2] " ) ;
+                MYTEST( cov[3] , 0 , " cov[3] " ) ;
+                MYTEST( cov[4] , 0 , " cov[4] " ) ;
+                MYTEST( cov[5] , 0 , " cov[5] " ) ;
+		
 
             }
         }

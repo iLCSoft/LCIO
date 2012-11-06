@@ -125,11 +125,16 @@ int main(int argc, char** argv ){
                 MYTEST( pos[2] , i*j , " pos[2] " ) ;
 
 
-                //const FloatVec& cov = trkHit->getCovMatrix() ;
+                const FloatVec& cov = trkHit->getCovMatrix() ;
 
-                //MYTEST( cov[0] , i , " cov[0] " ) ;
-                //MYTEST( cov[1] , j , " cov[1] " ) ;
-                //MYTEST( cov[2] , i+j , " cov[2] " ) ;
+                MYTEST( cov.size() , 6 , " cov.size() != 6  " ) ;
+
+                MYTEST( cov[0] , 0 , " cov[0] " ) ;
+                MYTEST( cov[1] , 0 , " cov[1] " ) ;
+                MYTEST( cov[2] , 0 , " cov[2] " ) ;
+                MYTEST( cov[3] , 0 , " cov[3] " ) ;
+                MYTEST( cov[4] , 0 , " cov[4] " ) ;
+                MYTEST( cov[5] , 0 , " cov[5] " ) ;
 
             }
         }

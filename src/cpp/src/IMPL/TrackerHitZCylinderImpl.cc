@@ -26,10 +26,7 @@ namespace IMPL {
     _center[0] = 0. ;
     _center[1] = 0. ;
 
-    //_cov.resize( TRKHITZCYLNCOVMATRIX ) ;
-    //for(int i=0;i<TRKHITZCYLNCOVMATRIX;i++){
-    //   _cov.push_back(0.0) ;
-    //}
+    _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
 
   }
   
