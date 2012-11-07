@@ -4,6 +4,18 @@
 
 
 ============
+  v02-03-03
+============
+
+  - fixed bug in TrackerHitPlaneImpl and TrackerHitZCylinderImpl
+    with size of covariance matrix being 0 (no set to 6)
+    that caused corrupted LCIO files when any hits of these types
+    where written as "TrackerHit" types, e.g. in a new subset collection
+    that is made persistent ...
+    this is no problem for the DBD standard reconstruction !
+
+
+============
   v02-03-02
 ============
 
