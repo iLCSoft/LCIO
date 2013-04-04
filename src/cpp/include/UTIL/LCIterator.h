@@ -7,6 +7,7 @@
 #include <typeinfo>
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCCollection.h"
+#include "lcio.h"
 
 namespace UTIL {
 
