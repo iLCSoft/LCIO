@@ -254,6 +254,7 @@ INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
     PATTERN "*/SIO*" EXCLUDE
     PATTERN "*/CPPFORT*" EXCLUDE
     PATTERN "*/EVENT*" EXCLUDE
+    PATTERN "*/pre-generated" EXCLUDE
     PATTERN "*/IO" EXCLUDE # watchout: */IO* pattern also excludes IOIMPL
 )
 
