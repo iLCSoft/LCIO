@@ -2,6 +2,22 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+============
+  v02-03-04
+============
+  - added build option for C++ only builds
+    using pre-genetarated header files:
+     cmake -DLCIO_GENERATE_HEADERS=OFF ..
+
+    - note: header files will have to be updated manually by developers
+      after changing the class layout
+
+  - some minor fixes:
+    - fix missing include issue in UTIL/LCIterator.h for latest ubuntu
+    - update freehep-sio dep to 2.3
+    - enforce cmake version >= 2.8
+
+
 
 ============
   v02-03-03

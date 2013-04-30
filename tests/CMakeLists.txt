@@ -36,60 +36,63 @@ SET_TESTS_PROPERTIES( t_c_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClu
 SET_TESTS_PROPERTIES( t_c_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
 # ----------------------------------------------------------------------------
 
-# ------ java tests ----------------------------------------------------------
-ADD_TEST( t_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
-ADD_TEST( t_j_ana_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
-ADD_TEST( t_j_rec_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
-ADD_TEST( t_j_ana_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
-
-SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created[ ]+10[ ]+runs with[ ]+100[ ]+events" )
-SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-SET_TESTS_PROPERTIES( t_j_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed[ ]+100[ ]+events" )
-SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-# ----------------------------------------------------------------------------
-
-
-# ------ c++/java ana/sim mixed tests ----------------------------------------
-ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
-ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
-ADD_TEST( t_j_ana_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
-ADD_TEST( t_j_ana_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
-
-SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-SET_TESTS_PROPERTIES( t_j_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-# ----------------------------------------------------------------------------
 
 
 
-# ------ c++/java sim/rec mixed tests ----------------------------------------
-ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
-ADD_TEST( t_j_rec_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
-ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
-ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
+if( INSTALL_JAR )
 
-SET_TESTS_PROPERTIES( t_c_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClusters' and 'SomeTracks'.*to[ ]+100[ ]+events" )
-SET_TESTS_PROPERTIES( t_j_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
-SET_TESTS_PROPERTIES( t_c_ana_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-# ----------------------------------------------------------------------------
+  # ------ java tests ----------------------------------------------------------
+  ADD_TEST( t_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSimJob.sh j_sim.slcio )
+  ADD_TEST( t_j_ana_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_sim.slcio )
+  ADD_TEST( t_j_rec_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh j_sim.slcio j_rec.slcio )
+  ADD_TEST( t_j_ana_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh j_rec.slcio )
+  
+  SET_TESTS_PROPERTIES( t_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "created[ ]+10[ ]+runs with[ ]+100[ ]+events" )
+  SET_TESTS_PROPERTIES( t_j_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  SET_TESTS_PROPERTIES( t_j_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed[ ]+100[ ]+events" )
+  SET_TESTS_PROPERTIES( t_j_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  # ----------------------------------------------------------------------------
 
-
-# ------ java sio dump tests -------------------------------------------------
-ADD_TEST( t_j_sio_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_sim.slcio )
-ADD_TEST( t_j_sio_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_rec.slcio )
-ADD_TEST( t_j_sio_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_sim.slcio )
-ADD_TEST( t_j_sio_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_rec.slcio )
-ADD_TEST( t_j_sio_j2c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j2c_rec.slcio )
-ADD_TEST( t_j_sio_c2j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c2j_rec.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
-SET_TESTS_PROPERTIES( t_j_sio_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
-SET_TESTS_PROPERTIES( t_j_sio_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
-SET_TESTS_PROPERTIES( t_j_sio_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
-SET_TESTS_PROPERTIES( t_j_sio_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
-SET_TESTS_PROPERTIES( t_j_sio_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
-# ----------------------------------------------------------------------------
+  # ------ c++/java ana/sim mixed tests ----------------------------------------
+  ADD_TEST( t_c_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob" j_sim.slcio )
+  ADD_TEST( t_c_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j_rec.slcio )
+  ADD_TEST( t_j_ana_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_sim.slcio )
+  ADD_TEST( t_j_ana_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh c_rec.slcio )
+  
+  SET_TESTS_PROPERTIES( t_c_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  SET_TESTS_PROPERTIES( t_c_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  SET_TESTS_PROPERTIES( t_j_ana_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  SET_TESTS_PROPERTIES( t_j_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  # ----------------------------------------------------------------------------
+  
+  # ------ c++/java sim/rec mixed tests ----------------------------------------
+  ADD_TEST( t_c_rec_j_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" j_sim.slcio j2c_rec.slcio )
+  ADD_TEST( t_j_rec_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runRecJob.sh c_sim.slcio c2j_rec.slcio )
+  ADD_TEST( t_c_ana_j2c_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" j2c_rec.slcio )
+  ADD_TEST( t_c_ana_c2j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob" c2j_rec.slcio )
+  
+  SET_TESTS_PROPERTIES( t_c_rec_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "'SomeClusters' and 'SomeTracks'.*to[ ]+100[ ]+events" )
+  SET_TESTS_PROPERTIES( t_j_rec_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Analyzed 100 events" )
+  SET_TESTS_PROPERTIES( t_c_ana_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  SET_TESTS_PROPERTIES( t_c_ana_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+  # ----------------------------------------------------------------------------
+  
+  
+  # ------ java sio dump tests -------------------------------------------------
+  ADD_TEST( t_j_sio_c_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_sim.slcio )
+  ADD_TEST( t_j_sio_c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c_rec.slcio )
+  ADD_TEST( t_j_sio_j_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_sim.slcio )
+  ADD_TEST( t_j_sio_j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j_rec.slcio )
+  ADD_TEST( t_j_sio_j2c_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml j2c_rec.slcio )
+  ADD_TEST( t_j_sio_c2j_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml c2j_rec.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_c_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
+  SET_TESTS_PROPERTIES( t_j_sio_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+  SET_TESTS_PROPERTIES( t_j_sio_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+  SET_TESTS_PROPERTIES( t_j_sio_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+  SET_TESTS_PROPERTIES( t_j_sio_j2c_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+  SET_TESTS_PROPERTIES( t_j_sio_c2j_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+  # ----------------------------------------------------------------------------
+endif() 
 
 
 IF( BUILD_F77_TESTJOBS )
@@ -121,19 +124,20 @@ IF( BUILD_F77_TESTJOBS )
     SET_TESTS_PROPERTIES( t_f_ana_c_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
     # ------------------------------------------------------------------------
 
-    # ------ java/fortran ana/sim mixed tests --------------------------------
-    ADD_TEST( t_j_ana_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
-    ADD_TEST( t_j_ana_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
-    ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
-    ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
-
-    SET_TESTS_PROPERTIES( t_j_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_j_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
-    # ------------------------------------------------------------------------
-
-
+    if( INSTALL_JAR )
+      # ------ java/fortran ana/sim mixed tests --------------------------------
+      ADD_TEST( t_j_ana_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_sim.slcio )
+      ADD_TEST( t_j_ana_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runAnalysisJob.sh f_rec.slcio )
+      ADD_TEST( t_f_ana_j_sim "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_sim.slcio )
+      ADD_TEST( t_f_ana_j_rec "${EXECUTABLE_OUTPUT_PATH}/anajob_F" j_rec.slcio )
+      
+      SET_TESTS_PROPERTIES( t_j_ana_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+      SET_TESTS_PROPERTIES( t_j_ana_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+      SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+      SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
+      # ------------------------------------------------------------------------
+    endif()
+    
     
     # ------ c++/fortran sim/rec mixed tests ---------------------------------
     #ADD_TEST( t_c_rec_f_sim "${EXECUTABLE_OUTPUT_PATH}/recjob" f_sim.slcio f2c_rec.slcio )
@@ -250,27 +254,28 @@ ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
 ADD_LCIO_TEST( test_splitting )
 
-ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_cluster ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml cluster.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_cluster PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_tracks ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml tracks.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_tracks PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_trackerhits ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhits.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_trackerhits PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_trackerpulses ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerpulses.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_trackerpulses PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_trackerhitplane ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitplane.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_trackerhitplane PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
-
-ADD_TEST( t_j_sio_trackerhitzcylinder ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitzcylinder.slcio )
-SET_TESTS_PROPERTIES( t_j_sio_trackerhitzcylinder PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
-
+if( INSTALL_JAR )
+  ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_calohit PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_cluster ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml cluster.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_cluster PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_tracks ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml tracks.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_tracks PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_trackerhits ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhits.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_trackerhits PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_trackerpulses ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerpulses.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_trackerpulses PROPERTIES PASS_REGULAR_EXPRESSION "Read 23 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_trackerhitplane ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitplane.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_trackerhitplane PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+  
+  ADD_TEST( t_j_sio_trackerhitzcylinder ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml trackerhitzcylinder.slcio )
+  SET_TESTS_PROPERTIES( t_j_sio_trackerhitzcylinder PROPERTIES PASS_REGULAR_EXPRESSION "Read 9 records with 0 warnings" )
+endif()
 
 FIND_PACKAGE( CLHEP QUIET )
 IF( CLHEP_FOUND )
