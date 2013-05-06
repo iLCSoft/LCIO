@@ -225,6 +225,18 @@ if( LCIO_GENERATE_HEADERS )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
   # ----------------------------------------------------------------------------
+
+else()
+
+  #------FG: if the headers are not generated we need to manually set the header lists
+  
+  # get list of all .h files in pre-generated directory
+  FILE( GLOB  EVENT_CXX_HEADERS_LIST "${LCIO_AID_HEADERS_OUTPUT_DIR}/EVENT/*.h" )
+  FILE( GLOB  IO_CXX_HEADERS_LIST "${LCIO_AID_HEADERS_OUTPUT_DIR}/IO/*.h" )
+
+#  MESSAGE( STATUS "********************* IO_CXX_HEADERS_LIST:  ${IO_CXX_HEADERS_LIST}" )
+#  MESSAGE( STATUS "********************* EVENT_CXX_HEADERS_LIST:  ${EVENT_CXX_HEADERS_LIST}" )
+
 endif()
 
 
@@ -321,6 +333,8 @@ IF( BUILD_ROOTDICT )
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/Operators.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
+	${LCIO_CXX_HEADERS_DIR}/pre-generated/EVENT/*.h 
+	${LCIO_CXX_HEADERS_DIR}/pre-generated/IO/*.h    
     )
 
     # remove items to exclude
@@ -331,6 +345,9 @@ IF( BUILD_ROOTDICT )
     GEN_ROOT_DICT_SOURCES( UTIL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
+   MESSAGE( STATUS "********************* IO_CXX_HEADERS_LIST:  ${IO_CXX_HEADERS_LIST}" )
+   MESSAGE( STATUS "********************* EVENT_CXX_HEADERS_LIST:  ${EVENT_CXX_HEADERS_LIST}" )
+   MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
 
     # ------ generate dictionary for IO classes --------------------

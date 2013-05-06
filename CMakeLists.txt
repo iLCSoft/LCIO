@@ -115,9 +115,9 @@ ENDIF()
 
 ### GENERATE HEADERS ( USING ANT ) ##########################################
 
-# directories where ant generates c++ and java headers
 SET( LCIO_CXX_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/cpp/include" )
 
+# directories where ant generates c++ and java headers
 if( INSTALL_JAR )
   SET( LCIO_JAVA_HEADERS_DIR "${LCIO_SOURCE_DIR}/src/java/hep/lcio" )
 endif()
