@@ -12,15 +12,15 @@ src/aid/EVENT/LCIO.aid
   #define LCIO_MINOR_VERSION 8
   #define LCIO_PATCH_LEVEL 2
 
+  public static const int MAJORVERSION  = 0 ; 
+  public static const int MINORVERSION  = 9 ; 
+
+
+
 src/cpp/include/pre-generated/EVENT/LCIO.h    <<<<<<<<<<<<<<< NEW in v02-03-04 !!!!!!!!!!
   #define LCIO_MAJOR_VERSION 1
   #define LCIO_MINOR_VERSION 8
   #define LCIO_PATCH_LEVEL 2
-
-
-
-  public static const int MAJORVERSION  = 0 ; 
-  public static const int MINORVERSION  = 9 ; 
 
 
 config/lcio.properties

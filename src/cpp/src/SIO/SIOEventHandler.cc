@@ -106,7 +106,10 @@ namespace SIO  {
 
 	try { 
 	  
-	  (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
+	  // if we have a list with the sub set of collection names to be read we only add these to the event
+	  if( _colSubSet.empty() || _colSubSet.find( colName ) !=  _colSubSet.end()  ) 
+
+	    (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
 	  
 	}
 	catch( EventException ){  return LCIO::ERROR ; }
@@ -195,4 +198,15 @@ namespace SIO  {
 
   }
 
+  void SIOEventHandler::setReadCollectionNames(const std::vector<std::string>& colnames){
+
+    if( ! _colSubSet.empty() )
+      _colSubSet.clear() ;
+    
+    for( unsigned i=0,N=colnames.size() ; i<N ; ++i ){
+      
+      _colSubSet.insert( colnames[i] ) ;
+    }
+  }
+  
 }

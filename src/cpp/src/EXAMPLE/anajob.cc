@@ -5,6 +5,7 @@
 #include "EVENT/LCRunHeader.h" 
 
 #include <cstdlib>
+#include <sstream>
 
 static std::vector<std::string> FILEN ; 
 
@@ -23,7 +24,9 @@ int main(int argc, char** argv ){
 
   // read file names from command line (only argument) 
   if( argc < 2) {
-    cout << " usage:  anajob <input-file1> [[input-file2],...]" << endl ;
+    cout << " usage:  anajob <input-file1> [[input-file2],...]" << endl << endl ;
+    cout << "  set the environment variable LCIO_READ_COL_NAMES to a space separated list" << endl ;
+    cout << "  of collection names that you would like to read (all are read if not set)" << endl ;
     exit(1) ;
   }
   for(int i=1 ; i < argc ; i++){
@@ -33,24 +36,44 @@ int main(int argc, char** argv ){
   
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
   
+    // ------ check if LCIO_READ_COL_NAMES is set -------------
+    
+    char* rColChar = getenv ("LCIO_READ_COL_NAMES");
+
+    if ( rColChar != 0 ) {
+      
+    std::vector< std::string > colSubset ;
+      std::stringstream sts( rColChar ) ;
+      std::string colName;
+      
+      while( sts >> colName) {
+	
+	colSubset.push_back( colName ) ;
+      }
+      
+      lcReader->setReadCollectionNames(  colSubset ) ;
+    }
+    //-----------------------------------------------------------
+
+
+
   // first we read the run information
   
-
   cout << "anajob:  will open and read from files: " << endl ;  
 
   for(int i=0 ; i < nFiles ; i++){
 
     lcReader->open( FILEN[i] ) ;
-
+    
     cout  << endl <<  "     "  << FILEN[i] 
 	  <<  "     [ number of runs: "    <<  lcReader->getNumberOfRuns() 
 	  <<       ", number of events: "  <<  lcReader->getNumberOfEvents() << " ] "   
 	  << endl 
 	  << endl ; 
-
+    
     lcReader->close() ;
   }  
-
+  
   
   // open list of files
   lcReader->open( FILEN ) ;

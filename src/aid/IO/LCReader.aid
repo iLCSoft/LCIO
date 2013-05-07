@@ -94,6 +94,12 @@ public interface LCReader {
     public void getEvents( IntVec& events ) ;
 
 
+    /** Limit the collection names that are going to be read to the subset given in the vector -
+     *  all other collection will be ignored. This might improve the reading performance
+     *  considerably in cases where only a small subset of the collections in the event is needed. 
+     */
+    public void setReadCollectionNames(const String[]&  colnames) ;
+
     @endif
 
   /** Skips the next n events from the current position.

@@ -95,6 +95,12 @@ namespace SIO {
     SIO_blockManager::clear() ;
   }
 
+  void SIOReader::setReadCollectionNames(const std::vector<std::string>& colnames){
+
+    _evtHandler->setReadCollectionNames( colnames ) ;    
+  }
+
+
   void SIOReader::open(const std::vector<std::string>& filenames) 
     throw( IOException , std::exception){
 

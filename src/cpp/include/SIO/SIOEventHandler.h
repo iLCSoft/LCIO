@@ -34,12 +34,16 @@ namespace SIO {
     void setEvent(const EVENT::LCEvent* evt ) ; 
     void setEventPtr( IOIMPL::LCEventIOImpl** evtP ) ; 
     
+    void setReadCollectionNames(const std::vector<std::string>& colnames) ;
+
   private: 
     // event implementation for reading 
     IOIMPL::LCEventIOImpl **_evtP ;  
     // event data interface for writing
     const EVENT::LCEvent *_evt ;  
     
+    std::set< std::string > _colSubSet ;
+
   }; // class
   
 } // namespace

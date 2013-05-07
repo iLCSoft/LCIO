@@ -108,6 +108,12 @@ public:
      */
     virtual void getEvents(EVENT::IntVec & events) = 0;
 
+    /** Limit the collection names that are going to be read to the subset given in the vector -
+     *  all other collection will be ignored. This might improve the reading performance
+     *  considerably in cases where only a small subset of the collections in the event is needed. 
+     */
+    virtual void setReadCollectionNames(const std::vector<std::string>  & colnames) = 0;
+
   /** Skips the next n events from the current position.
      * @throws IOException
      */

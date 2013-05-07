@@ -3,6 +3,18 @@
 ---------------------------------------------------------------
 
 ============
+  v02-04
+============
+   
+  - added new method to limit the collections that are going to be read 
+    from a file:
+      LCReader::setReadCollectionNames(const std::vector<std::string>& cn)
+    - C++ only so far
+    - anajob and dumpevent now read variable LCIO_READ_COL_NAMES with
+      space separated list of colection names to read only these
+
+
+============
   v02-03-04
 ============
   - added build option for C++ only builds

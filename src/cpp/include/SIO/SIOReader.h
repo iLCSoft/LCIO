@@ -124,6 +124,14 @@ class SIOEventHandler ;
     virtual void skipNEvents(int n)   throw (IO::IOException, std::exception )  ;
 
 
+
+    /** Limit the collection names that are going to be read to the subset given in the vector -
+     *  all other collection will be ignored. This might improve the reading performance
+     *  considerably in cases where only a small subset of the collections in the event is needed. 
+     */
+    virtual void setReadCollectionNames(const std::vector<std::string>& colnames) ;
+
+
     /** Reads the specified runHeader from file. Returns NULL if
      *  the specified runHeader hasn't been found in the file.
      *

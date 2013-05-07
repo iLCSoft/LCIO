@@ -34,7 +34,9 @@ int main(int argc, char** argv ){
     cout << " usage: dumpevent filename runNum evtNum " << endl ;
     cout << "    or: dumpevent filename n      " << endl ;
     cout << "  where the first dumps the event with the specified run and event number" << endl ;
-    cout << "  and the second simply dumps the n-th event in the file" << endl ;
+    cout << "  and the second simply dumps the n-th event in the file" << endl << endl ;
+    cout << "  set the environment variable LCIO_READ_COL_NAMES to a space separated list" << endl ;
+    cout << "  of collection names that you would like to dump (all are dumped if not set)" << endl ;
 
     exit(1) ;
   }
@@ -43,7 +45,6 @@ int main(int argc, char** argv ){
 
   bool dumpNthEvent( argc == 3 ) ;
  
-
 
   if( dumpNthEvent ) {
 
@@ -74,6 +75,28 @@ int main(int argc, char** argv ){
   else
     lcReader = LCFactory::getInstance()->createLCReader(LCReader::directAccess) ;
   
+
+  // ------ check if LCIO_READ_COL_NAMES is set -------------
+  
+  char* rColChar = getenv ("LCIO_READ_COL_NAMES");
+  
+  if ( rColChar != 0 ) {
+
+    std::vector< std::string > colSubset ;
+    std::stringstream sts( rColChar ) ;
+    std::string colName;
+
+    while( sts >> colName) {
+    
+      colSubset.push_back( colName ) ;
+    }
+
+    lcReader->setReadCollectionNames(  colSubset ) ;
+  }
+  //-----------------------------------------------------------
+
+
+
   LCEvent* evt(0) ;
 
   try{
