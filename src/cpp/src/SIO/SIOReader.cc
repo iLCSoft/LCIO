@@ -720,8 +720,37 @@ namespace SIO {
   void  SIOReader::postProcessEvent() {
     // restore the daughter relations from the parent relations
     SIOParticleHandler::restoreParentDaughterRelations( _evt ) ;
-//     // fill the relation map from intermediate vector
-//     SIOLCRelationHandler::fillRelationMap(  _evt ) ;
-  }
+    //     // fill the relation map from intermediate vector
+    //     SIOLCRelationHandler::fillRelationMap(  _evt ) ;
+    
+    
+    // ----------- check subset collection's pointers: -----------
 
+    char* rColChar = getenv ("LCIO_IGNORE_NULL_IN_SUBSET_COLLECTIONS");
+
+    if ( rColChar == 0 ) {
+      
+      const std::vector< std::string >* strVec = _evt->getCollectionNames() ;
+      std::vector< std::string >::const_iterator name ;
+      for( name = strVec->begin() ; name != strVec->end() ; name++){
+	
+	LCCollection* col = _evt->getCollection( *name ) ;
+	if( col->isSubset()  ) {
+	  
+	  for( int i=0,N=col->getNumberOfElements() ; i<N ; ++i ){
+	    if( col->getElementAt( i ) == 0 ){
+	      
+	      std::stringstream sts ;
+	      sts << " SIOReader::postProcessEvent: null pointer in subset collection " 
+		  << *name << " at position: " << i  << std::endl ;
+	      
+	      throw Exception( sts.str()  ) ;
+	    }
+	  }
+	}
+      }
+    }
+    //--------------------------------------------------
+
+  }
 } // namespace

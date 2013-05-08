@@ -13,6 +13,16 @@
     - anajob and dumpevent now read variable LCIO_READ_COL_NAMES with
       space separated list of colection names to read only these
 
+  - pointers to LCObjects that are not in the event are now set to NULL
+    
+  - an Exception is thrown if a null pointer is found in a subset collection
+    (e.g. if LCIO_READ_COL_NAMES is set inconsistently such that 
+     the collection(s) holding the elements is not read )
+
+    - this behavior can be deactivated with setting the environment variable
+      LCIO_IGNORE_NULL_IN_SUBSET_COLLECTIONS=1
+      if really needed, e.g. to read inconsistent or corrupt files
+
 
 ============
   v02-03-04
