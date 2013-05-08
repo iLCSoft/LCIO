@@ -543,14 +543,26 @@ while( ptol != stream->pointerTo->end() )
     ptoh = stream->pointerTo->upper_bound( ptol->first );
     pati = stream->pointedAt->find( ptol->first );
 
-    if( pati != stream->pointedAt->end() )
-    {
-        for( ptoi = ptol; ptoi != ptoh; ptoi++ )
-	{
-             pointer = static_cast     <SIO_POINTER_DECL *>(ptoi->second); 
-            *pointer = reinterpret_cast<SIO_POINTER_DECL  >(pati->second);
-        }
+    bool pat_found( pati != stream->pointedAt->end() ) ;
+    
+    // if the pointed at object is not found we set the pointer to null
+    for( ptoi = ptol; ptoi != ptoh; ptoi++ ) {
+      pointer = static_cast     <SIO_POINTER_DECL *>(ptoi->second) ; 
+      *pointer = ( pat_found ? reinterpret_cast<SIO_POINTER_DECL  >(pati->second) : 0 ) ;
     }
+    
+    // if( pati != stream->pointedAt->end() )
+    // {
+    //     for( ptoi = ptol; ptoi != ptoh; ptoi++ )
+    // 	{
+    //          pointer = static_cast     <SIO_POINTER_DECL *>(ptoi->second); 
+    //         *pointer = reinterpret_cast<SIO_POINTER_DECL  >(pati->second);
+    //     }
+    // }
+    // else{
+    //   std::cout << " ----SIO_record: no pointed At object found for : " << ptol->first << std::endl ;
+    // }
+
     ptol = ptoh;
 }
 
