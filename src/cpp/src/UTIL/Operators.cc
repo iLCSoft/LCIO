@@ -2316,27 +2316,25 @@ namespace UTIL{
         out << endl ;
 
         out << "    tracks ( [   id   ] ): " ;
-        for(unsigned int l=0;l<part->getTracks().size();l++){
-            if(l == part->getTracks().size()-1){
-                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
-            }else{
-                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
-            }
 
-            //printf("[%8.8x], ",  part->getTracks()[l]->id() );
-        }
+        for(unsigned int l=0,N=part->getTracks().size(); l<N ;l++){
+	  
+	  out << dec << setfill('0') << "[" << setw(8) 
+	      << ( part->getTracks()[l]  ?  part->getTracks()[l]->id()  : 0 ) << "]" ;
+	  
+	  if( l != N-1 ) out << ", ";
+	}
         out << endl ;
 
         out << "    clusters ( [   id   ] ): " ;
-        for(unsigned int l=0;l<part->getClusters().size();l++){
-            if(l == part->getClusters().size()-1){
-                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
-            }else{
-                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
-            }
 
-            //printf("[%8.8x], ",  part->getClusters()[l]->id() );
-        }
+	for(unsigned int l=0,N=part->getClusters().size(); l<N ;l++){
+
+	  out << dec <<  setfill('0') << "[" << setw(8) 
+	      <<  ( part->getClusters()[l] ? part->getClusters()[l]->id() : 0 ) << "]";
+	  
+	  if(l != N-1) out << ", " ;
+	}
         out << endl ;
         out << "    particle ids ( [id], PDG, (type)): " ;
         for(unsigned int l=0;l<part->getParticleIDs().size();l++){
@@ -2447,27 +2445,25 @@ namespace UTIL{
         //out << endl ;
 
         out << endl << "Tracks id:    ";
-        for(unsigned int l=0;l<part->getTracks().size();l++){
-            if(! ((l+1)%5)){ out << endl << "                 ";}
-            if(l == part->getTracks().size()-1){
-                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "]";
-            }else{
-                out << dec << setfill('0') << "[" << setw(8) << part->getTracks()[l]->id() << "], ";
-            }
 
-        }
+        for(unsigned int l=0,N=part->getTracks().size(); l<N ;l++){
+	  if(! ((l+1)%5)){ out << endl << "                 ";}
+	  out << dec << setfill('0') << "[" << setw(8) 
+	      << ( part->getTracks()[l]  ?  part->getTracks()[l]->id()  : 0 ) << "]" ;
+	  
+	  if( l != N-1 ) out << ", ";
+	}
 
         out << endl << "Clusters id:  ";
-        for(unsigned int l=0;l<part->getClusters().size();l++){
-            if(! ((l+1)%5)){ out << endl << "                 ";}
+	for(unsigned int l=0,N=part->getClusters().size(); l<N ;l++){
 
-            if(l == part->getClusters().size()-1){
-                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "]";
-            }else{
-                out << dec <<  setfill('0') << "[" << setw(8) << part->getClusters()[l]->id() << "], ";
-            }
+	  if(! ((l+1)%5)){ out << endl << "                 ";}
+	  out << dec <<  setfill('0') << "[" << setw(8) 
+	      <<  ( part->getClusters()[l] ? part->getClusters()[l]->id() : 0 ) << "]";
+	  
+	  if(l != N-1) out << ", " ;
+	}
 
-        }
         out << endl << "Particle ids ( [id], PDG, (type)): " << endl;
         for(unsigned int l=0;l<part->getParticleIDs().size();l++){
             ParticleID* pid = part->getParticleIDs()[l] ;
@@ -2664,13 +2660,13 @@ namespace UTIL{
         out << " tracks(id): " ;
         const TrackVec& tracks = trk->getTracks() ;
 
-        for(unsigned l=0;l<tracks.size();l++){
-            if( tracks[l] != 0  )
-                out << "[" << setfill('0') << setw(8) << dec << tracks[l]->id() << "]";
-            else
-                out << "[" << setfill('0') << setw(8) << dec << 0 << "]";
-            if(l < tracks.size()-1){ out << ", ";}
-        }
+        for(unsigned int l=0,N=tracks.size(); l<N ;l++){
+	  
+	  out << dec << setfill('0') << "[" << setw(8)  << dec 
+	      << (  tracks[l]  ?   tracks[l]->id()  : 0 ) << "]" ;
+	  
+	  if( l != N-1 ) out << ", ";
+	}
 
         out << endl;
         if(sV.col != NULL){
@@ -2759,6 +2755,7 @@ namespace UTIL{
 
         out << "Tracks(id): " ;
         const TrackVec& tracks = part->getTracks() ;
+
         for(unsigned l=0;l<tracks.size();l++){
             if( tracks[l] != 0  )
                 out << tracks[l]->id();
