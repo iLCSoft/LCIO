@@ -23,10 +23,6 @@
       LCIO_IGNORE_NULL_IN_SUBSET_COLLECTIONS=1
       if really needed, e.g. to read inconsistent or corrupt files
 
-
-============
-  v02-03-04
-============
   - added build option for C++ only builds
     using pre-genetarated header files:
      cmake -DLCIO_GENERATE_HEADERS=OFF ..
