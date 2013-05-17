@@ -6,7 +6,7 @@ and the PyLCIO bindings to display TrackerHits and CalorimeterHits.
 
 make sure pyLCIO and PyROOt are in your Python path, eg:
 
-   export PYTHONPATH=${LCIO}/src/python/pyLCIO:${ROOTSYS}/lib
+   export PYTHONPATH=${LCIO}/src/python:${ROOTSYS}/lib
 
 and that glced is running.
 
@@ -24,8 +24,6 @@ import random
 import sys
 
 from pyLCIO.io.LcioReader import LcioReader
-from pyLCIO.base.LCCollection import LCCollection
-
 
 #---------------------------------------
 # load CED library
@@ -40,8 +38,8 @@ fname = pathToCED+"/lib/libCED.dylib"
 
 if not( os.path.isfile(fname) ) :
     
-    print "ERROR: cannot load CED library: ",  fname , 
-    " - please set $CED to CED root directory ! " 
+    print "ERROR: cannot load CED library: ",  fname 
+    print "       please set $CED to CED root directory ! " 
     exit(1) ;
     
     
@@ -74,16 +72,16 @@ def drawEvent(evt):
 #--------------------------------    
 def drawHits( col ):
 
+# c++ like loop:
 #    nhit = col.getNumberOfElements()
 #    for i in xrange( nhit ):
 #        hit=col.getElementAt(i)
-#
-    hits = LCCollection(col) 
-
-    for hit in hits:
 #        pos = hit.getPosition()
 #        pced_hit( ced , pos[0], pos[1], pos[2] ,  0 , 1 ,  0xaaff22 )
-        x,y,z=hit.getPositionVec()
+        
+# python loop:
+    for hit in col:
+        x,y,z = hit.getPositionVec()
         pced_hit( ced , x, y, z ,  0 , 1 ,  0xaaff22 )
         
 
