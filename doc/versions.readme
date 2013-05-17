@@ -5,7 +5,11 @@
 ============
   v02-04
 ============
-   
+  - Ch.Grefe, CERN
+    added a new python binding: pyLCIO based on the optional ROOT dictionary
+    see: $LCIO/examples/*.py for examples on how to use it
+
+ 
   - added new method to limit the collections that are going to be read 
     from a file:
       LCReader::setReadCollectionNames(const std::vector<std::string>& cn)
