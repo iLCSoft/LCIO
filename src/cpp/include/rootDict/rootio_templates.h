@@ -1,7 +1,6 @@
 #ifndef rootio_templates_h
 #define rootio_templates_h 1
 
-
 #include "UTIL/LCTypedVector.h"
 
 #include "IMPL/AccessChecked.h"
@@ -36,6 +35,8 @@
 #include "EVENT/LCIO.h"
 #include "UTIL/LCStdHepRdr.h"
 #include "UTIL/LCTOOLS.h"
+#include "UTIL/CellIDEncoder.h"
+//#include "UTIL/CellIDDecoder.h"
 
 #include <string>
 #include <vector>
@@ -92,6 +93,29 @@
 #pragma link C++ class std::vector<IMPL::TrackerRawDataImpl*>+;
 #pragma link C++ class std::vector<IMPL::VertexImpl*>+;
 
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::CalorimeterHitImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::RawCalorimeterHitImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::SimCalorimeterHitImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerDataImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitPlaneImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitZCylinderImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerPulseImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerRawDataImpl>+;
+#pragma link C++ class UTIL::CellIDEncoder<IMPL::SimTrackerHitImpl>+;
+
+/*
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::CalorimeterHit>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::RawCalorimeterHit>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::SimCalorimeterHit>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerData>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHit>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHitPlane>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHitZCylinder>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerPulse>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerRawData>+;
+#pragma link C++ class UTIL::CellIDDecoder<EVENT::SimTrackerHit>+;
+*/
 
 #endif
 

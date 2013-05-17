@@ -1,0 +1,16 @@
+########################################################
+# Examples for using LCIO from python
+#
+# Christian Grefe, CERN
+########################################################
+
+ROOT dictionaries for LCIO are required. Build them by setting BUILD_ROOTDICT=ON in cmake.
+
+Add the pyLCIO package and these examples to your python environment,
+e.g. PYTHONPATH=${LCIO}/src/python:${LCIO}/examples/python:${PYTHONPATH}
+
+The examples in this directory can be executed as python scripts, i.e. 'python <script.py>'
+
+The example XML steering files can be executed with the pylcio script:
+alias pylico='python ${LCIO}/src/python/pylcio.py'
+pylcio <steeringFile.xml>

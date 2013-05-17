@@ -5,7 +5,7 @@
     
     <control>
     	<skipEvents>0</skipEvents>
-        <numberOfEvents>5</numberOfEvents>
+        <numberOfEvents>-1</numberOfEvents>
         <printDrivers>True</printDrivers>
         <printStatistics>true</printStatistics>
     </control>
@@ -17,7 +17,8 @@
     
     <drivers>
         <driver name="markerDriver" type="pyLCIO.drivers.EventMarkerDriver.EventMarkerDriver">
-            <interval>1</interval>
+            <interval> 1 </interval>
+            <showRunNumber> False </showRunNumber>
         </driver>
         <driver name="mcParticlePlotDriver" type="exampleDrivers.McParticlePlotDriver.McParticlePlotDriver"/>
     </drivers>

@@ -66,12 +66,12 @@ class PyLCIOXML:
             try:
                 driverModule = importlib.import_module( driverModuleName )
             except ImportError:
-                print 'Module "%s" does not exist'%(driverModuleName)
+                print >> sys.stderr, 'Module "%s" does not exist'%(driverModuleName)
                 sys.exit( 2 )
             try:
                 driverClass = getattr( driverModule , driverClassName )
             except AttributeError:
-                print '%s does not have a class "%s"'%(driverModuleName, driverClassName)
+                print >> sys.stderr, '%s does not have a class "%s"'%(driverModuleName, driverClassName)
                 sys.exit( 2 )
             driver = driverClass()
             self.driverDict[driverName] = driver
@@ -84,7 +84,7 @@ class PyLCIOXML:
                 try:
                     parameterMethod = getattr( driver, parameterMethodName )
                 except AttributeError:
-                    print '%s does not have a method "%s"'%(driverClassName, parameterMethodName)
+                    print >> sys.stderr, '%s does not have a method "%s"'%(driverClassName, parameterMethodName)
                     sys.exit( 2 )
                 parameterMethod( parameterValue )
                 if self.printDrivers:

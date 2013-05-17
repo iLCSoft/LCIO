@@ -1,3 +1,11 @@
+'''
+Created on May 17, 2013
+
+Example for setting up an @EventLoop
+
+@author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
+'''
+
 from pyLCIO.base.EventLoop import EventLoop
 from pyLCIO.drivers.EventMarkerDriver import EventMarkerDriver
 from exampleDrivers.McParticlePlotDriver import McParticlePlotDriver
@@ -5,7 +13,13 @@ from exampleDrivers.McParticlePlotDriver import McParticlePlotDriver
 import sys, os
 
 def McParticlePlots( fileName ):
+    '''Set up an event loop to read the input file and add a driver to
+       plot some MCParticle properties.'''
+    
+    # Create the event loop
     eventLoop = EventLoop()
+    
+    # Set the input file. The actual reader is determined from the file ending (stdhep or slcio)
     eventLoop.setFile( fileName )
     
     # Add a driver to print the progress
@@ -14,10 +28,11 @@ def McParticlePlots( fileName ):
     markerDriver.setShowRunNumber( False )
     eventLoop.add( markerDriver )
     
-    # Add the driver that draws the plots
+    # Add the driver that draws the MCParticle plots
     mcParticlePlotDriver = McParticlePlotDriver()
     eventLoop.add( mcParticlePlotDriver )
     
+    # Skip some events if desired
     eventLoop.skipEvents( 0 )
     
     # Execute the event loop

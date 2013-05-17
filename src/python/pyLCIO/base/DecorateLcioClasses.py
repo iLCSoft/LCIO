@@ -6,8 +6,8 @@ Module to handle dynamic decoration of LCIO classes
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from ROOT import TVector3, TLorentzVector, EVENT
-
+from ROOT import TVector3, TLorentzVector, EVENT, IMPL
+from array import array
 
 def addMethod( self, method, name=None ):
     ''' Convenience method to add a method to a class '''
@@ -29,22 +29,42 @@ def getLorentzVec( self ):
 def getMomentumVec( self ):
     ''' Wrapper for the getMomentum method to return a TVector3 '''
     v = self.getMomentum()
-    return TVector3( v[0], v[1], v[2] ) 
+    return TVector3( v[0], v[1], v[2] )
+
+def setMomentumVec( self, v ):
+    ''' Wrapper for the setMomentum method passing a vector '''
+    self.setMomentum( array( 'f', [v.x(), v.y(), v.z()] ) )
 
 def getPositionVec( self ):
     ''' Wrapper for the getPosition method to return a TVector3 '''
     v = self.getPosition()
     return TVector3( v[0], v[1], v[2] ) 
 
+def setPositionVec( self, v ):
+    ''' Wrapper for the setPosition method passing a vector '''
+    self.setPosition( array( 'd', [v.x(), v.y(), v.z()] ) )
+
+def setRawDataVec( self, v ):
+    ''' Wrapper for the setRawData method passing a vector '''
+    self.setRawData( array( 'i', v ), len(v) )
+
 def getReferencePointVec( self ):
     ''' Wrapper for the getReferencePoint method to return a TVector3 '''
     v = self.getReferencePoint()
     return TVector3( v[0], v[1], v[2] ) 
 
+def setReferencePointVec( self, v ):
+    ''' Wrapper for the setReferencePoint method passing a vector '''
+    self.setReferencePoint( array( 'f', [v.x(), v.y(), v.z()] ) )
+
 def getVertexVec( self ):
     ''' Wrapper for the getVertex method to return a TVector3 '''
     v = self.getVertex()
     return TVector3( v[0], v[1], v[2] )
+
+def setVertexVec( self, v ):
+    ''' Wrapper for the setVertex method passing a vector '''
+    self.setVertex( array( 'd', [v.x(), v.y(), v.z()] ) )
 
 def LCCollectionIterator( self ):
     ''' Helper method to make LCCollection iterable '''
@@ -78,7 +98,25 @@ lcioClasses = [ EVENT.LCEvent,
                 EVENT.TrackState,
                 EVENT.Vertex,
                 EVENT.MCParticle,
-                EVENT.LCCollection ]
+                EVENT.LCCollection,
+                IMPL.MCParticleImpl,
+                IMPL.CalorimeterHitImpl,
+                IMPL.ClusterImpl,
+                IMPL.RawCalorimeterHitImpl,
+                IMPL.ReconstructedParticleImpl,
+                IMPL.SimCalorimeterHitImpl,
+                IMPL.SimTrackerHitImpl,
+                IMPL.TPCHitImpl,
+                IMPL.TrackerDataImpl,
+                IMPL.TrackerHitImpl,
+                IMPL.TrackerHitPlaneImpl,
+                IMPL.TrackerHitZCylinderImpl,
+                IMPL.TrackerPulseImpl,
+                IMPL.TrackerRawDataImpl,
+                IMPL.TrackImpl,
+                IMPL.TrackStateImpl,
+                IMPL.VertexImpl,
+                ]
 
 # Cache decorated classes
 decoratedClasses = []
@@ -91,14 +129,24 @@ def decorateClass( o ):
             addMethod( o, getEndpointVec )
         if 'getMomentum' in d:
             addMethod( o, getMomentumVec )
+        if 'setMomentum' in d:
+            addMethod( o, setMomentumVec )
         if 'getMomentum' and 'getEnergy' in d:
             addMethod( o, getLorentzVec )
         if 'getPosition' in d:
             addMethod( o, getPositionVec )
+        if 'setPosition' in d:
+            addMethod( o, setPositionVec )
         if 'getReferencePoint' in d:
             addMethod( o, getReferencePointVec )
+        if 'setRawData' in d:
+            addMethod( o, setRawDataVec )
+        if 'setReferencePoint' in d:
+            addMethod( o, setReferencePointVec )
         if 'getVertex' in d:
             addMethod( o, getVertexVec )
+        if 'setVertex' in d:
+            addMethod( o, setVertexVec )
         if 'getCollection' in d:
             addMethod( o, getMcParticles )
             addMethod( o, getTracks )
