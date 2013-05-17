@@ -1,0 +1,64 @@
+'''
+Created on Dec 4, 2012
+
+@author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
+'''
+import os
+
+from pyLCIO.drivers.Driver import Driver
+from pyLCIO.io.LcioReader import LcioReader
+from pyLCIO.io.StdHepReader import StdHepReader
+
+class EventLoop:
+    ''' Class that manages a loop of LCIO events '''
+    
+    def __init__( self ):
+        ''' Constructor '''
+        self.reader = None
+        self.driver = Driver()
+    
+    def setFile( self, fileName ):
+        ''' Define an input file as input and set up reader depending on file extension'''
+        extension = os.path.splitext( fileName )[1]
+        if extension in ['.slcio']:
+            self.setLcioFile( fileName )
+        elif extension in ['.stdhep']:
+            self.setStdHepFile( fileName )
+        else:
+            print 'Unknown extension for %s' % ( os.path.split( fileName )[1] )
+    
+    def setStdHepFile( self, fileName ):
+        ''' Define an StdHep file as input and set up reader '''
+        self.reader = StdHepReader( fileName )
+    
+    def setLcioFile( self, fileName ):
+        ''' Define an LCIO file as input and set up reader '''
+        self.reader = LcioReader( fileName )
+    
+    def printStatistics( self ):
+        self.driver.printStatistics()
+    
+    def add( self, driver ):
+        ''' Add a driver which will be executed within the event loop '''
+        self.driver.add( driver )
+    
+    def loop( self, nEvents= -1 ):
+        ''' Loop over a defined number of events. A negative number will loop over all events '''
+        self.driver.startOfData()
+        iEvent = 0
+        event = self.reader.nextEvent()
+        while event:
+            if iEvent == nEvents:
+                break
+            self.driver.process( event )
+            try:
+                event = self.reader.nextEvent()
+            except Exception:
+                break
+            iEvent += 1
+        self.driver.endOfData()
+    
+    def skipEvents( self, nEvents ):
+        ''' Skip events from the current event loop '''
+        self.reader.skipEvents( nEvents )
+            
