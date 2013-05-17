@@ -33,6 +33,9 @@
 #include "IMPL/TrackerRawDataImpl.h"
 #include "IMPL/VertexImpl.h"
 
+#include "EVENT/LCIO.h"
+#include "UTIL/LCStdHepRdr.h"
+#include "UTIL/LCTOOLS.h"
 
 #include <string>
 #include <vector>
