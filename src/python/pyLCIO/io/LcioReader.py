@@ -6,8 +6,9 @@ Created on Dec 4, 2012
 
 import os
 
+from pyLCIO import IOIMPL, IO
 from pyLCIO.io.Reader import Reader
-from ROOT import IOIMPL
+from ROOT import vector
 
 class LcioReader( Reader ):
     ''' Class to hold an LCReader object '''
@@ -19,24 +20,17 @@ class LcioReader( Reader ):
         reader = IOIMPL.LCFactory.getInstance().createLCReader()
         Reader.__init__(self, reader, fileName)
     
-    def setFile( self, fileName ):
-        ''' Open a new LCIO file with the LCReader '''
-        self.reader.open( fileName )
-        
-        # Give some feedback on the new file
-        #nRuns = self.getNumberOfRuns()
-        #nEvents = self.getNumberOfEvents()
-        #print 'Opened LCIO file with %d events in %d runs' % ( nEvents, nRuns )
-    
     def getNumberOfRuns( self ):
         ''' Get the number of runs in the current file '''
         return self.reader.getNumberOfRuns()
     
-    def readEvent( self ):
+    def __read__( self ):
         ''' Get the next event from the stream '''
         return self.reader.readNextEvent()
     
-#    def skipEvents( self, nEvents ):
-#        ''' Skip events from the stream '''
-#        self.reader.skipNEvents( nEvents )
+    def __open__( self, fileName ):
+        if self.isOpen:
+            self.__close__()
+        self.reader.open( fileName )
+        self.isOpen = True
             

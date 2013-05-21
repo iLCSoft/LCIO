@@ -100,8 +100,7 @@ def drawEvents( fileName ):
     rdr = LcioReader( fileName )
     
     
-    event = rdr.nextEvent()
-    while event:
+    for event in rdr:
 #------------------------------------------
         ced.ced_new_event()
         
@@ -115,8 +114,6 @@ def drawEvents( fileName ):
         c = raw_input( text )
         if( c == 'q' ):
             break ;
-
-        event = rdr.nextEvent()
 
 
 ################################################################################################

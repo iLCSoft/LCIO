@@ -4,52 +4,77 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+from pyLCIO import EVENT
+
 class Reader( object ):
     ''' Generic reader class '''
 
     def __init__( self, reader, fileName=None ):
         ''' Constructor '''
         self.reader = reader
-        self.fileList = None
+        self.fileList = []
+        self.fileIter = iter( self.fileList )
+        self.isOpen = False
         
         if fileName and isinstance( fileName, basestring ):
-            self.setFile( fileName )
+            self.addFile( fileName )
         elif isinstance( fileName, list ):
-            self.setFileList( fileName )
+            self.addFileList( fileName )
+    
+    def __iter__( self ):
+        return self
     
     def getNumberOfEvents( self ):
-        ''' Get the number of events in the current file '''
+        ''' Get the number of events in the stream '''
+        if len(fileList) == 0:
+            return 0
+        if not self.isOpen:
+            self.__open__( self.fileList[0] )
         return self.reader.getNumberOfEvents()
     
-    def setFile( self, fileName ):
-        pass
+    def addFile( self, fileName ):
+        ''' Add a file to the list of files to be read '''
+        self.fileList.append( fileName )
+            
+    def addFiles( self, files ):
+        ''' Add a list of file names to be read '''
+        self.fileList.extend( files )
     
-    def readEvent( self ):
-        ''' Reads the next event from the stream. Needs to be implemented by the derived class '''
-        pass
+    def addFileList( self, fileListName ):
+        ''' Add a list of files to the reader using a text file containing the names of the input files (one per line)'''
+        fileListFile = open( fileList, 'r' )
+        for line in fileListFile:
+            self.fileList.append( line.strip() )
+        fileListFile.close()
     
-    def setFileList( self, fileList ):
-        self.fileList = fileList
-        self.nextFile()
-        
-    def nextEvent( self ):
-        event = self.readEvent()
+    def next( self ):
+        ''' Reads the next event from the stream. '''
+        if not self.isOpen:
+            self.__open__( self.fileIter.next() )
+        event = self.__read__()
         if event:
             return event
-        elif self.nextFile():
-            return self.nextEvent()
+        else:
+            self.__close__()
+            return self.next()
     
-    def nextFile( self ):
-        if self.fileList:
-            fileName = self.fileList.pop(0)
-            if fileName:
-                self.setFile( fileName )
-                return True
-            else:
-                return False
-
-    def skipEvents( self, nEvents ):
-        ''' Skip events from the stream '''
-        for i in xrange( int( nEvents ) ):
-            self.nextEvent()
+    def skip( self, nEntries ):
+        ''' Skip entries from the stream '''
+        for i in xrange( int( nEntries ) ):
+            self.next()
+        
+    def __close__( self ):
+        ''' Close the reader and all streams '''
+        try:
+            self.reader.close()
+        except Exception:
+            pass
+        self.isOpen = False
             
+    def __read__( self ):
+        ''' Reads the next entry from the stream. Needs to be implemented by the derived class '''
+        return
+    
+    def __open__( self, fileName ):
+        ''' Opens the given file. Needs to be implemented by the derived class '''
+        self.isOpen = True

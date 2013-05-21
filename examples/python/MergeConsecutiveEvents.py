@@ -6,8 +6,9 @@ Script to merge a given number of consecutive events into a single event
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-import pyLCIO
-from ROOT import vector, EVENT, IOIMPL, IMPL
+from pyLCIO import EVENT, IOIMPL, IMPL
+from pyLCIO.io.LcioReader import LcioReader
+from ROOT import vector
 import os, sys
 
 
@@ -46,8 +47,7 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
     ''' Merges the events from the input file and writes them to the output file.
         Each output event will contain the information from the defined number of input events per event.'''
     # create a reader
-    reader = IOIMPL.LCFactory.getInstance().createLCReader()
-    reader.open( inputFileName )
+    reader = LcioReader( inputFileName )
     
     print 'Processing %d events from %s'%(reader.getNumberOfEvents(), inputFileName)
     
@@ -55,14 +55,13 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
     writer = IOIMPL.LCFactory.getInstance().createLCWriter()
     writer.open( outputFileName, EVENT.LCIO.WRITE_NEW )
     
-    event = reader.readNextEvent()
     readEvents = 0
     readEventsSinceLastWrite = 0
     combinedEvents = 0
     combinedEvent = None
     
     # loop over the input file
-    while event:
+    for event in reader:
         # check if we have merged sufficient events to write it to the output file
         if not combinedEvent or readEventsSinceLastWrite % nEventsPerEvent == 0:
             if combinedEvent:
@@ -89,7 +88,6 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
                     copyObjectParameters( collection, combinedEvent.getCollection( collectionName ) )
 
         mergeEvents( event, combinedEvent )
-        event = reader.readNextEvent()
         if readEvents % 100 == 0 and readEvents != 0:
             print 'Processed %d events'%(readEvents)
         readEvents += 1
@@ -102,7 +100,6 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
     
     writer.flush()
     writer.close()
-    reader.close()
 
 def usage():
     print 'Merges the given number of consecutive events into a single event by concatenating all collections.'

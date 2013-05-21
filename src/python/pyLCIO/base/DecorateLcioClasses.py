@@ -6,7 +6,7 @@ Module to handle dynamic decoration of LCIO classes
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from ROOT import TVector3, TLorentzVector, EVENT, IMPL
+from ROOT import TVector3, TLorentzVector, EVENT, IMPL, IO, UTIL
 from array import array
 
 def addMethod( self, method, name=None ):
@@ -73,6 +73,31 @@ def LCCollectionIterator( self ):
     while index < nElements:
         yield self.getElementAt( index )
         index += 1
+        
+def LCEventIterator( self ):
+    ''' Helper method to make LCEvent iterable '''
+    for collectionName in self.getCollectionNames():
+        yield collectionName, self.getCollection( collectionName )
+        
+def LCReaderIterator( self ):
+    ''' Helper method to make LCReader iterable '''
+    event = self.readNextEvent()
+    while event:
+        yield event
+        event = self.readNextEvent()
+        
+def LCStdHepRdrIterator( self ):
+    ''' Helper method to make LCStdHepRdr iterable '''
+    processedEvents = 0
+    while True:
+        event = IMPL.LCEventImpl()
+        try:
+            self.updateNextEvent( event )
+            event.setEventNumber( processedEvents )
+        except Exception:
+            break
+        yield event
+        processedEvents += 1
 
 def getMcParticles( self ):
     ''' Convenience method to get the default mc particle collection '''
@@ -116,6 +141,8 @@ lcioClasses = [ EVENT.LCEvent,
                 IMPL.TrackImpl,
                 IMPL.TrackStateImpl,
                 IMPL.VertexImpl,
+                IO.LCReader,
+                UTIL.LCStdHepRdr,
                 ]
 
 # Cache decorated classes
@@ -152,6 +179,12 @@ def decorateClass( o ):
             addMethod( o, getTracks )
         if 'getNumberOfElements' and 'getElementAt' in d:
             addMethod( o, LCCollectionIterator, '__iter__' )
+        if 'getCollectionNames' and 'getCollection' in d:
+            addMethod( o, LCEventIterator, '__iter__' )
+        if 'readNextEvent' in d:
+            addMethod( o, LCReaderIterator, '__iter__' )
+        if 'updateNextEvent' in d:
+            addMethod( o, LCStdHepRdrIterator, '__iter__' )
         decoratedClasses.append( o )
 
 def decorateLcioClasses():

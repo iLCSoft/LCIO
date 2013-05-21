@@ -33,7 +33,7 @@ class EventMarkerDriver ( Driver ):
         ''' Set if the run number is printed '''
         self.showRunNumber = show
     
-    def process( self, event ):
+    def processEvent( self, event ):
         ''' Method called by the event loop for every event '''
         eventNumber = event.getEventNumber()
         if eventNumber % self.interval == 0:
@@ -41,4 +41,3 @@ class EventMarkerDriver ( Driver ):
                 print self.runPrefix, event.getRunNumber(), self.eventPrefix, eventNumber
             else:
                 print self.eventPrefix, eventNumber
-        Driver.process( self, event )

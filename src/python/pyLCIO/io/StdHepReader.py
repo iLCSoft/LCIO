@@ -7,7 +7,7 @@ Created on Dec 4, 2012
 import os
 
 from pyLCIO.io.Reader import Reader
-from ROOT import EVENT, UTIL
+from pyLCIO import EVENT, IMPL, UTIL
 
 class StdHepReader( Reader ):
     ''' Class to hold an LCStdHepRdr object '''
@@ -22,12 +22,9 @@ class StdHepReader( Reader ):
         ''' Open a new StdHep file with the LCReader '''
         self.reader = UTIL.LCStdHepRdr( fileName )
         
-        #nEvents = self.getNumberOfEvents()
-        #print 'Opened %s with %d events' % ( os.path.split( fileName )[1], nEvents )
-        
     def readEvent( self ):
         ''' Get the next event from the stream '''
-        event = ROOT.IMPL.LCEventImpl()
+        event = IMPL.LCEventImpl()
         self.reader.updateNextEvent( event, EVENT.LCIO.MCPARTICLE )
         event.setEventNumber( self.processedEvents )
         self.processedEvents += 1

@@ -24,7 +24,7 @@ class McParticlePlotDriver( Driver ):
         self.histograms['PDGID'] = TH1D( 'PDGID', 'PDG ID;PDG ID;Entries', 1200, -600, 600. )
         self.histograms['GeneratorStatus'] = TH1D( 'GeneratorStatus', 'Generator Status;Generator Status;Entries', 4, -0.5, 3.5 )
     
-    def process( self, event ):
+    def processEvent( self, event ):
         ''' Method called by the event loop for each event '''
         
         # Get the MCParticle collection from the event

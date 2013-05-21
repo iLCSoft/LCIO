@@ -29,7 +29,7 @@ class WriteLcioDriver( Driver ):
     def processRunHeader( self, run ):
         self.writer.writeRunHeader( run )
     
-    def process( self, event ):
+    def processEvent( self, event ):
         self.writer.writeEvent( event )
         
     def endOfData( self ):

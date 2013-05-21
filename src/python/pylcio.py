@@ -39,7 +39,11 @@ class PyLCIOXML:
         for fileNode in inputFilesNode.findall( 'file' ):
             fileName = os.path.abspath( parseValue( fileNode.text ) )
             if os.path.isfile( fileName ):
-                self.eventLoop.setFile( fileName )
+                self.eventLoop.addFile( fileName )
+        for fileNode in inputFilesNode.findall( 'fileList' ):
+            fileListName = os.path.abspath( parseValue( fileNode.text ) )
+            if os.path.isfile( fileListName ):
+                self.eventLoop.addFile( fileListName )
                 
     def __parseControlNode__( self, controlNode ):
         nEventsNode = controlNode.find( 'numberOfEvents' )
@@ -80,7 +84,7 @@ class PyLCIOXML:
             for parameterNode in driverNode:
                 parameterName = parameterNode.tag
                 parameterValue = parseValue( parameterNode.text )
-                parameterMethodName = 'set%s'%(parameterName.title())
+                parameterMethodName = 'set%s%s'%(parameterName[0].upper(), parameterName[1:])
                 try:
                     parameterMethod = getattr( driver, parameterMethodName )
                 except AttributeError:

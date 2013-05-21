@@ -23,6 +23,7 @@ def generateEvents( outputFileName, nEvents ):
     charge = -1.
     mass = 0.105658
     momentum = TVector3( 0.3, 0.1, 10. )
+    runNumber = 321
     
     # define a detector with positions for the tracker planes
     detectorName = 'ToyTracker'
@@ -36,13 +37,20 @@ def generateEvents( outputFileName, nEvents ):
     writer = IOIMPL.LCFactory.getInstance().createLCWriter()
     writer.open( outputFileName, EVENT.LCIO.WRITE_NEW )
     
+    # create a run header and add it to the file (optional)
+    run = IMPL.LCRunHeaderImpl()
+    run.setRunNumber( runNumber )
+    run.setDetectorName( detectorName )
+    run.setDescription( 'This is a test run' )
+    writer.writeRunHeader( run )
+    
     for iEvent in xrange( nEvents ):
         
         # create an event and set its parameters
         event = IMPL.LCEventImpl()
         event.setEventNumber( iEvent )
         event.setDetectorName( detectorName )
-        event.setRunNumber( 0 )
+        event.setRunNumber( runNumber )
         event.setTimeStamp( int( time() * 1000000000. ) )
         
         # create the mc particle collection
@@ -69,7 +77,8 @@ def generateEvents( outputFileName, nEvents ):
         trackerHits.setFlag( UTIL.set_bit( trackerHits.getFlag(), EVENT.LCIO.THBIT_MOMENTUM ) )
         
         # create an IDEncoder to store hit IDs
-        encodingString = 'system:4,layer:4'
+        # defines the tags and the number of bits for the different bit fields
+        encodingString = 'system:3,layer:6'
         idEncoder = UTIL.CellIDEncoder( IMPL.SimTrackerHitImpl )( encodingString, trackerHits )
         
         # add a hit for each layer

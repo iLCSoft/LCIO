@@ -17,23 +17,27 @@ class EventLoop:
         self.reader = None
         self.driver = Driver()
     
-    def setFile( self, fileName ):
-        ''' Define an input file as input and set up reader depending on file extension'''
-        extension = os.path.splitext( fileName )[1]
-        if extension in ['.slcio']:
-            self.setLcioFile( fileName )
-        elif extension in ['.stdhep']:
-            self.setStdHepFile( fileName )
+    def addFile( self, fileName ):
+        if not self.reader:
+            extension = fileName.split('.')[-1]
+            if extension in ['slcio']:
+                self.reader = LcioReader( fileName )
+            elif extension in ['stdhep']:
+                self.reader = StdHepReader( fileName )
+            else:
+                print 'Unknown extension for %s' % ( extension )
         else:
-            print 'Unknown extension for %s' % ( os.path.split( fileName )[1] )
+            self.reader.addFile( fileName )
+        
+    def addFiles( self, files):
+        for fileName in files:
+            self.addFile( fileName )
     
-    def setStdHepFile( self, fileName ):
-        ''' Define an StdHep file as input and set up reader '''
-        self.reader = StdHepReader( fileName )
-    
-    def setLcioFile( self, fileName ):
-        ''' Define an LCIO file as input and set up reader '''
-        self.reader = LcioReader( fileName )
+    def addFileList( self, fileListName ):
+        fileListFile = open( fileList, 'r' )
+        for line in fileListFile:
+            self.addFile( line.strip() )
+        fileListFile.close()
     
     def printStatistics( self ):
         self.driver.printStatistics()
@@ -46,19 +50,14 @@ class EventLoop:
         ''' Loop over a defined number of events. A negative number will loop over all events '''
         self.driver.startOfData()
         iEvent = 0
-        event = self.reader.nextEvent()
-        while event:
+        for event in self.reader:
             if iEvent == nEvents:
                 break
-            self.driver.process( event )
-            try:
-                event = self.reader.nextEvent()
-            except Exception:
-                break
+            self.driver.processEvent( event )
             iEvent += 1
         self.driver.endOfData()
     
     def skipEvents( self, nEvents ):
         ''' Skip events from the current event loop '''
-        self.reader.skipEvents( nEvents )
+        self.reader.skip( int( nEvents ) )
             

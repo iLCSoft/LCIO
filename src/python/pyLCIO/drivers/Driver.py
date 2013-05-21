@@ -3,6 +3,7 @@ Created on Dec 4, 2012
 
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
+from pyLCIO import IO 
 from time import time
 
 class Driver():
@@ -26,25 +27,31 @@ class Driver():
     def startOfData( self ):
         ''' Method that is executed at the beginning of an event loop '''
         for driver in self.drivers:
-            driver.startOfData()    
+            startTime = time()
+            driver.startOfData()
+            driver.processedTime += time() - startTime
     
-    def processRunHeader( self, run ):
+    def processRunHeader( self, runHeader ):
         ''' Method that is executed for each run header '''
         for driver in self.drivers:
+            startTime = time()
             driver.processRunHeader( run )
+            driver.processedTime += time() - startTime
 
-    def process( self, event ):
+    def processEvent( self, event ):
         ''' Method that is executed for each event '''
         for driver in self.drivers:
             startTime = time()
-            driver.process( event )
+            driver.processEvent( event )
             driver.processedTime += time() - startTime
             driver.processedEvents += 1
-            
+    
     def endOfData( self ):
         ''' Method that is executed at the end of an event loop '''
         for driver in self.drivers:
+            startTime = time()
             driver.endOfData()
+            driver.processedTime += time() - startTime
             
     def printStatistics( self ):
         ''' Method that gives feedback on the processing time '''
@@ -54,3 +61,4 @@ class Driver():
             if driver.processedEvents != 0:
                 msPerEvent = int(1000*driver.processedTime/driver.processedEvents) 
             print '  {0:25} {1:>7} events {2:>8} ms {3:>7} ms/event'.format(driver.getType(), driver.processedEvents, int(1000*driver.processedTime), msPerEvent)
+
