@@ -79,6 +79,10 @@ def drawHits( col ):
 #        pos = hit.getPosition()
 #        pced_hit( ced , pos[0], pos[1], pos[2] ,  0 , 1 ,  0xaaff22 )
         
+    if( 0 ) : # restrict the collections to be read from file
+        colNames = [ "SETTrackerHits" , "SITTrackerHits" , "VXDTrackerHits" , "TPCTrackerHits" , "FTTrackerHits" ]
+        rdr.setReadCollectionNames( colNames )
+        
 # python loop:
     for hit in col:
         x,y,z = hit.getPositionVec()
