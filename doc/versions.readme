@@ -3,6 +3,18 @@
 ---------------------------------------------------------------
 
 ============
+  v02-04-01 .....
+============
+    - LCReader/SIOReader sets the RunHeader parameter "LCIOFileName" to
+      the current file name (usefull if a list of files is processed)
+
+    
+    -  bug fix in SIOReader:  used to hold pointer to StringVec argument of
+       SIOReader::open(StringVec& files) - now the filenames are copied to local
+       class member variable 
+   
+
+============
   v02-04
 ============
   - Ch.Grefe, CERN

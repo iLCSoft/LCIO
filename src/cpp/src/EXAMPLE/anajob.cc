@@ -77,7 +77,6 @@ int main(int argc, char** argv ){
   
   // open list of files
   lcReader->open( FILEN ) ;
-  
 
   LCRunHeader *runHdr ;
   
@@ -112,6 +111,10 @@ int main(int argc, char** argv ){
     cout  << "     "  << FILEN[i] << endl ; 
   }  
   
+  // test if the lists of files can be deleted ....
+  FILEN.clear() ;
+
+
   LCEvent* evt ;
   int nEvents = 0 ;
   

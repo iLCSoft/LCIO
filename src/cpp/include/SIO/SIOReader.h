@@ -243,7 +243,7 @@ class SIOEventHandler ;
     std::set<IO::LCRunListener*> _runListeners ;
     std::set<IO::LCEventListener*> _evtListeners ;
     
-    const std::vector<std::string>* _myFilenames ;
+    std::vector<std::string> _myFilenames ;
     unsigned int _currentFileIndex ;
 
     //    EventMap _evtMap ;

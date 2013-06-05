@@ -122,9 +122,12 @@ namespace SIO {
       throw IOException( std::string( "[SIOReader::open()] File(s) not found:  " + missing_files )) ;
     }
     
-    _myFilenames = &filenames ;
-    _currentFileIndex = 0 ;
-    open( (*_myFilenames)[ _currentFileIndex ]  ) ;
+    _myFilenames.clear() ;
+
+    std::copy( filenames.begin() ,  filenames.end() , std::back_inserter( _myFilenames ) )   ;
+
+    _currentFileIndex = -1 ;
+    open( _myFilenames[ ++_currentFileIndex ]  ) ;
   }
 
   void SIOReader::open(const std::string& filename) throw( IOException , std::exception)  {
@@ -156,6 +159,9 @@ namespace SIO {
 
       getEventMap() ;
     }
+
+    if( _myFilenames.empty() ) // we are in single file mode....
+      _myFilenames.push_back( filename ) ;
 
   }
   
@@ -265,10 +271,10 @@ namespace SIO {
 	if( status & SIO_STREAM_EOF ){
 
 	  // if we have a list of filenames open the next file
-	  if( _myFilenames != 0  && ++_currentFileIndex < _myFilenames->size()  ){
+	  if( !_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()  ){
 	    close() ;
 
-	    open( (*_myFilenames)[ _currentFileIndex  ] ) ;
+	    open( _myFilenames[ ++_currentFileIndex  ] ) ;
 
 	    readRecord() ;
 	    return ;
@@ -318,6 +324,9 @@ namespace SIO {
 
         _run->setReadOnly(  accessMode == LCIO::READ_ONLY   ) ;
     }
+    
+    // save the current file name in run header parameter: 
+    _run->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
 
     return _run ;
   }
