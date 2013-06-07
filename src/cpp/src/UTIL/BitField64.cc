@@ -106,7 +106,7 @@ namespace UTIL{
       throw Exception(" BitFieldValue: unknown name: " + name ) ;
   }
   
-  unsigned BitField64::highestBit() {
+  unsigned BitField64::highestBit() const {
 
     unsigned hb(0) ;
 

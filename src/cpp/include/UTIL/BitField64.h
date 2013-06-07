@@ -165,7 +165,7 @@ namespace UTIL {
 
     /** Returns the current 64bit value 
      */
-    lcio::long64 getValue() { return _value ; } 
+    lcio::long64 getValue() const { return _value ; }
     
     /** Set a new 64bit value 
      */
@@ -189,10 +189,10 @@ namespace UTIL {
 
     /** Highest bit used in fields [0-63]
      */
-    unsigned highestBit() ;
+    unsigned highestBit() const ;
     
     /** Number of values */
-    size_t size() { return _fields.size() ; }
+    size_t size() const { return _fields.size() ; }
 
     /** Index for field named 'name' 
      */
