@@ -9,10 +9,12 @@
       the current file name (usefull if a list of files is processed)
 
     
-    -  bug fix in SIOReader:  used to hold pointer to StringVec argument of
-       SIOReader::open(StringVec& files) - now the filenames are copied to local
-       class member variable 
+    - bug fix in SIOReader:  used to hold pointer to StringVec argument of
+      SIOReader::open(StringVec& files) - now the filenames are copied to local
+      class member variable 
    
+    - added missing const keywords for getValue() and highestBit()
+      in UTIL::BitField64  (Ch.Grefe)
 
 ============
   v02-04
