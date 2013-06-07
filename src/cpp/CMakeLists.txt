@@ -398,8 +398,9 @@ IF( BUILD_ROOTDICT )
 
       # ROOT expects the dictionary (and main lcio) libraries to have .so extension - so we create a symlink:
       ADD_CUSTOM_TARGET(dylib2so ALL
-	${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.so  DEPENDS lcioDict
-	COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcio.so  DEPENDS lcioDict)
+	${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/lib
+	COMMAND  ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.so
+	COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcio.so)
 
     ENDIF()
 
