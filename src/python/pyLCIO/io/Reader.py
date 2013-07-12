@@ -42,7 +42,7 @@ class Reader( object ):
     
     def addFileList( self, fileListName ):
         ''' Add a list of files to the reader using a text file containing the names of the input files (one per line)'''
-        fileListFile = open( fileList, 'r' )
+        fileListFile = open( fileListName, 'r' )
         for line in fileListFile:
             self.fileList.append( line.strip() )
         fileListFile.close()

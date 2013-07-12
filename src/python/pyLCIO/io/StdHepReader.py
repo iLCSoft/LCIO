@@ -18,15 +18,20 @@ class StdHepReader( Reader ):
         Reader.__init__(self, None, fileName)
         self.processedEvents = 0
         
-    def setFile( self, fileName ):
-        ''' Open a new StdHep file with the LCReader '''
+    def __open__( self, fileName ):
+        if self.isOpen:
+            self.__close__()
         self.reader = UTIL.LCStdHepRdr( fileName )
-        
-    def readEvent( self ):
+        self.isOpen = True
+      
+    def __read__( self ):
         ''' Get the next event from the stream '''
         event = IMPL.LCEventImpl()
-        self.reader.updateNextEvent( event, EVENT.LCIO.MCPARTICLE )
-        event.setEventNumber( self.processedEvents )
-        self.processedEvents += 1
-        return event
+        try:
+            self.reader.updateNextEvent( event, EVENT.LCIO.MCPARTICLE )
+            event.setEventNumber( self.processedEvents )
+            self.processedEvents += 1
+            return event
+        except:
+            return
     
