@@ -399,8 +399,7 @@ IF( BUILD_ROOTDICT )
       ADD_CUSTOM_TARGET(dylib2so ALL
 	COMMAND  ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
 	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so 
-	WORKING_DIRECTORY  ${CMAKE_CURRENT_BINARY_DIR} ) 
-      
+	WORKING_DIRECTORY  ${LIBRARY_OUTPUT_PATH} )       
     ENDIF()
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
