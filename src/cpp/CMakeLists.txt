@@ -392,16 +392,15 @@ IF( BUILD_ROOTDICT )
     TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} lcio )
 
     IF( APPLE )
-        SET_TARGET_PROPERTIES( lcioDict PROPERTIES LINKER_FLAGS
-            "-single_module -undefined dynamic_lookup -bind_at_load"
-        )
 
-      # ROOT expects the dictionary (and main lcio) libraries to have .so extension - so we create a symlink:
+      SET_TARGET_PROPERTIES( lcioDict PROPERTIES LINKER_FLAGS
+        "-single_module -undefined dynamic_lookup -bind_at_load" )
+      
       ADD_CUSTOM_TARGET(dylib2so ALL
-	${CMAKE_COMMAND} -E make_directory ${CMAKE_INSTALL_PREFIX}/lib
-	COMMAND  ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcioDict.so
-	COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib ${CMAKE_INSTALL_PREFIX}/lib/liblcio.so)
-
+	COMMAND  ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
+	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so 
+	WORKING_DIRECTORY  ${CMAKE_CURRENT_BINARY_DIR} ) 
+      
     ENDIF()
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
