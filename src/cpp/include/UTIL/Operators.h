@@ -45,6 +45,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
+#include <sstream>
 
 
 namespace UTIL{
@@ -280,7 +281,13 @@ namespace UTIL{
   }
 */
 
- 
+  
+  template <class T>
+  std::string toString(const T* obj) {
+    std::stringstream ss ;
+    ss << *obj ;
+    return ss.str() ;
+  }
 
 }//namespace
 

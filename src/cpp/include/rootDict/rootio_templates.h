@@ -37,13 +37,16 @@
 #include "UTIL/LCTOOLS.h"
 #include "UTIL/CellIDEncoder.h"
 //#include "UTIL/CellIDDecoder.h"
+#include "UTIL/Operators.h"
 
 #include <string>
 #include <vector>
 
+
 // ---- tell ROOT about the templates instantiations that we are going to use ...
 
 #ifdef __MAKECINT__
+
 #pragma link C++ class std::vector<std::string>+;
 #pragma link C++ class std::vector<int>+;
 #pragma link C++ class std::vector<float>+;
@@ -104,18 +107,47 @@
 #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerRawDataImpl>+;
 #pragma link C++ class UTIL::CellIDEncoder<IMPL::SimTrackerHitImpl>+;
 
-/*
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::CalorimeterHit>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::RawCalorimeterHit>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::SimCalorimeterHit>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerData>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHit>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHitPlane>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerHitZCylinder>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerPulse>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::TrackerRawData>+;
-#pragma link C++ class UTIL::CellIDDecoder<EVENT::SimTrackerHit>+;
-*/
+
+
+#pragma link C++ function UTIL::toString(const EVENT::CalorimeterHit*);
+#pragma link C++ function UTIL::toString(const EVENT::Cluster*);
+#pragma link C++ function UTIL::toString(const EVENT::LCGenericObject*);
+#pragma link C++ function UTIL::toString(const EVENT::LCRelation*);
+#pragma link C++ function UTIL::toString(const EVENT::MCParticle*);
+#pragma link C++ function UTIL::toString(const EVENT::ParticleID*);
+#pragma link C++ function UTIL::toString(const EVENT::RawCalorimeterHit*);
+#pragma link C++ function UTIL::toString(const EVENT::ReconstructedParticle*);
+#pragma link C++ function UTIL::toString(const EVENT::SimCalorimeterHit*);
+#pragma link C++ function UTIL::toString(const EVENT::SimTrackerHit*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackState*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerData*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerHit*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerHitPlane*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerHitZCylinder*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerPulse*);
+#pragma link C++ function UTIL::toString(const EVENT::TrackerRawData*);
+#pragma link C++ function UTIL::toString(const EVENT::Vertex*);
+
+
+#pragma link C++ function UTIL::toString(const IMPL::CalorimeterHitImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::ClusterImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::LCGenericObjectImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::LCRelationImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::MCParticleImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::ParticleIDImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::RawCalorimeterHitImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::ReconstructedParticleImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::SimCalorimeterHitImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::SimTrackerHitImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackStateImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerDataImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerHitImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerHitPlaneImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerHitZCylinderImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerPulseImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackerRawDataImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::VertexImpl*);
+
 
 #endif
 

@@ -18,7 +18,7 @@ class LcioReader( Reader ):
         ''' Constructor allowing initialization with an LCIO file '''
         
         # Create a new LCReader
-        reader = IOIMPL.LCFactory.getInstance().createLCReader()
+        reader = IOIMPL.LCFactory.getInstance().createLCReader( IO.LCReader.directAccess )
         Reader.__init__(self, reader, fileName)
     
     def getNumberOfRuns( self ):
