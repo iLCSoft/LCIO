@@ -3,7 +3,20 @@
 ---------------------------------------------------------------
 
 ============
-  v02-04-01 .....
+  v02-04-02 
+============
+
+     - add template std::string toString(const T* obj) for
+       easy printing w/o operators (e.g. from Python)
+
+     - cleanup of Cmake code for BUILD_ROOTDICT
+     - fixed (again) target dylib2so for APPLE
+
+     - Updated the StdHepReader to use the exact same interface as the LcioReader
+       (Ch.Grefe)
+
+============
+  v02-04-01 
 ============
     - LCReader/SIOReader sets the RunHeader parameter "LCIOFileName" to
       the current file name (usefull if a list of files is processed)
