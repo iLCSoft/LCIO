@@ -317,33 +317,32 @@ IF( BUILD_ROOTDICT )
 
     # ------ generate dictionary for UTIL classes ------------------
     # get list of ALL LCIO headers in LCIO_CXX_HEADERS_DIR
-    FILE( GLOB_RECURSE UTIL_CXX_HEADERS_LIST ${LCIO_CXX_HEADERS_DIR}/*.h )
+    FILE( GLOB UTIL_CXX_HEADERS_LIST 
+      ${LCIO_CXX_HEADERS_DIR}/*.h 
+      ${LCIO_CXX_HEADERS_DIR}/rootDict/*.h 
+      ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h
+      )
+
+#    FILE( GLOB_RECURSE UTIL_CXX_HEADERS_LIST ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h )
 
     # list of headers to exclude
     FILE( GLOB_RECURSE exclude_headers 
-        ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h
-        ${LCIO_CXX_HEADERS_DIR}/DATA/*.h   # DEPRECATED
-        ${LCIO_CXX_HEADERS_DIR}/EVENT/*.h  # AID-generated
-        ${LCIO_CXX_HEADERS_DIR}/IO/*.h     # AID-generated
-        ${LCIO_CXX_HEADERS_DIR}/IMPL/*.h   # OWN NAMESPACE
-        ${LCIO_CXX_HEADERS_DIR}/IOIMPL/*.h # OWN NAMESPACE
-        ${LCIO_CXX_HEADERS_DIR}/SIO/*.h
-        ${LCIO_CXX_HEADERS_DIR}/CPPFORT/*.h
-        ${LCIO_CXX_HEADERS_DIR}/UTIL/CellIDDecoder.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
-        ${LCIO_CXX_HEADERS_DIR}/UTIL/Operators.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
-	${LCIO_CXX_HEADERS_DIR}/pre-generated/EVENT/*.h 
-	${LCIO_CXX_HEADERS_DIR}/pre-generated/IO/*.h    
     )
 
     # remove items to exclude
     LIST( REMOVE_ITEM UTIL_CXX_HEADERS_LIST ${exclude_headers} )
 
+    
+    MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
+
     # generate dictionary source files!
     GEN_ROOT_DICT_LINKDEF_HEADER( UTIL ${UTIL_CXX_HEADERS_LIST} )
     GEN_ROOT_DICT_SOURCES( UTIL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
+
+
 
 #  MESSAGE( STATUS "********************* IO_CXX_HEADERS_LIST:  ${IO_CXX_HEADERS_LIST}" )
 #  MESSAGE( STATUS "********************* EVENT_CXX_HEADERS_LIST:  ${EVENT_CXX_HEADERS_LIST}" )
@@ -380,6 +379,11 @@ IF( BUILD_ROOTDICT )
     GEN_ROOT_DICT_SOURCES( IOIMPL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
+###CCC    # ------ generate dictionary for templates ------------------
+###CCC    PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/rootDict )
+###CCC    GEN_ROOT_DICT_LINKDEF_HEADER( rootDict ${ROOT_DICT_INPUT_HEADERS} )
+###CCC    GEN_ROOT_DICT_SOURCES( rootDict.cxx )
+###CCC    LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
 
@@ -396,11 +400,14 @@ IF( BUILD_ROOTDICT )
       SET_TARGET_PROPERTIES( lcioDict PROPERTIES LINKER_FLAGS
         "-single_module -undefined dynamic_lookup -bind_at_load" )
       
-      ADD_CUSTOM_TARGET(dylib2so ALL
-	COMMAND  ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
+      ADD_CUSTOM_TARGET(dylib2so
 	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so 
-	WORKING_DIRECTORY  ${LIBRARY_OUTPUT_PATH} )       
+	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
+	WORKING_DIRECTORY  ${CMAKE_INSTALL_PREFIX}/lib 
+	DEPENDS ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib )
     ENDIF()
+
+    INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} dylib2so)" )
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
 
