@@ -9,7 +9,11 @@
      - add template std::string toString(const T* obj) for
        easy printing w/o operators (e.g. from Python)
 
+     - added missing pragma link statements for Track classes
+       (needed for ROOT dictionary/python binding)
+     
      - cleanup of Cmake code for BUILD_ROOTDICT
+     
      - fixed (again) target dylib2so for APPLE
 
      - Updated the StdHepReader to use the exact same interface as the LcioReader
