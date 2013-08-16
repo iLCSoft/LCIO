@@ -57,6 +57,7 @@
 
 #pragma link C++ class std::vector<EVENT::CalorimeterHit*>+;
 #pragma link C++ class std::vector<EVENT::Cluster*>+;
+#pragma link C++ class std::vector<EVENT::Track*>+;
 #pragma link C++ class std::vector<EVENT::LCGenericObject*>+;
 #pragma link C++ class std::vector<EVENT::LCObject*>+;
 #pragma link C++ class std::vector<EVENT::LCRelation*>+;
@@ -78,6 +79,7 @@
 
 #pragma link C++ class std::vector<IMPL::CalorimeterHitImpl*>+;
 #pragma link C++ class std::vector<IMPL::ClusterImpl*>+;
+#pragma link C++ class std::vector<IMPL::TrackImpl*>+;
 #pragma link C++ class std::vector<IMPL::LCGenericObjectImpl*>+;
 
 #pragma link C++ class std::vector<IMPL::LCRelationImpl*>+;
@@ -111,6 +113,7 @@
 
 #pragma link C++ function UTIL::toString(const EVENT::CalorimeterHit*);
 #pragma link C++ function UTIL::toString(const EVENT::Cluster*);
+#pragma link C++ function UTIL::toString(const EVENT::Track*);
 #pragma link C++ function UTIL::toString(const EVENT::LCGenericObject*);
 #pragma link C++ function UTIL::toString(const EVENT::LCRelation*);
 #pragma link C++ function UTIL::toString(const EVENT::MCParticle*);
@@ -131,6 +134,7 @@
 
 #pragma link C++ function UTIL::toString(const IMPL::CalorimeterHitImpl*);
 #pragma link C++ function UTIL::toString(const IMPL::ClusterImpl*);
+#pragma link C++ function UTIL::toString(const IMPL::TrackImpl*);
 #pragma link C++ function UTIL::toString(const IMPL::LCGenericObjectImpl*);
 #pragma link C++ function UTIL::toString(const IMPL::LCRelationImpl*);
 #pragma link C++ function UTIL::toString(const IMPL::MCParticleImpl*);
