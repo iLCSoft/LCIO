@@ -67,7 +67,6 @@
 #pragma link C++ class std::vector<EVENT::ReconstructedParticle*>+;
 #pragma link C++ class std::vector<EVENT::SimCalorimeterHit*>+;
 #pragma link C++ class std::vector<EVENT::SimTrackerHit*>+;
-#pragma link C++ class std::vector<EVENT::Track*>+;
 #pragma link C++ class std::vector<EVENT::TrackState*>+;
 #pragma link C++ class std::vector<EVENT::TrackerData*>+;
 #pragma link C++ class std::vector<EVENT::TrackerHit*>+;
@@ -90,7 +89,6 @@
 #pragma link C++ class std::vector<IMPL::ReconstructedParticleImpl*>+;
 #pragma link C++ class std::vector<IMPL::SimCalorimeterHitImpl*>+;
 #pragma link C++ class std::vector<IMPL::SimTrackerHitImpl*>+;
-#pragma link C++ class std::vector<IMPL::TrackImpl*>+;
 #pragma link C++ class std::vector<IMPL::TrackStateImpl*>+;
 #pragma link C++ class std::vector<IMPL::TrackerDataImpl*>+;
 #pragma link C++ class std::vector<IMPL::TrackerHitImpl*>+;
