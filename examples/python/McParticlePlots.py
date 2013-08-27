@@ -6,7 +6,7 @@ Example for setting up an @EventLoop
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from pyLCIO.base.EventLoop import EventLoop
+from pyLCIO.io.EventLoop import EventLoop
 from pyLCIO.drivers.EventMarkerDriver import EventMarkerDriver
 from exampleDrivers.McParticlePlotDriver import McParticlePlotDriver
 
@@ -20,7 +20,7 @@ def McParticlePlots( fileName ):
     eventLoop = EventLoop()
     
     # Set the input file. The actual reader is determined from the file ending (stdhep or slcio)
-    eventLoop.setFile( fileName )
+    eventLoop.addFile( fileName )
     
     # Add a driver to print the progress
     markerDriver = EventMarkerDriver()
