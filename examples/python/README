@@ -12,7 +12,7 @@ ROOT dictionaries for LCIO are required. Build them by setting BUILD_ROOTDICT=ON
 Add the pyLCIO package and these examples to your python environment:
 export PYTHONPATH=${LCIO}/src/python:${LCIO}/examples/python:${PYTHONPATH}
 
-Running requires all software versions identical to those used during compilation!
+Running requires all software versions identical to those used during compilation! The minimum version for python is 2.6.
 
 The examples in this directory can be executed as python scripts, i.e. 'python <script.py>'
 
