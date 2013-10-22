@@ -2,6 +2,16 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+==========
+ v02-04-03
+===========
+
+	- Added a statement about the minimum python version to use
+
+	- Adapted the example to the changed interface in EventLoop.
+
+
+
 ============
   v02-04-02 
 ============
