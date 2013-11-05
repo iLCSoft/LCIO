@@ -6,7 +6,8 @@ Module to handle dynamic decoration of LCIO classes
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from ROOT import TVector3, TLorentzVector, EVENT, IMPL, IO, UTIL
+from ROOT import TVector3, TLorentzVector
+from pyLCIO import EVENT, IMPL, IO, UTIL
 from array import array
 
 def addMethod( self, method, name=None ):
