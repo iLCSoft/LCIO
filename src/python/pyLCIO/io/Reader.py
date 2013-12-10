@@ -26,7 +26,7 @@ class Reader( object ):
     
     def getNumberOfEvents( self ):
         ''' Get the number of events in the stream '''
-        if len(fileList) == 0:
+        if len(self.fileList) == 0:
             return 0
         if not self.isOpen:
             self.__open__( self.fileList[0] )
