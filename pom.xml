@@ -38,7 +38,7 @@
         <repository>
             <id>freehep-maven</id>
             <name>FreeHEP Maven 2 Repository</name>
-            <url>http://java.freehep.org/maven2</url>
+            <url>http://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -79,8 +79,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -95,30 +95,10 @@
                     </excludes>	 
                 </configuration>
             </plugin>
-<!--
-            <plugin>
-                <groupId>org.freehep</groupId>
-                <artifactId>freehep-jas-plugin</artifactId>
-                <version>2.0.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>install</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <jarName>lcio</jarName>
-                    <includes>
-                        <include>org.lcsim:lcio</include>
-                    </includes> 
-                </configuration>
-            </plugin>
--->
             <plugin>
                 <groupId>org.freehep</groupId>
                 <artifactId>freehep-aid-plugin</artifactId>
-                <version>2.0.1-SNAPSHOT</version>
+                <version>2.0.1</version>
                 <executions>
                     <execution>
                         <id>generate-event-interfaces</id>
@@ -127,9 +107,9 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <configDirectory>${basedir}/config/</configDirectory>
                             <sourceDirectory>${basedir}/src/aid/EVENT/</sourceDirectory>
                             <targetDirectory>${basedir}/src/java/</targetDirectory>
-                            <configDirectory>${basedir}/config/</configDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -139,9 +119,9 @@
                             <goal>generate</goal>
                         </goals>                        
                         <configuration>
+                            <configDirectory>${basedir}/config/</configDirectory>
                             <sourceDirectory>${basedir}/src/aid/IO/</sourceDirectory>
                             <targetDirectory>${basedir}/src/java/</targetDirectory>
-                            <configDirectory>${basedir}/config/</configDirectory>
                         </configuration>
                     </execution>
                 </executions>
