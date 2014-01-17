@@ -1,6 +1,7 @@
 build.sh
 build.xml
 
+config/ant.properties
 config/lcio-java.properties
 config/lcio.properties
 config/manifest.template
