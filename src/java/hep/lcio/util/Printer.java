@@ -184,7 +184,7 @@ public class Printer {
 		if (printer != null) {
 			printer.print(coll, nprint);
 		} else {
-			ps.out.println("WARNING: Skipping unknown collection type <" + typename + ">");
+			ps.println("WARNING: Skipping unknown collection type <" + typename + ">");
 		}
 
 		ps.println();
