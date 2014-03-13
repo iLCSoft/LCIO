@@ -93,7 +93,7 @@
                 <version>2.0.2</version>
                 <executions>
                     <execution>
-                        <id>generate-event-interfaces</id>
+                        <id>generate-java-event-interfaces</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
@@ -105,7 +105,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>generate-io-interfaces</id>
+                        <id>generate-java-io-interfaces</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
@@ -114,6 +114,32 @@
                             <configDirectory>${basedir}/config/</configDirectory>
                             <sourceDirectory>${basedir}/src/aid/IO/</sourceDirectory>
                             <targetDirectory>${basedir}/src/java/</targetDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-cpp-event-headers</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generator>CPPHeaderGenerator</generator>
+                            <configDirectory>${basedir}/config/</configDirectory>
+                            <sourceDirectory>${basedir}/src/aid/EVENT/</sourceDirectory>
+                            <targetDirectory>${basedir}/src/cpp/include/</targetDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generate-cpp-io-headers</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generator>CPPHeaderGenerator</generator>
+                            <configDirectory>${basedir}/config/</configDirectory>
+                            <sourceDirectory>${basedir}/src/aid/IO/</sourceDirectory>
+                            <targetDirectory>${basedir}/src/cpp/include/</targetDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -156,10 +182,15 @@
                             <target>
                                 <echo>Cleaning up generated source files</echo>
                                 <delete file="${project.build.sourceDirectory}/JavaInterfaceGenerator"/>
+                                <echo>Deleting Java interface files</echo>
                                 <delete>
                                     <fileset dir="${project.build.sourceDirectory}/hep/lcio/io/" includes="**/*.java" />
                                     <fileset dir="${project.build.sourceDirectory}/hep/lcio/event/" includes="**/*.java" />
                                 </delete>
+                                <delete file="${basedir}/src/cpp/include/CPPHeaderGenerator" />
+                                <echo>Deleting C++ header files</echo>
+                                <delete dir="${basedir}/src/cpp/include/EVENT/" />
+                                <delete dir="${basedir}/src/cpp/include/IO/" />
                             </target>
                         </configuration>
                         <phase>clean</phase>
