@@ -12,16 +12,16 @@
         <url>http://source.freehep.org/jcvsweb/ilc/LCSIM/list/lcio</url>
     </scm>
     <distributionManagement>
-        <site>
-            <id>lcio</id>
-            <name>lcio</name>
-            <url>scp://svn.slac.stanford.edu///nfs/slac/g/lcd/mc/prj/www/lcsim/software/lcio/${project.version}</url>
-        </site>
         <repository>
-            <id>lcsim-maven-slac-linux</id>
-            <name>org.lcsim Maven Repository</name>
-            <url>scpexe://svn.slac.stanford.edu///nfs/slac/g/lcd/mc/prj/www/lcsim/maven2/</url>
+            <id>lcsim-repo-releases</id>
+            <name>LCSIM Releases maven repository</name>
+            <url>http://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-releases/</url>
         </repository>
+        <snapshotRepository>
+            <id>lcsim-repo-snapshots</id>
+            <name>LCSIM Snapshots maven repository</name>
+            <url>http://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-snapshot/</url>
+        </snapshotRepository>
     </distributionManagement>
     <repositories>
         <repository>
@@ -58,6 +58,13 @@
         </pluginRepository>
     </pluginRepositories>
     <build>
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                <version>2.3</version>
+            </extension>
+        </extensions>
         <sourceDirectory>src/java</sourceDirectory>
         <defaultGoal>install</defaultGoal>
         <resources>
