@@ -123,6 +123,7 @@
                             <targetDirectory>${basedir}/src/java/</targetDirectory>
                         </configuration>
                     </execution>
+<!--                    
                     <execution>
                         <id>generate-cpp-event-headers</id>
                         <phase>generate-sources</phase>
@@ -149,6 +150,7 @@
                             <targetDirectory>${basedir}/src/cpp/include/</targetDirectory>
                         </configuration>
                     </execution>
+-->                    
                 </executions>
             </plugin>
             <plugin>
