@@ -3,6 +3,14 @@
 ---------------------------------------------------------------
 
 ==========
+ v02-04-04 ... to be done ....
+===========
+
+         - turned LCIO_GENERATE_HEADERS off
+           ( generation of headers with java is broken )
+
+
+==========
  v02-04-03
 ===========
 

@@ -32,7 +32,7 @@ INCLUDE( ilcsoft_default_settings )
 OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
 
 # allow C++ only builds
-OPTION( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" ON)
+OPTION( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
 
 
 IF( INSTALL_JAR )
