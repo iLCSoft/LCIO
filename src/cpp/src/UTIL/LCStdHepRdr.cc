@@ -68,10 +68,7 @@ namespace UTIL{
     
     int idrup = mcpCol->getParameters().getIntVal( IDRUP_NAME ) ;
     
-    if( idrup !=0 ) {
-      
-      evt->parameters().setValue( IDRUP_NAME ,  idrup ) ;
-    }
+    evt->parameters().setValue( IDRUP_NAME ,  idrup ) ;
 
     double evtwgt = mcpCol->getParameters().getFloatVal( EVTWGT_NAME ) ;
 
