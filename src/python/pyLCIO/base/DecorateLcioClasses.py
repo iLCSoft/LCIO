@@ -43,7 +43,11 @@ def getPositionVec( self ):
 
 def setPositionVec( self, v ):
     ''' Wrapper for the setPosition method passing a vector '''
-    self.setPosition( array( 'd', [v.x(), v.y(), v.z()] ) )
+    # tracker hits take pointer to doubles, calorimeter hits pointer to floats
+    try:
+        self.setPosition( array( 'd', [v.x(), v.y(), v.z()] ) )
+    except TypeError:
+        self.setPosition( array( 'f', [v.x(), v.y(), v.z()] ) )
 
 def setRawDataVec( self, v ):
     ''' Wrapper for the setRawData method passing a vector '''
