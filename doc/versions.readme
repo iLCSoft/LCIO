@@ -3,11 +3,19 @@
 ---------------------------------------------------------------
 
 ==========
- v02-04-04 ... to be done ....
+ v02-04-04  
 ===========
+		- Several changes by J. McCormick on the JAVA side:
+			Work on LCIO-31 and LCIO-32.
+			Fix for LCIO-30 by updating freehep-sio version.
+			Updated the build system
 
-         - turned LCIO_GENERATE_HEADERS off
-           ( generation of headers with java is broken )
+		- Fixed setPositionVec (different types of hits in calo and tracker) - C. Grefe
+		- Added proper handling of exceptions. Whenever an LCIO C++ exception is thrown, the corresponding python exception is raised instead - C. Grefe
+		- Fixed a bug in getNumberOfEvents (spotted by Eduard) - C. Grefe	
+
+	 	- write udrup parameter also when it is 0
+      - turned LCIO_GENERATE_HEADERS off ( generation of headers with java is broken )
 
 
 ==========
