@@ -1251,4 +1251,8 @@ DOT_CLEANUP            = YES
 # The SEARCHENGINE tag specifies whether or not a search engine should be 
 # used. If set to NO the values of all tags below this one will be ignored.
 
-SEARCHENGINE           = NO
+# create a search field for doxygen
+#fg: already set at top: GENERATE_HTMLHELP   = NO
+SEARCHENGINE        = YES
+SERVER_BASED_SEARCH = NO
+

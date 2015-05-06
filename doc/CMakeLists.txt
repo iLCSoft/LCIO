@@ -112,8 +112,8 @@ IF( DOXYGEN_FOUND AND LATEX_COMPILER AND DVIPS_CONVERTER )
     INSTALL( FILES "${DOC_BIN_DIR}/latex/lciorefman.ps" DESTINATION ${DOC_INSTALL_PREFIX} )
 
 ELSE()
-    MESSAGE( SEND_ERROR "Failed to find tools required to build lcio reference manual (latex, dvips)" )
-    MESSAGE( "Please install them or set INSTALL_DOC to OFF" )
+    MESSAGE( "Failed to find tools required to build lcio reference manual (latex, dvips)" )
+    MESSAGE( "Reference manual will not be built")
     MESSAGE( "" )
 ENDIF()
 
@@ -156,8 +156,8 @@ IF( LATEX_COMPILER AND LATEX2HTML_CONVERTER AND PDFLATEX_COMPILER ) # AND DVIPS_
     INSTALL( FILES "${DOC_BIN_DIR}/manual/manual.pdf" DESTINATION ${DOC_INSTALL_PREFIX} )
 
 ELSE()
-    MESSAGE( SEND_ERROR "Failed to find tools required to build lcio user manual (latex, latex2html, pdflatex)" )
-    MESSAGE( "Please install them or set INSTALL_DOC to OFF" )
+    MESSAGE( "Failed to find tools required to build lcio user manual (latex, latex2html, pdflatex)" )
+    MESSAGE( "HTML documentation will not be built")
     MESSAGE( "" )
 ENDIF()
 
