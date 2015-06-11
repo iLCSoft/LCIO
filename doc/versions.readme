@@ -3,18 +3,35 @@
 ---------------------------------------------------------------
 
 ==========
- v02-04-04  
+ v02-05-01  
+==========
+    - patched C++ documentation (F.Gaede):
+      - create a search field on the doxygen page
+      - allow to create doxygen only (no latex and/or html)
+    - no changes in C++ code
+
+    - use Jaxen runtime in siodump (J.McCormick)
+ 
+    Note: in the previous release (v02-05) the versions for libraries and 
+          documentation had not been updated and all showed v02-04-03,
+          even though it had been tagged as v02-05. As this has been fixed
+          now, a rebuid is necessary when installing this patch release.
+
+
+==========
+ v02-05  
 ===========
-		- Several changes by J. McCormick on the JAVA side:
-			Work on LCIO-31 and LCIO-32.
-			Fix for LCIO-30 by updating freehep-sio version.
-			Updated the build system
 
-		- Fixed setPositionVec (different types of hits in calo and tracker) - C. Grefe
-		- Added proper handling of exceptions. Whenever an LCIO C++ exception is thrown, the corresponding python exception is raised instead - C. Grefe
-		- Fixed a bug in getNumberOfEvents (spotted by Eduard) - C. Grefe	
+	- Several changes by J. McCormick on the JAVA side:
+		Work on LCIO-31 and LCIO-32.
+		Fix for LCIO-30 by updating freehep-sio version.
+		Updated the build system
 
-	 	- write udrup parameter also when it is 0
+	- Fixed setPositionVec (different types of hits in calo and tracker) - C. Grefe
+	- Added proper handling of exceptions. Whenever an LCIO C++ exception is thrown, the corresponding python exception is raised instead - C. Grefe
+	- Fixed a bug in getNumberOfEvents (spotted by Eduard) - C. Grefe	
+
+	- write udrup parameter also when it is 0
       - turned LCIO_GENERATE_HEADERS off ( generation of headers with java is broken )
 
 

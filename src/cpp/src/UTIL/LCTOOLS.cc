@@ -4,9 +4,6 @@
 #include "UTIL/LCTime.h"
 #include "UTIL/CellIDDecoder.h"
 #include "UTIL/PIDHandler.h"
-// #ifdef USE_CLHEP
-// #include "UTIL/LCFourVector.h"
-// #endif
 
 #include "EVENT/LCCollection.h"
 #include "EVENT/SimCalorimeterHit.h"
