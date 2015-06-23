@@ -275,6 +275,49 @@ namespace UTIL{
   }
 
 
+  ParticleIDVec PIDHandler::getParticleIDs( LCObject* p , int id ) {
+
+    PNM::iterator nit = _pNames.find( id ) ;
+    
+    if( nit == _pNames.end() ){
+      
+      std::stringstream ss ; ss << id ; 
+      throw UnknownAlgorithm( ss.str().c_str()  ) ;
+    }
+
+    
+    const ParticleIDVec* idv = 0 ;	 
+
+    if( _type == ReconstructedParticle  ){
+      
+      idv = &( static_cast< ReconstructedParticleImpl* >(p)->getParticleIDs()  ) ; 
+    }
+    else if( _type == Cluster  ){
+      
+      idv = &( static_cast< ClusterImpl* >(p)->getParticleIDs()  ) ; 
+    }
+    else{
+      
+      throw Exception("PIDHandler::getParticleID LCObject is neither  ReconstructedParticleImpl nor ClusterImpl !") ;
+    }
+
+    const ParticleIDVec& pidV = *idv ;	 
+
+    ParticleIDVec pidVID ;
+
+    unsigned nPid = pidV.size() ;
+    
+    for(unsigned i=0; i<nPid; ++i ) {
+
+      if( pidV[i]->getAlgorithmType() == id ) 
+	
+	pidVID.push_back( pidV[i] ) ;
+
+    }
+
+    return pidVID ;
+  }
+
   const ParticleID& PIDHandler::getParticleID( LCObject* p , int id ) {
 
     PNM::iterator nit = _pNames.find( id ) ;
@@ -329,8 +372,6 @@ namespace UTIL{
 
 
     return *pid ;
-
-
   }
   
   void PIDHandler::setParticleID( LCObject* p ,

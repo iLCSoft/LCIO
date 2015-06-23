@@ -2333,10 +2333,12 @@ namespace UTIL{
 	  if(l != N-1) out << ", " ;
 	}
         out << endl ;
-        out << "    particle ids ( [id], PDG, (type)): " ;
+        out << "    particle ids ( [id], PDG, (type)): " << std::endl  ;
         for(unsigned int l=0;l<part->getParticleIDs().size();l++){
             ParticleID* pid = part->getParticleIDs()[l] ;
-            out << dec <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") ";
+	    if(l==0) out << "         " << header( pid ) << std::endl ;
+	    out << "         " << lcshort( pid ) << std::endl ;
+	    //            out << dec <<  "[" << setw(8) <<pid->id() << "], " <<  dec << setw(6) << pid->getPDG() << ", " <<  "(" << setw(6) <<pid->getType() << ") ";
             //printf("[%8.8x], %6.6d, (%6.6d)  ",  pid->id() , pid->getPDG() , pid->getType() ) ;
         }
         out << endl ;

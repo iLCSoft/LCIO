@@ -76,10 +76,18 @@ namespace UTIL{
      */
     int getParameterIndex( int algorithmID, const std::string& pName ) ;
       
-    /** The ParticleID object for the given algorithm and particle (or cluster) - throws UnknownAlgorithm.
+    /** Return the (first) ParticleID object for the given algorithm and particle (or cluster) - throws UnknownAlgorithm.
+     *  Only use if you know there is only one PID object for the algorithms or if you simply want the most likely
+     *  PID for this algorithm.
      */
     const ParticleID& getParticleID( LCObject* particle , int algorithmID ) ;
     
+
+    /** Return all PID objects for a given algorithm - ordered with decreasing likelihood - throws UnknownAlgorithm.
+     */
+    ParticleIDVec getParticleIDs( LCObject* p , int id ) ;
+
+
     /** Set the particleID algorithm that is used for this particle's  kinematic variables 
      * - throws UnknownAlgorithm.
      */
