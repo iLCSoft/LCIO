@@ -78,8 +78,8 @@ int main(int argc, char** argv ){
                 trkPulse->setCharge( 3.1415 + 0.1 * j ) ;
                 //trkPulse->setChargeError( (i+j)*.005 ) ;
 
-                float cov[3] = { i, j, i*j } ;
-                trkPulse->setCovMatrix( cov );
+		float cov[3] = { float(i) , float(j) ,float(i*j) } ;
+		trkPulse->setCovMatrix( cov );
 
                 trkPulsesCov->addElement( trkPulse ) ;
             }

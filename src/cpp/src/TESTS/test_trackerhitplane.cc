@@ -67,7 +67,7 @@ int main(int argc, char** argv ){
                 // trkHit->setdEdx( i*j*117. ) ;
                 trkHit->setEDepError( (i+j)*.3 ) ;
 
-                double pos[3] = { i, j, i*j } ;
+                double pos[3] = { 1.*i, 1.*j, 1.*i*j } ;
                 trkHit->setPosition( pos ) ;
 
 		// float cov[6] = { i, j, i+j ,  2*i, 2*j, 2*(i+j) , } ;

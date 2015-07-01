@@ -120,10 +120,12 @@ int main(int argc, char** argv ){
                 trk->setReferencePoint( ref ) ;
 
                 // add some additional TrackStates
-                for( int k=1 ; k<4 ; k++ ){
+                for( int ki=0 ; ki < 4. ; ki++ ){
+		     
+		    float k( ki );
 
-                    float cov[15] = { k+1.,k+2.,k+3.,k+4.,k+5.,k+6.,k+7.,k+8.,k+9.,k+10.,k+11.,k+12.,k+13.,k+14.,k+15. } ;
-                    float ref[3] = { k*1. , k*2. , k*3. } ;
+                    float cov[15] = { k+1,k+2,k+3,k+4,k+5,k+6,k+7,k+8,k+9,k+10,k+11,k+12,k+13,k+14,k+15 } ;
+                    float ref[3] = { k*1 , k*2 , k*3 } ;
 
                     TrackStateImpl* trkstate = new TrackStateImpl(
                             k,                  // location

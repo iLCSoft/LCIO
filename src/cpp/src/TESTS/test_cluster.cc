@@ -60,7 +60,7 @@ int main(int argc, char** argv ){
             for(int j=0;j<NHITS;j++){
                 ClusterImpl* clu = new ClusterImpl ;
                 clu->setEnergy( i*j*117. ) ;
-                float pos[3] = { i , j ,i*j } ;
+		float pos[3] = { float(i) , float(j) ,float(i*j) } ;
                 clu->setPosition( pos ) ;
                 clusters->addElement( clu ) ;
             }
@@ -68,7 +68,7 @@ int main(int argc, char** argv ){
                 ClusterImpl* clu = new ClusterImpl ;
                 clu->setEnergy( i*j*117. ) ;
                 clu->setEnergyError( i*j*0.117 ) ;
-                float pos[3] = { i , j ,i*j } ;
+		float pos[3] = { float(i) , float(j) ,float(i*j) } ;
                 clu->setPosition( pos ) ;
                 clustersErr->addElement( clu ) ;
             }

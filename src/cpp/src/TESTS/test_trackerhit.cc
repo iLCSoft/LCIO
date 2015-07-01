@@ -85,10 +85,10 @@ int main(int argc, char** argv ){
 	      trkHit->setEDep( i*j*117. ) ;
 	      // trkHit->setdEdx( i*j*117. ) ;
 	      trkHit->setEDepError( (i+j)*.3 ) ;
-	      double pos[3] = { i, j, i*j } ;
+	      double pos[3] = { 1.*i, 1.*j, 1.*i*j } ;
 	      trkHit->setPosition( pos ) ;
 	      
-	      float cov[TRKHITNCOVMATRIX] = { i, j, i+j , 2*i, 2*j, 2*(i+j) } ;
+	      float cov[TRKHITNCOVMATRIX] = { float(i), float(j), float(i+j) , float(2*i), float(2.*j), float(2.*(i+j) ) } ;
 	      trkHit->setCovMatrix( cov );
 	      
 	      trkHits->addElement( trkHit ) ;

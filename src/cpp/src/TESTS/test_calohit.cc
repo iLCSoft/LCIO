@@ -67,7 +67,7 @@ int main(int argc, char** argv ){
 	CalorimeterHitImpl* calHit = new CalorimeterHitImpl ;
 	calHit->setEnergy( i*j*117. ) ;
 	calHit->setCellID0( i+100000 + j ) ;
-	float pos[3] = { i , j ,i*j } ;
+	float pos[3] = { float(i) , float(j) ,float(i*j) } ;
 	calHit->setPosition( pos ) ;
 	calHits->addElement( calHit ) ;
       }
@@ -76,7 +76,7 @@ int main(int argc, char** argv ){
 	calHit->setEnergy( i*j*117. ) ;
 	calHit->setEnergyError( i*j*0.117 ) ;
 	calHit->setCellID0( i+100000 + j ) ;
-	float pos[3] = { i , j ,i*j } ;
+	float pos[3] = { float(i) , float(j) ,float(i*j) } ;
 	calHit->setPosition( pos ) ;
 	calHitsErr->addElement( calHit ) ;
       }
