@@ -120,7 +120,7 @@ int main(int argc, char** argv ){
                 trk->setReferencePoint( ref ) ;
 
                 // add some additional TrackStates
-                for( int ki=0 ; ki < 4. ; ki++ ){
+                for( int ki=1 ; ki < 4 ; ki++ ){
 		     
 		    float k( ki );
 
