@@ -647,6 +647,13 @@ public:
 				       42.*j / nPID , // likelihood
 				       aIDs[j] ,
 				       fv ) ;
+		  
+    recPIDHandler.setParticleID( part,  
+				       j*j  , // user type
+				       13 , // PDG 
+				       42.*j / nPID , // likelihood
+				       aIDs[j] ,
+				       fv ) ;
 	    
 	  if( j == 2 ) 
 
