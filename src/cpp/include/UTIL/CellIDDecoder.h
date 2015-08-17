@@ -15,7 +15,7 @@
 //#include <sstream>
 //#include <typeinfo>
 
-using namespace lcio ;
+//using namespace lcio ;
 
 namespace UTIL{
 
@@ -36,7 +36,7 @@ namespace UTIL{
   CellIDDecoder( const std::string& encoder_str ) : _oldHit(0) {
       
       if( encoder_str.length() == 0 ){
-      	throw( Exception( "CellIDDecoder : string of length zero provided as encoder string" ) ) ;
+      	throw( lcio::Exception( "CellIDDecoder : string of length zero provided as encoder string" ) ) ;
       }
       _b = new BitField64( encoder_str ) ; 
       
@@ -44,12 +44,12 @@ namespace UTIL{
     
     /** Constructor reads encoding string from collection parameter LCIO::CellIDEncoding.
      */
-    CellIDDecoder( const LCCollection* col ) : _oldHit(0) {
+    CellIDDecoder( const EVENT::LCCollection* col ) : _oldHit(0) {
       
       std::string initString("") ; 
 
       if( col !=0 ) 
-	initString = col->getParameters().getStringVal(  LCIO::CellIDEncoding ) ;
+	initString = col->getParameters().getStringVal(  lcio::LCIO::CellIDEncoding ) ;
       
       if( initString.size() == 0 ) {
 	
@@ -82,8 +82,8 @@ namespace UTIL{
       if( hit != _oldHit && hit ) {
 	
 
-	long64 val = long64( hit->getCellID0() & 0xffffffff ) 
- 	  |        ( long64( hit->getCellID1() ) << 32      ) ;
+	lcio::long64 val = lcio::long64( hit->getCellID0() & 0xffffffff ) 
+ 	  |        ( lcio::long64( hit->getCellID1() ) << 32      ) ;
 	
 	_b->setValue( val ) ;
 
