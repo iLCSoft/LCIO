@@ -115,6 +115,10 @@ namespace UTIL {
     static const int BCAL      ;
     static const int LHCAL     ;
     static const int YOKE      ;
+    static const int COIL        ;
+    static const int ECAL_ENDCAP ;
+    static const int HCAL_ENDCAP ;
+    static const int YOKE_ENDCAP ;
     
     static const int bwd       ;
     static const int barrel    ;

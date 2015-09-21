@@ -34,6 +34,11 @@ namespace UTIL {
   const int ILDDetID::BCAL      =  25 ;
   const int ILDDetID::LHCAL     =  26 ;
   const int ILDDetID::YOKE      =  27 ;
+  const int ILDDetID::COIL       = 28 ;
+  const int ILDDetID::ECAL_ENDCAP= 29 ;
+  const int ILDDetID::HCAL_ENDCAP= 30 ;
+  const int ILDDetID::YOKE_ENDCAP= 31 ;
+
   const int ILDDetID::bwd       = - 1 ;
   const int ILDDetID::barrel    =   0 ;
   const int ILDDetID::fwd       =   1 ;
