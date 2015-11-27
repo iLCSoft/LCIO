@@ -177,14 +177,14 @@ namespace UTIL {
 
     /** Acces to field through index 
      */
-    BitFieldValue& operator[](size_t index) { 
-      return *_fields.at( index )  ; 
+    BitFieldValue& operator[](size_t theIndex) { 
+      return *_fields.at( theIndex )  ; 
     }
     
     /** Const acces to field through index 
      */
-    const BitFieldValue& operator[](size_t index) const { 
-      return *_fields.at( index )  ; 
+    const BitFieldValue& operator[](size_t theIndex) const { 
+      return *_fields.at( theIndex )  ; 
     }
 
     /** Highest bit used in fields [0-63]
