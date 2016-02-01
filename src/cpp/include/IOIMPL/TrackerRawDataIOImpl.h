@@ -1,5 +1,5 @@
-#ifndef SIO_TPCHITIOIMPL_H
-#define SIO_TPCHITIOIMPL_H 1
+#ifndef SIO_TrackerRawDataIOImpl_H
+#define SIO_TrackerRawDataIOImpl_H 1
 
 #include "IMPL/TrackerRawDataImpl.h"
 
@@ -25,4 +25,4 @@ namespace IOIMPL {
 
 } // namespace
 
-#endif /* ifndef SIO_TPCHITIOIMPL_H */
+#endif /* ifndef SIO_TrackerRawDataIOImpl_H */
