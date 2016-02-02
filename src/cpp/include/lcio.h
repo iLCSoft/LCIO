@@ -15,7 +15,7 @@
 #include "IMPL/LCIOExceptionHandler.h"
 
 
-/** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v02-06) 
+/** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v02-07) 
  * A persistency framework for linear collider simulation studies.
  * \section Overview
  * This is the API documentation for the C++ version of LCIO. For general documetation on 

@@ -19,9 +19,6 @@ namespace SIO {
   unsigned int SIOParticleHandler::read(SIO_stream* stream, 
 					LCObject** objP){
 
-    if ( SIO_VERSION_MAJOR(_vers)==0 && SIO_VERSION_MINOR(_vers)==8)  
-      return readv00_08( stream, objP ) ;
-    
     
     unsigned int status ; 
     
@@ -83,9 +80,17 @@ namespace SIO {
 
     SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
     
-    if( particle->_simstatus.test( MCParticle::BITEndpoint ) )  // bit 31
+    if( particle->_simstatus.test( MCParticle::BITEndpoint ) ) { // bit 31
+
       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
-    
+
+      if( _vers > SIO_VERSION_ENCODE( 2, 6 )   ) {
+	float momentum[3] ;
+	SIO_DATA( stream ,  momentum  , 3 ) ;
+	particle->setMomentumAtEndpoint( momentum ) ;
+      }
+    }
+
     if( _vers > SIO_VERSION_ENCODE( 1, 51) ){
         SIO_DATA( stream ,  particle->_spin  , 3 ) ;
         SIO_DATA( stream ,  particle->_colorFlow  , 2 ) ;
@@ -145,9 +150,15 @@ namespace SIO {
 
 
 //     if( particle->getEndpoint() != 0 ) 
-    if( particle->getSimulatorStatus() &  (1<<MCParticle::BITEndpoint) )  // endpoint set !
+    if( particle->getSimulatorStatus() &  (1<<MCParticle::BITEndpoint) ) { // endpoint set !
+
       SIO_DATA( stream, const_cast<double*>( particle->getEndpoint() ) , 3 ) ;
 
+      LCSIO_WRITE( stream, (float) particle->getMomentumAtEndpoint()[0] ) ;
+      LCSIO_WRITE( stream, (float) particle->getMomentumAtEndpoint()[1] ) ;
+      LCSIO_WRITE( stream, (float) particle->getMomentumAtEndpoint()[2] ) ;
+
+    }
     LCSIO_WRITE( stream, (float) particle->getSpin()[0] ) ;
     LCSIO_WRITE( stream, (float) particle->getSpin()[1] ) ;
     LCSIO_WRITE( stream, (float) particle->getSpin()[2] ) ;
@@ -157,64 +168,6 @@ namespace SIO {
 
     return ( SIO_BLOCK_SUCCESS ) ;
 
-  }
-
-  unsigned int SIOParticleHandler::readv00_08(SIO_stream* stream, 
-					      LCObject** objP){
-    unsigned int status ; 
-    
-    // create a new object :
-    MCParticleIOImpl* particle  = new MCParticleIOImpl ;
-    *objP = particle ;
-    
-    // tell SIO the address of particle as an abstract  MCParticle ...
-    // this is important, as SIO takes the bare address 
-    // (int)(MCParticle*) particle != (int)particle !!!!
-    SIO_PTAG( stream , dynamic_cast<MCParticle*>(particle) ) ;
-
-    int ignorePointer ;
-//     SIO_PNTR( stream , &(particle->_mother0) ) ;
-//     SIO_PNTR( stream , &(particle->_mother1) ) ;
-    SIO_DATA( stream , &ignorePointer  , 1  ) ;
-    SIO_DATA( stream , &ignorePointer  , 1  ) ;
-
-
-    // daughters
-    int numberOfDaughters ; 
-    SIO_DATA( stream ,  &numberOfDaughters , 1  ) ;
-
-    //    particle->prepareArrayOfDaughters( numberOfDaughters ) ;
-
-
-//     for(int i=0;i<numberOfDaughters;i++){
-//     }
-    particle->_daughters.resize( numberOfDaughters ) ;
-
-    for(int i=0;i<numberOfDaughters;i++){
-      SIO_PNTR( stream , &(particle->_daughters[i] ) ) ;
-    }
-//     for(int i=0;i<numberOfDaughters;i++){
-//       // create a pointer to a pointer to a MCParticle 
-//       // as SIO need the address of the pointer for pointer reallocation....
-//       MCParticle** pD = new (MCParticle*) ;
-//       SIO_PNTR( stream , pD ) ;
-//       particle->_daughters.push_back( pD ) ;
-//     }
-
-    SIO_DATA( stream ,  &(particle->_pdg) , 1  ) ;
-    SIO_DATA( stream ,  &(particle->_genstatus) , 1  ) ;
-    particle->_genstatus = 0 ;   // default value
-    SIO_DATA( stream ,  particle->_vertex  , 3 ) ;
-    SIO_DATA( stream ,  particle->_p  , 3 ) ;
-    SIO_DATA( stream ,  &(particle->_mass) , 1  ) ;
-    SIO_DATA( stream ,  &(particle->_charge) , 1  ) ;
-    
-    // if the particles doesn't have daughters we read its endpoint
-    if( numberOfDaughters == 0 ) {
-      SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
-      particle->_genstatus = 0x80000000 ; // set bit31
-    }
-    return ( SIO_BLOCK_SUCCESS ) ;
   }
 
 
@@ -246,7 +199,7 @@ namespace SIO {
 	    
 	    int nDaughters = mcp->getDaughters().size() ;
 	    for( int j=0; j<nDaughters; j++){
-	      MCParticleIOImpl* dgh = dynamic_cast<MCParticleIOImpl*>( mcp->getDaughter(j) ) ;
+	      MCParticleIOImpl* dgh = dynamic_cast<MCParticleIOImpl*>( mcp->getDaughters()[j] ) ;
 	      
 // 	      MCParticle ** mcpP = new (MCParticle*) ;
 // 	      *mcpP = mcp ;

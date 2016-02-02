@@ -32,16 +32,6 @@ namespace SIO {
 
     static void restoreParentDaughterRelations( EVENT::LCEvent* evt) ;
 
-  protected:
-
-    /** Reads lcio MCParticle objects from an SIO stream created with v00-08
-     */
-    virtual unsigned int readv00_08(SIO_stream* stream, 
-				    EVENT::LCObject** objP ) ;
-	
-
-
-
 
   }; // class
     

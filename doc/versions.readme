@@ -3,6 +3,28 @@
 ---------------------------------------------------------------
 
 ========
+ v02-07  
+========
+    - added MCParticle::getMomentumAtEndpoint()
+
+    - removed long deprecated methods
+       - MCParticle::getNumberOfParents()
+       - MCParticle::getParent(int i)
+       - MCParticle::getNumberOfDaughters()
+       - MCParticle::getDaughter(int i)
+
+    - fixed many compiler warnings for clang
+
+    - added example for setting particle id to recjob
+
+    - added IDs for coild and calo endcaps to UTIL/ILDConf.h
+
+    - fixed setting of CMAKE_INSTALL_PREFIX to allow
+      installation in 'usr/local'
+
+    - fixed incorrect file names printed at the end of anajob
+
+========
  v02-06  
 ========
     - patched C++ documentation (F.Gaede):

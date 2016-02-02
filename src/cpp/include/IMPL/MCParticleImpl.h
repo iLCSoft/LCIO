@@ -44,22 +44,22 @@ namespace IMPL {
     virtual const EVENT::MCParticleVec & getDaughters() const ;
 
 
-    /** Returns the i-th daughter of this particle.
-     * Same as getDaughter() except for return type.
-     *
-     * @see getNumberOfDaughters
-     */
-    virtual EVENT::MCParticle * getDaughter(int i) const ;
+    // /** Returns the i-th daughter of this particle.
+    //  * Same as getDaughter() except for return type.
+    //  *
+    //  * @see getNumberOfDaughters
+    //  */
+    // virtual EVENT::MCParticle * getDaughter(int i) const ;
 
 
-    /** Returns the number of parents of this particle - 0 if mother.
-     */
-    virtual int getNumberOfParents() const ;
+    // /** Returns the number of parents of this particle - 0 if mother.
+    //  */
+    // virtual int getNumberOfParents() const ;
 
 
-    /** Returns the i-th parent of this particle.
-     */
-    virtual EVENT::MCParticle * getParent(int i) const ;
+    // /** Returns the i-th parent of this particle.
+    //  */
+    // virtual EVENT::MCParticle * getParent(int i) const ;
 
 
     /** Returns the endpoint of the particle in [mm] - returns NULL if
@@ -69,9 +69,9 @@ namespace IMPL {
      */
     virtual const double* getEndpoint() const ;
 
-    /** Returns the number of daughters of this particle.
-     */
-    virtual int getNumberOfDaughters() const ;
+    // /** Returns the number of daughters of this particle.
+    //  */
+    // virtual int getNumberOfDaughters() const ;
 
 
     /** Returns the PDG code of the particle.
@@ -145,8 +145,12 @@ namespace IMPL {
 
     /** Returns the particle momentum at the production vertex.
      */
-          
     virtual const double * getMomentum() const ;
+
+
+    /** Returns the particle momentum at the endpoint.
+     */
+    virtual const double* getMomentumAtEndpoint() const ;
 
     /** Returns the mass of the particle in [GeV].
      */
@@ -220,6 +224,14 @@ namespace IMPL {
      */
     void setMomentum( const double p[3] );
 
+    /** Sets the momentum at the endpoint.
+      */
+    void setMomentumAtEndpoint( const float p[3] );
+
+    /** Sets the momentum at the endpoint.
+      */
+    void setMomentumAtEndpoint( const double p[3] );
+
     /** Sets the mass.
      */
     void setMass( float m ) ;
@@ -269,6 +281,7 @@ namespace IMPL {
     std::bitset<32> _simstatus ;
     double _vertex[3] ;
     double _endpoint[3] ;
+    double _pEndpoint[3] ;
     double _p[3] ;
     double _mass ;
     float _charge ;

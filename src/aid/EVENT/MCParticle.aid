@@ -57,7 +57,7 @@ public interface MCParticle extends LCObject {
     /** Returns the number of parents of this particle - 0 if mother.
      * @deprecated use getParents()
      */
-    public int getNumberOfParents() const ;
+    //    public int getNumberOfParents() const ;
 
 
     /** Returns the i-th parent of this particle.
@@ -65,7 +65,7 @@ public interface MCParticle extends LCObject {
      *
      * @see MCParticle.getNumberOfParents()
      */
-    public MCParticle* getParent( int i ) const ;
+    //public MCParticle* getParent( int i ) const ;
 
 
 
@@ -196,6 +196,11 @@ public interface MCParticle extends LCObject {
      */
     public const double3V getMomentum() const;
 
+    /** Returns the particle's 3-momentum at the endpoint in [GeV] 
+     *  Only float used in files. 
+     */
+    public const double3V getMomentumAtEndpoint() const;
+
     
     /** Returns the mass of the particle in [GeV] - only float used in files.
      */
@@ -209,11 +214,11 @@ public interface MCParticle extends LCObject {
     /** Returns the number of daughters of this particle.
      * @deprecated use getDaughters()
      */
-    public int  getNumberOfDaughters() const ;
+    //    public int  getNumberOfDaughters() const ;
     
     /** Returns the i-th daughter of this particle.
      * @deprecated use getDaughters()
      */
-    public MCParticle* getDaughter(int i) const ; 
+    //    public MCParticle* getDaughter(int i) const ; 
 
 }

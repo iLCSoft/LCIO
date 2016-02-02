@@ -44,6 +44,9 @@ namespace IMPL {
     _vertex[0] = 0.0 ;
     _vertex[1] = 0.0 ;
     _vertex[2] = 0.0 ;
+    _pEndpoint[0] = 0.0 ;
+    _pEndpoint[1] = 0.0 ;
+    _pEndpoint[2] = 0.0 ;
     _p[0] = 0.0 ;
     _p[1] = 0.0 ;
     _p[2] = 0.0 ;
@@ -58,48 +61,10 @@ namespace IMPL {
     _colorFlow[0] = 0 ;
     _colorFlow[1] = 0 ;
   }
-  
-//   MCParticleImpl::MCParticleImpl(const EVENT::MCParticle& p) :
-//     _pdg( p.getPDG() ),
-//     _genstatus( p.getGeneratorStatus() ),
-//     _simstatus( p.getSimulatorStatus() ),
-//     _mass( p.getMass() ),
-//     _charge( p.getCharge() ),
-//     _time( p.getTime() ),
-//     _parents( p.getParents() ),
-//     _daughters( p.getDaughters() )
-//   {
-//     _vertex[0] = p.getVertex()[0] ;
-//     _vertex[1] = p.getVertex()[1] ;
-//     _vertex[2] = p.getVertex()[2] ;
-//     _p[0] = p.getMomentum()[0] ;
-//     _p[1] = p.getMomentum()[1] ;
-//     _p[2] = p.getMomentum()[2] ;
-//     _endpoint[0] = p.getEndpoint()[0] ;
-//     _endpoint[1] = p.getEndpoint()[1] ;
-//     _endpoint[2] = p.getEndpoint()[2] ;
-//   }
-    
-
 
   MCParticleImpl::~MCParticleImpl(){
-    // no dynamic variables
-    //    delete [] _readDaughters ;
-//     for(MCParticlePVec::iterator iter = _daughters.begin();iter != _daughters.end() ;iter++){
-//       delete (*iter) ;
-//     }
-
   }
   
-//   MCParticle * MCParticleImpl::getParent() const { return _mother0 ; } 
-//   MCParticle * MCParticleImpl::getParent() const { return _mother0 ; }
-
-//   MCParticle * MCParticleImpl::getSecondParent() const { return _mother1; }  
-//   MCParticle * MCParticleImpl::getSecondParent() const { return _mother1; }
-
-//   //  const MCParticleVec * MCParticleImpl::getDaughters() const { return &_daughters ; }
-
-
   const MCParticleVec & MCParticleImpl::getParents() const {
     return _parents ;
   }
@@ -108,69 +73,69 @@ namespace IMPL {
     return _daughters ;
   }
 
-  int MCParticleImpl::getNumberOfParents() const { 
-    //static bool first = true ;
-    //if( first ){
-    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
-	//	<< " - please use  MCParticleImpl::getParents().size() ! " << std::endl ;
-    //  first = false ;
-    //}
-    
-    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFPARENTS" ) ;
-
-    return _parents.size() ; 
-  }
-
-  MCParticle* MCParticleImpl::getParent(int i) const {
-    
-    //static bool first = true ;
-    //if( first ){
-    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
-	//	<< " - please use  MCParticleImpl::getParents()[i] ! " << std::endl ;
-    //  first = false ;
-    //}
-
-    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETPARENT" ) ;
-
-    try{
-      return _parents.at(i) ;
-    }catch( std::out_of_range ){
-      std::stringstream err ; err << "MCParticleImpl::getParent(): out_of_range :"  << i  ;
-      throw Exception( err.str() );
-    }
-  }
-  
-  //   // unchecked access
-  //   MCParticle* MCParticleImpl::getParent(int i) const {
-  //     return _parents[i] ;
-  //   }
-
-
-  int MCParticleImpl::getNumberOfDaughters() const { 
-    //static bool first = true ;
-    //if( first ){
-    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
-	//	<< " - please use  MCParticleImpl::getDaughters().size() ! " << std::endl ;
-    //  first = false ;
-    //}
-
-    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFDAUGHTERS" ) ;
-
-    return _daughters.size() ; 
-  }
-
-  MCParticle* MCParticleImpl::getDaughter(int i) const {
-    
-    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETDAUGHTER" ) ;
-    
-    try{
-      return _daughters.at(i) ;
-    }catch( std::out_of_range ){
-      std::stringstream err ; err << "MCParticleImpl::getDaughter(): out_of_range :"  << i  ;
-      throw Exception( err.str() );
-    }
-    
-  }
+//  int MCParticleImpl::getNumberOfParents() const { 
+//    //static bool first = true ;
+//    //if( first ){
+//    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfParents() is deprecated "
+//	//	<< " - please use  MCParticleImpl::getParents().size() ! " << std::endl ;
+//    //  first = false ;
+//    //}
+//    
+//    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFPARENTS" ) ;
+//
+//    return _parents.size() ; 
+//  }
+//
+//  MCParticle* MCParticleImpl::getParent(int i) const {
+//    
+//    //static bool first = true ;
+//    //if( first ){
+//    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getParent(i) is deprecated "
+//	//	<< " - please use  MCParticleImpl::getParents()[i] ! " << std::endl ;
+//    //  first = false ;
+//    //}
+//
+//    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETPARENT" ) ;
+//
+//    try{
+//      return _parents.at(i) ;
+//    }catch( std::out_of_range ){
+//      std::stringstream err ; err << "MCParticleImpl::getParent(): out_of_range :"  << i  ;
+//      throw Exception( err.str() );
+//    }
+//  }
+//  
+//  //   // unchecked access
+//  //   MCParticle* MCParticleImpl::getParent(int i) const {
+//  //     return _parents[i] ;
+//  //   }
+//
+//
+//  int MCParticleImpl::getNumberOfDaughters() const { 
+//    //static bool first = true ;
+//    //if( first ){
+//    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getNumberOfDaughters() is deprecated "
+//	//	<< " - please use  MCParticleImpl::getDaughters().size() ! " << std::endl ;
+//    //  first = false ;
+//    //}
+//
+//    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETNUMBEROFDAUGHTERS" ) ;
+//
+//    return _daughters.size() ; 
+//  }
+//
+//  MCParticle* MCParticleImpl::getDaughter(int i) const {
+//    
+//    UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETDAUGHTER" ) ;
+//    
+//    try{
+//      return _daughters.at(i) ;
+//    }catch( std::out_of_range ){
+//      std::stringstream err ; err << "MCParticleImpl::getDaughter(): out_of_range :"  << i  ;
+//      throw Exception( err.str() );
+//    }
+//    
+//  }
 
   const double* MCParticleImpl::getEndpoint() const { 
     
@@ -229,6 +194,7 @@ namespace IMPL {
   const double * MCParticleImpl::getVertex() const { return _vertex ;}
   float MCParticleImpl::getTime() const { return _time ; }
   const double * MCParticleImpl::getMomentum() const { return _p ;}
+  const double * MCParticleImpl::getMomentumAtEndpoint() const { return _pEndpoint ;}
   double MCParticleImpl::getMass() const { return _mass ;}
   float MCParticleImpl::getCharge() const { return _charge ; }
 
@@ -304,6 +270,19 @@ namespace IMPL {
     _p[0] = p[0] ;
     _p[1] = p[1] ;
     _p[2] = p[2] ;
+  }
+
+  void MCParticleImpl::setMomentumAtEndpoint( const float p[3] ){
+    checkAccess("MCParticleImpl::setMomentumAtEndpoint") ;
+    _pEndpoint[0] = p[0] ;
+    _pEndpoint[1] = p[1] ;
+    _pEndpoint[2] = p[2] ;
+  }
+  void MCParticleImpl::setMomentumAtEndpoint( const double p[3] ){
+    checkAccess("MCParticleImpl::setMomentumAtEndpoint") ;
+    _pEndpoint[0] = p[0] ;
+    _pEndpoint[1] = p[1] ;
+    _pEndpoint[2] = p[2] ;
   }
 
   void MCParticleImpl::setMass( float m ) { 

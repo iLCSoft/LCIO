@@ -183,7 +183,7 @@ int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* sims
   for(int k=0;k<3;k++)  *momentum++ = (float) tmp[k] ;
   *mass              = lcMCParticle->getMass() ;
   *charge            = lcMCParticle->getCharge() ;
-  *ndaughters        = lcMCParticle->getNumberOfDaughters() ;
+  *ndaughters        = lcMCParticle->getDaughters().size() ;
   return LCIO::SUCCESS ;
 }
 

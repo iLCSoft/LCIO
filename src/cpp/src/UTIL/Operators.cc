@@ -2082,7 +2082,7 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::MCParticle *){ //hauke
-        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | energy |gen|[simstat ]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
+        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | px_ep ,  py_ep  ,  pz_ep      | energy |gen|[simstat ]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
         return _h;
     }
 
@@ -2100,6 +2100,8 @@ namespace UTIL{
         out << setfill(' ')<< setw(5) << part->getPDG() << "|"; 
         out << scientific << showpos << setprecision(2)
             << part->getMomentum()[0] << ", " << part->getMomentum()[1] << ", " << part->getMomentum()[2] << "|";
+        out << scientific << showpos << setprecision(2)
+            << part->getMomentumAtEndpoint()[0] << ", " << part->getMomentumAtEndpoint()[1] << ", " << part->getMomentumAtEndpoint()[2] << "|";
         out << noshowpos;
         out << part->getEnergy() << "|";
         out << fixed << setw(3) << part->getGeneratorStatus() << "|";
@@ -2158,6 +2160,10 @@ namespace UTIL{
         tmp.str("");
         tmp  << mcp->getMomentum()[0] << ", " << mcp->getMomentum()[1]  << ", " << mcp->getMomentum()[2]; 
         out << setw(30) << left << "Momentum [GeV] (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
+
+        tmp.str("");
+        tmp  << mcp->getMomentumAtEndpoint()[0] << ", " << mcp->getMomentumAtEndpoint()[1]  << ", " << mcp->getMomentumAtEndpoint()[2]; 
+        out << setw(30) << left << "Momentum at Endpoint[GeV] (x,y,z) " << setfill(' ') << right <<setw(40) << tmp.str() << endl;
 
 
         out << setw(30) << left <<"GeneratorStatus" << setfill(' ') << right << setw(40) << mcp->getGeneratorStatus() << endl; 

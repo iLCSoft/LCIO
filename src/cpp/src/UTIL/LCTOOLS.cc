@@ -1177,7 +1177,7 @@ namespace UTIL {
         }
 
         std::cout << endl
-            <<  "[   id   ]index|      PDG |    px,     py,        pz    | energy  |gen|[simstat ]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |            spin             | colorflow | [parents] - [daughters]"    
+            <<  "[   id   ]index|      PDG |    px,     py,        pz    | px_ep,   py_ep , pz_ep      | energy  |gen|[simstat ]| vertex x,     y   ,   z     | endpoint x,    y  ,   z     |    mass |  charge |            spin             | colorflow | [parents] - [daughters]"    
             << endl 
             << endl ;
 
@@ -1193,6 +1193,10 @@ namespace UTIL {
                     part->getMomentum()[0] ,
                     part->getMomentum()[1] , 
                     part->getMomentum()[2] );
+            printf("% 1.2e,% 1.2e,% 1.2e|" , 
+                    part->getMomentumAtEndpoint()[0] ,
+                    part->getMomentumAtEndpoint()[1] , 
+                    part->getMomentumAtEndpoint()[2] );
             printf("% 1.2e|" , part->getEnergy() ) ; 
 
             printf(" %1d |" , part->getGeneratorStatus()  );
