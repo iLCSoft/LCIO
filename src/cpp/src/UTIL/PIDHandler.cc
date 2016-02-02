@@ -266,8 +266,9 @@ namespace UTIL{
     }
     
     if( pid == 0 ) {
-
-      throw UnknownAlgorithm( std::string("pid object not found in particle for algorithmId: "+id ) ) ;
+      std::stringstream err ; 
+      err << "pid object not found in particle for algorithmId: "<< id ;
+      throw UnknownAlgorithm( err.str() ) ;
     }
 
     p->setParticleIDUsed( pid ) ;

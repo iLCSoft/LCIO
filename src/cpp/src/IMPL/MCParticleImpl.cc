@@ -4,6 +4,7 @@
 
 #include "EVENT/LCIO.h"
 #include <iostream>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 #include <math.h> 
@@ -132,13 +133,10 @@ namespace IMPL {
     UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETPARENT" ) ;
 
     try{
-      //      return _parents.at(i) ;
-      //FIXME gcc 2.95 doesn't know at(i) ??
-      
-      return _parents[i] ;
+      return _parents.at(i) ;
     }catch( std::out_of_range ){
-      throw Exception(std::string("MCParticleImpl::getParent(): out_of_range :" 
-				  + i ) );
+      std::stringstream err ; err << "MCParticleImpl::getParent(): out_of_range :"  << i  ;
+      throw Exception( err.str() );
     }
   }
   
@@ -163,30 +161,16 @@ namespace IMPL {
 
   MCParticle* MCParticleImpl::getDaughter(int i) const {
     
-    //static bool first = true ;
-    //if( first ){
-    //  std::cout << " WARNING >>>>>>>  MCParticleImpl::getDaughter(i) is deprecated "
-	//	<< " - please use  MCParticleImpl::getDaughters()[i] ! " << std::endl ;
-    //  first = false ;
-    //}
-
     UTIL::LCWarning::getInstance().printWarning( "MCPARTICLE_DEPRECATED_GETDAUGHTER" ) ;
-
+    
     try{
-      //      return _daughters.at(i) ;
-      //FIXME gcc 2.95 doesn't know at(i) ??
-      
-      return _daughters[i] ;
+      return _daughters.at(i) ;
     }catch( std::out_of_range ){
-      throw Exception(std::string("MCParticleImpl::getDaughter(): out_of_range :" 
-				  + i ) );
+      std::stringstream err ; err << "MCParticleImpl::getDaughter(): out_of_range :"  << i  ;
+      throw Exception( err.str() );
     }
     
   }
-//   // unchecked access
-//   MCParticle* MCParticleImpl::getDaughter(int i) const {
-//     return *_daughters[i] ;
-//   }
 
   const double* MCParticleImpl::getEndpoint() const { 
     

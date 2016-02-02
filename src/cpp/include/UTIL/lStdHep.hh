@@ -243,7 +243,7 @@ public:
    void           setPz(int i, double pz)     { event.phep[i * 5 + 2] = pz; return;   };
    void           setE(int i, double e)       { event.phep[i * 5 + 3] = e; return;    };
    void           setM(int i, double m)       { event.phep[i * 5 + 4] = m; return;    };
-   void           setPid(int i, long pid)     { event.idhep[i] = pid; return;         };
+   void           setPid(int i, long aPid)     { event.idhep[i] = aPid; return;         };
    void           setStatus(int i, long s)    { event.isthep[i] = s; return;          };
    void           setMother1(int i, long n)   { event.jmohep[i + i + 0] = n; return;  };
    void           setMother2(int i, long n)   { event.jmohep[i + i + 1] = n; return;  };

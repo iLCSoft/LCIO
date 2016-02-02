@@ -1,6 +1,7 @@
 #include "IMPL/SimCalorimeterHitImpl.h"
 #include "UTIL/LCWarning.h"
 #include <iostream>
+#include <sstream>
 
 namespace IMPL{
   
@@ -97,15 +98,12 @@ namespace IMPL{
 
   EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const {
     try{
-      //return _vec.at(i)->Particle ;
-      //FIXME gcc 2.95 doesn't know at(i) ??
-      return _vec[i]->Particle ;      
-    }
-    catch( ... ){
-      throw EVENT::Exception(std::string("SimCalorimeterHitImpl::getParticleCont: no particle at " + i ) ) ;
+      return _vec.at(i)->Particle ;
+    }catch( std::out_of_range ){
+      std::stringstream err ; err << "SimCalorimeterHitImpl::getParticleCont(): out_of_range :"  << i  ;
+      throw EVENT::Exception( err.str() );
     }
   }
-
 
   float SimCalorimeterHitImpl::getEnergyCont(int i) const {
     return _vec[i]->Energy ;
