@@ -41,7 +41,6 @@ using namespace lcio ;
 
 static std::string FILEN = "simjob.slcio" ;
 static std::string OUTFILEN = "recjob.slcio" ;
-static const int NHITS = 50 ;  // calorimeter hits per event
 static const int nRecP = 10 ; // number of reconstructed particles
 
 /** Example of reading events from the file, add sth. to the event

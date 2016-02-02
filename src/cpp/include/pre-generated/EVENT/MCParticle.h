@@ -58,15 +58,13 @@ public:
     /** Returns the number of parents of this particle - 0 if mother.
      * @deprecated use getParents()
      */
-    virtual int getNumberOfParents() const = 0;
-
+    //    public int getNumberOfParents() const ;
     /** Returns the i-th parent of this particle.
      * @deprecated use getParents()
      *
      * @see MCParticle.getNumberOfParents()
      */
-    virtual MCParticle * getParent(int i) const = 0;
-
+    //public MCParticle* getParent( int i ) const ;
     /** Returns the PDG code of the particle.
      */
     virtual int getPDG() const = 0;
@@ -176,6 +174,11 @@ public:
      */
     virtual const double* getMomentum() const = 0;
 
+    /** Returns the particle's 3-momentum at the endpoint in [GeV] 
+     *  Only float used in files. 
+     */
+    virtual const double* getMomentumAtEndpoint() const = 0;
+
     /** Returns the mass of the particle in [GeV] - only float used in files.
      */
     virtual double getMass() const = 0;
@@ -187,12 +190,11 @@ public:
     /** Returns the number of daughters of this particle.
      * @deprecated use getDaughters()
      */
-    virtual int getNumberOfDaughters() const = 0;
-
+    //    public int  getNumberOfDaughters() const ;
     /** Returns the i-th daughter of this particle.
      * @deprecated use getDaughters()
      */
-    virtual MCParticle * getDaughter(int i) const = 0;
+    //    public MCParticle* getDaughter(int i) const ; 
 }; // class
 } // namespace EVENT
 #endif /* ifndef EVENT_MCPARTICLE_H */
