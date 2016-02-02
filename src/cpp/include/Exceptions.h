@@ -3,6 +3,7 @@
 
 #include <string>
 #include <exception> 
+#include <stdexcept>
 
 // define some exceptions similar to the ones used in hep.lcd.io
 // the exceptions should be part of the corresponding namespace
