@@ -136,6 +136,12 @@ IF( BUILD_F77_TESTJOBS )
       SET_TESTS_PROPERTIES( t_f_ana_j_sim PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
       SET_TESTS_PROPERTIES( t_f_ana_j_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
       # ------------------------------------------------------------------------
+
+      ADD_TEST( t_j_sio_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_sim.slcio )
+      ADD_TEST( t_j_sio_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_rec.slcio )
+      SET_TESTS_PROPERTIES( t_j_sio_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
+      SET_TESTS_PROPERTIES( t_j_sio_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
+
     endif()
     
     
@@ -151,10 +157,6 @@ IF( BUILD_F77_TESTJOBS )
     #SET_TESTS_PROPERTIES( t_c_ana_c2f_rec PROPERTIES PASS_REGULAR_EXPRESSION "100[ ]+events read from files" )
     # ------------------------------------------------------------------------
 
-    ADD_TEST( t_j_sio_f_sim ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_sim.slcio )
-    ADD_TEST( t_j_sio_f_rec ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml f_rec.slcio )
-    SET_TESTS_PROPERTIES( t_j_sio_f_sim PROPERTIES PASS_REGULAR_EXPRESSION "Read 231 records with 0 warnings" )
-    SET_TESTS_PROPERTIES( t_j_sio_f_rec PROPERTIES PASS_REGULAR_EXPRESSION "Read 213 records with 0 warnings" )
 
 ENDIF()
 
