@@ -74,7 +74,13 @@ class SIOMCParticle extends IMCParticle
          endpoint[0] = in.readDouble();
          endpoint[1] = in.readDouble();
          endpoint[2] = in.readDouble();
-      }
+         
+         if( SIOVersion.encode(major,minor) > SIOVersion.encode(2,6)) {
+	   momentumAtEndpoint[0] = in.readFloat();
+	   momentumAtEndpoint[1] = in.readFloat();
+	   momentumAtEndpoint[2] = in.readFloat();
+         }  
+       }
       if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51) ){
 
           spin[0] = in.readFloat();
@@ -146,6 +152,11 @@ class SIOMCParticle extends IMCParticle
             out.writeDouble(endpoint[0]);
             out.writeDouble(endpoint[1]);
             out.writeDouble(endpoint[2]);
+            
+            double[] momentumAtEndpoint = hit.getMomentumAtEndpoint();
+            out.writeFloat((float) momentumAtEndpoint[0]);
+            out.writeFloat((float) momentumAtEndpoint[1]);
+            out.writeFloat((float) momentumAtEndpoint[2]);
          }
 
          float[] spin = hit.getSpin();
@@ -185,6 +196,9 @@ class SIOMCParticle extends IMCParticle
          out.writeDouble(endpoint[0]);
          out.writeDouble(endpoint[1]);
          out.writeDouble(endpoint[2]);
+         out.writeFloat((float) momentumAtEndpoint[0]);
+         out.writeFloat((float) momentumAtEndpoint[1]);
+         out.writeFloat((float) momentumAtEndpoint[2]);
       }
 
      out.writeFloat((float)spin[0]);

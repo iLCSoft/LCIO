@@ -18,6 +18,7 @@ public class IMCParticle extends ILCObject implements MCParticle
    protected double[] endpoint = new double[3];
    protected double[] momentum = new double[3];
    protected double[] vertex = new double[3];
+   protected double[] momentumAtEndpoint = new double[3];
    protected float charge;
    protected float time ;
    protected double mass;
@@ -145,6 +146,30 @@ public class IMCParticle extends ILCObject implements MCParticle
    public double[] getMomentum()
    {
       return momentum;
+   }
+   
+   public double[] getMomentumAtEndpoint() {
+      return momentumAtEndpoint; 
+   }
+   
+   public void setMomentumAtEndpoint(float[] momemtum)
+   {
+      checkAccess();
+      if (momentum.length != 3)
+         throw new IllegalArgumentException(); 
+      momentumAtEndpoint[0] = momentum[0];
+      momentumAtEndpoint[1] = momentum[1];
+      momentumAtEndpoint[2] = momentum[2];
+   }
+   
+   public void setMomentumAtEndpoint(double[] momemtum)
+   {
+      checkAccess();
+      if (momentum.length != 3)
+         throw new IllegalArgumentException(); 
+      momentumAtEndpoint[0] = momentum[0];
+      momentumAtEndpoint[1] = momentum[1];
+      momentumAtEndpoint[2] = momentum[2];
    }
    
    public int getNumberOfDaughters()
