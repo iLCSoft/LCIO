@@ -5,6 +5,13 @@
 ========
  v02-07  
 ========
+
+ N.Graf
+  - Added support for new momentumAtEndpoint feature
+    in Java
+
+ F.Gaede 
+     C++ :
     - added MCParticle::getMomentumAtEndpoint()
 
     - removed long deprecated methods
@@ -23,6 +30,9 @@
       installation in 'usr/local'
 
     - fixed incorrect file names printed at the end of anajob
+
+    - fixed compiler warnings for clang and c++11 in TESTs:
+      non-constant-expression cannot be narrowed from type 'double' to 'float' in initializer list [-Wc++11-narrowing]
 
 ========
  v02-06  
