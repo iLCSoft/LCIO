@@ -18,7 +18,7 @@ namespace UTIL {
    */
   class LCTime {
 
-  protected:
+  public:
     /** Helper struct that holds the calendar time.
      */
     struct CalendarTime{

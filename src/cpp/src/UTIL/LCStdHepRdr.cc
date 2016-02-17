@@ -41,8 +41,7 @@ namespace UTIL{
 
   void LCStdHepRdr::printHeader(std::ostream& os ) {
 
-    if( os == std::cout ) {
-
+    if( &os == &std::cout ) {
       _reader->printFileHeader() ;
     }
 
