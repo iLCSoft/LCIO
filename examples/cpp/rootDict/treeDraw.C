@@ -1,3 +1,9 @@
+/***********************************************************
+ load LCIO libraries before calling this macro in root:
+
+   gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+ ***********************************************************/
 
 /** Example script for testing the ROOT LCIO dictionary.
  * 
@@ -7,18 +13,13 @@
  *
  */
 
-{
+void treeDraw(const char* FILEN){
 
 
-if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-  unsigned res ;
-  
-  res = gSystem->Load("$LCIO/lib/liblcio.so"); 
-  res = gSystem->Load("$LCIO/lib/liblcioDict.so"); 
-}
 
+TFile* f = new TFile( FILEN ,"READ") ;
 
-TFile* f = new TFile("lcioTree.root","READ") ;
+TTree *t; f->GetObject("LCIO",t);
 
 
 // -------------------------
@@ -37,33 +38,22 @@ TCut isElectron("abs(MCParticlesSkimmed.getPDG())==11" ) ;
 
 
 // simple drawing of scalar variable (using API !) 
-//LCIO->Draw("MCParticlesSkimmed.getPDG()") ;
+//t->Draw("MCParticlesSkimmed.getPDG()") ;
 
-LCIO->Draw("MCParticlesSkimmed.getPDG()", isPhoton || isElectron ) ;
+t->Draw("MCParticlesSkimmed.getPDG()", isPhoton || isElectron ) ;
 
 
 
 c1->cd(2)  ;
-LCIO->Draw("MCParticlesSkimmed._endpoint[][0]:MCParticlesSkimmed._endpoint[][1]", sizeCut && isPhoton ) ;
+t->Draw("MCParticlesSkimmed._endpoint[][0]:MCParticlesSkimmed._endpoint[][1]", sizeCut && isPhoton ) ;
 
 c1->cd(3)  ;
-LCIO->Draw("MCParticlesSkimmed._endpoint[][0]:MCParticlesSkimmed._endpoint[][1]", sizeCut && isElectron ) ;
-
-
-// this syntax does not work !!!!
-// 
-//  in order to access array like data,
-//  you need to use the member variable names as shown above 
-//
-//LCIO->Draw("MCParticlesSkimmed.getEndpoint()[][0]:MCParticlesSkimmed.getEndpoint()[][1]", sizeCut) ;
-
-//LCIO->Draw("MCParticlesSkimmed.getEndpoint()[0]:MCParticlesSkimmed.getEndpoint()[1]" ) ;
-
+t->Draw("MCParticlesSkimmed._endpoint[][0]:MCParticlesSkimmed._endpoint[][1]", sizeCut && isElectron ) ;
 
 
 TH2F h_trkStop("h_trkStop","particles stopped vs in/out of tracker region" , 2 , -.5 , 1.5 , 2 , -.5 , 1.5 ) ; 
 
 c1->cd(4)  ;
-LCIO->Draw("MCParticlesSkimmed.isDecayedInTracker():MCParticlesSkimmed.isStopped()>>h_trkStop" ) ;
+t->Draw("MCParticlesSkimmed.isDecayedInTracker():MCParticlesSkimmed.isStopped()>>h_trkStop" ) ;
 
 }

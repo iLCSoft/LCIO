@@ -690,7 +690,7 @@ int main(int argc, char** argv ) {
     char *line = readline (print_prompt());
 
     // exit with CTRL+D
-    if( line == '\0' ) {
+    if( *line == '\0' ) {
         free(line);
         cout << "exit" << endl;
         leave(0);

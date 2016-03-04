@@ -1,12 +1,9 @@
-#ifndef __CINT__ 
-#include "IO/LCReader.h"
-#include "IOIMPL/LCFactory.h"
-#include "IMPL/LCCollectionVec.h"
-#include "IMPL/MCParticleImpl.h"
-#include "EVENT/LCEvent.h"
-#include "UTIL/LCTOOLS.h"
-#include <vector>
-#endif
+/***********************************************************
+ load LCIO libraries before calling this macro in root:
+
+   gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+ ***********************************************************/
 
 
 /** Example script for testing the ROOT LCIO dictionary.
@@ -23,19 +20,7 @@ void writeTree(const char* FILEN) {
   std::string mcpName("MCParticlesSkimmed") ;
 
 
-  //just in case this script is executed multiple times
-  delete gROOT->GetListOfFiles()->FindObject( FILEN );
-  delete gROOT->GetListOfCanvases()->FindObject("c1");
-  
-  if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-    unsigned res ;
-    
-    res = gSystem->Load("${LCIO}/lib/liblcio.so"); 
-    res = gSystem->Load("${LCIO}/lib/liblcioDict.so"); 
-  }
-  
-  
-  //--- create a ROOT file, a tree and a branch ...
+    //--- create a ROOT file, a tree and a branch ...
 
   TFile* file = new TFile( "lcioTree.root" , "RECREATE");    
 
@@ -68,8 +53,8 @@ void writeTree(const char* FILEN) {
   lcReader->open( FILEN ) ;
   
 
-  IMPL::LCCollectionVec emptyCol ;
-  
+  EVENT::LCEvent* evt = 0 ;
+
   //----------- the event loop -----------
   while( (evt = lcReader->readNextEvent()) != 0  && nEvents < maxEvt ) {
     
@@ -81,8 +66,6 @@ void writeTree(const char* FILEN) {
 
     IMPL::LCCollectionVec* col = (IMPL::LCCollectionVec*) evt->getCollection( mcpName  ) ;
 
-//     treeCol = col ? col : emptyCol ;
-    
     treeCol->clear() ;
 
     int nMCP = col->getNumberOfElements() ;

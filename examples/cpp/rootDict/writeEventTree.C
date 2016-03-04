@@ -1,13 +1,10 @@
-#ifndef __CINT__ 
-#include "IO/LCReader.h"
-#include "IOIMPL/LCFactory.h"
-#include "IMPL/LCCollectionVec.h"
-#include "IMPL/MCParticleImpl.h"
-#include "EVENT/LCEvent.h"
-#include "UTIL/LCTOOLS.h"
-#include <vector>
-#endif
 
+/***********************************************************
+ load LCIO libraries before calling this macro in root:
+
+   gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+ ***********************************************************/
 
 /** Example script for testing the ROOT LCIO dictionary.
  * 
@@ -18,19 +15,7 @@
  */
 
 void writeEventTree(const char* FILEN) {
-  
-  //just in case this script is executed multiple times
-  delete gROOT->GetListOfFiles()->FindObject( FILEN );
-  delete gROOT->GetListOfCanvases()->FindObject("c1");
-  
-  if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-    unsigned res ;
     
-    res = gSystem->Load("$LCIO/lib/liblcio.so"); 
-    res = gSystem->Load("$LCIO/lib/liblcioDict.so"); 
-  }
-  
-  
   //--- create a ROOT file, a tree and a branch ...
   
   TFile* file = new TFile( "lcioEventTree.root" , "RECREATE");    
@@ -64,6 +49,7 @@ void writeEventTree(const char* FILEN) {
   
 
   //----------- the event loop -----------
+  EVENT::LCEvent* evt = 0 ;
   while( (evt = lcReader->readNextEvent()) != 0  && nEvents < maxEvt ) {
     
     if( nEvents < 3 )  // only dump first 3 events

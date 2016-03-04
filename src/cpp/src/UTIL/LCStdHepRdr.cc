@@ -187,7 +187,7 @@ namespace UTIL{
 	//
 	//  Momentum vector
 	//
-	float p0[3] = {_reader->Px(IHEP),_reader->Py(IHEP),_reader->Pz(IHEP)};
+	float p0[3] = {(float)_reader->Px(IHEP),(float)_reader->Py(IHEP),(float)_reader->Pz(IHEP)};
 	mcp->setMomentum(p0);
 	//
 	//  Mass
@@ -215,10 +215,10 @@ namespace UTIL{
 	// add spin and color flow information if available 
 	if( _reader->isStdHepEv4() ){
 
-	  float spin[3] = { _reader->spinX( IHEP ) , _reader->spinY( IHEP ) ,  _reader->spinZ( IHEP )   } ;
+	  float spin[3] = {(float) _reader->spinX( IHEP ) ,(float) _reader->spinY( IHEP ) , (float) _reader->spinZ( IHEP )   } ;
 	  mcp->setSpin( spin ) ;
 
-	  int colorFlow[2] = {  _reader->colorflow( IHEP , 0 ) , _reader->colorflow( IHEP , 1 ) } ;
+	  int colorFlow[2] = {  (int)_reader->colorflow( IHEP , 0 ) ,  (int)_reader->colorflow( IHEP , 1 ) } ;
 	  mcp->setColorFlow( colorFlow ) ;
 
 	}

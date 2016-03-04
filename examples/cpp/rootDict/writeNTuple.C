@@ -1,14 +1,10 @@
-#ifndef __CINT__ 
-#include "IO/LCReader.h"
-#include "IOIMPL/LCFactory.h"
-#include "IMPL/LCCollectionVec.h"
-#include "IMPL/MCParticleImpl.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/LCEvent.h"
-#include "UTIL/LCTOOLS.h"
-#include <vector>
-#endif
 
+/***********************************************************
+ load LCIO libraries before calling this macro in root:
+
+   gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+ ***********************************************************/
 
 /** Example script for using the LCIO root dictionary.
  *  writeNTuple: 
@@ -24,24 +20,12 @@ void writeNTuple(const char* FILEN) {
 
   //  std::cout << " rootFileBaseName: " << rootFileBaseName << std::endl ;
 
-  std::string mcpName("MCParticle") ;
+  std::string mcpName("MCParticlesSkimmed") ;
 
   const char* tupleNames = "px:py:pz:vx:vy:vz:ex:ey:ez:pdg:np:nd:gs:ss" ;
   double px,py,pz,vx,vy,vz,ex,ey,ez ;
   int pdg,np,nd,gs,ss ;
 
-
-  //just in case this script is executed multiple times
-  delete gROOT->GetListOfFiles()->FindObject( FILEN );
-  delete gROOT->GetListOfCanvases()->FindObject("c1");
-  
-  if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-    unsigned res ;
-    
-    res = gSystem->Load("${LCIO}/lib/liblcio.so"); 
-    res = gSystem->Load("${LCIO}/lib/liblcioDict.so"); 
-  }
-  
   
   //--- create a ROOT file and an NTuple
 
@@ -61,6 +45,8 @@ void writeNTuple(const char* FILEN) {
 
   IMPL::LCCollectionVec emptyCol ;
   
+
+  EVENT::LCEvent* evt = 0 ;
   //----------- the event loop -----------
   while( (evt = lcReader->readNextEvent()) != 0  && nEvents < maxEvt ) {
     

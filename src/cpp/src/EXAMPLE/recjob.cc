@@ -136,7 +136,7 @@ public:
       trkHit->setTime(   tpcRawHit->getTime() ) ;
 
       int cellID = tpcRawHit->getCellID0() ;
-      double pos[3]  = { (cellID & 0xff) , (cellID & 0xff00)>>8 ,  (cellID & 0xff0000)>>16 } ;
+      double pos[3]  = { double (cellID & 0xff) ,  double ( (cellID & 0xff00)>>8 ),   double( (cellID & 0xff0000)>>16 ) } ;
       trkHit->setPosition(  pos  ) ;
 
       trkHit->rawHits().push_back( tpcRawHit ) ; // store the original raw data hit

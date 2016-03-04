@@ -241,8 +241,8 @@ endif()
 
 
 # -------- compiler definitions ----------------------------------------------
-ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
-ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
+#ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
+#ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
@@ -301,8 +301,11 @@ ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 
 IF( BUILD_ROOTDICT )
 
-    # special rootcint definitions for lcio
-    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
+  #fg: for ROOT 6 we need the .src/cpp as include directory  
+  INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
+
+    # special rootcint definitions for lcio 
+#    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
     INCLUDE( ${ROOT_DICT_MACROS_FILE} )
@@ -327,6 +330,7 @@ IF( BUILD_ROOTDICT )
 
     # list of headers to exclude
     FILE( GLOB_RECURSE exclude_headers 
+        ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h 
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
     )
@@ -379,11 +383,11 @@ IF( BUILD_ROOTDICT )
     GEN_ROOT_DICT_SOURCES( IOIMPL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
-###CCC    # ------ generate dictionary for templates ------------------
-###CCC    PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/rootDict )
-###CCC    GEN_ROOT_DICT_LINKDEF_HEADER( rootDict ${ROOT_DICT_INPUT_HEADERS} )
-###CCC    GEN_ROOT_DICT_SOURCES( rootDict.cxx )
-###CCC    LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
+    # ------ generate dictionary for templates ------------------
+    PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/rootDict )
+    GEN_ROOT_DICT_LINKDEF_HEADER( rootDict ${ROOT_DICT_INPUT_HEADERS} )
+    GEN_ROOT_DICT_SOURCES( rootDict.cxx )
+    LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
 
@@ -414,6 +418,18 @@ IF( BUILD_ROOTDICT )
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
 
     INSTALL_SHARED_LIBRARY( lcioDict DESTINATION lib )
+    
+    #fg: for root6 we also need to install the pcm files ...
+    FILE( GLOB ROOT_DICT_PCM_FILES  
+      ${ROOT_DICT_OUTPUT_DIR}/EVENT_rdict.pcm
+      ${ROOT_DICT_OUTPUT_DIR}/IMPL_rdict.pcm
+      ${ROOT_DICT_OUTPUT_DIR}/IOIMPL_rdict.pcm
+      ${ROOT_DICT_OUTPUT_DIR}/IO_rdict.pcm
+      ${ROOT_DICT_OUTPUT_DIR}/UTIL_rdict.pcm
+      ${ROOT_DICT_OUTPUT_DIR}/rootDict_rdict.pcm
+      )
+    
+    INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION lib)
 
 ENDIF()
 # ----------------------------------------------------------------------------

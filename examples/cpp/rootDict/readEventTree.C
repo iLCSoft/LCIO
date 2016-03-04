@@ -1,14 +1,10 @@
-// #include "TTree.h"
-// #include "TFile.h"
-// #include "TBranch.h"
-#ifndef __CINT__ 
-#include "IO/LCReader.h"
-#include "IOIMPL/LCFactory.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/LCCollection.h"
-#include "IMPL/LCEventImpl.h"
-#include "UTIL/LCTOOLS.h"
-#endif
+
+/***********************************************************
+ load LCIO libraries before calling this macro in root:
+
+   gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+ ***********************************************************/
 
 
 /** Example script for testing the ROOT LCIO dictionary.
@@ -20,20 +16,6 @@
  */
 
 void readEventTree(const char* FILEN) {
-  
-  //just in case this script is executed multiple times
-  delete gROOT->GetListOfFiles()->FindObject( FILEN );
-  delete gROOT->GetListOfCanvases()->FindObject("c1");
-  
-  if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-    unsigned res ;
-    
-    res = gSystem->Load("$LCIO/lib/liblcio.so"); 
-    res = gSystem->Load("$LCIO/lib/liblcioDict.so"); 
-  }
-  
-  
-  std::cout << " loaded LCIO library and dictionary ... " << std::endl ;
   
 
   //======== open file and get tree and branch =====================

@@ -157,7 +157,7 @@ int main(int argc, char** argv ){
 	  MCParticleImpl* mcp = new MCParticleImpl ;
 
 	  mcp->setPDG( 1000 * (j+1)  ) ;
-	  float p[3] = { j*1. , 4./1024. , 8./1024. } ;
+	  float p[3] = { float(j*1.) , float(4./1024.) , float(8./1024.) } ;
 	  mcp->setMomentum( p ) ;
 	  mcp->setMass( .135 ) ;
 
@@ -166,7 +166,7 @@ int main(int argc, char** argv ){
 	    MCParticleImpl* d1 = new MCParticleImpl ;
 
 	    d1->setPDG( 1000 * (j+1) + 100 * (k+1)  ) ;
-	    float pd1[3] = { k*1. , 4.1 , 8.1 } ;
+	    float pd1[3] = {  float(k*1.) ,  float(4.1) ,  float(8.1) } ;
 	    d1->setMomentum( pd1 ) ;
 	    d1->setMass( .135 ) ;
 
@@ -174,7 +174,7 @@ int main(int argc, char** argv ){
 	      MCParticleImpl* d2 = new MCParticleImpl ;
 	      
 	      d2->setPDG( 1000 * (j+1) + 100 * (k+1) + 10 *  (l+1)  ) ;
-	      float pd2[3] = { l*1. , 0.41 , 4.1 } ;
+	      float pd2[3] = {  float(l*1.) ,  float(0.41) ,  float(4.1) } ;
 	      d2->setMomentum( pd2 ) ;
 	      d2->setMass( .135 ) ;
 	      
@@ -229,7 +229,7 @@ int main(int argc, char** argv ){
 	  
 	  hit->setEnergy( 3.1415 * rand()/RAND_MAX   )  ;
 	  
-	  float pos[3] = { 1.1* rand()/RAND_MAX , 2.2* rand()/RAND_MAX , 3.3* rand()/RAND_MAX } ;
+	  float pos[3] = {  float(1.1* rand()/RAND_MAX) ,  float(2.2* rand()/RAND_MAX) ,  float(3.3* rand()/RAND_MAX) } ;
 	  
 	  // cell indices
 	  b["M"] = j % 8 ;
@@ -248,7 +248,7 @@ int main(int argc, char** argv ){
 	  calVec->push_back( hit ) ;
 	  
 	  // assign the hits randomly to MC particles
-	  float rn =  .99999*rand()/RAND_MAX ;
+	  double rn =   .99999*rand()/RAND_MAX ;
 	  int mcIndx = static_cast<int>( NMCPART * rn ) ;
 	  
 	  // in order to access a MCParticle,  we need a dynamic cast as the 

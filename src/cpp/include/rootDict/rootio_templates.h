@@ -98,16 +98,16 @@
 #pragma link C++ class std::vector<IMPL::TrackerRawDataImpl*>+;
 #pragma link C++ class std::vector<IMPL::VertexImpl*>+;
 
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::CalorimeterHitImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::RawCalorimeterHitImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::SimCalorimeterHitImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerDataImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitPlaneImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitZCylinderImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerPulseImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerRawDataImpl>+;
-#pragma link C++ class UTIL::CellIDEncoder<IMPL::SimTrackerHitImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::CalorimeterHitImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::RawCalorimeterHitImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::SimCalorimeterHitImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerDataImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitPlaneImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerHitZCylinderImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerPulseImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::TrackerRawDataImpl>+;
+// #pragma link C++ class UTIL::CellIDEncoder<IMPL::SimTrackerHitImpl>+;
 
 
 

@@ -1,11 +1,25 @@
-#ifndef __CINT__ 
-#include "IO/LCReader.h"
-#include "IOIMPL/LCFactory.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/LCCollection.h"
-#include "EVENT/LCEvent.h"
-#include "UTIL/LCTOOLS.h"
-#endif
+
+// R__LOAD_LIBRARY("liblcio" )
+// R__LOAD_LIBRARY("liblcioDict" )
+// namespace {
+//   int loadMyLibrariesTriggerFunc() {
+//     gSystem->Load("liblcio");
+//     gSystem->Load("liblcioDict");
+//     return 0 ;
+//   }
+//   static int loadMyLibraryTrigger = loadMyLibrariesTriggerFunc();
+// }
+
+/************************************************************
+fg: none of the above seem to work on MacOS w/ ROOT 6.04 
+  - so one needs to call 
+
+ gSystem->Load("liblcio");  gSystem->Load("liblcioDict");
+
+at the root prompt before calling
+
+.x ./anajob("myFile.slcio")
+************************************************************/
 
 
 /** Example script for testing the ROOT LCIO dictionary.
@@ -18,25 +32,11 @@
 void anajob(const char* FILEN) {
   
   
-  //just in case this script is executed multiple times
-  delete gROOT->GetListOfFiles()->FindObject( FILEN );
-  delete gROOT->GetListOfCanvases()->FindObject("c1");
-  
-
-  if (!TClassTable::GetDict("IMPL::ReconstructedParticleImpl")) {
-    unsigned res ;
-    
-    res = gSystem->Load("${LCIO}/lib/liblcio.so"); 
-    res = gSystem->Load("${LCIO}/lib/liblcioDict.so"); 
-  }
-
-  std::cout << " loaded LCIO library and dictionary ... " << std::endl ;
-
-
   int nEvents = 0  ;
   IO::LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
   lcReader->open( FILEN ) ;
 
+  EVENT::LCEvent* evt = 0 ;
 
   //----------- the event loop -----------
   while( (evt = lcReader->readNextEvent()) != 0 ) {
