@@ -2,6 +2,19 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+==========
+ v02-07-01
+==========
+
+ - made compatible with c++11
+    - removed old flags: -Wall -ansi -pedantic -Wno-long-long -fno-strict-aliasing
+    - fixed some "narrowing in initializer list" in examples
+ - optional ROOT dictionary now requires ROOT6
+    - adapted cmake code for generating the dictionary
+    - adapted the example/test macros
+
+  - no changes in lcio source code or EDM
+
 ========
  v02-07  
 ========
