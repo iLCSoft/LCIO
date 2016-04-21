@@ -109,6 +109,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/LCRelationNavigator.cc
   ./src/UTIL/LCSplitWriter.cc
   ./src/UTIL/LCStdHepRdr.cc
+  ./src/UTIL/LCStdHepRdrNew.cc
   ./src/UTIL/LCTime.cc
   ./src/UTIL/Operators.cc
   ./src/UTIL/lStdHep.cc
@@ -454,6 +455,7 @@ ADD_LCIO_EXAMPLE( recjob )
 ADD_LCIO_EXAMPLE( dumpevent ) 
 ADD_LCIO_EXAMPLE( copyfix ) 
 ADD_LCIO_EXAMPLE( stdhepjob ) 
+ADD_LCIO_EXAMPLE( stdhepjob_new )
 ADD_LCIO_EXAMPLE( addRandomAccess )
 ADD_LCIO_EXAMPLE( lcio_event_counter ) 
 ADD_LCIO_EXAMPLE( lcio_check_col_elements )
