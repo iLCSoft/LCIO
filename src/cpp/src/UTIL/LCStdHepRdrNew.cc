@@ -39,7 +39,7 @@ LCStdHepRdrNew::~LCStdHepRdrNew() {
 
 void LCStdHepRdrNew::printHeader(std::ostream& os) {
 
-    if (os == std::cout) {
+    if (&os == &std::cout) {
 
         _reader->printFileHeader();
     }
@@ -175,8 +175,8 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
         //
         //  Momentum vector
         //
-        float p0[3] = { _reader->Px(IHEP), _reader->Py(IHEP), _reader->Pz(IHEP) };
-        mcp->setMomentum(p0);
+	float p0[3] = {(float)_reader->Px(IHEP),(float)_reader->Py(IHEP),(float)_reader->Pz(IHEP)};
+	mcp->setMomentum(p0);
         //
         //  Mass
         //
@@ -202,10 +202,10 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
         // add spin and color flow information if available
         if (_reader->isStdHepEv4()) {
 
-            float spin[3] = { _reader->spinX(IHEP), _reader->spinY(IHEP), _reader->spinZ(IHEP) };
+	  float spin[3] = {(float) _reader->spinX( IHEP ) ,(float) _reader->spinY( IHEP ) , (float) _reader->spinZ( IHEP )   } ;
             mcp->setSpin(spin);
 
-            int colorFlow[2] = { _reader->colorflow(IHEP, 0), _reader->colorflow(IHEP, 1) };
+	    int colorFlow[2] = {  (int)_reader->colorflow( IHEP , 0 ) ,  (int)_reader->colorflow( IHEP , 1 ) } ;
             mcp->setColorFlow(colorFlow);
 
         }
@@ -455,8 +455,8 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
     for (int IHEP = 0; IHEP < NHEP; IHEP++) {
         int mom1 = _reader->mother1(IHEP) - 1;
         int mom2 = _reader->mother2(IHEP) - 1;
-        int dau1 = _reader->daughter1(IHEP) - 1;
-        int dau2 = _reader->daughter1(IHEP) - 1;
+        // int dau1 = _reader->daughter1(IHEP) - 1;
+        // int dau2 = _reader->daughter1(IHEP) - 1;
         MCParticleImpl* mcDau = (MCParticleImpl*) mcVec->getElementAt(IHEP);
         if (mom1 > 0 && mom2 == -1) {
             MCParticleImpl* mcPar = (MCParticleImpl*) mcVec->getElementAt(mom1);
