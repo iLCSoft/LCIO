@@ -55,16 +55,6 @@ public:
      */
     virtual const MCParticleVec & getDaughters() const = 0;
 
-    /** Returns the number of parents of this particle - 0 if mother.
-     * @deprecated use getParents()
-     */
-    //    public int getNumberOfParents() const ;
-    /** Returns the i-th parent of this particle.
-     * @deprecated use getParents()
-     *
-     * @see MCParticle.getNumberOfParents()
-     */
-    //public MCParticle* getParent( int i ) const ;
     /** Returns the PDG code of the particle.
      */
     virtual int getPDG() const = 0;
@@ -187,14 +177,6 @@ public:
      */
     virtual float getCharge() const = 0;
 
-    /** Returns the number of daughters of this particle.
-     * @deprecated use getDaughters()
-     */
-    //    public int  getNumberOfDaughters() const ;
-    /** Returns the i-th daughter of this particle.
-     * @deprecated use getDaughters()
-     */
-    //    public MCParticle* getDaughter(int i) const ; 
 }; // class
 } // namespace EVENT
 #endif /* ifndef EVENT_MCPARTICLE_H */

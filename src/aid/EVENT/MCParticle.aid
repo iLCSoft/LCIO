@@ -53,22 +53,6 @@ public interface MCParticle extends LCObject {
      */
     public const MCParticleVec& getDaughters() const ;
     
-
-    /** Returns the number of parents of this particle - 0 if mother.
-     * @deprecated use getParents()
-     */
-    //    public int getNumberOfParents() const ;
-
-
-    /** Returns the i-th parent of this particle.
-     * @deprecated use getParents()
-     *
-     * @see MCParticle.getNumberOfParents()
-     */
-    //public MCParticle* getParent( int i ) const ;
-
-
-
     /** Returns the PDG code of the particle.
      */
     public int getPDG() const;
@@ -210,15 +194,5 @@ public interface MCParticle extends LCObject {
      */
     public float getCharge() const;
     
-
-    /** Returns the number of daughters of this particle.
-     * @deprecated use getDaughters()
-     */
-    //    public int  getNumberOfDaughters() const ;
-    
-    /** Returns the i-th daughter of this particle.
-     * @deprecated use getDaughters()
-     */
-    //    public MCParticle* getDaughter(int i) const ; 
 
 }
