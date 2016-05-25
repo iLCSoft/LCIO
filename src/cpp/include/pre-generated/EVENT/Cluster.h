@@ -60,17 +60,19 @@ public:
     */
     virtual const FloatVec & getPositionError() const = 0;
 
-    /** Intrinsic direction of cluster at position: Theta.
-     * Not to be confused with direction cluster is seen from IP.
-     */
-    virtual float getITheta() const = 0;
-
     /** Intrinsic direction of cluster at position: Phi.
      * Not to be confused with direction cluster is seen from IP.
      */
     virtual float getIPhi() const = 0;
 
-    /** Covariance matrix of the direction (3 Parameters)
+    /** Intrinsic direction of cluster at position: Theta.
+     * Not to be confused with direction cluster is seen from IP.
+     */
+    virtual float getITheta() const = 0;
+
+    /** Covariance matrix of the direction (3 Parameters). Stored as lower triangle matrix where
+     * the order of parameters is: iPhi, iTheta. So we have cov(iPhi,iPhi), cov( iPhi, iTheta), 
+     *  cov( iTheta, iTheta).
      */
     virtual const FloatVec & getDirectionError() const = 0;
 
@@ -79,9 +81,6 @@ public:
      */
     virtual const FloatVec & getShape() const = 0;
 
-//     /** Type hypotheses: 3 Parameters: compatible with EM, HAD, muon cluster
-//      */
-//     public const FloatVec& getParticleType() const ;
     /** The particle Id's sorted by their likelihood.
      * @see ParticleID
      */

@@ -52,17 +52,19 @@ public interface Cluster extends LCObject {
     public const FloatVec& getPositionError() const ;
 
 
-    /** Intrinsic direction of cluster at position: Theta.
-     * Not to be confused with direction cluster is seen from IP.
-     */
-    public float getITheta() const ;	
-
     /** Intrinsic direction of cluster at position: Phi.
      * Not to be confused with direction cluster is seen from IP.
      */
     public float getIPhi() const ;	
 
-    /** Covariance matrix of the direction (3 Parameters)
+    /** Intrinsic direction of cluster at position: Theta.
+     * Not to be confused with direction cluster is seen from IP.
+     */
+    public float getITheta() const ;	
+
+    /** Covariance matrix of the direction (3 Parameters). Stored as lower triangle matrix where
+     * the order of parameters is: iPhi, iTheta. So we have cov(iPhi,iPhi), cov( iPhi, iTheta), 
+     *  cov( iTheta, iTheta).
      */
     public const FloatVec& getDirectionError() const ;
 
