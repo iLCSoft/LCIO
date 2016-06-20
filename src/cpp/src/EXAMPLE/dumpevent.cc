@@ -105,8 +105,8 @@ int main(int argc, char** argv ){
      
      if( dumpNthEvent ) {
        
-       if( nthEvent > 1 )
-	 lcReader->skipNEvents(  nthEvent - 1 ) ;
+     if( nthEvent > 0 )
+	   lcReader->skipNEvents(  nthEvent - 1 ) ;
 
        evt = lcReader->readNextEvent() ; 
        

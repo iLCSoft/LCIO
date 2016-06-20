@@ -428,7 +428,10 @@ namespace SIO {
   }
   
   void SIOReader::skipNEvents(int n) throw (IO::IOException, std::exception) {
-    
+     
+    if( n < 1 )  // nothing to skip
+      return ;  
+
     int eventsSkipped = 0 ;
     
     //    SIOUnpack hdrUnp( SIOUnpack::EVENTHDR ) ;
