@@ -245,6 +245,8 @@ endif()
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
+
+
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
   ${LCIO_CPPFORT_SRCS} PROPERTIES 

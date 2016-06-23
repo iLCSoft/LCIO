@@ -20,6 +20,7 @@ INCLUDE( ilcsoft_default_enable_ctest )
 INCLUDE( ilcsoft_default_library_versioning )
 INCLUDE( ilcsoft_default_build_output_directories )
 INCLUDE( ilcsoft_default_rpath_settings )
+INCLUDE( ilcsoft_default_cxx_flags )
 #INCLUDE( ilcsoft_build_32bit_compatible )
 
 
