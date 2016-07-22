@@ -41,6 +41,11 @@ IF( INSTALL_JAR )
 ENDIF()
 
 
+# install python stuff (for out-of-source-build)
+INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/src/python/" DESTINATION python )
+INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/examples/python/" DESTINATION python/examples )
+
+
 # JAVA (needed to generate c++ headers)
 if( INSTALL_JAR OR LCIO_GENERATE_HEADERS)
   INCLUDE( FindJAVA4LCIO )
