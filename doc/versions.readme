@@ -1,6 +1,22 @@
 ---------------------------------------------------------------
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
+==========
+ v02-07-02
+==========
+
+ F.Gaede:  - add EXAMPLE/readmcparticles.cc
+           - fix some documentation 
+                - Cluster: itheta/iPhi and deprecated methods in MCParticle
+           - bug fix in  SIOReader::skipNEvents: 
+                - allow to call with 0 as argument 
+           - fix handling of default CXX_FLAGS 
+             - can be overwritten on command line
+           - install also the python source code and examples (M.Petric)
+
+ J.McCormick: Implement handling of daughter to mother relationships in StdHep reader; 
+              use separate classes for now:  LCStdHepRdrNew ( and EXAMPLE/stdhepjob_new.cc )
+              - pending more testing.
 
 ==========
  v02-07-01
