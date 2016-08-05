@@ -332,39 +332,49 @@ namespace SIO {
   }
   
   void SIOReader::setUpHandlers(){
-
+    
     // use event _evt to setup the block readers from header information ....
     const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
     for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
       
       const LCCollection* col = _evt->getCollection( *name ) ;
-
-
+      
+      
       // check if block handler exists in manager
-      SIOCollectionHandler* ch = dynamic_cast<SIOCollectionHandler*> 
-	( SIO_blockManager::get( name->c_str() )  ) ;
+      SIOCollectionHandler* ch = dynamic_cast<SIOCollectionHandler*>
+      ( SIO_blockManager::get( name->c_str() )  ) ;
+      
+      // check if it is still the correct block handler
+      if( ch != 0 && ch->getTypeName().compare(col->getTypeName()) != 0 ){
+        // The type changed, so destroy the old handler and get a new one.
+        std::string chName = ch->getTypeName();
+        std::string colName= col->getTypeName();
+        std::cout << "ch name: " << chName << " col name: " << colName << std::endl;
+        delete ch;
+        ch = 0;
+      }
       
       // if not, create a new block handler
       if( ch == 0 ) {
-	
-	// create collection handler for event
-	try{
-	  ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_evt )  ;
-	  // calls   SIO_blockManager::add( ch )  in the c'tor !
-	}
-	catch(Exception& ex){   // unsuported type !
-	  delete ch ;
-	  ch =  0 ;
-	}
-
+        
+        // create collection handler for event
+        try{
+          ch =  new SIOCollectionHandler( *name, col->getTypeName() , &_evt )  ;
+          // calls   SIO_blockManager::add( ch )  in the c'tor !
+        }
+        catch(Exception& ex){   // unsuported type !
+          delete ch ;
+          ch =  0 ;
+        }
+        
       }
       // else { // handler already exists
       if( ch != 0 )
-	ch->setEvent( &_evt ) ; 
+        ch->setEvent( &_evt ) ; 
       //      }
     }
   }
-
+  
 
   LCEvent* SIOReader::readNextEvent() throw (IOException , std::exception ) {
 

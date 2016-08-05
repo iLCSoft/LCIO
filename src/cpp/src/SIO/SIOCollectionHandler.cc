@@ -41,6 +41,12 @@ namespace SIO {
 //     std::cout << " deleting SIOCollectionHandler " << _myType << std::endl ;
   }
   
+  const std::string &SIOCollectionHandler::getTypeName() const{
+    return _myType ;
+  }
+  
+
+  
   void SIOCollectionHandler::setCollection(const LCCollection *col){
     _col = col ;
   } 

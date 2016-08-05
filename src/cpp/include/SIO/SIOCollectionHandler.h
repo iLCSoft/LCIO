@@ -37,7 +37,9 @@ namespace SIO {
       throw (EVENT::Exception) ;
 
     virtual ~SIOCollectionHandler() ;
-    
+
+    const std::string &getTypeName() const;
+
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
