@@ -68,11 +68,16 @@ namespace UTIL{
 
     /** Return the charge of the particle times 3  - code copied from HepPDT package.
      */
-    int threeCharge( int pdgID ) const ;
+    int threeCharge( int pdgID ) const;
+
+    void setWriteEventNumber(bool writeEventNumber) {
+        _writeEventNumber = writeEventNumber;
+    }
 
   private:
     
 	lStdHep* _reader;
+	bool _writeEventNumber;
     
 
   }; // class

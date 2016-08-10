@@ -73,6 +73,10 @@ void LCStdHepRdrNew::updateNextEvent(IMPL::LCEventImpl* evt, const char* colName
     // ---- end event parameters  ------------------
 
     evt->addCollection(mcpCol, colName);
+
+    if (_writeEventNumber) {
+        evt->setEventNumber(_reader->evtNum());
+    }
 }
 
 //
