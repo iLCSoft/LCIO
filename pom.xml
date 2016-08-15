@@ -4,7 +4,7 @@
     <artifactId>lcio</artifactId>
     <groupId>org.lcsim</groupId>
     <name>LCIO</name>
-    <version>2.4.4-SNAPSHOT</version>
+    <version>2.7.3-SNAPSHOT</version>
     <description>Compilation, tests, and dependencies for LCIO Java Library.</description>
     <scm>
         <connection>scm:cvs:pserver:${maven.username}@cvs.freehep.org:/cvs/lcd:lcio</connection>
