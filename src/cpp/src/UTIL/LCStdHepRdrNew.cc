@@ -72,9 +72,11 @@ void LCStdHepRdrNew::updateNextEvent(IMPL::LCEventImpl* evt, const char* colName
 
     // ---- end event parameters  ------------------
 
-    evt->addCollection(mcpCol, colName);
+    //evt->addCollection(mcpCol, colName);
 
     if (_writeEventNumber) {
+        std::cout << "LCStdHepRdrNew: setting event number " << _reader->evtNum() 
+            << " from StdHep event" << std::endl;
         evt->setEventNumber(_reader->evtNum());
     }
 }
