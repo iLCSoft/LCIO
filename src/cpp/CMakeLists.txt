@@ -432,6 +432,10 @@ IF( BUILD_ROOTDICT )
       ${ROOT_DICT_OUTPUT_DIR}/rootDict_rdict.pcm
       )
     
+    #fg: it seems we need to print the list of pcm files here in order 
+    #    to ensure that they really get installed ( race conditions ??)
+    message( STATUS "{ROOT_DICT_OUTPUT_DIR} : ${ROOT_DICT_OUTPUT_DIR}  - {ROOT_DICT_PCM_FILES}: ${ROOT_DICT_PCM_FILES} " )
+
     INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION lib)
 
 ENDIF()
