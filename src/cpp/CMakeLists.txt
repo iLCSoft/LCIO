@@ -423,7 +423,7 @@ IF( BUILD_ROOTDICT )
     INSTALL_SHARED_LIBRARY( lcioDict DESTINATION lib )
     
     #fg: for root6 we also need to install the pcm files ...
-    FILE( GLOB ROOT_DICT_PCM_FILES  
+    SET( ROOT_DICT_PCM_FILES
       ${ROOT_DICT_OUTPUT_DIR}/EVENT_rdict.pcm
       ${ROOT_DICT_OUTPUT_DIR}/IMPL_rdict.pcm
       ${ROOT_DICT_OUTPUT_DIR}/IOIMPL_rdict.pcm
