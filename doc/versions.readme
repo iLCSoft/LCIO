@@ -2,6 +2,16 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
+=========
+ v02-08
+=========
+  - TO DO:
+      - release notes ( patch for HPS )
+       - apply patch from Marko/Andre ( relocatable)
+       - change version 
+       - ...
+
+
 ==========
  v02-07-03
 ==========
