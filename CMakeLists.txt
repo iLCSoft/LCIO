@@ -14,7 +14,7 @@ PROJECT( LCIO )
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
 SET( LCIO_VERSION_MINOR 7 )
-SET( LCIO_VERSION_PATCH 3 )
+SET( LCIO_VERSION_PATCH 4 )
 
 
 
@@ -264,3 +264,4 @@ MESSAGE( STATUS "" )
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake LCIOLibDeps.cmake )
 
+INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION lib/cmake)

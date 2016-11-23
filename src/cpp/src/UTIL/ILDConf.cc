@@ -2,8 +2,8 @@
 
 namespace UTIL {
   
-  // this string should never be changed really
-  const std::string ILDCellID0::encoder_string = "subdet:5,side:-2,layer:9,module:8,sensor:8" ;
+  // this string should never be changed really  
+  std::string ILDCellID0::encoder_string = "subdet:5,side:-2,layer:9,module:8,sensor:8" ;
   
   // Note: the definition of static const ints might not be strictly needed as in-class declarqtion and initialization
   //       is typically enough, however there are cases where this would result in undefined symbol linker errors

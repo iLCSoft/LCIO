@@ -47,3 +47,8 @@ src/latex/manual/manual.tex
     \title{{\Huge\bf LCIO  -  Users manual} \\ Version 00-09}
     ....
      use search and replace !
+
+
+
+./pom.xml
+<version>2.7.4-SNAPSHOT</version>

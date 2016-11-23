@@ -2,15 +2,18 @@
  Describes the changes for the different versions/tags of LCIO
 ---------------------------------------------------------------
 
-=========
- v02-08
-=========
-  - TO DO:
-      - release notes ( patch for HPS )
-       - apply patch from Marko/Andre ( relocatable)
-       - change version 
-       - ...
+==========
+ v02-07-04
+==========
 
+F.Gaede
+  - make LCIO relocatable ( as suggested by M.Petric/A.Sailer)
+     - install cmake macros
+     - use CMAKE_CURRENT_LIST_DIR in cmake config files
+
+  - remove const from ILDCellID0::encoder_string
+    - so it can be changed for CLIC/SiD as 
+      as workaround  
 
 ==========
  v02-07-03
@@ -20,6 +23,11 @@ F. Gaede:
 
     - fix issue w/ installing pcm files in cmake script 
 
+ J.McCormick: 
+
+    - apply Maurik Holtrop's patch for handling the case where 
+      collection types change in C++ reader.
+ 
 ==========
  v02-07-02
 ==========
