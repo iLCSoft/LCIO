@@ -1,0 +1,30 @@
+sudo: required
+dist: trusty
+
+services:
+  - docker
+
+language: cpp
+
+env:
+  matrix:
+    - COMPILER=gcc
+    - COMPILER=llvm
+
+# command to install dependencies
+install:
+  - shopt -s extglob dotglob
+  - mkdir Package
+  - mv !(Package) Package
+  - shopt -u dotglob
+  - export PKGDIR=${PWD}/Package
+  - curl -O https://lcd-data.web.cern.ch/lcd-data/CernVM/cernvm3-docker-latest.tar
+  - cat cernvm3-docker-latest.tar | docker import - cernvm
+
+# command to run tests
+script:
+  - docker run -t -v $PKGDIR:/Package -e COMPILER=$COMPILER cernvm /init /Package/.travis-ci.d/compile_and_test.sh
+
+# Don't send e-mail notifications
+notifications:
+  email: false
