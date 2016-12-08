@@ -41,7 +41,7 @@ ELSE()
 ENDIF()
 
 
-CHECK_CXX_COMPILER_FLAG("-fdiagnostics-color=always" CXX_FLAG_WORKS_-fdiagnostics-color)
+CHECK_CXX_COMPILER_FLAG("-fdiagnostics-color=auto" CXX_FLAG_WORKS_-fdiagnostics-color)
 IF(CXX_FLAG_WORKS_-fdiagnostics-color)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=auto")
 ENDIF()
