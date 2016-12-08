@@ -39,3 +39,9 @@ IF( USE_CXX11 )
 ELSE()
   MESSAGE( STATUS "NOT building with CXX11 standard" )
 ENDIF()
+
+
+CHECK_CXX_COMPILER_FLAG("-fdiagnostics-color=always" CXX_FLAG_WORKS_-fdiagnostics-color)
+IF(CXX_FLAG_WORKS_-fdiagnostics-color)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
+ENDIF()
