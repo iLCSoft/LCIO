@@ -6,8 +6,12 @@ INCLUDE(CheckCXXCompilerFlag)
 
 SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized )
 
-IF( NOT APPLE )
- LIST( APPEND COMPILER_FLAGS -Wl,-no-undefined )
+IF(("${CMAKE_CXX_COMPILER_ID}" EQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" EQUAL "Clang"))
+    SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+ENDIF()
+
+IF("${CMAKE_CXX_COMPILER_ID}" EQUAL "AppleClang")
+    SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
 ENDIF()
 
 
