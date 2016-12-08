@@ -1,5 +1,7 @@
 # LCIO
 
+[![Build Status](https://travis-ci.org/iLCSoft/LCIO.svg?branch=master)](https://travis-ci.org/iLCSoft/LCIO)
+
 LCIO ( **L**inear **C**ollider **I/O** ) provides the event data model (EDM) and 
 persistency solution for Linear Collider detector R&D studies.
 
