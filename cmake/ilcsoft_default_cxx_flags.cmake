@@ -4,7 +4,7 @@
 
 INCLUDE(CheckCXXCompilerFlag)
 
-SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized )
+SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -fdiagnostics-color=auto )
 
 IF(("${CMAKE_CXX_COMPILER_ID}" EQUAL "GNU") OR ("${CMAKE_CXX_COMPILER_ID}" EQUAL "Clang"))
     SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
@@ -38,10 +38,4 @@ IF( USE_CXX11 )
   ENDIF()
 ELSE()
   MESSAGE( STATUS "NOT building with CXX11 standard" )
-ENDIF()
-
-
-CHECK_CXX_COMPILER_FLAG("-fdiagnostics-color=auto" CXX_FLAG_WORKS_-fdiagnostics-color)
-IF(CXX_FLAG_WORKS_-fdiagnostics-color)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=auto")
 ENDIF()
