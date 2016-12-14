@@ -42,8 +42,7 @@ FIND_PATH( LCIO_INCLUDE_DIRS
 
 
 # ---------- libraries --------------------------------------------------------
-#INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroCheckPackageLibs.cmake" )
-INCLUDE( "${CMAKE_CURRENT_LIST_DIR}/cmake/MacroCheckPackageLibs.cmake" )
+INCLUDE( "${LCIO_ROOT}/lib/cmake/MacroCheckPackageLibs.cmake" )
 
 # only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
 # additional components are set by cmake in variable PKG_FIND_COMPONENTS

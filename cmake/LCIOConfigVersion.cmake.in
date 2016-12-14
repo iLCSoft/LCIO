@@ -3,6 +3,7 @@
 #
 # @author Jan Engels, Desy IT
 ##############################################################################
+SET( LCIO_ROOT "@CMAKE_INSTALL_PREFIX@" )
 
 
 SET( ${PACKAGE_FIND_NAME}_VERSION_MAJOR @LCIO_VERSION_MAJOR@ )
@@ -10,7 +11,6 @@ SET( ${PACKAGE_FIND_NAME}_VERSION_MINOR @LCIO_VERSION_MINOR@ )
 SET( ${PACKAGE_FIND_NAME}_VERSION_PATCH @LCIO_VERSION_PATCH@ )
 
 
-#INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroCheckPackageVersion.cmake" )
-INCLUDE( "${CMAKE_CURRENT_LIST_DIR}/cmake/MacroCheckPackageVersion.cmake" )
+INCLUDE( "${LCIO_ROOT}/lib/cmake/MacroCheckPackageVersion.cmake" )
 CHECK_PACKAGE_VERSION( ${PACKAGE_FIND_NAME} @LCIO_VERSION@ )
 
