@@ -85,9 +85,9 @@ namespace SIO {
       SIO_DATA( stream ,  particle->_endpoint  , 3 ) ;
 
       if( _vers > SIO_VERSION_ENCODE( 2, 6 )   ) {
-	float momentum[3] ;
-	SIO_DATA( stream ,  momentum  , 3 ) ;
-	particle->setMomentumAtEndpoint( momentum ) ;
+	float mom[3] ;
+	SIO_DATA( stream ,  mom  , 3 ) ;
+	particle->setMomentumAtEndpoint( mom ) ;
       }
     }
 

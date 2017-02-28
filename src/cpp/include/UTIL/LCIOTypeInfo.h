@@ -78,7 +78,7 @@ namespace UTIL{
    *  std::cout << lctypename( mcp ) << std::endl ; <br>
    */
   template <class T>
-  const char*  lctypename(const T* t) {
+  const char*  lctypename(const T* /*t*/) {
     return lctypename< typename T::lcobject_type >() ;
   }
 

@@ -289,7 +289,7 @@ return( disconnect( &s_name, block ) );
 unsigned int SIO_record::disconnect
 (
     std::string*          s_name,
-    SIO_block*            block
+    SIO_block*           /* block */
 )
 {
 

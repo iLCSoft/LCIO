@@ -271,9 +271,9 @@ namespace SIO{
 
 	raPos = ra->getPrevLocation() ;	
 
-	EVENT::long64 indexPos = ra->getIndexLocation() ;
+	EVENT::long64 idxPos = ra->getIndexLocation() ;
 
-	readLCIOIndexAt( stream , indexPos ) ;
+	readLCIOIndexAt( stream , idxPos ) ;
 
       }else{
 	throw IOException( std::string( "[LCIORandomAccessMgr::ReadEventMap()] Could not read previous LCIORandomAccess record" ) ) ;

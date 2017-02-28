@@ -428,7 +428,7 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
             int parentid = _reader->mother1(IHEP) % 10000 - 1;
             int firstdau = _reader->daughter1(IHEP) % 10000 - 1;
             int lastdau = _reader->daughter2(IHEP) % 10000 - 1;
-            int outn = lastdau - firstdau + 1;
+            unsigned outn = ( ( lastdau-firstdau +1 ) > 0 ?  lastdau-firstdau +1  : 0 ) ;
             //printf("found first parent in line %i\n",parentid);
             MCParticleImpl* parent;
 

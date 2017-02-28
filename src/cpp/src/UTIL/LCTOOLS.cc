@@ -902,18 +902,18 @@ namespace UTIL {
 
         for( int i=0 ; i< nPrint ; i++ ){
 
-            Cluster* clu = 
+            Cluster* clu1 = 
                 dynamic_cast<Cluster*>( col->getElementAt( i ) ) ;
 
-            printf("   [%8.8x] " , clu->id() ) ;
+            printf("   [%8.8x] " , clu1->id() ) ;
 
 
-            for(unsigned int l=0;l<clu->getParticleIDs().size();l++){
+            for(unsigned int l=0;l<clu1->getParticleIDs().size();l++){
 
                 if( l!=0)
                     printf("              " ) ;
 
-                ParticleID* pid = clu->getParticleIDs()[l] ;
+                ParticleID* pid = clu1->getParticleIDs()[l] ;
                 try{	
                     printf("| %6d | %6.4e | %6.6d | %8d | [",  
                             pid->getPDG() , 
@@ -1043,18 +1043,18 @@ namespace UTIL {
 
         for( int i=0 ; i< nPrint ; i++ ){
 
-            ReconstructedParticle* recP = 
+            ReconstructedParticle* recP1 = 
                 dynamic_cast<ReconstructedParticle*>( col->getElementAt( i ) ) ;
 
-            printf("   [%8.8x] " , recP->id() ) ;
+            printf("   [%8.8x] " , recP1->id() ) ;
 
 
-            for(unsigned int l=0;l<recP->getParticleIDs().size();l++){
+            for(unsigned int l=0;l<recP1->getParticleIDs().size();l++){
 
                 if( l!=0)
                     printf("              " ) ;
 
-                ParticleID* pid = recP->getParticleIDs()[l] ;
+                ParticleID* pid = recP1->getParticleIDs()[l] ;
                 try{	
                     printf("| %6d | %6.4e | %6.6d | %8d | [",  
                             pid->getPDG() , 

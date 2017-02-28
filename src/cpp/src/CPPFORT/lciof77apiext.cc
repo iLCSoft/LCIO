@@ -96,9 +96,9 @@ PTRTYPE lcreadnextrunheader(PTRTYPE reader , int* irun , void* detname , void* d
 
     PTRTYPE stringpos ;
     stringpos = reinterpret_cast<PTRTYPE>( detname ) ;
-    char* detname = reinterpret_cast<char*>( stringpos ) ;
+    char* detnam = reinterpret_cast<char*>( stringpos ) ;
     const char* detectorname = runHdr->getDetectorName().c_str() ;
-    strcpy(detname,detectorname) ;
+    strcpy(detnam,detectorname) ;
     stringpos = reinterpret_cast<PTRTYPE>( description ) ;
     char* descr = reinterpret_cast<char*>( stringpos ) ;
     const char* rundescription = runHdr->getDescription().c_str() ;

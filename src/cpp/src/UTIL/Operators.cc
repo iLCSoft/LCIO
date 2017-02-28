@@ -268,7 +268,7 @@ namespace UTIL{
     //   # LCGenericObject
     //============================================================================
 
-    const std::string& header(const EVENT::LCGenericObject *obj, const EVENT::LCCollection *col){ //hauke
+  const std::string& header(const EVENT::LCGenericObject* /*obj*/, const EVENT::LCCollection *col){ //hauke
         //const EVENT::LCCollection *col = &v;
         bool isFixedSize  =  BitSet32( col->getFlag() ).test( LCIO::GOBIT_FIXED);
         stringstream header;
@@ -597,8 +597,7 @@ namespace UTIL{
         return _t;
     }
 
-    std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCParameters>& sV){ //hauke
-        //const EVENT::LCParameters* hit = sV.obj;
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCParameters>& /*sV*/){ //hauke
         out << noshowpos;
         out << "| " << hex << setw(8) << setfill(' ')<< " |";
         return out;
@@ -820,8 +819,7 @@ namespace UTIL{
         return _t;
     }
 
-    std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCIO>& sV){ //hauke
-        //const EVENT::LCIO* hit = sV.obj;
+  std::ostream& operator<<( std::ostream& out, const UTIL::lcio_short<EVENT::LCIO>& /*sV*/){ //hauke
         out << noshowpos;
         out << " " << endl;
         return out;

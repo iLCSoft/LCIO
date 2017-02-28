@@ -77,7 +77,7 @@ string prompt = "";
 LCReader* lcReader;
 LCRunHeader *runHdr ;
 LCEvent *event;
-LCCollection *col;
+LCCollection *gCol;
 
 
 /** 
@@ -131,7 +131,7 @@ void int_handler(int sig) {
 }
 
 void term_handler(int sig) {
-  cout << "leaving.." << endl;
+  cout << "leaving.. " << sig << endl;
   leave(1);
 }
 
@@ -144,7 +144,9 @@ void term_handler(int sig) {
 
 void begin_paging(pagerInfo*file) {
   if (!(file->save)) {
-    file->filename = tmpnam (NULL);
+    std::string s("./tmp_lcio_file.XXXXXX" );
+    char* cp = &s[0] ;
+    file->filename = mktemp( cp ) ; //tmpnam (NULL);
   }
 
   // C style output redirection (changing file descriptors)
@@ -330,14 +332,14 @@ void fun_print(string colNr, string flag) {
   if ((event = lcReader->readEvent( position[RUN].first, position[EVT].first )) != 0) {
     const vector<string> *colVec = event->getCollectionNames();
     if (c < colVec->size()) {
-      col = event->getCollection((*colVec)[c]);
+      gCol = event->getCollection((*colVec)[c]);
       cout << "name:     " << (*colVec)[c] << endl;
-      cout << "type:     " << col->getTypeName() << endl;
+      cout << "type:     " << gCol->getTypeName() << endl;
   
       if (flag == "-s") {
-        simplePrintCol(col);
+        simplePrintCol(gCol);
       } else {
-        normalPrintCol(col);
+        normalPrintCol(gCol);
       }
     }
   }
@@ -396,8 +398,8 @@ void lsCollections() {
     vector<string>::const_iterator it;
     vector<string>::const_iterator itEnd = colVec->end();
     for( it = colVec->begin(); it != itEnd ; it++ ){
-      col = event->getCollection(*it);
-      cout << "[" << setw(2) << i << "] " << left << setw(25) << *it << "  " << setw(20) << col->getTypeName() << "  " << right << setw(3) << col->getNumberOfElements () <<  endl;
+      gCol = event->getCollection(*it);
+      cout << "[" << setw(2) << i << "] " << left << setw(25) << *it << "  " << setw(20) << gCol->getTypeName() << "  " << right << setw(3) << gCol->getNumberOfElements () <<  endl;
       i++;
     }
   } else {
