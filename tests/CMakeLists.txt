@@ -13,7 +13,11 @@
 ADD_CUSTOM_TARGET( tests )
 
 # lcio.jar needed for java tests
-ADD_DEPENDENCIES( tests jar )
+ADD_DEPENDENCIES( tests )
+
+IF( INSTALL_JAR )
+  ADD_DEPENDENCIES( jar )
+ENDIF()
 
 # simjob/anajob/recjob needed for c++ tests
 ADD_DEPENDENCIES( tests examples )
