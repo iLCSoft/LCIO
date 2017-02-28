@@ -144,9 +144,8 @@ void term_handler(int sig) {
 
 void begin_paging(pagerInfo*file) {
   if (!(file->save)) {
-    std::string s("./tmp_lcio_file.XXXXXX" );
-    char* cp = &s[0] ;
-    file->filename = mktemp( cp ) ; //tmpnam (NULL);
+    std::string s("./lcio_lsh.tmp" );
+    file->filename =  &s[0] ;
   }
 
   // C style output redirection (changing file descriptors)
@@ -800,8 +799,8 @@ int main(int argc, char** argv ) {
       pageOutput = false;
       ++run;
     } while (!outputSuccess); // repeat until output succesfully printed (max two runs)
-    if (run != 1) {
-      cout << "  paging failed - active pager: " << pager << endl;
+    if (run > 2) {
+      cout << "  paging failed - active pager: " << pager << " run:  " << run << endl;
       cout << "  You can set another pager with:  pager <command>" << endl;
     }
     
