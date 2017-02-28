@@ -7,8 +7,6 @@
 #include <cstdlib>
 #include <sstream>
 
-static std::vector<std::string> FILEN ; 
-
 using namespace std ;
 using namespace lcio ;
 

@@ -34,13 +34,9 @@ namespace UTIL{
     _wrt->open( getFilename() ) ;
   }
   
-  void LCSplitWriter::open(const std::string & filename, int writeMode) throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::open(const std::string & , int ) throw (IO::IOException, std::exception ) {
       throw Exception(" LCSplitWriter doesn't support  NEW and APPEND mode ! "
 		      " Please remove your old file(s) and use the default mode." ) ;
-
-    //     _count = 0 ;
-    //     setBaseFilename( filename ) ;
-    //     _wrt->open( getFilename() , writeMode ) ;
   }
   
   void LCSplitWriter::writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IO::IOException, std::exception ) {

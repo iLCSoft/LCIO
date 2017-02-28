@@ -33,7 +33,7 @@ const static string testname="test_splitting";
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
 
     // this should be the first line in your test
     TEST MYTEST=TEST( testname, std::cout );
@@ -49,7 +49,7 @@ int main(int argc, char** argv ){
         inputFilesVec.push_back( FILE_BASENAME + ".002" + FILE_EXTENSION );
 
         // remove files if needed
-        for(int i=0 ; i<inputFilesVec.size() ; i++){
+        for(unsigned i=0 ; i<inputFilesVec.size() ; i++){
             remove( inputFilesVec[i].c_str() );
         }
 

@@ -452,7 +452,7 @@ namespace UTIL{
             int parentid = _reader->mother1(IHEP)%10000 - 1;
             int firstdau = _reader->daughter1(IHEP)%10000 - 1;
             int lastdau =  _reader->daughter2(IHEP)%10000 - 1;
-            int outn = lastdau-firstdau +1;
+            unsigned outn = ( ( lastdau-firstdau +1 ) > 0 ?  lastdau-firstdau +1  : 0 ) ;
             //printf("found first parent in line %i\n",parentid);
             MCParticleImpl* parent;
 
@@ -461,7 +461,9 @@ namespace UTIL{
             for (unsigned int nextparentid = parentid; IHEP-nextparentid>0; nextparentid++){
                 //printf("     check line %i ", nextparentid);
                 parent =  dynamic_cast<MCParticleImpl*>(mcVec->getElementAt(nextparentid));
-                if((parent->getGeneratorStatus()==2)&&(parent->getDaughters().size()==0)&&mcp->getParents().size()<outn){
+                if(( parent->getGeneratorStatus()==2) &&
+		   (parent->getDaughters().size()==0) &&
+		   mcp->getParents().size()<outn){
                     mcp->addParent(parent);
                     //printf(" -> relation fixed\n");
                     nic--;

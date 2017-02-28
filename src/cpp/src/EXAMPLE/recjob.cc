@@ -93,7 +93,7 @@ public:
     delete lcWrt ;
   }
   
-  void processEvent( LCEvent * evt ) { /* used for 'read only' access*/ 
+  void processEvent( LCEvent* evt ) { /* used for 'read only' access*/ 
 
 
     // this is our event loop code
@@ -321,8 +321,7 @@ public:
 	const LCObjectVec& simHits = rel.getRelatedToObjects( calHit ) ;
 	const FloatVec& weights = rel.getRelatedToWeights( calHit ) ;
 
-	int nSimHits = simHits.size() ;
-	for(int k=0;k<nSimHits;k++){
+	for(int k=0,nSH = simHits.size(); k<nSH;k++){
 	  
 	  std::cout << " [" << simHits[k]->id() << "] (" 
 		    <<  weights[k]  << ") "  ;
@@ -729,7 +728,7 @@ public:
     lcWrt->writeRunHeader( run ) ;
   }
 
-  void modifyRunHeader(LCRunHeader* run){/*  we don't modify anything */;}
+  void modifyRunHeader(LCRunHeader*  /*run*/){/*  we don't modify anything */;}
 
 
 } ;

@@ -179,7 +179,7 @@ void SIO_blockManager::clear() {
     blockNames.push_back( iter->first  ) ;
   }
 
-  for(int i=0 ;i<blockNames.size() ;i++){
+  for(unsigned i=0 ;i<blockNames.size() ;i++){
     delete (*blockMap)[ blockNames[i] ] ;
   }
   

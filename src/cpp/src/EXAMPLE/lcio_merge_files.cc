@@ -49,8 +49,8 @@ class RunEventProcessor : public LCRunListener, public LCEventListener{
             lcWrt->close()  ;
             cout << "merged " << nEvent << " events from " << _nFiles << " input files." << endl ; 
         }
-
-        void modifyEvent( LCEvent * evt ) {  /*no changes to event ! */ ; }
+  
+       void modifyEvent( LCEvent * /* evt */) {  /*no changes to event ! */ ; }
 
         void processEvent( LCEvent * evt ) {  
 
@@ -61,7 +61,7 @@ class RunEventProcessor : public LCRunListener, public LCEventListener{
             // 	 << " [run: " << evt->getRunNumber() << "] copied" << endl ;
         }
 
-        void modifyRunHeader(LCRunHeader* run){  /*no changes to event ! */ ;}
+        void modifyRunHeader(LCRunHeader* /*run*/ ){  /*no changes to event ! */ ;}
 
         // don't manipulate run headers - use analyze 
         void processRunHeader( LCRunHeader* run){

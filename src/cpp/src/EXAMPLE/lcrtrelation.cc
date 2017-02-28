@@ -50,7 +50,7 @@ struct ParentDaughter : LCNToNRelation<ParentDaughter,MCParticle,MCParticle> {} 
  *  requires recjob.slcio (from simjob/recjob).
  */
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
 
 
   LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;

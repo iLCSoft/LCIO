@@ -248,8 +248,8 @@ int main(int argc, char** argv ){
 	  calVec->push_back( hit ) ;
 	  
 	  // assign the hits randomly to MC particles
-	  double rn =   .99999*rand()/RAND_MAX ;
-	  int mcIndx = static_cast<int>( NMCPART * rn ) ;
+	  double rnd =   .99999*rand()/RAND_MAX ;
+	  int mcIndx = static_cast<int>( NMCPART * rnd ) ;
 	  
 	  // in order to access a MCParticle,  we need a dynamic cast as the 
 	  // LCCollection returns an LCIOObject - this is like vectors in Java 
@@ -336,8 +336,8 @@ int main(int argc, char** argv ){
 	  hit->setPosition( pos ) ; 
 	  
 	  // assign the hits randomly to MC particles
-	  float rn =  .99999*rand()/RAND_MAX ;
-	  int mcIndx = static_cast<int>( NMCPART * rn ) ;
+	  float rnd =  .99999*rand()/RAND_MAX ;
+	  int mcIndx = static_cast<int>( NMCPART * rnd ) ;
 	  
 
 // 	  hit->setMCParticle( dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx ) ) ) ;

@@ -34,7 +34,7 @@ const static string testname="random_access";
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
     
     // this should be the first line in your test
     TEST MYTEST=TEST( testname, std::cout );
@@ -137,9 +137,9 @@ int main(int argc, char** argv ){
       lcReader->getRuns( runs ) ;
       lcReader->getEvents( events ) ;
 
-      MYTEST( runs.size() , 10 , " LCReader::getRuns( runs )  - size 'runs' is not 10" );
+      MYTEST( runs.size() , 10u , " LCReader::getRuns( runs )  - size 'runs' is not 10" );
 
-      MYTEST( events.size()  , 200 , " LCReader::getEvents( events ) - size of 'events' is not 200" );
+      MYTEST( events.size()  , 200u , " LCReader::getEvents( events ) - size of 'events' is not 200" );
 
       // for(int i=0,nElements= events.size() /2 ; i < nElements ; ++i){
       // 	std::cout << " test_random_access - i*2 =  " << i*2 << " runnum = " 

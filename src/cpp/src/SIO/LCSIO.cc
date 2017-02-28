@@ -68,7 +68,7 @@ namespace SIO {
 
     for( unsigned i=0; i < NumberOfRecords ; ++i ){
 
-      LCSIO::records()[ i ]->setUnpack( _flags ) ;
+      LCSIO::records()[ i ]->setUnpack( _flags[i] ) ;
     }
     
   }

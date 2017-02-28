@@ -55,8 +55,8 @@ namespace HEPEVTIMPL{
 	  mcp->addParent( mom ) ;
 	  if( parent2 > 0 )
 	    for(int i = parent1 ; i < parent2 ; i++ ){ 
-	      MCParticle* mom = dynamic_cast<MCParticle*>( mcVec->getElementAt( i ) ) ;
-	      mcp->addParent( mom ) ;
+	      MCParticle* mom2 = dynamic_cast<MCParticle*>( mcVec->getElementAt( i ) ) ;
+	      mcp->addParent( mom2 ) ;
 	    }
         }
       }

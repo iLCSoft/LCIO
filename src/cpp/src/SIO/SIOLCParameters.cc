@@ -12,7 +12,7 @@ namespace SIO{
     
   unsigned int SIOLCParameters::read(SIO_stream* stream, 
 				     LCParameters& params,  
-				     unsigned int vers) {
+				     unsigned int /*vers*/) {
 
     unsigned int status ; 
 	

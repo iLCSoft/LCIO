@@ -20,7 +20,7 @@ const static string testname="mytest";
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
     
     // this should be the first line in your test
     TEST MYTEST=TEST( testname, std::cout );

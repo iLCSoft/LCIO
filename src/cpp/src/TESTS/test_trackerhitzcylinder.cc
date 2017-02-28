@@ -31,7 +31,7 @@ const static string testname="test_trackerhitzcylinder";
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
 
     // this should be the first line in your test
     TEST MYTEST=TEST( testname, std::cout );
@@ -127,7 +127,7 @@ int main(int argc, char** argv ){
 
                 const FloatVec& cov = trkHit->getCovMatrix() ;
 
-                MYTEST( cov.size() , 6 , " cov.size() != 6  " ) ;
+                MYTEST( cov.size() , 6u , " cov.size() != 6  " ) ;
 
                 MYTEST( cov[0] , 0 , " cov[0] " ) ;
                 MYTEST( cov[1] , 0 , " cov[1] " ) ;

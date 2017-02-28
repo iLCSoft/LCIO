@@ -33,7 +33,7 @@ const static string testname="test_tracks";
 
 //=============================================================================
 
-int main(int argc, char** argv ){
+int main(int /*argc*/, char** /*argv*/ ){
 
     // this should be the first line in your test
     TEST MYTEST=TEST( testname, std::cout );
@@ -124,8 +124,8 @@ int main(int argc, char** argv ){
 		     
 		    float k( ki );
 
-                    float cov[15] = { k+1,k+2,k+3,k+4,k+5,k+6,k+7,k+8,k+9,k+10,k+11,k+12,k+13,k+14,k+15 } ;
-                    float ref[3] = { k*1 , k*2 , k*3 } ;
+                    float covL[15] = { k+1,k+2,k+3,k+4,k+5,k+6,k+7,k+8,k+9,k+10,k+11,k+12,k+13,k+14,k+15 } ;
+                    float refL[3] = { k*1 , k*2 , k*3 } ;
 
                     TrackStateImpl* trkstate = new TrackStateImpl(
                             k,                  // location
@@ -134,8 +134,8 @@ int main(int argc, char** argv ){
                             ( (i+j+k) * .1 ),   // omega
                             ( i*j*k * .1 ),     // z0
                             ( (i+j+k) * .2 ),   // tanlambda
-                            cov,
-                            ref
+                            covL,
+                            refL
                             );
                     trk->addTrackState( trkstate ) ;
                 }
@@ -222,9 +222,9 @@ int main(int argc, char** argv ){
                 ++j ;
             }
 
-            stringstream ss;
-            ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "Tracks using the LCIterator<Track>.\n" ; 
-            MYTEST.LOG( ss.str()  ) ;
+            stringstream ssG;
+            ssG <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "Tracks using the LCIterator<Track>.\n" ; 
+            MYTEST.LOG( ssG.str()  ) ;
 
 
             j=0 ;
@@ -262,9 +262,9 @@ int main(int argc, char** argv ){
                 ++j ;
             }
 
-            ss.str("");
-            ss <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "TracksCopies using the LCIterator<Track>.\n" ; 
-            MYTEST.LOG( ss.str()  ) ;
+            ssG.str("");
+            ssG <<  " read back " << it->getNumberOfElements() << " tracks  from collection " << "TracksCopies using the LCIterator<Track>.\n" ; 
+            MYTEST.LOG( ssG.str()  ) ;
 
 
 
@@ -274,7 +274,7 @@ int main(int argc, char** argv ){
 
             MYTEST.LOG(" reading back TracksWithMultipleStates " ) ;
 
-            for(int j=0 ; j<NTRACKS ; j++ ){
+            for( j=0 ; j<NTRACKS ; j++ ){
 
                 //std::cout << " testing track " << j << std::endl ;
 
@@ -322,20 +322,20 @@ int main(int argc, char** argv ){
                     MYTEST( trackstates[k]->getD0(),  float( i*j*k * .1 ), "getD0" ) ;
                     MYTEST( trackstates[k]->getZ0(),  float( i*j*k * .1 ), "getZ0" ) ;
 
-                    const FloatVec& cov = trackstates[k]->getCovMatrix() ;
+                    const FloatVec& covM = trackstates[k]->getCovMatrix() ;
 
-                    for( unsigned int l=0 ; l<cov.size() ; l++ ){
+                    for( unsigned int l=0 ; l<covM.size() ; l++ ){
                         stringstream ss;
                         ss << " cov[" << l << "] " ;
-                        MYTEST( cov[l] , float(k+(l+1)) , ss.str() ) ;
+                        MYTEST( covM[l] , float(k+(l+1)) , ss.str() ) ;
                     }
 
-                    const float* ref = trackstates[k]->getReferencePoint() ;
+                    const float* refL = trackstates[k]->getReferencePoint() ;
 
                     for( unsigned int l=0 ; l<3 ; l++ ){
                         stringstream ss;
                         ss << " ref[" << l << "] " ;
-                        MYTEST( ref[l] , float(k*(l+1)) , ss.str() ) ;
+                        MYTEST( refL[l] , float(k*(l+1)) , ss.str() ) ;
                     }
                 }
 
@@ -382,20 +382,20 @@ int main(int argc, char** argv ){
                     MYTEST( trackstatesc[k]->getD0(),  float( i*j*k * .1 ), "getD0" ) ;
                     MYTEST( trackstatesc[k]->getZ0(),  float( i*j*k * .1 ), "getZ0" ) ;
 
-                    const FloatVec& cov = trackstatesc[k]->getCovMatrix() ;
+                    const FloatVec& covM = trackstatesc[k]->getCovMatrix() ;
 
-                    for( unsigned int l=0 ; l<cov.size() ; l++ ){
+                    for( unsigned int l=0 ; l<covM.size() ; l++ ){
                         stringstream ss;
                         ss << " cov[" << l << "] " ;
-                        MYTEST( cov[l] , float(k+(l+1)) , ss.str() ) ;
+                        MYTEST( covM[l] , float(k+(l+1)) , ss.str() ) ;
                     }
 
-                    const float* ref = trackstatesc[k]->getReferencePoint() ;
+                    const float* refL = trackstatesc[k]->getReferencePoint() ;
 
                     for( unsigned int l=0 ; l<3 ; l++ ){
                         stringstream ss;
                         ss << " ref[" << l << "] " ;
-                        MYTEST( ref[l] , float(k*(l+1)) , ss.str() ) ;
+                        MYTEST( refL[l] , float(k*(l+1)) , ss.str() ) ;
                     }
                 }
 
