@@ -12,11 +12,10 @@
 # global target for building tests
 ADD_CUSTOM_TARGET( tests )
 
-# lcio.jar needed for java tests
-ADD_DEPENDENCIES( tests )
 
 IF( INSTALL_JAR )
-  ADD_DEPENDENCIES( jar )
+# lcio.jar needed for java tests
+  ADD_DEPENDENCIES(tests jar )
 ENDIF()
 
 # simjob/anajob/recjob needed for c++ tests
