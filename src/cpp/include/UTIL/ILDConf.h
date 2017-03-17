@@ -4,6 +4,7 @@
 
 #include <string>
 #include "CellIDEncoder.h"
+#include "CellIDDecoder.h"
 #include "LCTrackerConf.h"
 
 
