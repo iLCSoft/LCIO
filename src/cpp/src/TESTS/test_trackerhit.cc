@@ -17,6 +17,7 @@
 #include "UTIL/CellIDEncoder.h"
 #include "UTIL/CellIDDecoder.h"
 #include "UTIL/ILDConf.h"
+#include "UTIL/LCTrackerConf.h"
 
 //#include <iostream>
 
@@ -63,7 +64,7 @@ int main(int /*argc*/, char** /*argv*/ ){
 
 	    ILDCellIDEncoder<TrackerHitImpl> idEnc( "readoutUnit:8,daqChannel:16,"  ,   trkHits ) ;
 	    //   this is effectively the same as:
-	    //	 CellIDEncoder<TrackerHitImpl> idEnc( ILDCellID0::encoder_string + ",readoutUnit:8,daqChannel:16"  ,   trkHits ) ;
+	    //	 CellIDEncoder<TrackerHitImpl> idEnc( LCTrackerCellID::encoding_string() + ",readoutUnit:8,daqChannel:16"  ,   trkHits ) ;
 
 
 
@@ -73,11 +74,11 @@ int main(int /*argc*/, char** /*argv*/ ){
 
 	      idEnc.reset() ;
 
-	      idEnc[ ILDCellID0::subdet ]  = ILDDetID::FTD ;
-	      idEnc[ ILDCellID0::layer  ]  = j % 100 ; 
-	      idEnc[ ILDCellID0::side   ]  = ILDDetID::bwd ; 
-	      idEnc[ ILDCellID0::module ]  = j / 100 + 1 ; 
-	      idEnc[ ILDCellID0::sensor ]  = j % 4  ; 
+	      idEnc[ LCTrackerCellID::subdet() ]  = ILDDetID::FTD ;
+	      idEnc[ LCTrackerCellID::layer() ]  = j % 100 ;
+	      idEnc[ LCTrackerCellID::side()   ]  = ILDDetID::bwd ;
+	      idEnc[ LCTrackerCellID::module() ]  = j / 100 + 1 ;
+	      idEnc[ LCTrackerCellID::sensor() ]  = j % 4  ;
 	      idEnc["daqChannel"] =  j*8 ;
 	      
 	      idEnc.setCellID( trkHit ) ;
@@ -131,11 +132,11 @@ int main(int /*argc*/, char** /*argv*/ ){
                 TrackerHit* trkHit = dynamic_cast<TrackerHit*>(trkHits->getElementAt(j)) ;
 
 
-		MYTEST( idDec(trkHit)[ ILDCellID0::subdet ]  , ILDDetID::FTD , " cellID(trkHit) == ( ILDDetID::FTD  ) " ) ;
-		MYTEST( idDec(trkHit)[ ILDCellID0::layer  ]  , j % 100       , " cellID(trkHit) == ( j % 100        ) " ) ; 
-		MYTEST( idDec(trkHit)[ ILDCellID0::side   ]  , ILDDetID::bwd , " cellID(trkHit) == ( ILDDetID::bwd  ) " ) ; 
-		MYTEST( idDec(trkHit)[ ILDCellID0::module ]  , j / 100 + 1   , " cellID(trkHit) == ( j / 100 + 1    ) " ) ; 
-		MYTEST( idDec(trkHit)[ ILDCellID0::sensor ]  , j % 4         , " cellID(trkHit) == ( j % 4          ) " ) ; 
+		MYTEST( idDec(trkHit)[ LCTrackerCellID::subdet() ]  , ILDDetID::FTD , " cellID(trkHit) == ( ILDDetID::FTD  ) " ) ;
+		MYTEST( idDec(trkHit)[ LCTrackerCellID::layer()  ]  , j % 100       , " cellID(trkHit) == ( j % 100        ) " ) ;
+		MYTEST( idDec(trkHit)[ LCTrackerCellID::side()   ]  , ILDDetID::bwd , " cellID(trkHit) == ( ILDDetID::bwd  ) " ) ;
+		MYTEST( idDec(trkHit)[ LCTrackerCellID::module() ]  , j / 100 + 1   , " cellID(trkHit) == ( j / 100 + 1    ) " ) ;
+		MYTEST( idDec(trkHit)[ LCTrackerCellID::sensor() ]  , j % 4         , " cellID(trkHit) == ( j % 4          ) " ) ;
 		MYTEST( idDec(trkHit)["daqChannel"]          , j*8           , " cellID(trkHit) == ( j*8            ) " ) ;
 
 
