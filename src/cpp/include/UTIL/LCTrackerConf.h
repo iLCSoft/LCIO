@@ -22,6 +22,16 @@ namespace UTIL {
    */
   class LCTrackerCellID{
     
+
+    enum {
+      subdetID = 0 ,
+      sideID   = 1 ,
+      layerID  = 2 ,
+      moduleID = 3 ,
+      sensorID = 4 ,
+    } ;
+
+
   public:
 
     static LCTrackerCellID& instance() { 
@@ -30,19 +40,19 @@ namespace UTIL {
     } 
 
     /// index of subdet in cellID
-    static const unsigned subdet = 0 ;
+    static unsigned subdet() { return subdetID ; }
 
     /// index of side in cellID
-    static const unsigned side   = 1 ;
+    static unsigned side()  { return sideID ; }
 
     /// index of layer in cellID
-    static const unsigned layer  = 2 ;
+    static unsigned layer()  { return layerID ; }
 
     /// index of module in cellID
-    static const unsigned module = 3 ;
+    static unsigned module()  { return moduleID ; }
 
     /// index of sensor in cellID
-    static const unsigned sensor = 4 ;
+    static unsigned sensor() { return sensorID ; }
 
 
     /// c'tor initialize the encoding string with the 'canonical' encoding 
@@ -50,9 +60,9 @@ namespace UTIL {
 		       _accessed(false) {}
     
     // get the current encoding string
-    const std::string& encoding_string() {
-      _accessed = true;
-      return _encoding ;
+    static const std::string& encoding_string() {
+      instance()._accessed = true;
+      return instance()._encoding ;
     }
     
     /// return a string with the details of the given id:
@@ -66,6 +76,26 @@ namespace UTIL {
     /// set the encoding string. Throws exception if it was already accessed to prevent inconsistencies
     void set_encoding_string( const std::string& encoding_string ) {
       if( _accessed ) throw std::logic_error( "The encoding string was already accessed! Changing it now will lead to inconsistencies! Fix your code!" );
+
+      bool isValid = true ;
+
+      unsigned long long subdetPos = encoding_string.find( "subdet" ) ;
+      unsigned long long sidePos   = encoding_string.find( "side" ) ;
+      unsigned long long layerPos  = encoding_string.find( "layer" ) ;
+      unsigned long long modulePos = encoding_string.find( "module" ) ;
+      unsigned long long sensorPos = encoding_string.find( "sensor" ) ;
+
+      isValid = ( subdetPos  != std::string::npos &&
+		  sidePos    != std::string::npos &&
+		  layerPos   != std::string::npos &&
+		  modulePos  != std::string::npos &&
+		  sensorPos  != std::string::npos &&
+		  ( subdetPos < sidePos < layerPos < modulePos < sensorPos  ) ) ;
+
+
+      if( ! isValid ) throw std::runtime_error(" LCTrackerCellID::set_encoding_string(): string needs to contain"
+					       " \"subdet:A,side:B,layer:C,module:D,sensor:E\" " ) ;
+
       _encoding = encoding_string;
     }
     
