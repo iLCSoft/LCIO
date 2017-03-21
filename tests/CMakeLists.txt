@@ -258,6 +258,7 @@ ADD_LCIO_TEST( test_trackerhitzcylinder )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
 ADD_LCIO_TEST( test_splitting )
+ADD_LCIO_TEST( test_lctrackercellid )
 
 if( INSTALL_JAR )
   ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
