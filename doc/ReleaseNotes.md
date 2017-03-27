@@ -1,18 +1,9 @@
----------------------------------------------------------------
- Describes the changes for the different versions/tags of LCIO
----------------------------------------------------------------
-
-==========
- v02-07-05
-==========
+# v02-07-05
 
 F.Gaede
   - fix all warnings in LCIO (llvm/clang 8.0)
 
-
-==========
- v02-07-04
-==========
+# v02-07-04
 
 F.Gaede
   - make LCIO relocatable ( as suggested by M.Petric/A.Sailer)
@@ -23,9 +14,7 @@ F.Gaede
     - so it can be changed for CLIC/SiD as 
       as workaround  
 
-==========
- v02-07-03
-==========
+# v02-07-03
 
 F. Gaede:
 
@@ -36,9 +25,7 @@ F. Gaede:
     - apply Maurik Holtrop's patch for handling the case where 
       collection types change in C++ reader.
  
-==========
- v02-07-02
-==========
+# v02-07-02
 
  F.Gaede:  - add EXAMPLE/readmcparticles.cc
            - fix some documentation 
@@ -53,9 +40,7 @@ F. Gaede:
               use separate classes for now:  LCStdHepRdrNew ( and EXAMPLE/stdhepjob_new.cc )
               - pending more testing.
 
-==========
- v02-07-01
-==========
+# v02-07-01
 
  - made compatible with c++11
     - removed old flags: -Wall -ansi -pedantic -Wno-long-long -fno-strict-aliasing
@@ -66,9 +51,7 @@ F. Gaede:
 
   - no changes in lcio source code or EDM
 
-========
- v02-07  
-========
+# v02-07
 
  N.Graf
   - Added support for new momentumAtEndpoint feature
@@ -101,9 +84,7 @@ F. Gaede:
  T.Bisanz
     - made UTIL::LCTime and UTIL::LCStdHepRdr compatible with gcc 5.3.1
    
-========
- v02-06  
-========
+# v02-06
     - patched C++ documentation (F.Gaede):
       - create a search field on the doxygen page
       - allow to create doxygen only (no latex and/or html)
@@ -121,9 +102,7 @@ F. Gaede:
           now, a rebuid is necessary when installing this patch release.
 
 
-==========
- v02-05  
-===========
+# v02-05
 
 	- Several changes by J. McCormick on the JAVA side:
 		Work on LCIO-31 and LCIO-32.
@@ -138,9 +117,7 @@ F. Gaede:
       - turned LCIO_GENERATE_HEADERS off ( generation of headers with java is broken )
 
 
-==========
- v02-04-03
-===========
+# v02-04-03
 
 	- Added a statement about the minimum python version to use
 
@@ -148,9 +125,7 @@ F. Gaede:
 
 
 
-============
-  v02-04-02 
-============
+# v02-04-02
 
      - add template std::string toString(const T* obj) for
        easy printing w/o operators (e.g. from Python)
@@ -165,9 +140,7 @@ F. Gaede:
      - Updated the StdHepReader to use the exact same interface as the LcioReader
        (Ch.Grefe)
 
-============
-  v02-04-01 
-============
+# v02-04-01
     - LCReader/SIOReader sets the RunHeader parameter "LCIOFileName" to
       the current file name (usefull if a list of files is processed)
 
@@ -179,9 +152,7 @@ F. Gaede:
     - added missing const keywords for getValue() and highestBit()
       in UTIL::BitField64  (Ch.Grefe)
 
-============
-  v02-04
-============
+# v02-04
   - Ch.Grefe, CERN
     added a new python binding: pyLCIO based on the optional ROOT dictionary
     see: $LCIO/examples/python/README for examples on how to use it
@@ -218,9 +189,7 @@ F. Gaede:
 
 
 
-============
-  v02-03-03
-============
+# v02-03-03
 
   - fixed bug in TrackerHitPlaneImpl and TrackerHitZCylinderImpl
     with size of covariance matrix being 0 (no set to 6)
@@ -230,23 +199,17 @@ F. Gaede:
     this is no problem for the DBD standard reconstruction !
 
 
-============
-  v02-03-02
-============
+# v02-03-02
 
     - added lcio_merge_files tool
     - fixed cmake 2.6 incompatibility introduced in v02-00-02
 
-============
-  v02-03-01
-============
+# v02-03-01
 
   - changed printout of ID for MCParticles from hex to dec
     in LCTOOLS::printMCParticles() (used e.g. in dumpevent ) 
 
-============
-  v02-03
-============
+# v02-03
   
    - added new flag bit to simulator status word:
      MCParticle::BITOverlay=23 and methods
@@ -276,9 +239,7 @@ F. Gaede:
      (#include <typeinfo>, reported by M.Killenberg)
    
 
-============
-  v02-02
-============
+# v02-02
     - added new class LCIterator<T> for convenient loops over collections, e.g.:
 
         for(  LCIterator<Track> it( evt, "Tracks" ) ;  Track* trk = it.next()  ; ) {
@@ -297,27 +258,21 @@ F. Gaede:
     - added LCIO_JAVA_USE_MAVEN option to build lcio.jar library using maven
 
 
-============
- v02-01-02 
-============
+# v02-01-02
 
     - fixed short print out of MCParticle
     - fixed warnings w/ unused variables (in function argument list)
     - fix in LCStdhepReader.cc (B.Vormwald) for dealing with multiple 94 objects
     - fixed typo in CPPFORT/lcmcp.h : lcmcpsetcolowflow -> lcmcpsetcolorflow
 
-============
- v02-01-01 
-============
+# v02-01-01
 
    - patch release with fixes for issues identified by coverity
      ( https://coverity.cern.ch/defects/index.htm?projectId=10017 )
       - uninitialized c'tors and memory leaks
 
 
-============
- v02-01 
-============
+# v02-01
 
     - minor release including following addons:
        - added helper structs to UTIL/ILDConf:
@@ -335,9 +290,7 @@ F. Gaede:
          
     
  
-============
- v02-00-03
-============
+# v02-00-03
 
     - patch release including following patches/bug fixes:
 
@@ -352,9 +305,7 @@ F. Gaede:
           - improved testing
 
 
-============
- v02-00-02
-============
+# v02-00-02
 
     - patch release including following patches/bug fixes:
 
@@ -367,9 +318,7 @@ F. Gaede:
 
 
 
-============
- v02-00-01
-============
+# v02-00-01
 
     - patch release including following patches/bug fixes:
 
@@ -383,9 +332,7 @@ F. Gaede:
          
 
 
-==========
- v02-00
-==========
+# v02-00
     
     - added multiple trackstates for Track
         
@@ -452,9 +399,7 @@ F. Gaede:
         - fixed path to MacroCheckPackageLibs.cmake and MacroCheckPackageVersion.cmake in LCIOConfig.cmake
 
 
-==========
- v01-60
-==========
+# v01-60
 
      - implemented new methods:
 
@@ -525,17 +470,13 @@ F. Gaede:
 
 	
 
-==========
- v01-51-02
-==========
+# v01-51-02
      - patch release:
          fix for building the ROOT dictionary with ROOT 5.27.06
          fix for printing covariance matrix of TrackerHit in dumpevent
          missing documentation of TRAWBIT_CM in TrackerPulse (EVENT)
 
-==========
- v01-51-01
-==========
+# v01-51-01
      - patch release:
          made compliant with gcc 4.4
          bug fix: readNextEvent/RunHeader did not work in direct access mode
@@ -544,9 +485,7 @@ F. Gaede:
          fix in sio/SIOEvent.java (missing LCRelations)
          made compliant with latest MacOSX (sio/include/SIO_functions.h)     
 
-==========
- v01-51
-==========
+# v01-51
    
   changes to EDM:
   --------------
@@ -622,23 +561,17 @@ F. Gaede:
 //***********************************************************************
 
 
-=====================
- v01-12-03
-=====================
+# v01-12-03
   - bug fix/patch release:
     read cluster hit weights as floats (was pointer) 
     (seg fault on 64 bit with C++ library)
 
-=====================
- v01-12-02
-=====================
+# v01-12-02
   - bug fix/patch release:
     fix bug with backward compatibility for reading TrackerHits
 
 
-=====================
- v01-12-01
-=====================
+# v01-12-01
    Experimental patch release:
    ---------------------------
    - optionally build a ROOT dictionary for LCIO
@@ -646,9 +579,7 @@ F. Gaede:
    - library and files fully compatible with v01-12
 
 
-=====================
- v01-12
-=====================
+# v01-12
   - added quality bit field for TrackerHit (http://bugs.freehep.org/browse/LCIO-63)
   
   - new features in java/lcio:   
@@ -662,9 +593,7 @@ F. Gaede:
        - fixed support for optional linkage against libdcap (dCache I/O) - C++ only
        - minor fixes (includes etc.)
 
-=====================
- v01-11
-=====================
+# v01-11
   - made direct (random) access mode in C++ optional:
     use  LCFactory::getInstance()->createLCReader(LCReader::directAccess) if
     direct access is need (default is off, i.e. 'no recreating of event map' 
@@ -672,18 +601,14 @@ F. Gaede:
   - bug fixes and improvements in C++
     (CMake build procedure, compatibility w/ gcc4.x, 32bit compatibility mode)
 
-=====================
-v01-10-03
-=====================
+# v01-10-03
     - bug fix patch release:
         - fixed 'bug' in updateNextEvent: ignore daughters if the first 
              daughter index is illegal (0 in stdhep)
         -> needed in Mokka-06-07 for fixStdHepLeptonFSR
 
 
-=====================
-v01-10-02
-=====================
+# v01-10-02
     - bug fix patch release:
 
     * fixed stdhepjob for running in 64 bit systems
@@ -691,9 +616,7 @@ v01-10-02
     * added 32 bit compatibility build option
     * added LCIO_LIBRARY_DIRS
 
-=====================
-v01-10-01
-=====================
+# v01-10-01
    - bug fix patch release:
 
 
@@ -703,9 +626,7 @@ v01-10-01
     * improved format of dump of MCParticle collection
 
 
-=====================
-v01-10
-=====================
+# v01-10
  
    - added optional attribute CalorimeterHit::getEnergyError() 
        -> set/check flag bit RCH_BIT_ENERGY_ERROR
@@ -722,9 +643,7 @@ v01-10
      - made compatible w/ gcc4.3 C++ (A.Bulgheroni)
 
 
-=====================
-v01-09
-=====================
+# v01-09
   no changes in file format
 
    - added event weight: LCEvent.getWeight()  (Java/C++)
@@ -745,9 +664,7 @@ v01-09
        programs built with LCIO and CLHEP )   
 
 
-=====================
-v01-08-05
-=====================
+# v01-08-05
   no changes in file format and API
 
   - experimental code for direct access (C++) 
@@ -764,9 +681,7 @@ v01-08-05
     dump format of TrackerPulses in LCTOOLS (AB)
     show proper include path in API doc
 
-=====================
-v01-08-04 
-=====================
+# v01-08-04
   bug fix release
   no changes in file format and API
   - minor fixes in Java code (JMC)
@@ -779,35 +694,27 @@ v01-08-04
     ( use -DBUILD_LCIO_SHELL=true - requires ncurses and readline )
     [experimental code]
  
-=====================
-v01-08-03
-=====================
+# v01-08-03
   bug fix release
   no changes in file format and API
   - minor fixes in Java code (TJ,JMC)
   - full support for building with cmake 
 
-=====================
-v01-08-02
-=====================
+# v01-08-02
   bug fix release
   no changes in file format and API
     - fixed several problems with templates for newer gcc versions (>=3.4)
     - removed obsolte lcioframe example
     - support for building LCIO (C++) with cmake (experimental)
 
-=====================
-v01-08-01
-=====================
+# v01-08-01
   bug fix release
   no changes in file format and API
     - fixed problems with storing large arrays in SIO (C++) 
     - fixed some issues with CellIDEncoder (C++) 
     - enforce valid collection names (like C/C++ variables)
 
-=====================
-v01-08    
-=====================
+# v01-08
 
    - introduced C++ runtime (user) extensions and relations
      see LCRTRelation and lcrtrelation.cc for documentation and examples
@@ -828,9 +735,7 @@ v01-08
         + bug with BitField64/CellIdDecoder
         + ...
 
-======================
-  v01-07
-=======================
+# v01-07
 
    - optional python binding (Jeremy McCormick)
 
@@ -846,9 +751,7 @@ v01-08
 
    - ant does not show "BUILD SUCCESSFUL" in case of error  anymore
 
-======================
-  v01-06
-=======================
+# v01-06
 
    - added optional momentum[3] to SimTrackerHit (momentum of particle at position of hit)
  
@@ -856,9 +759,7 @@ v01-08
 
    - added option to dump the n-th event in a file to $LCIO/bin/dumpevent 
 
-======================
-  v01-05
-=======================
+# v01-05
    - changed return values of energy, momentum and mass to double for MCParticle and 
      ReconstructedParticle - stored are still floats
      -> requires some trivial changes (float->double) in code where indicated by the compiler !
@@ -889,9 +790,7 @@ v01-08
    - Java version
     * ReconstructedParticle.getParticleIDs() now sorted wrt. likelihood
 
-======================
-  v01-04
-=======================
+# v01-04
 
  - added flag isSubset to LCCollection to allow to have collections in the event that 
    are subsets of other collections in the event. In case the collection is not transient
@@ -924,15 +823,11 @@ v01-08
      + changed LCEvent::getTimestamp() to long long (64bit) 
      + fixed bug when writing empty collection of LCGenericObjects
  
-======================
-  v01-03-01
-=======================
+# v01-03-01
   bug fix release
   no changes in file format and API
 
-======================
-  v01-03
-=======================
+# v01-03
   - added support for reading stdhep binary files  
 
   - added ant target 'doc.all' - requires javadoc, doxygen, pdflatex,latex2html
@@ -961,9 +856,7 @@ v01-08
 
   - flag for transient collections -> not written to file
 
-======================
-  v01-02 prebeta
-=======================
+# v01-02 prebeta
 
    - new classes Track, Cluster, ReconstructedParticle 
   
@@ -977,15 +870,11 @@ v01-08
 
    - added 'chain reader' : LCReader::open(std::vector<std::string> fileNames  )   
 
-============================
-  v01-00
-============================
+# v01-00
 
    first public release
 
-============================
-  v00-08  ( fg20030911 ) 
-============================
+# v00-08  ( fg20030911 )
 
 
    - require version >= v00-08 in C++    
@@ -997,9 +886,7 @@ v01-08
 
    - scripts for building under cygwin (Norman)
 
-============================
- v00-08beta ( fg20030911 ) 
-============================
+# v00-08beta ( fg20030911 )
   
    - added TPCHit class for real data TPC prototypes
      lcio.xml updated
@@ -1014,9 +901,7 @@ v01-08
    - manual.tex now able to create ps, pdf and html
 
 
-============================
-  ( fg20030909 ) 
-============================
+# ( fg20030909 )
 
    - manual reviewed and updated, added section on Exceptions
 
@@ -1034,9 +919,7 @@ v01-08
 
  
 
-============================
- v00-07beta ( fg 20030903 ) 
-============================
+# v00-07beta ( fg 20030903 )
 
    - first version of user manual ('ant doc.manual' -> ./doc/manual.ps)
 
@@ -1064,9 +947,7 @@ v01-08
 
  
 
-============================
- v00-05beta ( fg 20030613 )
-============================
+# v00-05beta ( fg 20030613 )
 
   - new package hep.lcio.data / namespace DATA
     defines pure data contents - this is now the interface that has to implemented
@@ -1112,9 +993,7 @@ v01-08
     [C++ only]
 
 
-=====================
-v00-04  (fg 20030514)
-=====================
+# v00-04  (fg 20030514)
 
  - new sio-file extension '.slcio' (enforced by C++ version of LCReader/Writer)
 
@@ -1149,9 +1028,7 @@ v00-04  (fg 20030514)
 
 
 
-=====================
-v00-03  (fg 20030509)
-=====================
+# v00-03  (fg 20030509)
 
  - no 0's at end of strings
 
