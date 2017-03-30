@@ -79,13 +79,14 @@ namespace UTIL {
 
       bool isValid = true ;
 
-      unsigned long long subdetPos = encoding_string.find( "subdet" ) ;
+      unsigned long long subdetPos = encoding_string.find( "subdet" );
+      unsigned long long systemPos = encoding_string.find( "system" );
       unsigned long long sidePos   = encoding_string.find( "side" ) ;
       unsigned long long layerPos  = encoding_string.find( "layer" ) ;
       unsigned long long modulePos = encoding_string.find( "module" ) ;
       unsigned long long sensorPos = encoding_string.find( "sensor" ) ;
 
-      isValid = ( subdetPos  != std::string::npos &&
+      isValid = ( (subdetPos  != std::string::npos || systemPos != std::string::npos) &&
 		  sidePos    != std::string::npos &&
 		  layerPos   != std::string::npos &&
 		  modulePos  != std::string::npos &&
