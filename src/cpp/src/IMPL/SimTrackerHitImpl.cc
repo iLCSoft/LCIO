@@ -13,13 +13,16 @@ namespace IMPL {
     _EDep(0),
     _time(0),
     _particle(0),
-    _pathLength(0){
+    _pathLength(0),
+    _quality(0)
+  {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
     _p[0] = 0. ;
     _p[1] = 0. ;
     _p[2] = 0. ;
+
   }
 
   SimTrackerHitImpl::~SimTrackerHitImpl(){  
@@ -120,6 +123,19 @@ namespace IMPL {
   void SimTrackerHitImpl::setPathLength(float pathLength){
     checkAccess("SimTrackerHitImpl::setPathLength") ;
     _pathLength = pathLength ;
+  }
+
+  void SimTrackerHitImpl::setQuality( int quality )  {
+    checkAccess("SimTrackerHitImpl::setQuality") ;
+    _quality = quality ;
+  }
+
+  void SimTrackerHitImpl::setQualityBit( int bit , bool val ) {
+    checkAccess("SimTrackerHitImpl::setQualityBit") ;
+    if( val )
+      _quality |=  ( 1 << bit ) ;
+    else
+      _quality &= ~( 1 << bit ) ;
   }
 
 

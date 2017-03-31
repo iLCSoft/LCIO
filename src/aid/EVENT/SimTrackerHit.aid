@@ -64,4 +64,9 @@ public interface SimTrackerHit extends LCObject {
      *  This is only stored together with momentum, i.e. if  LCIO::THBIT_MOMENTUM is set.
      */
     public float getPathLength() const ;
+
+    /** The quality bit flag of the hit */
+    public int getQuality() const ;
+
+
 }
