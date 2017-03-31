@@ -34,12 +34,23 @@ install:
   - mv !(Package) Package
   - shopt -u dotglob
   - export PKGDIR=${PWD}/Package
+  - export description=`date`
+  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
+    then wget https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_SCAN_TOKEN}&project=iLCSoft%2FLCIO" -O Package/coverity_tool.tgz; cd Package; mkdir cov-analysis-linux64; tar -xf coverity_tool.tgz -C cov-analysis-linux64 --strip-components=2;
+    fi
 
 # command to run tests
 script:
   - docker run -it --name CI_container -v $PKGDIR:/Package -e COMPILER=$COMPILER -v /cvmfs/clicdp.cern.ch:/cvmfs/clicdp.cern.ch -d clicdp/slc6-build /bin/bash
-  - docker exec -it CI_container /bin/bash -c "./Package/.travis-ci.d/compile_and_test.sh"
-
+  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
+    then docker exec -it CI_container /bin/bash -c "./Package/.travis-ci.d/coverity_scan.sh";
+    elif [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "llvm"  ]];
+    then echo "Running the weekly Coverity Scan, no LLVM/Clang build this time";
+    else docker exec -it CI_container /bin/bash -c "./Package/.travis-ci.d/compile_and_test.sh";
+    fi
+  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
+    then curl --form token=${COVERITY_SCAN_TOKEN} --form email=frank.gaede@desy.de --form file=@${PKGDIR}/build/myproject.tgz --form version="master" --form description="${description}" https://scan.coverity.com/builds?project=iLCSoft%2FLCIO ;
+    fi
 
 # Don't send e-mail notifications
 notifications:
