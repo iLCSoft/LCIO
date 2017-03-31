@@ -51,6 +51,9 @@ namespace SIO{
         SIO_DATA( stream ,    &(hit->_pathLength)  , 1 ) ;
     }
 
+    if( _vers > SIO_VERSION_ENCODE( 2, 7 )   )
+      SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
+
     // read the pointer tag in case we want to point to hits
     if( _vers > SIO_VERSION_ENCODE( 1, 0) ) {
       SIO_PTAG( stream , dynamic_cast<const SimTrackerHit*>(hit) ) ;
@@ -95,6 +98,7 @@ namespace SIO{
       SIO_DATA( stream , p  , 3 ) ;
       LCSIO_WRITE( stream , hit->getPathLength() ) ;
     }
+    LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
     // write a ptag in order to be able to point to tracker hits - from v1.1
     SIO_PTAG( stream , hit ) ;

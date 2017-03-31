@@ -81,6 +81,10 @@ namespace IMPL {
      */
     virtual float getPathLength() const ;
 
+    /** The quality bit flag of the hit.
+     */
+    virtual int getQuality() const { return _quality ; }
+
     // ---------- setters ------------------------
     /** DEPRECATED: use @setCellID0
      */
@@ -130,6 +134,14 @@ namespace IMPL {
 	 */	
     void setPathLength(float pathLength);
 
+    /* Set the quality flag of the hit.
+     */
+    void setQuality( int quality ) ;
+
+    /* Set a quality bit of the hit.
+     */
+    void setQualityBit( int bit , bool val=true ) ;
+
   protected:
     int _cellID0 ;
     int _cellID1 ;
@@ -139,6 +151,7 @@ namespace IMPL {
     EVENT::MCParticle* _particle ;   //! <-- fixme: ROOT cannot handle this pointer !!????
     float _p[3] ;
     float _pathLength ;
+    int _quality ;
 
 }; // class
 } // namespace IMPL

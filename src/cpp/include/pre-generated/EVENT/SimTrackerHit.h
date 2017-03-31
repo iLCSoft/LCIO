@@ -76,6 +76,9 @@ public:
      *  This is only stored together with momentum, i.e. if  LCIO::THBIT_MOMENTUM is set.
      */
     virtual float getPathLength() const = 0;
+
+    /** The quality bit flag of the hit */
+    virtual int getQuality() const = 0;
 }; // class
 } // namespace EVENT
 #endif /* ifndef EVENT_SIMTRACKERHIT_H */
