@@ -21,7 +21,8 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
    protected int cellID1;
    protected float[] momentum = new float[3] ;
    protected float pathLength;
-   
+   protected int quality;
+
    // DEPRECATED. renamed to setcellID0
    public void setCellID(int cellID)
    {
@@ -140,6 +141,17 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
    public void setPathLength(float length)
    {
       this.pathLength = length;
+   }
+
+
+   public int getQuality()
+   {
+      return quality;
+   }
+
+   public void setQuality(int quality)
+   {
+      this.quality = quality;
    }
 
    
