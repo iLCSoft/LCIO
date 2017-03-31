@@ -91,8 +91,13 @@ namespace UTIL {
 		  layerPos   != std::string::npos &&
 		  modulePos  != std::string::npos &&
 		  sensorPos  != std::string::npos &&
-		  ( subdetPos < sidePos < layerPos < modulePos < sensorPos  ) ) ;
-
+		  (
+		   (( subdetPos < sidePos ) || (systemPos < sidePos ) ) &&
+		   ( sidePos < layerPos ) &&
+		   ( layerPos < modulePos ) &&
+		   ( modulePos < sensorPos)
+		  )
+		);
 
       if( ! isValid ) throw std::runtime_error(" LCTrackerCellID::set_encoding_string(): string needs to contain"
 					       " \"subdet:A,side:B,layer:C,module:D,sensor:E\" " ) ;
