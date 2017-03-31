@@ -21,6 +21,7 @@ float lcsthgetpathlength ( PTRTYPE hit )  ;
 float lcsthgetdedx( PTRTYPE hit )  ;
 float lcsthgetedep( PTRTYPE hit ) ;
 float lcsthgettime( PTRTYPE hit )  ;
+int lcsthgetquality( PTRTYPE hit ) ;
 
 PTRTYPE lcsthgetmcparticle( PTRTYPE hit )  ;
 
@@ -35,6 +36,7 @@ int lcsthsetdedx( PTRTYPE hit, float dEdX )  ;
 int lcsthsetedep( PTRTYPE hit, float e ) ;
 int lcsthsettime( PTRTYPE hit, float t )  ;
 int lcsthsetmcparticle( PTRTYPE hit,  PTRTYPE  particle )  ;
+int lcsthsetquality( PTRTYPE hit, int quality ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
@@ -51,6 +53,7 @@ FCALLSCFUN1(FLOAT, lcsthgetpathlength,LCSTHGETPATHLENGTH,lcsthgetpathlength,CFOR
 FCALLSCFUN1(FLOAT, lcsthgetdedx,LCSTHGETDEDX,lcsthgetdedx,CFORTRANPNTR) 
 FCALLSCFUN1(FLOAT, lcsthgetedep,LCSTHGETEDEP,lcsthgetedep,CFORTRANPNTR) 
 FCALLSCFUN1(FLOAT, lcsthgettime,LCSTHGETTIME,lcsthgettime,CFORTRANPNTR) 
+FCALLSCFUN1(INT, lcsthgetquality,LCSTHGETQUALITY,lcsthgetquality,CFORTRANPNTR)
 
 FCALLSCFUN1(CFORTRANPNTR,lcsthgetmcparticle,LCSTHGETMCPARTICLE,lcsthgetmcparticle,CFORTRANPNTR) 
 
@@ -66,5 +69,6 @@ FCALLSCFUN2(INT, lcsthsetdedx, LCSTHSETDEDX, lcsthsetdedx, CFORTRANPNTR, FLOAT )
 FCALLSCFUN2(INT, lcsthsetedep, LCSTHSETEDEP, lcsthsetedep, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcsthsettime, LCSTHSETTIME, lcsthsettime, CFORTRANPNTR, FLOAT ) 
 FCALLSCFUN2(INT, lcsthsetmcparticle, LCSTHSETMCPARTICLE, lcsthsetmcparticle, CFORTRANPNTR, CFORTRANPNTR ) 
+FCALLSCFUN2(INT, lcsthsetquality, LCSTHSETQUALITY, lcsthsetquality, CFORTRANPNTR, INT )
 }
 

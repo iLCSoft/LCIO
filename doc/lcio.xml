@@ -206,7 +206,12 @@
                   <data type="float" name="pathLength"></data>
                </if>
 	    </if> 
-           <if condition="1000*major+minor&gt;1000">
+
+	    <if condition="1000*major+minor&gt;2008">
+              <data type="int" name="Quality"></data>
+	    </if>
+
+	    <if condition="1000*major+minor&gt;1000">
             <data type="ptag" name="this"></data>
            </if>
          </repeat>

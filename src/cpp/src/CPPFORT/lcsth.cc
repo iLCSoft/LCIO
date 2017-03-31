@@ -73,6 +73,11 @@ PTRTYPE lcsthgetmcparticle( PTRTYPE hit ){
   return C2F_POINTER( LCObject*, sth->getMCParticle() );
 }
 
+int lcsthgetquality( PTRTYPE hit ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  return sth->getQuality() ;
+}
+
 int lcsthsetcellid( PTRTYPE hit, int id ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   sth->setCellID( id ) ;
@@ -136,5 +141,11 @@ int lcsthsetmcparticle( PTRTYPE hit,  PTRTYPE  particle ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   MCParticle* mcp = f2c_pointer<MCParticle,LCObject>( particle ) ;
   sth->setMCParticle( mcp ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lcsthsetquality( PTRTYPE hit, int quality ){
+  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
+  sth->setQuality( quality ) ;
   return LCIO::SUCCESS ;
 }
