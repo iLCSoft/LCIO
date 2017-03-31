@@ -48,7 +48,10 @@ class SIOSimTrackerHit extends ISimTrackerHit
          
          if (version > SIOVersion.encode(1,6)) pathLength = in.readFloat();
       }
-      
+
+      quality = 0 ;
+      if( SIOVersion.encode(major,minor) > SIOVersion.encode(2,7))
+        quality = in.readInt();
 
       if( version > SIOVersion.encode(1,0)) in.readPTag(this);
    }
@@ -87,7 +90,9 @@ class SIOSimTrackerHit extends ISimTrackerHit
             out.writeFloat(p[2] ) ;
             out.writeFloat(hit.getPathLength());
          }
-         
+
+         out.writeInt(hit.getQuality());
+
          out.writePTag(hit);
       }
    }
@@ -112,6 +117,7 @@ class SIOSimTrackerHit extends ISimTrackerHit
          out.writeFloat(momentum[2] ) ;
          out.writeFloat(pathLength);
       }
+      out.writeInt(quality);
       out.writePTag(this);
    }
 }
