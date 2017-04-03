@@ -207,7 +207,7 @@
                </if>
 	    </if> 
 
-	    <if condition="1000*major+minor&gt;2008">
+	    <if condition="1000*major+minor&gt;2007">
               <data type="int" name="Quality"></data>
 	    </if>
 
