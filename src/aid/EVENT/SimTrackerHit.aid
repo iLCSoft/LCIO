@@ -69,4 +69,25 @@ public interface SimTrackerHit extends LCObject {
     public int getQuality() const ;
 
 
+    // define the bit positions for the quality flag
+@ifdef cpp
+@cpp{
+    static const int BITOverlay = 31 ;
+    static const int BITProducedBySecondary = 30 ;
+
+}@else
+    public static const int BITOverlay = 31 ;
+    public static const int BITProducedBySecondary = 30 ;
+
+@endif
+
+    /** True if the hit has been overlayed by the simulation (or digitization)  program.
+     */
+    public boolean isOverlay() const ;
+
+    /** True if the particle has been created by a secondary particle that is not stored in the MCParticle collection.
+     */
+    public boolean isProducedBySecondary() const ;
+
+
 }

@@ -154,5 +154,24 @@ public class ISimTrackerHit extends ILCObject implements SimTrackerHit
       this.quality = quality;
    }
 
-   
+    public boolean isProducedBySecondary()
+    {
+	return bitTest(this.quality, BITProducedBySecondary);
+    }
+
+    public boolean isOverlay()
+    {
+	return bitTest(this.quality, BITOverlay);
+    }
+
+    public void setProducedBySecondary(boolean val)
+    {
+	quality = bitSet(quality, BITProducedBySecondary, val);
+    }
+
+    public void setOverlay(boolean val)
+    {
+	quality = bitSet(quality, BITOverlay, val);
+    }
+
 }
