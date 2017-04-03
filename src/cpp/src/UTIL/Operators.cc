@@ -1801,12 +1801,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::SimTrackerHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 |  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  \n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 |  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  | Quality \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::SimTrackerHit *){ //hauke
-        static std::string _t("------------|--------|--------|---------------------------------|----------|----------|-----------------|-------------------|-------------\n");
+        static std::string _t("------------|--------|--------|---------------------------------|----------|----------|-----------------|-------------------|-------------|---------\n");
         return _t;
     }
 
@@ -1854,10 +1854,14 @@ namespace UTIL{
             out << hit->getMomentum()[0] << ", ";
             out << hit->getMomentum()[1] << ", ";
             out << hit->getMomentum()[2] << ") | ";
-            out << hit->getPathLength();
+            out << std::setw(13) << hit->getPathLength() << "|";
         }else{
             out << "|   unknown         |";
+	    out << "     n/a     |"; // path length
         }
+
+        //qualityBits
+        out << LCTOOLS::getQualityBits(hit);
 
         out << endl ;
 
@@ -1911,6 +1915,8 @@ namespace UTIL{
             BitSet32 flag( col->getFlag() ) ;
             out << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
             out << "     LCIO::THBIT_MOMENTUM : " << flag.test( LCIO::THBIT_MOMENTUM ) << endl ;
+
+            out << LCTOOLS::getQualityBits() << endl;
         } 
 
         //out << setw(30) << left << "CellID0"<< setfill(' ') << right << setw(40) << dec << hit->getCellID0() << endl;
