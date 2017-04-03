@@ -142,6 +142,19 @@ namespace IMPL {
      */
     void setQualityBit( int bit , bool val=true ) ;
 
+    /** True if the hit has been overlayed by the simulation (or digitization)  program.
+     */
+    virtual bool isOverlay() const ;
+
+    /** True if the particle has been created by a secondary particle that is not stored in the MCParticle collection.
+     */
+    virtual bool isProducedBySecondary() const ;
+
+    // setters for quality bits
+    void setOverlay(bool val) ;
+
+    void setProducedBySecondary(bool val) ;
+
   protected:
     int _cellID0 ;
     int _cellID1 ;

@@ -3,6 +3,15 @@
 
 using namespace EVENT ;
 
+namespace EVENT{
+
+  // the standard requires static const ints to be defined outside the class declaration
+  // so we do this here :
+  const int SimTrackerHit::BITOverlay ;
+  const int SimTrackerHit::BITProducedBySecondary ;
+
+}
+
 
 namespace IMPL {
   
@@ -138,6 +147,10 @@ namespace IMPL {
       _quality &= ~( 1 << bit ) ;
   }
 
+  bool SimTrackerHitImpl::isOverlay() const { return _quality & (1 << BITOverlay) ; }
+  bool SimTrackerHitImpl::isProducedBySecondary() const { return _quality & (1 << BITProducedBySecondary) ; }
 
+  void SimTrackerHitImpl::setOverlay(bool val) { setQualityBit( BITOverlay, val); }
+  void SimTrackerHitImpl::setProducedBySecondary(bool val) { setQualityBit( BITProducedBySecondary, val); }
 
 } // namespace IMPL

@@ -79,6 +79,19 @@ public:
 
     /** The quality bit flag of the hit */
     virtual int getQuality() const = 0;
+
+    // define the bit positions for the quality flag
+
+    static const int BITOverlay = 31 ;
+    static const int BITProducedBySecondary = 30 ;
+
+    /** True if the hit has been overlayed by the simulation (or digitization)  program.
+     */
+    virtual bool isOverlay() const = 0;
+
+    /** True if the particle has been created by a secondary particle that is not stored in the MCParticle collection.
+     */
+    virtual bool isProducedBySecondary() const = 0;
 }; // class
 } // namespace EVENT
 #endif /* ifndef EVENT_SIMTRACKERHIT_H */
