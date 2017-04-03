@@ -5,6 +5,7 @@
 
 #include "EVENT/LCEvent.h" 
 #include "EVENT/MCParticle.h" 
+#include "EVENT/SimTrackerHit.h"
 #include "EVENT/LCParameters.h"
 #include "EVENT/LCRunHeader.h"
 
@@ -131,6 +132,13 @@ namespace UTIL{
     static std::string getSimulatorStatusString(const EVENT::MCParticle* mcp=0) ;
 
     static int printDaughterParticles(const EVENT::MCParticle* part, int index) ;
+
+
+    /** Returns a string describing the quality flag bits set for this SimTrackerHit.
+     *  If no SimTrackerHit is given a string describing the bits is returned:<br>
+     *
+     */
+    static std::string getQualityBits(const EVENT::SimTrackerHit* sth=0);
 
   }; // class
 

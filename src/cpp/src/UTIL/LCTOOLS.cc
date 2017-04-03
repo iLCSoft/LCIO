@@ -278,6 +278,7 @@ namespace UTIL {
         BitSet32 flag( col->getFlag() ) ;
         cout << "     LCIO::THBIT_BARREL : " << flag.test( LCIO::THBIT_BARREL ) << endl ;
         cout << "     LCIO::THBIT_MOMENTUM : " << flag.test( LCIO::THBIT_MOMENTUM ) << endl ;
+        cout << LCTOOLS::getQualityBits() << endl;
 
         int nHits =  col->getNumberOfElements() ;
         int nPrint = nHits > MAX_HITS ? MAX_HITS : nHits ;
@@ -1432,6 +1433,38 @@ namespace UTIL {
             s[8]='o' ;
         else
             s[8]=' ' ;
+
+        return s ;
+    }
+
+
+    std::string LCTOOLS::getQualityBits(const SimTrackerHit* sth){
+
+        if( sth == 0  ) {
+
+            std::stringstream str ;
+
+            str << "    quality bits: [os......] "
+                << " o: hit from overlay"
+                << " s: hit from secondary not from the MCParticle associated to it"
+                << std::endl ;
+
+            return str.str() ;
+        }
+
+
+        if( sth->getQuality() == 0 )
+            return "[   0   ]";
+
+        std::string s("[       ]");
+        if( sth->isOverlay() )
+            s[1]='o' ;
+        else
+            s[1]=' ' ;
+        if( sth->isProducedBySecondary() )
+            s[2]='s' ;
+        else
+            s[2]=' ' ;
 
         return s ;
     }
