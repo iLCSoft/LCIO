@@ -322,7 +322,7 @@ private:
       long *trigMasks;
       long *ptrEvents;
    };
-   EventTable     eventTable;
+  EventTable     eventTable{};
 //
 // The event
 //
@@ -403,7 +403,7 @@ private:
       double  estdseed1;
       double  estdseed2;
    };
-   Event          event;
+  Event          event{};
 };
 
 } // end namespace

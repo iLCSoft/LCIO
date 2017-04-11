@@ -175,7 +175,7 @@ long lStdHep::readEvent(void)
 
 long lStdHep::getEvent(lStdEvent &lse) const
 {
-   if (long status = getError() != LSH_SUCCESS) return(status);
+   if (long stat = getError() != LSH_SUCCESS) return(stat);
 
    lse.evtNum  = event.nevhep;
 
@@ -204,8 +204,8 @@ long lStdHep::getEvent(lStdEvent &lse) const
 
 long lStdHep::readEvent(lStdEvent &lse)
 {
-   long status = readEvent();
-   if (status != LSH_SUCCESS) return(status);
+   long stat = readEvent();
+   if (stat != LSH_SUCCESS) return(stat);
    return(getEvent(lse));
 }
 
@@ -288,8 +288,8 @@ long lStdHep::setEvent(const lStdEvent &lse)
 
 long lStdHep::writeEvent(lStdEvent &lse)
 {
-   long status = writeEvent();
-   if (status != LSH_SUCCESS) return(status);
+   long stat = writeEvent();
+   if (stat != LSH_SUCCESS) return(stat);
    return(setEvent(lse));
 }
 
