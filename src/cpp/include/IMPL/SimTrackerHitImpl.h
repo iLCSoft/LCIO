@@ -24,7 +24,13 @@ namespace IMPL {
     /** Default constructor, initializes values to 0.
      */
     SimTrackerHitImpl() ;
-    
+
+    /// default copy constructor - use with care
+    SimTrackerHitImpl(const SimTrackerHitImpl&) = default ;
+
+    /// default assignment operator - use with care
+    SimTrackerHitImpl& operator=(const SimTrackerHitImpl&) = default ;
+
     /// Destructor.
     virtual ~SimTrackerHitImpl() ; 
     
@@ -86,9 +92,6 @@ namespace IMPL {
     virtual int getQuality() const { return _quality ; }
 
     // ---------- setters ------------------------
-    /** DEPRECATED: use @setCellID0
-     */
-    void setCellID( int id) ;
 
     /** Sets the first cell id;
      */
