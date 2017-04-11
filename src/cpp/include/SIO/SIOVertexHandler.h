@@ -38,10 +38,9 @@ namespace SIO {
     virtual unsigned int write(SIO_stream* stream, const EVENT::LCObject* obj) ;
 
   protected:
-    std::map<int,std::string> imr; //indexmap for reading
-    //std::map<std::string,int> imw; //indexmap for writing (used with FIFO)
-    std::set<std::string> _set;
-    EVENT::StringVec parameters; //needed for putting the collection parameters into the STL Containers
+    std::map<int,std::string> imr{}; //indexmap for reading
+    std::set<std::string> _set{};
+    EVENT::StringVec parameters{}; //needed for putting the collection parameters into the STL Containers
     
   }; // class
 } // namespace

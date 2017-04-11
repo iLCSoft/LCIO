@@ -57,8 +57,8 @@ public:
  protected:
 
 
-  unsigned int _flag ; 
-  unsigned int _vers ;
+  unsigned int _flag{0} ; 
+  unsigned int _vers{0} ;
   
 }; // class
 

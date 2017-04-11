@@ -42,7 +42,7 @@ namespace SIO {
     
   private:
     
-    SIOHandlerMap _map ;
+    SIOHandlerMap _map{} ;
     
     static SIOHandlerMgr* _me ;
     
