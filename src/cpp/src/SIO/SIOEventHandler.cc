@@ -21,14 +21,14 @@ using namespace IOIMPL ;
 namespace SIO  {
 
 
-  SIOEventHandler::SIOEventHandler(const std::string& name) : 
-    SIO_block( name.c_str() ),
+  SIOEventHandler::SIOEventHandler(const std::string& bname) : 
+    SIO_block( bname.c_str() ),
     _evtP(0), 
     _evt(0) {
   }
 
-  SIOEventHandler::SIOEventHandler(const std::string& name, LCEventIOImpl** anEvtP) : 
-    SIO_block( name.c_str() ),
+  SIOEventHandler::SIOEventHandler(const std::string& bname, LCEventIOImpl** anEvtP) : 
+    SIO_block( bname.c_str() ),
     _evtP( anEvtP ), 
     _evt(0) {
  
@@ -193,9 +193,7 @@ namespace SIO  {
 
   unsigned int   SIOEventHandler::version(){
 
-    int version = SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
-    return version ;
-
+   return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }
 
   void SIOEventHandler::setReadCollectionNames(const std::vector<std::string>& colnames){
