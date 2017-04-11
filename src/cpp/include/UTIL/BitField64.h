@@ -103,14 +103,14 @@ namespace UTIL {
 
   protected:
   
-    lcio::long64& _b ;
-    lcio::ulong64 _mask ;
+    lcio::long64& _b  ;
+    lcio::ulong64 _mask{0} ;
     std::string _name ;
-    unsigned _offset ;
-    unsigned _width ;
-    int _minVal ;
-    int _maxVal ;
-    bool _isSigned ;
+    unsigned _offset{0} ;
+    unsigned _width{0} ;
+    int _minVal{0} ;
+    int _maxVal{0} ;
+    bool _isSigned{false} ;
 
   };
 
@@ -246,9 +246,9 @@ namespace UTIL {
 
     // -------------- data members:--------------
 
-    std::vector<BitFieldValue*>  _fields ;
+    std::vector<BitFieldValue*>  _fields{} ;
     lcio::long64 _value ;
-    IndexMap _map ;
+    IndexMap _map{} ;
     lcio::long64 _joined ;
 
 
