@@ -101,8 +101,8 @@ public:
 private:
     SIO_stream( const char *, unsigned int, SIO_verbosity );
 	~SIO_stream();
-	SIO_stream(const SIO_stream&) = default ;
-	SIO_stream& operator=(const SIO_stream&) = default ;
+	SIO_stream(const SIO_stream&) = delete ;
+	SIO_stream& operator=(const SIO_stream&) = delete ;
 
     unsigned int           write( SIO_record*, const char* );
 
