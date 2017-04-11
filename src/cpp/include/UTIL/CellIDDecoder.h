@@ -31,7 +31,7 @@ namespace UTIL{
     
   public:  
 
-    CellIDDecoder() = delete ;
+    CellIDDecoder() = default ;
     CellIDDecoder(const CellIDDecoder& ) = delete ;
     CellIDDecoder& operator=(const CellIDDecoder& ) = delete ;
     
