@@ -45,6 +45,11 @@ namespace SIO {
 
     LCIORandomAccessMgr() ;
     
+    /// no copy constructor
+    LCIORandomAccessMgr(const LCIORandomAccessMgr&) = delete ;
+    /// no default assignment operator 
+    LCIORandomAccessMgr& operator=(const LCIORandomAccessMgr&) = delete ;
+
     virtual ~LCIORandomAccessMgr() ;
  
     /** Return the position of the specified Event record or Run record respectively (if EventNum == -1 ).

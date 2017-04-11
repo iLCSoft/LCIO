@@ -42,6 +42,12 @@ namespace SIO {
     /**Default constructor.
      */
     SIOWriter() ;
+
+    /// no copy constructor
+    SIOWriter(const SIOWriter&) = delete ;
+    /// no assignment operator
+    SIOWriter& operator=(const SIOWriter&) = delete ;
+
     /**
      * Destructor
      */
