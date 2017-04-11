@@ -47,9 +47,8 @@ namespace UTIL {
      *  this will behave the same as an empty collection - use operator() to
      *  test, if the collection exists.
      */
-    LCIterator<T>( EVENT::LCEvent* evt, const std::string& name ) : _i(0) {
+    LCIterator<T>( EVENT::LCEvent* evt, const std::string& name ) : _i(0), _col(0) {
     
-      _col = 0 ;
     
       try{
       
@@ -117,7 +116,7 @@ namespace UTIL {
     EVENT::LCCollection* operator()() { return _col ; }
 
   private:
-    int _n, _i ;
+    int _n{0}, _i ;
     EVENT::LCCollection* _col ;
   } ;
 
