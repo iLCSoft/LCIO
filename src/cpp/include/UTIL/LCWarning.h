@@ -43,13 +43,13 @@ private:
 
 
     struct _warning_cfg_struct{
-        std::string txt;
-        int max;
-        int counter;
+      std::string txt{};
+      int max{0};
+      int counter{0};
     };
 
-    std::map< std::string, _warning_cfg_struct > _warning_cfg ; // warning configurations
-    std::map< std::string, _warning_cfg_struct > :: iterator _warning_cfg_it ; // iterator
+    std::map< std::string, _warning_cfg_struct > _warning_cfg{} ; // warning configurations
+    std::map< std::string, _warning_cfg_struct >::iterator _warning_cfg_it{} ; // iterator
     std::ostream& _outstream ; // where warnings get printed
 
 }; // class
