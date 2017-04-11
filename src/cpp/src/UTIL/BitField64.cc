@@ -8,28 +8,28 @@ using namespace EVENT ;
 namespace UTIL{
   
   
-    BitFieldValue::BitFieldValue( lcio::long64& bitfield, const std::string& name, 
-				  unsigned offset, int signedWidth ) :
+    BitFieldValue::BitFieldValue( lcio::long64& bitfield, const std::string& theName, 
+				  unsigned theOffset, int signedWidth ) :
     _b(bitfield),
     _mask(0), 
-    _name( name ), 
-    _offset( offset ),
+    _name( theName ), 
+    _offset( theOffset ),
     _width( abs( signedWidth ) ),
     _minVal(0),
     _maxVal(0),
     _isSigned( signedWidth < 0 ) {
     
     // sanity check
-    if( offset > 63 || offset+_width > 64 ) {
+    if( _offset > 63 || _offset+_width > 64 ) {
       
       std::stringstream s ;
       s << " BitFieldValue '" << _name << "': out of range -  offset : " 
-	<< offset  << " width " << _width  ; 
+	<< _offset  << " width " << _width  ; 
       
       throw( Exception( s.str() ) ) ;
     }
     
-    _mask = ( ( 0x0001LL << _width ) - 1 ) << offset ;
+    _mask = ( ( 0x0001LL << _width ) - 1 ) << _offset ;
     
     
     // compute extreme values for later checks
