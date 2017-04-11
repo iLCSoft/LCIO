@@ -34,7 +34,7 @@ public:
 
   /** 'Copy constructor' needed to interpret LCCollection read from file/database.
    */
-  CalibrationConstant(LCObject* obj) : LCFixedObject<NINT,NFLOAT,NDOUBLE>(obj) { } 
+  CalibrationConstant(LCObject* o) : LCFixedObject<NINT,NFLOAT,NDOUBLE>(o) { } 
 
   /** Important for memory handling*/
   virtual ~CalibrationConstant() { /* no op*/  }

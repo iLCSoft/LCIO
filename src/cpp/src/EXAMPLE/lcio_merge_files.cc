@@ -23,13 +23,16 @@ using namespace lcio ;
 class RunEventProcessor : public LCRunListener, public LCEventListener{
 
     protected:
-        LCWriter* lcWrt ;
-        int nEvent ;
-        unsigned int _nFiles ;
+        LCWriter* lcWrt{NULL} ;
+        int nEvent{0} ;
+        unsigned int _nFiles{0} ;
 
     public:
 
-        RunEventProcessor(const char* outFileName, unsigned int nFiles) : nEvent(0), _nFiles(nFiles) {
+       RunEventProcessor(const RunEventProcessor&) = delete ;
+       RunEventProcessor operator=(const RunEventProcessor&) = delete ;
+
+       RunEventProcessor(const char* outFileName, unsigned int nFiles) : nEvent(0), _nFiles(nFiles) {
 
             // open outputfile
             lcWrt = LCFactory::getInstance()->createLCWriter() ;

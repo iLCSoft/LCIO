@@ -28,6 +28,12 @@ namespace UTIL{
     
   public: 
     
+    /// default copy constructor - use with care
+    LCFixedObject(const LCFixedObject&) = default ;
+
+    /// default assignment operator - use with care
+    LCFixedObject& operator=(const LCFixedObject&) = default ;
+
     /** Default c'tor.
      */
     LCFixedObject():
@@ -108,8 +114,8 @@ namespace UTIL{
     
   protected:
     
-    LCGenericObjectImpl* _obj ;
-    bool _createdObject ;
+    LCGenericObjectImpl* _obj{NULL} ;
+    bool _createdObject{false} ;
     
   }; 
   

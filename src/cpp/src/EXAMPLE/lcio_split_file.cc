@@ -23,11 +23,14 @@ using namespace lcio ;
 class RunEventProcessor : public LCRunListener, public LCEventListener{
   
 protected:
-  LCWriter* lcWrt ;
-  int nEvent ;
+  LCWriter* lcWrt{NULL} ;
+  int nEvent{0} ;
   
 public:
   
+  RunEventProcessor(const RunEventProcessor&) = delete ;
+  RunEventProcessor operator=(const RunEventProcessor&) = delete ;
+
   RunEventProcessor(const char* outFileName, int splitSize) : nEvent(0) {
     
     // open outputfile
