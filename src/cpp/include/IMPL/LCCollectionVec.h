@@ -13,7 +13,6 @@
 
 namespace IMPL {
   
-  //  typedef std::vector<EVENT::LCObject*> LCObjectVec ;
 
   /** Implementation of the LCCollection using (inheriting from) an STL vector
    *  of LCObjects.
@@ -27,12 +26,12 @@ namespace IMPL {
     , public AccessChecked {
     
     
-   public: // this is needed for the auto generated streamer in the ROOT dictionary !!!
-    //protected 
-    /**  Default Constructor should be protected - every LCCollection needs to know the type
-     *   of its elements.
+   public: 
+    /**  Default Constructor - don't use - only public for auto-generated streamers 
+     *   in the ROOT dictionary !! Should be protected really. 
+     *   Every LCCollection needs to know the type of its elements.
      */
-    LCCollectionVec() : _flag(0) {  /* no default c'tor */ }
+    LCCollectionVec() :  _typeName("UNKNOWN" ), _flag(0) { }
     
   public:
     
@@ -149,8 +148,7 @@ namespace IMPL {
 
     std::string _typeName ;
     int _flag ;
-    LCParametersImpl _params ;
-    //    int _access ;
+    LCParametersImpl _params{} ;
 
 }; // class
 } // namespace IMPL
