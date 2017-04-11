@@ -97,7 +97,7 @@ namespace IMPL {
 
   protected:
 
-    int _location ; // location defined by TrackStateLocationEnum
+    int _location{} ; // location defined by TrackStateLocationEnum
     float _d0 ;
     float _phi ;
     float _omega ;
@@ -105,7 +105,7 @@ namespace IMPL {
     float _tanLambda ;
 
     EVENT::FloatVec _covMatrix ;
-    float  _reference[TRKSTATENREFSIZE] ;
+    float  _reference[TRKSTATENREFSIZE]{} ;
 
 }; // class
 
