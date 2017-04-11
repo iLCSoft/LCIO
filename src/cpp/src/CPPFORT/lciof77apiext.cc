@@ -188,14 +188,14 @@ int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* sims
 }
 
 
-int lcaddsimtrackerhit( PTRTYPE collectionvec, int cellID, double* pos, float dEdx, 
+int lcaddsimtrackerhit( PTRTYPE collectionvec, int cellID0, double* pos, float dEdx, 
 			    float time, PTRTYPE mcp ){
 
   LCCollectionVec* lcCollectionVec = reinterpret_cast<LCCollectionVec*>( (collectionvec) ) ;
   SimTrackerHitImpl* hit = new SimTrackerHitImpl ;
   MCParticle* mmcp = f2c_pointer<MCParticle,LCObject>( mcp ) ;
 
-  hit->setCellID( cellID ) ;
+  hit->setCellID0( cellID0 ) ;
   hit->setPosition( pos ) ;
   hit->setdEdx( dEdx ) ;
   hit->setTime( time ) ;

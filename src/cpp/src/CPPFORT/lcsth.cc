@@ -78,11 +78,6 @@ int lcsthgetquality( PTRTYPE hit ){
   return sth->getQuality() ;
 }
 
-int lcsthsetcellid( PTRTYPE hit, int id ){
-  SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
-  sth->setCellID( id ) ;
-  return LCIO::SUCCESS ;
-}
 int lcsthsetcellid0( PTRTYPE hit, int id ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
   sth->setCellID0( id ) ;
