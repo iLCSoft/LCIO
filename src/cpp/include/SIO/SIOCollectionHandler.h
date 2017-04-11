@@ -26,10 +26,8 @@ namespace SIO {
     
   public:
     
-    /// default copy constructor - use with care
-    SIOCollectionHandler(const SIOCollectionHandler&) = default ;
-    /// default assignment operator - use with care
-    SIOCollectionHandler& operator=(const SIOCollectionHandler&) = default ;
+    SIOCollectionHandler(const SIOCollectionHandler&) = delete;
+    SIOCollectionHandler& operator=(const SIOCollectionHandler&) = delete ;
 
     /** The default constructor needs the name, the type and a pointer 
      * the address of the collection. Throws an exception if handler

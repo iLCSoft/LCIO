@@ -23,6 +23,9 @@ namespace SIO {
 
   public:
     
+    SIOEventHandler(const SIOEventHandler&) = delete;
+    SIOEventHandler& operator=(const SIOEventHandler&) = delete ;
+
     SIOEventHandler(const std::string& name) ;
     SIOEventHandler(const std::string& name, IOIMPL::LCEventIOImpl** evtP) ;
     virtual ~SIOEventHandler() ;
