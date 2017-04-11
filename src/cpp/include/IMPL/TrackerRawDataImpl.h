@@ -66,7 +66,7 @@ protected:
   int _cellID1 ;
   int _channelID ;
   int  _time ;
-  EVENT::ShortVec _adc ;
+  EVENT::ShortVec _adc{} ;
   
 }; // class
 } // namespace IMPL
