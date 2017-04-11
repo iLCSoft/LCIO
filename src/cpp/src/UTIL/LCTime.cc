@@ -61,21 +61,21 @@ namespace UTIL{
   }
 
 
-  LCTime::LCTime(int year, int month, int day, int hour, int min, int s ){
+  LCTime::LCTime(int y, int mon, int d, int h, int m, int s ){
     
 
-    _d.year = year  ;
-    _d.month = month  ;
-    _d.day = day  ;
-    _d.hour = hour  ;
-    _d.min = min  ;
+    _d.year = y  ;
+    _d.month = mon  ;
+    _d.day = d  ;
+    _d.hour = h  ;
+    _d.min = m  ;
     _d.sec = s  ;
     _d.ns = 0 ; 
     
     // do some sanity checks on date:
-    if(  year  < YEAR0               || 
-	 month < 0     || month > 12 ||
-	 day   < 0     || day   > daysInMonth( month , year ) ){
+    if(  y  < YEAR0               || 
+	 mon < 0  || mon  > 12 ||
+	 d < 0    || d   > daysInMonth( mon , y ) ){
 
       throw Exception( "LCTime::LCTime() invalid date:"+ getDateString() ) ;
     } 
@@ -84,9 +84,9 @@ namespace UTIL{
     convertFromCalTime() ;
   }
   
-  LCTime::LCTime( int unixTime ) {
+  LCTime::LCTime( int unix_time) {
 
-    _t = unixTime * NPS ;
+    _t = unix_time * NPS ;
 
     convertToCalTime() ;
   }
@@ -193,19 +193,19 @@ namespace UTIL{
   }
 
    
-  int LCTime::daysInYear( int year ) const {
+  int LCTime::daysInYear( int y ) const {
     int d = DPY ;
-    if( isLeapYear( year ) ) d++ ;
+    if( isLeapYear( y ) ) ++d ;
     return d ;
   }
   
-  int LCTime::daysInMonth( int month , int year ) const {
+  int LCTime::daysInMonth( int mon , int y ) const {
     
-    if( month < 1 || month > 12 ) 
+    if( mon < 1 || mon > 12 ) 
       return 0 ;
-    int d = dpm[ month ] ;
+    int d = dpm[ mon ] ;
     
-    if( month == 2 &&  isLeapYear( year ) ) d++ ;
+    if( mon == 2 &&  isLeapYear( y ) ) d++ ;
     return d ;
   }
   
