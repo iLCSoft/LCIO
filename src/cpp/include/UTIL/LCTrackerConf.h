@@ -74,17 +74,17 @@ namespace UTIL {
     }
     
     /// set the encoding string. Throws exception if it was already accessed to prevent inconsistencies
-    void set_encoding_string( const std::string& encoding_string ) {
+    void set_encoding_string( const std::string& encodingString ) {
       if( _accessed ) throw std::logic_error( "The encoding string was already accessed! Changing it now will lead to inconsistencies! Fix your code!" );
 
       bool isValid = true ;
 
-      unsigned long long subdetPos = encoding_string.find( "subdet" );
-      unsigned long long systemPos = encoding_string.find( "system" );
-      unsigned long long sidePos   = encoding_string.find( "side" ) ;
-      unsigned long long layerPos  = encoding_string.find( "layer" ) ;
-      unsigned long long modulePos = encoding_string.find( "module" ) ;
-      unsigned long long sensorPos = encoding_string.find( "sensor" ) ;
+      unsigned long long subdetPos = encodingString.find( "subdet" );
+      unsigned long long systemPos = encodingString.find( "system" );
+      unsigned long long sidePos   = encodingString.find( "side" ) ;
+      unsigned long long layerPos  = encodingString.find( "layer" ) ;
+      unsigned long long modulePos = encodingString.find( "module" ) ;
+      unsigned long long sensorPos = encodingString.find( "sensor" ) ;
 
       isValid = ( (subdetPos  != std::string::npos || systemPos != std::string::npos) &&
 		  sidePos    != std::string::npos &&
@@ -102,7 +102,7 @@ namespace UTIL {
       if( ! isValid ) throw std::runtime_error(" LCTrackerCellID::set_encoding_string(): string needs to contain"
 					       " \"subdet:A,side:B,layer:C,module:D,sensor:E\" " ) ;
 
-      _encoding = encoding_string;
+      _encoding = encodingString;
     }
     
     /// set accessed to true
