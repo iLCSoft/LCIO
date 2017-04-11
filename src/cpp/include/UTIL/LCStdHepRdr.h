@@ -25,18 +25,23 @@ namespace UTIL{
     
   public:
 
-	/** Open the stdhep input file in the constructer
-	 */
+    /** Open the stdhep input file in the constructer
+     */
     LCStdHepRdr(const char* evfile) ;
 
-	/** noop
-	 */
-	~LCStdHepRdr() ;
+    /// no copy constructor
+    LCStdHepRdr(const LCStdHepRdr&) = delete ;
+    /// no assignment operator
+    LCStdHepRdr& operator=(const LCStdHepRdr&) = delete ;
 
+    /** noop
+     */
+    ~LCStdHepRdr() ;
 
-	/** Get number of events in the stdhep file.
+    
+    /** Get number of events in the stdhep file.
      *  This number is read from the file header (no guarantee that it is correct)
-    */
+     */
     long getNumberOfEvents() const {
       return _reader->numEvents() ;
     }
@@ -72,7 +77,7 @@ namespace UTIL{
 
   private:
     
-	lStdHep* _reader;
+    lStdHep* _reader{NULL};
     
 
   }; // class

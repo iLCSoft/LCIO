@@ -285,7 +285,11 @@ private:
 //
    class EventTable {
    public:
-      EventTable();
+       EventTable();
+      /// no copy constructor
+      EventTable(const EventTable&) = delete ;
+      /// no assignment operator
+      EventTable& operator=(const EventTable&) = delete ;
       ~EventTable();
       void cleanup(void);
       long read(lStdHep &ls);
@@ -325,6 +329,10 @@ private:
    class Event {
    public:
       Event();
+      /// no copy constructor
+      Event(const Event&) = delete ;
+      /// no assignment operator
+      Event& operator=(const Event&) = delete ;
       ~Event();
       void cleanup(void);
       long read(lStdHep &ls);
