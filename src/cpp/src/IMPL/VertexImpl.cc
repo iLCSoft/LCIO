@@ -7,17 +7,13 @@ namespace IMPL{
 
   VertexImpl::VertexImpl() :
     _primary(0),
+    _type("Unknown"),
     _chi2(0),
     _probability(0),
+    _cov( VTXCOVMATRIX ),
     _par(0),
     _aParticle(0)
-  {
-    _type="Unknown";
-    _cov.resize( VTXCOVMATRIX ) ;
-    _vpos[0] = 0. ;
-    _vpos[1] = 0. ;
-    _vpos[2] = 0. ;
-  }
+  {}
 
   VertexImpl::~VertexImpl(){ }
  

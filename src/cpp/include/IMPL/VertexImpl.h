@@ -26,6 +26,13 @@ namespace IMPL {
     /** Default constructor, initializes values to 0.
      */
     VertexImpl() ;
+
+    /// default copy constructor - use with care
+    VertexImpl(const VertexImpl&) = default ;
+
+    /// default assignment operator - use with care
+    VertexImpl& operator=(const VertexImpl&) = default ;
+
     
     // Destructor.
     virtual ~VertexImpl() ; 
@@ -84,7 +91,6 @@ namespace IMPL {
 
   protected:
     int _primary ;
-    //int _type ;
     std::string _type ;
     float _chi2 ;
     float _probability ;
