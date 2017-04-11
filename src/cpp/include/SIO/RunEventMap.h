@@ -78,10 +78,10 @@ namespace SIO {
 
   protected: 
 
-    MapType _map ;
+    MapType _map{} ;
 
-    int _nRun ;
-    int _nEvt ;
+    int _nRun{0} ;
+    int _nEvt{0} ;
 
   }; // class
  } // namespace
