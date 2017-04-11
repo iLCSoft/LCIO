@@ -32,9 +32,9 @@ public:
     typedef LCFloatVec lcobject_type ;
 
     public:
-    int id() const { return _acc.simpleUID() ; } 
+      int id() const { return _acc.simpleUID() ; } 
     protected:
-      IMPL::AccessChecked _acc ;
+      IMPL::AccessChecked _acc{} ;
 }; // class
 } // namespace EVENT
 #endif /* ifndef EVENT_LCFLOATVEC_H */

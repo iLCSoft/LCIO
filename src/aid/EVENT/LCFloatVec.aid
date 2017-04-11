@@ -22,9 +22,9 @@ public interface LCFloatVec extends LCObject
     typedef LCFloatVec lcobject_type ;
 
     public:
-    int id() const { return _acc.simpleUID() ; } 
+      int id() const { return _acc.simpleUID() ; } 
     protected:
-      IMPL::AccessChecked _acc ;
+      IMPL::AccessChecked _acc{} ;
 }
 
 
