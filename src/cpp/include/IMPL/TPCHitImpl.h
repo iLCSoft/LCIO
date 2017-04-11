@@ -19,7 +19,13 @@ public:
   /** Default Constructor - initializes all data to 0's. 
    */
   TPCHitImpl() ;
-  
+
+  /// default copy constructor - use with care
+  TPCHitImpl(const TPCHitImpl&) = default ;
+
+  /// default assignment operator - use with care
+  TPCHitImpl& operator=(const TPCHitImpl&) = default ;
+
   /// Destructor.
   virtual ~TPCHitImpl() ;
   
