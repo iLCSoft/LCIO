@@ -397,7 +397,7 @@ IF( BUILD_ROOTDICT )
     # ------ build lcioDict library ---------------------------------
 
     INCLUDE_DIRECTORIES( "${ROOT_DICT_OUTPUT_DIR}" )
-    INCLUDE_DIRECTORIES( "${ROOT_INCLUDE_DIRS}" )
+    INCLUDE_DIRECTORIES( SYSTEM "${ROOT_INCLUDE_DIRS}" )
 
     ADD_SHARED_LIBRARY( lcioDict ${lcio_rootdict_sources} )
     TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} lcio )
