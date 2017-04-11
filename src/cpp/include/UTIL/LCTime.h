@@ -22,13 +22,13 @@ namespace UTIL {
     /** Helper struct that holds the calendar time.
      */
     struct CalendarTime{
-      short year  ;
-      short  month ;
-      short  day   ;
-      short  hour ;
-      short  min ;
-      short  sec ;
-      int ns ;
+      short year{0}  ;
+      short  month{0} ;
+      short  day{0}   ;
+      short  hour{0} ;
+      short  min{0} ;
+      short  sec{0} ;
+      int ns{0} ;
     } ;
 
   public: 
@@ -63,13 +63,13 @@ namespace UTIL {
      *  year is multiple of 4 and not multiple of 100<br>
      *  or year is multiple of 400.
      */
-    bool isLeapYear( int year ) const { return ( ( !( year % 4 ) &&  ( year%100 ) ) || !(year%400)   ) ; }
+    bool isLeapYear( int y ) const { return ( ( !( y % 4 ) &&  ( y%100 ) ) || !(y%400)   ) ; }
 
     /** The number if days in the given year in the Gregorian calendar. */
-    int daysInYear( int year ) const ;
+    int daysInYear( int y ) const ;
 
     /** The number if days in the given month and year in the Gregorian calendar. */
-    int daysInMonth( int month , int year )  const ;
+    int daysInMonth( int m , int y )  const ;
 
     /** Date in human readable format, e.g. 10.02.2005  10:54:29.123456789 :<br>
      *  dd.mm.yyyy  hh:mm:ss._ms_us_ns
@@ -116,8 +116,8 @@ namespace UTIL {
     
   protected: 
     
-    EVENT::long64 _t ;  // time stamp in ns
-    CalendarTime  _d ;  // calendar date and time
+    EVENT::long64 _t{0} ;  // time stamp in ns
+    CalendarTime  _d{} ;  // calendar date and time
     
     
     // internal helper methods
