@@ -41,16 +41,16 @@ namespace UTIL{
      * 
      * 
      */
-    LCFixedObject(LCObject* obj) : 
+    LCFixedObject(LCObject* object) : 
       _createdObject(false)  {
       
-      _obj = dynamic_cast<LCGenericObjectImpl*>( obj )  ;
+      _obj = dynamic_cast<LCGenericObjectImpl*>( object )  ;
       
       if( _obj==0 ){
 
 	// could be an instance of LCFixedObject !?
 	LCFixedObject<NINT,NFLOAT,NDOUBLE>* f = 
-	  dynamic_cast< LCFixedObject<NINT,NFLOAT,NDOUBLE>* >( obj ) ;
+	  dynamic_cast< LCFixedObject<NINT,NFLOAT,NDOUBLE>* >( object ) ;
 
 	if( f != 0 )
 	  _obj = f->obj() ;
