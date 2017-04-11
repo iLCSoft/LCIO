@@ -22,6 +22,12 @@ namespace IMPL {
      */
     TrackerPulseImpl() ;
     
+    /// default copy constructor - use with care
+    TrackerPulseImpl(const TrackerPulseImpl&) = default ;
+
+    /// default assignment operator - use with care
+    TrackerPulseImpl& operator=(const TrackerPulseImpl&) = default ;
+
     /// Destructor.
     virtual ~TrackerPulseImpl() ;
     
@@ -88,9 +94,7 @@ protected:
     int _cellID0 ;
     int _cellID1 ;
     float _time ;
-    //float _timeError ;
     float _charge ;
-    //float _chargeError ;
     int   _quality ;
     EVENT::FloatVec _cov ;
     EVENT::TrackerData* _corrData ;
