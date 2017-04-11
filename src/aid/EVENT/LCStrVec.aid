@@ -23,7 +23,7 @@ public interface LCStrVec extends LCObject
     public:
     int id() const { return _acc.simpleUID() ; } 
     protected:
-      IMPL::AccessChecked _acc ;
+      IMPL::AccessChecked _acc{} ;
 }
 
 @ifdef java
