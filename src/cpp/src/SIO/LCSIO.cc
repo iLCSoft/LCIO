@@ -244,8 +244,6 @@ std::string LCSIO::getValidSIOName(const std::string& aName ) {
 
     else if( (*name>=0) && ( isalnum( (int)*name ) || *name == '_' ) )
       *newName++ = *name ;
-    else
-    ; // ignore
   } 
   
   *newName = '\0' ;
