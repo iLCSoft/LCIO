@@ -35,6 +35,11 @@ namespace UTIL{
       _lastCount(4294967295UL) {    
     }    
    
+    /// no copy constructor
+    LCSplitWriter(const LCSplitWriter&) = delete ;
+    /// no assignment operator
+    LCSplitWriter& operator=(const LCSplitWriter&) = delete ;
+
     /** Destructor.
      */
     virtual ~LCSplitWriter() {;}
