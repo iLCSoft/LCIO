@@ -34,10 +34,10 @@ namespace SIO {
 
 
   protected:
-    int _nInt ;
-    int _nFloat ;
-    int _nDouble ;
-    bool _isFixedSize ;
+    int _nInt{0} ;
+    int _nFloat{0} ;
+    int _nDouble{0} ;
+    bool _isFixedSize{false} ;
 
   }; // class
     
