@@ -194,7 +194,7 @@ namespace IMPL {
     float _energy ;
     float _position[3] ;
 
-    MCParticleContVec _vec ;
+    MCParticleContVec _vec{} ;
     
   }; // class
 } // namespace IMPL
