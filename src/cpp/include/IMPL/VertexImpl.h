@@ -94,7 +94,7 @@ namespace IMPL {
     std::string _type ;
     float _chi2 ;
     float _probability ;
-    float _vpos[3] ;
+    float _vpos[3] ={0,0,0} ;
     EVENT::FloatVec _cov ;
     EVENT::FloatVec _par ;
     EVENT::ReconstructedParticle* _aParticle ;
