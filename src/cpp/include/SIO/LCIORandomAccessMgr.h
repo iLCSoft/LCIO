@@ -120,10 +120,10 @@ namespace SIO {
     } 
 
     // ----- map with RunHeader and EventHeader record positions
-    RunEventMap _runEvtMap ;
+    RunEventMap _runEvtMap{} ;
     
     // ----- list of LCIORandomAccess objects 
-    std::list< LCIORandomAccess* > _list ;
+    std::list< LCIORandomAccess* > _list{} ;
 
     LCIORandomAccess* _fileRecord ;
 

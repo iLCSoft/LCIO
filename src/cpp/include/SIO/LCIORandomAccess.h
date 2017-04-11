@@ -67,15 +67,15 @@ namespace SIO{ // IO or IMPL ?
     void setFirstRecordLocation(long64 fl) { _firstRecordLocation = fl ; }
 
   protected:
-    RunEvent _minRunEvt ;
-    RunEvent _maxRunEvt ;
-    int  _nRunHeaders ;
-    int  _nEvents ;
-    int  _recordsAreInOrder ;  
-    long64  _indexLocation ;
-    long64  _prevLocation ;
-    long64  _nextLocation ;
-    long64  _firstRecordLocation ;
+    RunEvent _minRunEvt{} ;
+    RunEvent _maxRunEvt{} ;
+    int  _nRunHeaders{0} ;
+    int  _nEvents{0} ;
+    int  _recordsAreInOrder{0} ;  
+    long64  _indexLocation{0} ;
+    long64  _prevLocation{0} ;
+    long64  _nextLocation{0} ;
+    long64  _firstRecordLocation{0} ;
   }; // class
 
 
