@@ -21,24 +21,6 @@ LCEventImpl::LCEventImpl() :
   _detectorName("unknown") {
 }
   
-// LCEventImpl::LCEventImpl(const LCEvent& evt) : 
-//   _runNumber( evt.getRunNumber() ),
-//   _eventNumber( evt.getEventNumber() ),
-//   _timeStamp( evt.getTimeStamp() ),
-//   _detectorName( evt.getDetectorName().c_str() ),
-  
-//   std::vector<std::string>* strVec = evt.getCollectionNames() ;
-//   int nCol = strVec->size() ;
-  
-//   for( std::vector<std::string>::iterator name = strVec->begin() ; name != strVec->end() ; name++){
-    
-//     const LCCollection* col = evt.getCollection( *name ) ;
-//     col->getTypeName() ;
-    
-//     // to be done - need to create new LCCollectionVec and add to the event ...
-//   }
-
-// }
 
 LCEventImpl::~LCEventImpl() {
   //  std::cout << " ~LCEventImpl() : " << this << std::endl ;
