@@ -9,32 +9,11 @@ using namespace EVENT ;
 
 namespace IMPL {
 
-//     std::string _typeName ;
-//     int _flag ;
-
 
 LCCollectionVec::LCCollectionVec( const std::string& type ) :
   _typeName( type ),
-  _flag(0){ 
-  //,
-  // _access(LCIO::UPDATE ) {
-
-}
+  _flag(0) {}
   
-// LCCollectionVec::LCCollectionVec( const EVENT::LCCollection& col ) :
-//   _typeName( col.getTypeName() ),
-//   _flag( col.getFlag() ),
-//   _access( col._access ) {
-
-//   // deep copy of all elements  - requires clone of original elements
-//   //
-//   int nElements = col.getNumberOfElements() ;
-
-//   for(int i=0; i< nElements ; i++){
-//     push_back(  col.getElementAt( i )->clone() ) ;
-//   }
-
-// }
 
   // overwrite the default implementation
   // set flag in all elements
