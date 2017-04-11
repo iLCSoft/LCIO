@@ -29,6 +29,11 @@ namespace UTIL{
 	 */
     LCStdHepRdrNew(const char* evfile) ;
 
+    /// no copy constructor
+    LCStdHepRdrNew(const LCStdHepRdrNew&) = delete ;
+    /// no assignment operator
+    LCStdHepRdrNew& operator=(const LCStdHepRdrNew&) = delete ;
+
 	/** noop
 	 */
 	~LCStdHepRdrNew() ;
@@ -76,8 +81,8 @@ namespace UTIL{
 
   private:
     
-	lStdHep* _reader;
-	bool _writeEventNumber;
+    lStdHep* _reader{};
+    bool _writeEventNumber{false};
     
 
   }; // class
