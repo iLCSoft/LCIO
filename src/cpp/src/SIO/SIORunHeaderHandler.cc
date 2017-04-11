@@ -16,14 +16,14 @@ using namespace IOIMPL ;
 namespace SIO  {
 
 
-  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name) : 
-    SIO_block( name.c_str() ),
+  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& bname) : 
+    SIO_block( bname.c_str() ),
     _rhP(0), 
     _hdr(0) {
   }
 
-  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** aRhP) : 
-    SIO_block( name.c_str() ),
+  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& bname, IOIMPL::LCRunHeaderIOImpl** aRhP) : 
+    SIO_block( bname.c_str() ),
     _rhP( aRhP ), 
     _hdr(0) {
     
@@ -103,8 +103,8 @@ namespace SIO  {
 	int nSDN = strVec->size() ;
 	SIO_DATA( stream, &nSDN, 1 ) ;
 	
-	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-	  LCSIO_WRITE( stream, *name ) ;
+	for( std::vector<std::string>::const_iterator nameI = strVec->begin() ; nameI != strVec->end() ; ++nameI){
+	  LCSIO_WRITE( stream, *nameI ) ;
 	} 
 	
 	// write parameters
@@ -125,9 +125,7 @@ namespace SIO  {
   
   unsigned int   SIORunHeaderHandler::version(){
     
-    int version = SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
-    return version ;
-    
+    return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }
   
 }

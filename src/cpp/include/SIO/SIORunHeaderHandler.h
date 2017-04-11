@@ -24,6 +24,9 @@ namespace SIO {
 
   public:
     
+    SIORunHeaderHandler(const SIORunHeaderHandler&) = delete;
+    SIORunHeaderHandler& operator=(const SIORunHeaderHandler&) = delete ;
+
     /** C'tor for writing
      */
     SIORunHeaderHandler(const std::string& name) ;
@@ -40,8 +43,8 @@ namespace SIO {
     void setRunHeaderPtr(IOIMPL::LCRunHeaderIOImpl** hdrP ) ; 
     
   private: 
-    IOIMPL::LCRunHeaderIOImpl** _rhP ;  // address for reading
-    const EVENT::LCRunHeader* _hdr ;  // runheader for writing
+    IOIMPL::LCRunHeaderIOImpl** _rhP{NULL} ;  // address for reading
+    const EVENT::LCRunHeader* _hdr{NULL} ;  // runheader for writing
     
   }; // class
   
