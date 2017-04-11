@@ -106,33 +106,33 @@ private:
 
     unsigned int           write( SIO_record*, const char* );
 
-    unsigned char*         bufloc;        // Buffer pointer (beginning)
-    unsigned char*         buffer;        // Buffer pointer (current)
-    unsigned char*         bufmax;        // Buffer pointer (end)
-    unsigned char*         recmax;        // Record pointer (end)
-    unsigned char*         blkmax;        // Block  pointer (end)
+    unsigned char*         bufloc{NULL};    // Buffer pointer (beginning)
+    unsigned char*         buffer{NULL};    // Buffer pointer (current)
+    unsigned char*         bufmax{NULL};    // Buffer pointer (end)
+    unsigned char*         recmax{NULL};    // Record pointer (end)
+    unsigned char*         blkmax{NULL};    // Block  pointer (end)
 
-    unsigned char*         cmploc;        // Compression buffer pointer (beg)
-    unsigned char*         cmpmax;        // Compression buffer pointer (end)
-    struct z_stream_s*     z_strm;        // Compression buffer control
+    unsigned char*         cmploc{NULL};    // Compression buffer pointer (beg)
+    unsigned char*         cmpmax{NULL};    // Compression buffer pointer (end)
+    struct z_stream_s*     z_strm{NULL};    // Compression buffer control
 
-    std::string            name;          // Stream's name
-    std::string            filename;      // Stream's associated file
-    FILE*                  handle;        // File handle
+    std::string            name{};          // Stream's name
+    std::string            filename{};      // Stream's associated file
+    FILE*                  handle{NULL};    // File handle
 
-    std::string            rec_name;      // Record name being read
-    std::string            blk_name;      // Block  name being read
+    std::string            rec_name{};      // Record name being read
+    std::string            blk_name{};      // Block  name being read
 
-    pointedAtMap_c*        pointedAt;     // Map      of 'pointed at'
-    pointerToMap_c*        pointerTo;     // Multimap of 'pointer to'
+    pointedAtMap_c*        pointedAt{NULL}; // Map      of 'pointed at'
+    pointerToMap_c*        pointerTo{NULL}; // Multimap of 'pointer to'
 
-    SIO_stream_mode        mode;          // Stream mode
-    unsigned int           reserve;       // Reserved size of buffer
-    SIO_stream_state       state;         // Stream state  
-    SIO_verbosity          verbosity;     // Reporting level
+    SIO_stream_mode        mode{SIO_MODE_UNDEFINED};   // Stream mode
+    unsigned int           reserve{0};                 // Reserved size of buffer
+    SIO_stream_state       state{SIO_STATE_CLOSED};    // Stream state  
+    SIO_verbosity          verbosity{};                // Reporting level
 
-    SIO_64BITINT           recPos  ;      // start Position of last record read
-    int                    compLevel ;    // compression level
+    SIO_64BITINT           recPos{0}  ;     // start Position of last record read
+    int                    compLevel{0} ;   // compression level
 
 friend class SIO_streamManager;           // Access to constructor/destructor
 friend class SIO_record;                  // Access to buffer
