@@ -173,13 +173,13 @@ namespace IMPL{
     std::string _detectorName ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
-    mutable LCCollectionMap _colMap ;
-    mutable std::vector<std::string> _colNames ;
+    mutable LCCollectionMap _colMap{} ;
+    mutable std::vector<std::string> _colNames{} ;
     
-    LCParametersImpl _params ;
+    LCParametersImpl _params{} ;
     
     // set of collections that are not owned by the event anymore
-    mutable LCCollectionSet _notOwned ;
+    mutable LCCollectionSet _notOwned{} ;
     
 
   }; // class
