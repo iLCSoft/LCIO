@@ -250,7 +250,11 @@ double *lXDR::readFloatArray(long &length)
    if (_hasNetworkOrder == false) {
       for (long i = 0; i < length; i++) {
          long l = ntohl(st[i]);
-         s[i] = (double) (*((float *) &l));
+	 //         s[i] = (double) (*((float *) &l));
+	 //fg: the above causes a strict aliasing error, so we sue memcpy
+	 float f ;
+	 memcpy( &f, &l, sizeof(float) ) ;
+	 s[i] = f ;
       }
    }
    _error = LXDR_SUCCESS;
