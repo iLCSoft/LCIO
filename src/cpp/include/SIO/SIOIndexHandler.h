@@ -20,6 +20,9 @@ namespace SIO {
 
   public:
     
+    SIOIndexHandler(const SIOIndexHandler&) = delete;
+    SIOIndexHandler& operator=(const SIOIndexHandler&) = delete ;
+
     /** C'tor.
      */
     SIOIndexHandler(const std::string& name, LCIORandomAccessMgr* raMgr) ; 
@@ -31,15 +34,9 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() ;
     
-//     void setWritePtr(const LCIORandomAccess* ra ) ; 
-//     void setReadPtr( LCIORandomAccess** raP ) ; 
-    
   private: 
-//     LCIORandomAccess** _raP ;  // address for reading
-//     const LCIORandomAccess* _ra ;  // object for writing
 
-//     RunEventMap* _reMap ;
-    LCIORandomAccessMgr* _raMgr ;
+    LCIORandomAccessMgr* _raMgr{NULL} ;
 
   }; // class
   
