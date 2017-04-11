@@ -12,8 +12,8 @@
 namespace SIO  {
 
 
-  SIORandomAccessHandler::SIORandomAccessHandler(const std::string& name, LCIORandomAccessMgr* raMgr) : 
-    SIO_block( name.c_str() ),
+  SIORandomAccessHandler::SIORandomAccessHandler(const std::string& bname, LCIORandomAccessMgr* raMgr) : 
+    SIO_block( bname.c_str() ),
     _raMgr( raMgr ) {
     
   }
@@ -91,9 +91,7 @@ namespace SIO  {
   
   unsigned int   SIORandomAccessHandler::version(){
     
-    int version = SIO_VERSION_ENCODE( EVENT::LCIO::MAJORVERSION, EVENT::LCIO::MINORVERSION ) ;
-    return version ;
-    
+    return SIO_VERSION_ENCODE( EVENT::LCIO::MAJORVERSION, EVENT::LCIO::MINORVERSION ) ;
   }
   
 }
