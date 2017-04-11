@@ -66,13 +66,6 @@ namespace IMPL {
 
   const float* SimTrackerHitImpl::getMomentum() const { return _p ; }
 
-  void SimTrackerHitImpl::setCellID( int id) {
-    UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_SETCELLID" ) ;
-    //checkAccess("SimTrackerHitImpl::setCellID") ;
-    //_cellID = id ;
-    setCellID0( id );
-  }
-
   void SimTrackerHitImpl::setCellID0( int id0) {
     checkAccess("SimTrackerHitImpl::setCellID0") ;
     _cellID0 = id0 ; 
