@@ -119,18 +119,17 @@ namespace IMPL {
 
 protected:
 
-    int _cellID0 ;
-    int _cellID1 ;
+    int _cellID0{0} ;
+    int _cellID1{0} ;
 
-    int _type ;
-    double _pos[3] ;
-    EVENT::FloatVec _cov ;
-    //float _dEdx ; // DEPRECATED. renamed to _EDep
-    float _EDep ;
-    float _EDepError ;
-    float _time ;
-    int _quality ;
-    EVENT::LCObjectVec _rawHits ;
+    int _type{0} ;
+    double _pos[3] = {0.,0.,0.} ;
+    EVENT::FloatVec _cov{} ;
+    float _EDep{0} ;
+    float _EDepError{0} ;
+    float _time{0} ;
+    int _quality{0} ;
+    EVENT::LCObjectVec _rawHits{} ;
     
 
 }; // class
