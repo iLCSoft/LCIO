@@ -100,7 +100,10 @@ namespace UTIL{
   class CellIDEncoder : public BitField64 {
 
   public:  
-    
+   
+    CellIDEncoder( const CellIDEncoder&) = delete ;
+    CellIDEncoder& operator=(const CellIDEncoder&) = delete ;
+
     /** Constructor, sets collection parameter LCIO::CellIDEncoding to the given encoding string.
      */
     CellIDEncoder( const std::string& cellIDEncoding ,  EVENT::LCCollection* col) :
