@@ -11,23 +11,14 @@ namespace IMPL {
     _cellID1(0),
 
     _type(0),
-    //_r(0),
     _drphi(0),
     _dz(0),
     _EDep(0),
     _EDepError(0),
     _time(0),
     _quality(0),
+    _cov(TRKHITZCYLNCOVMATRIX ), 
     _rawHits(0) {
-    
-    _pos[0] = 0. ;
-    _pos[1] = 0. ;
-    _pos[2] = 0. ;
-    _center[0] = 0. ;
-    _center[1] = 0. ;
-
-    _cov.resize( TRKHITZCYLNCOVMATRIX ) ;
-
   }
   
   TrackerHitZCylinderImpl::~TrackerHitZCylinderImpl(){  
