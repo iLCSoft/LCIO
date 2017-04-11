@@ -41,7 +41,7 @@ namespace UTIL{
 
 
   public:  
-    PIDHandler() = delete ;
+    PIDHandler() = default ;
     PIDHandler(const PIDHandler& ) = delete ;
     PIDHandler& operator=(const PIDHandler& ) = delete ;
     
@@ -122,13 +122,13 @@ namespace UTIL{
     void init( const LCCollection* col ) ;
 
 
-    LCCollection* _col ;
-    CPM _cpm ;
-    int _type ; 
-    int _maxID ;
-    PNM _pNames ; 
-    CPMINV _cpmInv ;
-    IntVec _ids ;
+    LCCollection* _col{NULL} ;
+    CPM _cpm{} ;
+    int _type{0} ; 
+    int _maxID{0} ;
+    PNM _pNames{} ; 
+    CPMINV _cpmInv{} ;
+    IntVec _ids{} ;
 
   } ; 
   

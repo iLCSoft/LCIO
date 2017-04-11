@@ -159,7 +159,7 @@ namespace UTIL{
   template <class T>
   class LCIO_LONG{
         public:
-            LCIO_LONG() = delete ;
+            LCIO_LONG() = default ;
             LCIO_LONG(const LCIO_LONG& ) = default ;
             LCIO_LONG& operator=(const LCIO_LONG& ) = default ;
             LCIO_LONG(const T& o, const EVENT::LCCollection* c){ obj=&o; col=c;};
