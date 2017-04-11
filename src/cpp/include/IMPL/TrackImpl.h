@@ -13,7 +13,6 @@
 
 typedef std::map< std::string , EVENT::IntVec* > IndexMap ; 
 
-//#define TRKNCOVMATRIX 15 // defined in TrackState
 
 namespace IMPL {
 
@@ -46,23 +45,12 @@ namespace IMPL {
     
     virtual int id() const { return simpleUID() ; }
 
-//     /** Type of track, i.e. the subdetector(s) used to derive the track paramters, e.g. "TPC", "COMB", etc.
-//      *  In order to save disc space working groups should try and define three to four letter acronyms for
-//      *  their tracking detectors.
-//      */
-//     virtual const std::string & getType() const ;
-
-
-
     /** Flagword that defines the type of track. Bits 0-15 can be used to denote the subdetectors
      *  that have contributed hits used in the track fit. The definition of the  hits has to be done 
      *  elsewhere, e.g. in the run header. Before LCIO 2.0 bit 31 was used to encode isReferencePointPCA (now deprecated).
      */
     virtual  int getType() const  ;
 
-//     /** Returns true if the corresponding bit in the type word is set.
-//      */
-//     virtual bool testType(int bitIndex) const ;
 
     /** Impact paramter of the track in (r-phi).
      *  Information is stored in the first TrackState of this Track, @see TrackState.
@@ -205,32 +193,20 @@ namespace IMPL {
 
     virtual void  setType( int  type ) ;
 
-    //    std::string _type ;
-    std::bitset<32> _type ;
+    std::bitset<32> _type{0} ;
 
-    
-    //float _d0 ;                       // stored in TrackState
-    //float _phi ;                      // stored in TrackState
-    //float _omega ;                    // stored in TrackState
-    //float _z0 ;                       // stored in TrackState
-    //float _tanLambda ;                // stored in TrackState
-    //EVENT::FloatVec _covMatrix ;      // stored in TrackState
-    //float  _reference[3] ;            // stored in TrackState
+   
+    float _chi2{0} ;
+    int   _ndf{0} ; 
+    float _dEdx{0} ;
+    float _dEdxError{0} ;
+    float _radiusOfInnermostHit{0} ;
+    EVENT::IntVec _subdetectorHitNumbers{} ;
 
+    EVENT::TrackVec _tracks{} ;
+    EVENT::TrackerHitVec _hits{} ;
 
-    //bool _isReferencePointPCA ;
-
-    float _chi2 ;
-    int   _ndf ; 
-    float _dEdx ;
-    float _dEdxError ;
-    float _radiusOfInnermostHit ;
-    EVENT::IntVec _subdetectorHitNumbers ;
-
-    EVENT::TrackVec _tracks ;
-    EVENT::TrackerHitVec _hits ;
-
-    EVENT::TrackStateVec _trackStates ;
+    EVENT::TrackStateVec _trackStates{} ;
 
 
 
