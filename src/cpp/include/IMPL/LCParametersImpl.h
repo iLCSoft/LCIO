@@ -123,9 +123,9 @@ namespace IMPL {
 
   protected:
 
-    mutable IntMap _intMap ;
-    mutable FloatMap _floatMap ;
-    mutable StringMap _stringMap ;
+    mutable IntMap _intMap{} ;
+    mutable FloatMap _floatMap{} ;
+    mutable StringMap _stringMap{} ;
     
   }; // class
 } // namespace IMPL
