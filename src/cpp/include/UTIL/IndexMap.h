@@ -10,7 +10,7 @@
 
 namespace UTIL{
   
-/** utility class to manage indexes according to Collection Parameters
+/** utility class to manage indices according to Collection Parameters
  * 
  *  EXP: UNDER DEVELOPMENT!!! - Don't use this class yet
  *
@@ -57,6 +57,11 @@ namespace UTIL{
      */
     IndexMap(const EVENT::LCCollection* col, const std::string& key1, const std::string& key2);
 
+    /// no copy constructor
+    IndexMap(const IndexMap&) = delete ;
+    /// no assignment operator
+    IndexMap& operator=(const IndexMap&) = delete ;
+
     //destructor
     ~IndexMap();
 
@@ -70,8 +75,8 @@ namespace UTIL{
     const EVENT::LCCollection* _col;
     const std::string _key1;
     const std::string _key2;
-    EVENT::StringVec _strvec;
-    EVENT::IntVec _intvec;
+    EVENT::StringVec _strvec{};
+    EVENT::IntVec _intvec{};
   }; // class
 
 }//namespace
