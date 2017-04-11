@@ -40,8 +40,12 @@ class SIOEventHandler ;
      */
     SIOReader( int lcReaderFlag=0 ) ;
     
-    // Destructor
+    /// no copy constructor
+    SIOReader(const SIOReader&) = delete ;
+    /// no assignment operator
+    SIOReader& operator=(const SIOReader&) = delete ;
 
+    /// Destructor
     virtual ~SIOReader() ;
     
 
