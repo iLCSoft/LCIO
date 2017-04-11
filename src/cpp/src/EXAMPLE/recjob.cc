@@ -54,11 +54,14 @@ static const int nRecP = 10 ; // number of reconstructed particles
 class RunEventProcessor : public LCRunListener, public LCEventListener{
   
 protected:
-  LCWriter* lcWrt ;
-  int nEvent ;
+  LCWriter* lcWrt{} ;
+  int nEvent{0} ;
   
 public:
   
+  RunEventProcessor(const RunEventProcessor&) = delete ;
+  RunEventProcessor operator=(const RunEventProcessor&) = delete ;
+
   RunEventProcessor() : nEvent(0) {
     
     // open outputfile
