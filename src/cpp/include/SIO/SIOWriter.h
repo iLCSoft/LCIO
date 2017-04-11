@@ -130,15 +130,11 @@ namespace SIO {
 
     SIOEventHandler *_hdrHandler ;
     SIORunHeaderHandler *_runHandler ;
-    std::vector<SIO_block*> _connectedBlocks ;
+    std::vector<SIO_block*> _connectedBlocks{} ;
 
   protected:
     
-//     SIO_record *_evtRecord ;
-//     SIO_record *_hdrRecord ;
-//     SIO_record *_runRecord ;
-
-    LCIORandomAccessMgr _raMgr ;
+    LCIORandomAccessMgr _raMgr{} ;
 
   }; // class
 
