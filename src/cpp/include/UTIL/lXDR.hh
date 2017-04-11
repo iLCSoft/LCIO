@@ -116,10 +116,10 @@ public:
 private:
    char      *_fileName;
    FILE      *_fp;
-   long       _error;
-   bool       _openForWrite;
+   long       _error{0};
+   bool       _openForWrite{false};
 
-   bool       _hasNetworkOrder;
+  bool       _hasNetworkOrder{false};
    double     ntohd(double d) const;
    double     htond(double d) const { return(ntohd(d)); };
 
