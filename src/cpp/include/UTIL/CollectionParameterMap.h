@@ -26,6 +26,9 @@ namespace UTIL{
   class CollectionParameterMap {
 
   public:  
+    CollectionParameterMap() = delete ;
+    CollectionParameterMap(const CollectionParameterMap& ) = delete ;
+    CollectionParameterMap& operator=(const CollectionParameterMap& ) = delete ;
     
     typedef  std::map< std::string, int >  map_type ;
 
@@ -50,7 +53,6 @@ namespace UTIL{
 
   protected:
 
-    CollectionParameterMap();
     
     void init( const LCCollection* col ) ; 
  

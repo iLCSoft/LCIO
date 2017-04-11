@@ -41,6 +41,9 @@ namespace UTIL{
 
 
   public:  
+    PIDHandler() = delete ;
+    PIDHandler(const PIDHandler& ) = delete ;
+    PIDHandler& operator=(const PIDHandler& ) = delete ;
     
     /** Create PIDHandler for reading from the given collection - read the collection parameters
      *  PIDAlgorithmTypeName, PIDAlgorithmTypeID and the corresponding 
@@ -118,8 +121,7 @@ namespace UTIL{
     int nextID() { return ++_maxID ; }
     void init( const LCCollection* col ) ;
 
-    PIDHandler();
- 
+
     LCCollection* _col ;
     CPM _cpm ;
     int _type ; 
