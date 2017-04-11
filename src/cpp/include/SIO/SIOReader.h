@@ -228,33 +228,27 @@ class SIOEventHandler ;
 
   protected:
     
-    // we need an SIO record for every type
-//     SIO_record *_evtRecord ;
-//     SIO_record *_hdrRecord ;
-//     SIO_record *_runRecord ;
-    SIO_record *_dummyRecord ;  // used for reading arbitrary records
-    SIO_stream *_stream ;
+    SIO_record *_dummyRecord {NULL};  // used for reading arbitrary records
+    SIO_stream *_stream{NULL} ;
 
-    SIORunHeaderHandler* _runHandler ;
-    SIOEventHandler* _evtHandler ;
+    SIORunHeaderHandler* _runHandler{NULL} ;
+    SIOEventHandler* _evtHandler{NULL} ;
 
   private:
     
-    IOIMPL::LCEventIOImpl *_defaultEvt ; // used to add collections when reading 
-    IOIMPL::LCEventIOImpl *_evt ;
-    IOIMPL::LCRunHeaderIOImpl *_run ;
+    IOIMPL::LCEventIOImpl *_defaultEvt{NULL} ; // used to add collections when reading 
+    IOIMPL::LCEventIOImpl *_evt{NULL} ;
+    IOIMPL::LCRunHeaderIOImpl *_run{NULL} ;
 
-    std::set<IO::LCRunListener*> _runListeners ;
-    std::set<IO::LCEventListener*> _evtListeners ;
+    std::set<IO::LCRunListener*> _runListeners{} ;
+    std::set<IO::LCEventListener*> _evtListeners{} ;
     
-    std::vector<std::string> _myFilenames ;
-    unsigned int _currentFileIndex ;
+    std::vector<std::string> _myFilenames{} ;
+    unsigned int _currentFileIndex{0} ;
 
-    //    EventMap _evtMap ;
-    bool _readEventMap ;
+    bool _readEventMap{false} ;
     
-    //    RunEventMap _reMap ;
-    LCIORandomAccessMgr _raMgr ;
+    LCIORandomAccessMgr _raMgr{} ;
 
   }; // class
 } // namespace
