@@ -18,11 +18,8 @@
 #include "IMPL/ClusterImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h" 
 #include "IMPL/VertexImpl.h" 
-//#include "IMPL/ParticleIDImpl.h" 
-//#include "IMPL/LCFlagImpl.h" 
 #include "UTIL/LCTOOLS.h"
 #include "UTIL/PIDHandler.h"
-//#include "UTIL/IndexMap.h"
 #include "IMPL/LCRelationImpl.h"
 
 #include "UTIL/LCRelationNavigator.h"

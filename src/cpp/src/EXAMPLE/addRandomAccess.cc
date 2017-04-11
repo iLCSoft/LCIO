@@ -66,9 +66,7 @@ int main(int argc, char** argv ){
 	    
 	    int status = fread( &bla[0] , sizeof(char) , 16 , f ) ;
 	    
-	    //	    std::cout << "  ====== read : [" << bla << "]" << std::endl ; 
-	    
-	    if( !strcmp( bla.c_str() , "LCIORandomAccess")  ){ 
+	    if( !strcmp( bla.c_str() , "LCIORandomAccess") || status != 16 ){ 
 	      
 	      
 	      status = fseek( f ,  -(16) , SEEK_CUR ) ;
@@ -77,7 +75,6 @@ int main(int argc, char** argv ){
 	      
 	      status = fwrite( &bla[0] , 1 , 16 , f ) ;
 	      
-	      //	      std::cout << "  --------- wrote " << bla << " to file - bytes written " << status << std::endl; 
 	    } 
 	  }
 
