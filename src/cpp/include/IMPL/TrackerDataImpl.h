@@ -65,7 +65,7 @@ protected:
   int _cellID0 ;
   int _cellID1 ;
   float  _time ;
-  EVENT::FloatVec _charge ;
+  EVENT::FloatVec _charge{} ;
   
 }; // class
 } // namespace IMPL
