@@ -14,8 +14,8 @@ namespace IMPL{
     _time(0),
     _charge(0),
     _quality(0),
-    _corrData(0),
-    _cov( TRKPULSENCOVMATRIX ){
+    _cov( TRKPULSENCOVMATRIX ), 
+    _corrData(0){
   }    
   
   /// Destructor.
