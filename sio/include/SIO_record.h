@@ -54,17 +54,17 @@ private:
     SIO_record( const char*, SIO_verbosity );
    ~SIO_record();
 
-    unsigned int              connect( std::string*, SIO_block* );
+    unsigned int           connect( std::string*, SIO_block* );
     unsigned int           disconnect( std::string*, SIO_block* );
     unsigned int           getOptions();  
     unsigned int           read(  SIO_stream*, unsigned int );
     unsigned int           write( SIO_stream* );
 
-    connectMap_c           connectMap;    // Map of connected blocks
-    std::string            name;          // Record name
-    unsigned int           options;       // Options (flag word)         
-    bool                   unpack;        // Unpack incoming records?
-    SIO_verbosity          verbosity;     // Reporting level
+    connectMap_c           connectMap{};    // Map of connected blocks
+    std::string            name;            // Record name
+    unsigned int           options{0};      // Options (flag word)   
+    bool                   unpack{false};   // Unpack incoming records?
+    SIO_verbosity          verbosity{};     // Reporting level
 
 friend class SIO_recordManager;           // Access to constructor/destructor
 friend class SIO_stream;                  // Access to read/write/getOptions

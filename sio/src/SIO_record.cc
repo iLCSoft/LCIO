@@ -34,13 +34,8 @@ SIO_record::SIO_record
 (
     const char*     i_name,
     SIO_verbosity   i_verbosity
-)
-{
-options   = 0;
-name      = i_name;
-unpack    = false;
-verbosity = i_verbosity;
-}
+ ) : name(i_name), verbosity( i_verbosity )
+{}
 
 // ----------------------------------------------------------------------------
 // Destructor.
