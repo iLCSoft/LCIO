@@ -26,6 +26,12 @@ namespace IMPL {
     LCRelationImpl( EVENT::LCObject* from, EVENT::LCObject* to , float weight=1.0f ) : _from(from),
 											  _to(to),
 											  _weight(weight) {}
+    /// default copy constructor - use with care
+    LCRelationImpl(const LCRelationImpl&) = default ;
+
+    /// default assignment operator - use with care
+    LCRelationImpl& operator=(const LCRelationImpl&) = default ;
+
     ~LCRelationImpl(){}
 
     int id() const { return simpleUID() ; }

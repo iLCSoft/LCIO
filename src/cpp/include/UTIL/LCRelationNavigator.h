@@ -91,8 +91,8 @@ namespace UTIL {
     void removeRelation(EVENT::LCObject * from, EVENT::LCObject * to, RelMap& map ) ;
     void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight, RelMap& map) ;
 
-    mutable RelMap _map ;
-    mutable RelMap _rMap ;
+    mutable RelMap _map{} ;
+    mutable RelMap _rMap{} ;
     std::string _from ;
     std::string _to ;
     
