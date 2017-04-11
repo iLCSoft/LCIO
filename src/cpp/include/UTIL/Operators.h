@@ -159,13 +159,15 @@ namespace UTIL{
   template <class T>
   class LCIO_LONG{
         public:
-            //lcio_long(const T& o, EVENT::LCCollection* c);
+            LCIO_LONG() = delete ;
+            LCIO_LONG(const LCIO_LONG& ) = default ;
+            LCIO_LONG& operator=(const LCIO_LONG& ) = default ;
             LCIO_LONG(const T& o, const EVENT::LCCollection* c){ obj=&o; col=c;};
             const T *object(void) const {return(obj);};
             const EVENT::LCCollection *collection(void) const {return(col);};
         private: 
-            const T *obj;
-            const EVENT::LCCollection *col;
+            const T *obj{NULL};
+            const EVENT::LCCollection *col{NULL};
   };
 
   //test:
