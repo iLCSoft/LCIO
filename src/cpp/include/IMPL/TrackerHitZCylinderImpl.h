@@ -137,9 +137,8 @@ protected:
     int _cellID1 ;
 
     int _type ;
-    double _pos[3] ;
-    float  _center[2] ;
-    //float  _r;
+    double _pos[3] = {0,0,0} ;
+    float  _center[2]  = {0,0};
     float  _drphi ;
     float  _dz ;
     float _EDep ;

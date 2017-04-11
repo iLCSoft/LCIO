@@ -130,8 +130,6 @@ namespace IMPL {
     void setTime( float t ) ;
     void setQuality( int quality ) ;
     void setQualityBit( int bit , bool val=true ) ;
-    //void setCovMatrix( const EVENT::FloatVec& cov );
-    //void setCovMatrix( float cov[TRKHITPLANENCOVMATRIX]  );
 
 protected:
   
@@ -139,9 +137,9 @@ protected:
     int _cellID1 ;
 
     int    _type ;
-    double  _pos[3] ;
-    float  _u[2] ;
-    float  _v[2] ;
+    double  _pos[3] = {0,0,0};
+    float  _u[2] = {0,0};
+    float  _v[2] = {0,0};
     float  _du ;
     float  _dv ;
     float _EDep ;
