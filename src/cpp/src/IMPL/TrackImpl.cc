@@ -10,15 +10,11 @@ namespace IMPL {
   
     TrackImpl::TrackImpl() :
         _type(0),
-        //_isReferencePointPCA(0),
         _chi2(0),
         _ndf(0),
         _dEdx(0),
         _dEdxError(0),
         _radiusOfInnermostHit(0) { 
-
-            //_type.set( BIT_ISREFERENCEPOINTDCA ) ;
-
         }
 
   // copy constructor
@@ -44,15 +40,12 @@ namespace IMPL {
 
     std::copy( o._tracks.begin() ,  o._tracks.end() , std::back_inserter( _tracks ) ) ;
 
+    _trackStates.reserve(  o._trackStates.size() ) ;
     for( unsigned int i=0; i< o._trackStates.size() ; i++ ){
-      //_trackStates.push_back( new TrackStateImpl(  *dynamic_cast<TrackStateImpl*>( o._trackStates[i] ) ) ) ; 
       _trackStates.push_back( new TrackStateImpl(  *o._trackStates[i] ) ) ;
     }
 
-    // return back the object
-    // needed when calling multiple assignments,
-    // e.g. a = b = c ;
-    return o ;
+    return *this ;
     }
 
 
