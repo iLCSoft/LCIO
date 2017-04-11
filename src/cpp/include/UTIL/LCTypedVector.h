@@ -29,20 +29,23 @@ namespace UTIL{
   class LCTypedVector : public  std::vector<T*> {
     
   public:  
-    
-    LCTypedVector( EVENT::LCCollection* col ) : _col( col) {
+    LCTypedVector() = default ;
+    LCTypedVector(const LCTypedVector& ) = delete ;
+    LCTypedVector& operator=(const LCTypedVector& ) = delete ;
+  
+    LCTypedVector( EVENT::LCCollection* collection ) : _col( collection) {
       
       this->resize( _col->getNumberOfElements() ) ;
       
       for(int i=0;i<_col->getNumberOfElements();i++ ) {
 	
-	(*this)[i] = dynamic_cast<T*>( col->getElementAt(i) ) ;
+	(*this)[i] = dynamic_cast<T*>( _col->getElementAt(i) ) ;
 	
 	// check the first element for the proper type
 	if( i == 0 && (*this)[i] == 0  ){
 
 	  std::stringstream str ;
-	  str << "LCTypedVector: cannot convert " << col->getTypeName() << " to " 
+	  str << "LCTypedVector: cannot convert " << _col->getTypeName() << " to " 
 	      << typeid(T).name()  ;
 
 	  throw EVENT::Exception(  str.str().c_str() ) ; 
