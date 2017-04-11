@@ -50,11 +50,11 @@ int main(int argc, char** argv ){
   rdr.printHeader() ;
 
   // create sio writer
-  std::auto_ptr<LCWriter> lcWrt( LCFactory::getInstance()->createLCWriter() ) ;
+  std::unique_ptr<LCWriter> lcWrt( LCFactory::getInstance()->createLCWriter() ) ;
   
   lcWrt->open( outFile )  ;
   
-  std::auto_ptr<LCRunHeaderImpl> runHdr(  new LCRunHeaderImpl ) ; 
+  std::unique_ptr<LCRunHeaderImpl> runHdr(  new LCRunHeaderImpl ) ; 
   
   runHdr->setRunNumber( 0 ) ;
   
@@ -75,7 +75,7 @@ int main(int argc, char** argv ){
 
     while( maxEvt < 0  || count < maxEvt ){
 	
-      std::auto_ptr<LCEventImpl> evt( new LCEventImpl() ) ;
+      std::unique_ptr<LCEventImpl> evt( new LCEventImpl() ) ;
 	
       evt->setRunNumber(  0   ) ;
       evt->setEventNumber( count ) ;
