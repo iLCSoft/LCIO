@@ -31,6 +31,11 @@ namespace UTIL{
     
   public:  
 
+    CellIDDecoder() = delete ;
+    CellIDDecoder(const CellIDDecoder& ) = delete ;
+    CellIDDecoder& operator=(const CellIDDecoder& ) = delete ;
+    
+
     /** Constructor takes encoding string as argument.
      */
   CellIDDecoder( const std::string& encoder_str ) : _oldHit(0) {
@@ -105,8 +110,8 @@ namespace UTIL{
     }
     
   protected:
-    BitField64* _b ;
-    const T* _oldHit ;
+    BitField64* _b{} ;
+    const T* _oldHit{NULL} ;
     
     static std::string*  _defaultEncoding ;
   } ; 
@@ -116,30 +121,6 @@ namespace UTIL{
   = new std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
 
   
-
-//  /** Provides access to the bit fields, e.g. <br>
-//   *   int layer =  myCellIDEncoding( hit )[ "layer" ] ;
-//   * Specialization for SimTrackerHits that have only one cellID.
-//   */
-//  template<>
-//  inline const BitField64 & CellIDDecoder<SimTrackerHit>::operator()(const SimTrackerHit* hit ){  
-//    
-//    if( hit != _oldHit && hit ) {
-//      
-//      long64 val = long64( hit->getCellID() & 0xffffffff )  ;
-//      
-//      _b->setValue( val ) ;
-//      
-//      _oldHit = hit ;
-//    }
-//    
-//    return  *_b ;
-//  }
-//  
-//  
-//  template <>
-//  std::string* CellIDDecoder<SimTrackerHit>::_defaultEncoding  ;
-
 } // namespace
 #endif
 
