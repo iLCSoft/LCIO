@@ -20,12 +20,12 @@ namespace UTIL{
   public: 
     virtual ~LCObjectHandle() { /*no_op*/; } 
     
-    LCObjectHandle( T* lcObj) : _lcObj(lcObj) {
+    LCObjectHandle( T* obj) : _lcObj(obj) {
     }
 
-    LCObjectHandle(EVENT::LCObject* lcObj){
+    LCObjectHandle(EVENT::LCObject* obj){
       
-      _lcObj = dynamic_cast< T* >( lcObj ) ;
+      _lcObj = dynamic_cast< T* >( obj ) ;
 
       if( _lcObj == 0 )
 	throw EVENT::Exception("dynamic cast failed for LCObjectHandle() !" ) ;
