@@ -26,6 +26,11 @@ namespace SIO {
     
   public:
     
+    /// default copy constructor - use with care
+    SIOCollectionHandler(const SIOCollectionHandler&) = default ;
+    /// default assignment operator - use with care
+    SIOCollectionHandler& operator=(const SIOCollectionHandler&) = default ;
+
     /** The default constructor needs the name, the type and a pointer 
      * the address of the collection. Throws an exception if handler
      * for given type doesn't exist.
@@ -53,7 +58,7 @@ namespace SIO {
     const EVENT::LCCollection *_col ;   // for writing we use the data interface
     
     std::string _myType ;
-    SIOObjectHandler* _myHandler  ;
+    SIOObjectHandler* _myHandler{NULL}  ;
     
   }; // class
   
