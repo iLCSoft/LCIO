@@ -20,11 +20,11 @@ using namespace IOIMPL ;
 namespace SIO {
 
 
-  SIOCollectionHandler::SIOCollectionHandler(const std::string& name, 
+  SIOCollectionHandler::SIOCollectionHandler(const std::string& bname, 
 					     const std::string& type,
 					     LCEventIOImpl**  anEvtP)
     throw (Exception) : 
-    SIO_block( name.c_str() ), 
+    SIO_block( bname.c_str() ), 
     _evtP( anEvtP ) , _col(0) , 
     _myType( type )   {
     
@@ -145,10 +145,8 @@ namespace SIO {
   }
   
   unsigned int   SIOCollectionHandler::version(){
-    
-    int version = SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
-    
-    return version ;
+
+    return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }
   
 } // namespace
