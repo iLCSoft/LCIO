@@ -1,5 +1,30 @@
 # v02-08
 
+2017-04-11 Frank Gaede ([PR#26](https://github.com/iLCSoft/LCIO/pull/26))
+
+- fix all remaining compiler warnings from -Weffc++
+  - using -Wno-non-virtual-dtor ( requires gcc 6 ) on older compilers these warnings will appear but can be safely ignored
+
+2017-03-03 Andre Sailer ([PR#24](https://github.com/iLCSoft/LCIO/pull/24))
+- LCTrackerConf: bugfix for checks of encoding string field order
+
+2017-03-03 Marko Petric ([PR#23](https://github.com/iLCSoft/LCIO/pull/23))
+- Integate CI with Coverity scan via Travis cron jobs
+
+2017-03-01 Marko Petric ([PR#22](https://github.com/iLCSoft/LCIO/pull/22))
+- Update to the CI system:
+  - Install directly cvmfs on base system, which removes the need for the parrot connector 
+  - Replace CernVM docker with plain docker
+  - This reduces the build run time from 15 min to 5 min
+
+2017-03-06 Andre Sailer ([PR#21](https://github.com/iLCSoft/LCIO/pull/21))
+- SimTrackerHit: Add Quality bitfield
+
+
+2017-03-06 Andre Sailer ([PR#19](https://github.com/iLCSoft/LCIO/pull/19))
+- LCTrackerConf: allow first field to be called "system"
+
+
 # v02-07-05
 
 Andre Sailer 2017-03-27 
