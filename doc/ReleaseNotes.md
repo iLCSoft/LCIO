@@ -1,5 +1,7 @@
 # v02-08
 
+# v02-08
+
 2017-04-11 Frank Gaede ([PR#26](https://github.com/iLCSoft/LCIO/pull/26))
 
 - fix all remaining compiler warnings from -Weffc++
