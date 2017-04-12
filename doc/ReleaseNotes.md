@@ -1,7 +1,44 @@
 # v02-07-05
 
-F.Gaede
+Andre Sailer 2017-03-27 
+  - ReleaseNotes: change formatting to markdown, tag headers only
+
+Marko Petric 2017-03-23 
+  - Update CONTRIBUTING
+  - Add CONTRIBUTING.md and PULL_REQUEST_TEMPLATE
+
+Oleksandr Viazlo 2017-03-21 
+  - Replace ILDCellID0 with LCTrackerCellID
+
+Frank Gaede 2017-03-17 
+  - add LCTrackerConf.h with LCTrackerCellID
+
+Frank Gaede 2017-03-02 
+  - update ilcsoft_default_cxx_flags.cmake from ilcutil
+
+Frank Gaede 2017-02-28 
   - fix all warnings in LCIO (llvm/clang 8.0)
+
+Marko Petric 2016-12-14 
+  - Add Coverity scan
+
+Frank Gaede 2016-12-14 
+  - fix lookup pathes of MacroCheckDep if relocated
+
+Marko Petric 2016-12-08 
+  - Fix diagnostic color handling
+  - Add diagnostic color to external cmake flags
+  - Update diagnostics-color to auto
+  - Add build status to README
+  - Include also building of ROOT dictionaries
+  - Add diagnostics-color flag to compiler if supported
+  - Clarify undefined symbol lookup on different linkers
+  - Add CI
+
+Frank Gaede 2016-12-08 
+  - Update README.md
+  -  replace README.html w/ README.md
+  -  add LICENCE ( BSD3c ) to LCIO
 
 # v02-07-04
 
