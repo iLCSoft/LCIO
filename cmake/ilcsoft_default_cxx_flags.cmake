@@ -4,7 +4,7 @@
 
 INCLUDE(CheckCXXCompilerFlag)
 
-SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wno-non-virtual-dtor)
+SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wno-non-virtual-dtor -Wheader-hygiene)
 
 IF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
  LIST( APPEND COMPILER_FLAGS -Wl,-no-undefined )
