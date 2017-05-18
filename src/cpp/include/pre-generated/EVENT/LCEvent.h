@@ -65,6 +65,10 @@ public:
      */
     virtual LCCollection * getCollection(const std::string & name) const throw (DataNotAvailableException, std::exception )  = 0;
 
+    /** Returns the collection for the given name or a nullptr if not existing.
+     */
+    virtual LCCollection * getCollectionNoThrow(const std::string & name) const   = 0;
+
     /** Returns the collection for the given name and transfers the ownership of the collection
      *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
      *  deleted. The collection is still in the event but flagged as transient 

@@ -72,6 +72,8 @@ namespace IMPL{
     virtual EVENT::LCCollection * getCollection(const std::string & name) const 
      throw (EVENT::DataNotAvailableException, std::exception) ;
 
+    virtual EVENT::LCCollection * getCollectionNoThrow(const std::string & name) const;
+
     /** Returns the collection for the given name and transfers the ownership of the collection
      *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
      *  deleted. The collection is still in the event but flagged as transient 
