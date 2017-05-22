@@ -5,7 +5,7 @@
 using namespace EVENT ;
 
 namespace IMPL {
-  
+
   TrackerHitPlaneImpl::TrackerHitPlaneImpl() :
     _cellID0(0),
     _cellID1(0),
@@ -17,19 +17,19 @@ namespace IMPL {
     _time(0),
     _quality(0),
     _cov( TRKHITPLANENCOVMATRIX ),
-    _rawHits(0)
+    _rawHits()
      {}
-  
-  TrackerHitPlaneImpl::~TrackerHitPlaneImpl(){  
-  } 
-  
-  
+
+  TrackerHitPlaneImpl::~TrackerHitPlaneImpl(){
+  }
+
+
   const FloatVec & TrackerHitPlaneImpl::getCovMatrix() const {
-    
-    // FIXME: compute errors in (x,y,z) 
+
+    // FIXME: compute errors in (x,y,z)
     return _cov ;
   }
-  
+
   // DEPRECATED. use getEDep()
   float TrackerHitPlaneImpl::getdEdx() const {
 
@@ -49,58 +49,58 @@ namespace IMPL {
     _cellID1 = id1 ;
   }
 
-  void TrackerHitPlaneImpl::setType(int type) { 
+  void TrackerHitPlaneImpl::setType(int type) {
     checkAccess("TrackerHitPlaneImpl::setType") ;
-    _type= type ; 
+    _type= type ;
   }
 
-  void TrackerHitPlaneImpl::setPosition( const double pos[3]){ 
+  void TrackerHitPlaneImpl::setPosition( const double pos[3]){
     checkAccess("TrackerHitPlaneImpl::setPosition") ;
-    _pos[0] = pos[0] ; 
-    _pos[1] = pos[1] ; 
-    _pos[2] = pos[2] ; 
+    _pos[0] = pos[0] ;
+    _pos[1] = pos[1] ;
+    _pos[2] = pos[2] ;
   }
 
-  void TrackerHitPlaneImpl::setU( float theta, float phi){ 
+  void TrackerHitPlaneImpl::setU( float theta, float phi){
     checkAccess("TrackerHitPlaneImpl::setU") ;
     _u[0] = theta ;
     _u[1] = phi ;
-  } 
+  }
 
-  void TrackerHitPlaneImpl::setV( float theta, float phi){ 
+  void TrackerHitPlaneImpl::setV( float theta, float phi){
     checkAccess("TrackerHitPlaneImpl::setV") ;
     _v[0] = theta ;
     _v[1] = phi ;
-  } 
+  }
 
-  void TrackerHitPlaneImpl::setdU( float du ){ 
+  void TrackerHitPlaneImpl::setdU( float du ){
     checkAccess("TrackerHitPlaneImpl::setdU") ;
     _du = du ;
-  } 
+  }
 
-  void TrackerHitPlaneImpl::setdV( float dv ){ 
+  void TrackerHitPlaneImpl::setdV( float dv ){
     checkAccess("TrackerHitPlaneImpl::setdV") ;
     _dv = dv ;
-  } 
-  
-  void TrackerHitPlaneImpl::setEDep( float e )  { 
+  }
+
+  void TrackerHitPlaneImpl::setEDep( float e )  {
     checkAccess("TrackerHitPlaneImpl::setEDep") ;
-    _EDep = e ; 
+    _EDep = e ;
   }
 
-  void TrackerHitPlaneImpl::setEDepError( float e )  { 
+  void TrackerHitPlaneImpl::setEDepError( float e )  {
     checkAccess("TrackerHitPlaneImpl::setEDepError") ;
-    _EDepError = e ; 
+    _EDepError = e ;
   }
 
-  void TrackerHitPlaneImpl::setTime( float t )  { 
+  void TrackerHitPlaneImpl::setTime( float t )  {
     checkAccess("TrackerHitPlaneImpl::setTime") ;
-    _time = t ; 
+    _time = t ;
   }
 
-  void TrackerHitPlaneImpl::setQuality( int quality )  { 
+  void TrackerHitPlaneImpl::setQuality( int quality )  {
     checkAccess("TrackerHitPlaneImpl::setQuality") ;
-    _quality = quality ; 
+    _quality = quality ;
   }
 
   void TrackerHitPlaneImpl::setQualityBit( int bit , bool val ) {

@@ -5,7 +5,7 @@
 using namespace EVENT ;
 
 namespace IMPL {
-  
+
   TrackerHitImpl::TrackerHitImpl() :
     _cellID0(0),
     _cellID1(0),
@@ -15,19 +15,19 @@ namespace IMPL {
     _EDepError(0),
     _time(0),
     _quality(0),
-    _rawHits(0) {
+    _rawHits() {
     _pos[0] = 0. ;
     _pos[1] = 0. ;
     _pos[2] = 0. ;
-    
+
     _cov.resize( TRKHITNCOVMATRIX ) ;
     //     for(int i=0;i<TRKHITNCOVMATRIX;i++){
     //       _cov.push_back(0.0) ;
     //     }
   }
-  
-  TrackerHitImpl::~TrackerHitImpl(){  
-  } 
+
+  TrackerHitImpl::~TrackerHitImpl(){
+  }
 
 
   int TrackerHitImpl::getCellID0() const {
@@ -38,7 +38,7 @@ namespace IMPL {
     return _cellID1 ;
   }
 
-  const double* TrackerHitImpl::getPosition() const {  return _pos ; } 
+  const double* TrackerHitImpl::getPosition() const {  return _pos ; }
 
   const FloatVec & TrackerHitImpl::getCovMatrix() const {
     return _cov ;
@@ -69,7 +69,7 @@ namespace IMPL {
 //     static std::string tpcHitType( LCIO::TPCHIT ) ;
 //     static std::string unknown( "Unknown" ) ;
 //     TPCHit* tpchit = dynamic_cast<TPCHit*>( _rawHit ) ;
-//     if( tpchit != 0 ) 
+//     if( tpchit != 0 )
 //       return tpcHitType ;
 //     else
 //       return unknown ;
@@ -89,16 +89,16 @@ namespace IMPL {
     _cellID1 = id1 ;
   }
 
-  void TrackerHitImpl::setType(int type) { 
+  void TrackerHitImpl::setType(int type) {
     checkAccess("TrackerHitImpl::setType") ;
-    _type= type ; 
+    _type= type ;
   }
 
-  void TrackerHitImpl::setPosition( const double pos[3]){ 
+  void TrackerHitImpl::setPosition( const double pos[3]){
     checkAccess("TrackerHitImpl::setPosition") ;
-    _pos[0] = pos[0] ; 
-    _pos[1] = pos[1] ; 
-    _pos[2] = pos[2] ; 
+    _pos[0] = pos[0] ;
+    _pos[1] = pos[1] ;
+    _pos[2] = pos[2] ;
   }
 
   // DEPRECATED. use setEDep()
@@ -107,28 +107,28 @@ namespace IMPL {
     UTIL::LCWarning::getInstance().printWarning( "TRACKERHIT_DEPRECATED_SETDEDX" ) ;
 
     //checkAccess("TrackerHitImpl::setdEdx") ;
-    //_dEdx = dedx ; 
+    //_dEdx = dedx ;
     setEDep( dedx ) ;
   }
 
-  void TrackerHitImpl::setEDep( float e )  { 
+  void TrackerHitImpl::setEDep( float e )  {
     checkAccess("TrackerHitImpl::setEDep") ;
-    _EDep = e ; 
+    _EDep = e ;
   }
 
-  void TrackerHitImpl::setEDepError( float e )  { 
+  void TrackerHitImpl::setEDepError( float e )  {
     checkAccess("TrackerHitImpl::setEDepError") ;
-    _EDepError = e ; 
+    _EDepError = e ;
   }
 
-  void TrackerHitImpl::setTime( float t )  { 
+  void TrackerHitImpl::setTime( float t )  {
     checkAccess("TrackerHitImpl::setTime") ;
-    _time = t ; 
+    _time = t ;
   }
 
-  void TrackerHitImpl::setQuality( int quality )  { 
+  void TrackerHitImpl::setQuality( int quality )  {
     checkAccess("TrackerHitImpl::setQuality") ;
-    _quality = quality ; 
+    _quality = quality ;
   }
 
   void TrackerHitImpl::setQualityBit( int bit , bool val ) {
