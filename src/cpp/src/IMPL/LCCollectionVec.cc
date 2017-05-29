@@ -13,7 +13,7 @@ namespace IMPL {
 LCCollectionVec::LCCollectionVec( const std::string& type ) :
   _typeName( type ),
   _flag(0) {}
-  
+
 
   // overwrite the default implementation
   // set flag in all elements
@@ -22,29 +22,13 @@ LCCollectionVec::LCCollectionVec( const std::string& type ) :
     AccessChecked::setReadOnly(readOnly ) ;
 
     LCObjectVec::iterator iter = begin() ;
-    while( iter != end() ){
-      AccessChecked* element = dynamic_cast<AccessChecked*>(*iter++) ;
-      if(element){
-	element->setReadOnly( readOnly ) ;
+    for (; iter != end(); ++iter) {
+      AccessChecked* element = dynamic_cast<AccessChecked*>((*iter).get());
+      if (element) {
+	    element->setReadOnly( readOnly ) ;
       }
     }
   }
-
-LCCollectionVec::~LCCollectionVec() {
-
-  if( ! isSubset() ){
-    // delete all elements
-    LCObjectVec::const_iterator iter = begin() ;
-    //    std::cout << "deleting collection " 
-    //  	    << std::endl ;
-    //    UTIL::LCTOOLS::printParameters( parameters() )  ;
-    
-    while( iter != end() ){
-      delete *iter++ ;
-    }
-  }
-}
-
 
 int LCCollectionVec::getNumberOfElements() const{
   return size() ;
@@ -57,12 +41,12 @@ const std::string & LCCollectionVec::getTypeName() const{
 
 
 
-EVENT::LCObject * LCCollectionVec::getElementAt(int index) const{
+EVENT::LCObject* LCCollectionVec::getElementAt(int index) const{
   return this->operator[](index) ;
 }
 
-bool LCCollectionVec::isTransient() const { 
-  return (_flag & (1<<BITTransient) ) ; 
+bool LCCollectionVec::isTransient() const {
+  return (_flag & (1<<BITTransient) ) ;
 }
 
 void LCCollectionVec::setTransient(bool val) {
@@ -71,8 +55,8 @@ void LCCollectionVec::setTransient(bool val) {
 }
 
 
-bool LCCollectionVec::isDefault() const { 
-  return (_flag & (1<<BITDefault) ) ; 
+bool LCCollectionVec::isDefault() const {
+  return (_flag & (1<<BITDefault) ) ;
 }
 
 void LCCollectionVec::setDefault(bool val) {
@@ -80,8 +64,8 @@ void LCCollectionVec::setDefault(bool val) {
   else _flag &= ~(1<<BITDefault) ;
 }
 
-bool LCCollectionVec::isSubset() const { 
-  return (_flag & (1<<BITSubset) ) ; 
+bool LCCollectionVec::isSubset() const {
+  return (_flag & (1<<BITSubset) ) ;
 }
 
 void LCCollectionVec::setSubset(bool val) {
@@ -99,17 +83,15 @@ void LCCollectionVec::setFlag(int flag){
   _flag  = flag ;
 }
 
-
-  void LCCollectionVec::addElement(EVENT::LCObject * obj) throw (ReadOnlyException){
-    
+  void LCCollectionVec::addElement(EVENT::LCObject* obj) throw (ReadOnlyException){
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
     checkAccess("LCCollectionVec::addElement") ;
-    this->push_back( obj ) ; 
+    push_back(obj) ;
   }
 
   void LCCollectionVec::removeElementAt(int i) throw (EVENT::ReadOnlyException){
-    
+
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
     checkAccess("LCCollectionVec::removeElementAt") ;
@@ -118,4 +100,3 @@ void LCCollectionVec::setFlag(int flag){
   }
 
 } // namespace IMPL
-

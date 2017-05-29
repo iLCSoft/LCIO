@@ -5,7 +5,7 @@
 using namespace EVENT ;
 
 namespace IMPL {
-  
+
   TrackerHitZCylinderImpl::TrackerHitZCylinderImpl() :
     _cellID0(0),
     _cellID1(0),
@@ -17,20 +17,20 @@ namespace IMPL {
     _EDepError(0),
     _time(0),
     _quality(0),
-    _cov(TRKHITZCYLNCOVMATRIX ), 
-    _rawHits(0) {
+    _cov(TRKHITZCYLNCOVMATRIX ),
+    _rawHits() {
   }
-  
-  TrackerHitZCylinderImpl::~TrackerHitZCylinderImpl(){  
-  } 
-  
-  
+
+  TrackerHitZCylinderImpl::~TrackerHitZCylinderImpl(){
+  }
+
+
   const FloatVec & TrackerHitZCylinderImpl::getCovMatrix() const {
-    
-    // FIXME: compute errors in (x,y,z) 
+
+    // FIXME: compute errors in (x,y,z)
     return _cov ;
   }
-  
+
   // DEPRECATED. use getEDep()
   float TrackerHitZCylinderImpl::getdEdx() const {
 
@@ -51,57 +51,57 @@ namespace IMPL {
   }
 
 
-  void TrackerHitZCylinderImpl::setType(int type) { 
+  void TrackerHitZCylinderImpl::setType(int type) {
     checkAccess("TrackerHitZCylinderImpl::setType") ;
-    _type= type ; 
+    _type= type ;
   }
 
-  void TrackerHitZCylinderImpl::setPosition( const double pos[3]){ 
+  void TrackerHitZCylinderImpl::setPosition( const double pos[3]){
     checkAccess("TrackerHitZCylinderImpl::setPosition") ;
-    _pos[0] = pos[0] ; 
-    _pos[1] = pos[1] ; 
-    _pos[2] = pos[2] ; 
+    _pos[0] = pos[0] ;
+    _pos[1] = pos[1] ;
+    _pos[2] = pos[2] ;
   }
 
-  void TrackerHitZCylinderImpl::setCenter( float xc, float yc){ 
+  void TrackerHitZCylinderImpl::setCenter( float xc, float yc){
     checkAccess("TrackerHitZCylinderImpl::setCenter") ;
     _center[0] = xc ;
     _center[1] = yc ;
-  } 
-  
-  //void TrackerHitZCylinderImpl::setR( float r ){ 
+  }
+
+  //void TrackerHitZCylinderImpl::setR( float r ){
   //  checkAccess("TrackerHitZCylinderImpl::setR") ;
   //  _r = r ;
-  //} 
-  
-  void TrackerHitZCylinderImpl::setdRPhi(float drphi ){ 
+  //}
+
+  void TrackerHitZCylinderImpl::setdRPhi(float drphi ){
     checkAccess("TrackerHitZCylinderImpl::setdRPhi") ;
     _drphi = drphi ;
-  } 
+  }
 
-  void TrackerHitZCylinderImpl::setdZ( float dz ){ 
+  void TrackerHitZCylinderImpl::setdZ( float dz ){
     checkAccess("TrackerHitZCylinderImpl::setdZ") ;
     _dz = dz ;
-  } 
-  
-  void TrackerHitZCylinderImpl::setEDep( float e )  { 
+  }
+
+  void TrackerHitZCylinderImpl::setEDep( float e )  {
     checkAccess("TrackerHitZCylinderImpl::setEDep") ;
-    _EDep = e ; 
+    _EDep = e ;
   }
 
-  void TrackerHitZCylinderImpl::setEDepError( float e )  { 
+  void TrackerHitZCylinderImpl::setEDepError( float e )  {
     checkAccess("TrackerHitZCylinderImpl::setEDepError") ;
-    _EDepError = e ; 
+    _EDepError = e ;
   }
 
-  void TrackerHitZCylinderImpl::setTime( float t )  { 
+  void TrackerHitZCylinderImpl::setTime( float t )  {
     checkAccess("TrackerHitZCylinderImpl::setTime") ;
-    _time = t ; 
+    _time = t ;
   }
 
-  void TrackerHitZCylinderImpl::setQuality( int quality )  { 
+  void TrackerHitZCylinderImpl::setQuality( int quality )  {
     checkAccess("TrackerHitZCylinderImpl::setQuality") ;
-    _quality = quality ; 
+    _quality = quality ;
   }
 
   void TrackerHitZCylinderImpl::setQualityBit( int bit , bool val ) {

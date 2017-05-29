@@ -20,9 +20,9 @@ using namespace IOIMPL ;
 
 namespace SIO{
 
-    unsigned int SIOTrackerHitHandler::read(SIO_stream* stream, 
+    unsigned int SIOTrackerHitHandler::read(SIO_stream* stream,
             LCObject** objP){
-        unsigned int status ; 
+        unsigned int status ;
 
         // create a new object :
         TrackerHitIOImpl* hit  = new TrackerHitIOImpl ;
@@ -39,7 +39,7 @@ namespace SIO{
 
         if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
             SIO_DATA( stream ,  &(hit->_type) , 1  ) ;
-        } 
+        }
 
         SIO_DATA( stream ,    hit->_pos  , 3 ) ;
 
@@ -61,7 +61,7 @@ namespace SIO{
 
 
         // rawHits
-        int numberOfRawHits = 1 ; 
+        int numberOfRawHits = 1 ;
         if( _vers > SIO_VERSION_ENCODE( 1, 2)   ){
             SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
         }
@@ -69,7 +69,8 @@ namespace SIO{
         hit->_rawHits.resize( numberOfRawHits ) ;
 
         for(int i=0;i<numberOfRawHits;i++){
-            SIO_PNTR( stream , &(hit->_rawHits[i] ) ) ;
+            EVENT::LCObject* v = hit->_rawHits[i];
+            SIO_PNTR( stream , &v ) ;
         }
 
         SIO_PTAG( stream , dynamic_cast<const TrackerHit*>(hit) ) ;
@@ -79,10 +80,10 @@ namespace SIO{
     }
 
 
-    unsigned int SIOTrackerHitHandler::write(SIO_stream* stream, 
+    unsigned int SIOTrackerHitHandler::write(SIO_stream* stream,
             const LCObject* obj){
 
-        unsigned int status ; 
+        unsigned int status ;
 
         const TrackerHit* hit = dynamic_cast<const TrackerHit*>(obj)  ;
 
@@ -97,8 +98,8 @@ namespace SIO{
         LCSIO_WRITE( stream ,  hit->getType() ) ;
 
         // as SIO doesn't provide a write function with const arguments
-        // we have to cast away the constness 
-        double* pos = const_cast<double*> ( hit->getPosition() ) ; 
+        // we have to cast away the constness
+        double* pos = const_cast<double*> ( hit->getPosition() ) ;
         SIO_DATA( stream,  pos , 3 ) ;
 
         const FloatVec& cov = hit->getCovMatrix() ;
@@ -120,7 +121,8 @@ namespace SIO{
 
         LCSIO_WRITE( stream, rawHits.size()  ) ;
         for(unsigned int i=0; i < rawHits.size() ; i++){
-            SIO_PNTR( stream , &(rawHits[i]) ) ;
+            EVENT::LCObject* v = rawHits[i];
+            SIO_PNTR( stream , &v ) ;
         }
 
         // write a ptag in order to be able to point to tracker hits in the future

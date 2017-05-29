@@ -13,8 +13,8 @@
 using namespace EVENT;
 using namespace IMPL;
 
-#define IDRUP_NAME "_idrup" 
-#define EVTWGT_NAME "_weight" 
+#define IDRUP_NAME "_idrup"
+#define EVTWGT_NAME "_weight"
 
 namespace UTIL {
 
@@ -75,7 +75,7 @@ void LCStdHepRdrNew::updateNextEvent(IMPL::LCEventImpl* evt, const char* colName
     evt->addCollection(mcpCol, colName);
 
     if (_writeEventNumber) {
-        std::cout << "LCStdHepRdrNew: setting event number " << _reader->evtNum() 
+        std::cout << "LCStdHepRdrNew: setting event number " << _reader->evtNum()
             << " from StdHep event" << std::endl;
         evt->setEventNumber(_reader->evtNum());
     }
@@ -135,8 +135,8 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
 
 //     static int counter = 0 ;
 //     bool isCritical = false ;
-//     std::cout << " -----  readEvent  " << counter << " err: " <<   errorcode 
-// 	      << " nhep : " << NHEP 
+//     std::cout << " -----  readEvent  " << counter << " err: " <<   errorcode
+// 	      << " nhep : " << NHEP
 // 	      << std::endl ;
 //     if( counter++ == 3850 ) {
 //       std::cout << " - critical event read !!! " << std::endl ;
@@ -166,7 +166,7 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
         MCParticleImpl* mcp = new MCParticleImpl();
 
         // and add it to the collection (preserving the order of the hepevt block)
-        mcVec->at(IHEP) = mcp;
+        mcVec->at(IHEP) = std::shared_ptr<EVENT::LCObject>(mcp);
 
         //
         //  PDGID
@@ -286,7 +286,7 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
 
     //
     //  Now make a second loop over the particles, checking the daughter
-    //  information. This is not always consistent with parent 
+    //  information. This is not always consistent with parent
     //  information, and this utility assumes all parents listed are
     //  parents and all daughters listed are daughters
     //
@@ -373,7 +373,7 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
 
             } else {
                 //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
-// 	      std::cout << " WARNING:  LCStdhepReader: invalid index in stdhep : " << fd 
+// 	      std::cout << " WARNING:  LCStdhepReader: invalid index in stdhep : " << fd
 // 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
             }
 
@@ -381,7 +381,7 @@ IMPL::LCCollectionVec * LCStdHepRdrNew::readEvent() {
 // --------- fg: ignore daughters if the first daughter index is illegal (0 in stdhep, -1 here)
 // 	else if(ld > -1 )
 // 	  {
-// 	    std::cout << " WARNING: LCStdhepReader: illegal daughter index in stdhep : " << ld 
+// 	    std::cout << " WARNING: LCStdhepReader: illegal daughter index in stdhep : " << ld
 // 		      << " NHEP = " << NHEP << " - ignored ! " << std::endl ;
         // 	    if(  ld < NHEP ){
         // 	      d = dynamic_cast<MCParticleImpl*>
@@ -578,4 +578,3 @@ int LCStdHepRdrNew::threeCharge(int pdgID) const {
 }
 
 } // namespace UTIL
-

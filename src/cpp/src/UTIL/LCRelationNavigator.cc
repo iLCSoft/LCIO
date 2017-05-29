@@ -17,11 +17,11 @@ namespace UTIL{
 
 
   LCRelationNavigator::LCRelationNavigator( const EVENT::LCCollection* col ) :
-  
+
     _from( col->getParameters().getStringVal( RELATIONFROMTYPESTR ) ) ,
-    _to( col->getParameters().getStringVal( RELATIONTOTYPESTR ) ) { 
-    
-    initialize(col) ; 
+    _to( col->getParameters().getStringVal( RELATIONTOTYPESTR ) ) {
+
+    initialize(col) ;
   }
 
   void LCRelationNavigator::initialize( const LCCollection* col ) {
@@ -30,29 +30,29 @@ namespace UTIL{
     if( col->getTypeName() != LCIO::LCRELATION ) {
       return ;
     }
-    
+
     int n = col->getNumberOfElements() ;
-    
+
     for(int i=0; i < n; i++){
-      
+
       LCRelation* rel = dynamic_cast<LCRelation*>( col->getElementAt(i) )  ;
-      
-      addRelation( rel->getFrom() , rel->getTo() , rel->getWeight()  ) ; 
-      
+
+      addRelation( rel->getFrom() , rel->getTo() , rel->getWeight()  ) ;
+
     }
   }
 
 
   const std::string & LCRelationNavigator::getFromType() const { return _from ; }
   const std::string & LCRelationNavigator::getToType() const { return _to ; }
-  
-  const EVENT::LCObjectVec& 
+
+  const EVENT::LCObjectVec&
   LCRelationNavigator::getRelatedToObjects(EVENT::LCObject * from) const{
 
     return _map[ from ].first ;
   }
 
-  const EVENT::LCObjectVec& 
+  const EVENT::LCObjectVec&
   LCRelationNavigator::getRelatedFromObjects(EVENT::LCObject * to) const{
 
     return _rMap[ to ].first ;
@@ -68,21 +68,21 @@ namespace UTIL{
     return _rMap[ to ].second ;
   }
 
-  void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
-					       EVENT::LCObject * to, 
+  void LCRelationNavigator::addRelation(EVENT::LCObject * from,
+					       EVENT::LCObject * to,
 					       float weight) {
     addRelation( from , to , weight ,  _map ) ;
     addRelation( to , from, weight ,  _rMap ) ;
   }
-  
-  void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
-					       EVENT::LCObject * to, 
+
+  void LCRelationNavigator::addRelation(EVENT::LCObject * from,
+					       EVENT::LCObject * to,
 					       float weight,
 					       RelMap& map) {
-    
+
     LCObjectVec& vTo = map[ from ].first ;
     FloatVec & vWgt = map[ from ].second ;
-    
+
     bool isNewObject = true ;
     int n = vTo.size() ;
     for(int i=0; i<n ; i++){
@@ -94,32 +94,32 @@ namespace UTIL{
     }
     if( isNewObject ){
       vTo.push_back( to ) ;
-      vWgt.push_back( weight) ;      
+      vWgt.push_back( weight) ;
     }
   }
-  
+
 
 
   void LCRelationNavigator::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) {
     removeRelation( from, to, _map ) ;
     removeRelation( to, from, _rMap ) ;
   }
-  
-  
-  
+
+
+
   void LCRelationNavigator::removeRelation(EVENT::LCObject * from, EVENT::LCObject * to, RelMap& map ){
 
     RelMap::iterator iter =  map.find( from ) ;
     if( iter != map.end() ) {
-      
-      
+
+
       LCObjectVec& vTo = iter->second.first ;
       FloatVec & vWgt  = iter->second.second ;
-      
+
       // doesn't work as we need to remove/erase the corresponding weight as well ...
       // vTo.erase( remove(vTo.begin(),vTo.end(), to ), vTo.end()).
 
-      LCObjectVec::iterator iTo = find( vTo.begin(), vTo.end() , to ) ;
+      LCObjectVec::iterator iTo = find( vTo.begin(), vTo.end() , std::shared_ptr<EVENT::LCObject>(to) ) ;
 
       if( iTo != vTo.end() ){
 
@@ -135,15 +135,15 @@ namespace UTIL{
 	  map.erase( iter ) ;
 	}
       }
-      
+
     }
   }
 
   EVENT::LCCollection * LCRelationNavigator::createLCCollection() {
-    
+
     LCCollectionVec* col = new LCCollectionVec( LCIO::LCRELATION ) ;
-    
-    
+
+
     col->parameters().setValue( RELATIONFROMTYPESTR , getFromType() ) ;
     col->parameters().setValue( RELATIONTOTYPESTR , getToType() ) ;
 
@@ -151,11 +151,11 @@ namespace UTIL{
     bool storeWeights = false ;
     for(RelMap::iterator iter = _map.begin() ;
 	iter != _map.end() ; iter++ ) {
-      
+
       LCObject* from = iter->first ;
       LCObjectVec& vTo = iter->second.first ;
       FloatVec & vWgt  = iter->second.second ;
-      
+
       unsigned int n =  vTo.size() ;
       assert( n == vWgt.size() ) ;
 
@@ -166,12 +166,12 @@ namespace UTIL{
       }
     }
     if( storeWeights ) {
-      LCFlagImpl flag(0) ; 
+      LCFlagImpl flag(0) ;
       flag.setBit( LCIO::LCREL_WEIGHTED ) ;
       col->setFlag( flag.getFlag() ) ;
     }
-      
+
 
     return col ;
   }
-} 
+}

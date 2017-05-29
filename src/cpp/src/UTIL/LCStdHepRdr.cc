@@ -13,8 +13,8 @@ using namespace EVENT ;
 using namespace IMPL ;
 
 
-#define IDRUP_NAME "_idrup" 
-#define EVTWGT_NAME "_weight" 
+#define IDRUP_NAME "_idrup"
+#define EVTWGT_NAME "_weight"
 
 namespace UTIL{
 
@@ -24,7 +24,7 @@ namespace UTIL{
     //
     _reader = new UTIL::lStdHep(evfile,false);
     if(_reader->getError()) {
-      std::stringstream description ; 
+      std::stringstream description ;
       description << "LCStdHepRdr: no stdhep file: " << evfile << std::ends ;
       throw IO::IOException( description.str() );
     }
@@ -36,7 +36,7 @@ namespace UTIL{
 
     delete _reader ;
   }
-  
+
 
 
   void LCStdHepRdr::printHeader(std::ostream& os ) {
@@ -54,9 +54,9 @@ namespace UTIL{
     if( evt == 0 ) {
       throw EVENT::Exception( " LCStdHepRdr::updateEvent - null pointer for event "  );
     }
-    
+
     IMPL::LCCollectionVec* mcpCol = readEvent() ;
-    
+
     if( mcpCol == 0 ) {
 
       throw IO::EndOfDataException( " LCStdHepRdr::updateEvent: EOF " ) ;
@@ -64,9 +64,9 @@ namespace UTIL{
 
     // copy event parameters from the collection to the event:
     // FIXME: make this more efficient - not going through paramer map twice....
-    
+
     int idrup = mcpCol->getParameters().getIntVal( IDRUP_NAME ) ;
-    
+
     evt->parameters().setValue( IDRUP_NAME ,  idrup ) ;
 
     double evtwgt = mcpCol->getParameters().getFloatVal( EVTWGT_NAME ) ;
@@ -76,7 +76,7 @@ namespace UTIL{
 
     // ---- end event parameters  ------------------
 
- 
+
     evt->addCollection( mcpCol , colName ) ;
   }
 
@@ -98,21 +98,21 @@ namespace UTIL{
       if( errorcode != LSH_SUCCESS ){
 
 	if(  errorcode != LSH_ENDOFFILE ) {
-	  
-	  std::stringstream description ; 
+
+	  std::stringstream description ;
 	  description << "LCStdHepRdr::readEvent: error when reading event: " << errorcode << std::ends ;
-	  
+
 	  throw IO::IOException( description.str() );
 	}
-	
+
 	else {
-	  
+
 	  return 0 ;
 	  // throw IO::EndOfDataException( " LCStdHepRdr::readEvent EOF " ) ;
 	}
       }
 
-      
+
 //     } else {
 //       //
 //       // End of File :: ??? Exception ???
@@ -131,14 +131,14 @@ namespace UTIL{
     //  Loop over particles
     //
     int NHEP = _reader->nTracks();
-    
+
     // user defined process  id
-    long idrup = _reader->idrup() ;  
-    
+    long idrup = _reader->idrup() ;
+
 //     static int counter = 0 ;
 //     bool isCritical = false ;
-//     std::cout << " -----  readEvent  " << counter << " err: " <<   errorcode 
-// 	      << " nhep : " << NHEP 
+//     std::cout << " -----  readEvent  " << counter << " err: " <<   errorcode
+// 	      << " nhep : " << NHEP
 // 	      << std::endl ;
 //     if( counter++ == 3850 ) {
 //       std::cout << " - critical event read !!! " << std::endl ;
@@ -152,13 +152,13 @@ namespace UTIL{
 
 
     if( idrup != 0 ) {
-      
+
       mcVec->parameters().setValue( IDRUP_NAME ,  (int) idrup ) ;
     }
-    
+
     double evtWeight = _reader->eventweight() ;
-    
-    
+
+
     mcVec->parameters().setValue( EVTWGT_NAME ,  (float) evtWeight ) ;
 
     mcVec->resize( NHEP ) ;
@@ -171,7 +171,7 @@ namespace UTIL{
 	MCParticleImpl* mcp = new MCParticleImpl();
 
 	// and add it to the collection (preserving the order of the hepevt block)
-	mcVec->at(IHEP)  = mcp ;
+	mcVec->at(IHEP)  = std::shared_ptr<EVENT::LCObject>(mcp);
 
 	//
 	//  PDGID
@@ -181,7 +181,7 @@ namespace UTIL{
 
 	//
 	//  charge
-	// 
+	//
 	mcp->setCharge( threeCharge( mcp->getPDG() ) / 3. ) ;
 
 	//
@@ -212,7 +212,7 @@ namespace UTIL{
 	mcp->setTime(_reader->T(IHEP)/c_light);
 
 
-	// add spin and color flow information if available 
+	// add spin and color flow information if available
 	if( _reader->isStdHepEv4() ){
 
 	  float spin[3] = {(float) _reader->spinX( IHEP ) ,(float) _reader->spinY( IHEP ) , (float) _reader->spinZ( IHEP )   } ;
@@ -297,7 +297,7 @@ namespace UTIL{
 
     //
     //  Now make a second loop over the particles, checking the daughter
-    //  information. This is not always consistent with parent 
+    //  information. This is not always consistent with parent
     //  information, and this utility assumes all parents listed are
     //  parents and all daughters listed are daughters
     //
@@ -306,7 +306,7 @@ namespace UTIL{
 	//
 	//  Get the MCParticle
 	//
-	MCParticleImpl* mcp = 
+	MCParticleImpl* mcp =
 	  dynamic_cast<MCParticleImpl*>
 	  (mcVec->getElementAt(IHEP));
 	//
@@ -321,7 +321,7 @@ namespace UTIL{
 // 	}
 
 	//
-	//  As with the parents, look for range, 2 discreet or 1 discreet 
+	//  As with the parents, look for range, 2 discreet or 1 discreet
 	//  daughter.
 	//
 	if( (fd > -1) && (ld > -1) )
@@ -379,7 +379,7 @@ namespace UTIL{
 		if(!gotit)d->addParent(mcp);
 	      }
 	  }
-	else if(fd > -1 ) 
+	else if(fd > -1 )
 	  {
 
 	    if( fd < NHEP ) {
@@ -395,9 +395,9 @@ namespace UTIL{
 		}
 	      if(!gotit)d->addParent(mcp);
 
-	    } else { 
+	    } else {
 	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
-// 	      std::cout << " WARNING:  LCStdhepReader: invalid index in stdhep : " << fd 
+// 	      std::cout << " WARNING:  LCStdhepReader: invalid index in stdhep : " << fd
 // 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
 	    }
 
@@ -405,7 +405,7 @@ namespace UTIL{
 // --------- fg: ignore daughters if the first daughter index is illegal (0 in stdhep, -1 here)
 // 	else if(ld > -1 )
 // 	  {
-// 	    std::cout << " WARNING: LCStdhepReader: illegal daughter index in stdhep : " << ld 
+// 	    std::cout << " WARNING: LCStdhepReader: illegal daughter index in stdhep : " << ld
 // 		      << " NHEP = " << NHEP << " - ignored ! " << std::endl ;
 	// 	    if(  ld < NHEP ){
 	// 	      d = dynamic_cast<MCParticleImpl*>
@@ -419,14 +419,14 @@ namespace UTIL{
 	// 		  if(p == mcp)gotit = true;
 	// 		}
 	// 	      if(!gotit)d->addParent(mcp);
-	
+
 	// 	    } else {
 	// 	      //FIXME: whizdata has lots of of illegal daughter indices 21 < NHEP
-	// // 	      std::cout << " WARNING: LCStdhepReader: invalid index in stdhep : " << ld 
+	// // 	      std::cout << " WARNING: LCStdhepReader: invalid index in stdhep : " << ld
 	// // 			<< " NHEP = " << NHEP << " - ignored ! " << std::endl ;
-	
+
 	// 	    }
-	
+
 	// 	  }
 
       }// End second loop over particles
@@ -486,7 +486,7 @@ namespace UTIL{
     //
     //  Return the collection
     //
-    return mcVec;    
+    return mcVec;
   }
 
 
@@ -494,7 +494,7 @@ namespace UTIL{
     //
     // code copied from HepPDT package, author L.Garren
     // modified to take pdg
-    
+
     ///  PID digits (base 10) are: n nr nl nq1 nq2 nq3 nj
     ///  The location enum provides a convenient index into the PID.
     enum location { nj=1, nq3, nq2, nq1, nl, nr, n, n8, n9, n10 };
@@ -512,9 +512,9 @@ namespace UTIL{
 			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 			      0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-    
+
     ida = (pdgID < 0) ? -pdgID : pdgID ;
-    
+
     //     q1 = digit(nq1);
     //     q2 = digit(nq2);
     //     q3 = digit(nq3);
@@ -522,24 +522,24 @@ namespace UTIL{
     q1 =  ( ida / ( (int) std::pow( 10.0, (nq1 -1) ) )  ) % 10 ;
     q2 =  ( ida / ( (int) std::pow( 10.0, (nq2 -1) ) )  ) % 10 ;
     q3 =  ( ida / ( (int) std::pow( 10.0, (nq3 -1) ) )  ) % 10 ;
-    
+
 //     sid = fundamentalID();
     //---- ParticleID::fundamentalID -------
     short dig_n9 =  ( ida / ( (int) std::pow( 10.0, (n9 -1) ) )  ) % 10 ;
     short dig_n10 =  ( ida / ( (int) std::pow( 10.0, (n10 -1) ) )  ) % 10 ;
-    
+
     if( ( dig_n10 == 1 ) && ( dig_n9 == 0 ) ) {
-      
+
       sid = 0 ;
-    } 
+    }
     else if( q2 == 0 && q1 == 0) {
-      
+
       sid = ida % 10000;
-    } 
+    }
     else if( ida <= 102 ) {
-      
-      sid = ida ; 
-    } 
+
+      sid = ida ;
+    }
     else {
 
       sid = 0;
@@ -575,10 +575,9 @@ namespace UTIL{
     if( charge == 0 ) {
       return 0;
     } else if( pdgID < 0 ) {
-      charge = -charge; 
+      charge = -charge;
     }
     return charge;
   }
 
 } // namespace UTIL
-

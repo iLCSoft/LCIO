@@ -51,13 +51,14 @@ namespace SIO{
         //hit->setCovMatrix( cov ) ;
 
         // rawHits
-        int numberOfRawHits = 1 ; 
+        int numberOfRawHits = 1 ;
         SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
 
         hit->_rawHits.resize( numberOfRawHits ) ;
 
         for(int i=0;i<numberOfRawHits;i++){
-            SIO_PNTR( stream , &(hit->_rawHits[i] ) ) ;
+            EVENT::LCObject* v = hit->_rawHits[i];
+            SIO_PNTR( stream , &v ) ;
         }
 
         SIO_PTAG( stream , dynamic_cast<const TrackerHitZCylinder*>(hit) ) ;
@@ -67,10 +68,10 @@ namespace SIO{
     }
 
 
-    unsigned int SIOTrackerHitZCylinderHandler::write(SIO_stream* stream, 
+    unsigned int SIOTrackerHitZCylinderHandler::write(SIO_stream* stream,
             const LCObject* obj){
 
-        unsigned int status ; 
+        unsigned int status ;
 
         const TrackerHitZCylinder* hit = dynamic_cast<const TrackerHitZCylinder*>(obj)  ;
 
@@ -85,11 +86,11 @@ namespace SIO{
         LCSIO_WRITE( stream ,  hit->getType() ) ;
 
         // as SIO doesn't provide a write function with const arguments
-        // we have to cast away the constness 
-        double* pos = const_cast<double*> ( hit->getPosition() ) ; 
+        // we have to cast away the constness
+        double* pos = const_cast<double*> ( hit->getPosition() ) ;
         SIO_DATA( stream,  pos , 3 ) ;
 
-        float* center = const_cast<float*> ( hit->getCenter() ) ; 
+        float* center = const_cast<float*> ( hit->getCenter() ) ;
         SIO_DATA( stream,  center , 2 ) ;
 
         //LCSIO_WRITE( stream, hit->getR()  ) ;
@@ -100,7 +101,7 @@ namespace SIO{
         LCSIO_WRITE( stream, hit->getTime()  ) ;
         LCSIO_WRITE( stream, hit->getQuality()  ) ;
 
-        
+
         //const FloatVec& cov = hit->getCovMatrix() ;
         //for(unsigned int i=0;i<cov.size();i++){
         //    LCSIO_WRITE( stream, cov[i]  ) ;
@@ -110,7 +111,8 @@ namespace SIO{
 
         LCSIO_WRITE( stream, rawHits.size()  ) ;
         for(unsigned int i=0; i < rawHits.size() ; i++){
-            SIO_PNTR( stream , &(rawHits[i]) ) ;
+            EVENT::LCObject* v = rawHits[i];
+            SIO_PNTR( stream , &v ) ;
         }
 
         SIO_PTAG( stream , hit ) ;
