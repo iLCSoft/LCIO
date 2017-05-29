@@ -99,6 +99,10 @@ LCCollection * LCEventImpl::getCollection(const std::string & name) const
   
 }
 
+LCCollection * LCEventImpl::getCollectionNoThrow(const std::string & name) const {
+  LCCollectionMap::iterator it = _colMap.find( name );
+  return (it == _colMap.end()) ? nullptr : it->second;
+}
 
 LCCollection * LCEventImpl::takeCollection(const std::string & name) const 
   throw (DataNotAvailableException, std::exception) {
