@@ -1,3 +1,11 @@
+# v02-09
+
+* 2017-05-08 Sebastien Binet ([PR#27](https://github.com/ilcsoft/lcio/pull/27))
+  - add an example using `LCIO` from `Go`
+
+* 2017-05-29 Marko Petric ([PR#30](https://github.com/ilcsoft/lcio/pull/30))
+  - Added flag -Wheader-hygiene to warn about usage of namespace directive in global context in header
+
 # v02-08
 
 # v02-08
