@@ -80,7 +80,7 @@ const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
     
 
 LCCollection * LCEventImpl::getCollection(const std::string & name) const 
-  throw (DataNotAvailableException, std::exception) {
+  noexcept(false) {
 
   LCCollectionMap::iterator it = _colMap.find( name )  ;
 
@@ -101,7 +101,7 @@ LCCollection * LCEventImpl::getCollection(const std::string & name) const
 
 
 LCCollection * LCEventImpl::takeCollection(const std::string & name) const 
-  throw (DataNotAvailableException, std::exception) {
+  noexcept(false) {
 
   LCCollectionVec* col = dynamic_cast<LCCollectionVec*> ( getCollection( name ) ) ;
 
@@ -116,7 +116,7 @@ LCCollection * LCEventImpl::takeCollection(const std::string & name) const
     
 
 void  LCEventImpl::addCollection(LCCollection * col, const std::string & name) 
-  throw (EventException, std::exception)  {
+  noexcept(false) {
 
   
   if( ! validateCollectionName(name.c_str()) ){
@@ -142,7 +142,7 @@ void  LCEventImpl::addCollection(LCCollection * col, const std::string & name)
 
     
 
-void LCEventImpl::removeCollection(const std::string & name) throw (ReadOnlyException, std::exception) {
+void LCEventImpl::removeCollection(const std::string & name) noexcept(false) {
 
   // remove collection only, if access mode == update
   checkAccess("LCEventImpl::removeCollection") ;

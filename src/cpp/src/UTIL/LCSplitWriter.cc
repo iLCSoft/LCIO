@@ -28,18 +28,18 @@ namespace UTIL{
 
 
 
-  void LCSplitWriter::open(const std::string & filename) throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::open(const std::string & filename) noexcept(false) {
     _count = 0 ;
     setBaseFilename( filename ) ;
     _wrt->open( getFilename() ) ;
   }
   
-  void LCSplitWriter::open(const std::string & , int ) throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::open(const std::string & , int ) noexcept(false) {
       throw Exception(" LCSplitWriter doesn't support  NEW and APPEND mode ! "
 		      " Please remove your old file(s) and use the default mode." ) ;
   }
   
-  void LCSplitWriter::writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::writeRunHeader(const EVENT::LCRunHeader * hdr) noexcept(false) {
 
     _wrt->flush() ;
     if( fileSize() > _maxBytes ) {
@@ -51,7 +51,7 @@ namespace UTIL{
     _wrt->writeRunHeader( hdr ) ;
   }
 
-  void LCSplitWriter::writeEvent(const EVENT::LCEvent * evt) throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::writeEvent(const EVENT::LCEvent * evt) noexcept(false) {
 
     _wrt->flush() ;
 
@@ -70,11 +70,11 @@ namespace UTIL{
     _wrt->writeEvent( evt ) ;
    }
   
-  void LCSplitWriter::close() throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::close() noexcept(false) {
     _wrt->close() ;
    }
 
-  void LCSplitWriter::flush() throw (IO::IOException, std::exception ) {
+  void LCSplitWriter::flush() noexcept(false) {
     _wrt->flush() ;
    }
 
