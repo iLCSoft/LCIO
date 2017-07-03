@@ -19,7 +19,11 @@ public interface LCWriter {
      *
      *@throws IOException
      */
+@ifdef cpp
+    public void open(const String& filename ) ;
+@else
     public void open(const String& filename ) throws IOException ;
+@endif
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW
@@ -27,7 +31,11 @@ public interface LCWriter {
      *
      *@throws IOException
      */
+@ifdef cpp
+    public void open(const String& filename , int writeMode ) ;
+@else
     public void open(const String& filename , int writeMode ) throws IOException ;
+@endif
 
     
     /** Set the compression level - needs to be called before open() otherwise
@@ -53,23 +61,39 @@ public interface LCWriter {
      *
      *@throws IOException
      */
+@ifdef cpp
+    public void writeRunHeader(const LCRunHeader*  hdr) ;
+@else
     public void writeRunHeader(const LCRunHeader*  hdr) throws IOException ;
+@endif
 
     /** Writes the given event to file.
      *
      *@throws IOException
      */
+@ifdef cpp
+    public void writeEvent(const LCEvent*  evt) ;
+@else
     public void writeEvent(const LCEvent*  evt) throws IOException ;
+@endif
     
     /** Closes the output file/stream.
      *
      *@throws IOException
      */
+@ifdef cpp
+    public void close() ;
+@else
     public void close() throws IOException ;
+@endif
 
     /** Flushes the output file/stream.
      *
      *@throws IOException
      */
-    public void flush() throws IOException ;    
+@ifdef cpp
+    public void flush() ;
+@else
+    public void flush() throws IOException ;
+@endif
 }
