@@ -37,7 +37,7 @@ namespace SIO {
     SIOCollectionHandler(const std::string& name, 
 			 const std::string& type, 
 			 IOIMPL::LCEventIOImpl**  anEvtP=0 ) 
-      throw (EVENT::Exception) ;
+      noexcept(false) ;
 
     virtual ~SIOCollectionHandler() ;
 
