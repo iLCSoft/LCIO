@@ -24,7 +24,12 @@ public interface LCReader {
      *
      * @throws IOException
      */
+@ifdef cpp
+    public void removeCollection(const  String& name ) ;
+@else
     public void open(const String& filename) throws IOException  ;
+@endif
+
 
 
     /** Opens a list of files for reading (read-only). All subsequent
@@ -34,7 +39,12 @@ public interface LCReader {
      *
      * @throws IOException
      */
+@ifdef cpp
+    public void open(const String[]& filenames) ;
+@else
     public void open(const String[]& filenames) throws IOException  ;
+@endif
+
 
 
     /** Reads the next run header from the file. Returns NULL if
@@ -42,28 +52,45 @@ public interface LCReader {
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCRunHeader* readNextRunHeader() ;
+@else
     public LCRunHeader* readNextRunHeader() throws IOException ;
+@endif
     
     /** Same as readNextRunHeader() but allows to set the access mode 
      *  LCIO::READ_ONLY (default) or LCIO::Update. 
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCRunHeader* readNextRunHeader(int accessMode) ;
+@else
     public LCRunHeader* readNextRunHeader(int accessMode) throws IOException ;
+@endif
     
     /** Reads the next event from the file. Returns NULL if
      * 'EOF' read. 
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCEvent* readNextEvent() ;
+@else
     public LCEvent* readNextEvent() throws IOException ;
+@endif
     
     /** Same as readNextEvent() but allows to set the access mode 
      *  LCIO::READ_ONLY (default) or LCIO::Update. 
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCEvent* readNextEvent(int accessMode) ;
+@else
     public LCEvent* readNextEvent(int accessMode) throws IOException ;
+@endif
+
 
     @ifdef cpp
 	
@@ -71,13 +98,13 @@ public interface LCReader {
      *  case several input files are specified in the open() method - 
      *  the number of events in the file that is currently open is returned. 
      */
-     public int getNumberOfEvents() throws IOException;
+     public int getNumberOfEvents() ;
     
     /** Return the number of runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
      *  the number of runs (run headers) in the file that is currently open is returned. 
      */
-     public int getNumberOfRuns() throws IOException;
+     public int getNumberOfRuns() ;
      
     /** Return the run numbers of the runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
@@ -105,41 +132,65 @@ public interface LCReader {
   /** Skips the next n events from the current position.
      * @throws IOException
      */
+@ifdef cpp
+    public void skipNEvents(int n) ;
+@else
     public void skipNEvents(int n) throws IOException;
+@endif
 
     /** Reads the specified runHeader from file. Returns NULL if
      *  the specified runHeader hasn't been found in the file.
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCRunHeader* readRunHeader(int runNumber ) ;
+@else
     public LCRunHeader* readRunHeader(int runNumber ) throws IOException  ;
+@endif
     
     /** Same as LCEvent* readRunHeader(int runNumber) 
      *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCRunHeader* readRunHeader(int runNumber, int accessMode) ;
+@else
     public LCRunHeader* readRunHeader(int runNumber, int accessMode) throws IOException  ;
+@endif
 
     /** Reads the specified event from file. Returns NULL if
      *  the specified event hasn't been found in the file.
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCEvent* readEvent(int runNumber, int evtNumber) ;
+@else
     public LCEvent* readEvent(int runNumber, int evtNumber) throws IOException  ;
+@endif
 
     /** Same as LCEvent* readEvent(int runNumber, int evtNumber) 
      *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
      *
      * @throws IOException
      */
+@ifdef cpp
+    public LCEvent* readEvent(int runNumber, int evtNumber, int accessMode) ;
+@else
     public LCEvent* readEvent(int runNumber, int evtNumber, int accessMode) throws IOException  ;
+@endif
 
     /** Closes the output file/stream etc.
      *
      * @throws IOException
      */
+@ifdef cpp
+    public void close() ;
+@else
     public void close() throws IOException ;
+@endif
 
     
     /** Registers a listener for reading LCEvents from a stream.
@@ -164,7 +215,11 @@ public interface LCReader {
      *
      * @throws IOException
      */
+@ifdef cpp
+    public void readStream() ;
+@else
     public void readStream() throws IOException ;
+@endif
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream.
@@ -172,5 +227,9 @@ public interface LCReader {
      *
      * @throws IOException
      */
+@ifdef cpp
+    public void readStream(int maxRecord) ;
+@else
     public void readStream(int maxRecord) throws IOException ;
+@endif
 }
