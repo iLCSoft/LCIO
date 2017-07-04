@@ -32,12 +32,12 @@ namespace UTIL{
     /** Create CollectionParameterMap for given collection - read the collection parameters
      *  keyName and valueName if they exist.
      */
-    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  LCCollection* col ) ;
+    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  EVENT::LCCollection* col ) ;
     
     /** Create CollectionParameterMap for given collection - read the collection parameters
      *  keyName and valueName if they exist.
      */
-    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  const LCCollection* col ) ;
+    CollectionParameterMap( const std::string& keyName ,  const std::string& valueName,  const EVENT::LCCollection* col ) ;
 
     /** Update the collection parameters keyName and valueName when going out of scope.
      */
@@ -51,11 +51,11 @@ namespace UTIL{
   protected:
 
     
-    void init( const LCCollection* col ) ; 
+    void init( const EVENT::LCCollection* col ) ;
  
     std::string _keyName{} ;
     std::string _valueName{} ;
-    LCCollection* _col{NULL} ;
+    EVENT::LCCollection* _col{NULL} ;
     map_type _map{} ;
 
 

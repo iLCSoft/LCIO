@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+using namespace EVENT;
 
 namespace UTIL{
 

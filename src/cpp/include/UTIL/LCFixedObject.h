@@ -22,7 +22,7 @@ namespace UTIL{
    */
 
   template <int NINT, int NFLOAT, int NDOUBLE>
-  class LCFixedObject : public LCGenericObject {
+  class LCFixedObject : public EVENT::LCGenericObject {
     
   public: 
     
@@ -36,7 +36,7 @@ namespace UTIL{
      */
     LCFixedObject():
       _createdObject( true )  {
-      _obj = new LCGenericObjectImpl( NINT, NFLOAT , NDOUBLE ) ;
+      _obj = new IMPL::LCGenericObjectImpl( NINT, NFLOAT , NDOUBLE ) ;
     }
     
     /** C'tor to be used for elements of LCGenericObjects read from
@@ -48,7 +48,7 @@ namespace UTIL{
     LCFixedObject(LCObject* object) : 
       _createdObject(false)  {
       
-      _obj = dynamic_cast<LCGenericObjectImpl*>( object )  ;
+      _obj = dynamic_cast<IMPL::LCGenericObjectImpl*>( object )  ;
       
       if( _obj==0 ){
 
@@ -63,7 +63,7 @@ namespace UTIL{
 
       // do some sanity checks ...
       if( _obj==0 ){
-	throw Exception("Cannot create LCFixedObject from sth."
+        throw EVENT::Exception("Cannot create LCFixedObject from sth."
 			" that is not LCGenericObjectImpl" ) ;
       } 
       
@@ -71,13 +71,13 @@ namespace UTIL{
 	   ( _obj->getNFloat()  != NFLOAT )  || 
 	   ( _obj->getNDouble() != NDOUBLE )   ) {
 	
-	throw Exception("LCFixedObject(LCObject* obj): Wrong number of elements in object" ) ;
+        throw EVENT::Exception("LCFixedObject(LCObject* obj): Wrong number of elements in object" ) ;
       }
     }
     
     /** The LCGenericObjectImpl . Sublcasses use this to access their data.
      */
-    LCGenericObjectImpl* obj() { return _obj ; }
+    IMPL::LCGenericObjectImpl* obj() { return _obj ; }
 
 
     /** Clean up if we created a new LCGenericObjectImpl 
@@ -112,7 +112,7 @@ namespace UTIL{
     
   protected:
     
-    LCGenericObjectImpl* _obj{NULL} ;
+    IMPL::LCGenericObjectImpl* _obj{NULL} ;
     bool _createdObject{false} ;
     
   }; 

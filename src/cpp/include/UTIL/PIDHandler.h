@@ -33,7 +33,7 @@ namespace UTIL{
   class PIDHandler {
 
     typedef CollectionParameterMap CPM ;
-    typedef std::map< int, StringVec > PNM ;
+    typedef std::map< int, EVENT::StringVec > PNM ;
     typedef  std::map< CPM::map_type::mapped_type , CPM::map_type::key_type > CPMINV ;
 
 
@@ -46,14 +46,14 @@ namespace UTIL{
      *  PIDAlgorithmTypeName, PIDAlgorithmTypeID and the corresponding 
      *  ParameterNames_PIDAlgorithmTypeName if they exist.
      */
-    PIDHandler( const LCCollection* col ) ;
+    PIDHandler( const EVENT::LCCollection* col ) ;
     
     /** Create PIDHandler for setting PID information in the given collection 
      *  - read and update the collection parameters
      *  PIDAlgorithmTypeName, PIDAlgorithmTypeID and the corresponding 
      *  ParameterNames_PIDAlgorithmTypeName if they exist.
      */
-    PIDHandler( LCCollection* col ) ;
+    PIDHandler( EVENT::LCCollection* col ) ;
 
 
     /** Update the collection parameter when going out of scope.
@@ -62,7 +62,7 @@ namespace UTIL{
 
     /** Add a new algorithm and return the corresponding algorithm id.
      */
-    int addAlgorithm( const std::string& algoName, const StringVec& parameterNames ) ;
+    int addAlgorithm( const std::string& algoName, const EVENT::StringVec& parameterNames ) ;
     
     /** Return the typeID of algorithm algoName  - throws UnknownAlgorithm.
      */
@@ -80,12 +80,12 @@ namespace UTIL{
      *  Only use if you know there is only one PID object for the algorithms or if you simply want the most likely
      *  PID for this algorithm.
      */
-    const ParticleID& getParticleID( LCObject* particle , int algorithmID ) ;
+    const EVENT::ParticleID& getParticleID( EVENT::LCObject* particle , int algorithmID ) ;
     
 
     /** Return all PID objects for a given algorithm - ordered with decreasing likelihood - throws UnknownAlgorithm.
      */
-    ParticleIDVec getParticleIDs( LCObject* p , int id ) ;
+    EVENT::ParticleIDVec getParticleIDs( EVENT::LCObject* p , int id ) ;
 
 
     /** Set the particleID algorithm that is used for this particle's  kinematic variables 
@@ -96,43 +96,43 @@ namespace UTIL{
 
     /** The names of parameters for the algorithm with algorithmID - throws UnknownAlgoritm.
      */
-    const StringVec&  getParameterNames( int algorithmID  ) ;
+    const EVENT::StringVec&  getParameterNames( int algorithmID  ) ;
     
     /** Return the IDs of all known Algorithms.
      */
-    const IntVec& getAlgorithmIDs() ;
+    const EVENT::IntVec& getAlgorithmIDs() ;
 
 
     /** Set the particleID information for this particle (or cluster) - throws UnknownAlgorithm.
      */
-    void setParticleID( LCObject* p ,
-			int userType, 
-			int PDG,
-			float likelihood,
-			int algorithmID, 
-			const FloatVec& params
-			) ;
+    void setParticleID( EVENT::LCObject* p ,
+                        int userType,
+                        int PDG,
+                        float likelihood,
+                        int algorithmID,
+                        const EVENT::FloatVec& params
+                        ) ;
 
   protected:
 
     int nextID() { return ++_maxID ; }
-    void init( const LCCollection* col ) ;
+    void init( const EVENT::LCCollection* col ) ;
 
 
-    LCCollection* _col{NULL} ;
+    EVENT::LCCollection* _col{NULL} ;
     CPM _cpm{} ;
     int _type{0} ; 
     int _maxID{0} ;
     PNM _pNames{} ; 
     CPMINV _cpmInv{} ;
-    IntVec _ids{} ;
+    EVENT::IntVec _ids{} ;
 
   } ; 
   
 
   /** Exception for unknown algorithms.
    */
-  class UnknownAlgorithm : public Exception {
+  class UnknownAlgorithm : public EVENT::Exception {
     
   protected:
     UnknownAlgorithm() {  /*no_op*/ ; } 
