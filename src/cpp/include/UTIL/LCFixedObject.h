@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-using namespace lcio ;
-
 namespace UTIL{
 
   /** Template class for fixed size LCGenericObject subclasses.
