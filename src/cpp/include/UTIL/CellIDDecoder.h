@@ -58,7 +58,7 @@ namespace UTIL{
       
       if( initString.size() == 0 ) {
 	
-	initString = *_defaultEncoding ;
+	initString = _defaultEncoding ;
 
 	std::cout << "    ----------------------------------------- " << std::endl  
 		  << "       WARNING: CellIDDecoder - no CellIDEncoding parameter in collection ! " 
@@ -103,22 +103,20 @@ namespace UTIL{
      *  CellIDEncoding parameter is set in the collection, e.g. in older lcio files.
      */ 
     static void setDefaultEncoding(const std::string& defaultEncoding ) {
-      
-      delete _defaultEncoding ;
-      
-      _defaultEncoding = new std::string( defaultEncoding ) ;
+
+      _defaultEncoding = std::string( defaultEncoding ) ;
     }
     
   protected:
     BitField64* _b{} ;
     const T* _oldHit{NULL} ;
     
-    static std::string*  _defaultEncoding ;
+    static std::string _defaultEncoding;
   } ; 
   
   template <class T>
-  std::string* CellIDDecoder<T>::_defaultEncoding 
-  = new std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
+  std::string CellIDDecoder<T>::_defaultEncoding
+  = std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
 
   
 } // namespace
