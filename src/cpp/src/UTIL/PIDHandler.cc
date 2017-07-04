@@ -7,6 +7,7 @@
 #include <sstream>
 
 using namespace IMPL;
+using namespace EVENT;
 
 namespace UTIL{
 
