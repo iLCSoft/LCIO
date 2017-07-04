@@ -15,8 +15,6 @@
 //#include <sstream>
 //#include <typeinfo>
 
-using namespace lcio ;
-
 namespace UTIL{
 
 

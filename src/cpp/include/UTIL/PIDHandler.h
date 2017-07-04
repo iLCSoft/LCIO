@@ -13,9 +13,6 @@
 
 #include <string>
 
-using namespace lcio ;
-
-
 namespace UTIL{
   
   

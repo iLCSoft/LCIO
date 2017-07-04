@@ -6,9 +6,6 @@
 #include <map>
 #include <string>
 
-using namespace EVENT;
-
-
 namespace UTIL{
   
   

@@ -21,8 +21,6 @@
 #include "hepevt0.h"
 #include "hepevt1.h"
 
-using namespace lcio;
-
 namespace HEPEVTIMPL{
 
   class HEPEVT{
