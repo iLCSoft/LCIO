@@ -16,7 +16,7 @@
      There are two types of LCIORandomAccess records
        file record -- one per file, always first record on file
        index record -- one or more per file, points to associated LCIOIndex record
-     <block name="LCIORandomAccess" major="2" minor="8">
+     <block name="LCIORandomAccess" major="2" minor="9">
          <data type="int" name="runMin"/>
          <data type="int" name="eventMin"/>
          <data type="int" name="runMax"/>
@@ -42,7 +42,7 @@
      </block>
   </record>
   <record name="LCIOIndex">
-     <block name="LCIOIndex" major="2" minor="8">
+     <block name="LCIOIndex" major="2" minor="9">
          <data type="int" name="controlWord">
             Bit 0 = single Run
             Bit 1 = long offset required
@@ -98,7 +98,7 @@
      </block>
   </record>
   <record name="LCRunHeader">
-     <block name="RunHeader" major="2" minor="8">
+     <block name="RunHeader" major="2" minor="9">
         <data type="int" name="runNumber"></data>
         <data type="string" name="detectorName"></data>
         <data type="string" name="description"></data>
@@ -110,7 +110,7 @@
      </block>
   </record>  
   <record name="LCEventHeader">
-     <block name="EventHeader" major="2" minor="8">
+     <block name="EventHeader" major="2" minor="9">
         <data type="int" name="runNumber"></data>
         <data type="int" name="eventNumber"></data>
         <data type="long" name="timeStamp"></data>
@@ -124,7 +124,7 @@
      </block>
   </record>  
   <record name="LCEvent">
-      <block name="MCParticle" major="2" minor="8">
+      <block name="MCParticle" major="2" minor="9">
          <data type="int" name="flags"> not yet used, Bits 0-15 user/application dependent</data>
          <include subroutine="namedParameters"/>
 	 <data type="int" name="nMC"></data>
