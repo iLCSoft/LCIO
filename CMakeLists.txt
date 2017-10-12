@@ -31,7 +31,7 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/config/lcio.properties"
   )
 configure_file (
-  "${PROJECT_SOURCE_DIR}/cmake/lcio.h.in"
+  "${PROJECT_SOURCE_DIR}/cmake/lcio_namespaces.h.in"
   "${PROJECT_SOURCE_DIR}/src/cpp/include/lcio.h"
   )
 configure_file (
