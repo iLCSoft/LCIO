@@ -1,3 +1,11 @@
+# v02-10-01
+
+* 2017-10-12 Frank Gaede ([PR#40](https://github.com/ilcsoft/lcio/pull/40))
+  - ensure correct version numbers in this and future releases
+      - have all files that contain a version number configured by CMake
+      - will allow to use tagging script for GitHub to make a new release
+  - no code changes wrt. v02-10
+
 # v02-10
 
 * 2017-07-07 Andre Sailer ([PR#36](https://github.com/ilcsoft/lcio/pull/36))
