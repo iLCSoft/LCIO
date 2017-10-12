@@ -2,9 +2,9 @@ package hep.lcio.event ;
 
 @ifdef cpp
 @cpp{
-#define LCIO_MAJOR_VERSION 2
-#define LCIO_MINOR_VERSION 9
-#define LCIO_PATCH_LEVEL  0
+#define LCIO_MAJOR_VERSION @LCIO_VERSION_MAJOR@
+#define LCIO_MINOR_VERSION @LCIO_VERSION_MINOR@
+#define LCIO_PATCH_LEVEL   @LCIO_VERSION_PATCH@
 
 #define LCIO_VERSION_GE( MAJV , MINV )  ( (  LCIO_MAJOR_VERSION  > MAJV ) || ( (LCIO_MAJOR_VERSION==MAJV) && ( LCIO_MINOR_VERSION >= MINV ) ) )
 
@@ -130,8 +130,8 @@ public interface LCIO{
 }
 @else
     // current version number of lcio
-  public static const int MAJORVERSION  = 2 ; 
-  public static const int MINORVERSION  = 8 ;
+  public static const int MAJORVERSION  = @LCIO_VERSION_MAJOR@ ; 
+  public static const int MINORVERSION  = @LCIO_VERSION_MINOR@ ;
 
 
   // bits in flag words
