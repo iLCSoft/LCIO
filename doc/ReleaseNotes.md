@@ -1,3 +1,11 @@
+# v02-10
+
+* 2017-07-07 Andre Sailer ([PR#36](https://github.com/ilcsoft/lcio/pull/36))
+  - CellIDDecoder: use static string instead of static pointer to string for defaultEncoding
+
+* 2017-09-28 Marko Petric ([PR#38](https://github.com/ilcsoft/lcio/pull/38))
+  - Correct LCIO_MINOR_VERSION
+
 # v02-09
 
 * 2017-05-08 Sebastien Binet ([PR#27](https://github.com/ilcsoft/lcio/pull/27))
