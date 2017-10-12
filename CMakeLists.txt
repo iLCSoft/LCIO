@@ -16,6 +16,41 @@ SET( LCIO_VERSION_MAJOR 2 )
 SET( LCIO_VERSION_MINOR 10 )
 SET( LCIO_VERSION_PATCH 0 )
 
+### set correct LCIO version in relevant files  ############################
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/LCIO.aid.in"
+  "${PROJECT_SOURCE_DIR}/src/aid/EVENT/LCIO.aid"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/LCIO.h.in"
+  "${PROJECT_SOURCE_DIR}/src/cpp/include/pre-generated/EVENT/LCIO.h"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/lcio.properties.in"
+  "${PROJECT_SOURCE_DIR}/config/lcio.properties"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/lcio.h.in"
+  "${PROJECT_SOURCE_DIR}/src/cpp/include/lcio.h"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/index.html.in"
+  "${PROJECT_SOURCE_DIR}/doc/index.html"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/lcio.xml.in"
+  "${PROJECT_SOURCE_DIR}/doc/lcio.xml"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/manual.tex.in"
+  "${PROJECT_SOURCE_DIR}/src/latex/manual/manual.tex"
+  )
+configure_file (
+  "${PROJECT_SOURCE_DIR}/cmake/pom.xml.in"
+  "${PROJECT_SOURCE_DIR}/pom.xml"
+  )
+
 
 
 ### DEPENDENCIES ############################################################
