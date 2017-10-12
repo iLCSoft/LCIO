@@ -16,7 +16,7 @@
      There are two types of LCIORandomAccess records
        file record -- one per file, always first record on file
        index record -- one or more per file, points to associated LCIOIndex record
-     <block name="LCIORandomAccess" major="2" minor="@LCIO_VERSION_MINOR@">
+     <block name="LCIORandomAccess" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="runMin"/>
          <data type="int" name="eventMin"/>
          <data type="int" name="runMax"/>
