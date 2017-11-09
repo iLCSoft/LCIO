@@ -16,16 +16,18 @@ namespace IMPL {
       Particle(0) ,
       Energy(0.) ,
       Time(0.) ,
+      Length(0.),
       PDG(0)  {   
       StepPosition[0] = 0. ;
       StepPosition[1] = 0. ;
       StepPosition[2] = 0. ;
     }
 
-    MCParticleCont( EVENT::MCParticle* part,  float e,float t,int pdg, const float* step ) :
+    MCParticleCont( EVENT::MCParticle* part,  float e,float t,float l,int pdg, const float* step ) :
       Particle( part ) ,
       Energy(e) ,
       Time(t) ,
+      Length(l),
       PDG(pdg)  {   
       StepPosition[0] = step[0] ;
       StepPosition[1] = step[1] ;
@@ -35,6 +37,7 @@ namespace IMPL {
     EVENT::MCParticle* Particle ;
     float Energy ;
     float Time ;
+    float Length ;
     int   PDG ;
     float StepPosition[3] ;
   } ;
@@ -127,6 +130,11 @@ namespace IMPL {
      */ 
     virtual float getTimeCont(int i) const ;
 
+    /** Returns the step length of the i-th contribution to the hit.
+     * @see getNMCContributions()
+     */
+    virtual float getLengthCont(int i) const ;
+
     /** Returns the PDG code of the shower particle that caused this contribution.
      *  Check the flag word bit LCIO.CHBIT_STEP of the collection whether this information 
      *  is available. 
@@ -176,14 +184,31 @@ namespace IMPL {
      *  If stepPos==0, (0,0,0) will be stored.
      *  NB: The flag word bit LCIO::CHBIT_STEP (or LCIO::CHBIT_PDG) has to be set, in order for the PDG and step 
      *  position to be stored. 
+     *  @deprecated use addMCParticleContribution() with step length
      */
     void addMCParticleContribution( EVENT::MCParticle *p,
 				    float en,
 				    float t,
 				    int pdg, 
 				    float* stepPos=0
-				    ) ; 
+      ) {
+
+      addMCParticleContribution( p, en, t, 0., pdg, stepPos ) ;
+    } 
     
+    /** Adds a detailed MCParticle contribution to the hit. This method should be used for the detailed mode, where 
+     *  one MCParticleContribution is stored for every simulator step.<br>
+     *  If stepPos==0, (0,0,0) will be stored.
+     *  NB: The flag word bit LCIO::CHBIT_STEP (or LCIO::CHBIT_PDG) has to be set, in order for the PDG and step 
+     *  position to be stored. 
+     */
+    void addMCParticleContribution( EVENT::MCParticle *p,
+				    float en,
+				    float t,
+				    float l,
+				    int pdg, 
+				    float* stepPos=0
+				    ) ; 
     
 
 

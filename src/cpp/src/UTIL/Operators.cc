@@ -1283,7 +1283,7 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::SimCalorimeterHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | sec. PDG | stepPosition (x,y,z) \n");
+        static std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | length  | sec. PDG | stepPosition (x,y,z) \n");
         return _h;
     }
 
@@ -1327,7 +1327,8 @@ namespace UTIL{
                 out << setw(6) << hit->getTimeCont(k) << "|";
 
                 if(flag.test(LCIO::CHBIT_STEP)){
-                    out << hit->getPDGCont( k ) << "| (" ;
+                    out << hit->getLengthCont( k ) << "| (" ;
+                    out << hit->getPDGCont( k ) << ", " ;
                     out << hit->getStepPosition( k )[0] << ", " ;
                     out << hit->getStepPosition( k )[1] << ", " ;
                     out << hit->getStepPosition( k )[2] << ")" ;
@@ -1411,6 +1412,7 @@ namespace UTIL{
                 out << setw(30) << left << "                Prim. PDG" << right << setw(40) << ( hit->getParticleCont(k) ? hit->getParticleCont(k)->getPDG()  : 0 ) << endl;
                 out << setw(30) << left << "                Energy [GeV]" << right << setw(40) << hit->getEnergyCont(k) << endl;
                 out << setw(30) << left << "                Time" << right << setw(40) << hit->getTimeCont(k) << endl;
+                out << setw(30) << left << "                Length" << right << setw(40) << hit->getLengthCont(k) << endl;
                 out << setw(30) << left << "                Sec. PDG" << right << setw(40) << hit->getPDGCont(k) << endl;
             }catch(exception& e){
                 out << e.what() << endl ;

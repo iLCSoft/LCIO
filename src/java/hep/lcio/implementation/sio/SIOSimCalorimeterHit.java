@@ -43,29 +43,37 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
       time = new float[nContributions];
 
       boolean hasPDG = (flags & (1 << LCIO.CHBIT_PDG)) != 0;
-      if (hasPDG)
+      if (hasPDG){
          pdg = new int[nContributions];
+	 length = new float[nContributions];
+	 if( steps == null ) steps = new ArrayList() ;
+      }
       for (int i = 0; i < nContributions; i++)
       {
          particle[i] = in.readPntr();
          energyContrib[i] = in.readFloat();
          time[i] = in.readFloat();
+
          if (hasPDG) {
-            if( steps == null ) steps = new ArrayList() ;
-        	pdg[i] = in.readInt();
-            if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51)){
-                float[] st = new float[3] ;
-                st[0] = in.readFloat();
-                st[1] = in.readFloat();
-                st[2] = in.readFloat();          
-                steps.add( st ) ;
-            }
+
+	   if( SIOVersion.encode(major,minor) > SIOVersion.encode(2,10)){
+	     length[i] = in.readFloat();
+	   }
+	   pdg[i] = in.readInt();
+
+	   if( SIOVersion.encode(major,minor) > SIOVersion.encode(1,51)){
+	     float[] st = new float[3] ;
+	     st[0] = in.readFloat();
+	     st[1] = in.readFloat();
+	     st[2] = in.readFloat();          
+	     steps.add( st ) ;
+	   }
          }
          
-         }
-	  double version  = (double) major + ( (double) minor ) /  10. ;
-	  if( version > 1.0 )
-	    in.readPTag(this);
+      }
+      double version  = (double) major + ( (double) minor ) /  10. ;
+      if( version > 1.0 )
+	in.readPTag(this);
    }
 
    public MCParticle getParticleCont(int i)
@@ -102,6 +110,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
             out.writeFloat(hit.getEnergyCont(i));
             out.writeFloat(hit.getTimeCont(i));
             if (hasPDG){
+               out.writeFloat(hit.getLengthCont(i));
                out.writeInt(hit.getPDGCont(i));
                float[] st = hit.getStepPosition(i) ;
                out.writeFloat( st[0] ) ;
@@ -134,6 +143,7 @@ class SIOSimCalorimeterHit extends ISimCalorimeterHit
          out.writeFloat(energyContrib[i]);
          out.writeFloat(time[i]);
          if (hasPDG){
+	   out.writeFloat(length[i]);
             out.writeInt(pdg[i]);
             float[] st = (float[]) steps.toArray()[i] ;
             out.writeFloat( st[0]) ;

@@ -13,8 +13,8 @@ PROJECT( LCIO )
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 10 )
-SET( LCIO_VERSION_PATCH 1 )
+SET( LCIO_VERSION_MINOR 11 )
+SET( LCIO_VERSION_PATCH 0 )
 
 ### set correct LCIO version in relevant files  ############################
 

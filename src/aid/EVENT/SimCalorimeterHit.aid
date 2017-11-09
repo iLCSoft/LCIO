@@ -65,11 +65,16 @@ public interface SimCalorimeterHit extends LCObject {
      */ 
     public float getEnergyCont(int i) const ;
 
-    /** Returns the time of the i-th in [ns]  contribution to the hit.
+    /** Returns the time in [ns] of the i-th contribution to the hit.
      * @see getNMCContributions()
-     */ 
+     */
     public float getTimeCont(int i) const ;
     
+    /** Returns the step length of the i-th contribution to the hit.
+     * @see getNMCContributions()
+     */
+    public float getLengthCont(int i) const ;
+
     /** Returns the PDG code of the shower particle that caused this contribution.
      *  Check the flag word bit LCIO.CHBIT_STEP of the collection whether this information 
      *  is available. 
