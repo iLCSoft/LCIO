@@ -30,6 +30,7 @@ namespace IMPL{
     _position[2] = p[2] ;
 
     int nMC = hit.getNMCContributions() ;
+    _vec.reserve( nMC ) ; 
 
     // now copy all the MCParticle contributions
     for(int i=0; i<nMC ;i++){
@@ -37,6 +38,7 @@ namespace IMPL{
       MCParticleCont* con = new  MCParticleCont( hit.getParticleCont(i),
 						 hit.getEnergyCont(i),
 						 hit.getTimeCont(i),
+						 hit.getLengthCont(i),
 						 hit.getPDGCont(i),
 						 hit.getStepPosition(i) ) ;
       _vec.push_back( con ) ;
@@ -112,6 +114,9 @@ namespace IMPL{
   float SimCalorimeterHitImpl::getTimeCont(int i) const {
     return _vec[i]->Time ;
   }
+  float SimCalorimeterHitImpl::getLengthCont(int i) const {
+    return _vec[i]->Length ;
+  }
 
   int SimCalorimeterHitImpl::getPDGCont(int i) const{
     return _vec[i]->PDG ;
@@ -143,17 +148,17 @@ namespace IMPL{
   void SimCalorimeterHitImpl::addMCParticleContribution( EVENT::MCParticle *p,
 							 float en,
 							 float t ) {
-    
+
     checkAccess("SimCalorimeterHitImpl::addMCParticleContribution") ;
 
-   _energy += en ;
+    _energy += en ;
 
     static const float nullStep[3] = { 0.,0.,0. } ;
 
     // if we already have the particle, just add the energy
     for( std::vector<MCParticleCont*>::iterator it=_vec.begin(), End = _vec.end() ; it != End ; ++it ) {
-      
- 
+
+
     if( (*it)->Particle == p ) { 
 	
     	(*it)->Energy += en ;
@@ -161,7 +166,7 @@ namespace IMPL{
       }
     }
     // else create a new contribution
-    _vec.push_back( new MCParticleCont( p , en , t , 0 , nullStep )  )  ;
+    _vec.push_back( new MCParticleCont( p , en , t , 0 , 0 , nullStep )  )  ;
 
   }
   
@@ -170,6 +175,7 @@ namespace IMPL{
   void SimCalorimeterHitImpl::addMCParticleContribution( EVENT::MCParticle *p,
 							 float en,
 							 float t,
+							 float l,
 							 int pdg, 
 							 float* stepPos
 							 )  {
@@ -182,7 +188,7 @@ namespace IMPL{
     
      // add a new contribution :
 
-    _vec.push_back( new MCParticleCont( p , en , t , pdg ,  ( stepPos ? stepPos : nullStep )  )  )  ;
+    _vec.push_back( new MCParticleCont( p , en , t , l , pdg ,  ( stepPos ? stepPos : nullStep )  )  )  ;
 
     }
 } // namespace IMPL

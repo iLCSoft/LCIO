@@ -254,7 +254,7 @@ int main(int argc, char** argv ){
 	  // in order to access a MCParticle,  we need a dynamic cast as the 
 	  // LCCollection returns an LCIOObject - this is like vectors in Java 
 	  hit->addMCParticleContribution(  dynamic_cast<MCParticle*>(mcVec->getElementAt( mcIndx )) , 
-					   0.314159, 0.1155, 1, pos ) ;
+					   0.314159, 0.1155, 42.,  1, pos ) ;
 	  
 	}
 	
@@ -264,40 +264,11 @@ int main(int argc, char** argv ){
 	  SimCalorimeterHitImpl* existingHit 
 	    = dynamic_cast<SimCalorimeterHitImpl*>( calVec->getElementAt(j) ) ; // << Ok now
 
- 	  //	    = dynamic_cast<SimCalorimeterHitImpl*>( (*calVec)[j] ) ;  // << not needed 
-	  
 	  existingHit->addMCParticleContribution( dynamic_cast<MCParticle*>
 						  (mcVec->getElementAt(0)), 
-						  0.1, 0. ) ; // no pdg
+						  0.1, 0. ) ; 
 	}
 
-// 	// ----- find the MCParticle with the largest contribution to the SimCalorimeterHits:
-// 	for(int j=0;j<NHITS;j++){
-
-// 	  SimCalorimeterHit* sh =
-// 	    dynamic_cast<SimCalorimeterHit*>( calVec->getElementAt(j) ) ; 
-
-// 	  typedef std::map<MCParticle*,double>  MCPMap ; 
-	  
-// 	  MCPMap mcpMap ;
-	  
-// 	  for( int ii=0 ;ii< sh->getNMCContributions() ; ++ii){
-// 	    mcpMap[  sh->getParticleCont(ii) ] += sh->getEnergyCont(ii) ;   
-// 	  }
-	  
-// 	  double eMax(0.) ; 
-// 	  MCParticle* mcp ;
-	  
-// 	  for( MCPMap::iterator it = mcpMap.begin() ;  it != mcpMap.end() ; ++it ){
-	    
-// 	    if( it->second > eMax ) {
-// 	      mcp = it->first ;
-// 	      eMax = it->second ;
-// 	    }
-// 	  } 
-// // 	  std::cout << " largest contribution " << eMax << " GeV from particle " 
-// // 		    << mcp << std::endl ;
-// 	}
 
 	// and finally some tracker hits
 	// with some user extensions (4 floats and 2 ints) per track:

@@ -126,7 +126,7 @@ public class SimJob
                stepPos[2] = (float) 3.3 ;
                
                
-               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(mcIndx), 0.314159f, 0.1155f, 121212, stepPos );
+               hit.addMCParticleContribution((MCParticle) mcVec.getElementAt(mcIndx), 0.314159f, 0.1155f, 42.f , 121212, stepPos );
             }
 
             // and finally some tracker hits

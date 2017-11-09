@@ -178,7 +178,7 @@
             </if>
          </repeat>
       </block>
-      <block name="SimTrackerHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="SimTrackerHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bit 31 Barrel = 0, Endcap = 1, Bit 30 momentum (not) stored: 1(0), Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -216,7 +216,7 @@
            </if>
          </repeat>
       </block>
-      <block name="SimCalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="SimCalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0; Bit 28 PDG = 1, no PDG =0, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
@@ -236,10 +236,11 @@
 		<data type="float" name="energyContrib"></data>
 		<data type="float" name="time"></data>
 		<if condition="(flags&amp;(1&lt;&lt;28)) != 0">
-		   <data type="int" name="PDG"></data>
-           <if condition="1000*major+minor&gt;1051">
-		        <data type="float[3]" name="stepPosition"></data>
-		    </if>
+		  <data type="float" name="length"></data>
+		  <data type="int" name="PDG"></data>
+                  <if condition="1000*major+minor&gt;1051">
+		    <data type="float[3]" name="stepPosition"></data>
+		  </if>
 		</if>
 
             </repeat>
@@ -248,7 +249,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCFloatVec" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="LCFloatVec" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -262,7 +263,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCIntVec" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="LCIntVec" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -276,7 +277,7 @@
            </if>
          </repeat>
       </block>
-      <block name="LCStrVec" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="LCStrVec" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">not yet used, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nVectors"></data>
@@ -290,7 +291,7 @@
            </if>
          </repeat>
       </block>
-      <block name="RawCalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="RawCalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0;Bit 28 = 1: don't store ptr tag;
 	      Bit 27 = 1: timeStamp stored; Bits 0-15 user/detector specific</data>
@@ -310,7 +311,7 @@
 	    </if>
          </repeat>
       </block>
-      <block name="CalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="CalorimeterHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bit 31 long = 1, short = 0; Bit 30 Barrel = 0, Endcap = 1; 
               Bit 29 cellid1 = 1, no cellid1 = 0;
 	      Bit 27 = 1: timeStamp stored; Bit 26 = 1: energy error stored;
@@ -345,7 +346,7 @@
             </if>
          </repeat>
       </block>
-      <block name="TrackerHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -383,7 +384,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerHitPlane" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerHitPlane" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -421,7 +422,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerHitZCylinder" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerHitZCylinder" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -458,7 +459,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TPCHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TPCHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bit 31 no raw data = 0, raw data = 1, Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -484,7 +485,7 @@
             </if>
          </repeat>
       </block>
-      <block name="TrackerRawData" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerRawData" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -502,7 +503,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerData" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerData" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -520,7 +521,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="TrackerPulse" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="TrackerPulse" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -545,7 +546,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-      <block name="SiliconRawHit" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="SiliconRawHit" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags">Bits 0-15 user/detector specific</data>
          <include subroutine="namedParameters"/>
          <data type="int" name="n"></data>
@@ -557,7 +558,7 @@
             <data type="ptag" name="this"></data>
          </repeat>
       </block>
-    <block name="Track" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="Track" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
       <data type="int" name="flag">Bit 31 Hits are kept =1, Hits are not kept = 0</data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nTrack"/>
@@ -611,7 +612,7 @@
       <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="Cluster" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="Cluster" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
       <data type="int" name="flag">Bit 31 Hits are kept =0, Hits are not kept = 1</data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nCluster"/>
@@ -668,7 +669,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="Vertex" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="Vertex" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
       <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nVertex"></data>
@@ -687,7 +688,7 @@
         <data type="ptag" name="this"></data>
     </repeat>
     </block>
-    <block name="ReconstructedParticle" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="ReconstructedParticle" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
       <data type="int" name="flag"></data>
       <include subroutine="namedParameters"/>
       <data type="int" name="nObject"/>
@@ -763,7 +764,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="LCGenericObject" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="LCGenericObject" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
       <data type="int" name="flag"></data>
         <include subroutine="namedParameters"/>
         <if condition="(flag&amp;(1&lt;&lt;31)) !=0">
@@ -790,7 +791,7 @@
         <data type="ptag" name="this"></data>
       </repeat>
     </block>
-    <block name="LCRelation" major="@LCIO_VERSION_MAJOR@" minor="8">
+    <block name="LCRelation" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
        <data type="int" name="flag">Bit 31: 1[0] Weights are [not] stored</data>
        <include subroutine="namedParameters"/>
        <data type="int" name="nRelations"/>
@@ -803,7 +804,7 @@
        </repeat>
     </block>
       <!-- generic block description for subset collections that hold references to existing objects -->
-      <block name="References" major="@LCIO_VERSION_MAJOR@" minor="8">
+      <block name="References" major="@LCIO_VERSION_MAJOR@" minor="@LCIO_VERSION_MINOR@">
          <data type="int" name="flags"></data>
          <include subroutine="namedParameters"/>
          <data type="int" name="nReferences"></data>

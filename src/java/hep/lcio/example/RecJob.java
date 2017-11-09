@@ -100,6 +100,10 @@ public class RecJob implements LCRunListener, LCEventListener
       // create a new collection to be added to the event
       ILCCollection calVec = new ILCCollection(LCIO.SIMCALORIMETERHIT);
 
+      int flag = 1 << LCIO.CHBIT_LONG;
+      flag = flag | (1 << LCIO.CHBIT_PDG); // include pdg as well
+      calVec.setFlag(flag);
+
       for (int j = 0; j < NHITS; j++)
       {
          ISimCalorimeterHit hit = new ISimCalorimeterHit();

@@ -75,10 +75,15 @@ public:
      */ 
     virtual float getEnergyCont(int i) const = 0;
 
-    /** Returns the time of the i-th in [ns]  contribution to the hit.
+    /** Returns the time in [ns] of the i-th contribution to the hit.
      * @see getNMCContributions()
-     */ 
+     */
     virtual float getTimeCont(int i) const = 0;
+
+    /** Returns the step length of the i-th contribution to the hit.
+     * @see getNMCContributions()
+     */
+    virtual float getLengthCont(int i) const = 0;
 
     /** Returns the PDG code of the shower particle that caused this contribution.
      *  Check the flag word bit LCIO.CHBIT_STEP of the collection whether this information 

@@ -19,6 +19,7 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
    protected int[] pdg;
    protected float[] position = new float[3];
    protected float[] time;
+   protected float[] length;
    protected float energy;
    protected int cellId0;
    protected int cellId1;
@@ -103,17 +104,28 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
       return time[i];
    }
    
-   public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg){
-       addMCParticleContribution( p , energy, time , pdg,  null ) ;
-   }
-   public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg, float stepPos[])
-   {
+
+  public float getLengthCont(int i){
+    return length[i];
+  }
+
+  public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg){
+    addMCParticleContribution( p , energy, time , 0 , pdg,  null ) ;
+  }
+  
+  public void addMCParticleContribution(MCParticle p, float energy, float time, int pdg, float stepPos[]){
+    addMCParticleContribution( p , energy, time , 0 , pdg,  stepPos ) ;
+  }
+
+  public void addMCParticleContribution(MCParticle p, float energy, float time, float length, int pdg, float stepPos[])
+    {
       checkAccess();
       
       int i = getIndexForNextContrib();
       this.particle[i] = p;
       this.energyContrib[i] = energy;
       this.time[i] = time;
+      this.length[i] = length;
       this.pdg[i] = pdg;
       
       if( steps==null ) steps = new ArrayList() ;
@@ -137,6 +149,8 @@ public class ISimCalorimeterHit extends ILCObject implements SimCalorimeterHit
          old = time;
          time = new float[size];
          if (oldSize > 0) System.arraycopy(old, 0, time, 0, oldSize);
+         length = new float[size];
+         if (oldSize > 0) System.arraycopy(old, 0, length, 0, oldSize);
          old = pdg;
          pdg = new int[size];
          if (oldSize > 0) System.arraycopy(old, 0, pdg, 0, oldSize);
