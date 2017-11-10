@@ -1,3 +1,13 @@
+# v02-11
+
+* 2017-11-10 Frank Gaede ([PR#41](https://github.com/ilcsoft/lcio/pull/41))
+  - add the step length to the MC-Contributions of the `SimCalorimeterHit`
+    - add method `SimCalorimeterHit::getLengthCont(int) ` to access it 
+    - only stored if `LCIO.CHBIT_STEP` is set (detailed shower mode)
+    - implemented in C++ and Java (!?)
+    - updated version number to v02-11
+    - fixed some versions in ./cmake/lcio.xml.in
+
 # v02-10-01
 
 * 2017-10-12 Frank Gaede ([PR#40](https://github.com/ilcsoft/lcio/pull/40))
