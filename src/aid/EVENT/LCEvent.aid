@@ -46,7 +46,11 @@ public interface LCEvent {
      *
      * @throws DataNotAvailableException
      */
-     public LCCollection* getCollection(const String& name) const throws DataNotAvailableException ;
+@ifdef cpp
+    public LCCollection* getCollection(const String& name) const noexcept(false) ;
+@else
+    public LCCollection* getCollection(const String& name) const throws DataNotAvailableException ;
+@endif
 
 @ifdef cpp
     /** Returns the collection for the given name and transfers the ownership of the collection
@@ -57,7 +61,7 @@ public interface LCEvent {
      *  Use with care!
      * @throws DataNotAvailableException
      */
-     public LCCollection* takeCollection(const String& name) const throws DataNotAvailableException ;
+     public LCCollection* takeCollection(const String& name) const noexcept(false) ;
 @endif
 
     /** Adds a collection with the given name (has to be a valid C/C++ variable name). 
@@ -66,15 +70,24 @@ public interface LCEvent {
      *
      *@see validateCollectionName
      *@throws EventException
-     */ 
+     */
+@ifdef cpp
+    public void addCollection(LCCollection* col ,const  String& name ) noexcept(false) ;
+@else
     public void addCollection(LCCollection* col ,const  String& name ) throws EventException ;
+@endif
+
     
     /** Removes (and deletes) the collection with name (if it exists in the event). 
      * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
      *
      *@throws ReadOnlyException
-     */ 
+     */
+@ifdef cpp
+    public void removeCollection(const  String& name ) noexcept(false) ;
+@else
     public void removeCollection(const  String& name ) throws ReadOnlyException ;
+@endif
     
     /** Parameters defined for this event.
      */

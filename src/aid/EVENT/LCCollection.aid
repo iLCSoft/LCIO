@@ -83,15 +83,22 @@ public interface LCCollection
      *
      * @throws ReadOnlyException
      */
+@ifdef cpp
+    public void addElement(LCObject* obj) noexcept(false) ;
+@else
     public void addElement(LCObject* obj) throws ReadOnlyException ;
-    
+@endif
     
     /** Removes the i-th element from the collection. Throws an exception 
      * if the collection (event) is 'read only'.
      *
      * @throws ReadOnlyException
      */
+@ifdef cpp
+    public void removeElementAt(int i) noexcept(false) ;
+@else
     public void removeElementAt(int i) throws ReadOnlyException ;
+@endif
     
 
     /** Set the flag word. This is allowed in 'read only' mode.
