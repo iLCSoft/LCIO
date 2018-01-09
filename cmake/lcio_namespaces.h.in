@@ -12,6 +12,7 @@
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCFactory.h"
 #include "IMPL/LCIOExceptionHandler.h"
+#include "Exceptions.h"
 
 
 /** \mainpage <a href="http://lcio.desy.de">LCIO</a> (v@LCIO_VERSION_MAJOR@-@LCIO_VERSION_MINOR@-@LCIO_VERSION_PATCH@)
