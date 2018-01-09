@@ -25,7 +25,7 @@ public interface LCReader {
      * @throws IOException
      */
 @ifdef cpp
-    public void removeCollection(const  String& name ) ;
+    public void open(const String& filename) ;
 @else
     public void open(const String& filename) throws IOException  ;
 @endif

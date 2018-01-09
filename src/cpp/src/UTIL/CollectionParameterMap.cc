@@ -1,5 +1,6 @@
 #include "UTIL/CollectionParameterMap.h"
 #include "EVENT/LCParameters.h"
+#include "Exceptions.h"
 #include<sstream>
 
 #include <iostream>
