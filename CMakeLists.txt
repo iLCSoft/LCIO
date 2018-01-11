@@ -297,6 +297,6 @@ MESSAGE( STATUS "" )
 
 
 # generate and install following configuration files
-GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake LCIOLibDeps.cmake )
+GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake )
 
 INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION lib/cmake)
