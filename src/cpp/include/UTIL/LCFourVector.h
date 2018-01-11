@@ -30,11 +30,14 @@ namespace UTIL {
   class LCFourVector :  public HepLorentzVector {
 
   protected: 
-    const TT* _lcObj ;
+    const TT* _lcObj = nullptr ;
     
   public: 
     virtual ~LCFourVector() { /*no_op*/; } 
     
+    LCFourVector(const LCFourVector& ) = default ;
+    LCFourVector& operator=(const LCFourVector& ) = default ;
+
     /** Constructor for templated type,e.g. LCFourVector<MCParticle>( myMCParticle ).
      */
     inline LCFourVector( const TT* lcObj) : _lcObj(lcObj) {
