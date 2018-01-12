@@ -112,7 +112,8 @@ int main(int /*argc*/, char** /*argv*/ ){
 
 
     MYTEST.LOG( "  -------------------------------------    test random access in file c_sim.slcio - file must exist in : "  ) ;
-    std::system("pwd") ;
+    if( !std::system("pwd") )
+	std::cout << "?" << std::endl ;
 
     // simjob.slcio has written 100 events in 10 runs, closing and re-opening the file after every run 
     //  this tests writing the random access records in append mode ...
