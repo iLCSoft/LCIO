@@ -1,3 +1,20 @@
+# v02-12
+
+* 2018-01-10 Frank Gaede ([PR#43](https://github.com/ilcsoft/lcio/pull/43))
+  -  Remove dynamic exception specification from C++ headers
+
+* 2018-01-12 Frank Gaede ([PR#46](https://github.com/ilcsoft/lcio/pull/46))
+  - fix unused warning in test_randomaccess.cc 
+  - bug fix in cmake/LCIOConfig.cmake.in (fixes DD4hep part of #45)
+
+* 2018-01-12 Frank Gaede ([PR#44](https://github.com/ilcsoft/lcio/pull/44))
+  - fix last warnings (gcc5.4)
+       - dont create LCIOLibDeps.cmake (fix Policy CMP0033) 
+       - fix warnings in UTIL::LCFourVector
+
+* 2018-03-23 Frank Gaede ([PR#35](https://github.com/ilcsoft/lcio/pull/35))
+  - Remove using namespace from header files
+
 # v02-11
 
 * 2017-11-10 Frank Gaede ([PR#41](https://github.com/ilcsoft/lcio/pull/41))
