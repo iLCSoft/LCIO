@@ -77,6 +77,7 @@ namespace UTIL{
     int getParameterIndex( int algorithmID, const std::string& pName ) ;
       
     /** Return the (first) ParticleID object for the given algorithm and particle (or cluster) - throws UnknownAlgorithm.
+     *  If no object is found for the given algorithmID a default initialized dummy object is returned.
      *  Only use if you know there is only one PID object for the algorithms or if you simply want the most likely
      *  PID for this algorithm.
      */
