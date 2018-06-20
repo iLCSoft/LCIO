@@ -1033,7 +1033,7 @@ namespace UTIL {
             cout << endl ;
         }
         catch( UnknownAlgorithm &e ){
-            cout << "- NA - ";
+	  cout << "- NA - " << std::endl ;
         }
 
         std::cout << endl
@@ -1066,17 +1066,19 @@ namespace UTIL {
 
                     const StringVec& pNames = pidH.getParameterNames(  pid->getAlgorithmType() ) ;
 
-                    for(unsigned j=0;j< pNames.size() ;++j){
+		    if(  pNames.size() == pid->getParameters().size() ) {
+		      for(unsigned j=0;j< pNames.size() ;++j){
 
                         cout << " " <<  pNames[j]
-                            << " : " <<  pid->getParameters()[j] << "," ; 
+			     << " : " <<  pid->getParameters()[j] << "," ; 
+		      }
+		    }
 
-                    }
                     cout << "]"<< endl ;
 
                 }
                 catch( UnknownAlgorithm &e ){
-                    cout << "- NA - ";
+		  cout << "- NA - " << std::endl ;
                 }
 
             }
