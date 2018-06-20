@@ -358,22 +358,10 @@ namespace UTIL{
 
     }
 	
-    // not returned, i.e. we need to create a new pid objects
+    // nothing found - return a dummy ParticleID object
 
-    ParticleIDImpl* pid = new ParticleIDImpl ;
-
-
-    if( _type == ReconstructedParticle  ){
-      
-      static_cast< ReconstructedParticleImpl* >(p)->addParticleID( pid ) ; 
-    }
-    else if( _type == Cluster  ){
-      
-      static_cast< ClusterImpl* >(p)->addParticleID( pid )  ; 
-    }
-
-
-    return *pid ;
+    static const ParticleIDImpl dummyPID ;
+    return dummyPID ;
   }
   
   void PIDHandler::setParticleID( LCObject* p ,
