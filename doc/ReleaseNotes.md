@@ -1,3 +1,11 @@
+# v02-12-01
+
+* 2018-06-21 Frank Gaede ([PR#48](https://github.com/ilcsoft/lcio/pull/48))
+  - protect against invalid ParticleID objects in `LCTOOLS::printReconstructedParticles()`
+           - these where added as a nasty side effect in `PIDHandler::getParticleID()`
+  - fix `PIDHandler::getParticleID()` accordingly
+  - fixes #47
+
 # v02-12
 
 * 2018-01-10 Frank Gaede ([PR#43](https://github.com/ilcsoft/lcio/pull/43))
