@@ -120,11 +120,13 @@ public:
     static unsigned int pointer_to( SIO_stream*, SIO_POINTER_DECL* );
 
     static bool validateName( const char* );
+    
+    static void copy( unsigned char*, unsigned char*, 
+                      const int,      const int      );
 
 private:
 
-    static void         copy( unsigned char*, unsigned char*, 
-                              const int,      const int      );
+
     static unsigned int xfer( SIO_stream*,    const int, 
                               const int,      unsigned char* );
 
