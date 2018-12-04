@@ -111,6 +111,14 @@ typedef enum {
     SIO_ALL
 } SIO_verbosity;
 
+// Old check was problematic because both macros could evaluate to true, and it would
+// also be possible that SIO_POINTER_DECL was not defined at all.  Change as needed.
+// --JM 
+#if defined(__alpha__) || defined(_M_ALPHA) || defined(_LP64)
+ #define SIO_POINTER_DECL   size_t
+#else
+ #define SIO_POINTER_DECL   unsigned int
+#endif
 
 
 namespace sio {
@@ -123,6 +131,32 @@ namespace sio {
   using block_ptr   = std::shared_ptr<block>;
   using record_map  = std::map<std::string, record_ptr>;
   using block_map   = std::map<std::string, block_ptr>;
+  using pointed_at_map = std::map< void*, void* >;
+  using pointer_to_map = std::multimap< void*, void* >;
+  
+  /**
+   *  @brief  record_write_result struct
+   *          Result of a write operation for records
+   */
+  struct record_write_result {
+    /// After-write operation status 
+    unsigned int        _status{0};
+    /// After-write record start position
+    SIO_64BITINT        _record_begin{-1};
+    /// After-write record end position
+    SIO_64BITINT        _record_end{-1};
+  };
+  
+  /**
+   *  @brief  record_read_result struct
+   *          Result of a read operation for records
+   */
+  struct record_read_result {
+    /// After-read operation status 
+    unsigned int        _status{0};
+    /// After-read record pointer
+    record_ptr          _record{nullptr};
+  };
   
 }
 
