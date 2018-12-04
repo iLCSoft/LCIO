@@ -111,6 +111,60 @@ typedef enum {
     SIO_ALL
 } SIO_verbosity;
 
+#define SIO_LEN_SB        1
+#define SIO_LEN_DB        2
+#define SIO_LEN_QB        4
+#define SIO_LEN_OB        8
+
+// ----------------------------------------------------------------------------
+// Deal with declarations for 64 bit integers.  This really amounts to "who is
+// ANSI compiant?"  ANSI defines "long long" as the declaration for 64 bit
+// integers.  M$ hasn't caught up yet and still requires __int64.
+//
+// Branch on flag provided by compiler:
+//
+// OS            CPU           Macro         Provided by   Declaration
+// ------------  ------------  ------------  ------------  -----------
+// AIX           PPC(?)        _AIX          GNU compiler  long long
+// OSF1          Alpha         __alpha__     GNU compiler  long long
+// Linux         x86           __i386__      GNU compiler  long long
+// Linux         Opteron       _LP64         GNU compiler  long long
+// Linux         Itanium       _LP64         GNU compiler  long long
+// SunOS         Sparc         __sparc__     GNU compiler  long long
+// Windows/NT    Alpha         _M_ALPHA      VC  compiler  __int64
+// Windows/NT    x86           _M_IX86       VC  compiler  __int64
+// Windows/NT    MIPS          _M_MRX000     VC  compiler  __int64
+// Windows/NT    PPC           _M_PPC        VC  compiler  __int64
+// ----------------------------------------------------------------------------
+#if defined(_AIX)      ||  defined(__alpha__) || defined(__i386__)  || defined(__sparc__) || defined(__APPLE_CC__) || defined(_LP64)
+
+// fg: gcc complains about long long - what to do about it ?
+// warning: ANSI C++ does not support `long long'
+ #define SIO_64BITINT   long long
+// #define SIO_64BITINT   long
+#endif
+
+#if defined(_M_ALPHA)  || defined(_M_IX86)   || defined(_M_PPC)
+ #define SIO_64BITINT   __int64
+#endif
+
+// ----------------------------------------------------------------------------
+// Deal with pointer length.  Currently, the only problem is alpha which uses
+// 64 bit pointers.                                                          
+//                                                              
+// OS            CPU           Macro         Provided by   Pointer size
+// ------------  ------------  ------------  ------------  -----------
+// AIX           PPC(?)        _AIX          GNU compiler  4 bytes
+// OSF1          Alpha         __alpha__     GNU compiler  8 bytes
+// Linux         x86           __i386__      GNU compiler  4 bytes
+// Linux         Opteron       _LP64    _    GNU compiler  8 bytes
+// Linux         Itanium       _LP64         GNU compiler  8 bytes
+// SunOS         Sparc         __sparc__     GNU compiler  4 bytes
+// Windows/NT    Alpha         _M_ALPHA      VC  compiler  8 bytes
+// Windows/NT    x86           _M_IX86       VC  compiler  4 bytes
+// Windows/NT    MIPS          _M_MRX000     VC  compiler  ? bytes
+// Windows/NT    PPC           _M_PPC        VC  compiler  4 bytes
+// ----------------------------------------------------------------------------
 // Old check was problematic because both macros could evaluate to true, and it would
 // also be possible that SIO_POINTER_DECL was not defined at all.  Change as needed.
 // --JM 
@@ -119,7 +173,6 @@ typedef enum {
 #else
  #define SIO_POINTER_DECL   unsigned int
 #endif
-
 
 namespace sio {
   
