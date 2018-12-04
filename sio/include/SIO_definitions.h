@@ -174,6 +174,11 @@ typedef enum {
  #define SIO_POINTER_DECL   unsigned int
 #endif
 
+//
+// This turns up far too often to be ignored.
+//
+#define UCHR_CAST(pntr)    (reinterpret_cast<unsigned char*>((pntr)))
+
 namespace sio {
   
   class stream;
