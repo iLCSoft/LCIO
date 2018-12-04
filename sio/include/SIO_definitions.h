@@ -13,6 +13,10 @@
 #ifndef SIO_DEFINITIONS_H
 #define SIO_DEFINITIONS_H 1
 
+// -- std headers
+#include <memory>
+#include <map>
+
 //
 // Error format
 //
@@ -106,6 +110,21 @@ typedef enum {
     SIO_ERRORS,
     SIO_ALL
 } SIO_verbosity;
+
+
+
+namespace sio {
+  
+  class stream;
+  class record;
+  class block;
+
+  using record_ptr  = std::shared_ptr<record>;
+  using block_ptr   = std::shared_ptr<block>;
+  using record_map  = std::map<std::string, record_ptr>;
+  using block_map   = std::map<std::string, block_ptr>;
+  
+}
 
 #endif
 
