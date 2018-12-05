@@ -76,6 +76,11 @@
 #define SIO_MBYTE     0x00100000
 
 //
+// Option for compression
+//
+#define SIO_OPT_COMPRESS   0x00000001
+
+//
 // To make version handling easier.
 //
 #define SIO_VERSION_ENCODE( major, minor )  (((major) << 16) + (minor))
