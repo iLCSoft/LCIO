@@ -179,6 +179,35 @@ typedef enum {
 //
 #define UCHR_CAST(pntr)    (reinterpret_cast<unsigned char*>((pntr)))
 
+//------- if built with dcap support we need different file functions -------
+#ifdef SIO_USE_DCAP
+
+#include <dcap.h>
+
+#define FOPEN  dc_fopen
+#define FTELL  dc_ftell
+#define FSEEK  dc_fseek
+#define FCLOSE dc_fclose
+#define FREAD  dc_fread
+#define FWRITE dc_fwrite
+#define FFLUSH dc_fflush
+#define FSTAT  dc_stat
+
+#else
+
+#include <sys/stat.h>
+
+#define FOPEN  fopen
+#define FTELL  ftell
+#define FSEEK  fseek
+#define FCLOSE fclose
+#define FREAD  fread
+#define FWRITE fwrite
+#define FFLUSH fflush
+#define FSTAT  stat
+
+#endif
+
 namespace sio {
   
   class stream;
