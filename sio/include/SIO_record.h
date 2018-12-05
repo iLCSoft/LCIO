@@ -141,7 +141,7 @@ namespace sio {
     
     block_ptr blk = std::make_shared<BLOCK_TYPE>(args...);
     
-    if (!SIO_functions::validateName(blk->name().c_str())) {
+    if (!functions::validateName(blk->name().c_str())) {
       std::stringstream ss; ss << "SIO [context] Invalid block name '" << blk->name() << "'";
       throw std::runtime_error(ss.str().c_str());
     }
