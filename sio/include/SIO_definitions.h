@@ -218,6 +218,7 @@ namespace sio {
   class stream;
   class record;
   class block;
+  class functions;
   
   using stream_ptr  = std::shared_ptr<stream>;
   using record_ptr  = std::shared_ptr<record>;
@@ -261,6 +262,7 @@ namespace sio {
 using SIO_stream = sio::stream;
 using SIO_record = sio::record;
 using SIO_block = sio::block;
+using SIO_functions = sio::functions;
 
 #endif
 
