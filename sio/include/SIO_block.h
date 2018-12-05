@@ -20,31 +20,7 @@
 // -- sio headers
 #include <SIO_definitions.h>
 
-
-/* START DEPRECATED */
-class SIO_stream;
-
-class SIO_block
-{
-public:
-    SIO_block( const char* );
-    virtual ~SIO_block();
-
-    std::string*           getName();
-    virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) = 0;
-    virtual unsigned int   version() = 0;
-
-private:
-    std::string            name;
-
-};
-
-/* END DEPRECATED */
-
 namespace sio {
-  
-  // forward declarations
-  class stream;
   
   /**
    *  @brief  block class
