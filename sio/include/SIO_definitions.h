@@ -184,7 +184,8 @@ namespace sio {
   class stream;
   class record;
   class block;
-
+  
+  using stream_ptr  = std::shared_ptr<stream>;
   using record_ptr  = std::shared_ptr<record>;
   using block_ptr   = std::shared_ptr<block>;
   using record_map  = std::map<std::string, record_ptr>;
@@ -214,9 +215,18 @@ namespace sio {
     unsigned int        _status{0};
     /// After-read record pointer
     record_ptr          _record{nullptr};
+    /// After-read record start position
+    SIO_64BITINT        _record_begin{-1};
+    /// After-read record end position
+    SIO_64BITINT        _record_end{-1};
   };
   
 }
+
+// for interface compatibility
+using SIO_stream = sio::stream;
+using SIO_record = sio::record;
+using SIO_block = sio::block;
 
 #endif
 
