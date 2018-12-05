@@ -14,1414 +14,844 @@
 #   pragma warning(disable:4786)        // >255 characters in debug information
 #endif
 
+// -- std headers
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
 
+// -- zlib headers
 #include "zlib.h"
 
+// -- sio headers
 #include "SIO_block.h"
 #include "SIO_definitions.h"
 #include "SIO_functions.h"
 #include "SIO_record.h"
-#include "SIO_recordManager.h"
 #include "SIO_stream.h"
 
-
-
+// IO markers definitions
 static unsigned int
     SIO_align       = 0x00000003,
-    SIO_mark_record = 0xabadcafe;
+    SIO_mark_record = 0xabadcafe,
+    SIO_mark_block  = 0xdeadbeef;
 
-// ----------------------------------------------------------------------------
-// Constructor (private function!)   
-// ----------------------------------------------------------------------------
-SIO_stream::SIO_stream
-(
-    const char*      i_name,
-    unsigned int     i_reserve,
-    SIO_verbosity    i_verbosity
- ) : name( i_name ),
-	 reserve( i_reserve ),
-	 verbosity( i_verbosity ),
-	 compLevel(Z_DEFAULT_COMPRESSION) 
-{}
-
-// ----------------------------------------------------------------------------
-// Destructor (private function!)
-// ----------------------------------------------------------------------------
-SIO_stream::~SIO_stream()
-{
-
-//
-// Always try to close the stream.
-//
-if( state != SIO_STATE_CLOSED )
-    close();
-
-//
-// That's all folks!
-//
-return;
-}
-
-// ----------------------------------------------------------------------------
-// Flush the stream.
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::flush()
-{
-//
-// Can't close what ain't open!
-//
-if( state == SIO_STATE_CLOSED )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Not open"
-                  << std::endl;
+namespace sio {
+  
+  unsigned int stream::open(const std::string &fname, SIO_stream_mode m) {
+    const char filemode[4][3] = { "rb", "wb", "ab","r+" };
+    if(SIO_STATE_OPEN == _state || SIO_STATE_ERROR == _state) {
+      return SIO_STREAM_ALREADYOPEN;
     }
-    return( SIO_STREAM_NOTOPEN );
-}
-int rc = FFLUSH( handle );
-return (rc == 0) ? SIO_STREAM_SUCCESS : SIO_STREAM_BADWRITE;
-}
-
-// ----------------------------------------------------------------------------
-// Close the stream.
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::close()
-{
-
-//
-// Local variables.
-//
-int
-    z_stat;
-
-unsigned int
-    status;
-
-//
-// Can't close what ain't open!
-//
-if( state == SIO_STATE_CLOSED )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Not open"
-                  << std::endl;
+    if(SIO_MODE_UNDEFINED == m) {
+      return SIO_STREAM_BADMODE;
     }
-    return( SIO_STREAM_NOTOPEN );
-}
-
-//
-// Assume all will go well.
-//
-status = SIO_STREAM_SUCCESS;
-
-//
-// Dispose of the pointer relocation tables.
-//
-delete pointedAt;
-delete pointerTo;
-
-//
-// Dispose of compression control structure.
-//
-if( z_strm != NULL )
-{
-    z_stat = (mode == SIO_MODE_READ) ? inflateEnd( z_strm )
-                                     : deflateEnd( z_strm );
-
-    if( z_stat != Z_OK )
+    // open the file
+    if( (_handle = FOPEN( fname.c_str(), filemode[m] )) == NULL ) {
+      return SIO_STREAM_OPENFAIL;
+    }
+    _filename = fname;
+    _mode = m;
+    _state = SIO_STATE_OPEN;
+    // allocate raw buffer
+    _buffer_begin = static_cast<unsigned char*>(malloc( _reserve ));
+    if(nullptr == _buffer_begin) {
+      _state = SIO_STATE_ERROR;
+      return SIO_STREAM_NOALLOC;
+    }
+    _buffer_current = _buffer_begin;
+    _buffer_end = _buffer_current + _reserve;
+    // allocate compression buffer
+    _cmp_begin = static_cast<unsigned char*>(malloc( _reserve >> 2 ));
+    if(nullptr == _cmp_begin) {
+      _state = SIO_STATE_ERROR;
+      return SIO_STREAM_BADCOMPRESS;
+    }
+    _cmp_end = _cmp_begin + (_reserve >> 2);
+    // zstream initialization
+    _z_stream = static_cast<z_stream*>( malloc( sizeof( z_stream ) ));
+    _z_stream->zalloc = Z_NULL;
+    _z_stream->zfree  = Z_NULL;
+    _z_stream->opaque = 0;
+    auto z_stat = (_mode == SIO_MODE_READ) ? inflateInit( _z_stream ) : deflateInit( _z_stream, _compression_level );
+    if( z_stat != Z_OK ) {
+        _state = SIO_STATE_ERROR;
+        return SIO_STREAM_BADCOMPRESS;
+    }
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::close() {
+    if(_state == SIO_STATE_CLOSED) {
+        return SIO_STREAM_NOTOPEN;
+    }
+    unsigned int status = SIO_STREAM_SUCCESS;
+    // clear pointer maps
+    _pointed_at.clear();
+    _pointer_to.clear();
+    // clear zlib memory
+    auto zstatus = clear_zstream();
+    if(zstatus != SIO_STREAM_SUCCESS) {
+      status = zstatus;
+    }
+    // clear local buffers
+    if(nullptr != _cmp_begin) {
+      free(_cmp_begin);
+      _cmp_begin = nullptr;
+      _cmp_end = nullptr;
+    }
+    if(nullptr != _buffer_begin)
     {
+        free(_buffer_begin);
+        _buffer_begin = NULL;
+        _buffer_current = NULL;
+        _buffer_end = NULL;
+        _record_end = NULL;
+        _block_end = NULL;
+    }
+    if( FCLOSE( _handle ) == EOF ) {
+      status = SIO_STREAM_GOTEOF;
+    }
+    _filename.clear();
+    _handle = nullptr;
+    _mode = SIO_MODE_UNDEFINED;
+    _state = SIO_STATE_CLOSED;
+    return status;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::flush() {
+    if(_state == SIO_STATE_CLOSED) {
+      return SIO_STREAM_NOTOPEN;
+    }
+    int rc = FFLUSH( _handle );
+    return (rc == 0) ? SIO_STREAM_SUCCESS : SIO_STREAM_BADWRITE;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::seek(SIO_64BITINT pos, int whence) {
+    unsigned int status = FSEEK(_handle, pos, whence);    
+    if( status != 0 ) {
+      _state = SIO_STATE_ERROR;
+      return SIO_STREAM_EOF;
+    }
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::reset( SIO_64BITINT pos ) {
+    unsigned int status = this->seek( pos ) ;
+    if( SIO_STREAM_SUCCESS == status ) {
+      // if we can seek the file  the stream should be fine ...
+      _state = SIO_STATE_OPEN;
+    }
+    return status;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  void stream::set_compression_level(int level) {
+    if(level < 0) {
+      _compression_level = Z_DEFAULT_COMPRESSION;
+    }
+    else if(level > 9) {
+      _compression_level = 9;
+    }
+    else {
+      _compression_level = level;
+    }
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  void stream::pointer_relocation_read() {
+    // Pointer relocation on read.
+    // Some of these variables are a little terse!  Expanded meanings:
+    // ptol:  Iterator pointing to lower bound in the 'pointer to' multimap
+    // ptoh:  Iterator pointing to upper bound in the 'pointer to' multimap
+    // ptoi:  Iterator for the 'pointer to' multimap (runs [ptol, ptoh) )
+    // pati:  Iterator in the 'pointed at' map (search map for ptol->first)
+    auto ptol  = _pointer_to.begin();
+    while( ptol != _pointer_to.end() ) {
+      auto ptoh = _pointer_to.upper_bound( ptol->first );
+      auto pati = _pointed_at.find( ptol->first );
+
+      bool pat_found( pati != _pointed_at.end() ) ;
+      
+      // if the pointed at object is not found we set the pointer to null
+      for( auto ptoi = ptol; ptoi != ptoh; ptoi++ ) {
+        auto pointer = static_cast<SIO_POINTER_DECL *>(ptoi->second);
+        *pointer = ( pat_found ? reinterpret_cast<SIO_POINTER_DECL>(pati->second) : 0 ) ;
+      }
+      ptol = ptoh;
+    }
+    _pointer_to.clear();
+    _pointed_at.clear();
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  void stream::pointer_relocation_write() {
+    // Pointer relocation on write.
+    // Some of these variables are a little terse!  Expanded meanings:
+    // ptol:  Iterator pointing to lower bound in the 'pointer to' multimap
+    // ptoh:  Iterator pointing to upper bound in the 'pointer to' multimap
+    // ptoi:  Iterator for the 'pointer to' multimap (runs [ptol, ptoh) )
+    // pati:  Iterator in the 'pointed at' map (search map for ptol->first)
+    unsigned int match = 0x00000001;
+    auto ptol = _pointer_to.begin();
+    while( ptol != _pointer_to.end() ) {
+      auto ptoh = _pointer_to.upper_bound( ptol->first );
+      auto pati = _pointed_at.find( ptol->first );
+      if( pati != _pointed_at.end() ) {
+        auto pointer = _buffer_begin + reinterpret_cast<SIO_POINTER_DECL>(pati->second);
+        functions::copy( UCHR_CAST( &match ), pointer, SIO_LEN_QB, 1 );
+        for( auto ptoi = ptol; ptoi != ptoh; ptoi++ ) {
+          pointer = _buffer_begin + reinterpret_cast<SIO_POINTER_DECL>(ptoi->second);
+          functions::copy( UCHR_CAST( &match ), pointer, SIO_LEN_QB, 1 );
+	      }
+      }
+      match++;
+      ptol = ptoh;
+    }
+    _pointer_to.clear();
+    _pointed_at.clear();
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::clear_zstream() {
+    unsigned int status = SIO_STREAM_SUCCESS;
+    if( nullptr != _z_stream ) {
+      auto z_stat = (_mode == SIO_MODE_READ) ? inflateEnd( _z_stream ) : deflateEnd( _z_stream );
+      if( z_stat != Z_OK ) {
         status = SIO_STREAM_BADCOMPRESS;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "//] "
-                      << "ZLIB error number " << z_stat
-                      << std::endl;
-
-            std::cout << "SIO: ["  << name << "//] "
-                      << "Compression de-initialization failed"
-                      << std::endl;
-        }
+      }
+      free(_z_stream);
+      _z_stream = nullptr;
     }
-    free( z_strm );
-    z_strm = NULL;
-}
-    
-//
-// Dispose of any compression/decompression buffer.
-//
-if( cmploc != NULL )
-{
-    free( cmploc );
-    cmploc = NULL;
-    cmpmax = NULL;
-}
-
-//
-// Dispose of any associated raw data buffer.
-//
-if( bufloc != NULL )
-{
-    free( bufloc );
-    bufloc = NULL;
-    buffer = NULL;
-    bufmax = NULL;
-    recmax = NULL;
-    blkmax = NULL;
-}
-
-//
-// Close the stream and destroy associated information.
-//
-if( FCLOSE( handle ) == EOF )
-{
-    status = SIO_STREAM_GOTEOF;
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "EOF on close" 
-                  << std::endl;
-    }
-}
-else
-{
-}
-filename.erase( filename.begin(), filename.end() );
-handle = NULL;
-
-//
-// Miscellany.
-//
-mode   = SIO_MODE_UNDEFINED;
-state  = SIO_STATE_CLOSED;
-
-//
-// Summarize.
-//
-if( status == SIO_STREAM_SUCCESS )
-{
-    if( verbosity >= SIO_ALL )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Closed"
-                  << std::endl;
-    }
-}
-
-//
-// That's all folks!
-//
-return( status );
-}
-
-// ----------------------------------------------------------------------------
-// Dump the buffer.  
-// ----------------------------------------------------------------------------
-void SIO_stream::dump
-(
-    unsigned int    offset,
-    unsigned int    length
-)
-{
-
-//
-// Local variables.
-//
-unsigned int
-    count;
-
-char
-   *ascpnt,
-   *hexpnt,
-    outbuf[77];
-
-unsigned char
-   *dmpbeg,
-   *dmpend;
-
-static char
-    hex[16] = { '0', '1', '2', '3', '4', '5', '6', '7',
-                '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
-
-//
-// Header.
-//
-printf( "\nDump buffer of stream %s\n\n", name.c_str() );
-
-if( buffer == NULL )
-{
-    printf( "No buffer associated with stream %s\n", name.c_str() );
-    return;
-}
-
-//
-// Offset must be in bounds.
-//
-dmpbeg = bufloc + offset;
-if( dmpbeg >= bufmax )
-{
-    printf( "Offset beyond end of buffer\n");
-    return;
-}
-
-//
-// Length must not run off end of buffer.
-//
-dmpend = dmpbeg + length;
-if( dmpend > bufmax )
-    dmpend = bufmax;
-
-//
-// Buffer characteristics.
-//
- printf("   Start address: %8ld  (%p)\n", (long int)bufloc, (void*) bufloc );
-count = buffer - bufloc;
-printf(" Current address: %8ld  (%p)    Offset: %8d  (0x%08x)\n", 
-        (long int)buffer, (void*) buffer, count, count );
-count = bufmax - bufloc;
-printf("     End address: %8ld  (%p)    Offset: %8d  (0x%08x)\n",
-        (long int)bufmax,  (void*) bufmax, count, count );
-
-//
-// Put out a header.
-//
-printf("\n --Offset:Address-");
-printf(  "    -Hex------------------------------");
-printf(  "    -ASCII----------\n");
-
-// dddddddd:xxxxxxxx    xxxxxxx xxxxxxxx xxxxxxxx xxxxxxxx    aaaaaaaaaaaaaaaa
-//-123456789-123456789-123456789-123456789-123456789-123456789-123456789-123456
-
-//
-// Scan down the buffer, printing a dump record every 16 bytes.
-//
-memset(  &outbuf[ 0], ' ', sizeof( outbuf ) );
-sprintf( &outbuf[ 1], "%8d",  offset );
-sprintf( &outbuf[10], "%p",  (void*) dmpbeg );
-outbuf[ 9] = ':';
-outbuf[18] = ' ';
-outbuf[76] = '\0';
-hexpnt     = &outbuf[22];
-ascpnt     = &outbuf[60];
-count      = 0;
-
-while( dmpbeg < dmpend )
-{
-
-    *hexpnt++ = hex[ ((*dmpbeg >>   4) & 15) ]; 
-    *hexpnt++ = hex[ ( *dmpbeg         & 15) ];
-    if( (count & 0x3) == 3 ) hexpnt++;
-
-    if( isprint( *dmpbeg ) ) *ascpnt++ = *dmpbeg;
-    else                     *ascpnt++ = '.';
-
-    count++;
-    offset++;
-    dmpbeg++;
-
-    if( count == 16 )
-    {
-        printf( "%s\n", outbuf );
-
-        memset(  &outbuf[ 0], ' ', sizeof( outbuf ) );
-        sprintf( &outbuf[ 1], "%8d",  offset );
-        sprintf( &outbuf[10], "%p",  (void*) dmpbeg );
-        outbuf[ 9] = ':';
-        outbuf[18] = ' ';
-        outbuf[76] = '\0';
-        hexpnt     = &outbuf[22];
-        ascpnt     = &outbuf[60];
-        count      = 0;
-    }
-}
-
-if( count != 0 )
-    printf( "%s\n", outbuf );
-
-//
-// That's all folks!
-//
-return;
-}
-
-// ----------------------------------------------------------------------------
-// Return pointer to stream name.
-// ----------------------------------------------------------------------------
-std::string* SIO_stream::getName()         { return( &name ); }
-
-// ----------------------------------------------------------------------------
-// Return pointer to filename.
-// ----------------------------------------------------------------------------
-std::string* SIO_stream::getFilename()     { return( &filename ); }
-
-// ----------------------------------------------------------------------------
-// Return mode.
-// ----------------------------------------------------------------------------
-SIO_stream_mode SIO_stream::getMode()      { return( mode ); }
-
-// ----------------------------------------------------------------------------
-// Return state.
-// ----------------------------------------------------------------------------
-SIO_stream_state SIO_stream::getState()    { return( state ); }
-
-// ----------------------------------------------------------------------------
-// Return verbosity.
-// ----------------------------------------------------------------------------
-SIO_verbosity SIO_stream::getVerbosity()   { return( verbosity ); }
-
-
-// ----------------------------------------------------------------------------
-// Set compresision level
-// ----------------------------------------------------------------------------
-void SIO_stream::setCompressionLevel(int level) { 
-  
-  // zlib knows comp levels:  -1/Z_DEFAULT_COMPRESSION, 1-9
-  if( level < 0 ) 
-
-    compLevel = Z_DEFAULT_COMPRESSION ;
-
-  else if( level > 9 )
-    
-    compLevel = 9  ;
- 
-  else 
-
-    compLevel = level ;
-
-}
-
-
-
-// ----------------------------------------------------------------------------
-// Associate a file name and a mode with this stream and open the file.
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::open
-(
-    const char*      i_filename,
-    SIO_stream_mode  i_mode
-)
-{
-
-//
-// Local variables.
-//
-int
-    z_stat;
-
-static char
-  SIO_filemode[4][3] = { "rb", "wb", "ab","r+" };
-
-//
-// Can't open what ain't closed!
-//
-if( state == SIO_STATE_OPEN || state == SIO_STATE_ERROR )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Already open"
-                  << std::endl;
-    }
-    return( SIO_STREAM_ALREADYOPEN );
-}
-
-//
-// Can't open in mode undefined.
-//
- if( i_mode == SIO_MODE_UNDEFINED )
-   {
-     if( verbosity >= SIO_ERRORS )
-       {
-	 std::cout << "SIO: ["  << name << "//] "
-		   << "Cannot open in mode SIO_MODE_UNDEFINED"
-		   << std::endl;
-       }
-     return( SIO_STREAM_BADMODE );
-   }
- 
-//
-// Open the file.
-//
-if( (handle = FOPEN( i_filename, SIO_filemode[i_mode] )) == NULL )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot open file "
-                  << i_filename
-                  << std::endl;
-    }
-    return( SIO_STREAM_OPENFAIL );
-}
-
-//
-// Open succeeded.  Save the context.
-//
-filename = i_filename;
-mode     = i_mode;
-state    = SIO_STATE_OPEN;
-
-if( verbosity >= SIO_ALL )
-{
-    std::cout << "SIO: ["  << name << "//] "
-              << "Opened file " 
-              << i_filename
-              << std::endl;
-}
-
-//
-// Allocate a raw data buffer to go with the stream.
-//
-buffer = NULL;
-bufmax = NULL;
-bufloc = static_cast<unsigned char*>(malloc( reserve ));
-if( bufloc == NULL )
-{
-    state = SIO_STATE_ERROR;
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Buffer allocation failed"
-                  << std::endl;
-    }
-    return( SIO_STREAM_NOALLOC );
-}
-buffer = bufloc;
-bufmax = bufloc + reserve;
-
-//
-// Allocate a compression/decompression buffer and initialize it.
-//
-cmploc = NULL;
-cmpmax = NULL;
-cmploc = static_cast<unsigned char*>(malloc( reserve >> 2 ));
-if( cmploc == NULL )
-{
-    state = SIO_STATE_ERROR;
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Compression buffer allocation failed"
-                  << std::endl;
-    }
-    return( SIO_STREAM_BADCOMPRESS );
-}
-cmpmax = cmploc + (reserve >> 2);
-
-//
-// Allocate the z_stream structure and initialize it.
-//
-z_strm = static_cast<z_stream*>( malloc( sizeof( z_stream ) ));
-
-z_strm->zalloc = Z_NULL;
-z_strm->zfree  = Z_NULL;
-z_strm->opaque = 0;
-
-z_stat = (mode == SIO_MODE_READ) ? inflateInit( z_strm )
-                                 : deflateInit( z_strm, compLevel );
-
-if( z_stat != Z_OK )
-{
-    state = SIO_STATE_ERROR;
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "ZLIB error number " << z_stat
-                  << std::endl;
-
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Compression initialization failed"
-                  << std::endl;
-    }
-    return( SIO_STREAM_BADCOMPRESS );
-}
-    
-//
-// Allocate the pointer relocation tables.
-//
-pointedAt = new pointedAtMap_c;
-pointerTo = new pointerToMap_c;
-
-//
-// That's all folks!
-//
-return( SIO_STREAM_SUCCESS );
-}
-
-
-//fg: need ftell for direct access 
-SIO_64BITINT SIO_stream::currentPosition() { 
-
-  return  FTELL( handle ) ; 
-}
-
-//
-//fg: add method to position the file pointer
-//
-unsigned int SIO_stream::seek(SIO_64BITINT pos, int whence) {  
-  
-  unsigned int status;
-  
-  //fg:  also need the seek in 'append' mode ( delete old file record )
-//   //
-//   // This must be a readable stream!
-//   //
-//   if( mode != SIO_MODE_READ ) {
-    
-//     //    if( verbosity >= SIO_ERRORS ) {
-//     if( true ) {
-      
-//       std::cout << "SIO: ["  << name << "//] "
-// 		<< "Cannot seek (stream is write only)"
-// 		<< std::endl;
-//     }
-//     return( SIO_STREAM_WRITEONLY );
-//   }
-
-  status = FSEEK( handle, pos , whence )  ;
-  
-  if( status != 0 ) {
-    
-    state = SIO_STATE_ERROR;
-    
-    if( verbosity >= SIO_ERRORS ) {
-      
-      std::cout << "SIO: ["  << name << "/] "
-		<< "Failed seeking position" << pos
-		<< std::endl;
-    }
-    return( SIO_STREAM_EOF );
+    return status;
   }
   
-//   //FIXME: debug...
-//   std::cout << " SIO_stream::seek( " << pos << ", " << whence << " ) - ftell : " << FTELL( handle ) 
-// 	    << " stream-state: " << state << std::endl ;
-
-  return( SIO_STREAM_SUCCESS );
-}
-
-unsigned int SIO_stream::reset(SIO_64BITINT pos){
-
-  unsigned int status;
-
-  status = seek( pos ) ;
-
-  if( status == SIO_STREAM_SUCCESS ){
-
-    // if we can seek the file  the stream should be fine ...
-    state = SIO_STATE_OPEN ;
-  }
-
-  return status ;
-}
-
-
-// ----------------------------------------------------------------------------
-// Read the next record.
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::read
-(
-    SIO_record**    record
-)
-{
-
-int
-    z_stat;
-
-unsigned int
-    data_length,
-    head_length,
-    name_length,
-    ucmp_length,
-    buftyp,
-    compress,
-    padlen,
-    options,
-    status;
-
-char
-   *tmploc;
-
-bool
-    requested;
-
-//
-// Initialize the returned record pointer to something nasty.
-//
-*record = NULL;
-
- recPos = -1 ;  
- SIO_64BITINT  recStart = -1 ;
-
-//
-// The stream must be open!
-//
-if( state != SIO_STATE_OPEN )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot read (stream is not open)"
-                  << std::endl;
-    }
-    return( SIO_STREAM_NOTOPEN );
-}
-
-//
-// This must be a readable stream!
-//
-if( mode != SIO_MODE_READ )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot read (stream is write only)"
-                  << std::endl;
-    }
-    return( SIO_STREAM_WRITEONLY );
-}
-
-//
-// Loop over records until a requested one turns up.
-//
-requested = false;
-while( requested == false )
-{
-
-  recStart = FTELL( handle ) ;
-
-    //
-    // Initialize the buffer and read the first eight bytes.  A read failure
-    // at this point is treated as an end-of-file (even if there are a few
-    // bytes dangling in the file).
-    //
-    buffer = bufloc;
-    status = FREAD( buffer, SIO_LEN_SB, 8, handle );
-    if( status < 8 )
-        return( SIO_STREAM_EOF );
- 
-    //
-    // Interpret: 1) The length of the record header.
-    //            2) The record marker.
-    //
-    blkmax = bufloc + 8;
-    SIO_DATA( this, &head_length,  1 );
-    SIO_DATA( this, &buftyp,       1 );
-    if( buftyp != SIO_mark_record )
-    {
-        state = SIO_STATE_ERROR;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "//] "
-                      << "Expected record marker not found"
-                      << std::endl;
-        }
-        return( SIO_STREAM_NORECMARKER );
-    }
-
-    //
-    // Interpret: 3) The options word.
-    //            4) The length of the record data (compressed).
-    //            5) The length of the record name (uncompressed).
-    //            6) The length of the record name.
-    //            7) The record name.
-    //
-    status = FREAD( buffer, SIO_LEN_SB, (head_length - 8), handle );
-    if( status < (head_length - 8) )
-    {
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "//] "
-                      << "Unexpected EOF reading record header"
-                      << std::endl;
-        }
-        return( SIO_STREAM_EOF );
-    }
-
-    blkmax = bufloc + head_length;
-    SIO_DATA( this, &options,      1 );
-    SIO_DATA( this, &data_length,  1 );
-    SIO_DATA( this, &ucmp_length,  1 );
-    SIO_DATA( this, &name_length,  1 );
-
-    tmploc = static_cast<char*>(malloc( name_length + 1 ));
-    if( tmploc == NULL )
-    {
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "//] "
-                      << "Buffer allocation failed"
-                      << std::endl;
-        }
-        return( SIO_STREAM_NOALLOC );
-    }
-
-    //    SIO_DATA( this, tmploc, name_length );
-    //fg: keep coverity happy be deleting the temp memory in case of a read error
-    status = SIO_functions::data(  this, tmploc, name_length );
-    if( !(status & 1) ) {
-      free( tmploc );
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::read_pointed_at(SIO_POINTER_DECL *ptr) {
+    // Read.  Keep a record of the "match" quantity read from the buffer and
+    // the location in memory which will need relocating.
+    const unsigned int SIO_ptag = 0xffffffff;
+    unsigned int match = 0;
+    unsigned int status = read_raw( SIO_LEN_QB, 1, UCHR_CAST( &match ) );
+    if( !( status & 1 ) ) {
       return status;
     }
-
-    tmploc[name_length]  = '\0';
-    *record              = SIO_recordManager::get( tmploc );
-    rec_name             = tmploc;
-    free( tmploc );
-
-    if( verbosity >= SIO_ALL )
-    {
-        std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                  << "Record header read"
-                  << std::endl;
+    // Ignore match = SIO_ptag. This is basically a pointer target which was
+    // never relocated when the record was written. i.e. nothing points to it!
+    // Don't clutter the maps with information that can never be used. 
+    if( match != SIO_ptag ) {
+      pointed_at_map::value_type entry = {reinterpret_cast<void *>(match), ptr };
+      _pointed_at.insert( entry );
     }
-
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::write_pointed_at(SIO_POINTER_DECL *ptr) {
+    // Write.  Save the memory location of this object along with the offset
+    // in the output buffer where the generated match quantity must go.  Put
+    // a placeholder in the output buffer (it will be overwritten at the "output
+    // relocation" stage).
+    unsigned int SIO_ptag = 0xffffffff;
+    pointed_at_map::value_type entry = {ptr, reinterpret_cast<void *>( _buffer_current - _buffer_begin ) };
+    _pointed_at.insert( entry );
+    return write_raw( SIO_LEN_QB, 1, UCHR_CAST(&SIO_ptag));
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::read_pointer_to(SIO_POINTER_DECL *ptr) {
+    // Read.  Keep a record of the "match" quantity read from the buffer and
+    // the location in memory which will need relocating.
     //
-    // Unpack this record?
-    //
-    if( *record == NULL )
-    {
-        if( verbosity >= SIO_ALL )
-	{
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                      << "Ignored (name not recognized)"
-                      << std::endl;
-        }
+    // Placeholder value for 'pointer to'
+    unsigned int SIO_pntr = 0x00000000;
+    unsigned int match = 0;
+    unsigned int status = read_raw( SIO_LEN_QB, 1, UCHR_CAST( &match ) );
+    if( !( status & 1 ) ) {
+      return status;
     }
-
-    else if( !(*record)->getUnpack() )
-    {
-        if( verbosity >= SIO_ALL )
-	{
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                      << "Ignored (unpacking not requested)"
-                      << std::endl;
-        }
+    // Ignore match = SIO_pntr.  This is basically a null pointer which can
+    // never be relocated, so don't fill the multimap with a lot of useless
+    // information.
+    if( match != SIO_pntr ) {
+        pointer_to_map::value_type entry = {reinterpret_cast<void *>(match), ptr};
+        _pointer_to.insert( entry );
     }
-
-    else
-    {
-        requested = true;
+    // Hand -something- back to the caller.  The number passed back is -not-
+    // a pointer, and pointer relocation will not occur until the whole record
+    // has been read.  The only circumstance where the next line is important
+    // is the case of a NULL pointer which the caller may be relying on to
+    // find the end of (for instance) a singly linked list.
+    *ptr = static_cast<SIO_POINTER_DECL>(match);
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::write_pointer_to(SIO_POINTER_DECL *ptr) {
+    // Write.  Keep a record of the "match" quantity (i.e. the value of the
+    // pointer (which may be different lengths on different machines!)) and
+    // the current offset in the output buffer.  Put a placeholder in the
+    // output buffer (it will be overwritten at the "output relocation" stage).
+    // 
+    // Placeholder value for 'pointer to'
+    unsigned int SIO_pntr = 0x00000000;
+    // ptr is really a pointer-to-a-pointer.  This routine is most interested
+    // in the value of *xfer when treated as a pointer.  C++ tends to object
+    // to this as being 'not type safe'.  To keep the compiler happy (and purists
+    // miserable), do one 'reinterpret_cast' immediately to make later code
+    // easier to read.
+    // Indirect ptr (actually **ptr)
+    void *ifer = reinterpret_cast<void *>(*ptr);
+    // Ignore NULL pointers.  These are always recorded in the buffer with a
+    // zero match word (and are treated specially when read back).  There's no
+    // point in putting useless information in the maps.
+    //
+    if( nullptr != ifer ) {
+        pointer_to_map::value_type entry = {ifer, reinterpret_cast<void *>(_buffer_current - _buffer_begin) };
+        _pointer_to.insert( entry );
     }
+    return write_raw( SIO_LEN_QB, 1, UCHR_CAST(&SIO_pntr));
+  }
+  
+  //----------------------------------------------------------------------------
 
-    //
-    // If the record's not interesting, move on.  Remember to skip over any
-    // padding bytes inserted to make the next record header start on a
-    // four byte boundary in the file.
-    //
-    if( requested == false )
-    {
+  unsigned int stream::write_raw(const int size, const int count, unsigned char *to) {
+    if( SIO_STATE_ERROR == _state ) {
+      return SIO_STREAM_BADSTATE;
+    }
+    const int bytlen = count * size;
+    const int padlen = (bytlen + 3) & 0xfffffffc;
+    // resize the buffer ?
+    if( (_buffer_current + padlen) > _buffer_end ) {
+      const int minNeeded = (_buffer_current + padlen) - _buffer_end;
+      const int bufSize = _buffer_end - _buffer_begin;
+      int resizeFactor = 2;
+      while( bufSize * (resizeFactor-1)  < minNeeded ) {
+        ++resizeFactor ;
+      }
+      // create new buffer
+      const int newlen = bufSize * resizeFactor;
+      unsigned char *newbuf = (unsigned char *)malloc( newlen );
+      if( nullptr == newbuf) {
+        _state = SIO_STATE_ERROR;
+        return SIO_STREAM_NOALLOC;
+      }
+      const int oldlen = _buffer_current - _buffer_current;
+ 
+      memcpy(newbuf, _buffer_begin, oldlen);
+      free(_buffer_begin);
+      _buffer_end = newbuf + (_buffer_end - _buffer_begin);
+      _buffer_end = newbuf + newlen;
+      _buffer_current = newbuf + oldlen;
+      _buffer_begin = newbuf;
+    }
+    // Copy and write padding as necessary (xdr format)
+    functions::copy( to, _buffer_current, size, count );
+    _buffer_current += bytlen;
+    for( int bytcnt = bytlen; bytcnt < padlen; bytcnt++ ) {
+      *_buffer_current++ = 0;
+    }
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::read_raw(const int size, const int count, unsigned char *from) {
+    // check stream state
+    if( SIO_STATE_ERROR == _state ) {
+      return SIO_STREAM_BADSTATE;
+    }
+    const int bytlen = count * size;
+    const int padlen = (bytlen + 3) & 0xfffffffc;
+    // check buffer size
+    if( (_buffer_current + padlen) > _buffer_end ) {
+      _state = SIO_STATE_ERROR;
+      return SIO_STREAM_OFFEND;
+    }
+    // Copy and skip over padding as necessary (xdr format)
+    functions::copy( _buffer_current, from, size, count );
+    _buffer_current += padlen;
+    return SIO_STREAM_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  template <typename T>
+  unsigned int stream::write_data(T *data, const int count) {
+    throw std::runtime_error("stream::write_data: Unknown type for writing");
+    return 0;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  template <typename T>
+  unsigned int stream::read_data(T *data, const int count) {
+    throw std::runtime_error("stream::read_data: Unknown type for reading");
+    return 0;
+  }
+  
+  //---------------------------------------------------------------------------
+  
+#define WRITE_DATA_TIMPL(TYPE, SIZE) \
+template <> \
+unsigned int stream::write_data(TYPE *data, const int count) { \
+  return write_raw(SIZE, count, UCHR_CAST(data)); \
+}
+#define READ_DATA_TIMPL(TYPE, SIZE) \
+template <> \
+unsigned int stream::read_data(TYPE *data, const int count) { \
+  return read_raw(SIZE, count, UCHR_CAST(data)); \
+}
+  
+  // write impl
+  WRITE_DATA_TIMPL(char, SIO_LEN_SB)
+  WRITE_DATA_TIMPL(unsigned char, SIO_LEN_SB)
+  WRITE_DATA_TIMPL(short, SIO_LEN_DB)
+  WRITE_DATA_TIMPL(unsigned short, SIO_LEN_DB)
+  WRITE_DATA_TIMPL(int, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
+  WRITE_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
+  WRITE_DATA_TIMPL(float, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(double, SIO_LEN_OB)
+  // read impl
+  READ_DATA_TIMPL(char, SIO_LEN_SB)
+  READ_DATA_TIMPL(unsigned char, SIO_LEN_SB)
+  READ_DATA_TIMPL(short, SIO_LEN_DB)
+  READ_DATA_TIMPL(unsigned short, SIO_LEN_DB)
+  READ_DATA_TIMPL(int, SIO_LEN_QB)
+  READ_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  READ_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
+  READ_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
+  READ_DATA_TIMPL(float, SIO_LEN_QB)
+  READ_DATA_TIMPL(double, SIO_LEN_OB)
+  
+#undef WRITE_DATA_TIMPL
+#undef READ_DATA_TIMPL
+
+  //----------------------------------------------------------------------------
+
+  record_read_result stream::read_next_record( const record_map &records ) {
+    record_read_result result;
+    // check stream state first
+    if( SIO_STATE_OPEN != _state ) {
+      result._status = SIO_STREAM_NOTOPEN;
+      return result;
+    }
+    if( SIO_MODE_READ != _mode ) {
+      result._status = SIO_STREAM_WRITEONLY;
+      return result;
+    }
+    // Loop over records until a requested one turns up.
+    bool requested = false;
+    while( not requested ) {
+      // save record begin in file
+      result._record_begin = FTELL( _handle );
+      // Initialize the buffer and read the first eight bytes.  A read failure
+      // at this point is treated as an end-of-file (even if there are a few
+      // bytes dangling in the file).
+      _buffer_current = _buffer_begin;
+      result._status = FREAD( _buffer_current, SIO_LEN_SB, 8, _handle );
+      if( result._status < 8 ) {
+        result._status = SIO_STREAM_EOF;
+        return result;
+      }
+      // Interpret: 1) The length of the record header.
+      //            2) The record marker.
+      _block_end = _buffer_begin + 8;
+      unsigned int head_length(0), buftyp(0);
+      SIO_STREAM_DATA( this, &head_length,  1 );
+      SIO_STREAM_DATA( this, &buftyp,       1 );
+      if( buftyp != SIO_mark_record ) {
+        _state = SIO_STATE_ERROR;
+        result._status = SIO_STREAM_NORECMARKER;
+        return result;
+      }
+      // Interpret: 3) The options word.
+      //            4) The length of the record data (compressed).
+      //            5) The length of the record name (uncompressed).
+      //            6) The length of the record name.
+      //            7) The record name.
+      result._status = FREAD( _buffer_current, SIO_LEN_SB, (head_length - 8), _handle );
+      if( result._status < (head_length - 8) ) {
+        result._status = SIO_STREAM_EOF;
+        return result;
+      }
+      _block_end = _buffer_begin + head_length;
+      unsigned int options(0), data_length(0), ucmp_length(0), name_length(0);
+      SIO_STREAM_DATA( this, &options,      1 );
+      SIO_STREAM_DATA( this, &data_length,  1 );
+      SIO_STREAM_DATA( this, &ucmp_length,  1 );
+      SIO_STREAM_DATA( this, &name_length,  1 );
+      std::string record_name(name_length, '\0');
+      SIO_STREAM_DATA( this, &(record_name[0]), name_length );
+      // find the record to read
+      auto record_iter = records.find(record_name);
+      record_ptr record = (records.end() != record_iter) ? record_iter->second : nullptr;
+      requested = ((records.end() != record_iter) and (record_iter->second->unpack()));
+      // If the record's not interesting, move on.  Remember to skip over any
+      // padding bytes inserted to make the next record header start on a
+      // four byte boundary in the file.
+      if( not requested ) {
         data_length += (4 - (data_length & SIO_align)) & SIO_align;
-        status = FSEEK( handle, data_length, 1 );
-        if( status != 0 )
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Failed skipping record"
-                          << std::endl;
-            }
-            return( SIO_STREAM_EOF );
+        result._status = FSEEK( _handle, data_length, 1 );
+        if( result._status != 0 ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_EOF;
+          return result;
         }
         continue;
-    }
-
-    //
-    // Ensure sufficient buffering for the uncompressed record.
-    //
-    if( (head_length + ucmp_length) >= (bufmax - bufloc) )
-    {
-        unsigned int
-            newlen;
-
-        unsigned char
-           *newbuf;
-
-        newlen = head_length + ucmp_length;
-        newbuf = static_cast<unsigned char*>(malloc( newlen )); 
-        if( newbuf == NULL )
-        {
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Uncompressed buffer allocation failed"
-                          << std::endl;
-            }
-            return( SIO_STREAM_NOALLOC );
+      }
+      // Ensure sufficient buffering for the uncompressed record.
+      unsigned int total_length = head_length + ucmp_length;
+      if( total_length >= (_buffer_end - _buffer_current) ) {
+        unsigned char *new_buffer = static_cast<unsigned char*>(malloc( total_length ));
+        if( nullptr == new_buffer ) {
+          result._status = SIO_STREAM_NOALLOC;
+          return result;
         }
-
-        memcpy( newbuf, bufloc, head_length );
-        free( bufloc );
-        bufloc = newbuf;
-        buffer = newbuf + head_length;
-        bufmax = bufloc + newlen;
-    }
-
-    //
-    // Extract the compression bit from the options word.
-    //
-    compress = options & SIO_OPT_COMPRESS;
-
-    if( !compress )
-    {
-        //
+        memcpy( new_buffer, _buffer_begin, head_length );
+        free( _buffer_begin );
+        _buffer_begin = new_buffer;
+        _buffer_current = new_buffer + head_length;
+        _buffer_end = new_buffer + total_length;
+      }
+      // Deal with compression
+      bool compressed_buffer = (options & SIO_OPT_COMPRESS);
+      // Deal with uncompressed record
+      if( not compressed_buffer ) {
         // Read the rest of the record data.  Note that uncompressed data is
         // -always- aligned to a four byte boundary in the file, so no pad
-        // skipping is necessary,
-        //
-        status = FREAD( buffer, SIO_LEN_SB, data_length, handle );
-        if( status < data_length )
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Failed reading uncompressed record data"
-                          << std::endl;
-            }
-            return( SIO_STREAM_EOF );
+        // skipping is necessary.
+        result._status = FREAD( _buffer_current, SIO_LEN_SB, data_length, _handle );
+        if( result._status < data_length ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_EOF;
+          return result;
         }
-    }
-
-    else
-    {
-        //
+      }
+      else {
         // Ensure sufficient buffering for the compressed record.
-        //
-        if( data_length >= (cmpmax - cmploc) )
-        {
-            unsigned char
-               *newbuf;
-
-            newbuf = static_cast<unsigned char*>(malloc( data_length )); 
-            if( newbuf == NULL )
-            {
-                if( verbosity >= SIO_ERRORS )
-                {
-                    std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                              << "Compressed buffer allocation failed"
-                              << std::endl;
-                }
-                return( SIO_STREAM_NOALLOC );
-            }
-
-            free( cmploc );
-            cmploc = newbuf;
-            cmpmax = cmploc + data_length;
+        if( data_length >= (_cmp_end - _cmp_begin) ) {
+          unsigned char *new_buffer = static_cast<unsigned char*>(malloc( data_length )); 
+          if( nullptr == new_buffer ) {
+            result._status = SIO_STREAM_NOALLOC;
+            return result;
+          }
+          free( _cmp_begin );
+          _cmp_begin = new_buffer;
+          _cmp_end = new_buffer + data_length;
         }
-
-        //
         // Read the compressed record data.
-        //
-        status = FREAD( cmploc, SIO_LEN_SB, data_length, handle );
-        if( status < data_length )
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Failed reading compressed record data"
-                          << std::endl;
-            }
-            return( SIO_STREAM_EOF );
+        result._status = FREAD( _cmp_begin, SIO_LEN_SB, data_length, _handle );
+        if( result._status < data_length ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_EOF;
+          return result;
         }
-
-        //
         // Skip the read pointer over any padding bytes that may have been
         // inserted to make the next record header start on a four byte
         // boundary in the file.
-        //
-        padlen = (4 - (data_length & SIO_align)) & SIO_align;
-        if( padlen > 0 )
-        {
-            status = FSEEK( handle, padlen, 1 );
-            if( status != 0 )
-            {
-                state = SIO_STATE_ERROR;
-                if( verbosity >= SIO_ERRORS )
-                {
-                    std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                              << "Failed reading end-of-record pad data"
-                              << std::endl;
-                }
-                return( SIO_STREAM_EOF );
-            }
+        unsigned int pad_length = (4 - (data_length & SIO_align)) & SIO_align;
+        if( pad_length > 0 ) {
+          result._status = FSEEK( _handle, pad_length, 1 );
+          if( result._status != 0 ) {
+            _state = SIO_STATE_ERROR;
+            result._status = SIO_STREAM_EOF;
+            return result;
+          }
         }
-
-        //
         // Set up for the decompression.
-        //
-        z_strm->next_in   = cmploc;
-        z_strm->avail_in  = data_length;
-        z_strm->total_in  = 0;
-
-        z_strm->next_out  = buffer;
-        z_strm->avail_out = bufmax-buffer;
-        z_strm->total_out = 0;
-
-        z_stat = inflate( z_strm, Z_FINISH );
-        if( z_stat != Z_STREAM_END )
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "ZLIB error number " << z_stat
-                          << std::endl;
-
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Decompression failed"
-                          << std::endl;
-            }
-            return( SIO_STREAM_BADCOMPRESS );
+        _z_stream->next_in   = _cmp_begin;
+        _z_stream->avail_in  = data_length;
+        _z_stream->total_in  = 0;
+        _z_stream->next_out  = _buffer_current;
+        _z_stream->avail_out = _buffer_end - _buffer_current;
+        _z_stream->total_out = 0;
+        // Uncompress
+        auto res = inflate( _z_stream, Z_FINISH );
+        if( res != Z_STREAM_END ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_BADCOMPRESS;
+          return result;
         }
-    
-        z_stat = inflateReset( z_strm );
-        if( z_stat != Z_OK )
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "ZLIB error number " << z_stat
-                          << std::endl;
-
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "Decompression de-initialization failed"
-                          << std::endl;
-            }
-            return( SIO_STREAM_BADCOMPRESS );
+        res = inflateReset( _z_stream );
+        if( res != Z_OK ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_BADCOMPRESS;
+          return result;
         }
-    
+      }
+      _record_end = _buffer_begin + head_length + ucmp_length;
+      result._record = record;
+      record->set_options( options );
+      result._status = do_read_record( record );
+      result._record_end = FTELL( _handle );
     }
-
-    //
-    // Let the record manager sort out reading all the blocks.
-    //
-    recmax = bufloc + head_length + ucmp_length;
-    status = (*record)->read( this, options );
-
-    //
-    // Clear the maps that may have accumulated during record unpacking.
-    // This must be done unconditionally (otherwise tables from a busted
-    // record may persist into the next record).
-    //
-    pointerTo->erase( pointerTo->begin(), pointerTo->end() );
-    pointedAt->erase( pointedAt->begin(), pointedAt->end() );
-
-    if( !( status & 1 ) )
-    {
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-	              << "Unpacking error"
-                      << std::endl;
+    return result;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::do_read_record( record_ptr &record ) {
+    // Walk along the record buffer unpacking blocks.
+    unsigned int status;
+    while( _buffer_current < _record_end ) {
+      // Set the block maximum marker out of the way while interpreting the
+      // block length and type (but even so, don't let reads escape off the
+      // total length of the buffer!
+      _block_end = _record_end;
+      // Interpret: 1) The length of the block.
+      //            2) The block marker.
+      unsigned int buflen, buftyp, version, blknlen;
+      SIO_DATA( this, &buflen, 1 );
+      SIO_DATA( this, &buftyp, 1 );
+      if( buftyp != SIO_mark_block ) {
+        return SIO_RECORD_NOBLKMARKER;
+      }
+      _block_end = _buffer_current + buflen - 8;
+      // Read the block version.
+      SIO_DATA( this, &version, 1 );
+      // Read and interpret the block name.
+      SIO_DATA( this, &blknlen, 1 );
+      std::string block_name(blknlen, '\0');
+      SIO_DATA( this, &block_name[0], blknlen );
+      // Find the block in the record object
+      auto block = record->get_block(block_name);
+      // Try to unpack the block.
+      if( nullptr != block ) {
+        status = block->xfer( this, SIO_OP_READ, version );
+        if( !(status & 1) ) {
+          return status;
+        }  
+      }
+      else {
+        _buffer_current = _block_end;
+      }
+    }
+    // Pointer relocation on read !
+    pointer_relocation_read();
+    return SIO_RECORD_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  record_write_result stream::write_record( record_ptr &record ) {
+    record_write_result result;
+    const unsigned char pad[4] = { 0, 0, 0, 0 };
+    if( _state != SIO_STATE_OPEN ) {
+      result._status = SIO_STREAM_NOTOPEN;
+      return result;
+    }
+    if( _mode == SIO_MODE_READ ) {
+      result._status = SIO_STREAM_READONLY;
+      return result;
+    }
+    // Initialize the buffer.
+    _buffer_current = _buffer_begin;
+    // Save begin of record (current file end) 
+    result._record_begin = FTELL( _handle );
+    const bool compress = record->compression_option();
+    unsigned int options  = record->options();
+    const char *record_name = record->name().c_str();
+    // Output: 1) A placeholder for the record header length.
+    //         2) A 'framing' marker (to help in debugging).
+    //         3) An options word.
+    //         4) A placeholder for the record data length (compressed).
+    //         5) A placeholder for the record data length (uncompressed).
+    //         6) The length of the record name.
+    //         7) The record name.
+    unsigned int head_length_off = (_buffer_current - _buffer_begin);
+    SIO_STREAM_DATA( this, &SIO_mark_record, 1 );
+    SIO_STREAM_DATA( this, &SIO_mark_record, 1 );
+    SIO_STREAM_DATA( this, &options,         1 );
+    unsigned int data_length_off = _buffer_current - _buffer_begin;
+    SIO_STREAM_DATA( this, &SIO_mark_record, 1 );
+    unsigned int ucmp_length_off = _buffer_current - _buffer_begin;
+    SIO_STREAM_DATA( this, &SIO_mark_record, 1 );
+    unsigned int name_length = strlen( record_name );
+    SIO_STREAM_DATA( this, &name_length,     1 );
+    SIO_STREAM_DATA( this,  const_cast<char *>(record_name), name_length );
+    // Back fill the length of the record header.
+    unsigned int head_length = _buffer_current - _buffer_begin;
+    functions::copy( UCHR_CAST(&head_length), (_buffer_begin + head_length_off), SIO_LEN_QB, 1 );
+    // Ask the record object to fill the buffer with blocks. If an error is
+    // reported, just print a complaint and skip writing this buffer.
+    result._status = do_write_record( record );
+    if( not (result._status & 1) ) {
+      return result;
+    }
+    // Fill in the uncompressed record length.
+    unsigned int ucmp_length = (_buffer_current - _buffer_begin) - head_length;
+    functions::copy( UCHR_CAST(&ucmp_length), (_buffer_begin + ucmp_length_off), SIO_LEN_QB, 1);
+    // Write out the complete record.
+    if( not compress ) {
+      // Fill in the written length of the record data (identical with the
+      // uncompressed length when no compression is being performed).
+      unsigned int data_length = ucmp_length;
+      functions::copy( UCHR_CAST(&data_length), (_buffer_begin + data_length_off), SIO_LEN_QB, 1 );
+      // When not compressing, both the record header and the record data
+      // can be written in one swell foop.  Note that uncompressed data always
+      // satisfies the requirement that it ends on a four byte boundary, so
+      // no padding is required.
+      data_length += head_length;
+      auto bufout = FWRITE( _buffer_begin, sizeof(char), data_length, _handle );
+      // fg 20030514 - flush the record 
+      if( bufout != data_length && ! FFLUSH( _handle ) ) {
+        _state = SIO_STATE_ERROR;
+        result._status = SIO_STREAM_BADWRITE;
+        return result;
+      }
+    }
+    else {
+      // Set up for the compression.
+      _z_stream->next_in   = _buffer_begin + head_length;
+      _z_stream->avail_in  = ucmp_length;
+      _z_stream->total_in  = 0;  
+      _z_stream->next_out  = _cmp_begin;
+      _z_stream->avail_out = _cmp_end - _cmp_begin;
+      _z_stream->total_out = 0;
+      // Loop the compression in case the compression buffer is not big enough.
+      for(;;) {
+        deflate( _z_stream, Z_FINISH );
+        if( _z_stream->avail_out > 0 ) {
+          break;
         }
-    } else {
-      // save position of record start // can be queried with lastRecordStart()
-      recPos = recStart ;
-    }
-
-}
-
-//
-// That's all folks!
-//
-return( status );
-}
-
-// ----------------------------------------------------------------------------
-// Set the verbosity level.
-// ----------------------------------------------------------------------------
-SIO_verbosity SIO_stream::setVerbosity
-(
-    SIO_verbosity   i_verb
-)
-{ SIO_verbosity o_verb = verbosity; verbosity = i_verb; return( o_verb ); } 
-
-// ----------------------------------------------------------------------------
-// Write a record (by record name).
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::write
-(
-    const char*     i_name
-)
-{
-
-//
-// Local variables.
-//
-SIO_record
-   *record;
-
-//
-// Validate the record name.
-//
-record = SIO_recordManager::get( i_name );
-if( record == NULL )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "/" << i_name << "//] "
-                  << "Record name not recognized" 
-                  << std::endl;
-    }
-    return( SIO_STREAM_NOSUCHRECORD );
-}
-
-//
-// Call the workhorse.
-//
-return( write( record, i_name ) );
-}
-
-// ----------------------------------------------------------------------------
-// Write a record (by record pointer).
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::write
-(
-    SIO_record*     record
-)
-{
-
-//
-// Call the workhorse.
-//
-return( write( record, record->getName()->c_str() ) );
-}
-
-// ----------------------------------------------------------------------------
-// Write a record (workhorse)
-// ----------------------------------------------------------------------------
-unsigned int SIO_stream::write
-(
-    SIO_record*     record,
-    const char*     i_name
-)
-{
-
-//
-// Local variables.
-//
-int
-    z_stat;
-
-unsigned int
-    data_length,
-    data_length_off,
-    head_length,
-    head_length_off,
-    name_length,
-    ucmp_length,
-    ucmp_length_off,
-    bufout,
-    compress,
-    newlen,
-    oldlen,
-    options,
-    status;
-
-unsigned char
-   *newbuf;
-
-static unsigned char
-    pad[4] = { 0, 0, 0, 0 };
- 
-//
-// The stream must be open!
-//
-if( state != SIO_STATE_OPEN )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot write (stream is not open)"
-                  << std::endl;
-    }
-    return( SIO_STREAM_NOTOPEN );
-}
-
-//
-// This must be a writeable stream!
-//
-if( mode == SIO_MODE_READ )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "//] "
-                  << "Cannot write (stream is read only)"
-                  << std::endl;
-    }
-    return( SIO_STREAM_READONLY );
-}
-
-//
-// Capture the record name for error reporting.
-//
-rec_name = i_name;
-
-//
-// Initialize the buffer.
-//
-buffer = bufloc;
-
-//
-// Save begin of record (current file end) 
-//
-recPos = FTELL( handle ) ;
-
-//
-// Output: 1) A placeholder for the record header length.
-//         2) A 'framing' marker (to help in debugging).
-//         3) An options word.
-//         4) A placeholder for the record data length (compressed).
-//         5) A placeholder for the record data length (uncompressed).
-//         6) The length of the record name.
-//         7) The record name.
-//
-compress = record->getCompress();
-options  = record->getOptions();
-
-head_length_off = buffer - bufloc;
-SIO_DATA( this, &SIO_mark_record,            1           );
-SIO_DATA( this, &SIO_mark_record,            1           );
-SIO_DATA( this, &options,                    1           );
-
-data_length_off = buffer - bufloc;
-SIO_DATA( this, &SIO_mark_record,            1           );
-
-ucmp_length_off = buffer - bufloc;
-SIO_DATA( this, &SIO_mark_record,            1           );
-
-name_length = strlen( i_name );
-SIO_DATA( this, &name_length,                1           );
-SIO_DATA( this,  const_cast<char *>(i_name), name_length );
-
-//
-// Back fill the length of the record header.
-//
-head_length = buffer - bufloc;
-SIO_functions::copy( UCHR_CAST(&head_length), (bufloc + head_length_off),
-                     SIO_LEN_QB,              1                        );
-
-//
-// Ask the record object to fill the buffer with blocks. If an error is
-// reported, just print a complaint and skip writing this buffer.
-//
-status = record->write( this );
-if( !(status & 1) )
-{
-    if( verbosity >= SIO_ERRORS )
-    {
-        std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-	          << "Packing error"
-                  << std::endl;
-    }
-    return( status );
-}
-
-//
-// Fill in the uncompressed record length.
-//
-ucmp_length = (buffer - bufloc) - head_length;
-SIO_functions::copy( UCHR_CAST(&ucmp_length), (bufloc + ucmp_length_off),
-                     SIO_LEN_QB,              1                        );
-
-// //debug
-// std::cout << "*************** SIO: ["  << name << "/" << rec_name << "/] "
-// << "writing record -  compressed : "  << compress 
-// << std::endl;
-
-
-//
-// Write out the complete record.
-//
-if( !compress )
-{
-    //
-    // Fill in the written length of the record data (identical with the
-    // uncompressed length when no compression is being performed).
-    //
-    data_length = ucmp_length;
-    SIO_functions::copy( UCHR_CAST(&data_length), (bufloc + data_length_off),
-                         SIO_LEN_QB,              1                        );
-
-    //
-    // When not compressing, both the record header and the record data
-    // can be written in one swell foop.  Note that uncompressed data always
-    // satisfies the requirement that it ends on a four byte boundary, so
-    // no padding is required.
-    //
-    data_length += head_length;
-    bufout = FWRITE( bufloc, sizeof(char), data_length, handle );
-    if( bufout != data_length && ! FFLUSH( handle ) ) // fg 20030514 - flush the record
-    {
-        state = SIO_STATE_ERROR;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                      << "File error writing record" 
-                      << std::endl;
+        unsigned int newlen = (_cmp_end - _cmp_begin) << 1;
+        unsigned char *newbuf = static_cast<unsigned char*>(malloc( newlen ));
+        if( nullptr != newbuf ) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_NOALLOC;
+          return result;
         }
-        return( SIO_STREAM_BADWRITE );
-    }
-}
-else
-{
-    //
-    // Set up for the compression.
-    //
-    z_strm->next_in   = bufloc + head_length;
-    z_strm->avail_in  = ucmp_length;
-    z_strm->total_in  = 0;
-
-    z_strm->next_out  = cmploc;
-    z_strm->avail_out = cmpmax - cmploc;
-    z_strm->total_out = 0;
-
-    //
-    // Loop the compression in case the compression buffer is not big enough.
-    //
-    for(;;)
-    {
-        z_stat = deflate( z_strm, Z_FINISH );
-        if( z_strm->avail_out > 0 )
-            break;
-
-        newlen = (cmpmax - cmploc) << 1;
-        newbuf = static_cast<unsigned char*>(malloc( newlen ));
-        if( newbuf == NULL )
-        {
-            if( verbosity >= SIO_ERRORS )
-	    {
-                std::cout << "SIO: ["  
-                          << name     << "/"
-                          << rec_name << "//] "
-                          << "Compression buffer allocation failed"
-                          << std::endl;
-            }
-        
-            state = SIO_STATE_ERROR;
-            return( SIO_STREAM_NOALLOC );
+        unsigned int oldlen = (_z_stream->next_out - _cmp_begin);
+        memcpy( newbuf, _cmp_begin, oldlen );
+        free( _cmp_begin );
+        _cmp_begin = newbuf;
+        _cmp_end = newbuf + newlen;
+        _z_stream->next_out  = _cmp_begin + oldlen;
+        _z_stream->avail_out = _cmp_end - _z_stream->next_out;
+      }
+      auto z_stat = deflateReset( _z_stream );
+      if( z_stat != Z_OK ) {
+        _state = SIO_STATE_ERROR;
+        result._status = SIO_STREAM_BADCOMPRESS;
+        return result;
+      }
+      // Fill in the length of the compressed buffer.
+      unsigned int data_length = (_z_stream->next_out - _cmp_begin);
+      functions::copy( UCHR_CAST(&data_length), (_cmp_begin + data_length_off), SIO_LEN_QB, 1 );
+      // Write the record header.
+      auto bufout = FWRITE( _buffer_begin, sizeof(char), head_length, _handle );
+      if( bufout != head_length ) {
+        _state = SIO_STATE_ERROR;
+        result._status = SIO_STREAM_BADWRITE;
+        return result;
+      }
+      // Write the compressed record data.
+      bufout = FWRITE( _cmp_begin, sizeof(char), data_length, _handle );
+      // fg 20030514 - flush the record
+      if( bufout != data_length && ! FFLUSH(_handle) ) {
+        _state = SIO_STATE_ERROR;
+        result._status = SIO_STREAM_BADWRITE;
+        return result;
+      }
+      // Insert any necessary padding to make the next record header start
+      // on a four byte boundary in the file (to make it directly accessible
+      // for xdr read).
+      unsigned int newlen = (4 - (data_length & SIO_align)) & SIO_align;
+      if( newlen > 0 ) {
+        bufout = FWRITE( pad, sizeof(char), newlen, _handle );
+        // fg 20030514 - flush the record
+        if( bufout != newlen && ! FFLUSH(_handle)) {
+          _state = SIO_STATE_ERROR;
+          result._status = SIO_STREAM_BADWRITE;
+          return result;
         }
-
-        oldlen = z_strm->next_out - cmploc;
-        memcpy( newbuf, cmploc, oldlen );
-        free( cmploc );
-        cmploc = newbuf;
-        cmpmax = cmploc + newlen;
-
-        z_strm->next_out  = cmploc + oldlen;
-        z_strm->avail_out = cmpmax - z_strm->next_out;
-
-        if( verbosity >= SIO_ALL )
-        {
-            std::cout << "SIO: ["  
-                      << name     << "/"
-                      << rec_name << "//] "
-                      << "Allocated a "
-                      << newlen
-                      << "(0x" << std::hex << newlen << std::dec << ")"
-                      << " byte compression buffer"
-                      << std::endl;
-        }
+      }
     }
-
-    z_stat = deflateReset( z_strm );
-    if( z_stat != Z_OK )
-    {
-        state = SIO_STATE_ERROR;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "//] "
-                      << "ZLIB error number " << z_stat
-                      << std::endl;
-
-            std::cout << "SIO: ["  << name << "//] "
-                      << "Compression de-initialization failed"
-                      << std::endl;
-        }
-        return( SIO_STREAM_BADCOMPRESS );
+    result._record_end = FTELL(_handle);
+    return result;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  unsigned int stream::do_write_record( record_ptr &record ) {
+    unsigned int status;
+    // Loop over blocks, getting their input.
+    for(auto iter = record->begin(), end_iter = record->end() ; iter != end_iter ; ++iter) {
+      auto block = iter->second;
+      // Save the beginning of block pointer.  Reuse the stream->blkmax variable
+      // (which has no use during buffer writing) to save it so that if the copy
+      // routine in functions is forced to reallocate the output buffer,
+      // the pointer to the beginning of block can be updated as well.
+      _block_end = _buffer_current;
+      // Output: 1) A placeholder where the block length will go.
+      //         2) A 'framing' marker (to help in debugging).
+      //         3) The version of the block.
+      //         4) The length of the block name.
+      //         5) The block name.
+      unsigned int blkver = block->version();
+      unsigned int namlen = block->name().size();
+      const char *nampnt = block->name().c_str();
+      SIO_DATA( this, &SIO_mark_block,             1      );
+      SIO_DATA( this, &SIO_mark_block,             1      );
+      SIO_DATA( this, &blkver,                     1      );
+      SIO_DATA( this, &namlen,                     1      );
+      SIO_DATA( this, const_cast<char *>(nampnt), namlen );
+      // Write the block content.
+      status = block->xfer( this, SIO_OP_WRITE, blkver );
+      if( status != SIO_BLOCK_SUCCESS ) {
+        return status;
+      }
+      // Back fill the length of the block.
+      unsigned int buflen = _buffer_current - _block_end;
+      functions::copy( UCHR_CAST(&buflen), _block_end, SIO_LEN_QB, 1 );
     }
-
-    //
-    // Fill in the length of the compressed buffer.
-    //
-    data_length = z_strm->next_out - cmploc;
-    SIO_functions::copy( UCHR_CAST(&data_length), (bufloc + data_length_off),
-                         SIO_LEN_QB,              1                        );
-
-    //
-    // Write the record header.
-    //
-    bufout = FWRITE( bufloc, sizeof(char), head_length, handle );
-    if( bufout != head_length )
-    {
-        state = SIO_STATE_ERROR;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                      << "File error writing record header" 
-                      << std::endl;
-        }
-        return( SIO_STREAM_BADWRITE );
-    }
-    
-    //
-    // Write the compressed record data.
-    //
-    bufout = FWRITE( cmploc, sizeof(char), data_length, handle );
-    if( bufout != data_length && ! FFLUSH(handle) ) // fg 20030514 - flush the record
-    {
-        state = SIO_STATE_ERROR;
-        if( verbosity >= SIO_ERRORS )
-        {
-            std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                      << "File error writing record content" 
-                      << std::endl;
-        }
-        return( SIO_STREAM_BADWRITE );
-    }
-
-    //
-    // Insert any necessary padding to make the next record header start
-    // on a four byte boundary in the file (to make it directly accessible
-    // for xdr read).
-    //
-    newlen = (4 - (data_length & SIO_align)) & SIO_align;
-    if( newlen > 0 )
-    {
-        bufout = FWRITE( pad, sizeof(char), newlen, handle );
-        if( bufout != newlen && ! FFLUSH(handle))// fg 20030514 - flush the record
-        {
-            state = SIO_STATE_ERROR;
-            if( verbosity >= SIO_ERRORS )
-            {
-                std::cout << "SIO: ["  << name << "/" << rec_name << "/] "
-                          << "File error writing end-of-record pad" 
-                          << std::endl;
-            }
-            return( SIO_STREAM_BADWRITE );
-        }
-    }
+    pointer_relocation_write();
+    return SIO_RECORD_SUCCESS;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  // template instantiations for write 
+  template <> unsigned int stream::write_data<char>(char *data, const int count);
+  template <> unsigned int stream::write_data<unsigned char>(unsigned char *data, const int count);
+  template <> unsigned int stream::write_data<short>(short *data, const int count);
+  template <> unsigned int stream::write_data<unsigned short>(unsigned short *data, const int count);
+  template <> unsigned int stream::write_data<int>(int *data, const int count);
+  template <> unsigned int stream::write_data<unsigned int>(unsigned int *data, const int count);
+  template <> unsigned int stream::write_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
+  template <> unsigned int stream::write_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
+  template <> unsigned int stream::write_data<float>(float *data, const int count);
+  template <> unsigned int stream::write_data<double>(double *data, const int count);
+  // template instantiations for read
+  template <> unsigned int stream::read_data<char>(char *data, const int count);
+  template <> unsigned int stream::read_data<unsigned char>(unsigned char *data, const int count);
+  template <> unsigned int stream::read_data<short>(short *data, const int count);
+  template <> unsigned int stream::read_data<unsigned short>(unsigned short *data, const int count);
+  template <> unsigned int stream::read_data<int>(int *data, const int count);
+  template <> unsigned int stream::read_data<unsigned int>(unsigned int *data, const int count);
+  template <> unsigned int stream::read_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
+  template <> unsigned int stream::read_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
+  template <> unsigned int stream::read_data<float>(float *data, const int count);
+  template <> unsigned int stream::read_data<double>(double *data, const int count);
 }
 
-//
-// Clear the maps that may have accumulated during record writing.
-//
-pointerTo->erase( pointerTo->begin(), pointerTo->end() );
-pointedAt->erase( pointedAt->begin(), pointedAt->end() );
 
-//
-// That's all folks!
-//
-return( SIO_STREAM_SUCCESS );
-}
 
