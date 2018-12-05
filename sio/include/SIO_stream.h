@@ -13,150 +13,266 @@
 #ifndef SIO_STREAM_H
 #define SIO_STREAM_H 1
 
+// -- std headers
 #include <map>
 #include <string>
-
 #include <stdio.h>
 
+// -- sio headers
 #include "SIO_definitions.h"
-#include "SIO_functions.h"
 #include "SIO_record.h"
 
-typedef std::map< void*, void* >                pointedAtMap_c;
-typedef std::map< void*, void* >::iterator      pointedAtMap_i;
-
-typedef std::multimap< void*, void* >           pointerToMap_c;
-typedef std::multimap< void*, void* >::iterator pointerToMap_i;
+//
+// Take the drudgery out of error handling.
+//
+#define SIO_STREAM_DATA( rec, pnt, cnt ) { \
+  result._status = (rec->mode() != SIO_MODE_READ) ? \
+    rec->write_data(pnt, cnt) : \
+    rec->read_data(pnt, cnt); \
+  if( !(result._status & 1) ) \
+    return result; \
+}
+#define SIO_DATA( rec, pnt, cnt ) { \
+  status = (rec->mode() != SIO_MODE_READ) ? \
+    rec->write_data(pnt, cnt) : \
+    rec->read_data(pnt, cnt); \
+  if( !(status & 1) ) \
+    return status; \
+}
+#define SIO_PNTR( rec, pnt ) { \
+  status = (rec->mode() != SIO_MODE_READ) ? \
+    rec->write_pointer_to( (SIO_POINTER_DECL *)(pnt) ) : \
+    rec->read_pointer_to( (SIO_POINTER_DECL *)(pnt) ); \
+  if( !(status & 1) ) \
+    return status; \
+}
+#define SIO_PTAG( rec, pnt ) { \
+  status = (rec->mode() != SIO_MODE_READ) ? \
+    rec->write_pointed_at( (SIO_POINTER_DECL *)(pnt) ) : \
+    rec->read_pointed_at( (SIO_POINTER_DECL *)(pnt) ); \
+  if( !(status & 1) ) \
+    return status; \
+}
 
 struct z_stream_s;
 
-
-//------- if built with dcap support we need different file functions -------
-#ifdef SIO_USE_DCAP
-
-#include <dcap.h>
-
-#define FOPEN  dc_fopen
-#define FTELL  dc_ftell
-#define FSEEK  dc_fseek
-#define FCLOSE dc_fclose
-#define FREAD  dc_fread
-#define FWRITE dc_fwrite
-#define FFLUSH dc_fflush
-#define FSTAT  dc_stat
-
-#else
-
-#include <sys/stat.h>
-
-#define FOPEN  fopen
-#define FTELL  ftell
-#define FSEEK  fseek
-#define FCLOSE fclose
-#define FREAD  fread
-#define FWRITE fwrite
-#define FFLUSH fflush
-#define FSTAT  stat
-
-#endif
-
-
-
-
-// ----------------------------------------------------------------------------
-// Class SIO_stream.         
-// ----------------------------------------------------------------------------
-class SIO_stream
-{
-public:
-    unsigned int           close();
-    unsigned int           flush();
-    void                   dump( unsigned int, unsigned int );
-    std::string*           getName();
-    std::string*           getFilename();
-    SIO_stream_mode        getMode();
-    SIO_stream_state       getState();  
-    SIO_verbosity          getVerbosity();  
-    unsigned int           open( const char *, SIO_stream_mode );
-    unsigned int           read( SIO_record** );
-    SIO_verbosity          setVerbosity( SIO_verbosity );
-    unsigned int           write( const char* );
-    unsigned int           write( SIO_record* );
-
-    // return the start of the last record read; -1 if not sucessfull
-    SIO_64BITINT           lastRecordStart() { return recPos ; }
-
-    SIO_64BITINT           currentPosition()  ;
+namespace sio {
+  
+  /**
+   *  @brief  stream class.
+   *  
+   *  File and buffer handler for reading / writing files with SIO
+   */
+  class stream {
+  public:
+    /**
+     *  @brief  Open a new file
+     *  
+     *  @param  fname the file name
+     *  @param  m the file opening mode
+     */
+    unsigned int open(const std::string &fname, SIO_stream_mode m);
     
-    unsigned int           seek(SIO_64BITINT pos, int whence=SEEK_SET) ;
+    /**
+     *  @brief  Close the current file
+     */
+    unsigned int close();
+    
+    /**
+     *  @brief  Flush the current opened stream
+     */
+    unsigned int flush();
+    
+    /**
+     *  @brief  The name of currently opened file
+     */
+    const std::string &file_name() const;
+    
+    /**
+     *  @brief  The current open mode
+     */
+    SIO_stream_mode mode() const;
+    
+    /**
+     *  @brief  The stream state
+     */
+    SIO_stream_state state() const;
+    
+    /**
+     *  @brief  Seek pointer in file
+     *  
+     *  @param  pos position in the file
+     *  @param  whence from where
+     */
+    unsigned int seek(SIO_64BITINT pos, int whence = SEEK_SET);
 
-    // reset the stream after a non-sucessful attempt to read a record (e.g. from an older file)
-    // set the file position to pos
-    unsigned int              reset( SIO_64BITINT pos=0 ) ;
+    /**
+     *  @brief  Reset the stream after a non-sucessful attempt to read a record (e.g. from an older file).
+     *          Set the file position to pos
+     *  
+     *  @param  pos the position to set after reset 
+     */
+    unsigned int reset( SIO_64BITINT pos = 0 );
 
-    // set compression level: -1:default, 0, no compression, 1-9 compression
-    // note if level==0  user should set compression off for all records !
-    void                   setCompressionLevel( int level ) ;
+    /**
+     *  @brief  Set the compression level:
+     *          - -1  default 
+     *          - 0   no compression 
+     *          - 1-9 compression
+     *  Note if level==0, user should set compression off for all records !
+     * 
+     *  @param  level the compression level
+     */
+    void set_compression_level(int level);
+    
+    /**
+     *  @brief  Set the size to reserve for the raw buffer while reading/writing 
+     * 
+     *  @param  reserve the size to reserve
+     */
+    void set_reserve(unsigned int reserve);
+    
+    /**
+     *  @brief  Write data to the raw buffer
+     *  
+     *  @param  data the data to write
+     *  @param  count the number of variable to write
+     */
+    template <typename T>
+    unsigned int write_data(T *data, const int count);
+    
+    /**
+     *  @brief  Read data from the raw buffer
+     *  
+     *  @param  data the data to read
+     *  @param  count the number of variable to read
+     */
+    template <typename T>
+    unsigned int read_data(T *data, const int count);
+    
+    /**
+     *  @brief  Read a 'pointed at' from ptr mapping
+     * 
+     *  @param  ptr a raw pointer
+     */
+    unsigned int read_pointed_at(SIO_POINTER_DECL *ptr);
+    
+    /**
+     *  @brief  Write a 'pointed at' to ptr mapping
+     * 
+     *  @param  ptr a raw pointer
+     */
+    unsigned int write_pointed_at(SIO_POINTER_DECL *ptr);
+    
+    /**
+     *  @brief  Read a 'pointer to' from ptr mapping
+     * 
+     *  @param  ptr a raw pointer
+     */
+    unsigned int read_pointer_to(SIO_POINTER_DECL *ptr);
+    
+    /**
+     *  @brief  Write a 'pointer to' to ptr mapping
+     * 
+     *  @param  ptr a raw pointer
+     */
+    unsigned int write_pointer_to(SIO_POINTER_DECL *ptr);
 
-private:
-    SIO_stream( const char *, unsigned int, SIO_verbosity );
-	~SIO_stream();
-	SIO_stream(const SIO_stream&) = delete ;
-	SIO_stream& operator=(const SIO_stream&) = delete ;
+    /**
+     *  @brief  Read the next record from file
+     *
+     *  @param  records the possible records to be read
+     *  
+     *  @return a structure containing the read record and read status
+     */
+    record_read_result read_next_record( const record_map &records );
 
-    unsigned int           write( SIO_record*, const char* );
-
-    unsigned char*         bufloc{NULL};    // Buffer pointer (beginning)
-    unsigned char*         buffer{NULL};    // Buffer pointer (current)
-    unsigned char*         bufmax{NULL};    // Buffer pointer (end)
-    unsigned char*         recmax{NULL};    // Record pointer (end)
-    unsigned char*         blkmax{NULL};    // Block  pointer (end)
-
-    unsigned char*         cmploc{NULL};    // Compression buffer pointer (beg)
-    unsigned char*         cmpmax{NULL};    // Compression buffer pointer (end)
-    struct z_stream_s*     z_strm{NULL};    // Compression buffer control
-
-    std::string            name{};          // Stream's name
-    std::string            filename{};      // Stream's associated file
-    FILE*                  handle{NULL};    // File handle
-
-    std::string            rec_name{};      // Record name being read
-    std::string            blk_name{};      // Block  name being read
-
-    pointedAtMap_c*        pointedAt{NULL}; // Map      of 'pointed at'
-    pointerToMap_c*        pointerTo{NULL}; // Multimap of 'pointer to'
-
-    SIO_stream_mode        mode{SIO_MODE_UNDEFINED};   // Stream mode
-    unsigned int           reserve{0};                 // Reserved size of buffer
-    SIO_stream_state       state{SIO_STATE_CLOSED};    // Stream state  
-    SIO_verbosity          verbosity{};                // Reporting level
-
-    SIO_64BITINT           recPos{0}  ;     // start Position of last record read
-    int                    compLevel{0} ;   // compression level
-
-friend class SIO_streamManager;           // Access to constructor/destructor
-friend class SIO_record;                  // Access to buffer
-friend class SIO_functions;               // Access to buffer and pointer maps
-}; 
+    /**
+     *  @brief  Write a record to file
+     *  
+     *  @param  record the record to write
+     *  @return a structure containing the record write result
+     */
+    record_write_result write_record( record_ptr &record );
+    
+  private:
+    /**
+     *  @brief  Perform an after-read pointer relocation
+     */
+    void pointer_relocation_read();
+    
+    /**
+     *  @brief  Perform an after-write pointer relocation
+     */
+    void pointer_relocation_write();
+    
+  private:
+    unsigned int clear_zstream();
+    unsigned int write_raw(const int size, const int count, unsigned char *to);
+    unsigned int read_raw(const int size, const int count, unsigned char *from);
+    unsigned int do_read_record( record_ptr &record );
+    unsigned int do_write_record( record_ptr &record );
+    
+  private:
+    /// The buffer pointer (beginning)
+    unsigned char *_buffer_begin{nullptr};
+    /// The buffer pointer (current)
+    unsigned char *_buffer_current{nullptr};
+    /// The buffer pointer (end)
+    unsigned char *_buffer_end{nullptr};
+    /// The record pointer (end)
+    unsigned char *_record_end{nullptr};
+    /// The block  pointer (end)
+    unsigned char *_block_end{nullptr};
+    /// The compression buffer pointer (beg)
+    unsigned char *_cmp_begin{nullptr};
+    /// The compression buffer pointer (end)
+    unsigned char *_cmp_end{nullptr};
+    /// The compression buffer control
+    struct z_stream_s *_z_stream{nullptr};
+    /// Stream's associated file
+    std::string _filename{};      
+    /// File handle
+    FILE *_handle{nullptr};
+    /// Map of 'pointed at'
+    pointed_at_map _pointed_at{};
+    /// Multimap of 'pointer to'
+    pointer_to_map _pointer_to{};
+    /// Stream mode
+    SIO_stream_mode _mode{SIO_MODE_UNDEFINED};
+    /// Reserved size of buffer
+    unsigned int _reserve{0};
+    /// Stream state  
+    SIO_stream_state _state{SIO_STATE_CLOSED};
+    /// The compression level
+    int _compression_level{0};   
+  };
+  
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  
+  inline const std::string &stream::file_name() const {
+    return _filename;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  inline SIO_stream_mode stream::mode() const {
+    return _mode;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  inline SIO_stream_state stream::state() const {
+    return _state;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  inline void stream::set_reserve(unsigned int reserve) {
+    _reserve = reserve;
+  }
+  
+}
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
