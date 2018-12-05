@@ -40,13 +40,8 @@ INCLUDE_DIRECTORIES(
 )
 
 SET (SIO_SRCS
-    ${SIO_SOURCE_DIR}/src/SIO_block.cc
-    ${SIO_SOURCE_DIR}/src/SIO_blockManager.cc
     ${SIO_SOURCE_DIR}/src/SIO_functions.cc
-    ${SIO_SOURCE_DIR}/src/SIO_record.cc
-    ${SIO_SOURCE_DIR}/src/SIO_recordManager.cc
     ${SIO_SOURCE_DIR}/src/SIO_stream.cc
-    ${SIO_SOURCE_DIR}/src/SIO_streamManager.cc
 )
 
 #------ require proper C++ -------
