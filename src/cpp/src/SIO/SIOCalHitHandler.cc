@@ -8,6 +8,7 @@
 #include "IOIMPL/CalorimeterHitIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
+#include "SIO_stream.h"
 #include "SIO_functions.h"
 #include "SIO_block.h"
 

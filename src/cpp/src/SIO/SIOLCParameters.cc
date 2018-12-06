@@ -4,6 +4,7 @@
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
+#include "SIO_stream.h"
 
 using namespace EVENT ;
 
@@ -22,9 +23,8 @@ namespace SIO{
 
     for(int i=0; i< nIntParameters ; i++ ){
 
-      char* keyTmp ; 
-      LCSIO_READ( stream,  &keyTmp ) ; 
-      std::string key( keyTmp ) ;
+      std::string key;
+      LCSIO_READ( stream,  key ) ; 
 
       int nInt  ;
       SIO_DATA( stream , &nInt , 1 ) ;
@@ -41,9 +41,8 @@ namespace SIO{
 
     for(int i=0; i< nFloatParameters ; i++ ){
 
-      char* keyTmp ; 
-      LCSIO_READ( stream,  &keyTmp ) ; 
-      std::string key( keyTmp ) ;
+      std::string key;
+      LCSIO_READ( stream,  key ) ; 
 
       int nFloat  ;
       SIO_DATA( stream , &nFloat , 1 ) ;
@@ -60,18 +59,17 @@ namespace SIO{
 
     for(int i=0; i< nStringParameters ; i++ ){
 
-      char* keyTmp ; 
-      LCSIO_READ( stream,  &keyTmp ) ; 
-      std::string key( keyTmp ) ;
+      std::string key;
+      LCSIO_READ( stream,  key ) ; 
 
       int nString  ;
       SIO_DATA( stream , &nString , 1 ) ;
       StringVec stringVec(nString) ;
 
       for(int j=0; j< nString ; j++ ){
-	char* valTmp ; 
-	LCSIO_READ( stream,  &valTmp ) ; 
-	stringVec[j] = valTmp ;
+        std::string val;
+        LCSIO_READ( stream,  val ) ; 
+      	stringVec[j] = val ;
       }
       params.setValues( key , stringVec ) ;
     }

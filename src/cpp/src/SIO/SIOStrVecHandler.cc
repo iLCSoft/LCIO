@@ -5,6 +5,7 @@
 #include "EVENT/LCStrVec.h"
 #include "SIO_functions.h"
 #include "SIO_block.h"
+#include "SIO_stream.h"
 #include "SIO/LCSIO.h"
 
 #include <iostream>
@@ -26,17 +27,16 @@ namespace SIO{
 	
     int nElements ;
     SIO_DATA( stream ,  &(nElements) , 1  ) ;
+    vec->resize( nElements );
 
     //    char* x = new char*[]( nElements ) ;
     for(int i=0;i<nElements;i++){
-      char* x ;
-      int len ;
-      LCSIO_READ_LEN( stream , &x , &len) ;
-
-      //      vec->push_back( x ) ;
-      vec->resize( vec->size() + 1 ) ;
-      vec->back().resize(len) ;
-      memcpy( &(vec->back()[0]) , x , len ) ;
+      std::string x ;
+      LCSIO_READ( stream , x) ;
+      vec->push_back( x );
+      // vec->resize( vec->size() + 1 ) ;
+      // vec->back().resize() ;
+      // memcpy( &(vec->back()[0]) , x , len ) ;
 
     }
 
