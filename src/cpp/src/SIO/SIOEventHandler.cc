@@ -10,6 +10,8 @@
 #include "SIO/SIOLCParameters.h"
 
 #include "SIO_functions.h"
+#include "SIO_stream.h"
+
 #include <sstream> 
 #include <iostream>
 
@@ -72,8 +74,8 @@ namespace SIO  {
       SIO_DATA( stream ,  &(*_evtP)->_eventNumber  , 1  ) ;
       SIO_DATA( stream ,  &(*_evtP)->_timeStamp  , 1  ) ;
     
-      char* detName ; 
-      LCSIO_READ( stream,  &detName ) ; 
+      std::string detName ; 
+      LCSIO_READ( stream, detName ) ; 
       (*_evtP)->setDetectorName( detName  )  ;
 
       // read collection types and names
@@ -81,38 +83,30 @@ namespace SIO  {
       // but SIO crashes if block is not read completely ...
       int nCol ;
       SIO_DATA( stream ,  &nCol , 1 ) ;
-      for( int i=0; i<nCol ; i++ ){
-	char* dummy ; 
-	LCSIO_READ( stream,  &dummy ) ; 
-	std::string colName( dummy ) ;
-	char* type ;
-	// read type 
-	LCSIO_READ( stream,  &type ) ; 
-	
-	//  we have to attach a new collection or relation object to the event for every type in the header
-// 	 std::string typeStr( type ) ;
-// 	 if( typeStr.find( LCIO::LCRELATION) == 0  ){ // typeStr starts with LCRelation
-// 	   try{ (*_evtP)->addRelation( new LCRelationIOImpl() , colName) ; 
-// 	   }
-// 	   catch( EventException ){  return LCIO::ERROR ; }
-// 	 }else{
+      for( int i=0; i<nCol ; i++ ) {
+      	std::string colName;
+        LCSIO_READ( stream,  colName ) ; 
+      	// read type 	
+      	std::string colType;
 
-	std::string colType( type ) ;
-//  	unsigned  idx ;
-	std::string::size_type idx ;
-	if( ( idx = colType.rfind( SUBSETPOSTFIX ) ) != std::string::npos ){
-	  colType = std::string( colType , 0 , idx ) ;
-	}
+      	LCSIO_READ( stream,  colType ) ; 
 
-	try { 
-	  
-	  // if we have a list with the sub set of collection names to be read we only add these to the event
-	  if( _colSubSet.empty() || _colSubSet.find( colName ) !=  _colSubSet.end()  ) 
+      	std::string::size_type idx ;
+      	if( ( idx = colType.rfind( SUBSETPOSTFIX ) ) != std::string::npos ){
+      	  colType = std::string( colType , 0 , idx ) ;
+      	}
 
-	    (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
-	  
-	}
-	catch( EventException ){  return LCIO::ERROR ; }
+      	try { 
+      	  
+      	  // if we have a list with the sub set of collection names to be read we only add these to the event
+      	  if( _colSubSet.empty() || _colSubSet.find( colName ) !=  _colSubSet.end()  ) 
+
+      	    (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
+      	  
+      	}
+      	catch( EventException ) {  
+          return LCIO::ERROR ; 
+        }
 
       }
 
