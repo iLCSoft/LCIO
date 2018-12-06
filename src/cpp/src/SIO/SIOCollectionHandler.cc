@@ -10,6 +10,7 @@
 #include "SIO/SIOHandlerMgr.h"
 #include "SIO/SIOObjectHandler.h"
 
+#include "SIO_stream.h"
 #include "SIO_functions.h"
 
 #include <iostream>
@@ -24,7 +25,7 @@ namespace SIO {
 					     const std::string& type,
 					     LCEventIOImpl**  anEvtP)
      :
-    SIO_block( bname.c_str() ), 
+    SIO_block( bname ), 
     _evtP( anEvtP ) , _col(0) , 
     _myType( type )   {
     
@@ -74,7 +75,7 @@ namespace SIO {
 
       // get the collection from event that has been attached by SIOEventHandler
       try{   // can safely cast - we know we have an LCEventImpl that has LCCollectionIOVecs
-	ioCol = dynamic_cast<LCCollectionIOVec*>( (*_evtP)->getCollection( getName()->c_str() )) ;
+	ioCol = dynamic_cast<LCCollectionIOVec*>( (*_evtP)->getCollection( name().c_str() )) ;
       }
       catch(DataNotAvailableException& e ){  
 
@@ -144,7 +145,7 @@ namespace SIO {
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
-  unsigned int   SIOCollectionHandler::version(){
+  unsigned int SIOCollectionHandler::version() const {
 
     return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }
