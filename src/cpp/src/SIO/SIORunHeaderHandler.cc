@@ -6,6 +6,7 @@
 #include "EVENT/LCIO.h"
 
 #include "SIO_functions.h"
+#include "SIO_stream.h"
 
 #include <iostream>
 
@@ -66,12 +67,12 @@ namespace SIO  {
       SIO_DATA( stream ,  &rnTmp  , 1  ) ;
       (*_rhP)->setRunNumber( rnTmp    );
 
-      char* detNameTmp ; 
-      LCSIO_READ( stream,  &detNameTmp ) ; 
+      std::string detNameTmp ; 
+      LCSIO_READ( stream,  detNameTmp ) ; 
       (*_rhP)->setDetectorName( detNameTmp  )  ;
 
-      char* descTmp ; 
-      LCSIO_READ( stream,  &descTmp ) ; 
+      std::string descTmp ; 
+      LCSIO_READ( stream,  descTmp ) ; 
       (*_rhP)->setDescription( descTmp  )  ;
       
       // read  active sub detector names
@@ -79,10 +80,9 @@ namespace SIO  {
       SIO_DATA( stream ,  &nSDN , 1 ) ;
       for( int i=0; i<nSDN ; i++ ){
 
-	char* sdnTmp ; 
-	LCSIO_READ( stream,  &sdnTmp ) ; 
-
-	(*_rhP)->addActiveSubdetector( sdnTmp ) ;
+      	std::string sdnTmp ; 
+      	LCSIO_READ( stream,  sdnTmp ) ; 
+      	(*_rhP)->addActiveSubdetector( sdnTmp ) ;
       }
 
       // read parameters
