@@ -3,7 +3,7 @@
 
 #include "IMPL/LCParametersImpl.h"
 
-class SIO_stream ;
+#include "SIO_definitions.h"
 
 namespace SIO {
     
