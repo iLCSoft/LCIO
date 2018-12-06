@@ -4,11 +4,11 @@
 #include "LCIORandomAccess.h"
 #include "RunEventMap.h"
 
+#include <SIO_definitions.h>
+
 #include <iostream>
 #include <map>
 #include <list>
-
-class SIO_stream ;
 
 namespace SIO { 
 
