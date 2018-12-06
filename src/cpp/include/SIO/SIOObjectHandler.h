@@ -3,10 +3,8 @@
 
 #include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
-//#include "SIO_functions.h"
+#include "SIO_definitions.h"
 #include "SIO_block.h"
-
-class SIO_stream ;
 
 
 namespace SIO{
