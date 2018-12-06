@@ -3,6 +3,7 @@
 
 #include "EVENT/LCIO.h"
 #include "SIO_functions.h"
+#include "SIO_stream.h"
 #include "SIO/SIOLCParameters.h"
 
 

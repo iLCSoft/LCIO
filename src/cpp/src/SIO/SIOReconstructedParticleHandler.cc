@@ -9,6 +9,7 @@
 
 #include "SIO_functions.h"
 #include "SIO_block.h"
+#include "SIO_stream.h"
 #include <bitset>
 
 
