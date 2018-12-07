@@ -67,6 +67,7 @@ SET( LCIO_IOIMPL_SRCS
 
 SET( LCIO_SIO_SRCS
   ./src/SIO/LCSIO.cc
+  ./src/SIO/SIOContext.cc
   ./src/SIO/SIOCalHitHandler.cc
   ./src/SIO/SIOClusterHandler.cc
   ./src/SIO/SIOCollectionHandler.cc
