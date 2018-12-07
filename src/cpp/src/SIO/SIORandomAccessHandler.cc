@@ -89,7 +89,7 @@ namespace SIO  {
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
-  unsigned int   SIORandomAccessHandler::version(){
+  unsigned int   SIORandomAccessHandler::version() const {
     
     return SIO_VERSION_ENCODE( EVENT::LCIO::MAJORVERSION, EVENT::LCIO::MINORVERSION ) ;
   }
