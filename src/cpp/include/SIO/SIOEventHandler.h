@@ -32,7 +32,7 @@ namespace SIO {
     
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() ;
+    virtual unsigned int   version() const ;
     
     void setEvent(const EVENT::LCEvent* evt ) ; 
     void setEventPtr( IOIMPL::LCEventIOImpl** evtP ) ; 
