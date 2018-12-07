@@ -123,7 +123,7 @@ namespace SIO  {
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
-  unsigned int   SIORunHeaderHandler::version(){
+  unsigned int   SIORunHeaderHandler::version() const {
     
     return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }

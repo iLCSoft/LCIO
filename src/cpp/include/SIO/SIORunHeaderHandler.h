@@ -32,12 +32,13 @@ namespace SIO {
     SIORunHeaderHandler(const std::string& name) ;
     /** C'tor for reading.
      */
+    // TODO evaluate why different ctor for reading and writing ??
     SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** rhP) ;
     virtual ~SIORunHeaderHandler() ;
     
     // interface from SIO_block
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() ;
+    virtual unsigned int   version() const;
     
     void setRunHeader(const EVENT::LCRunHeader* hdr ) ; 
     void setRunHeaderPtr(IOIMPL::LCRunHeaderIOImpl** hdrP ) ; 

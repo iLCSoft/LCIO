@@ -185,7 +185,7 @@ namespace SIO  {
     return ( SIO_BLOCK_SUCCESS ) ;
   }
 
-  unsigned int   SIOEventHandler::version(){
+  unsigned int   SIOEventHandler::version() const {
 
    return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
   }
