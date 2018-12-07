@@ -17,6 +17,7 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <type_traits>
 
 // -- sio headers
 #include <SIO_definitions.h>
@@ -49,7 +50,7 @@ namespace sio {
      *
      *  @param  args  the arguments to pass to block constructor
      */
-    template <typename BLOCK_TYPE, typename... Args, class = typename std::is_base_of<BLOCK_TYPE, block>::value>
+    template <typename BLOCK_TYPE, typename... Args, class = typename std::enable_if<std::is_base_of<block, BLOCK_TYPE>::value>::type>
     block_ptr add_block(Args... args);
     
     /**
@@ -58,6 +59,14 @@ namespace sio {
      *  @param  name the block name
      */
     block_ptr get_block(const std::string &name) const;
+    
+    /**
+     *  @brief  Get a block by name and convert it to user type
+     * 
+     *  @param  name the block name
+     */
+    template <typename BLOCK_TYPE, class = typename std::enable_if<std::is_base_of<block, BLOCK_TYPE>::value>::type>
+    std::shared_ptr<BLOCK_TYPE> get_block_as(const std::string &name) const;
     
     /**
      *  @brief  Remove a block with the target name
@@ -155,6 +164,14 @@ namespace sio {
     }
     
     return blk;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  template <typename BLOCK_TYPE, class>
+  std::shared_ptr<BLOCK_TYPE> record::get_block_as(const std::string &name) const {
+    auto iter = _blocks.find(name);
+    return (_blocks.end() != iter) ? std::static_pointer_cast<BLOCK_TYPE>(iter->second) : nullptr;
   }
   
   //----------------------------------------------------------------------------
