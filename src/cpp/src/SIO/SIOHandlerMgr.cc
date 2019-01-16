@@ -29,13 +29,9 @@ using namespace EVENT ;
 
 namespace SIO {
   
-  SIOHandlerMgr* SIOHandlerMgr::_me  = 0 ;
-  
-  
   SIOHandlerMgr::SIOHandlerMgr(){
     
     // add instances for all types to the map
-    
     _map[ LCIO::MCPARTICLE     ] = new SIOParticleHandler ;
     _map[ LCIO::SIMCALORIMETERHIT ] = new SIOSimCalHitHandler ;
     _map[ LCIO::RAWCALORIMETERHIT ] = new SIORawCalHitHandler ;
@@ -61,37 +57,30 @@ namespace SIO {
   } 
   
   SIOHandlerMgr::~SIOHandlerMgr(){
-      // just called at end of program ...
-    // to make valgrind happy delete the handlers
-    // -> doesn't work as destructor is not explicitely called at end of main  :(
     for( SIOHandlerMap::iterator iter = _map.begin() ; iter  != _map.end() ; iter++ ){
-      //     std::cout << " deleting SIOHandler : " << iter->first << std::endl ;
       delete iter->second ;
     }
   }
   
-  SIOHandlerMgr* SIOHandlerMgr::instance(){
-	
-    if( ! _me  ){
-      _me  = new SIOHandlerMgr ;
+  SIOObjectHandler* SIOHandlerMgr::getHandler( const std::string& type ) const {
+    auto findIter = _map.find( type );
+    if(  findIter == _map.end( ) ) {
+      return nullptr ;
     }
-    return _me ;
-  }
-  
-  SIOObjectHandler* SIOHandlerMgr::getHandler( const std::string& type ){
-    
-    if(  _map.find( type ) == _map.end( ) ) 
-      return 0 ;
-    
-    return _map[ type ] ;
+    return findIter->second ;
   }
   
   
   bool SIOHandlerMgr::registerHandler( const std::string& type, SIOObjectHandler* handler ){
 	
     // check if type name does not yet exist  
-    if(  _map.find( type ) != _map.end( ) ) 
+    if(  _map.find( type ) != _map.end( ) ) {
       return false ;
+    }
+    
+    if( nullptr == handler ) {
+      return false ;
+    }
     
     _map[ type ] = handler ;
     
