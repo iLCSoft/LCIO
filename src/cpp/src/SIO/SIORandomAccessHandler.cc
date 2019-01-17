@@ -3,6 +3,7 @@
 #include "SIO/LCIORandomAccess.h"
 #include "SIO/LCSIO.h"
 #include "SIO_functions.h"
+#include "SIO_stream.h"
 
 #include "EVENT/LCIO.h"
 
