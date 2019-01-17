@@ -28,14 +28,6 @@ namespace SIO {
     SIO_block( bname ), 
     _evtP( anEvtP ) , _col(0) , 
     _myType( type )   {
-    
-    // here we need to get the handler for our type
-    _myHandler = SIOHandlerMgr::instance()->getHandler( _myType  ) ;
-    if( ! _myHandler ){
-      // throw an exception that is caught in the SIOReader 
-      throw Exception("SIOCollectionHandler: unsuported type") ;
-    }
-    //    std::cout << " creating SIOCollectionHandler " << _myType << std::endl ;
   }
 
   SIOCollectionHandler::~SIOCollectionHandler(){
@@ -46,11 +38,14 @@ namespace SIO {
     return _myType ;
   }
   
-
+  void SIOCollectionHandler::setHandler( SIOObjectHandler *handler ) {
+    _myHandler = handler;
+  }
   
   void SIOCollectionHandler::setCollection(const LCCollection *col){
     _col = col ;
-  } 
+  }
+  
   void SIOCollectionHandler::setEvent(LCEventIOImpl**  anEvtP){
     _evtP = anEvtP ;
   }  
