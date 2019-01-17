@@ -47,6 +47,7 @@ namespace SIO {
     virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
     virtual unsigned int   version() const ;
     
+    void setHandler( SIOObjectHandler *handler ) ;
     void setCollection(const EVENT::LCCollection *col) ; 
     void setEvent(IOIMPL::LCEventIOImpl**  anEvtP) ; 
     
