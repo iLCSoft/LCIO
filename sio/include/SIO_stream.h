@@ -84,6 +84,11 @@ namespace sio {
     unsigned int flush();
     
     /**
+     *  @brief  Get current file pointer position
+     */
+    SIO_64BITINT file_tell();
+    
+    /**
      *  @brief  The name of currently opened file
      */
     const std::string &file_name() const;
@@ -241,7 +246,7 @@ namespace sio {
     /// Stream mode
     SIO_stream_mode _mode{SIO_MODE_UNDEFINED};
     /// Reserved size of buffer
-    unsigned int _reserve{0};
+    unsigned int _reserve{32*SIO_KBYTE*SIO_KBYTE};
     /// Stream state  
     SIO_stream_state _state{SIO_STATE_CLOSED};
     /// The compression level
@@ -249,6 +254,12 @@ namespace sio {
   };
   
   //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+  
+  inline SIO_64BITINT stream::file_tell() {
+    return FTELL(_handle);
+  }
+  
   //----------------------------------------------------------------------------
   
   inline const std::string &stream::file_name() const {
@@ -272,6 +283,61 @@ namespace sio {
   inline void stream::set_reserve(unsigned int reserve) {
     _reserve = reserve;
   }
+  
+  //----------------------------------------------------------------------------
+  
+  template <typename T>
+  inline unsigned int stream::write_data(T * /*data*/, const int /*count*/) {
+    throw std::runtime_error("stream::write_data: Unknown type for writing");
+    return 0;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  template <typename T>
+  inline unsigned int stream::read_data(T * /*data*/, const int /*count*/) {
+    throw std::runtime_error("stream::read_data: Unknown type for reading");
+    return 0;
+  }
+  
+  //---------------------------------------------------------------------------
+  
+#define WRITE_DATA_TIMPL(TYPE, SIZE) \
+template <> \
+inline unsigned int stream::write_data(TYPE *data, const int count) { \
+  return write_raw(SIZE, count, UCHR_CAST(data)); \
+}
+#define READ_DATA_TIMPL(TYPE, SIZE) \
+template <> \
+inline unsigned int stream::read_data(TYPE *data, const int count) { \
+  return read_raw(SIZE, count, UCHR_CAST(data)); \
+}
+  
+  // write impl
+  WRITE_DATA_TIMPL(char, SIO_LEN_SB)
+  WRITE_DATA_TIMPL(unsigned char, SIO_LEN_SB)
+  WRITE_DATA_TIMPL(short, SIO_LEN_DB)
+  WRITE_DATA_TIMPL(unsigned short, SIO_LEN_DB)
+  WRITE_DATA_TIMPL(int, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
+  WRITE_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
+  WRITE_DATA_TIMPL(float, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(double, SIO_LEN_OB)
+  // read impl
+  READ_DATA_TIMPL(char, SIO_LEN_SB)
+  READ_DATA_TIMPL(unsigned char, SIO_LEN_SB)
+  READ_DATA_TIMPL(short, SIO_LEN_DB)
+  READ_DATA_TIMPL(unsigned short, SIO_LEN_DB)
+  READ_DATA_TIMPL(int, SIO_LEN_QB)
+  READ_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  READ_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
+  READ_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
+  READ_DATA_TIMPL(float, SIO_LEN_QB)
+  READ_DATA_TIMPL(double, SIO_LEN_OB)
+  
+#undef WRITE_DATA_TIMPL
+#undef READ_DATA_TIMPL
   
 }
 
