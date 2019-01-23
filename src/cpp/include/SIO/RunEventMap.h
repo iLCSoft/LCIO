@@ -18,20 +18,18 @@ namespace SIO {
  * @version $Id: RunEventMap.h,v 1.3 2011-03-03 16:00:12 gaede Exp $
  */
   class RunEventMap {
-
-
     friend std::ostream & operator<<(std::ostream& os, const RunEventMap& rm ) ;
    
   public:
+    // traits
+    typedef std::map< RunEvent, long64> map_type ;
+    typedef map_type::iterator iterator ;
+    typedef map_type::const_iterator const_iterator ;
+    static const int npos = -1 ;
 
-    typedef std::map< RunEvent, long64> MapType ;
-    typedef MapType::iterator Map_IT ;
-    typedef MapType::const_iterator Map_cIT ;
-
-    static const int NPos = -1 ;
-
-    RunEventMap() ; 
-    ~RunEventMap() ;
+  public:
+    RunEventMap() = default ; 
+    ~RunEventMap() = default ;
     
     /** Add a new entry to the event map - if the RunEvent already exists the new position will be stored.
      */
@@ -65,10 +63,10 @@ namespace SIO {
     // map funcitons
     size_t size() { return _map.size()  ; } 
 
-    Map_IT begin()  { return _map.begin() ; }
-    Map_IT end()  { return _map.end() ; }
-    Map_cIT begin() const  { return _map.begin() ; }
-    Map_cIT end()  const { return _map.end() ; }
+    iterator begin()  { return _map.begin() ; }
+    iterator end()  { return _map.end() ; }
+    const_iterator begin() const  { return _map.begin() ; }
+    const_iterator end()  const { return _map.end() ; }
     bool empty() const { return _map.empty() ; }
 
     template <class InputIterator>
@@ -77,12 +75,9 @@ namespace SIO {
     void clear() {  _map.clear() ; _nRun=0 ; _nEvt =0 ; }
 
   protected: 
-
-    MapType _map{} ;
-
+    map_type _map{} ;
     int _nRun{0} ;
     int _nEvt{0} ;
-
   }; // class
  } // namespace
 
