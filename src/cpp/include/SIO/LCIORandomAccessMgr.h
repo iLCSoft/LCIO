@@ -2,6 +2,7 @@
 #define SIO_LCIORandomAccessMgr_H 1
 
 #include "LCIORandomAccess.h"
+#include "SIO/LCIORecords.h"
 #include "RunEventMap.h"
 
 #include <SIO_definitions.h>
@@ -43,7 +44,7 @@ namespace SIO {
 
   public:
 
-    LCIORandomAccessMgr() ;
+    LCIORandomAccessMgr() = default ;
     
     /// no copy constructor
     LCIORandomAccessMgr(const LCIORandomAccessMgr&) = delete ;
@@ -117,18 +118,20 @@ namespace SIO {
     /**Pointer to the last LCIORandomAccess in the list */
     const LCIORandomAccess* lastLCIORandomAccess() {
       return (_list.empty() ?  0 : _list.back() )  ; 
-    } 
-
-    // ----- map with RunHeader and EventHeader record positions
-    RunEventMap _runEvtMap{} ;
+    }
     
-    // ----- list of LCIORandomAccess objects 
-    std::list< LCIORandomAccess* > _list{} ;
-
-    LCIORandomAccess* _fileRecord ;
-
-  }; // class
-  
-  
+    /** Seek the stream at the given position */
+    void seekStream( SIO_stream *stream, long64 pos ) ;
+    
+  private:
+    /// Map with RunHeader and EventHeader record positions
+    RunEventMap                      _runEvtMap{} ;
+    /// List of LCIORandomAccess objects 
+    std::list< LCIORandomAccess* >   _list{} ;
+    /// The file record summary
+    LCIORandomAccess*                _fileRecord{nullptr} ;
+    /// The LCIO records manager
+    LCIORecords                      _lcioRecords{} ;
+  };
 } // namespace 
 #endif 
