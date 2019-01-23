@@ -390,61 +390,6 @@ namespace sio {
   }
   
   //----------------------------------------------------------------------------
-  
-  template <typename T>
-  unsigned int stream::write_data(T *data, const int count) {
-    throw std::runtime_error("stream::write_data: Unknown type for writing");
-    return 0;
-  }
-  
-  //----------------------------------------------------------------------------
-  
-  template <typename T>
-  unsigned int stream::read_data(T *data, const int count) {
-    throw std::runtime_error("stream::read_data: Unknown type for reading");
-    return 0;
-  }
-  
-  //---------------------------------------------------------------------------
-  
-#define WRITE_DATA_TIMPL(TYPE, SIZE) \
-template <> \
-unsigned int stream::write_data(TYPE *data, const int count) { \
-  return write_raw(SIZE, count, UCHR_CAST(data)); \
-}
-#define READ_DATA_TIMPL(TYPE, SIZE) \
-template <> \
-unsigned int stream::read_data(TYPE *data, const int count) { \
-  return read_raw(SIZE, count, UCHR_CAST(data)); \
-}
-  
-  // write impl
-  WRITE_DATA_TIMPL(char, SIO_LEN_SB)
-  WRITE_DATA_TIMPL(unsigned char, SIO_LEN_SB)
-  WRITE_DATA_TIMPL(short, SIO_LEN_DB)
-  WRITE_DATA_TIMPL(unsigned short, SIO_LEN_DB)
-  WRITE_DATA_TIMPL(int, SIO_LEN_QB)
-  WRITE_DATA_TIMPL(unsigned int, SIO_LEN_QB)
-  WRITE_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
-  WRITE_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
-  WRITE_DATA_TIMPL(float, SIO_LEN_QB)
-  WRITE_DATA_TIMPL(double, SIO_LEN_OB)
-  // read impl
-  READ_DATA_TIMPL(char, SIO_LEN_SB)
-  READ_DATA_TIMPL(unsigned char, SIO_LEN_SB)
-  READ_DATA_TIMPL(short, SIO_LEN_DB)
-  READ_DATA_TIMPL(unsigned short, SIO_LEN_DB)
-  READ_DATA_TIMPL(int, SIO_LEN_QB)
-  READ_DATA_TIMPL(unsigned int, SIO_LEN_QB)
-  READ_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
-  READ_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
-  READ_DATA_TIMPL(float, SIO_LEN_QB)
-  READ_DATA_TIMPL(double, SIO_LEN_OB)
-  
-#undef WRITE_DATA_TIMPL
-#undef READ_DATA_TIMPL
-
-  //----------------------------------------------------------------------------
 
   record_read_result stream::read_next_record( const record_map &records ) {
     record_read_result result;
@@ -829,28 +774,28 @@ unsigned int stream::read_data(TYPE *data, const int count) { \
   
   //----------------------------------------------------------------------------
   
-  // template instantiations for write 
-  template <> unsigned int stream::write_data<char>(char *data, const int count);
-  template <> unsigned int stream::write_data<unsigned char>(unsigned char *data, const int count);
-  template <> unsigned int stream::write_data<short>(short *data, const int count);
-  template <> unsigned int stream::write_data<unsigned short>(unsigned short *data, const int count);
-  template <> unsigned int stream::write_data<int>(int *data, const int count);
-  template <> unsigned int stream::write_data<unsigned int>(unsigned int *data, const int count);
-  template <> unsigned int stream::write_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
-  template <> unsigned int stream::write_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
-  template <> unsigned int stream::write_data<float>(float *data, const int count);
-  template <> unsigned int stream::write_data<double>(double *data, const int count);
-  // template instantiations for read
-  template <> unsigned int stream::read_data<char>(char *data, const int count);
-  template <> unsigned int stream::read_data<unsigned char>(unsigned char *data, const int count);
-  template <> unsigned int stream::read_data<short>(short *data, const int count);
-  template <> unsigned int stream::read_data<unsigned short>(unsigned short *data, const int count);
-  template <> unsigned int stream::read_data<int>(int *data, const int count);
-  template <> unsigned int stream::read_data<unsigned int>(unsigned int *data, const int count);
-  template <> unsigned int stream::read_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
-  template <> unsigned int stream::read_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
-  template <> unsigned int stream::read_data<float>(float *data, const int count);
-  template <> unsigned int stream::read_data<double>(double *data, const int count);
+  // // template instantiations for write 
+  // template unsigned int stream::write_data<char>(char *data, const int count);
+  // template unsigned int stream::write_data<unsigned char>(unsigned char *data, const int count);
+  // template unsigned int stream::write_data<short>(short *data, const int count);
+  // template unsigned int stream::write_data<unsigned short>(unsigned short *data, const int count);
+  // template unsigned int stream::write_data<int>(int *data, const int count);
+  // template unsigned int stream::write_data<unsigned int>(unsigned int *data, const int count);
+  // template unsigned int stream::write_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
+  // template unsigned int stream::write_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
+  // template unsigned int stream::write_data<float>(float *data, const int count);
+  // template unsigned int stream::write_data<double>(double *data, const int count);
+  // // template instantiations for read
+  // template unsigned int stream::read_data<char>(char *data, const int count);
+  // template unsigned int stream::read_data<unsigned char>(unsigned char *data, const int count);
+  // template unsigned int stream::read_data<short>(short *data, const int count);
+  // template unsigned int stream::read_data<unsigned short>(unsigned short *data, const int count);
+  // template unsigned int stream::read_data<int>(int *data, const int count);
+  // template unsigned int stream::read_data<unsigned int>(unsigned int *data, const int count);
+  // template unsigned int stream::read_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
+  // template unsigned int stream::read_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
+  // template unsigned int stream::read_data<float>(float *data, const int count);
+  // template unsigned int stream::read_data<double>(double *data, const int count);
 }
 
 
