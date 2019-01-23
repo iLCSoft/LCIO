@@ -145,6 +145,13 @@ namespace sio {
   //----------------------------------------------------------------------------
   //----------------------------------------------------------------------------
   
+  inline record::record(const std::string &name) :
+  _name(name) {
+    /* nop */
+  }
+  
+  //----------------------------------------------------------------------------
+  
   template <typename BLOCK_TYPE, typename... Args, class>
   inline block_ptr record::add_block(Args... args) {
     
