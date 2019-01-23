@@ -223,7 +223,9 @@ ENDIF()
 
 # -------- include directories -----------------------------------------------
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
+INCLUDE_DIRECTORIES( BEFORE "${LCIO_SOURCE_DIR}/sio/include" )
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
+
 
 
 
