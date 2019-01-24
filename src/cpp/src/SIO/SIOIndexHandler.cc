@@ -18,8 +18,12 @@ namespace SIO  {
     _raMgr( raMgr ) {
     
   }
+  
+  //----------------------------------------------------------------------------
  
   SIOIndexHandler::~SIOIndexHandler(){ }
+  
+  //----------------------------------------------------------------------------
 
   unsigned int SIOIndexHandler::xfer( SIO_stream* stream, SIO_operation op, 
 					  unsigned int versionID){
@@ -154,7 +158,7 @@ namespace SIO  {
       
       SIO_DATA( stream ,  &size, 1  ) ;
       
-      for( RunEventMap::Map_IT it =  _raMgr->_runEvtMap.begin() ; it !=  _raMgr->_runEvtMap.end() ; ++it ){
+      for( auto it =  _raMgr->_runEvtMap.begin() ; it !=  _raMgr->_runEvtMap.end() ; ++it ){
 	
 	const RunEvent& re = it->first ;
 	
@@ -192,8 +196,9 @@ namespace SIO  {
     return ( SIO_BLOCK_SUCCESS ) ;
   }
   
-  unsigned int   SIOIndexHandler::version(){
-    
+  //----------------------------------------------------------------------------
+  
+  unsigned int SIOIndexHandler::version() const {
     return SIO_VERSION_ENCODE( EVENT::LCIO::MAJORVERSION, EVENT::LCIO::MINORVERSION ) ;
   }
   
