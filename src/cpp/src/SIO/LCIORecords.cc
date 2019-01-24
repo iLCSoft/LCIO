@@ -7,6 +7,7 @@
 #include <SIO/SIOEventHandler.h>
 #include <SIO/SIOCollectionHandler.h>
 #include <SIO/SIORandomAccessHandler.h>
+#include <SIO/SIOIndexHandler.h>
 #include <EVENT/LCEvent.h>
 #include <Exceptions.h>
 
@@ -109,7 +110,7 @@ namespace SIO {
   
   sio::record_ptr LCIORecords::createIndexRecord( LCIORandomAccessMgr *raMgr ) const {
     auto indexRecord = std::make_shared<SIO_record>( LCSIO_INDEXRECORDNAME );
-    indexRecord->add_block<SIORandomAccessHandler>( LCSIO_INDEXBLOCKNAME, raMgr );
+    indexRecord->add_block<SIOIndexHandler>( LCSIO_INDEXBLOCKNAME, raMgr );
     return indexRecord;
   }
   
