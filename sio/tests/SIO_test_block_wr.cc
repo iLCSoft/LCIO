@@ -17,6 +17,7 @@ int main() {
   
   // prepare record and block
   auto record = std::make_shared<sio::record>( "SimpleRecord" );
+  record->set_compression(true);
   record->add_block<SimpleBlock>();
   auto block = record->get_block_as<SimpleBlock>("SimpleBlock");
   unitTest.test( "block is not null", nullptr != block );
@@ -39,7 +40,9 @@ int main() {
 
   // prepare stream
   auto stream = std::make_shared<sio::stream>();
+  stream->set_compression_level(5);
   status = stream->open( fileName, SIO_MODE_WRITE_NEW );
+  
   unitTest.test( "stream opened", status == SIO_STREAM_SUCCESS );
   
   // write record
