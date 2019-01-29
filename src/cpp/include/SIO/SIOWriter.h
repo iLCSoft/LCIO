@@ -6,23 +6,14 @@
 #include "IO/LCWriter.h"
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
+#include "SIO/LCIORecords.h"
 
 #include "LCIORandomAccessMgr.h"
 
 #include "SIO_block.h"
-
-class SIO_record ;
-class SIO_stream ;    
-
+#include "SIO_stream.h"
 
 namespace SIO {
-
-  class SIOEventHandler ;
-  class SIORunHeaderHandler ;
-  class SIOCollectionHandler ;
-
-  class SIOReader ;
-  class SIOUnpack ;
 
 /** Concrete implementation of LCWriter using SIO.
  * Use LCFactory to instantiate.
@@ -32,26 +23,16 @@ namespace SIO {
  * @version Mar 6, 2003
  */
   class SIOWriter : public IO::LCWriter {
-
-
-    friend class SIOReader ; // SIO Reader uses SAME SIO records !!
-    friend class SIOUnpack ;
-
   public:
 
-    /**Default constructor.
-     */
+    /// Default constructor
     SIOWriter() ;
-
     /// no copy constructor
     SIOWriter(const SIOWriter&) = delete ;
     /// no assignment operator
     SIOWriter& operator=(const SIOWriter&) = delete ;
-
-    /**
-     * Destructor
-     */
-    virtual ~SIOWriter() ;
+    /// Destructor
+    ~SIOWriter() = default ;
 
     /** Opens a file for writing. If file with given name exists, 
      * an exception is thrown. Use append or new mode instead.
@@ -108,32 +89,22 @@ namespace SIO {
      */
     virtual void flush()  ;
 
-
-  protected:
-
-    /** Sets up the handlers for writing the current event.
-     */
-    void setUpHandlers(const EVENT::LCEvent * evt)  ;
-    
+  private:  
     /** Creates a proper filename with extension 'slcio' 
      * in sioFilename.
      */
-    void getSIOFileName(const std::string& filename, 
-			std::string& sioFilename)  ; 
+    void getSIOFileName(const std::string& filename, std::string& sioFilename)  ; 
     
-  protected:
-    
-    SIO_stream *_stream ;
-    int _compressionLevel ;
-
   private:
-
-    SIOEventHandler *_hdrHandler ;
-    SIORunHeaderHandler *_runHandler ;
-    std::vector<SIO_block*> _connectedBlocks{} ;
-
-  protected:
+    /// 
+    sio::stream_ptr         _stream{nullptr};
+    ///
+    int                     _compressionLevel {0};
+    /// 
+    LCIORecords             _lcioRecords{};
     
+  private:
+    ///
     LCIORandomAccessMgr _raMgr{} ;
 
   }; // class
