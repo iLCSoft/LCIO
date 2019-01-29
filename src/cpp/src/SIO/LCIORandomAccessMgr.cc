@@ -119,7 +119,9 @@ namespace SIO {
   bool LCIORandomAccessMgr::readLCIORandomAccess( SIO_stream* stream ) {
 
     auto raRecord = _lcioRecords.createRandomAccessRecord( this ) ;
-    auto readResult = stream->read_next_record( {{ LCSIO_ACCESSRECORDNAME, raRecord }} );
+    raRecord->set_compression(false);
+    SIO_DEBUG( "LCIORandomAccessMgr::readLCIORandomAccess: Reading at " << stream->file_tell() );
+    auto readResult = stream->read_next_record( {{ raRecord->name(), raRecord }} );
     if( ! (readResult._status & 1) ) {
       readResult._status = stream->reset() ;
       if( readResult._status != SIO_STREAM_SUCCESS ) {
@@ -142,6 +144,7 @@ namespace SIO {
   bool LCIORandomAccessMgr::readLCIOIndex( SIO_stream* stream ) {
 
     auto raRecord = _lcioRecords.createIndexRecord( this ) ;
+    raRecord->set_compression(false);
     auto readResult = stream->read_next_record( {{ LCSIO_INDEXRECORDNAME, raRecord }} );
     if( ! (readResult._status & 1) ) {
       readResult._status = stream->reset() ;
@@ -157,13 +160,16 @@ namespace SIO {
 
   bool LCIORandomAccessMgr::initAppend( SIO_stream* stream ) {
     // check if the last record is LCIORandomAccess  (the file record )
+    SIO_DEBUG( "LCIORandomAccessMgr::initAppend: reading random access" );
     if( ! readLCIORandomAccessAt( stream , -LCSIO_RANDOMACCESS_SIZE) ) {
+      SIO_DEBUG( "LCIORandomAccessMgr::initAppend: No random access" );
       recreateEventMap( stream ) ; 
       return false;
     }
     // store the file record separately 
     _fileRecord = _list.back() ;
     _list.pop_back()  ;
+    SIO_DEBUG( "LCIORandomAccessMgr::initAppend: Random access found !" );
     // now read first LCIORandomAccess record 
     readLCIORandomAccessAt( stream , _fileRecord->_nextLocation ) ; // start of last LCIORandomAccessRecord	
     return true ;
@@ -278,6 +284,7 @@ namespace SIO {
     ra->setFirstRecordLocation(  thisPos  ) ;
     
     const LCIORandomAccess* lRa  = lastLCIORandomAccess() ;
+    SIO_DEBUG( "LCIORandomAccessMgr::writeRandomAccessRecords: lRa is " << lRa );
     long64 prevPos = (  lRa ? lRa->getFirstRecordLocation() : 0 ) ;
     ra->setPreviousLocation(  prevPos ) ;
     
@@ -302,6 +309,7 @@ namespace SIO {
     addLCIORandomAccess( _fileRecord ) ; 
     
     writeResult = stream->write_record( raRecord ) ;
+    SIO_DEBUG( "Random access manager: =====\n" << *this );
     
     if( !(writeResult._status & 1)  ) {
       throw IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] couldn't write LCIORandomAccess file record to stream" ) ;
@@ -315,6 +323,7 @@ namespace SIO {
     if( stream->state() != SIO_STATE_OPEN ) {
       throw IO::IOException( "[LCIORandomAccessMgr::seekStream] Stream not open") ;
     }
+    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: seeking at " << pos << ", current position being " << stream->file_tell() );
     int status ;
     if( pos < 0 ) {
       status = stream->seek( pos , SEEK_END ) ;
@@ -322,6 +331,7 @@ namespace SIO {
     else {
       status = stream->seek( pos ) ;
     }    
+    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: current position is now " << stream->file_tell() );
     if( status != SIO_STREAM_SUCCESS ) {
       std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos << "  errno : " << errno ;
       throw IO::IOException( s.str() ) ;
