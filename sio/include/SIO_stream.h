@@ -288,7 +288,8 @@ namespace sio {
   
   template <typename T>
   inline unsigned int stream::write_data(T * /*data*/, const int /*count*/) {
-    throw std::runtime_error("stream::write_data: Unknown type for writing");
+    std::stringstream ss; ss << "stream::write_data: Unknown type for writing: " << typeid(T).name();
+    throw std::runtime_error( ss.str().c_str() );
     return 0;
   }
   
@@ -296,7 +297,8 @@ namespace sio {
   
   template <typename T>
   inline unsigned int stream::read_data(T * /*data*/, const int /*count*/) {
-    throw std::runtime_error("stream::read_data: Unknown type for reading");
+    std::stringstream ss; ss << "stream::read_data: Unknown type for reading: " << typeid(T).name();
+    throw std::runtime_error( ss.str().c_str() );
     return 0;
   }
   
@@ -320,6 +322,7 @@ inline unsigned int stream::read_data(TYPE *data, const int count) { \
   WRITE_DATA_TIMPL(unsigned short, SIO_LEN_DB)
   WRITE_DATA_TIMPL(int, SIO_LEN_QB)
   WRITE_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  WRITE_DATA_TIMPL(std::size_t, SIO_LEN_QB)
   WRITE_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
   WRITE_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
   WRITE_DATA_TIMPL(float, SIO_LEN_QB)
@@ -331,6 +334,7 @@ inline unsigned int stream::read_data(TYPE *data, const int count) { \
   READ_DATA_TIMPL(unsigned short, SIO_LEN_DB)
   READ_DATA_TIMPL(int, SIO_LEN_QB)
   READ_DATA_TIMPL(unsigned int, SIO_LEN_QB)
+  READ_DATA_TIMPL(std::size_t, SIO_LEN_QB)
   READ_DATA_TIMPL(SIO_64BITINT, SIO_LEN_OB)
   READ_DATA_TIMPL(unsigned SIO_64BITINT, SIO_LEN_OB)
   READ_DATA_TIMPL(float, SIO_LEN_QB)
