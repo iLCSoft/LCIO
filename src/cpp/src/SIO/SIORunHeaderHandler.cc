@@ -54,7 +54,10 @@ namespace SIO  {
   
     if( op == SIO_OP_READ ){ 
 
-      if(!_rhP) return LCIO::ERROR ;  // in read mode we need an address for the pointer
+      if(!_rhP) {
+        SIO_DEBUG( "SIORunHeaderHandler::xfer: [READ] no run pointer set" );
+        return LCIO::ERROR ;  // in read mode we need an address for the pointer
+      }
 
       // delete the old run header object 
       // -> for every handler there will only be one RunHeader object at any given time
