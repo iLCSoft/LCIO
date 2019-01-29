@@ -69,6 +69,8 @@ OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
 # allow C++ only builds
 OPTION( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
 
+# debug printout from sio
+OPTION( SIO_PRINT_DEBUG "Whether to turn on SIO debug printout statements (high verbosity !)" OFF )
 
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
@@ -293,6 +295,7 @@ MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
 MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )
 MESSAGE( STATUS "LCIO_JAVA_USE_MAVEN = ${LCIO_JAVA_USE_MAVEN}" )
+MESSAGE( STATUS "SIO_PRINT_DEBUG = ${SIO_PRINT_DEBUG}" )
 MESSAGE( STATUS "" )
 
 
