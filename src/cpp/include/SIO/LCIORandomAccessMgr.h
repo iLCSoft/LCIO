@@ -87,6 +87,9 @@ namespace SIO {
 
     /** Clear all lists and maps before closing a file */
     void clear() ;
+    
+    /** Seek the stream at the given position */
+    void seekStream( SIO_stream *stream, long64 pos ) ;
 
   protected:
     
@@ -119,9 +122,6 @@ namespace SIO {
     const LCIORandomAccess* lastLCIORandomAccess() {
       return (_list.empty() ?  0 : _list.back() )  ; 
     }
-    
-    /** Seek the stream at the given position */
-    void seekStream( SIO_stream *stream, long64 pos ) ;
     
   private:
     /// Map with RunHeader and EventHeader record positions
