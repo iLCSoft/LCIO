@@ -66,8 +66,8 @@ SET( LCIO_IOIMPL_SRCS
 )
 
 SET( LCIO_SIO_SRCS
+  ./src/SIO/LCIORecords.cc
   ./src/SIO/LCSIO.cc
-  ./src/SIO/SIOContext.cc
   ./src/SIO/SIOCalHitHandler.cc
   ./src/SIO/SIOClusterHandler.cc
   ./src/SIO/SIOCollectionHandler.cc
@@ -245,8 +245,9 @@ endif()
 # -------- compiler definitions ----------------------------------------------
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
-
-
+IF( SIO_PRINT_DEBUG )
+  ADD_DEFINITIONS( "-DSIO_PRINT_DEBUG" )
+ENDIF()
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
