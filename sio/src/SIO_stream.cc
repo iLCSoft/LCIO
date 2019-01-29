@@ -393,13 +393,16 @@ namespace sio {
 
   record_read_result stream::read_next_record( const record_map &records ) {
     record_read_result result;
+    result._status = SIO_STREAM_SUCCESS;
     // check stream state first
     if( SIO_STATE_OPEN != _state ) {
       result._status = SIO_STREAM_NOTOPEN;
+      SIO_DEBUG( "stream::read_next_record: not opened" );
       return result;
     }
     if( SIO_MODE_READ != _mode ) {
       result._status = SIO_STREAM_WRITEONLY;
+      SIO_DEBUG( "stream::read_next_record: stream is read only" );
       return result;
     }
     // Loop over records until a requested one turns up.
@@ -425,6 +428,7 @@ namespace sio {
       if( buftyp != SIO_mark_record ) {
         _state = SIO_STATE_ERROR;
         result._status = SIO_STREAM_NORECMARKER;
+        SIO_DEBUG( "stream::read_next_record: No record marker. Read " << buftyp << ", expected " << SIO_mark_record );
         return result;
       }
       // Interpret: 3) The options word.
@@ -448,7 +452,8 @@ namespace sio {
       // find the record to read
       auto record_iter = records.find(record_name);
       record_ptr record = (records.end() != record_iter) ? record_iter->second : nullptr;
-      requested = ((records.end() != record_iter) and (record_iter->second->unpack()));
+      // requested = ((records.end() != record_iter) and (record_iter->second->unpack()));
+      requested = (records.end() != record_iter);
       // If the record's not interesting, move on.  Remember to skip over any
       // padding bytes inserted to make the next record header start on a
       // four byte boundary in the file.
@@ -468,6 +473,7 @@ namespace sio {
         unsigned char *new_buffer = static_cast<unsigned char*>(malloc( total_length ));
         if( nullptr == new_buffer ) {
           result._status = SIO_STREAM_NOALLOC;
+          SIO_DEBUG( "stream::read_next_record: malloc error" );
           return result;
         }
         memcpy( new_buffer, _buffer_begin, head_length );
@@ -496,6 +502,7 @@ namespace sio {
           unsigned char *new_buffer = static_cast<unsigned char*>(malloc( data_length )); 
           if( nullptr == new_buffer ) {
             result._status = SIO_STREAM_NOALLOC;
+            SIO_DEBUG( "stream::read_next_record: malloc error" );
             return result;
           }
           free( _cmp_begin );
@@ -507,6 +514,7 @@ namespace sio {
         if( result._status < data_length ) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_EOF;
+          SIO_DEBUG( "stream::read_next_record: weird EOF" );
           return result;
         }
         // Skip the read pointer over any padding bytes that may have been
@@ -518,6 +526,7 @@ namespace sio {
           if( result._status != 0 ) {
             _state = SIO_STATE_ERROR;
             result._status = SIO_STREAM_EOF;
+            SIO_DEBUG( "stream::read_next_record: weird padding ..." );
             return result;
           }
         }
@@ -533,12 +542,14 @@ namespace sio {
         if( res != Z_STREAM_END ) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_BADCOMPRESS;
+          SIO_DEBUG( "stream::read_next_record: bad uncompress" );
           return result;
         }
         res = inflateReset( _z_stream );
         if( res != Z_OK ) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_BADCOMPRESS;
+          SIO_DEBUG( "stream::read_next_record: bad uncompress" );
           return result;
         }
       }
@@ -567,6 +578,7 @@ namespace sio {
       SIO_DATA( this, &buflen, 1 );
       SIO_DATA( this, &buftyp, 1 );
       if( buftyp != SIO_mark_block ) {
+        SIO_DEBUG( "stream::do_read_record: no block marker found" );
         return SIO_RECORD_NOBLKMARKER;
       }
       _block_end = _buffer_current + buflen - 8;
@@ -582,6 +594,7 @@ namespace sio {
       if( nullptr != block ) {
         status = block->xfer( this, SIO_OP_READ, version );
         if( !(status & 1) ) {
+          SIO_DEBUG( "stream::do_read_record: block " << block_name << " xfer READ error" );
           return status;
         }  
       }
@@ -598,13 +611,16 @@ namespace sio {
   
   record_write_result stream::write_record( record_ptr &record ) {
     record_write_result result;
+    result._status = SIO_STREAM_SUCCESS;
     const unsigned char pad[4] = { 0, 0, 0, 0 };
     if( _state != SIO_STATE_OPEN ) {
       result._status = SIO_STREAM_NOTOPEN;
+      SIO_DEBUG( "stream::write_record: not opened" );
       return result;
     }
     if( _mode == SIO_MODE_READ ) {
       result._status = SIO_STREAM_READONLY;
+      SIO_DEBUG( "stream::write_record: read only baby" );
       return result;
     }
     // Initialize the buffer.
@@ -639,6 +655,7 @@ namespace sio {
     // reported, just print a complaint and skip writing this buffer.
     result._status = do_write_record( record );
     if( not (result._status & 1) ) {
+      SIO_DEBUG( "stream::write_record: error on do_write_record" );
       return result;
     }
     // Fill in the uncompressed record length.
@@ -660,6 +677,7 @@ namespace sio {
       if( bufout != data_length && ! FFLUSH( _handle ) ) {
         _state = SIO_STATE_ERROR;
         result._status = SIO_STREAM_BADWRITE;
+        SIO_DEBUG( "stream::write_record: error while flushing to file" );
         return result;
       }
     }
@@ -682,6 +700,7 @@ namespace sio {
         if( nullptr != newbuf ) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_NOALLOC;
+          SIO_DEBUG( "stream::write_record: malloc failed while compressing" );
           return result;
         }
         unsigned int oldlen = (_z_stream->next_out - _cmp_begin);
@@ -696,6 +715,7 @@ namespace sio {
       if( z_stat != Z_OK ) {
         _state = SIO_STATE_ERROR;
         result._status = SIO_STREAM_BADCOMPRESS;
+        SIO_DEBUG( "stream::write_record: deflate reset failed" );
         return result;
       }
       // Fill in the length of the compressed buffer.
@@ -706,6 +726,7 @@ namespace sio {
       if( bufout != head_length ) {
         _state = SIO_STATE_ERROR;
         result._status = SIO_STREAM_BADWRITE;
+        SIO_DEBUG( "stream::write_record: record write record to file" );
         return result;
       }
       // Write the compressed record data.
@@ -714,6 +735,7 @@ namespace sio {
       if( bufout != data_length && ! FFLUSH(_handle) ) {
         _state = SIO_STATE_ERROR;
         result._status = SIO_STREAM_BADWRITE;
+        SIO_DEBUG( "stream::write_record: compressed record write record to file" );
         return result;
       }
       // Insert any necessary padding to make the next record header start
@@ -726,6 +748,7 @@ namespace sio {
         if( bufout != newlen && ! FFLUSH(_handle)) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_BADWRITE;
+          SIO_DEBUG( "stream::write_record: padding write error" );
           return result;
         }
       }
@@ -759,9 +782,11 @@ namespace sio {
       SIO_DATA( this, &blkver,                     1      );
       SIO_DATA( this, &namlen,                     1      );
       SIO_DATA( this, const_cast<char *>(nampnt), namlen );
+      
       // Write the block content.
       status = block->xfer( this, SIO_OP_WRITE, blkver );
       if( status != SIO_BLOCK_SUCCESS ) {
+        SIO_DEBUG( "stream::do_write_record: block write failed " << block->name() );
         return status;
       }
       // Back fill the length of the block.
@@ -771,31 +796,7 @@ namespace sio {
     pointer_relocation_write();
     return SIO_RECORD_SUCCESS;
   }
-  
-  //----------------------------------------------------------------------------
-  
-  // // template instantiations for write 
-  // template unsigned int stream::write_data<char>(char *data, const int count);
-  // template unsigned int stream::write_data<unsigned char>(unsigned char *data, const int count);
-  // template unsigned int stream::write_data<short>(short *data, const int count);
-  // template unsigned int stream::write_data<unsigned short>(unsigned short *data, const int count);
-  // template unsigned int stream::write_data<int>(int *data, const int count);
-  // template unsigned int stream::write_data<unsigned int>(unsigned int *data, const int count);
-  // template unsigned int stream::write_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
-  // template unsigned int stream::write_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
-  // template unsigned int stream::write_data<float>(float *data, const int count);
-  // template unsigned int stream::write_data<double>(double *data, const int count);
-  // // template instantiations for read
-  // template unsigned int stream::read_data<char>(char *data, const int count);
-  // template unsigned int stream::read_data<unsigned char>(unsigned char *data, const int count);
-  // template unsigned int stream::read_data<short>(short *data, const int count);
-  // template unsigned int stream::read_data<unsigned short>(unsigned short *data, const int count);
-  // template unsigned int stream::read_data<int>(int *data, const int count);
-  // template unsigned int stream::read_data<unsigned int>(unsigned int *data, const int count);
-  // template unsigned int stream::read_data<SIO_64BITINT>(SIO_64BITINT *data, const int count);
-  // template unsigned int stream::read_data<unsigned SIO_64BITINT>(unsigned SIO_64BITINT *data, const int count);
-  // template unsigned int stream::read_data<float>(float *data, const int count);
-  // template unsigned int stream::read_data<double>(double *data, const int count);
+
 }
 
 
