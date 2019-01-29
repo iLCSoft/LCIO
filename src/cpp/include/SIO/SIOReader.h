@@ -11,14 +11,12 @@
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 
+#include "SIO/LCIORecords.h"
 #include "LCIORandomAccessMgr.h"
 #include "LCIOTypes.h"
 #include "EVENT/LCIO.h"
 
-
-class SIO_record ;
-class SIO_stream ;    
-
+#include "SIO_definitions.h"
 
 namespace SIO {
 
@@ -48,16 +46,13 @@ class SIOEventHandler ;
     /// Destructor
     virtual ~SIOReader() ;
     
-
     /** Opens a list of files for reading (read-only). All subsequent
      * read operations will operate on the list, i.e. if an EOF is encountered
      * the next file in the list will be opened and read transparently to the
      * user.
      * @throws IOException
      */
-    virtual void open(const std::vector<std::string>& filenames) 
-       ;
-
+    virtual void open(const std::vector<std::string>& filenames) ;
 
     /** Opens a file for reading (read-only).
      * @throws IOException
@@ -211,45 +206,39 @@ class SIOEventHandler ;
      */
     virtual void readStream(int maxRecord)  ;
 
-
-
-
   protected:
 
-    void setUpHandlers() ;
-    void readRecord()  ;
-
-
+    // void setUpHandlers() ;
+    void readRecord( const sio::record_map &records , sio::record_read_result &readResult ) ;
     void postProcessEvent() ;
-
     void getEventMap() ;
-
     void recreateEventMap() ;
 
-  protected:
-    
-    SIO_record *_dummyRecord {NULL};  // used for reading arbitrary records
-    SIO_stream *_stream{NULL} ;
-
-    SIORunHeaderHandler* _runHandler{NULL} ;
-    SIOEventHandler* _evtHandler{NULL} ;
-
   private:
-    
-    IOIMPL::LCEventIOImpl *_defaultEvt{NULL} ; // used to add collections when reading 
-    IOIMPL::LCEventIOImpl *_evt{NULL} ;
-    IOIMPL::LCRunHeaderIOImpl *_run{NULL} ;
-
+    /// The SIO stream for reading
+    sio::stream_ptr _stream{nullptr} ;
+    /// The LCIO records holder
+    LCIORecords _lcioRecords{} ;
+    /// 
+    IOIMPL::LCEventIOImpl *_defaultEvt{nullptr} ; // used to add collections when reading 
+    /// 
+    IOIMPL::LCEventIOImpl *_evt{nullptr} ;
+    /// 
+    IOIMPL::LCRunHeaderIOImpl *_run{nullptr} ;
+    /// The run listeners
     std::set<IO::LCRunListener*> _runListeners{} ;
+    /// The event listeners
     std::set<IO::LCEventListener*> _evtListeners{} ;
-    
+    /// The list of files to open and read
     std::vector<std::string> _myFilenames{} ;
+    /// A restricted list of collections to read only 
+    std::vector<std::string> _readCollectionNames{} ;
+    /// The current file list index when opening multiple files
     unsigned int _currentFileIndex{0} ;
-
+    /// Whether to read the event map using the random access manager
     bool _readEventMap{false} ;
-    
+    /// The random access manager for event/run random access in the file 
     LCIORandomAccessMgr _raMgr{} ;
-
   }; // class
 } // namespace
 
