@@ -59,8 +59,10 @@ namespace sio {
       return SIO_STREAM_NOALLOC;
     }
     _buffer_current = _buffer_begin;
-    _buffer_end = _buffer_current + _reserve;
+    _buffer_end = _buffer_begin + _reserve;
     // allocate compression buffer
+    _cmp_begin = nullptr;
+    _cmp_end = nullptr;
     _cmp_begin = static_cast<unsigned char*>(malloc( _reserve >> 2 ));
     if(nullptr == _cmp_begin) {
       _state = SIO_STATE_ERROR;
@@ -449,6 +451,14 @@ namespace sio {
       SIO_STREAM_DATA( this, &name_length,  1 );
       std::string record_name(name_length, '\0');
       SIO_STREAM_DATA( this, &(record_name[0]), name_length );
+      
+      SIO_DEBUG( "=== Read record info ====" );
+      SIO_DEBUG( "  options:     " << options );
+      SIO_DEBUG( "  data_length: " << data_length );
+      SIO_DEBUG( "  ucmp_length: " << ucmp_length );
+      SIO_DEBUG( "  name_length: " << name_length );
+      SIO_DEBUG( "  record_name: " << record_name );
+      
       // find the record to read
       auto record_iter = records.find(record_name);
       record_ptr record = (records.end() != record_iter) ? record_iter->second : nullptr;
@@ -513,8 +523,9 @@ namespace sio {
         result._status = FREAD( _cmp_begin, SIO_LEN_SB, data_length, _handle );
         if( result._status < data_length ) {
           _state = SIO_STATE_ERROR;
+          SIO_DEBUG( "stream::read_next_record: Failed to read compressed record: " << record_name );
+          SIO_DEBUG( "stream::read_next_record: Expected to read " << data_length << " bytes but read " << result._status << " bytes" );
           result._status = SIO_STREAM_EOF;
-          SIO_DEBUG( "stream::read_next_record: weird EOF" );
           return result;
         }
         // Skip the read pointer over any padding bytes that may have been
@@ -620,7 +631,7 @@ namespace sio {
     }
     if( _mode == SIO_MODE_READ ) {
       result._status = SIO_STREAM_READONLY;
-      SIO_DEBUG( "stream::write_record: read only baby" );
+      SIO_DEBUG( "stream::write_record: read only, baby" );
       return result;
     }
     // Initialize the buffer.
@@ -630,6 +641,12 @@ namespace sio {
     const bool compress = record->compression_option();
     unsigned int options  = record->options();
     const char *record_name = record->name().c_str();
+    SIO_DEBUG( "==== Record write settings ====" );
+    SIO_DEBUG( "   compress:            " << compress );
+    SIO_DEBUG( "   options:             " << options );
+    SIO_DEBUG( "   record_name:         " << record_name );
+    SIO_DEBUG( "   _compression_level:  " << _compression_level );
+    
     // Output: 1) A placeholder for the record header length.
     //         2) A 'framing' marker (to help in debugging).
     //         3) An options word.
@@ -682,6 +699,7 @@ namespace sio {
       }
     }
     else {
+      SIO_DEBUG( "stream::write_record: Writing buffer with compression ON, record: " << record_name );
       // Set up for the compression.
       _z_stream->next_in   = _buffer_begin + head_length;
       _z_stream->avail_in  = ucmp_length;
@@ -689,15 +707,29 @@ namespace sio {
       _z_stream->next_out  = _cmp_begin;
       _z_stream->avail_out = _cmp_end - _cmp_begin;
       _z_stream->total_out = 0;
-      // Loop the compression in case the compression buffer is not big enough.
+      SIO_DEBUG( "=== Writing buffer with compression setup: ===" );
+      SIO_DEBUG( "   _z_stream->next_in:     " << _z_stream->next_in );
+      SIO_DEBUG( "   _z_stream->avail_in:    " << _z_stream->avail_in );
+      SIO_DEBUG( "   _z_stream->total_in:    " << _z_stream->total_in );
+      SIO_DEBUG( "   _z_stream->next_out:    " << _z_stream->next_out );
+      SIO_DEBUG( "   _z_stream->avail_out:   " << _z_stream->avail_out );
+      SIO_DEBUG( "   _z_stream->total_out:   " << _z_stream->total_out );
+      SIO_DEBUG( "   _buffer_begin:          " << (void*)_buffer_begin );
+      SIO_DEBUG( "   head_length:            " << head_length );
+      SIO_DEBUG( "   ucmp_length:            " << ucmp_length );
+      SIO_DEBUG( "   _cmp_begin:             " << (void*)_cmp_begin );
+      SIO_DEBUG( "   _cmp_end:               " << (void*)_cmp_end );
+
       for(;;) {
         deflate( _z_stream, Z_FINISH );
         if( _z_stream->avail_out > 0 ) {
+          SIO_DEBUG( "stream::write_record: while compressing available came out with: " << _z_stream->avail_out );
           break;
         }
         unsigned int newlen = (_cmp_end - _cmp_begin) << 1;
+        SIO_DEBUG( "stream::write_record: Writing buffer with compression ON, size: " << newlen );
         unsigned char *newbuf = static_cast<unsigned char*>(malloc( newlen ));
-        if( nullptr != newbuf ) {
+        if( nullptr == newbuf ) {
           _state = SIO_STATE_ERROR;
           result._status = SIO_STREAM_NOALLOC;
           SIO_DEBUG( "stream::write_record: malloc failed while compressing" );
@@ -720,7 +752,8 @@ namespace sio {
       }
       // Fill in the length of the compressed buffer.
       unsigned int data_length = (_z_stream->next_out - _cmp_begin);
-      functions::copy( UCHR_CAST(&data_length), (_cmp_begin + data_length_off), SIO_LEN_QB, 1 );
+      SIO_DEBUG( "stream::write_record: Compressed buffer size: " << data_length );
+      functions::copy( UCHR_CAST(&data_length), (_buffer_begin + data_length_off), SIO_LEN_QB, 1 );
       // Write the record header.
       auto bufout = FWRITE( _buffer_begin, sizeof(char), head_length, _handle );
       if( bufout != head_length ) {
