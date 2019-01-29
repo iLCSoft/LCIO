@@ -48,7 +48,9 @@ SET (SIO_SRCS
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #----- need long long for int64 for now ------
 #ADD_DEFINITIONS( "-Wno-long-long -Wno-sign-compare -fno-strict-aliasing" )
-ADD_DEFINITIONS( "-DSIO_PRINT_DEBUG" )
+IF( SIO_PRINT_DEBUG )
+  ADD_DEFINITIONS( "-DSIO_PRINT_DEBUG" )
+ENDIF()
 
 ADD_SHARED_LIBRARY( sio ${SIO_SRCS} )
 TARGET_LINK_LIBRARIES( sio ${ZLIB_LIBRARIES} )
