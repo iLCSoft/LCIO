@@ -264,6 +264,12 @@ using SIO_record = sio::record;
 using SIO_block = sio::block;
 using SIO_functions = sio::functions;
 
+#ifdef SIO_PRINT_DEBUG
+#define SIO_DEBUG( message ) std::cout << message << std::endl
+#else
+#define SIO_DEBUG( message )
+#endif
+
 #endif
 
 
