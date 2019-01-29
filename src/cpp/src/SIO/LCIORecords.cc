@@ -53,6 +53,7 @@ namespace SIO {
       auto block = eventRecord->get_block_as<SIOCollectionHandler>( collectionName );
       auto handler = _handlerMgr.getHandler( collection->getTypeName() );
       block->setHandler( handler );
+      block->setCollection( collection );
     }
     return eventRecord;    
   }
@@ -93,8 +94,7 @@ namespace SIO {
   
   sio::record_ptr LCIORecords::createRunRecord( IOIMPL::LCRunHeaderIOImpl **runHeader ) const {
     auto runRecord = std::make_shared<SIO_record>( LCSIO_RUNRECORDNAME );
-    runRecord->add_block<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME );
-    runRecord->get_block_as<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME )->setRunHeaderPtr( runHeader );
+    runRecord->add_block<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME, runHeader );
     return runRecord;
   }
   
