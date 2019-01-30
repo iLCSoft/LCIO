@@ -11,21 +11,20 @@ namespace IMPL {
     _id = _lCObjectId++ ;
   }
   
-
-  void AccessChecked::setReadOnly( bool readOnly ) { _readOnly = readOnly ; }
+  void AccessChecked::setReadOnly( bool readOnly ) { 
+    _readOnly = readOnly ; 
+  }
   
   void AccessChecked::checkAccess() {
-
-    if( _readOnly ) throw EVENT::ReadOnlyException("") ;
-  }
-  void AccessChecked::checkAccess(const char* what) {
-
-    if( _readOnly ){
-      //      std::cout << " throwing ReadOnlyException " << what << std::endl ;
-      throw EVENT::ReadOnlyException(what) ;
+    if( _readOnly ) { 
+      throw EVENT::ReadOnlyException("") ;
     }
   }
   
-  //    bool readOnly ;
+  void AccessChecked::checkAccess(const char* what) {
+    if( _readOnly ) {
+      throw EVENT::ReadOnlyException(what) ;
+    }
+  }
   
 }
