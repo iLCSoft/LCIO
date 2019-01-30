@@ -1,5 +1,4 @@
 #include "IMPL/SimCalorimeterHitImpl.h"
-#include "UTIL/LCWarning.h"
 #include <iostream>
 #include <sstream>
 
@@ -88,9 +87,6 @@ namespace IMPL{
     //            << " - please use  SimCalorimeterHitImpl::getNMCContributions() ! " << std::endl ;
     //  first = false ;
     //}
-
-    UTIL::LCWarning::getInstance().printWarning( "SIMCALORIMETERHIT_DEPRECATED_GETNMCPARTICLES" ) ;
-
     return getNMCContributions() ;
   }
 

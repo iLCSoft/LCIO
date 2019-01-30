@@ -5,7 +5,7 @@
 #include "EVENT/SimTrackerHit.h"
 #include "EVENT/MCParticle.h"
 #include "AccessChecked.h"
-
+#include "LCIODeprecated.h"
 
 namespace IMPL {
 
@@ -38,7 +38,7 @@ namespace IMPL {
 
     /** DEPRECATED: use @getCellID0()
      */
-    virtual int getCellID() const ;
+    LCIO_DEPRECATED("Use getCellID0() instead", virtual int getCellID() const ) ;
 
     /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
      */
@@ -59,7 +59,7 @@ namespace IMPL {
      *  @deprecated
      *  @see getEDep()
      */ 	
-    virtual float getdEdx() const ;
+    LCIO_DEPRECATED("Use getEDep() instead", virtual float getdEdx() const ) ;
 
     /** Returns the deposited energy of the hit [GeV]
      */ 	
@@ -111,7 +111,7 @@ namespace IMPL {
      *  @deprecated
      *  @see setEDep()
      */
-    void setdEdx( float dEdX ) ;
+    LCIO_DEPRECATED("Use setEDep(float) instead", void setdEdx( float dEdX ) ) ;
 
     /** Sets EDep
      */
