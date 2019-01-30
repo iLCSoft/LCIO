@@ -23,13 +23,8 @@ LCEventImpl::LCEventImpl() :
   
 
 LCEventImpl::~LCEventImpl() {
-  //  std::cout << " ~LCEventImpl() : " << this << std::endl ;
-
   // here we need to delete all collections in the event
-  typedef LCCollectionMap::const_iterator LCI ;
-  
-  for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
-    
+  for ( auto i=_colMap.begin() ; i != _colMap.end() ; i++ ){
     // except collections whose ownership we gave away
     if( _notOwned.find( i->second ) ==  _notOwned.end() )
       delete i->second ;
@@ -58,20 +53,14 @@ long64 LCEventImpl::getTimeStamp() const {
 
 double LCEventImpl::getWeight() const {
   double w = _params.getFloatVal( EVT_WGT ) ;
-    
   return w == 0 ? 1. : w ;
-
 }
 
    
 const std::vector<std::string>* LCEventImpl::getCollectionNames() const {
-
-  // return pointer to updated vector _colNames 
-  typedef LCCollectionMap::const_iterator LCI ;
-  
+  // return pointer to updated vector _colNames
   _colNames.clear() ;
-
-  for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+  for ( auto i=_colMap.begin() ; i != _colMap.end() ; i++ ){
     _colNames.push_back( i->first  ) ; 
   }
   return &_colNames ;
@@ -188,10 +177,8 @@ void LCEventImpl::setAccessMode( int accessMode ) {
   bool readOnly = ( accessMode == LCIO::READ_ONLY ) ;
 
   setReadOnly( readOnly ) ;
-
-  typedef LCCollectionMap::iterator LCI ;
   
-  for ( LCI i=_colMap.begin() ; i != _colMap.end() ; i++ ){
+  for ( auto i=_colMap.begin() ; i != _colMap.end() ; i++ ){
 
     AccessChecked* col = dynamic_cast<AccessChecked*>( i->second ) ; 
     if( col ){
