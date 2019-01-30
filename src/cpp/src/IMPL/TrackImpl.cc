@@ -8,6 +8,8 @@ using namespace EVENT ;
 
 namespace IMPL {
   
+    const TrackStateImpl TrackImpl::_dummy ;
+  
     TrackImpl::TrackImpl() :
         _type(0),
         _chi2(0),
@@ -90,12 +92,12 @@ namespace IMPL {
     float TrackImpl::getZ0() const {                    return ( _trackStates.size()>0 ? _trackStates[0]->getZ0()             : 0 ) ;  }
     float TrackImpl::getTanLambda() const {             return ( _trackStates.size()>0 ? _trackStates[0]->getTanLambda()      : 0 ) ;  }
     const FloatVec& TrackImpl::getCovMatrix() const {   
-      static const TrackStateImpl dummy ;
-      return ( _trackStates.size()>0 ? _trackStates[0]->getCovMatrix()      : dummy.getCovMatrix() ) ;  
+      // static const TrackStateImpl dummy ;
+      return ( _trackStates.size()>0 ? _trackStates[0]->getCovMatrix()      : _dummy.getCovMatrix() ) ;  
     }
     const float* TrackImpl::getReferencePoint() const { 
-      static const TrackStateImpl dummy ;
-      return ( _trackStates.size()>0 ? _trackStates[0]->getReferencePoint() : dummy.getReferencePoint() ) ;  
+      // static const TrackStateImpl dummy ;
+      return ( _trackStates.size()>0 ? _trackStates[0]->getReferencePoint() : _dummy.getReferencePoint() ) ;  
     }
 
 
