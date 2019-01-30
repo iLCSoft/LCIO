@@ -39,8 +39,7 @@ namespace SIO {
 
   SIOReader::SIOReader( int lcReaderFlag ) :
     _readEventMap( lcReaderFlag & LCReader::directAccess  ) {
-    // TODO manage to remove this
-    LCIOExceptionHandler::createInstance() ;
+    /* nop */
   }
   
   //----------------------------------------------------------------------------
