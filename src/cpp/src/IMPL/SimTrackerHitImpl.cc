@@ -1,5 +1,4 @@
 #include "IMPL/SimTrackerHitImpl.h"
-#include "UTIL/LCWarning.h"
 
 using namespace EVENT ;
 
@@ -39,7 +38,6 @@ namespace IMPL {
 
   // DEPRECATED. use getCellID0()
   int SimTrackerHitImpl::getCellID() const {
-      UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_GETCELLID" ) ;
       return getCellID0();
   }
   int SimTrackerHitImpl::getCellID0() const { return _cellID0 ; }
@@ -49,9 +47,6 @@ namespace IMPL {
 
   // DEPRECATED. use getEDep()
   float SimTrackerHitImpl::getdEdx() const {
-        
-      UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_GETDEDX" ) ;
-
       //return _dEdx ;
       return getEDep() ;
   }
@@ -85,9 +80,6 @@ namespace IMPL {
 
   // DEPRECATED. use setEDep()
   void SimTrackerHitImpl::setdEdx( float dedx )  {
-
-    UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_SETDEDX" ) ;
-
     //checkAccess("SimTrackerHitImpl::setdEdx") ;
     //_dEdx = dedx ; 
     setEDep( dedx ) ;
