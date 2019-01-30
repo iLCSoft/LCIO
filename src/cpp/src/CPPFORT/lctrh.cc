@@ -42,7 +42,7 @@ int lctrhgetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
 // DEPRECATED. use lctrhgetedep()
 float lctrhgetdedx( PTRTYPE trhit ) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  return trh->getdEdx() ;
+  return trh->getEDep() ;
 }
 
 float lctrhgetedep( PTRTYPE trhit ) {
@@ -110,7 +110,7 @@ int lctrhsetcovmatrix( PTRTYPE trhit, float cvmtx[TRKHITNCOVMATRIX] ) {
 // DEPRECATED. use lctrhsetedep()
 int lctrhsetdedx( PTRTYPE trhit, float dedx) {
   TrackerHitImpl* trh = f2c_pointer<TrackerHitImpl,LCObject>( trhit ) ;
-  trh->setdEdx( dedx ) ;
+  trh->setEDep( dedx ) ;
   return LCIO::SUCCESS ;
 }
 
