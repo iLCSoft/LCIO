@@ -91,7 +91,7 @@ namespace SIO{}
 /** Use this macro to catch uncaught exceptions before aborting the program.
  *  Only needed if LCIO is used without LCWRiter or LCReader.
  */
-#define HANDLE_LCIO_EXCEPTIONS lcio::LCIOExceptionHandler::createInstance() ;
+#define HANDLE_LCIO_EXCEPTIONS lcio::LCIOExceptionHandler::setupHandlers() ;
 
 
 #endif // LCIO_NAMESPACE_H
