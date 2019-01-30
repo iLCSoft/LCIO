@@ -4,10 +4,11 @@
 
 namespace IMPL {
   
+  std::atomic_int AccessChecked::_lCObjectId(0);
+  
   AccessChecked::AccessChecked() : _readOnly(false) {
     // provide a simple unique id for LCObjects
-    static int lCObjectId(0) ;
-    _id = lCObjectId++ ;
+    _id = _lCObjectId++ ;
   }
   
 
