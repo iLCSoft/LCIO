@@ -32,14 +32,17 @@ void lcio_unexpected(){
   LCIOExceptionHandler::LCIOExceptionHandler(){
     std::set_terminate( lcio_unexpected ) ;
   }
-    
-
-  LCIOExceptionHandler* LCIOExceptionHandler::createInstance(){
-
-    if( ! _me ){
-      _me = new LCIOExceptionHandler ;
+  
+  void LCIOExceptionHandler::handler() {
+    try {
+      throw ;
     }
-
-    return _me ;
+    catch( std::exception& e) {      
+      std::cout << " A runtime error has occured : " 
+          << e.what() 
+          << std::endl
+          << " the program will have to be terminated - sorry." << std::endl ;
+      exit(1) ;
+    }
   }
 }
