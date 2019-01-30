@@ -6,7 +6,7 @@
 
 #include "EVENT/TrackerHit.h"
 #include "IMPL/AccessChecked.h"
-//#include "EVENT/TPCHit.h"
+#include "LCIODeprecated.h"
 
 #define TRKHITNCOVMATRIX 6
 
@@ -52,7 +52,7 @@ namespace IMPL {
      *  @deprecated
      *  @see getEDep()
      */ 	
-    virtual float getdEdx() const ;
+    LCIO_DEPRECATED( "Use getEDep() instead" , virtual float getdEdx() const ) ;
 
     /** The deposited energy of the hit [GeV]
      */
@@ -109,7 +109,7 @@ namespace IMPL {
     void setPosition( const double pos[3]) ;
     void setCovMatrix( const EVENT::FloatVec& cov );
     void setCovMatrix( const float cov[TRKHITNCOVMATRIX]  );
-    void setdEdx( float dedx ) ; // DEPRECATED. renamed to setEDep()
+    LCIO_DEPRECATED( "Use setEDep(float) instead" , void setdEdx( float dedx ) ) ; // DEPRECATED. renamed to setEDep()
     void setEDep( float e ) ;
     void setEDepError( float e ) ;
     void setTime( float t ) ;

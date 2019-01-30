@@ -197,7 +197,7 @@ int lcaddsimtrackerhit( PTRTYPE collectionvec, int cellID0, double* pos, float d
 
   hit->setCellID0( cellID0 ) ;
   hit->setPosition( pos ) ;
-  hit->setdEdx( dEdx ) ;
+  hit->setEDep( dEdx ) ;
   hit->setTime( time ) ;
   hit->setMCParticle( mmcp ) ;
 
