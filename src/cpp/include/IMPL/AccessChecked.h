@@ -3,6 +3,7 @@
 
 
 #include "Exceptions.h"
+#include <atomic>
 
 namespace IMPL {
   
@@ -33,7 +34,7 @@ namespace IMPL {
   protected: 
     bool _readOnly{false} ;
     int _id{-1} ;
-    
+    static std::atomic_int _lCObjectId;
   };
 } // namespace IMPL
 
