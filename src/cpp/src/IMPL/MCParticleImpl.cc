@@ -1,6 +1,5 @@
 
 #include "IMPL/MCParticleImpl.h"
-#include "UTIL/LCWarning.h"
 
 #include "EVENT/LCIO.h"
 #include <iostream>

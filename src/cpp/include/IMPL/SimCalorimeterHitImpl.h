@@ -6,6 +6,7 @@
 #include "EVENT/SimCalorimeterHit.h"
 #include "AccessChecked.h"
 #include <vector>
+#include "LCIODeprecated.h"
 
 namespace IMPL {
   
@@ -110,7 +111,7 @@ namespace IMPL {
      * @deprecated
      * @see getNMCContributions()
      */
-    virtual int getNMCParticles() const ;
+    LCIO_DEPRECATED( "Use getNMCContributions() instead" , virtual int getNMCParticles() const ) ;
     
     /** Returns the number of MC contributions to the hit. 0 if 
      * information is not stored. There are two levels of detail: if 

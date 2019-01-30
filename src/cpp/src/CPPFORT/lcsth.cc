@@ -24,7 +24,7 @@ int lcsthdelete( PTRTYPE hit ){
 
 int lcsthgetcellid( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
-  return sth->getCellID() ;
+  return sth->getCellID0() ;
 }
 int lcsthgetcellid0( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
@@ -55,7 +55,7 @@ float lcsthgetpathlength( PTRTYPE hit ){
 // DEPRECATED. use lcsthgetedep
 float lcsthgetdedx( PTRTYPE hit ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
-  return sth->getdEdx() ;
+  return sth->getEDep() ;
 }
 
 float lcsthgetedep( PTRTYPE hit ){
@@ -116,7 +116,7 @@ int lcsthsetpathlength(PTRTYPE hit, float pathLength) {
 // DEPRECATED. use lcsthsetedep()
 int lcsthsetdedx( PTRTYPE hit, float dEdX ){
   SimTrackerHitImpl* sth = f2c_pointer<SimTrackerHitImpl,LCObject>( hit ) ;
-  sth->setdEdx( dEdX ) ;
+  sth->setEDep( dEdX ) ;
   return LCIO::SUCCESS ;
 }
 
