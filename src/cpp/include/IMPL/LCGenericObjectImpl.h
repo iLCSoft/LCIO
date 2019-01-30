@@ -94,8 +94,8 @@ protected:
   std::vector<double> _doubleVec{} ;
   bool _isFixedSize{false} ;
 
-  static std::string _typeName ;
-  static std::string _dataDescription ;
+  static const std::string _typeName ;
+  static const std::string _dataDescription ;
 
 }; // class
 } // namespace EVENT

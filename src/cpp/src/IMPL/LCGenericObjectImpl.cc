@@ -6,8 +6,8 @@ using namespace EVENT ;
 namespace IMPL {
   
 
-  std::string  LCGenericObjectImpl::_typeName = "LCGenericObject" ;
-  std::string  LCGenericObjectImpl::_dataDescription = "" ;
+  const std::string  LCGenericObjectImpl::_typeName = "LCGenericObject" ;
+  const std::string  LCGenericObjectImpl::_dataDescription = "" ;
 
 
 
