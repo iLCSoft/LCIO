@@ -6,6 +6,7 @@
 
 #include "EVENT/TrackerHitPlane.h"
 #include "IMPL/AccessChecked.h"
+#include "LCIODeprecated.h"
 
 #define TRKHITPLANENCOVMATRIX 6
 
@@ -70,7 +71,7 @@ namespace IMPL {
      *  @deprecated
      *  @see getEDep()
      */ 	
-    virtual float getdEdx() const ;
+    LCIO_DEPRECATED( "Use getEDep() instead" , virtual float getdEdx() const ) ;
 
     /** The deposited energy of the hit [GeV]
      */
