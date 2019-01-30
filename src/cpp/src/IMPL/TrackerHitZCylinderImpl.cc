@@ -1,6 +1,5 @@
 #include "IMPL/TrackerHitZCylinderImpl.h"
 #include "EVENT/LCIO.h"
-#include "UTIL/LCWarning.h"
 
 using namespace EVENT ;
 
@@ -33,9 +32,6 @@ namespace IMPL {
   
   // DEPRECATED. use getEDep()
   float TrackerHitZCylinderImpl::getdEdx() const {
-
-      UTIL::LCWarning::getInstance().printWarning( "TRACKERHIT_DEPRECATED_GETDEDX" ) ;
-
       //return _dEdx ;
       return getEDep();
   }
