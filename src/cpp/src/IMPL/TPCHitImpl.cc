@@ -15,7 +15,9 @@ namespace IMPL{
 
   /// Destructor.
   TPCHitImpl::~TPCHitImpl() {
-    delete[] _rawArray ;
+    if(_rawArray) {
+      delete[] _rawArray ;      
+    }
   }
   
   int TPCHitImpl::getCellID() const { return  _cellID ; }  
