@@ -122,7 +122,7 @@ namespace UTIL{
   
   template <class T>
   const std::string CellIDDecoder<T>::_defaultEncoding
-  = std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
+  = std::string("M:3,S-1:3,I:9,J:9,K-1:6") ;
 
   
 } // namespace
