@@ -46,7 +46,7 @@ using namespace IMPL ;
 
 namespace UTIL {
 
-    static int MAX_HITS = 1000 ;
+    static const int MAX_HITS = 1000 ;
 
     void LCTOOLS::dumpEvent(const LCEvent* evt){
 
