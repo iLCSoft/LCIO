@@ -11,6 +11,7 @@
 
 // fixes problem in gcc 4.0.3
 #include "EVENT/LCParameters.h"
+#include "LCIODeprecated.h"
 
 //#include <sstream>
 //#include <typeinfo>
@@ -99,21 +100,28 @@ namespace UTIL{
 
     /** This can be used to set the default encoding that is used if no
      *  CellIDEncoding parameter is set in the collection, e.g. in older lcio files.
-     */ 
-    static void setDefaultEncoding(const std::string& defaultEncoding ) {
-
-      _defaultEncoding = std::string( defaultEncoding ) ;
-    }
+     */
+    LCIO_DEPRECATED( "No longer supported for thread safety issues" , 
+    static void setDefaultEncoding(const std::string& defaultEncoding ) ) ;
     
   protected:
     BitField64* _b{} ;
     const T* _oldHit{NULL} ;
     
-    static std::string _defaultEncoding;
+    static const std::string _defaultEncoding ;
   } ; 
   
   template <class T>
-  std::string CellIDDecoder<T>::_defaultEncoding
+  inline void CellIDDecoder<T>::setDefaultEncoding(const std::string& /*defaultEncoding*/ ) {
+    std::cout << "=================== WARNING ===================" << std::endl;
+    std::cout << "static method CellIDDecoder::setDefaultEncoding" << std::endl;
+    std::cout << "does nothing anymore. Use the constructor to " << std::endl;
+    std::cout << "specify your encoding string !!" << std::endl; 
+    std::cout << "===============================================" << std::endl;
+  }
+  
+  template <class T>
+  const std::string CellIDDecoder<T>::_defaultEncoding
   = std::string("byte0:8,byte1:8,byte2:8,byte3:8,byte4:8,byte5:8,byte6:8,byte7:8") ;
 
   
