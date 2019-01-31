@@ -85,12 +85,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCCollection *){ //hauke
-        static std::string _h("| Number of elements | Type name |    Flag     | Is transient | Is default | Is subset |\n");
+        static const std::string _h("| Number of elements | Type name |    Flag     | Is transient | Is default | Is subset |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCCollection *){ //hauke
-        static std::string _t("|--------------------|-----------|-------------|--------------|------------|-----------|\n");
+        static const std::string _t("|--------------------|-----------|-------------|--------------|------------|-----------|\n");
         return _t;
     }
 
@@ -140,12 +140,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCEvent *){ //hauke
-        static std::string _h("| Run number  |Event number |Detector name| Time stamp  |  Weight     |\n");
+        static const std::string _h("| Run number  |Event number |Detector name| Time stamp  |  Weight     |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCEvent *){ //hauke
-        static std::string _t("|-------------|-------------|-------------|-------------|-------------|\n");
+        static const std::string _t("|-------------|-------------|-------------|-------------|-------------|\n");
         return _t;
     }
 
@@ -203,12 +203,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCFlag *){ //hauke
-        static std::string _h("|    Flag    |");
+        static const std::string _h("|    Flag    |");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCFlag *){ //hauke
-        static std::string _t("|------------|\n");
+        static const std::string _t("|------------|\n");
         return _t;
     }
 
@@ -261,12 +261,12 @@ namespace UTIL{
             header << " Data.... ";
             header << endl;
         }
-        static std::string _t(header.str());
+        static const std::string _t(header.str());
         return _t;
     }
 
     const std::string& tail(const EVENT::LCGenericObject *){ //hauke
-        static std::string _t(" --------------------------------------------------------\n");
+        static const std::string _t(" --------------------------------------------------------\n");
         return _t;
     }
 
@@ -321,12 +321,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCIntVec *){ //hauke
-        static std::string _h("| [   id   ] | val0, val1, ...\n");
+        static const std::string _h("| [   id   ] | val0, val1, ...\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCIntVec *){ //hauke
-        static std::string _t("|------------|----------------\n");
+        static const std::string _t("|------------|----------------\n");
         return _t;
     }
 
@@ -378,13 +378,13 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCFloatVec *){
-        static std::string _h(" [   id   ] | val0, val1, ...\n");
+        static const std::string _h(" [   id   ] | val0, val1, ...\n");
         //_h+=tail(v);
         return _h;
     }
 
     const std::string& tail(const EVENT::LCFloatVec *){
-        static std::string _t("------------|------------------\n");
+        static const std::string _t("------------|------------------\n");
         return _t;
     }
 
@@ -489,12 +489,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCObject *){ //hauke
-        static std::string _h(" [  Id   ] \n");
+        static const std::string _h(" [  Id   ] \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCObject *){ //hauke
-        static std::string _t("-----------\n");
+        static const std::string _t("-----------\n");
         return _t;
     }
 
@@ -535,12 +535,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCParameters *){ //hauke
-        static std::string _h("-----\n");
+        static const std::string _h("-----\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCParameters *){ //hauke
-        static std::string _t("-----\n");
+        static const std::string _t("-----\n");
         return _t;
     }
 
@@ -635,12 +635,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCRelation *){
-        static std::string _h("| [from_id ] | [ to_id  ] | Weight  |\n");
+        static const std::string _h("| [from_id ] | [ to_id  ] | Weight  |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCRelation *){
-        static std::string _t("|------------|------------|---------|\n");
+        static const std::string _t("|------------|------------|---------|\n");
         return _t;
     }
 
@@ -682,12 +682,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCRunHeader *){ //hauke
-        static std::string _h(" [ Run number ] | Detector name | Description | Parameters |\n");
+        static const std::string _h(" [ Run number ] | Detector name | Description | Parameters |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCRunHeader *){ //hauke
-        static std::string _t("----------------|---------------|-------------|------------|\n");
+        static const std::string _t("----------------|---------------|-------------|------------|\n");
         return _t;
     }
 
@@ -733,12 +733,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::LCIO *){ //hauke
-        static std::string _h("-------------------");
+        static const std::string _h("-------------------");
         return _h;
     }
 
     const std::string& tail(const EVENT::LCIO *){ //hauke
-        static std::string _t("-------------------\n");
+        static const std::string _t("-------------------\n");
         return _t;
     }
 
@@ -776,12 +776,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::ParticleID *){ //hauke
-        static std::string _h("|   Type   |    PDG   | Likelihood |Algorithm type|");
+        static const std::string _h("|   Type   |    PDG   | Likelihood |Algorithm type|");
         return _h;
     }
 
     const std::string& tail(const EVENT::ParticleID *){ //hauke
-        static std::string _t("\n");
+        static const std::string _t("\n");
         return _t;
     }
 
@@ -826,12 +826,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::RawCalorimeterHit *){ //hauke
-        static std::string _h(" [   id   ] |  cellId0 ( M, S, I, J, K) | cellId1  | amplitude |  time  \n"); 
+        static const std::string _h(" [   id   ] |  cellId0 ( M, S, I, J, K) | cellId1  | amplitude |  time  \n"); 
         return _h;
     }
 
     const std::string& tail(const EVENT::RawCalorimeterHit *){ //hauke
-        static std::string _t("------------|---------------------------|----------|-----------|-------\n");
+        static const std::string _t("------------|---------------------------|----------|-----------|-------\n");
         return _t;
     }
 
@@ -947,12 +947,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerData *){ //hauke
-        static std::string _h(" [   id   ] |  cellid0 |  cellid1 |   time   | cellid-fields  \n");
+        static const std::string _h(" [   id   ] |  cellid0 |  cellid1 |   time   | cellid-fields  \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerData *){ //hauke
-        static std::string _t("------------|----------|----------|----------|----------------\n");
+        static const std::string _t("------------|----------|----------|----------|----------------\n");
         return _t;
     }
 
@@ -1014,12 +1014,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerPulse *){ //hauke
-        static std::string _h(" [   id   ] | cellid0  | cellid1  | time | charge | quality  |corr.Data | cellid-fields: | cov(c,c), cov(t,c), cov(t,t) \n");
+        static const std::string _h(" [   id   ] | cellid0  | cellid1  | time | charge | quality  |corr.Data | cellid-fields: | cov(c,c), cov(t,c), cov(t,t) \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerPulse *){ //hauke
-        static std::string _t("------------|----------|----------|------|--------|----------|----------|----------------|------------------------------\n");
+        static const std::string _t("------------|----------|----------|------|--------|----------|----------|----------------|------------------------------\n");
         return _t;
     }
 
@@ -1091,12 +1091,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerRawData *){ //hauke
-        static std::string _h(" [   id   ] |  cellid0 |  cellid1 |   time   | cellid-fields  \n");
+        static const std::string _h(" [   id   ] |  cellid0 |  cellid1 |   time   | cellid-fields  \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerRawData *){ //hauke
-        static std::string _t("------------|----------|----------|----------|----------------\n");
+        static const std::string _t("------------|----------|----------|----------|----------------\n");
         return _t;
     }
 
@@ -1157,12 +1157,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::SimCalorimeterHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | length  | sec. PDG | stepPosition (x,y,z) \n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |        position (x,y,z)          | nMCParticles \n           -> MC contribution: prim. PDG |  energy  |   time   | length  | sec. PDG | stepPosition (x,y,z) \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::SimCalorimeterHit *){ //hauke
-        static std::string _t("------------|--------|--------|----------|----------------------------------|--------------\n");
+        static const std::string _t("------------|--------|--------|----------|----------------------------------|--------------\n");
         return _t;
     }
 
@@ -1302,12 +1302,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]||[qual.]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]||[qual.]| EDep    |EDepError|  cov(x,x),  cov(y,x),  cov(y,y),  cov(z,x),  cov(z,y),  cov(z,z)\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHit *){ //hauke
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|-----------------------------------------------------------------\n");
+        static const std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|-----------------------------------------------------------------\n");
         return _t;
     }
 
@@ -1408,12 +1408,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackerHitPlane *){
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|   du    |   dv    |q|  u (theta, phi)   |  v (theta, phi)\n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|   du    |   dv    |q|  u (theta, phi)   |  v (theta, phi)\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHitPlane *){
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|-------------------|\n");
+        static const std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|-------------------|\n");
         return _t;
     }
 
@@ -1528,12 +1528,12 @@ namespace UTIL{
 
     const std::string& header(const EVENT::TrackerHitZCylinder *){
         //static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]| EDep    |EDepError|    r    |  dRPhi  |    dZ   |q|    center (x,y)   |\n");
-        static std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|  dRPhi  |    dZ   |q|    center (x,y)   |\n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 | position (x,y,z)            | time    |[type]|[qual.]| EDep    |EDepError|  dRPhi  |    dZ   |q|    center (x,y)   |\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackerHitZCylinder *){
-        static std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|\n");
+        static const std::string _t("------------|--------|--------|-----------------------------|---------|------|------|---------|---------|---------|---------|-|-------------------|\n");
         return _t;
     }
 
@@ -1646,12 +1646,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::SimTrackerHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 |  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  | Quality \n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 |  position (x,y,z)               |   EDep   |   time   |PDG of MCParticle|   (px,  py, pz)   | pathLength  | Quality \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::SimTrackerHit *){ //hauke
-        static std::string _t("------------|--------|--------|---------------------------------|----------|----------|-----------------|-------------------|-------------|---------\n");
+        static const std::string _t("------------|--------|--------|---------------------------------|----------|----------|-----------------|-------------------|-------------|---------\n");
         return _t;
     }
 
@@ -1810,12 +1810,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::CalorimeterHit *){ //hauke
-        static std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |energyerr |        position (x,y,z)           \n");
+        static const std::string _h(" [   id   ] |cellId0 |cellId1 |  energy  |energyerr |        position (x,y,z)           \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::CalorimeterHit *){ //hauke
-        static std::string _t("------------|--------|--------|----------|----------|-----------------------------------\n");
+        static const std::string _t("------------|--------|--------|----------|----------|-----------------------------------\n");
         return _t;
     }
 
@@ -1912,12 +1912,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::MCParticle *){ //hauke
-        static std::string _h(" [   id   ] | PDG |     px,     py,        pz     | px_ep ,  py_ep  ,  pz_ep      | energy |gen|[simstat ]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
+        static const std::string _h(" [   id   ] | PDG |     px,     py,        pz     | px_ep ,  py_ep  ,  pz_ep      | energy |gen|[simstat ]|  vertex x,     y   ,   z      |  endpoint x,    y  ,   z      |    mass |  charge |  [parents] - [daughters] \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::MCParticle *){ //hauke
-        static std::string _t("------------|-----|-------------------------------|--------|---|----------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
+        static const std::string _t("------------|-----|-------------------------------|--------|---|----------|-------------------------------|-------------------------------|---------|---------|--------------------------\n");
         return _t;
     }
 
@@ -2072,12 +2072,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::ReconstructedParticle *){ //hauke
-        static std::string _h(" [   id   ] |com|type|     momentum( px,py,pz)       | energy | mass   | charge |        position ( x,y,z)      |pidUsed|GoodnessOfPID|\n");
+        static const std::string _h(" [   id   ] |com|type|     momentum( px,py,pz)       | energy | mass   | charge |        position ( x,y,z)      |pidUsed|GoodnessOfPID|\n");
         return _h;
     }
 
     const std::string& tail(const EVENT::ReconstructedParticle *){ //hauke
-        static std::string _t("------------|---|----|-------------------------------|--------|--------|--------|-------------------------------|-------|-------------|\n");
+        static const std::string _t("------------|---|----|-------------------------------|--------|--------|--------|-------------------------------|-------|-------------|\n");
         return _t;
     }
 
@@ -2307,12 +2307,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::TrackState *){
-        static std::string _h(" [   id   ] |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        \n");
+        static const std::string _h(" [   id   ] |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::TrackState *){
-        static std::string _t("------------|----------|----------|----------|-----------|-----------|-------------------------------- \n");
+        static const std::string _t("------------|----------|----------|----------|-----------|-----------|-------------------------------- \n");
         return _t;
     }
 
@@ -2420,12 +2420,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::Track *){ //hauke
-        static std::string _h(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   |  ndf   \n");
+        static const std::string _h(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   |  ndf   \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::Track *){ //hauke
-        static std::string _t("------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- \n");
+        static const std::string _t("------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- \n");
         return _t;
     }
 
@@ -2615,12 +2615,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::Cluster *){ //hauke
-        static std::string _h(" [   id   ] |type|  energy  |energyerr |      position ( x,y,z)           |  itheta  |   iphi   \n");
+        static const std::string _h(" [   id   ] |type|  energy  |energyerr |      position ( x,y,z)           |  itheta  |   iphi   \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::Cluster *){ //hauke
-        static std::string _t("------------|----|----------|----------|----------------------------------|----------|----------\n");
+        static const std::string _t("------------|----|----------|----------|----------------------------------|----------|----------\n");
         return _t;
     }
 
@@ -2754,12 +2754,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::Vertex *){
-        static std::string _h( "\n[   id   ] |pri|     alg. type     |    chi2   |    prob.  |       position ( x, y, z)       | [par] |  [idRecP]  \n");
+        static const std::string _h( "\n[   id   ] |pri|     alg. type     |    chi2   |    prob.  |       position ( x, y, z)       | [par] |  [idRecP]  \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::Vertex *){
-        static std::string _t(  "------------|---|-------------------|-----------|-----------|---------------------------------|-------|------------\n");
+        static const std::string _t(  "------------|---|-------------------|-----------|-----------|---------------------------------|-------|------------\n");
         return _t;
     }
 
