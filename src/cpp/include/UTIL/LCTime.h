@@ -125,7 +125,7 @@ namespace UTIL {
 
     void convertFromCalTime() ;
 
-    static int dpm[13] ;  // days per month
+    static const int dpm[13] ;  // days per month
 
   }; // class
 
