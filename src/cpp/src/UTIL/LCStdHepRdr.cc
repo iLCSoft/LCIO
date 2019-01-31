@@ -502,7 +502,7 @@ namespace UTIL{
     int charge=0;
     int ida, sid;
     unsigned short q1, q2, q3;
-    static int ch100[100] = { -1, 2,-1, 2,-1, 2,-1, 2, 0, 0,
+    static const int ch100[100] = { -1, 2,-1, 2,-1, 2,-1, 2, 0, 0,
 			      -3, 0,-3, 0,-3, 0,-3, 0, 0, 0,
 			      0, 0, 0, 3, 0, 0, 0, 0, 0, 0,
 			      0, 0, 0, 3, 0, 0, 3, 0, 0, 0,
