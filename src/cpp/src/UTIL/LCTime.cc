@@ -24,7 +24,7 @@ using namespace std ;
 
 namespace UTIL{
 
-  int LCTime::dpm[13]   = { 0,31,28,31,30,31,30,31,31,30,31,30,31 } ;
+  const int LCTime::dpm[13]   = { 0,31,28,31,30,31,30,31,31,30,31,30,31 } ;
 
 
   LCTime::LCTime(){
