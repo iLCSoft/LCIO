@@ -38,7 +38,7 @@ namespace UTIL {
       *      int layer  = idDec( hit )[ ILDCellID0::layer ] ;
       *  </pre>
       */
-    static std::string encoder_string ; 
+    static const std::string encoder_string ; 
     
     /** Index of the field subdet in encoder_string - sub detector Id as defined in DetID, e.g. DetID::VXD or DetID::FTD. 
      */
