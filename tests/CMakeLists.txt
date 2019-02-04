@@ -260,6 +260,7 @@ ADD_LCIO_TEST( test_trackerhitplane )
 ADD_LCIO_TEST( test_trackerhitzcylinder )
 ADD_LCIO_TEST( test_trackerpulse )
 ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
+ADD_LCIO_TEST( test_RTextension )
 ADD_LCIO_TEST( test_splitting )
 ADD_LCIO_TEST( test_lctrackercellid )
 
