@@ -5,6 +5,10 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <typeindex>
+#include <memory>
+
+#include <Exceptions.h>
 
 namespace lcrtrel_helper{
 
@@ -15,43 +19,41 @@ namespace lcrtrel_helper{
   template <>
   struct can_call_ext<true>{ static void check(){/* no_op */ } ; };
 
-  /** Function pointer for delete function */
-  typedef void (*DeleteFPtr)(void*) ;
+  // /** Function pointer for delete function */
+  // typedef void (*DeleteFPtr)(void*) ;
 
   /** Simple init function for simple pointers */
   struct SimplePtrInit{ static void* init() { return 0 ; } } ;
-
-  /** Empty delete function for pointers w/o ownership */
-  struct NoDelete{ static void clean(void *) { /* no_op */ } } ;
 
   /** Factory for objects of type  T*/
   template <class T>
   struct CreationPtrInit{ static void* init() { return new T ; } } ;
 
+  /** Empty delete function for pointers w/o ownership */
+  struct NoDelete{ static void clean(void *) { /* no_op */ } } ;
+
   /** Delete function for pointers w/ ownership.*/
   template <class T>
   struct DeletePtr{ static void clean(void *v) { delete (T*) v ; } } ;
 
-
   /** Delete function for containers of owned objects */
   template <class T>
-  struct DeleteElements{
-
+  struct DeleteElements {
     static void clean(void *v) { 
       T* vec = static_cast<T*>(v) ;
       for( typename T::iterator it = vec->begin();it != vec->end(); ++it){
-	delete *it ;
+	       delete *it ;
       }
       delete vec  ;    
     } 
   };
 
 
-  /** Map of pointers to extension obbjects*/
-  typedef std::map< unsigned , void * > PtrMap ;
+  // /** Map of pointers to extension obbjects*/
+  // typedef std::map< unsigned , void * > PtrMap ;
 
-  /** Vector of delete  functions */
-  typedef std::vector< DeleteFPtr > DPtrVec ;
+  // /** Vector of delete  functions */
+  // typedef std::vector< DeleteFPtr > DPtrVec ;
 
   /** Vector of pointers to extension obbjects*/
   //typedef std::vector< void * > PtrVec ;
@@ -59,20 +61,33 @@ namespace lcrtrel_helper{
 
   /** Base class for all extensions and relations */
   template <class U, class T , class I, class D, bool b>
-  struct LCBaseTraits{
-  
+  struct LCBaseTraits {
+    // traits definitions
     typedef T*  ptr ;  /**<base pointer type  */
     typedef U tag ;    // this ensures that a new class instance is created for every user extension
-  
     static const int allowed_to_call_ext = b ;
-  
-    static void clean(void *v) {
-      D::clean( v ) ;
+    
+    LCBaseTraits<U, T, I, D, b>(const LCBaseTraits&) = delete ;
+    LCBaseTraits<U, T, I, D, b>& operator=(const LCBaseTraits&) = delete ;
+    
+  public:
+    /** Constructor */
+    inline LCBaseTraits<U, T, I, D, b>() {
+      _pointer = (ptr) I::init();
     }
-    static ptr init() {
-      return (ptr) I::init() ;
+    
+    /** Destructor */
+    inline ~LCBaseTraits<U, T, I, D, b>() {
+      D::clean( _pointer );
     }
-    static DeleteFPtr deletePtr() { return  &clean ; }  ;
+    
+    /** Extension data access */
+    inline ptr& pointer() {
+      return _pointer;
+    }
+    
+  protected:
+    ptr     _pointer{};
   };
 
 
@@ -246,24 +261,29 @@ namespace lcrtrel{
     
     typedef long ptr ;  // base pointer type - use long to work for 64 bit (long is 32 on 32-bit systems/64 on 64bit systems)
     typedef long& ext_type ;                
-
     typedef U tag ;     // this ensures that a new class instance is created for every user extension
-    
     static const int allowed_to_call_ext = 1 ;
     
-    static void clean(void *) { }
-
-    static ptr init() { 
-      return 0 ; 
+    /** Constructor 
+     */
+    LCIntExtension<U>() = default ;
+    
+    /** Destructor 
+     */
+    ~LCIntExtension<U>() = default ;
+    
+    /** Extension data access */
+    inline ptr& pointer() {
+      return _pointer;
     }
-    static DeleteFPtr deletePtr() { return  &clean ; }  ;
-
+    
+  private:
+    ptr     _pointer{0};
   };
 
 
 
   template <class U >
-  
   struct LCFloatExtension{// FIXME: need to check on 64 bit architecture...
 
 #ifdef  __i386__
@@ -274,13 +294,24 @@ namespace lcrtrel{
     typedef double  ptr ;  // base pointer type 
     typedef double& ext_type ;     // return value of  ext<>()
 #endif    
-
     typedef U tag ;     // this ensures that a new class instance is created for every user extension
-
     static const int allowed_to_call_ext = 1 ;
-    static void clean(void *) { }
-    static ptr init() { return 0 ; }
-    static DeleteFPtr deletePtr() { return  &clean ; }  ;
+
+    /** Constructor 
+     */
+    LCFloatExtension<U>() = default ;
+    
+    /** Destructor 
+     */
+    ~LCFloatExtension<U>() = default ;
+    
+    /** Extension data access */
+    inline ptr& pointer() {
+      return _pointer;
+    }
+    
+  private:
+    ptr     _pointer{0};
   };
   
 
@@ -408,8 +439,8 @@ namespace lcrtrel{
    * More examples can be found in <b>$LCIO/src/cpp/src/EXAMPLES/lcrtrelations.cc</b>.
    */
 
-  class LCRTRelations{
-  
+  class LCRTRelations {
+
     // declare functions for relation handling as friends
     template <class R> 
     friend void set_relation( typename R::from::obj_ptr f, 
@@ -429,26 +460,31 @@ namespace lcrtrel{
     template <class R> 
     friend void merge_relations( typename R::from::obj_ptr f1, 
 				 typename R::from::obj_ptr f2) ;
-  
+
   public:
-  
+    // traits definitions
+    typedef std::type_index                         ext_index ;
+    typedef std::shared_ptr<void>                   ext_type ;
+    typedef std::map<const ext_index, ext_type>     ext_map ;
+    
+  public:
     /** Provides access to an extension object - the type and ownership is defined 
      *  by the class V which should be a subtype of LCExtension, LCOwnedExtension,
      *  LCExtensionVector, LCExtensionList,...
      */
     template <class V>
     inline typename V::ext_type ext() { 
-
       can_call_ext<V::allowed_to_call_ext>::check() ;
-
       return  ptr<V>() ;
     }
 
+    /** Provides access to an extension object - the type and ownership is defined 
+     *  by the class V which should be a subtype of LCExtension, LCOwnedExtension,
+     *  LCExtensionVector, LCExtensionList,...
+     */
     template <class V>
     inline const typename V::ext_type ext() const { 
-      
       can_call_ext<V::allowed_to_call_ext>::check() ;
-
       return  ptr<V>() ;
     }
 
@@ -458,93 +494,40 @@ namespace lcrtrel{
      */
     template <class V>
     inline typename V::rel_type rel() {
-    
       return  ptr<V>() ;
     }
-  
-  
-
-    //   LCRTRelations() { 
-    //     _vec = new PtrVec( 32  ) ; // initialize to prevent from to many resizes
-    //   }
-    //   ~LCRTRelations() {
-    //    for( unsigned i=0 ; i< cleaners().size() ; ++i){
-    //      cleaners()[i]( _vec->operator[](i)  ) ;  // call the delete function
-    //    }
-    //    delete _vec ;
-    //   }
-
-
-
-    virtual ~LCRTRelations() {
-      for( PtrMap::iterator it = _map.begin() ; it != _map.end() ; ++it ){
-	cleaners()[ it->first ] ( it->second ) ;  // call the delete function
-      }
-    }
-  
-    //   void print(){
-    //     std::cout << " ---- LCRTRelations -- : " << std::endl ;
-    //     typedef std::map< void * , void*  > MyPtrMap ;
-    //     MyPtrMap& map = *(MyPtrMap*) &_map ;
-    //     for( MyPtrMap::iterator it = map.begin() ;
-    // 	 it != map.end() ; ++it ){
-    //       std::cout << "      ----   key : " << &(it->first) << " value " 
-    // 		<<  (void*)it->second  << std::endl ;
-    //     }
-    //   }
-
-
-  protected:
-
-
-    /** Returns the reference to the pointer to the extension/relation object */
+    
+  private:
+    /** Returns the reference to the pointer to the extension/relation object 
+     */
     template <class V>
     typename V::ptr & ptr() const {
+      // Look in extension map for the specific user type
+      auto iter = _extensionMap.find( std::type_index( typeid( V ) ) ) ;
+      // The final user extension
+      std::shared_ptr<V> userExtension = nullptr ;
       
-      // convert the pointer to the generic PtrMap to a Map that holds V::ptr objects
-      typedef std::map< unsigned , typename V::ptr  > MyPtrMap ;
-      
-      // going through a pointer to char* avoids the strict-aliasing warning of gcc 
-      char* char_map = reinterpret_cast<char *> ( &_map ) ;
-      MyPtrMap* map = reinterpret_cast<MyPtrMap*>( char_map ) ;
-      
-      typename MyPtrMap::iterator it = map->find( typeID<V>() ) ;
-      
-      if( it == map->end() )
-	it = map->insert( map->begin(), 
-			  std::make_pair(  typeID<V>() , V::init() )) ;
-      
-      return  it->second  ;
+      if( iter != _extensionMap.end() ) {
+        // get the user extension
+        userExtension = std::static_pointer_cast<V>( iter->second ) ;
+      }
+      else {
+        userExtension = std::make_shared<V>();
+        ext_map::value_type element(
+          std::type_index( typeid(V) ) , // the user extension element type info
+          userExtension                  // the user extension itself
+        );
+        iter = _extensionMap.insert( element ).first;
+      }
+      if( nullptr == userExtension ) {
+        throw EVENT::Exception("  Invalid user extension cast !!!  ") ;
+      }
+      return userExtension->pointer();
     }
-
+    
   private:
-  
-    static DPtrVec& cleaners() {
-      static DPtrVec v ;
-      return v ;
-    }
-  
-    inline unsigned nextID(DeleteFPtr cp) const {
-      static unsigned id(0) ;
-
-      //     std::cout << " ---- nextID " << id+1  << " - delete Ptr  " 
-      // <<  cp << std::endl ;
-      
-      cleaners().push_back( cp ) ;
-
-      return id++ ;
-    }
-  
-    template <class T>
-    inline unsigned typeID() const {
-      static const unsigned uid  = nextID( T::deletePtr() ) ;
-
-      return uid ;
-    } 
-  
-  
-    mutable PtrMap _map{} ;
-  
+    /// The user extension map
+    mutable ext_map          _extensionMap {};
   } ;
   
 
