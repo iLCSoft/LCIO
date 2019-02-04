@@ -5,7 +5,9 @@
 #include <vector>
 #include <list>
 #include <map>
+#ifndef __CINT__
 #include <typeindex>
+#endif
 #include <memory>
 
 #include <Exceptions.h>
@@ -527,7 +529,7 @@ namespace lcrtrel{
     
   private:
     /// The user extension map
-    mutable ext_map          _extensionMap {};
+    mutable ext_map          _extensionMap {};  //! exclude map from ROOT dictionaries ...
   } ;
   
 
