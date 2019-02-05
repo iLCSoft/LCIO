@@ -467,6 +467,11 @@ ADD_LCIO_EXAMPLE( lcio_split_file )
 ADD_LCIO_EXAMPLE( lcio_merge_files ) 
 ADD_LCIO_EXAMPLE( readmcparticles ) 
 
+IF( BUILD_ROOTDICT )
+  ADD_LCIO_EXAMPLE( lcio_io_benchmark )
+  TARGET_LINK_LIBRARIES( bin_lcio_io_benchmark ${ROOT_LIBRARIES} )
+ENDIF()
+
 IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
   ADD_LCIO_EXAMPLE( readcalibration )
