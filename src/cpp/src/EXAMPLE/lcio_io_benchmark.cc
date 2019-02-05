@@ -46,31 +46,20 @@ public:
     m_pTTree->Branch( "ProcInfo_fMemResident", &m_procInfo.fMemResident, "ProcInfo_fMemResident/Long_t" ) ;
     m_pTTree->Branch( "ProcInfo_fMemVirtual",  &m_procInfo.fMemVirtual, "ProcInfo_fMemVirtual/Long_t" ) ;
     
-    // time differences on read record
-    m_pTTree->Branch( "ReadRecordSysTime",      &m_readSysTime ) ;
-    m_pTTree->Branch( "ReadRecordUserTime",     &m_readUserTime ) ;
-
+    // differences on read record
+    m_pTTree->Branch( "ReadTime",      &m_readTime ) ;
+    m_pTTree->Branch( "ReadRSS",      &m_readResidentMemory, "ReadRSS/Long_t" ) ;
+    
     // init benchamark vars
     gSystem->GetCpuInfo(&m_cpuInfo);
     gSystem->GetMemInfo(&m_memInfo);
     gSystem->GetProcInfo(&m_procInfo);
+    m_residentMemoryReference = m_procInfo.fMemResident;
+    m_lastClock = clock();
   }
   
   void processEvent(EVENT::LCEvent * /*evt*/) {
-    // Get benchmarks and fill with the tree
-    CpuInfo_t cpuInfo ;
-    MemInfo_t memInfo ;
-    ProcInfo_t procInfo ;
-    gSystem->GetCpuInfo(&cpuInfo);
-    gSystem->GetMemInfo(&memInfo);
-    gSystem->GetProcInfo(&procInfo);
-    
-    m_readSysTime = procInfo.fCpuSys - m_procInfo.fCpuSys;
-    m_readUserTime = procInfo.fCpuUser - m_procInfo.fCpuUser;
-    m_cpuInfo = m_cpuInfo;
-    m_memInfo = memInfo;
-    m_procInfo = procInfo;
-    
+    getVariables();
     m_pTTree->Fill();
   }
 
@@ -79,15 +68,31 @@ public:
   }
   
   void processRunHeader(EVENT::LCRunHeader * /*rh*/) {
-    // Get benchmarks and fill with the tree
-    gSystem->GetCpuInfo(&m_cpuInfo);
-    gSystem->GetMemInfo(&m_memInfo);
-    gSystem->GetProcInfo(&m_procInfo);
+    getVariables();
     m_pTTree->Fill();
   }
 
   void modifyRunHeader(EVENT::LCRunHeader * /*rh*/) {
     /* nop */
+  }
+  
+  void getVariables() {
+    // Get benchmarks and fill with the tree
+    CpuInfo_t cpuInfo ;
+    MemInfo_t memInfo ;
+    ProcInfo_t procInfo ;
+    clock_t currentClock = clock();
+    gSystem->GetCpuInfo(&cpuInfo);
+    gSystem->GetMemInfo(&memInfo);
+    gSystem->GetProcInfo(&procInfo);
+    
+    m_readTime = (currentClock - m_lastClock) / static_cast<float>( CLOCKS_PER_SEC );
+    m_readResidentMemory = ( procInfo.fMemResident - m_residentMemoryReference ) ;
+    
+    m_cpuInfo = cpuInfo;
+    m_memInfo = memInfo;
+    m_procInfo = procInfo;
+    m_lastClock = currentClock;
   }
   
   void write() {
@@ -109,9 +114,11 @@ private:
   // Process benchmarks
   ProcInfo_t                       m_procInfo {} ;
   
-  Float_t                          m_readSysTime {0} ;
+  Float_t                          m_readTime {0} ;
+  clock_t                          m_lastClock {} ;
   
-  Float_t                          m_readUserTime {0} ;
+  Long_t                           m_residentMemoryReference {0} ;
+  Long_t                           m_readResidentMemory {0} ;
 };
 
 /** Small utility to benchmark lcio reading performances
