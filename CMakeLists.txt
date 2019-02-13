@@ -153,7 +153,7 @@ IF( NOT EXISTS ${LCIO_ENV_INIT} )
 ENDIF()
 
 
-
+FIND_PACKAGE( Threads REQUIRED )
 
 ### GENERATE HEADERS ( USING ANT ) ##########################################
 
