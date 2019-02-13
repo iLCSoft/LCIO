@@ -19,10 +19,8 @@ namespace IOIMPL {
 class LCFactory : public IO::ILCFactory {
 
 
-protected: 
-    LCFactory() ; 
-
 public: 
+    LCFactory() ; 
 
   /** Returns the instance of the factory.
    * In the future we need to specify the data format here...
