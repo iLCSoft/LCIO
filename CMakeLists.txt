@@ -156,7 +156,7 @@ eval $*
 ENDIF()
 
 
-
+FIND_PACKAGE( Threads REQUIRED )
 
 ### GENERATE HEADERS ( USING ANT ) ##########################################
 
