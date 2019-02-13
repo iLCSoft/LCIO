@@ -293,6 +293,7 @@ ADD_SHARED_LIBRARY( lcio
 )
 INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
+TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
 TARGET_LINK_LIBRARIES( lcio sio )
 TARGET_LINK_LIBRARIES( lcioF77 lcio )
 
@@ -468,6 +469,7 @@ ADD_LCIO_EXAMPLE( lcio_check_col_elements )
 ADD_LCIO_EXAMPLE( lcio_split_file ) 
 ADD_LCIO_EXAMPLE( lcio_merge_files ) 
 ADD_LCIO_EXAMPLE( readmcparticles ) 
+ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
 
 IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
