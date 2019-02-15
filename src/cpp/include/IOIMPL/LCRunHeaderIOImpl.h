@@ -11,6 +11,10 @@ namespace SIO {
   class SIOReader ;
 }
 
+namespace MT {
+  class LCReader ;
+}
+
 
 namespace IOIMPL {
   
@@ -23,6 +27,7 @@ namespace IOIMPL {
     
   // the reason for having this subclass
     friend class SIO::SIOReader ;
+    friend class MT::LCReader ;
   
   }; // class
 
