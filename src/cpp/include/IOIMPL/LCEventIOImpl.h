@@ -11,6 +11,10 @@ namespace SIO {
   class SIOReader ;
 }
 
+namespace MT {
+  class LCReader ;
+}
+
 
 namespace IOIMPL {
   
@@ -25,6 +29,7 @@ namespace IOIMPL {
     friend class SIO::SIOReader ;
     friend class SIO::SIOEventHeaderHandler ;
     friend class SIO::SIOEventHandler ;
+    friend class MT::LCReader ;
   
   }; // class
 
