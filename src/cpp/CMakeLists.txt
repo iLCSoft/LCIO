@@ -123,6 +123,10 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/ILDConf.cc
 )
 
+SET( LCIO_MT_SRCS
+  ./src/MT/LCReader.cc
+)
+
 
 ###### macro for generating lcio c++ header files from aid files #############
 #
@@ -290,6 +294,7 @@ ADD_SHARED_LIBRARY( lcio
   ${LCIO_IOIMPL_SRCS}
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
+  ${LCIO_MT_SRCS}
 )
 INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
@@ -470,6 +475,7 @@ ADD_LCIO_EXAMPLE( lcio_split_file )
 ADD_LCIO_EXAMPLE( lcio_merge_files ) 
 ADD_LCIO_EXAMPLE( readmcparticles ) 
 ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
+ADD_LCIO_EXAMPLE( lcio_parallel_processing ) 
 
 IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
