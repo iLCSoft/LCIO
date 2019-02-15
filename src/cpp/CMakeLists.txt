@@ -471,6 +471,7 @@ ADD_LCIO_EXAMPLE( lcio_merge_files )
 ADD_LCIO_EXAMPLE( readmcparticles ) 
 ADD_LCIO_EXAMPLE( lcio_perf )
 ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
+ADD_LCIO_EXAMPLE( lcio_parallel_processing ) 
 
 IF( BUILD_ROOTDICT )
   ADD_LCIO_EXAMPLE( lcio_io_benchmark )
