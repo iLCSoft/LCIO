@@ -13,6 +13,7 @@
 #include "EVENT/LCParameters.h"
 #include "Exceptions.h"
 #include "LCIOTypes.h"
+#include "LCRTRelations.h"
 
 namespace EVENT {
 
@@ -98,6 +99,10 @@ public:
     /** Parameters defined for this event.
      */
     virtual LCParameters & parameters() = 0;
+    
+    /** Get the runtime extensions for this event.
+     */
+    virtual lcrtrel::LCRTRelations & runtime() = 0;
 
 //     //fg20040528:   added relations to the event
 //     /** Returns the names of the relations in the  event.

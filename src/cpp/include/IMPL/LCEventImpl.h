@@ -133,6 +133,10 @@ namespace IMPL{
     /** Parameters defined for this run.
      */
     virtual EVENT::LCParameters & parameters() { return _params ; }
+    
+    /** Get the runtime extensions for this event.
+     */
+    virtual lcrtrel::LCRTRelations & runtime() { return _runtime ; }
 
     //---- set methods -----
     /** Sets the run number.
@@ -181,6 +185,7 @@ namespace IMPL{
     // set of collections that are not owned by the event anymore
     mutable LCCollectionSet _notOwned{} ;
     
+    lcrtrel::LCRTRelations _runtime{} ;
 
   }; // class
 
