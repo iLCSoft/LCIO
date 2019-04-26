@@ -316,6 +316,32 @@ namespace lcrtrel{
     ptr     _pointer{0};
   };
   
+  
+  template <class U >
+  struct LCBoolExtension{  
+    
+    typedef bool ptr ;  // base pointer type
+    typedef bool& ext_type ;                
+    typedef U tag ;     // this ensures that a new class instance is created for every user extension
+    static const int allowed_to_call_ext = 1 ;
+    
+    /** Constructor 
+     */
+    LCBoolExtension<U>() = default ;
+    
+    /** Destructor 
+     */
+    ~LCBoolExtension<U>() = default ;
+    
+    /** Extension data access */
+    inline ptr& pointer() {
+      return _pointer;
+    }
+    
+  private:
+    ptr     _pointer{false};
+  };
+  
 
   //--------------------------------------------------------------------
 
