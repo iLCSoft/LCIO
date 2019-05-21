@@ -427,6 +427,7 @@ namespace MT {
           // Marlin modifying processors )
           evtptr->setAccessMode( EVENT::LCIO::UPDATE ) ;
           (*iter)->modifyEvent( evtsptr ) ;
+          // TODO THREAD SAFETY ISSUE HERE !!!!!
           evtptr->setAccessMode( EVENT::LCIO::READ_ONLY ) ; // set the proper acces mode
           (*iter)->processEvent( evtsptr ) ;
           iter++ ;    
