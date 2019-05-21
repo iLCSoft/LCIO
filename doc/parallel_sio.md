@@ -16,11 +16,13 @@ We want a simple IO package enabling explicit multi-threading by the user (no im
     - input: a raw buffer (char*)
     - output: a record object (LCEvent, LCRunHeader, ...)
 
-In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
+The same applies for writing. In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
 
-The idea of a parallel version of SIO would be to decoupled these steps with independent data structures (handlers) and functions. The user can then decide how to call them, either sequentially or in different threads. The first step has to remain the only sequential call since performing system calls in parallel might be inefficient and potentially not thread safe.
+The idea of a parallel version of SIO would be to decoupled these steps with independent data structures (handlers) and functions. The user can then decide how to call them, either sequentially or in different threads. The actual reading (writing) operation from (to) file can **possibly** done using a mutex to enforce thread-safety.
 
-## Use cases
+## Example use cases
+
+### Record reading/writing: sequential, deferred, async modes
 
 With the current version, reading a record from a file is performed in this way:
 
@@ -39,7 +41,12 @@ auto block = record->get_block_as<SimpleBlock>("SimpleBlock");
 auto readData = block->data();
 ```
 
-The idea of a parallel version of SIO would be to split the function `stream::read_next_record()` in many functions. Example:
+The idea of a parallel version of SIO would be to split the function `stream::read_next_record()` in many functions. Each step of the record reading can be performed in three modes:
+- `sequential`: the operation is performed directly on call
+- `deferred` or `lazy`: the operation returns directly a handle on the result. When the user calls `handle.get()`, the operation is triggered.
+- `async`: an asynchronous task is launched and the operation directly returns a handle on the result to acquire later on.
+
+The record and stream are setup as for the current version:
 
 ```cpp
 // setup stream, record and blocks as before
@@ -47,74 +54,62 @@ auto stream = std::make_shared<sio::stream>();
 auto status = stream->open( fileName , SIO_MODE_READ );
 auto record = std::make_shared<sio::record>( "SimpleRecord" );
 record->add_block<SimpleBlock>();
+```
 
-// here is fread is called on the next record. 
-// The readResult is a different object type than before.
-// It handles the read buffer from the stream.
-auto readResult = stream->read_next_record({{ record->name() , record }});
+The following illustrates how to extract a record from the stream, but how to unpack it step by step.
 
-// The following lines are examples of how the decompression can be handled
-// This is the standard case (synchronous) 
+We first extract the record buffer from the stream:
+
+```cpp
+// Here fread is called on the next record.
+// The readResult the read buffer from the stream.
+auto readResult = stream->read_next_record();
+```
+The following lines show how the decompression can be handled:
+
+```cpp
+// This is the standard case (synchronous)
 auto decompResult = readResult.decompress() ;
 // or in a async call
 auto decompResult = readResult.decompress( std::launch::async ) ;
 // or in a deferred call
 auto decompResult = readResult.decompress( std::launch::deferred ) ;
+```
 
-// Here is the step of block decoding.
-// Depending on the launch policy specified above, the decode 
+The blocks decoding is the next step. Here, as for the decompression, different launch policy can be used:
+
+```cpp
+// Depending on the launch policy specified above, the decode
 // function act like this:
 //   - no argument: the buffer is already uncompressed
 //   - async: decompResult stores a std::future and
 //            we wait for decompression to finish before decoding
 //   - deferred: the decompression starts when calling decode()
-// The same strategy is adopted as for decompression.
-// This is the standard case (synchronous) 
+// This is the standard case (synchronous)
 auto decodeResult = decompResult.decode() ;
 // or in a async call
 auto decodeResult = decompResult.decode( std::launch::async ) ;
 // or in a deferred call
 auto decodeResult = decompResult.decode( std::launch::deferred ) ;
+```
 
-// Here we get the unpacked data after reading.
-// The same logic applies here. When calling result_as<T>,
-// depending on the launch policy specified in the decode() function
-// the following will happen:
-//   - no arg: the result is directly acquired since the decoding was sequential
-//   - async: the result is acquired when the parallel decoding task is finished
-//   - the decoding is triggered on call (lazy mode) and the result returned on completion 
+Here the `decodeResult` contains the final record product. The result can be accessed with simple getter, but the depending on the launch policy passed in the `decode()` method, the decoding operation can be triggered when using the getter (lazy triggering) and also maybe in a task.
+
+```cpp
 auto readData = decodeResult->result_as<BlockData>();
 ```
 
-## API definition
+For writing, the same mechanism should be provided:
+- encoding of input record object to a buffer (sequential, deferred or async)
+- compression to buffer (sequential, deferred or async)
+- writing to ouput stream (file, buffer, socket)
 
-Buffers are handled in a simple wrapper class `buffer_handler`:
+For both reading and writing these operation can also be combined in a smart way. For example, for reading, the decompression and decoding can be performed asynchronously in the same task and not in two steps.
 
-```cpp
-class buffer_handle {
-public:
-  buffer_handle() = default ;
-  buffer_handle( const char* buf, std::size_t len ) ;
-  
-  const char* buffer() const ;
-  std::size_t size() const ;
-  const char &operator[](std::size_t index) const ;
-  const char &operator[](std::size_t index) const ;
-};
-```
+## Other functionalities
 
-More generally, the stream class should provide a simple method for reading a record from the stream (file)
-
-```
-class stream {
-public:
-  // ...
-  buffer_handle read_next_record();
-};
-```
-
-The `buffer_handle` is a simple class handle a raw buffer (char*).
-- read time of the record from stream (for statistics)
-- the start and end positions of the record in the file
-- compression info (compressed ?, compression level, etc...)
-
+- The stream must be transparent in terms of input/output source (raw buffer, file, socket). The API should foresee either an abstract interface or a template implementation to support the different stream types. Example of possibly supported types:
+    - File streams
+    - Raw buffer streams
+    - Shared memory streams
+    - Socket streams
