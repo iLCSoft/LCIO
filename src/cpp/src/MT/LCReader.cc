@@ -410,8 +410,6 @@ namespace MT {
         auto iter = listeners.begin() ;
         while( iter != listeners.end() ) {
           runptr->setReadOnly( false ) ;
-          (*iter)->modifyRunHeader( hdrsptr ) ;
-          runptr->setReadOnly( true ) ;
           (*iter)->processRunHeader( hdrsptr ) ;          
           iter++ ;
         }
@@ -423,12 +421,7 @@ namespace MT {
         auto iter = listeners.begin() ;
         while( iter != listeners.end() ) {
           postProcessEvent(evtptr) ;
-          // fg20070813 changed order of update and process (needed for 
-          // Marlin modifying processors )
           evtptr->setAccessMode( EVENT::LCIO::UPDATE ) ;
-          (*iter)->modifyEvent( evtsptr ) ;
-          // TODO THREAD SAFETY ISSUE HERE !!!!!
-          evtptr->setAccessMode( EVENT::LCIO::READ_ONLY ) ; // set the proper acces mode
           (*iter)->processEvent( evtsptr ) ;
           iter++ ;    
         }
