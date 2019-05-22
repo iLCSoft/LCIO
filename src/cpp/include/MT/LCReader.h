@@ -145,6 +145,8 @@ private:
   void getEventMap() ;
     
 private:
+  /// Whether to read the event map using the random access manager
+  bool _readEventMap{false} ;
   /// The SIO stream for reading
   sio::stream_ptr _stream{nullptr} ;
   /// The LCIO records holder
@@ -155,8 +157,6 @@ private:
   std::vector<std::string> _readCollectionNames{} ;
   /// The current file list index when opening multiple files
   unsigned int _currentFileIndex{0} ;
-  /// Whether to read the event map using the random access manager
-  bool _readEventMap{false} ;
   /// The random access manager for event/run random access in the file 
   std::shared_ptr<SIO::LCIORandomAccessMgr> _raMgr {nullptr} ;
 }; // class
