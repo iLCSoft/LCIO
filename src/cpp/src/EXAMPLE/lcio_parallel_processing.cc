@@ -88,19 +88,16 @@ private:
     return ( _futures.size() < _maxNTasks ) ;
   }
   
-  void processEvent( LCEventPtr event ) {
+  void processEvent( LCEventPtr event ) override {
     startTask( event ) ;
   }
   
-  void processRunHeader( LCRunHeaderPtr hdr ) {
+  void processRunHeader( LCRunHeaderPtr hdr ) override {
     // Wait for all event task to finish
     // and then process the new run header
     waitForAll();
     UTIL::LCTOOLS::dumpRunHeader( hdr.get() );
   }
-  
-  void modifyEvent( LCEventPtr ) { /* nop */ }
-  void modifyRunHeader( LCRunHeaderPtr ) { /* nop */ }
   
 private:
   unsigned int                   _maxNTasks {} ;
