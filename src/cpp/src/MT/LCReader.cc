@@ -436,6 +436,24 @@ namespace MT {
   }
   
   //----------------------------------------------------------------------------
+  
+  void LCReader::readStream( LCReaderListener *listener ) {
+    readStream( {listener} ) ;
+  }
+  
+  //----------------------------------------------------------------------------
+
+  void LCReader::readStream( LCReaderListener *listener, int maxRecord ) {
+    readStream( {listener}, maxRecord );
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  void LCReader::readNextRecord( LCReaderListener *listener ) {
+    readNextRecord( {listener} );
+  }
+  
+  //----------------------------------------------------------------------------
 
   void LCReader::readRecord( const sio::record_map &records , sio::record_read_result &readResult ) {
     if( _stream->state() == SIO_STATE_OPEN ) {

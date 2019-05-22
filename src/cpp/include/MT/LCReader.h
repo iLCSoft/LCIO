@@ -121,23 +121,41 @@ public:
    */
   void close() ;
 
-  /** Reads the input stream and notifies registered 
+  /** Reads the input stream and notifies 
    * listeners according to the object type 
    * found in the stream. 
    */
   void readStream( const LCReaderListenerList & listeners ) ;
 
-  /** Reads maxRecord from the input stream and notifies registered 
+  /** Reads maxRecord from the input stream and notifies 
    * listeners according to the object type found in the stream.
    * An exception is thrown if less than maxRecord where read from the file.
    */
   void readStream( const LCReaderListenerList & listeners , int maxRecord ) ;
   
-  /** Reads the input stream and notifies registered 
+  /** Reads the input stream and notifies 
    * listeners according to the object type 
    * found in the stream. 
    */
   void readNextRecord( const LCReaderListenerList & listeners ) ;
+  
+  /** Reads the input stream and notifies the 
+   * listener according to the object type 
+   * found in the stream. 
+   */
+  void readStream( LCReaderListener *listener ) ;
+
+  /** Reads maxRecord from the input stream and notifies 
+   * listener according to the object type found in the stream.
+   * An exception is thrown if less than maxRecord where read from the file.
+   */
+  void readStream( LCReaderListener *listener , int maxRecord ) ;
+  
+  /** Reads the input stream and notifies 
+   * listener according to the object type 
+   * found in the stream. 
+   */
+  void readNextRecord( LCReaderListener *listener ) ;
     
 private:
   void readRecord( const sio::record_map &records , sio::record_read_result &readResult ) ;
