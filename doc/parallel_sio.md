@@ -16,7 +16,19 @@ We want a simple IO package enabling explicit multi-threading by the user (no im
     - input: a raw buffer (char*)
     - output: a record object (LCEvent, LCRunHeader, ...)
 
-The same applies for writing. In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
+In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
+
+The same applies for writing: 
+
+- encoding the event using `blocks` encoder setup in the `record` object.
+    - input: a record object (LCEvent, LCRunHeader, ...)
+    - output: a raw buffer (char*)
+- dealing with compression (zlib).
+    - input: creates a new compressed buffer (char*)
+    - output: a (possibly) compressed raw buffer (char*)
+- writing the record size and the record buffer to the file (2 system calls).
+    - input: a raw buffer (char*)
+    - output: the file handle (FILE*)
 
 The same applies for writing: 
 
