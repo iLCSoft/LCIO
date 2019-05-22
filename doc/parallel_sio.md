@@ -10,13 +10,25 @@ We want a simple IO package enabling explicit multi-threading by the user (no im
     - input: the file handle (FILE*)
     - output: a raw buffer (char*)
 - dealing with decompression (zlib).
-    - input: a raw buffer (char*)
+    - input: a (possibly) compressed raw buffer (char*)
     - output: if the buffer is compressed, creates a new buffer (char*), else just points to the original buffer
 - decoding the event using `blocks` decoder setup in the `record` object.
     - input: a raw buffer (char*)
     - output: a record object (LCEvent, LCRunHeader, ...)
 
-The same applies for writing. In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
+In the current version of SIO, these 3 steps are done using the `sio::stream::read_next_record()` method, all in one step.
+
+The same applies for writing: 
+
+- encoding the event using `blocks` encoder setup in the `record` object.
+    - input: a record object (LCEvent, LCRunHeader, ...)
+    - output: a raw buffer (char*)
+- dealing with compression (zlib).
+    - input: creates a new compressed buffer (char*)
+    - output: a (possibly) compressed raw buffer (char*)
+- writing the record size and the record buffer to the file (2 system calls).
+    - input: a raw buffer (char*)
+    - output: the file handle (FILE*)
 
 The idea of a parallel version of SIO would be to decoupled these steps with independent data structures (handlers) and functions. The user can then decide how to call them, either sequentially or in different threads. The actual reading (writing) operation from (to) file can **possibly** done using a mutex to enforce thread-safety.
 
@@ -104,7 +116,7 @@ For writing, the same mechanism should be provided:
 - compression to buffer (sequential, deferred or async)
 - writing to ouput stream (file, buffer, socket)
 
-For both reading and writing these operation can also be combined in a smart way. For example, for reading, the decompression and decoding can be performed asynchronously in the same task and not in two steps.
+For both reading and writing these operation can also be combined. For example, for reading, the decompression and decoding can be performed asynchronously in the same task and not in two steps.
 
 ## Other functionalities
 
