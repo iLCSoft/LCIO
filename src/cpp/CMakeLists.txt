@@ -249,9 +249,6 @@ endif()
 # -------- compiler definitions ----------------------------------------------
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
-IF( SIO_PRINT_DEBUG )
-  ADD_DEFINITIONS( "-DSIO_PRINT_DEBUG" )
-ENDIF()
 
 #---- special flags for cfortran code : --------
 SET_SOURCE_FILES_PROPERTIES( 
@@ -265,7 +262,6 @@ SET_SOURCE_FILES_PROPERTIES(
 
 # -------- include directories -----------------------------------------------
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
-INCLUDE_DIRECTORIES( BEFORE "${LCIO_SOURCE_DIR}/sio/include" )
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
 
 # install public headers
@@ -299,7 +295,7 @@ ADD_SHARED_LIBRARY( lcio
 INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
-TARGET_LINK_LIBRARIES( lcio sio )
+TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
 TARGET_LINK_LIBRARIES( lcioF77 lcio )
 
 ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
