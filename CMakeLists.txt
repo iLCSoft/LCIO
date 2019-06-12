@@ -69,9 +69,6 @@ OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
 # allow C++ only builds
 OPTION( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
 
-# debug printout from sio
-OPTION( SIO_PRINT_DEBUG "Whether to turn on SIO debug printout statements (high verbosity !)" OFF )
-
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
     INSTALL( FILES "${PROJECT_SOURCE_DIR}/lib/lcio.jar" DESTINATION lib )# OPTIONAL )
@@ -252,8 +249,9 @@ if( INSTALL_JAR )
 
 endif() 
 
-
-
+# find external SIO package
+FIND_PACKAGE( SIO REQUIRED )
+INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIR} )
 
 ### SUBDIRECTORIES ##########################################################
 
@@ -262,9 +260,7 @@ endif()
 
 OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 
-
-# lcio/sio libraries
-ADD_SUBDIRECTORY( ./sio sio )
+# lcio library
 ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
