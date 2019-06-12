@@ -251,7 +251,7 @@ endif()
 
 # find external SIO package
 FIND_PACKAGE( SIO REQUIRED )
-INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIR} )
+INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIRS} )
 
 ### SUBDIRECTORIES ##########################################################
 
