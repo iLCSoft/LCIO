@@ -6,6 +6,8 @@ namespace SIO {
   bool operator<(const LCIORandomAccess& ra0, const LCIORandomAccess& other) {
     return ra0._maxRunEvt < other._minRunEvt ;
   }
+  
+  //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
 
