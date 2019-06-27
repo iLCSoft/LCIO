@@ -4,10 +4,9 @@
 #include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
 
-#include "sio/definitions.h"
+#include <sio/definitions.h>
 
-namespace SIO{
-
+namespace SIO {
 
 /**  Interface for all lcio object SIO-handlers, has to be implemented  
  * for all event entities (hits, tracks, clusters,...).
@@ -17,49 +16,32 @@ namespace SIO{
  */
 class SIOObjectHandler {  
 public:
+  /// Constructor with collection type
+  SIOObjectHandler( const std::string &colType ) ;
+  
   /// Default destructor
   virtual ~SIOObjectHandler() = default ;
   
   /// Set the collection flag
   void setFlag( unsigned int flag ) ;
   
-  /** Reads lcio objects from an SIO stream.
-   */
-  virtual void read( sio::read_device& device, EVENT::LCObject** objP, sio::version_type vers ) = 0 ;
+  /// Get the collection type associated to the object handler (see EVENT/LCIO.h)
+  const std::string &collectionType() const ;
   
-  /** Writes lcio objects to an SIO stream.
-   */
+  /// Reads lcio objects from an SIO stream.
+  virtual void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) = 0 ;
+  
+  /// Writes lcio objects to an SIO stream.
   virtual void write( sio::write_device& device, const EVENT::LCObject* obj ) = 0 ;
   
-  // /** Initialize the handler and/or the collection.
-  //  * Read the flag and the parameters.
-  //  * Overwrite for classes that need specific processing.
-  //  */
-  // virtual void init( sio::read_device& device, EVENT::LCCollection* col, sio::version_type vers ) ; 
-  // 
-  //  /** Initialize the handler and/or the collection.
-  //   * Read/write the flag and the parameters.
-  //   * Overwrite for classes that need specific processing.
-  //   */
-  //  virtual unsigned int init( SIO_stream* stream,
- 	// 		     SIO_operation op,
- 	// 		     EVENT::LCCollection* col,
- 	// 		     unsigned int vers ) ; 
-  // 
-  // 
-  // /** Calls read() if the collection is not a subset otherwise only reads the pointers.*/
-  // virtual void readBase( sio::read_device& device, EVENT::LCObject** objP ) ;
-  // 
-  // 
-  // /** Calls write() if the collection is not a subset otherwise only writes the pointers.*/
-  // virtual void writeBase( sio::write_device& device, const EVENT::LCObject* obj ) ;
+  /// Factory method to create an object of the type of the collection
+  virtual EVENT::LCObject *create() const = 0 ;
 
  protected:
-
-  // 
-  unsigned int _flag {0} ; 
-  // unsigned int _vers{0} ;
-  
+   /// The collection type associated to LCIO object
+   const std::string     _collectionType ;
+   /// The collection flag
+   unsigned int          _flag {0} ;
 }; // class
 
 } // namespace 
