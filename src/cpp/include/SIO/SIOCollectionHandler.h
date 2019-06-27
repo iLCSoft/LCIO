@@ -1,65 +1,51 @@
 #ifndef SIO_SIOCOLLECTIONHANDLER_H
 #define SIO_SIOCOLLECTIONHANDLER_H 1
 
+// -- std headers
 #include <string>
+#include <memory>
+
+// -- lcio headers
 #include "EVENT/LCCollection.h"
-#include "IOIMPL/LCEventIOImpl.h"
-#include "Exceptions.h"
 
-#include "SIO_block.h"
-
+// -- sio headers
+#include <sio/block.h>
 
 namespace SIO {
   
-  class SIOObjectHandler;
+  class SIOObjectHandler ;
   
-/** Handler for LCCollection/LCCollectionIOVec objects for SIO.
- * 
- * @author gaede
- * @version $Id: SIOCollectionHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
- */
-
-  class SIOCollectionHandler : public SIO_block{
-    
-  private:
-    SIOCollectionHandler() ;  // no default c'tor
-    
-  public:
-    
+  /** Handler for LCCollection/LCCollectionIOVec objects for SIO.
+   * 
+   * @author gaede
+   * @version $Id: SIOCollectionHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
+   */
+  class SIOCollectionHandler : public sio::block {
+    SIOCollectionHandler() = delete ;
     SIOCollectionHandler(const SIOCollectionHandler&) = delete;
     SIOCollectionHandler& operator=(const SIOCollectionHandler&) = delete ;
+    ~SIOCollectionHandler() = default ;
+        
+  public:
+    /// Constructor with collection (block) name and object handler
+    SIOCollectionHandler( const std::string& name, std::shared_ptr<SIOObjectHandler> handler ) ;
 
-    /** The default constructor needs the name, the type and a pointer 
-     * the address of the collection. Throws an exception if handler
-     * for given type doesn't exist.
-     * @throws Exception
-     */
-    SIOCollectionHandler(const std::string& name, 
-			 const std::string& type, 
-			 IOIMPL::LCEventIOImpl**  anEvtP=0 ) 
-       ;
-
-    virtual ~SIOCollectionHandler() ;
-
-    const std::string &getTypeName() const;
-
-    // interface from SIO_block
-    virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() const ;
+    /// Get the collection type
+    const std::string &type() const ;
     
-    void setHandler( SIOObjectHandler *handler ) ;
-    void setCollection(const EVENT::LCCollection *col) ; 
-    void setEvent(IOIMPL::LCEventIOImpl**  anEvtP) ; 
-    
-    
+    /// Set the collection to read/write
+    void setCollection( EVENT::LCCollection *col ) ;
+
+    // from sio::block
+    void read( sio::read_device &device, sio::version_type vers ) ;
+    void write( sio::write_device &device ) ;
+
   private: 
-    IOIMPL::LCEventIOImpl**  _evtP ;    // adress of the event that data is read into 
-    const EVENT::LCCollection *_col ;   // for writing we use the data interface
-    
-    std::string _myType ;
-    SIOObjectHandler* _myHandler{NULL}  ;
-    
-  }; // class
+    /// The collection to read/write
+    EVENT::LCCollection                *_collection {nullptr} ;
+    /// The object handler for reading/writing
+    std::shared_ptr<SIOObjectHandler>   _handler {nullptr} ;
+  };
   
 } // namespace
 #endif /* ifndef SIO_SIOCOLLECTIONHANDLER_H */
