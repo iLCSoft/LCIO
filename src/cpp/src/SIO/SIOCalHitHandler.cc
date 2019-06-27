@@ -1,22 +1,13 @@
 #include "SIO/SIOCalHitHandler.h"
 
-#include "SIO/LCSIO.h"
-
+// -- lcio headers
 #include "EVENT/LCIO.h"
-#include "EVENT/MCParticle.h"
 #include "EVENT/CalorimeterHit.h"
 #include "IOIMPL/CalorimeterHitIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
-#include "SIO_stream.h"
-#include "SIO_functions.h"
-#include "SIO_block.h"
-
-
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
-
+// -- sio headers
+#include <sio/io_device.h>
 
 namespace SIO {
   
@@ -92,7 +83,7 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCObject *SIOCalHitHandler::create() const {
-    return new CalorimeterHitIOImpl() ;
+    return new IOIMPL::CalorimeterHitIOImpl() ;
   }
   
 } // namespace
