@@ -13,18 +13,18 @@ namespace SIO {
    * @version $Id: SIOCalHitHandler.h,v 1.7 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOCalHitHandler : public SIOObjectHandler {
-	
   public:
-	
-    /** Reads lcio calorimeter hit objects from an SIO stream.
-     */
-    virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP)  ;
-	
-    /** Writes lcio calorimeter hit objects to an SIO stream.
-     */
-    virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj) ;
+    /// Constructor
+    SIOCalHitHandler() ;
+    
+    /// Reads lcio objects from an SIO stream.
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) ;
+    
+    /// Writes lcio objects to an SIO stream.
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) ;
+    
+    /// Factory method to create an object of the type of the collection
+    EVENT::LCObject *create() const ;
 	
   }; // class
 } // namespace
