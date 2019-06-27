@@ -1,14 +1,31 @@
 #ifndef SIO_RunEventMap_H
 #define SIO_RunEventMap_H 1
 
+#include <ostream>
 #include <map>
 
-#include "LCIORandomAccess.h"
-
 namespace SIO {
-
+  
   class RunEventMap ; 
+  
+  /** Helper struct that stores run and event positions in the file. The operator<() defines a lexicographical ordering
+   *  in RunNum and EvtNum where all run records (EvtNum=-1) are orderd first.
+   */
+  struct RunEvent {
+    typedef long long long64 ;
+    
+    RunEvent() = default ;
+    ~RunEvent() = default ;
+    RunEvent(int run, int evt): RunNum( run ), EvtNum( evt ) {}
+    RunEvent(long64 runEvt): RunNum( (runEvt >> 32 ) & 0xffffffff  ), EvtNum( runEvt &  0xffffffff ) {}
+    operator long64() const {  return  ( ( long64(RunNum) << 32)  |  ( long64(EvtNum) & 0xffffffff )  ) ; }
+    
+    int RunNum {0} ;
+    int EvtNum {0} ;
+  };
 
+  std::ostream & operator<<(std::ostream& os, const RunEvent& re ) ;
+  bool operator < ( const RunEvent& r0, const RunEvent& other)  ;
   std::ostream & operator<<(std::ostream& os, const RunEventMap& rm ) ;
 
 
@@ -25,7 +42,8 @@ namespace SIO {
     typedef std::map< RunEvent, long64> map_type ;
     typedef map_type::iterator iterator ;
     typedef map_type::const_iterator const_iterator ;
-    static const int npos = -1 ;
+    typedef longlong long64 ;
+    static constexpr const int npos = -1 ;
 
   public:
     RunEventMap() = default ; 
