@@ -1,13 +1,33 @@
 #include "SIO/RunEventMap.h"
 
-//#include "EVENT/LCIO.h"
-
 #include <iostream>
 
+namespace SIO {
+    
+  bool operator < ( const RunEvent& r0, const RunEvent& other) {
 
-namespace SIO  {
+    //std::cout << r0 << " < " << other << " : ["
+    //<<  ( r0.RunNum == other.RunNum ?  r0.EvtNum < other.EvtNum  :  r0.RunNum < other.RunNum )  << "]" << std::endl;
 
-  const int RunEventMap::npos ;
+    if( r0.EvtNum < 0 ) { // sort run records (evtNu == -1 ) first
+
+      return ( other.EvtNum < 0 ?  r0.RunNum < other.RunNum : true ) ;
+    }
+    else if( other.EvtNum < 0 ) return false ;
+
+    return ( r0.RunNum == other.RunNum ?  r0.EvtNum < other.EvtNum  :  r0.RunNum < other.RunNum ) ;
+  }
+  
+  //----------------------------------------------------------------------------
+
+  std::ostream & operator<<(std::ostream& os, const RunEvent& re ) {
+
+    os << " run: " << re.RunNum << " - evt: " << re.EvtNum ;
+
+    return os ;
+  }
+  
+  //----------------------------------------------------------------------------
 
   void RunEventMap::add(const RunEvent& re, long64 pos ) {
     auto p = _map.insert( std::make_pair( (long64) re , pos ) ) ; 
@@ -29,7 +49,7 @@ namespace SIO  {
   
   //----------------------------------------------------------------------------
 
-  long64 RunEventMap::getPosition( long64 re ) {
+  RunEventMap::long64 RunEventMap::getPosition( long64 re ) {
     auto it = _map.find( re ) ;
     return ( it != _map.end() ? it->second : npos ) ;
   } 
