@@ -35,6 +35,7 @@ namespace SIO {
  * @version $Id: RunEventMap.h,v 1.3 2011-03-03 16:00:12 gaede Exp $
  */
   class RunEventMap {
+    typedef long long long64 ;
     friend std::ostream & operator<<(std::ostream& os, const RunEventMap& rm ) ;
    
   public:
@@ -42,7 +43,6 @@ namespace SIO {
     typedef std::map< RunEvent, long64> map_type ;
     typedef map_type::iterator iterator ;
     typedef map_type::const_iterator const_iterator ;
-    typedef longlong long64 ;
     static constexpr const int npos = -1 ;
 
   public:
