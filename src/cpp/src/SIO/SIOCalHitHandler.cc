@@ -8,11 +8,12 @@
 
 // -- sio headers
 #include <sio/io_device.h>
+#include <sio/version.h>
 
 namespace SIO {
   
   SIOCalHitHandler::SIOCalHitHandler() : 
-    SIOObjectHandler( EVENT::CALORIMETERHIT ) {
+    SIOObjectHandler( EVENT::LCIO::CALORIMETERHIT ) {
     
   }
 
