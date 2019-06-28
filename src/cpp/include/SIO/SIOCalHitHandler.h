@@ -25,7 +25,6 @@ namespace SIO {
     
     /// Factory method to create an object of the type of the collection
     EVENT::LCObject *create() const ;
-	
   }; // class
 } // namespace
 
