@@ -14,19 +14,18 @@ namespace SIO {
  */
 
   class SIOClusterHandler : public SIOObjectHandler {
-	
   public:
-	
-    /** Reads lcio clusterer hit objects from an SIO stream.
-     */
-    virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP)  ;
-	
-    /** Writes lcio objects to an SIO stream.
-     */
-    virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj) ;
-	
+    /// Constructor
+    SIOClusterHandler() ;
+    
+    /// Reads lcio objects from an SIO stream.
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) ;
+    
+    /// Writes lcio objects to an SIO stream.
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) ;
+    
+    /// Factory method to create an object of the type of the collection
+    EVENT::LCObject *create() const ;
   }; // class
 } // namespace
 
