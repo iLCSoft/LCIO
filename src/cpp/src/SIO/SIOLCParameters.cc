@@ -1,181 +1,95 @@
 #include "SIO/SIOLCParameters.h"
 
-#include "SIO/LCSIO.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
-
-using namespace EVENT ;
-
-
-namespace SIO{
+namespace SIO {
     
-  unsigned int SIOLCParameters::read(SIO_stream* stream, 
-				     LCParameters& params,  
-				     unsigned int /*vers*/) {
-
-    unsigned int status ; 
-	
-	
+  void SIOLCParameters::read( sio::read_device &device, EVENT::LCParameters& params, sio::version_type /*vers*/ ) {
     int nIntParameters ;
-    SIO_DATA( stream , &nIntParameters , 1 ) ;
-
-    for(int i=0; i< nIntParameters ; i++ ){
-
+    SIO_DATA( device , &nIntParameters , 1 ) ;
+    for(int i=0; i< nIntParameters ; i++ ) {
       std::string key;
-      LCSIO_READ( stream,  key ) ; 
-
+      SIO_SDATA( device,  key ) ; 
       int nInt  ;
-      SIO_DATA( stream , &nInt , 1 ) ;
-      IntVec intVec(nInt) ;
-
-      for(int j=0; j< nInt ; j++ ){
-	  SIO_DATA( stream , &intVec[j]  , 1 ) ;
+      SIO_DATA( device , &nInt , 1 ) ;
+      EVENT::IntVec intVec(nInt) ;
+      for(int j=0; j< nInt ; j++ ) {
+	       SIO_DATA( device , &intVec[j]  , 1 ) ;
       }
       params.setValues( key , intVec ) ;
     }
-
     int nFloatParameters ;
-    SIO_DATA( stream , &nFloatParameters , 1 ) ;
-
-    for(int i=0; i< nFloatParameters ; i++ ){
-
+    SIO_DATA( device , &nFloatParameters , 1 ) ;
+    for(int i=0; i< nFloatParameters ; i++ ) {
       std::string key;
-      LCSIO_READ( stream,  key ) ; 
-
+      SIO_SDATA( device,  key ) ; 
       int nFloat  ;
-      SIO_DATA( stream , &nFloat , 1 ) ;
-      FloatVec floatVec(nFloat) ;
-
-      for(int j=0; j< nFloat ; j++ ){
-	  SIO_DATA( stream , &floatVec[j]  , 1 ) ;
+      SIO_DATA( device , &nFloat , 1 ) ;
+      EVENT::FloatVec floatVec(nFloat) ;
+      for(int j=0; j< nFloat ; j++ ) {
+	      SIO_DATA( device , &floatVec[j]  , 1 ) ;
       }
       params.setValues( key , floatVec ) ;
     }
-
     int nStringParameters ;
-    SIO_DATA( stream , &nStringParameters , 1 ) ;
-
-    for(int i=0; i< nStringParameters ; i++ ){
-
+    SIO_DATA( device , &nStringParameters , 1 ) ;
+    for(int i=0; i< nStringParameters ; i++ ) {
       std::string key;
-      LCSIO_READ( stream,  key ) ; 
-
+      SIO_SDATA( device,  key ) ; 
       int nString  ;
-      SIO_DATA( stream , &nString , 1 ) ;
-      StringVec stringVec(nString) ;
-
+      SIO_DATA( device , &nString , 1 ) ;
+      EVENT::StringVec stringVec(nString) ;
       for(int j=0; j< nString ; j++ ){
         std::string val;
-        LCSIO_READ( stream,  val ) ; 
+        SIO_SDATA( device,  val ) ; 
       	stringVec[j] = val ;
       }
       params.setValues( key , stringVec ) ;
     }
-
-
-
-
-
-    return ( SIO_BLOCK_SUCCESS ) ;
-	
   }
     
-    
-  unsigned int SIOLCParameters::write(SIO_stream* stream, 
-				      const LCParameters& params) {
-    
-    unsigned int status ; 
-
-    StringVec intKeys ;
+  void SIOLCParameters::write( sio::write_device &device, const EVENT::LCParameters& params ) {
+    EVENT::StringVec intKeys ;
     int nIntParameters = params.getIntKeys( intKeys ).size() ;
-
-    SIO_DATA( stream , &nIntParameters , 1 ) ;
-
-    for(int i=0; i< nIntParameters ; i++ ){
-
-      IntVec intVec ;
-
+    SIO_DATA( device , &nIntParameters , 1 ) ;
+    for(int i=0; i< nIntParameters ; i++ ) {
+      EVENT::IntVec intVec ;
       params.getIntVals(  intKeys[i], intVec ) ;
-
-      int nInt  = intVec.size()  ;     // = params.getNInt( intKeys[i] ) ;
-
-//       if( nInt > 0 ){ 
-
-	LCSIO_WRITE( stream, intKeys[i]  ) ;
-	SIO_DATA( stream , &nInt , 1 ) ;
-
-
-	for(int j=0; j< nInt ; j++ ){
-	  LCSIO_WRITE( stream, intVec[j]  ) ;
- 	}
-//       }
+      int nInt  = intVec.size()  ;
+	    SIO_SDATA( device, intKeys[i]  ) ;
+	    SIO_DATA( device , &nInt , 1 ) ;
+	      for(int j=0; j< nInt ; j++ ) {
+	        SIO_SDATA( device, intVec[j]  ) ;
+        }
     }
-
-    StringVec floatKeys ;
+    EVENT::StringVec floatKeys ;
     int nFloatParameters = params.getFloatKeys( floatKeys ).size() ;
-    
-    SIO_DATA( stream , &nFloatParameters , 1 ) ;
-
-    for(int i=0; i< nFloatParameters ; i++ ){
-
-      FloatVec floatVec ;
-
+    SIO_DATA( device , &nFloatParameters , 1 ) ;
+    for(int i=0; i< nFloatParameters ; i++ ) {
+      EVENT::FloatVec floatVec ;
       params.getFloatVals(  floatKeys[i], floatVec ) ;
-
       int nFloat  = floatVec.size()  ;     // = params.getNFloat( floatKeys[i] ) ;
-
-//       if( nFloat > 0 ){ 
-
-	LCSIO_WRITE( stream, floatKeys[i]  ) ;
-	SIO_DATA( stream , &nFloat , 1 ) ;
-
-
-	for(int j=0; j< nFloat ; j++ ){
-	  LCSIO_WRITE( stream, floatVec[j]  ) ;
-	}
-//       }
+    	SIO_SDATA( device, floatKeys[i]  ) ;
+    	SIO_DATA( device , &nFloat , 1 ) ;
+    	for(int j=0; j< nFloat ; j++ ){
+    	  SIO_SDATA( device, floatVec[j]  ) ;
+    	}
     }
-    
-    StringVec stringKeys ;
+    EVENT::StringVec stringKeys ;
     int nStringParameters = params.getStringKeys( stringKeys ).size() ;
-    
-    SIO_DATA( stream , &nStringParameters , 1 ) ;
-    
+    SIO_DATA( device , &nStringParameters , 1 ) ;
     for(int i=0; i< nStringParameters ; i++ ){
-      
-      StringVec stringVec ;
-      
+      EVENT::StringVec stringVec ;
       params.getStringVals(  stringKeys[i], stringVec ) ;
-      
-      int nString  = stringVec.size()  ;     // = params.getNString( stringKeys[i] ) ;
-      
-//       if( nString > 0 ){ 
-	
-	LCSIO_WRITE( stream, stringKeys[i]  ) ;
-	SIO_DATA( stream , &nString , 1 ) ;
-	
-	
-	for(int j=0; j< nString ; j++ ){
-	  LCSIO_WRITE( stream, stringVec[j]  ) ;
-	}
-//       }
+      int nString  = stringVec.size()  ;
+    	SIO_SDATA( device, stringKeys[i]  ) ;
+    	SIO_DATA( device , &nString , 1 ) ;
+    	for(int j=0; j< nString ; j++ ){
+    	  SIO_SDATA( device, stringVec[j]  ) ;
+    	}
     }
-
-
-//     int nElements = vec->size() ;
-    
-//     //    cout << " >>>>> writing  LCParameters - size : " << nElements << ": " ;
-//     LCSIO_WRITE( stream, nElements ) ;
-//     for(int i=0;i<nElements;i++){
-//       LCSIO_WRITE( stream, (*vec)[i] ) ;
-//       //cout <<  (*vec)[i] <<   ", " ; 
-//     }    
-//     //    cout << endl ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
-    
   }
   
 } // namespace

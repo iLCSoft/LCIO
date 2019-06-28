@@ -3,7 +3,7 @@
 
 #include "IMPL/LCParametersImpl.h"
 
-#include "SIO_definitions.h"
+#include <sio/definitions.h>
 
 namespace SIO {
     
@@ -13,21 +13,15 @@ namespace SIO {
  * @author gaede
  * @version $Id: SIOLCParameters.h,v 1.4 2005-04-15 08:37:42 gaede Exp $
  */
-  class SIOLCParameters : public IMPL::LCParametersImpl{
-	
+  class SIOLCParameters {
   public:
-	
     /** Reads objects from an SIO stream.
      */
-    static unsigned int read(SIO_stream* stream, 
-			     LCParameters& params,  
-			     unsigned int vers)  ;
+    static void read( sio::read_device &device, EVENT::LCParameters& params, sio::version_type vers ) ;
     
     /** Writes lcio objects to an SIO stream.
      */
-    static unsigned int write(SIO_stream* stream, 
-			      const LCParameters& params) ;
-    
+    static void write( sio::write_device &device, const EVENT::LCParameters& params ) ;
   }; // class
 } // namespace
 
