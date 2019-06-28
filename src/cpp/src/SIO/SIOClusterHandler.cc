@@ -1,237 +1,176 @@
 #include "SIO/SIOClusterHandler.h"
 
-#include "SIO/LCSIO.h"
-#include "IOIMPL/ParticleIDIOImpl.h"
-
+// -- lcio headers
 #include "EVENT/LCIO.h"
+#include "IOIMPL/ParticleIDIOImpl.h"
 #include "IOIMPL/ClusterIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
-
-
-namespace SIO{
+namespace SIO {
+  
+  SIOClusterHandler::SIOClusterHandler() : 
+    SIOObjectHandler( EVENT::LCIO::CLUSTER ) {
     
-  unsigned int SIOClusterHandler::read(SIO_stream* stream, 
-				      LCObject** objP ){
-    unsigned int status ; 
-	
-
-    // create a new object :
-    ClusterIOImpl* cluster  = new ClusterIOImpl ;
-    *objP = cluster ;
-	
-    //SIO_DATA( stream ,  &(cluster->_type) , 1  ) ;
+  }
+  
+  //----------------------------------------------------------------------------
+  
+  void SIOClusterHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
+    IOIMPL::ClusterIOImpl* cluster = dynamic_cast<IOIMPL::ClusterIOImpl*>(objP) ;
+    // type is bitset<32> - can't be set directly
     int type ;
-    SIO_DATA( stream ,  &type  , 1 ) ;
-    cluster->setType( type ) ;  // type is bitset<32> - can't be set directly
-
-    SIO_DATA( stream ,  &(cluster->_energy)  , 1 ) ;
-
-    if( _vers > SIO_VERSION_ENCODE( 1, 51 ) ){
-        SIO_DATA( stream ,  &(cluster->_energyError) , 1  ) ;
+    SIO_DATA( device ,  &type  , 1 ) ;
+    cluster->setType( type ) ;
+    SIO_DATA( device ,  &(cluster->_energy)  , 1 ) ;
+    if( vers > SIO_VERSION_ENCODE( 1, 51 ) ) {
+      SIO_DATA( device ,  &(cluster->_energyError) , 1  ) ;
     }
-
-    SIO_DATA( stream ,  cluster->_position  , 3 ) ;
-
+    SIO_DATA( device ,  cluster->_position  , 3 ) ;
     float errpos[ NERRPOS ] ;
-    SIO_DATA( stream , errpos   , NERRPOS ) ;
+    SIO_DATA( device , errpos   , NERRPOS ) ;
     cluster->setPositionError( errpos ) ;
-    
-    SIO_DATA( stream ,  &(cluster->_theta)  , 1 ) ;
-    SIO_DATA( stream ,  &(cluster->_phi)  , 1 ) ;
-    
+    SIO_DATA( device ,  &(cluster->_theta)  , 1 ) ;
+    SIO_DATA( device ,  &(cluster->_phi)  , 1 ) ;
     float errdir[ NERRDIR ] ;
-    SIO_DATA( stream , errdir  , NERRDIR ) ;
+    SIO_DATA( device , errdir  , NERRDIR ) ;
     cluster->setDirectionError( errdir ) ;
-    
     int nShape ;
-    
-    if( _vers > SIO_VERSION_ENCODE(1,2) ) {
-      SIO_DATA( stream , &nShape  , 1 ) ;
-    } else {
+    if( vers > SIO_VERSION_ENCODE(1,2) ) {
+      SIO_DATA( device , &nShape  , 1 ) ;
+    } 
+    else {
       nShape = NSHAPE_OLD ;
     }
-    
     cluster->_shape.resize( nShape )   ;
-    
-    SIO_DATA( stream , &(cluster->_shape[0])  ,nShape ) ;
-    
-    
-    if( _vers > SIO_VERSION_ENCODE(1,2) ) {
-      
-      
+    SIO_DATA( device , &(cluster->_shape[0])  ,nShape ) ;
+    if( vers > SIO_VERSION_ENCODE(1,2) ) {      
       // read PIDs
       int nPid ;
-      SIO_DATA( stream ,  &nPid  , 1 ) ;
-      for(int i=0;i<nPid;i++){
-	// create new Pid objects
-	ParticleIDIOImpl* pid = new ParticleIDIOImpl ;
-	
-	SIO_DATA( stream ,  &(pid->_likelihood) , 1  ) ;
-	SIO_DATA( stream ,  &(pid->_type) , 1  ) ;
-	SIO_DATA( stream ,  &(pid->_pdg) , 1  ) ;
-	SIO_DATA( stream ,  &(pid->_algorithmType) , 1  ) ;
-
-	int nPara  ;
-	SIO_DATA( stream ,  &nPara  , 1 ) ;
-	float aParameter ;
-	for(int j=0;j<nPara;j++){
-	  SIO_DATA( stream ,  &aParameter  , 1 ) ;
-	  pid->addParameter( aParameter ) ;
-	}
-	cluster->addParticleID( pid) ;
-
+      SIO_DATA( device ,  &nPid  , 1 ) ;
+      for(int i=0;i<nPid;i++) {
+        // create new Pid objects
+        IOIMPL::ParticleIDIOImpl* pid = new IOIMPL::ParticleIDIOImpl() ;
+        SIO_DATA( device ,  &(pid->_likelihood) , 1  ) ;
+        SIO_DATA( device ,  &(pid->_type) , 1  ) ;
+        SIO_DATA( device ,  &(pid->_pdg) , 1  ) ;
+        SIO_DATA( device ,  &(pid->_algorithmType) , 1  ) ;
+        int nPara  ;
+        SIO_DATA( device ,  &nPara  , 1 ) ;
+        float aParameter ;
+        for(int j=0;j<nPara;j++) {
+          SIO_DATA( device ,  &aParameter  , 1 ) ;
+          pid->addParameter( aParameter ) ;
+        }
+        cluster->addParticleID( pid) ;
       }
-      
-    } else {
-      float pType[3] ;
-      SIO_DATA( stream , pType  , 3 ) ;
-//     cluster->setEMWeight( pType[0] ) ;
-//     cluster->setHADWeight( pType[1] ) ;
-//     cluster->setMuonWeight( pType[2] ) ;
-    
     }
-
-
-    
+    else {
+      float pType[3] ;
+      SIO_DATA( device , pType  , 3 ) ;    
+    }
     int nClusters ; 
-    SIO_DATA( stream, &nClusters , 1  ) ;
-
+    SIO_DATA( device, &nClusters , 1  ) ;
     // fill the vector to have correct size
     // as we are using the addresses of the elements henceforth
-
     cluster->_clusters.resize( nClusters ) ;
-    for(int i=0;i<nClusters;i++){
-      SIO_PNTR( stream , &(cluster->_clusters[i] ) ) ;
+    for(int i=0;i<nClusters;i++) {
+      SIO_PNTR( device , &(cluster->_clusters[i] ) ) ;
     }
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::CLBIT_HITS ) ){ 
-
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::CLBIT_HITS ) ) {
       int nHits ;
-      SIO_DATA( stream, &nHits , 1  ) ;
-
+      SIO_DATA( device, &nHits , 1  ) ;
       cluster->_hits.resize( nHits ) ;
       cluster->_weights.resize( nHits ) ;
-
-      for(int i=0;i<nHits;i++){
-	SIO_PNTR( stream , &(cluster->_hits[i] ) ) ;
-	SIO_DATA( stream , &(cluster->_weights[i] ) , 1 ) ;
+      for(int i=0;i<nHits;i++) {
+        SIO_PNTR( device , &(cluster->_hits[i] ) ) ;
+        SIO_DATA( device , &(cluster->_weights[i] ) , 1 ) ;
       }
-      
     }
     int nEnergies ;
-    SIO_DATA( stream, &nEnergies , 1  ) ;
+    SIO_DATA( device, &nEnergies , 1  ) ;
     cluster->_subdetectorEnergies.resize( nEnergies ) ;
     for(int i=0;i<nEnergies;i++){
-      SIO_DATA( stream, &(cluster->_subdetectorEnergies[i] )  , 1  ) ;
+      SIO_DATA( device, &(cluster->_subdetectorEnergies[i] )  , 1  ) ;
     }
-
     // read the pointer tag 
-    SIO_PTAG( stream , dynamic_cast<const Cluster*>(cluster) ) ;
-    return ( SIO_BLOCK_SUCCESS ) ;
+    SIO_PTAG( device , dynamic_cast<const EVENT::Cluster*>(cluster) ) ;
   }
-    
-    
-  unsigned int SIOClusterHandler::write(SIO_stream* stream, 
-				       const LCObject* obj ){
-    
-    unsigned int status ; 
-    
+  
+  //----------------------------------------------------------------------------
+  
+  void SIOClusterHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
     // this is where we gave up type safety in order to
     // simplify the API and the implementation
     // by having a common collection of objects
-    const Cluster* cluster = dynamic_cast<const Cluster*>(obj)  ;
-
-
-    LCSIO_WRITE( stream, cluster->getType()  ) ;
-    LCSIO_WRITE( stream, cluster->getEnergy()  ) ;
-    LCSIO_WRITE( stream, cluster->getEnergyError()  ) ;
-    float* pos = const_cast<float*> ( cluster->getPosition() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
-
-    const FloatVec& errpos = cluster->getPositionError() ;
-    for(unsigned int i=0;i<errpos.size();i++){
-      LCSIO_WRITE( stream, errpos[i]  ) ;
+    const EVENT::Cluster* cluster = dynamic_cast<const EVENT::Cluster*>(obj) ;
+    SIO_SDATA( device, cluster->getType()  ) ;
+    SIO_SDATA( device, cluster->getEnergy()  ) ;
+    SIO_SDATA( device, cluster->getEnergyError()  ) ;
+    SIO_DATA( device,  cluster->getPosition() , 3 ) ;
+    auto& errpos = cluster->getPositionError() ;
+    for(unsigned int i=0;i<errpos.size();i++) {
+      SIO_SDATA( device, errpos[i]  ) ;
     }
-    LCSIO_WRITE( stream, cluster->getITheta()  ) ;
-    LCSIO_WRITE( stream, cluster->getIPhi()  ) ;
-
-    const FloatVec& errdir = cluster->getDirectionError() ;
+    SIO_SDATA( device, cluster->getITheta()  ) ;
+    SIO_SDATA( device, cluster->getIPhi()  ) ;
+    auto& errdir = cluster->getDirectionError() ;
     for(unsigned int i=0;i<errdir.size();i++){
-      LCSIO_WRITE( stream, errdir[i]  ) ;
+      SIO_SDATA( device, errdir[i]  ) ;
     }
-
-    const FloatVec& shape = cluster->getShape() ;
-    LCSIO_WRITE( stream, shape.size() ) ;
-    
+    auto& shape = cluster->getShape() ;
+    SIO_SDATA( device, shape.size() ) ;
     for(unsigned int i=0;i<shape.size();i++){
-      LCSIO_WRITE( stream, shape[i]  ) ;
+      SIO_SDATA( device, shape[i]  ) ;
     }
-
-//     const FloatVec& particleType = cluster->getParticleType() ;
-//     for(unsigned int i=0;i<particleType.size();i++){
-//       LCSIO_WRITE( stream, particleType[i]  ) ;
-//     }
-
     // write Pids
     int nPid  = cluster->getParticleIDs().size() ;
-    SIO_DATA( stream ,  &nPid  , 1 ) ;
-    for(int i=0;i<nPid;i++){
-      const ParticleID* pid = cluster->getParticleIDs()[i]  ;
-      LCSIO_WRITE( stream, pid->getLikelihood()  ) ;
-      LCSIO_WRITE( stream, pid->getType()  ) ;
-      LCSIO_WRITE( stream, pid->getPDG()  ) ;
-      LCSIO_WRITE( stream, pid->getAlgorithmType()  ) ;
+    SIO_SDATA( device ,  nPid ) ;
+    for(int i=0;i<nPid;i++) {
+      auto pid = cluster->getParticleIDs()[i]  ;
+      SIO_SDATA( device, pid->getLikelihood()  ) ;
+      SIO_SDATA( device, pid->getType()  ) ;
+      SIO_SDATA( device, pid->getPDG()  ) ;
+      SIO_SDATA( device, pid->getAlgorithmType()  ) ;
       int nPara = pid->getParameters().size() ;
-      SIO_DATA( stream ,  &nPara  , 1 ) ;
+      SIO_DATA( device ,  &nPara  , 1 ) ;
       for(int j=0;j<nPara;j++){
-	LCSIO_WRITE( stream, pid->getParameters()[j]  ) ;
+        SIO_SDATA( device, pid->getParameters()[j]  ) ;
       }
     }
-    
-    const ClusterVec& clusters = cluster->getClusters() ;
+    auto& clusters = cluster->getClusters() ;
     int nClusters =  clusters.size() ;
-
-    SIO_DATA( stream, &nClusters , 1  ) ;
-    
-    for(int i=0;i<nClusters;i++){
-      SIO_PNTR( stream , &(clusters[i]) ) ;
+    SIO_DATA( device, &nClusters , 1  ) ;
+    for(int i=0;i<nClusters;i++) {
+      SIO_PNTR( device , &(clusters[i]) ) ;
     }
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::CLBIT_HITS ) ){ 
-
-
-      const CalorimeterHitVec& hits = cluster->getCalorimeterHits() ;
-      const FloatVec& weights = cluster->getHitContributions() ;
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::CLBIT_HITS ) ) {
+      auto& hits = cluster->getCalorimeterHits() ;
+      auto& weights = cluster->getHitContributions() ;
       int nHits = hits.size() ;
-      SIO_DATA( stream, &nHits , 1  ) ;
-      
+      SIO_DATA( device, &nHits , 1  ) ;
       for(int i=0;i<nHits;i++){
-	SIO_PNTR( stream , &(hits[i]) ) ;
-	LCSIO_WRITE( stream , weights[i] ) ;
+        SIO_PNTR( device , &(hits[i]) ) ;
+        SIO_SDATA( device , weights[i] ) ;
       }
-
     }
-
-    const FloatVec& subdetectorEnergies = cluster->getSubdetectorEnergies() ;
+    auto& subdetectorEnergies = cluster->getSubdetectorEnergies() ;
     int nEnergies = subdetectorEnergies.size() ;
-
-    LCSIO_WRITE( stream, nEnergies  ) ;
-    for(int i=0;i<nEnergies;i++){
-      LCSIO_WRITE( stream, subdetectorEnergies[i] ) ;
+    SIO_SDATA( device, nEnergies  ) ;
+    for(int i=0;i<nEnergies;i++) {
+      SIO_SDATA( device, subdetectorEnergies[i] ) ;
     }
     // write a ptag in order to be able to point to clusters
-    SIO_PTAG( stream , cluster ) ;
+    SIO_PTAG( device , cluster ) ;
+  }
+  
+  //----------------------------------------------------------------------------
 
-    return ( SIO_BLOCK_SUCCESS ) ;
-    
+  EVENT::LCObject *SIOClusterHandler::create() const {
+    return new IOIMPL::ClusterIOImpl() ;
   }
   
 } // namespace
