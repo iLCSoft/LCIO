@@ -9,6 +9,7 @@
 
 // -- sio headers
 #include <sio/io_device.h>
+#include <sio/version.h>
 
 namespace SIO {
 
@@ -62,7 +63,7 @@ namespace SIO {
         (*ioCol)[i] = _handler->create() ;
         auto lcobj = (*ioCol)[i] ;
         try {
-          _myHandler->read( device , lcobj , vers ) ;
+          _handler->read( device , lcobj , vers ) ;
         }
         catch( std::exception &e ) {
           SIO_RETHROW( e, sio::error_code::io_failure, "Couldn't read out object of type '" + _handler->collectionType() + "'" ) ;
@@ -85,7 +86,7 @@ namespace SIO {
     SIOLCParameters::write( device , _collection->getParameters() ) ;
     // write number of objects
   	int nObj = _collection->getNumberOfElements() ;
-  	SIO_DATA( stream,  &nObj , 1  ) ;
+  	SIO_DATA( device,  &nObj , 1  ) ;
     if( flag & ( 1 << EVENT::LCCollection::BITSubset ) ) {
       // write only pointers
       for( int i=0 ; i< nObj ; i ++ ) {
