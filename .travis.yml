@@ -37,7 +37,7 @@ install:
   - export description=`date`
   - export COVERITY_REPO=`echo ${TRAVIS_REPO_SLUG} | sed 's/\//\%2F/g'`
   - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
-    then wget https://scan.coverity.com/download/cxx/Linux --post-data "token=${COVERITY_SCAN_TOKEN}&project=${COVERITY_REPO}" -O Package/coverity_tool.tgz; cd Package; mkdir cov-analysis-linux64; tar -xf coverity_tool.tgz -C cov-analysis-linux64 --strip-components=2;
+    then wget https://scan.coverity.com/download/linux64 --post-data "token=${COVERITY_SCAN_TOKEN}&project=${COVERITY_REPO}" -O Package/coverity_tool.tgz; cd Package; mkdir cov-analysis-linux64; tar -xf coverity_tool.tgz -C cov-analysis-linux64 --strip-components=1;
     fi
 
 # command to run tests
