@@ -16,13 +16,13 @@ namespace SIO {
     SIOCalHitHandler() ;
 
     /// Reads lcio objects from an SIO stream.
-    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) ;
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) override ;
 
     /// Writes lcio objects to an SIO stream.
-    void write( sio::write_device& device, const EVENT::LCObject* obj ) ;
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) override ;
 
     /// Factory method to create an object of the type of the collection
-    EVENT::LCObject *create() const ;
+    EVENT::LCObject *create() const override ;
   }; // class
 } // namespace
 
