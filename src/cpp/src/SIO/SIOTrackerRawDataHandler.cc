@@ -1,79 +1,53 @@
 #include "SIO/SIOTrackerRawDataHandler.h"
 
-#include "SIO/LCSIO.h"
-
 #include "EVENT/TrackerRawData.h"
 #include "EVENT/LCIO.h"
 #include "IMPL/LCFlagImpl.h"
 #include "IOIMPL/TrackerRawDataIOImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+namespace SIO {
 
-
-namespace SIO{
-    
-  unsigned int SIOTrackerRawDataHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
-    unsigned int status ; 
-	
-    // create a new object :
-    TrackerRawDataIOImpl* hit  = new TrackerRawDataIOImpl ;
-    *objP = hit ;
-	
-    SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
-    
-    LCFlagImpl lcFlag(_flag) ;
-    
-    if( lcFlag.bitSet( LCIO::TRAWBIT_ID1 ) )
-      SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
-
-    SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
-
-    int adcSize ;
-    SIO_DATA( stream ,  &adcSize  , 1 ) ;
-
-    hit->_adc.resize( adcSize  ) ;
-
-    SIO_DATA( stream ,  &(hit->_adc[0])  , adcSize  ) ;
-
-    
-    SIO_PTAG( stream , dynamic_cast<const TrackerRawData*>(hit) ) ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
+  SIOTrackerRawDataHandler::SIOTrackerRawDataHandler() :
+    SIOObjectHandler( EVENT::LCIO::TRACKERRAWDATA ) {
+    /* nop */
   }
-    
-    
-  unsigned int SIOTrackerRawDataHandler::write(SIO_stream* stream, 
-				       const LCObject* obj){
-    
-    unsigned int status ; 
 
-    const TrackerRawData* hit = dynamic_cast<const TrackerRawData*>(obj)  ;
+  //----------------------------------------------------------------------------
 
-    LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-      
-    LCFlagImpl lcFlag(_flag) ;
-    if( lcFlag.bitSet( LCIO::TRAWBIT_ID1 ) )
-      LCSIO_WRITE( stream, hit->getCellID1()  ) ;
-    
-
-    LCSIO_WRITE( stream, hit->getTime()  ) ;
-
-    const ShortVec& v =  hit->getADCValues() ;
-    LCSIO_WRITE( stream, v.size()  ) ;
-    
-    short* v0 =  const_cast<short*> ( & v[0]  ) ; 
-    SIO_DATA( stream ,  v0 , v.size() ) ;
-
-    SIO_PTAG( stream , hit ) ;
-    
-    return ( SIO_BLOCK_SUCCESS ) ;
+  void SIOTrackerRawDataHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type /*vers*/ ) {
+    auto hit  = dynamic_cast<IOIMPL::TrackerRawDataIOImpl*>(objP) ;
+    SIO_DATA( device ,  &(hit->_cellID0) , 1  ) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_ID1 ) ) {
+      SIO_DATA( device ,  &(hit->_cellID1) , 1  ) ;
+    }
+    SIO_DATA( device ,  &(hit->_time) , 1  ) ;
+    SIO_SDATA( device ,  hit->_adc ) ;
+    SIO_PTAG( device , dynamic_cast<const EVENT::TrackerRawData*>(hit) ) ;
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  void SIOTrackerRawDataHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto hit = dynamic_cast<const EVENT::TrackerRawData*>(obj)  ;
+    SIO_SDATA( device, hit->getCellID0()  ) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_ID1 ) ) {
+      SIO_SDATA( device, hit->getCellID1()  ) ;
+    }
+    SIO_SDATA( device, hit->getTime()  ) ;
+    SIO_SDATA( device, hit->getADCValues()  ) ;
+    SIO_PTAG( device , hit ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOTrackerRawDataHandler::create() const {
+    return new IOIMPL::TrackerRawDataIOImpl() ;
+  }
+
 } // namespace
