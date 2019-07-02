@@ -3,29 +3,26 @@
 
 #include "SIO/SIOObjectHandler.h"
 
-
 namespace SIO {
-    
-    
+
   /** Implementation of SIOObjectHandler to handle IO of RawCalorimeterHits.
    *
    * @author gaede
    * @version $Id: SIORawCalHitHandler.h,v 1.2 2005-04-15 08:37:42 gaede Exp $
    */
   class SIORawCalHitHandler : public SIOObjectHandler {
-	
   public:
-	
-    /** Reads lcio raw calorimeter hit objects from an SIO stream.
-     */
-    virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP)  ;
-	
-    /** Writes lcio raw calorimeter hit objects to an SIO stream.
-     */
-    virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj) ;
-	
+    /// Constructor
+    SIORawCalHitHandler() ;
+
+    /// Reads lcio objects from an SIO stream.
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) override ;
+
+    /// Writes lcio objects to an SIO stream.
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) override ;
+
+    /// Factory method to create an object of the type of the collection
+    EVENT::LCObject *create() const override ;
   }; // class
 } // namespace
 
