@@ -1,268 +1,134 @@
 #include "SIO/SIOTrackHandler.h"
 
-#include "SIO/LCSIO.h"
-
+// -- lcio headers
 #include "EVENT/LCIO.h"
 #include "IOIMPL/TrackIOImpl.h"
 #include "IOIMPL/TrackStateIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+namespace SIO {
 
+  SIOTrackHandler::SIOTrackHandler() :
+    SIOObjectHandler( EVENT::LCIO::TRACK ) {
+    /* nop */
+  }
 
-namespace SIO{
-    
-  unsigned int SIOTrackHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
-    unsigned int status ; 
-	
+  //----------------------------------------------------------------------------
 
-    // create a new object :
-    TrackIOImpl* trk  = new TrackIOImpl ;
-    *objP = trk ;
-	
-//     SIO_DATA( stream ,  &(trk->_type) , 1  ) ;
-//     SIO_DATA( stream ,  &(trk->_p)  , 1 ) ;
-//     SIO_DATA( stream ,  &(trk->_theta)  , 1 ) ;
-//     SIO_DATA( stream ,  &(trk->_phi)  , 1 ) ;
-//     SIO_DATA( stream ,  &(trk->_d0)  , 1 ) ;
-//     SIO_DATA( stream ,  &(trk->_z0)  , 1 ) ;
-
-//     char* dummy ; 
-//     LCSIO_READ( stream,  &dummy ) ; 
-//     trk->setType( dummy ) ;
-
+  void SIOTrackHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
+    auto trk = dynamic_cast<IOIMPL::TrackIOImpl*>( objP ) ;
     int type ;
-    SIO_DATA( stream ,  &type  , 1 ) ;
+    SIO_DATA( device ,  &type  , 1 ) ;
     trk->setType( type ) ;  // type is bitset<32> - can't be set directly
-
-
     // read TrackStates
     int nTrackStates = 1 ; // set to 1 per default for backwards compatibility
-    
-
-    if( _vers >= SIO_VERSION_ENCODE( 2, 0)   ) {
-        SIO_DATA( stream ,  &nTrackStates  , 1 ) ;
+    if( vers >= SIO_VERSION_ENCODE( 2, 0 )   ) {
+      SIO_DATA( device ,  &nTrackStates  , 1 ) ;
     }
-
-
-    for( int i=0 ; i<nTrackStates ; i++ ){
-
-        // create new TrackState object
-        TrackStateIOImpl* trackstate = new TrackStateIOImpl ;
-
-        if( _vers >= SIO_VERSION_ENCODE( 2, 0)   ) {
-            SIO_DATA( stream ,  &(trackstate->_location)  , 1 ) ;
-        }
-
-        SIO_DATA( stream ,  &(trackstate->_d0)  , 1 ) ;
-        SIO_DATA( stream ,  &(trackstate->_phi)  , 1 ) ;
-        SIO_DATA( stream ,  &(trackstate->_omega)  , 1 ) ;
-        SIO_DATA( stream ,  &(trackstate->_z0)  , 1 ) ;
-        SIO_DATA( stream ,  &(trackstate->_tanLambda)  , 1 ) ;
-
-        float cov[15] ;
-        SIO_DATA( stream ,  cov  ,  15 ) ;
-        trackstate->setCovMatrix( cov ) ;
-
-        SIO_DATA( stream ,  trackstate->_reference  , 3 ) ;
-
-        trk->addTrackState( trackstate );
-
+    for( int i=0 ; i<nTrackStates ; i++ ) {
+      // create new TrackState object
+      auto trackstate = new IOIMPL::TrackStateIOImpl() ;
+      if( vers >= SIO_VERSION_ENCODE( 2, 0 ) ) {
+        SIO_DATA( device ,  &(trackstate->_location)  , 1 ) ;
+      }
+      SIO_DATA( device ,  &(trackstate->_d0)  , 1 ) ;
+      SIO_DATA( device ,  &(trackstate->_phi)  , 1 ) ;
+      SIO_DATA( device ,  &(trackstate->_omega)  , 1 ) ;
+      SIO_DATA( device ,  &(trackstate->_z0)  , 1 ) ;
+      SIO_DATA( device ,  &(trackstate->_tanLambda)  , 1 ) ;
+      float cov[15] ;
+      SIO_DATA( device ,  cov  ,  15 ) ;
+      trackstate->setCovMatrix( cov ) ;
+      SIO_DATA( device ,  trackstate->_reference  , 3 ) ;
+      trk->addTrackState( trackstate );
     }
-
-
-    //    SIO_DATA( stream ,  &(trk->_isReferencePointPCA )  , 1 ) ;
-
-    SIO_DATA( stream ,  &(trk->_chi2)  , 1 ) ;
-    SIO_DATA( stream ,  &(trk->_ndf)  , 1 ) ;
-
-    SIO_DATA( stream ,  &(trk->_dEdx) , 1  ) ;
-    SIO_DATA( stream ,  &(trk->_dEdxError) , 1  ) ;
-
-    SIO_DATA( stream ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
-
+    SIO_DATA( device ,  &(trk->_chi2)  , 1 ) ;
+    SIO_DATA( device ,  &(trk->_ndf)  , 1 ) ;
+    SIO_DATA( device ,  &(trk->_dEdx) , 1  ) ;
+    SIO_DATA( device ,  &(trk->_dEdxError) , 1  ) ;
+    SIO_DATA( device ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
     int nHitNumbers ;
-    SIO_DATA( stream, &nHitNumbers , 1  ) ;
+    SIO_DATA( device, &nHitNumbers , 1  ) ;
     trk->subdetectorHitNumbers().resize( nHitNumbers ) ;
-    
-    for(int i=0;i<nHitNumbers;i++){
-      SIO_DATA( stream , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
+    for( int i=0 ; i<nHitNumbers ; i++ ) {
+      SIO_DATA( device , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
     }
-    
     int nTracks ;
-    SIO_DATA( stream, &nTracks , 1  ) ;
-
-    // fill the vector to have correct size
-    // as we are using the addresses of the elements henceforth
+    SIO_DATA( device, &nTracks , 1  ) ;
     trk->_tracks.resize( nTracks ) ;
-//     for(int i=0;i<nTracks;i++){
-//       trk->_tracks.push_back( 0 ) ;
-//     }
-    for(int i=0;i<nTracks;i++){
-      SIO_PNTR( stream , &(trk->_tracks[i] ) ) ;
+    for( int i=0 ; i<nTracks ; i++ ) {
+      SIO_PNTR( device , &(trk->_tracks[i] ) ) ;
     }
-
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::TRBIT_HITS ) ){ 
-
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::TRBIT_HITS ) ) {
       int nHits ;
-      SIO_DATA( stream, &nHits , 1  ) ;
-      
-      // fill the vector to have correct size
-      // as we are using the addresses of the elements henceforth
-//       for(int i=0;i<nHits;i++){
-// 	trk->_hits.push_back( 0 ) ;
-//       }
+      SIO_DATA( device, &nHits , 1  ) ;
       trk->_hits.resize( nHits) ;
-
-      for(int i=0;i<nHits;i++){
-	SIO_PNTR( stream , &(trk->_hits[i] ) ) ;
+      for( int i=0 ; i<nHits ; i++ ) {
+	       SIO_PNTR( device , &(trk->_hits[i] ) ) ;
       }
-      
-//       // hit collections
-//       int nHitCol ;
-//       SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-//       for(int i=0 ; i< nHitCol ;i++){
-	
-// 	char* dummy ; 
-// 	LCSIO_READ( stream,  &dummy ) ; 
-// 	trk->_indexMap[ dummy ] = new IntVec ;
-	
-// 	int nHits ;
-// 	SIO_DATA( stream, &nHits , 1  ) ;
-	
-// 	int* hitsArray = new int[ nHits ] ;
-	
-// 	SIO_DATA( stream, hitsArray ,  nHits ) ;
-	
-// 	for( int j=0 ; j< nHits ; j++ ){
-// 	  trk->_indexMap[ dummy ]->push_back(  hitsArray[ j ] ) ;
-// 	}
-	
-// 	delete[] hitsArray ;
-//       }
     }
-
-    // read the pointer tag 
-    SIO_PTAG( stream , dynamic_cast<const Track*>(trk) ) ;
-    return ( SIO_BLOCK_SUCCESS ) ;
+    // read the pointer tag
+    SIO_PTAG( device , dynamic_cast<const EVENT::Track*>(trk) ) ;
   }
-    
-    
-  unsigned int SIOTrackHandler::write(SIO_stream* stream, 
-				       const LCObject* obj){
-    
-    unsigned int status ; 
-    
-    // this is where we gave up type safety in order to
-    // simplify the API and the implementation
-    // by having a common collection of objects
-    const Track* trk = dynamic_cast<const Track*>(obj)  ;
 
-//     LCSIO_WRITE( stream, trk->getType()  ) ;
-//     LCSIO_WRITE( stream, trk->getMomentum()  ) ;
-//     LCSIO_WRITE( stream, trk->getTheta()  ) ;
-//     LCSIO_WRITE( stream, trk->getPhi()  ) ;
-//     LCSIO_WRITE( stream, trk->getD0()  ) ;
-//     LCSIO_WRITE( stream, trk->getZ0()  ) ;
+  //----------------------------------------------------------------------------
 
-    LCSIO_WRITE( stream, trk->getType()  ) ;
-
-
-    // write TrackStates
-    const TrackStateVec& trackstates = trk->getTrackStates() ;
-    int nTrackStates=  trackstates.size() ;
-
-    SIO_DATA( stream, &nTrackStates , 1  ) ;
-
-    for( unsigned int i=0; i<trackstates.size() ; i++ ){
-
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getLocation()  ) ;
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getD0()  ) ;
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getPhi()  ) ;
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getOmega()  ) ;
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getZ0()  ) ;
-        LCSIO_WRITE( stream, trk->getTrackStates()[i]->getTanLambda()  ) ;
-
-        const FloatVec& cov = trk->getTrackStates()[i]->getCovMatrix() ;
-        for(unsigned int j=0; j<cov.size() ; j++ ){
-          LCSIO_WRITE( stream, cov[j]  ) ;
-        }
-
-        float* pos = const_cast<float*> ( trk->getTrackStates()[i]->getReferencePoint() ) ; 
-        SIO_DATA( stream,  pos , 3 ) ;
-    }
-
-    LCSIO_WRITE( stream, trk->getChi2()  ) ;
-    LCSIO_WRITE( stream, trk->getNdf()  ) ;
-    LCSIO_WRITE( stream, trk->getdEdx()  ) ;
-    LCSIO_WRITE( stream, trk->getdEdxError()  ) ;
-
-    LCSIO_WRITE( stream , trk->getRadiusOfInnermostHit()  ) ;
-
-    const IntVec& hitNums = trk->getSubdetectorHitNumbers() ;
-    int nHitNumbers = hitNums.size() ;
-    SIO_DATA( stream, &nHitNumbers , 1  ) ;
-
-    for(int i=0;i<nHitNumbers;i++){
-      LCSIO_WRITE( stream , hitNums[i]  ) ;
-    }
-
-    const TrackVec& tracks = trk->getTracks() ;
-    int nTracks=  tracks.size() ;
-
-    SIO_DATA( stream, &nTracks , 1  ) ;
-    
-    for(int i=0;i<nTracks;i++){
-//       const Track** _trkP ;
-//       _trkP = const_cast<const Track**> ( &(tracks[i]) ) ;
-//       SIO_PNTR( stream , _trkP ) ;
-      SIO_PNTR( stream , &(tracks[i]) ) ;
-    }
-
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::TRBIT_HITS ) ){ 
-
-      const TrackerHitVec& hits = trk->getTrackerHits() ;
-      int nHits=  hits.size() ;
-      SIO_DATA( stream, &nHits , 1  ) ;
-    
-      for(int i=0;i<nHits;i++){
-	SIO_PNTR( stream , &(hits[i]) ) ;
+  void SIOTrackHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto trk = dynamic_cast<const EVENT::Track*>(obj)  ;
+    SIO_SDATA( device, trk->getType()  ) ;
+    auto trackstates = trk->getTrackStates() ;
+    int nTrackStates = trackstates.size() ;
+    SIO_DATA( device, &nTrackStates , 1  ) ;
+    for( unsigned int i=0; i<trackstates.size() ; i++ ) {
+      SIO_SDATA( device, trk->getTrackStates()[i]->getLocation()  ) ;
+      SIO_SDATA( device, trk->getTrackStates()[i]->getD0()  ) ;
+      SIO_SDATA( device, trk->getTrackStates()[i]->getPhi()  ) ;
+      SIO_SDATA( device, trk->getTrackStates()[i]->getOmega()  ) ;
+      SIO_SDATA( device, trk->getTrackStates()[i]->getZ0()  ) ;
+      SIO_SDATA( device, trk->getTrackStates()[i]->getTanLambda()  ) ;
+      auto cov = trk->getTrackStates()[i]->getCovMatrix() ;
+      for(unsigned int j=0; j<cov.size() ; j++ ) {
+        SIO_SDATA( device, cov[j]  ) ;
       }
-
-
-//       const StringVec colNames = trk->getHitCollectionNames() ;
-//       int nHitCol =  colNames.size() ;
-//       SIO_DATA( stream, &nHitCol , 1  ) ;
-      
-//       for(unsigned int i=0;i<colNames.size();i++){
-	
-// 	LCSIO_WRITE( stream, colNames[i]  ) ;
-	
-// 	const IntVec& vec = trk->getHitIndicesForCollection( colNames[i]  ) ;
-// 	int nHits =  vec.size() ;
-	
-// 	SIO_DATA( stream, &nHits, 1 ) ;
-	
-// 	for( int j=0 ; j<nHits  ; j++ ){
-// 	  LCSIO_WRITE( stream, vec[j]  ) ;
-// 	}
-//       }
+      SIO_DATA( device,  trk->getTrackStates()[i]->getReferencePoint() , 3 ) ;
+    }
+    SIO_SDATA( device, trk->getChi2()  ) ;
+    SIO_SDATA( device, trk->getNdf()  ) ;
+    SIO_SDATA( device, trk->getdEdx()  ) ;
+    SIO_SDATA( device, trk->getdEdxError()  ) ;
+    SIO_SDATA( device , trk->getRadiusOfInnermostHit()  ) ;
+    auto hitNums = trk->getSubdetectorHitNumbers() ;
+    int nHitNumbers = hitNums.size() ;
+    SIO_DATA( device, &nHitNumbers , 1  ) ;
+    for( int i=0 ; i<nHitNumbers ; i++ ) {
+      SIO_SDATA( device , hitNums[i]  ) ;
+    }
+    auto tracks = trk->getTracks() ;
+    int nTracks = tracks.size() ;
+    SIO_DATA( device, &nTracks , 1  ) ;
+    for( int i=0 ; i<nTracks ; i++ ) {
+      SIO_PNTR( device , &(tracks[i]) ) ;
+    }
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::TRBIT_HITS ) ) {
+      auto hits = trk->getTrackerHits() ;
+      int nHits = hits.size() ;
+      SIO_DATA( device, &nHits , 1  ) ;
+      for( int i=0 ; i<nHits ; i++ ) {
+	      SIO_PNTR( device , &(hits[i]) ) ;
+      }
     }
     // write a ptag in order to be able to point to tracks
-    SIO_PTAG( stream , trk ) ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
-    
+    SIO_PTAG( device , trk ) ;
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOTrackHandler::create() const {
+    return new IOIMPL::TrackIOImpl() ;
+  }
+
 } // namespace
