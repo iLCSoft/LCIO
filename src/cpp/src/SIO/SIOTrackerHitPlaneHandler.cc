@@ -1,128 +1,83 @@
 #include "SIO/SIOTrackerHitPlaneHandler.h"
 
+// -- lcio headers
 #include "EVENT/LCIO.h"
-#include "SIO/LCSIO.h"
-
+#include "IMPL/LCFlagImpl.h"
 #include "EVENT/TrackerHitPlane.h"
 #include "IOIMPL/TrackerHitPlaneIOImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-#include "IMPL/LCFlagImpl.h"
+namespace SIO {
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+  SIOTrackerHitPlaneHandler::SIOTrackerHitPlaneHandler() :
+    SIOObjectHandler( EVENT::LCIO::TRACKERHITPLANE ) {
+    /* nop */
+  }
 
+  //----------------------------------------------------------------------------
 
-namespace SIO{
-
-    unsigned int SIOTrackerHitPlaneHandler::read(SIO_stream* stream, LCObject** objP){
-        unsigned int status ;
-
-        // create a new object :
-        TrackerHitPlaneIOImpl* hit  = new TrackerHitPlaneIOImpl ;
-        *objP = hit ;
-
-        LCFlagImpl lcFlag(_flag) ;
-
-        if( _vers > SIO_VERSION_ENCODE( 1, 51) ) {
-            SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
-            if( lcFlag.bitSet( LCIO::RTHPBIT_ID1 ) ){
-                SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
-            }
-        }
-
-        SIO_DATA( stream, &(hit->_type) , 1 ) ;
-        SIO_DATA( stream, hit->_pos     , 3 ) ;
-        SIO_DATA( stream, hit->_u       , 2 ) ;
-        SIO_DATA( stream, hit->_v       , 2 ) ;
-        SIO_DATA( stream, &(hit->_du)   , 1 ) ;
-        SIO_DATA( stream, &(hit->_dv)   , 1 ) ;
-        SIO_DATA( stream, &(hit->_EDep) , 1 ) ;
-        SIO_DATA( stream, &(hit->_EDepError) , 1 ) ;
-        SIO_DATA( stream, &(hit->_time) , 1 ) ;
-        SIO_DATA( stream, &(hit->_quality) , 1 ) ;
-
-
-        //float cov[TRKHITPLANENCOVMATRIX] ;
-        //SIO_DATA( stream ,  cov  ,  TRKHITPLANENCOVMATRIX ) ;
-        //hit->setCovMatrix( cov ) ;
-
-        // rawHits
-        int numberOfRawHits = 1 ; 
-        SIO_DATA( stream ,  &numberOfRawHits , 1  ) ;
-
-        hit->_rawHits.resize( numberOfRawHits ) ;
-
-        for(int i=0;i<numberOfRawHits;i++){
-            SIO_PNTR( stream , &(hit->_rawHits[i] ) ) ;
-        }
-
-        SIO_PTAG( stream , dynamic_cast<const TrackerHitPlane*>(hit) ) ;
-
-        return ( SIO_BLOCK_SUCCESS ) ;
-
+  void SIOTrackerHitPlaneHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
+    auto hit = dynamic_cast<IOIMPL::TrackerHitPlaneIOImpl*>(objP) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    if( vers > SIO_VERSION_ENCODE( 1, 51) ) {
+      SIO_DATA( device ,  &(hit->_cellID0) , 1  ) ;
+      if( lcFlag.bitSet( EVENT::LCIO::RTHPBIT_ID1 ) ){
+        SIO_DATA( device ,  &(hit->_cellID1) , 1  ) ;
+      }
     }
-
-
-    unsigned int SIOTrackerHitPlaneHandler::write(SIO_stream* stream, 
-            const LCObject* obj){
-
-        unsigned int status ; 
-
-        const TrackerHitPlane* hit = dynamic_cast<const TrackerHitPlane*>(obj)  ;
-
-
-        LCFlagImpl lcFlag(_flag) ;
-
-        LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-
-        if( lcFlag.bitSet( LCIO::RTHPBIT_ID1 ) ){
-            LCSIO_WRITE( stream, hit->getCellID1()  ) ;
-        }
-
-
-        LCSIO_WRITE( stream ,  hit->getType() ) ;
-
-        // as SIO doesn't provide a write function with const arguments
-        // we have to cast away the constness 
-        double* pos = const_cast<double*> ( hit->getPosition() ) ; 
-        SIO_DATA( stream,  pos , 3 ) ;
-
-        float* u = const_cast<float*> ( hit->getU() ) ; 
-        SIO_DATA( stream,  u , 2 ) ;
-
-        float* v = const_cast<float*> ( hit->getV() ) ; 
-        SIO_DATA( stream,  v , 2 ) ;
-
-
-        LCSIO_WRITE( stream, hit->getdU()  ) ;
-        LCSIO_WRITE( stream, hit->getdV()  ) ;
-        LCSIO_WRITE( stream, hit->getEDep()  ) ;
-        LCSIO_WRITE( stream, hit->getEDepError()  ) ;
-        LCSIO_WRITE( stream, hit->getTime()  ) ;
-        LCSIO_WRITE( stream, hit->getQuality()  ) ;
-
-        
-        //const FloatVec& cov = hit->getCovMatrix() ;
-        //for(unsigned int i=0;i<cov.size();i++){
-        //    LCSIO_WRITE( stream, cov[i]  ) ;
-        //}
-
-        const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
-
-        LCSIO_WRITE( stream, rawHits.size()  ) ;
-        for(unsigned int i=0; i < rawHits.size() ; i++){
-            SIO_PNTR( stream , &(rawHits[i]) ) ;
-        }
-
-        SIO_PTAG( stream , hit ) ;
-
-        return ( SIO_BLOCK_SUCCESS ) ;
-
+    SIO_DATA( device, &(hit->_type) , 1 ) ;
+    SIO_DATA( device, hit->_pos     , 3 ) ;
+    SIO_DATA( device, hit->_u       , 2 ) ;
+    SIO_DATA( device, hit->_v       , 2 ) ;
+    SIO_DATA( device, &(hit->_du)   , 1 ) ;
+    SIO_DATA( device, &(hit->_dv)   , 1 ) ;
+    SIO_DATA( device, &(hit->_EDep) , 1 ) ;
+    SIO_DATA( device, &(hit->_EDepError) , 1 ) ;
+    SIO_DATA( device, &(hit->_time) , 1 ) ;
+    SIO_DATA( device, &(hit->_quality) , 1 ) ;
+    int numberOfRawHits = 1 ;
+    SIO_DATA( device ,  &numberOfRawHits , 1  ) ;
+    hit->_rawHits.resize( numberOfRawHits ) ;
+    for( int i=0 ; i<numberOfRawHits ; i++ ) {
+      SIO_PNTR( device , &(hit->_rawHits[i] ) ) ;
     }
+    SIO_PTAG( device , dynamic_cast<const EVENT::TrackerHitPlane*>(hit) ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOTrackerHitPlaneHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto hit = dynamic_cast<const EVENT::TrackerHitPlane*>(obj)  ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    SIO_SDATA( device, hit->getCellID0()  ) ;
+    if( lcFlag.bitSet( EVENT::LCIO::RTHPBIT_ID1 ) ){
+      SIO_SDATA( device, hit->getCellID1()  ) ;
+    }
+    SIO_SDATA( device ,  hit->getType() ) ;
+    SIO_DATA( device,  hit->getPosition() , 3 ) ;
+    SIO_DATA( device,  hit->getU() , 2 ) ;
+    SIO_DATA( device,  hit->getV() , 2 ) ;
+    SIO_SDATA( device, hit->getdU()  ) ;
+    SIO_SDATA( device, hit->getdV()  ) ;
+    SIO_SDATA( device, hit->getEDep()  ) ;
+    SIO_SDATA( device, hit->getEDepError()  ) ;
+    SIO_SDATA( device, hit->getTime()  ) ;
+    SIO_SDATA( device, hit->getQuality()  ) ;
+    const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
+    SIO_SDATA( device, rawHits.size()  ) ;
+    for(unsigned int i=0; i < rawHits.size() ; i++){
+      SIO_PNTR( device , &(rawHits[i]) ) ;
+    }
+    SIO_PTAG( device , hit ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOTrackerHitPlaneHandler::create() const {
+    return new IOIMPL::TrackerHitPlaneIOImpl() ;
+  }
 
 } // namespace
