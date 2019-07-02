@@ -1,54 +1,56 @@
 #ifndef SIO_SIOEVENTHANDLER_H
 #define SIO_SIOEVENTHANDLER_H 1
 
+// -- std headers
 #include <string>
+#include <memory>
 
+// -- lcio headers
 #include "EVENT/LCEvent.h"
 #include "IOIMPL/LCEventIOImpl.h"
 
-#include "SIO_block.h"
+// -- sio headers
+#include <sio/block.h>
 
 namespace SIO {
-  
-  
+
+
 /** Handler for LCEvent/LCEventIOImpl objects.
- * 
+ *
  * @author gaede
  * @version $Id: SIOEventHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
  */
-  class SIOEventHandler : public SIO_block{
-    
-  protected:
-    SIOEventHandler() : SIO_block("UNKNOWN") { /* no default c'tor*/  ;} 
-
+  class SIOEventHandler : public sio::block {
   public:
-    
+    SIOEventHandler() = delete ;
     SIOEventHandler(const SIOEventHandler&) = delete;
     SIOEventHandler& operator=(const SIOEventHandler&) = delete ;
+    ~SIOEventHandler() = default ;
 
-    SIOEventHandler(const std::string& name) ;
-    SIOEventHandler(const std::string& name, IOIMPL::LCEventIOImpl** evtP) ;
-    virtual ~SIOEventHandler() ;
-    
-    // interface from SIO_block
-    virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() const ;
-    
-    void setEvent(const EVENT::LCEvent* evt ) ; 
-    void setEventPtr( IOIMPL::LCEventIOImpl** evtP ) ; 
-    
+    /// Constructor with block name
+    SIOEventHandler( const std::string &bname ) ;
+
+    // from sio::block
+    void read( sio::read_device &device, sio::version_type vers ) override ;
+    void write( sio::write_device &device ) override ;
+
+    /// Set the event to read/write
+    void setEvent( EVENT::LCEvent* evt ) ;
+
+    /// Set the list of collection to extract on read operation
     void setReadCollectionNames(const std::vector<std::string>& colnames) ;
 
-  private: 
-    // event implementation for reading 
-    IOIMPL::LCEventIOImpl **_evtP{NULL} ;  
-    // event data interface for writing
-    const EVENT::LCEvent *_evt{NULL} ;  
-    
-    std::set< std::string > _colSubSet{} ;
+  private:
+    static constexpr const char *SubsetPostfix = "_References" ;
+
+  private:
+    // Event pointer for reading/writing
+    EVENT::LCEvent             *_event {nullptr} ;
+    /// List of collection to read only
+    std::set<std::string>       _colSubSet {} ;
 
   }; // class
-  
+
 } // namespace
 
 #endif /* ifndef SIO_SIOEVENTHANDLER_H */
