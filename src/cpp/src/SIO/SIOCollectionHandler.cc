@@ -18,39 +18,33 @@ namespace SIO {
     _handler( handler ) {
     /* nop */
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   const std::string &SIOCollectionHandler::type() const{
     return _handler->collectionType() ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   void SIOCollectionHandler::setCollection( EVENT::LCCollection *col ) {
     _collection = col ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   void SIOCollectionHandler::read( sio::read_device &device, sio::version_type vers ) {
     IOIMPL::LCCollectionIOVec* ioCol = dynamic_cast<IOIMPL::LCCollectionIOVec*>( _collection ) ;
     if( nullptr == ioCol ) {
       SIO_THROW( sio::error_code::invalid_argument, "Expected collection of type LCCollectionIOVec!" ) ;
     }
-    // read out collection parameters
-    unsigned int flag ;
-    SIO_DATA( device ,  &flag , 1  ) ;
-    if( vers > SIO_VERSION_ENCODE( 1, 1 ) ) {
-  	  SIOLCParameters::read( device, _collection->parameters(), vers ) ;
-    }
-    _handler->setFlag( flag ) ;
+    _handler->initReading( device, _collection, vers ) ;
     // read out number of objects in the collection
     int nObj ;
     SIO_DATA( device ,  &nObj , 1  ) ;
     // reserve the space for the pointers to all objects
     ioCol->resize( nObj ) ;
-    if( flag & ( 1 << EVENT::LCCollection::BITSubset ) ) {
+    if( _handler->flag() & ( 1 << EVENT::LCCollection::BITSubset ) ) {
       // read out only pointers
       for( int i=0 ; i< nObj ; i ++ ) {
         auto lcobj = (*ioCol)[i] ;
@@ -74,33 +68,28 @@ namespace SIO {
       }
     }
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   void SIOCollectionHandler::write( sio::write_device &device ) {
-    // handle collection flag
-    auto flag = _collection->getFlag() ;
-    _handler->setFlag( _collection->getFlag() ) ;
-    SIO_DATA( device , &flag , 1 ) ;
-    // write collection parameter
-    SIOLCParameters::write( device , _collection->getParameters() ) ;
+    _handler->initWriting( device, _collection ) ;
     // write number of objects
   	int nObj = _collection->getNumberOfElements() ;
   	SIO_DATA( device,  &nObj , 1  ) ;
-    if( flag & ( 1 << EVENT::LCCollection::BITSubset ) ) {
+    if( _handler->flag() & ( 1 << EVENT::LCCollection::BITSubset ) ) {
       // write only pointers
       for( int i=0 ; i< nObj ; i ++ ) {
         auto ptr = _collection->getElementAt(i) ;
         SIO_PNTR( device , &ptr ) ;
-      }   
+      }
     }
     else {
       // write all the objects
     	for( int i=0 ; i< nObj ; i ++ ) {
-        _handler->write( device, _collection->getElementAt(i) ) ; 
-    	}      
+        _handler->write( device, _collection->getElementAt(i) ) ;
+    	}
     }
 
   }
-  
+
 } // namespace
