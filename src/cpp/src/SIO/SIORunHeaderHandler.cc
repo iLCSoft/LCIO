@@ -5,130 +5,67 @@
 #include "EVENT/LCRunHeader.h"
 #include "EVENT/LCIO.h"
 
-#include "SIO_functions.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-#include <iostream>
+namespace SIO {
 
-
-using namespace EVENT ; // for LCIO object
-using namespace IOIMPL ;
-
-namespace SIO  {
-
-
-  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& bname) : 
-    SIO_block( bname.c_str() ),
-    _rhP(0), 
-    _hdr(0) {
+  SIORunHeaderHandler::SIORunHeaderHandler( const std::string &bname ) :
+    sio::block( bname, LCSIO::blockVersion() ) {
+    /* nop */
   }
 
-  SIORunHeaderHandler::SIORunHeaderHandler(const std::string& bname, IOIMPL::LCRunHeaderIOImpl** aRhP) : 
-    SIO_block( bname.c_str() ),
-    _rhP( aRhP ), 
-    _hdr(0) {
-    
-    *_rhP = 0 ;
+  //----------------------------------------------------------------------------
+
+  void SIORunHeaderHandler::setRunHeader( EVENT::LCRunHeader* rh ) {
+    _runHeader = rh ;
   }
 
+  //----------------------------------------------------------------------------
 
-  SIORunHeaderHandler::~SIORunHeaderHandler(){
-//     if (*_rhP != 0 )  delete *_rhP ;
-  }
-
-  
-  void SIORunHeaderHandler::setRunHeader(const LCRunHeader* rh ){
-    _hdr = rh ;
-  }
-  void SIORunHeaderHandler::setRunHeaderPtr( LCRunHeaderIOImpl** hdrP ) {
-    _rhP= hdrP ;
-  } 
-
-
-  unsigned int SIORunHeaderHandler::xfer( SIO_stream* stream, SIO_operation op, 
-					  unsigned int versionID){
-  
-    LCSIO::checkVersion(versionID) ;
-    
-    unsigned int status ; // needed by the SIO_DATA macro
-  
-    if( op == SIO_OP_READ ){ 
-
-      if(!_rhP) {
-        SIO_DEBUG( "SIORunHeaderHandler::xfer: [READ] no run pointer set" );
-        return LCIO::ERROR ;  // in read mode we need an address for the pointer
-      }
-
-      // delete the old run header object 
-      // -> for every handler there will only be one RunHeader object at any given time
-      if (*_rhP != 0 )  delete *_rhP ;
-      *_rhP = new IOIMPL::LCRunHeaderIOImpl ;
-
-      // for the run header we read all the data into temporary variables
-      // as the data is mostly strings that need temporaries anyhow ...
-      int rnTmp ;
-      SIO_DATA( stream ,  &rnTmp  , 1  ) ;
-      (*_rhP)->setRunNumber( rnTmp    );
-
-      std::string detNameTmp ; 
-      LCSIO_READ( stream,  detNameTmp ) ; 
-      (*_rhP)->setDetectorName( detNameTmp  )  ;
-
-      std::string descTmp ; 
-      LCSIO_READ( stream,  descTmp ) ; 
-      (*_rhP)->setDescription( descTmp  )  ;
-      
-      // read  active sub detector names
-      int nSDN ;
-      SIO_DATA( stream ,  &nSDN , 1 ) ;
-      for( int i=0; i<nSDN ; i++ ){
-
-      	std::string sdnTmp ; 
-      	LCSIO_READ( stream,  sdnTmp ) ; 
-      	(*_rhP)->addActiveSubdetector( sdnTmp ) ;
-      }
-
-      // read parameters
-      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
-	SIOLCParameters::read( stream ,  (*_rhP)->parameters() , versionID) ;
-      
-    }  else if( op == SIO_OP_WRITE ){ 
-    
-      if( _hdr ){
-
-	LCSIO_WRITE( stream, _hdr->getRunNumber() ) ; 
-	LCSIO_WRITE( stream, _hdr->getDetectorName() ) ;
-	LCSIO_WRITE( stream, _hdr->getDescription() ) ;
-	
-	// now write list of  active sub detector names
-	const std::vector<std::string>* strVec = _hdr->getActiveSubdetectors() ;
-	
-	int nSDN = strVec->size() ;
-	SIO_DATA( stream, &nSDN, 1 ) ;
-	
-	for( std::vector<std::string>::const_iterator nameI = strVec->begin() ; nameI != strVec->end() ; ++nameI){
-	  LCSIO_WRITE( stream, *nameI ) ;
-	} 
-	
-	// write parameters
-	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
-	  SIOLCParameters::write( stream , _hdr->getParameters() ) ;
-
-	
-
-      } else {
-	std::cout << " SIORunHeaderHandler::xfer : run header pointer not set !  " << std::endl ;
-	return LCIO::ERROR ;
-      }
+  void SIORunHeaderHandler::read( sio::read_device &device, sio::version_type vers ) {
+    LCSIO::checkVersion( vers ) ;
+    auto rhdr = dynamic_cast<IMPL::LCRunHeaderImpl*>( _runHeader ) ;
+    // run number
+    int rnTmp ;
+    SIO_SDATA( device, rnTmp ) ;
+    rhdr->setRunNumber( rnTmp ) ;
+    // detector name
+    std::string detNameTmp ;
+    SIO_SDATA( device,  detNameTmp ) ;
+    rhdr->setDetectorName( detNameTmp  )  ;
+    // run description
+    std::string descTmp ;
+    SIO_SDATA( device,  descTmp ) ;
+    rhdr->setDescription( descTmp  )  ;
+    // active sub detector names
+    int nSDN ;
+    SIO_SDATA( device, nSDN ) ;
+    for( int i=0; i<nSDN ; i++ ) {
+      std::string sdnTmp ;
+      SIO_SDATA( device,  sdnTmp ) ;
+      rhdr->addActiveSubdetector( sdnTmp ) ;
     }
-    
-    
-    return ( SIO_BLOCK_SUCCESS ) ;
+    // parameters
+    if( vers > SIO_VERSION_ENCODE( 1, 1 ) ) {
+      SIOLCParameters::read( device, rhdr->parameters(), vers ) ;
+    }
   }
-  
-  unsigned int   SIORunHeaderHandler::version() const {
-    
-    return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
+
+  //----------------------------------------------------------------------------
+
+  void SIORunHeaderHandler::write( sio::write_device &device ) {
+    const std::vector<std::string>* strVec = _runHeader->getActiveSubdetectors() ;
+    int nSDN = strVec->size() ;
+    SIO_SDATA( device, _runHeader->getRunNumber() ) ;
+  	SIO_SDATA( device, _runHeader->getDetectorName() ) ;
+  	SIO_SDATA( device, _runHeader->getDescription() ) ;
+    SIO_SDATA( device, nSDN ) ;
+    for( auto detstr : *strVec ) {
+      SIO_SDATA( device, detstr ) ;
+    }
+    SIOLCParameters::write( device , _runHeader->getParameters() ) ;
   }
-  
+
 }

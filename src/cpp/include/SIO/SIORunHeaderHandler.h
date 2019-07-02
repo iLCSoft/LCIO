@@ -1,54 +1,45 @@
 #ifndef SIO_SIORUNHEADERHANDLER_H
 #define SIO_SIORUNHEADERHANDLER_H 1
 
-#include <string>
-
+// -- lcio headers
 #include "EVENT/LCRunHeader.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 
-#include "SIO_block.h"
+// -- sio headers
+#include <sio/block.h>
 
 namespace SIO {
-  
-  
+
+
 /** Handler for LCRunHeader/LCRunHeaderImpl objects.
- * 
+ *
  * @author gaede
  * @version $Id: SIORunHeaderHandler.h,v 1.8 2005-04-15 08:37:43 gaede Exp $
  * fg 20030609 using data interface for writing
  */
-  class SIORunHeaderHandler : public SIO_block{
-    
-  protected:
-    SIORunHeaderHandler() : SIO_block("UNKNOWN") { /* no default c'tor*/  ;} 
-
+  class SIORunHeaderHandler : public sio::block {
   public:
-    
-    SIORunHeaderHandler(const SIORunHeaderHandler&) = delete;
+    SIORunHeaderHandler() = delete ;
+    SIORunHeaderHandler(const SIORunHeaderHandler&) = delete ;
     SIORunHeaderHandler& operator=(const SIORunHeaderHandler&) = delete ;
+    ~SIORunHeaderHandler() = default ;
 
     /** C'tor for writing
      */
     SIORunHeaderHandler(const std::string& name) ;
-    /** C'tor for reading.
-     */
-    // TODO evaluate why different ctor for reading and writing ??
-    SIORunHeaderHandler(const std::string& name, IOIMPL::LCRunHeaderIOImpl** rhP) ;
-    virtual ~SIORunHeaderHandler() ;
-    
-    // interface from SIO_block
-    virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() const;
-    
-    void setRunHeader(const EVENT::LCRunHeader* hdr ) ; 
-    void setRunHeaderPtr(IOIMPL::LCRunHeaderIOImpl** hdrP ) ; 
-    
-  private: 
-    IOIMPL::LCRunHeaderIOImpl** _rhP{NULL} ;  // address for reading
-    const EVENT::LCRunHeader* _hdr{NULL} ;  // runheader for writing
-    
+
+    /// Set the run header to read/write
+    void setRunHeader( EVENT::LCRunHeader* hdr ) ;
+
+    // from sio::block
+    void read( sio::read_device &device, sio::version_type vers ) override ;
+    void write( sio::write_device &device ) override ;
+
+  private:
+    /// Run header for reading/writing
+    EVENT::LCRunHeader        *_runHeader {nullptr} ;
   }; // class
-  
+
 } // namespace
 
 #endif /* ifndef SIO_SIORUNHEADERHANDLER_H */
