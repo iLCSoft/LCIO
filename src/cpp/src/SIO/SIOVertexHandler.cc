@@ -1,208 +1,109 @@
 #include "SIO/SIOVertexHandler.h"
 
-#include <algorithm>
-#include "SIO/LCSIO.h"
-
+// -- lcio headers
 #include "EVENT/LCIO.h"
 #include "EVENT/Vertex.h"
 #include "IOIMPL/VertexIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
-#include "SIO/SIOLCParameters.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-//dbg
-#include <iostream>
+// -- std headers
+#include <algorithm>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+namespace SIO {
 
-
-namespace SIO{
-
-  SIOVertexHandler::~SIOVertexHandler(){ }
-
-  unsigned int SIOVertexHandler::init( SIO_stream* stream,
-                                       SIO_operation op,
-                                       EVENT::LCCollection* col ,
-                                       unsigned int vers ) {
-                                                                                                                                                             
-    unsigned int status ;
-                                                                                                                                                             
-                                                                                                                                                             
-    if( op == SIO_OP_READ ) {
-                                                                                                                                                             
-                                                                                                                                                             
-      SIO_DATA( stream ,  &_flag , 1  ) ;
-                                                                                                                                                             
-      if( vers > SIO_VERSION_ENCODE( 1, 1)   )
-        SIOLCParameters::read( stream ,  col->parameters() , vers ) ;
-      
-      col->setFlag( _flag ) ;
-      _vers = vers ;
- 
-      //get the parameters from the collection and initialize set/map with values
-      imr.clear();
-      //_set.clear();
-      parameters.clear();
-      col->getParameters().getStringVals("_lcio.VertexAlgorithmTypes",parameters);
-      for(unsigned int i=0; i<parameters.size(); i++){
-        //_set.insert(parameters[i]);
-	imr[i]=parameters[i];
-      }
-    }
-                                                                                                                                                             
-    else if( op == SIO_OP_WRITE ) {
-                                                                                                                                                             
-                                                                                                                                                             
-      _flag = col->getFlag() ;
-                                                                                                                                                             
-      LCSIO_WRITE( stream, _flag  ) ;
-/*      
-      //add parameters for vertex algorithm types using FIFO algorithm
-      parameters.clear();
-      Vertex* v;
-      v = dynamic_cast<Vertex*>( col->getElementAt( 0 ) ) ;
-      parameters.push_back( v->getAlgorithmType() );
-      bool found;
-      for(int i=0; i<col->getNumberOfElements(); i++){
-	found=0;
-	v = dynamic_cast<Vertex*>( col->getElementAt( i ) ) ;
-	for(unsigned int j=0; j<parameters.size(); j++){
-	  if( parameters[j] == v->getAlgorithmType() ){
-	    found=1;
-	    break;
-	  }
-	}
-	if(!found){ parameters.push_back( v->getAlgorithmType() ); }
-      }
-      col->parameters().setValues("_lcio.VertexAlgorithmTypes",parameters);
-
-      //initialize map with parameter values
-      imw.clear();
-      for(unsigned int i=0; i<parameters.size(); i++)
-        imw[parameters[i]]=i;
-*/
-      parameters.clear();
-      _set.clear();
-      Vertex* v;
-      for(int i=0; i<col->getNumberOfElements(); i++){
-	v = dynamic_cast<Vertex*>( col->getElementAt( i ) ) ;
-	_set.insert(v->getAlgorithmType());
-      }
-      for(std::set<std::string>::iterator it=_set.begin(); it!=_set.end(); it++){
-	parameters.push_back(*it);
-      }
-      //add parameters to collection
-      col->parameters().setValues("_lcio.VertexAlgorithmTypes",parameters);
-      
-      SIOLCParameters::write( stream , col->getParameters() ) ;
-                                                                                                                                                             
-      _vers = vers ;  // not really needed !?
-                                                                                                                                                             
-    }
-    return ( SIO_BLOCK_SUCCESS ) ;
+  SIOVertexHandler::SIOVertexHandler() :
+    SIOObjectHandler( EVENT::LCIO::VERTEX ) {
+    /* nop */
   }
 
-  
-  unsigned int SIOVertexHandler::read(SIO_stream* stream, LCObject** objP){
+  //----------------------------------------------------------------------------
 
-    unsigned int status ; 
+  void SIOVertexHandler::initReading( sio::read_device &device, EVENT::LCCollection *collection, sio::version_type vers ) {
+    SIOObjectHandler::initReading( device, collection, vers ) ;
+    _imr.clear() ;
+    _parameters.clear() ;
+    collection->getParameters().getStringVals("_lcio.VertexAlgorithmTypes" , _parameters ) ;
+    for(unsigned int i=0; i<_parameters.size(); i++) {
+      _imr[i] = _parameters[i] ;
+    }
+  }
 
-    // create a new object :
-    VertexIOImpl* vtx  = new VertexIOImpl ;
-    *objP = vtx ;
+  //----------------------------------------------------------------------------
 
-    //read data
-    SIO_DATA( stream ,  &(vtx->_primary)  , 1 ) ;
+  void SIOVertexHandler::initWriting( sio::write_device &device, EVENT::LCCollection *collection ) {
+    _parameters.clear() ;
+    _set.clear() ;
+    for( int i=0 ; i<collection->getNumberOfElements() ; i++) {
+      auto v = dynamic_cast<EVENT::Vertex*>( collection->getElementAt( i ) ) ;
+      _set.insert(v->getAlgorithmType());
+    }
+    for( auto it=_set.begin() ; it != _set.end() ; it++ ) {
+      _parameters.push_back(*it) ;
+    }
+    collection->parameters().setValues("_lcio.VertexAlgorithmTypes", _parameters ) ;
+    SIOObjectHandler::initWriting( device, collection ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOVertexHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type /*vers*/ ) {
+    auto vtx = dynamic_cast<IOIMPL::VertexIOImpl*>(objP) ;
+    SIO_DATA( device ,  &(vtx->_primary)  , 1 ) ;
     int algtype;
-    SIO_DATA( stream ,  &algtype  , 1 ) ;
-    vtx->setAlgorithmType(imr[algtype]);
-    //std::set<std::string>::iterator it;
-    //advance(it=_set.begin(),algtype);
-    //vtx->setAlgorithmType(*it);
-    
-    //dbg
-    //std::cout<<"Reading... (int)["<<algtype<<"] (string)["<<(*it)<<"]\n";
-    //std::cout<<"Reading... (int)["<<algtype<<"] (string)["<<imr[algtype]<<"]\n";
-      
-    SIO_DATA( stream ,  &(vtx->_chi2)  , 1 ) ;
-    SIO_DATA( stream ,  &(vtx->_probability)  , 1 ) ;
-    SIO_DATA( stream ,  vtx->_vpos  , 3 ) ;
-
-    //read covMatrix
+    SIO_DATA( device ,  &algtype  , 1 ) ;
+    vtx->setAlgorithmType( _imr[algtype] ) ;
+    SIO_DATA( device ,  &(vtx->_chi2)  , 1 ) ;
+    SIO_DATA( device ,  &(vtx->_probability)  , 1 ) ;
+    SIO_DATA( device ,  vtx->_vpos  , 3 ) ;
     float cov[VTXCOVMATRIX] ;
-    SIO_DATA( stream ,  cov  ,  VTXCOVMATRIX ) ;
+    SIO_DATA( device ,  cov  ,  VTXCOVMATRIX ) ;
     vtx->setCovMatrix( cov ) ;
-
-    //read parameters
     int nPara  ;
-    SIO_DATA( stream ,  &nPara  , 1 ) ;
+    SIO_DATA( device ,  &nPara  , 1 ) ;
     float aParameter ;
-    for(int i=0; i<nPara; i++){
-      SIO_DATA( stream ,  &aParameter  , 1 ) ;
+    for( int i=0 ; i<nPara ; i++ ) {
+      SIO_DATA( device ,  &aParameter  , 1 ) ;
       vtx->addParameter( aParameter ) ;
     }
-
     //read pointer to associated reconstructed particle
-    SIO_PNTR( stream ,   &(vtx->_aParticle) ) ;
-
-    // read the pointer tag 
-    SIO_PTAG( stream , dynamic_cast<const Vertex*>(vtx) ) ;
-    return ( SIO_BLOCK_SUCCESS ) ;
+    SIO_PNTR( device ,   &(vtx->_aParticle) ) ;
+    // read the pointer tag
+    SIO_PTAG( device , dynamic_cast<const EVENT::Vertex*>(vtx) ) ;
   }
-    
-    
-  unsigned int SIOVertexHandler::write(SIO_stream* stream, const LCObject* obj){
-    
-    unsigned int status ; 
-    
-    // this is where we gave up type safety in order to
-    // simplify the API and the implementation
-    // by having a common collection of objects
-    const Vertex* vtx = dynamic_cast<const Vertex*>(obj)  ;
 
-    //write data
-    LCSIO_WRITE( stream, vtx->isPrimary()  ) ;
-    //LCSIO_WRITE( stream, imw[vtx->getAlgorithmType()]  ) ;
-   
-    LCSIO_WRITE( stream, static_cast<size_t> (distance( _set.begin(),_set.find( vtx->getAlgorithmType() )))) ;
-    
-    //dbg
-    //std::cout<<"Writing... (string)["<<vtx->getAlgorithmType()<<"] (int)["<<distance( _set.begin(),_set.find( vtx->getAlgorithmType() ))<<"]\n";
-    
-    LCSIO_WRITE( stream, vtx->getChi2()  ) ;
-    LCSIO_WRITE( stream, vtx->getProbability()  ) ;
+  //----------------------------------------------------------------------------
 
-    //write position of the vertex
-    float* pos = const_cast<float*> ( vtx->getPosition() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
-    
-    //write covariance matrix
-    const FloatVec& cov = vtx->getCovMatrix() ;
-    for(unsigned int i=0; i<cov.size(); i++){
-      LCSIO_WRITE( stream, cov[i]  ) ;
+  void SIOVertexHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto vtx = dynamic_cast<const EVENT::Vertex*>(obj)  ;
+    SIO_SDATA( device, vtx->isPrimary()  ) ;
+    SIO_SDATA( device, static_cast<size_t> (distance( _set.begin(),_set.find( vtx->getAlgorithmType() )))) ;
+    SIO_SDATA( device, vtx->getChi2()  ) ;
+    SIO_SDATA( device, vtx->getProbability()  ) ;
+    SIO_DATA( device,  vtx->getPosition() , 3 ) ;
+    auto cov = vtx->getCovMatrix() ;
+    for( unsigned int i=0 ; i<cov.size() ; i++ ) {
+      SIO_SDATA( device, cov[i]  ) ;
     }
-
-    //write parameters
     int nPara = vtx->getParameters().size() ;
-    SIO_DATA( stream ,  &nPara  , 1 ) ;
-    for(int i=0; i<nPara; i++){
-      LCSIO_WRITE( stream, vtx->getParameters()[i]  ) ;
+    SIO_DATA( device ,  &nPara  , 1 ) ;
+    for( int i=0 ; i<nPara ; i++ ) {
+      SIO_SDATA( device, vtx->getParameters()[i]  ) ;
     }
-
     //write pointer to associated reconstructed particle
-    EVENT::ReconstructedParticle* recP = vtx->getAssociatedParticle() ;
-    SIO_PNTR( stream , &recP  ) ;
-	
-    
+    auto recP = vtx->getAssociatedParticle() ;
+    SIO_PNTR( device , &recP  ) ;
     // write a ptag in order to be able to point to vertices
-    SIO_PTAG( stream , vtx ) ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
+    SIO_PTAG( device , vtx ) ;
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOVertexHandler::create() const {
+    return new IOIMPL::VertexIOImpl() ;
+  }
+
 } // namespace
