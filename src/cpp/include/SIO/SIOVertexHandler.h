@@ -10,8 +10,8 @@
 #include <string>
 
 namespace SIO {
-    
-    
+
+
 /** Implementation of SIOObjectHandler to handle IO of Vertexes.
  *
  * @author gaede, engels
@@ -19,29 +19,29 @@ namespace SIO {
  */
 
   class SIOVertexHandler : public SIOObjectHandler {
-	
   public:
+    /// Constructor
+    SIOVertexHandler() ;
 
-    virtual ~SIOVertexHandler() ;
-    
-    virtual unsigned int init( SIO_stream* stream,
-                             SIO_operation op,
-                             EVENT::LCCollection* col,
-                             unsigned int vers ) ;
-	
-    /** Reads lcio Vertex objects from an SIO stream.
-     */
-    virtual unsigned int read(SIO_stream* stream, EVENT::LCObject** objP)  ;
-	
-    /** Writes lcio Vertex objects to an SIO stream.
-     */
-    virtual unsigned int write(SIO_stream* stream, const EVENT::LCObject* obj) ;
+    /// Init collection reading
+    void initReading( sio::read_device &device, EVENT::LCCollection *collection, sio::version_type vers ) override ;
+
+    /// Init collection reading
+    void initWriting( sio::write_device &device, EVENT::LCCollection *collection ) override ;
+
+    /// Reads lcio objects from an SIO stream.
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) override ;
+
+    /// Writes lcio objects to an SIO stream.
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) override ;
+
+    /// Factory method to create an object of the type of the collection
+    EVENT::LCObject *create() const override ;
 
   protected:
-    std::map<int,std::string> imr{}; //indexmap for reading
-    std::set<std::string> _set{};
-    EVENT::StringVec parameters{}; //needed for putting the collection parameters into the STL Containers
-    
+    std::map<int,std::string>    _imr {}; //indexmap for reading
+    std::set<std::string>        _set {};
+    EVENT::StringVec             _parameters {}; //needed for putting the collection parameters into the STL Containers
   }; // class
 } // namespace
 
