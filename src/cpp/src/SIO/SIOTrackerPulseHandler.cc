@@ -1,91 +1,72 @@
 #include "SIO/SIOTrackerPulseHandler.h"
 
-#include "SIO/LCSIO.h"
-
+// -- lcio headers
 #include "EVENT/TrackerPulse.h"
 #include "EVENT/LCIO.h"
 #include "IMPL/LCFlagImpl.h"
 #include "IOIMPL/TrackerPulseIOImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+namespace SIO {
 
-
-namespace SIO{
-    
-  unsigned int SIOTrackerPulseHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
-    unsigned int status ; 
-	
-    // create a new object :
-    TrackerPulseIOImpl* hit  = new TrackerPulseIOImpl ;
-    *objP = hit ;
-	
-    SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
-    
-    LCFlagImpl lcFlag(_flag) ;
-    if( lcFlag.bitSet( LCIO::TRAWBIT_ID1 ) )
-      SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
-
-    SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
-    SIO_DATA( stream ,  &(hit->_charge )  , 1  ) ;
-    if( _vers > SIO_VERSION_ENCODE( 1, 12 )   ){
-
-        //SIO_DATA( stream ,  &(hit->_timeError) , 1  ) ;
-        //SIO_DATA( stream ,  &(hit->_chargeError )  , 1  ) ;
-
-        if( lcFlag.bitSet( LCIO::TRAWBIT_CM ) ){
-            float cov[TRKPULSENCOVMATRIX] ;
-            SIO_DATA( stream ,  cov  ,  TRKPULSENCOVMATRIX ) ;
-            hit->setCovMatrix( cov ) ;
-        }
-    }
-    SIO_DATA( stream ,  &(hit->_quality )  , 1  ) ;
-    
-    SIO_PNTR( stream , &(hit->_corrData) ) ;
-    
-    SIO_PTAG( stream , dynamic_cast<const TrackerPulse*>(hit) ) ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
+  SIOTrackerPulseHandler::SIOTrackerPulseHandler() :
+    SIOObjectHandler( EVENT::LCIO::TRACKERPULSE ) {
+    /* nop */
   }
-    
-    
-  unsigned int SIOTrackerPulseHandler::write(SIO_stream* stream, 
-				       const LCObject* obj){
-    
-    unsigned int status ; 
 
-    const TrackerPulse* hit = dynamic_cast<const TrackerPulse*>(obj)  ;
+  //----------------------------------------------------------------------------
 
-    LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-      
-    LCFlagImpl lcFlag(_flag) ;
-    if( lcFlag.bitSet( LCIO::TRAWBIT_ID1 ) )
-      LCSIO_WRITE( stream, hit->getCellID1()  ) ;
-    LCSIO_WRITE( stream, hit->getTime()  ) ;
-    LCSIO_WRITE( stream, hit->getCharge()  ) ;
-    //LCSIO_WRITE( stream, hit->getTimeError()  ) ;
-    //LCSIO_WRITE( stream, hit->getChargeError()  ) ;
-    if( lcFlag.bitSet( LCIO::TRAWBIT_CM ) ){
-        const FloatVec& cov = hit->getCovMatrix() ;
-        for(unsigned int i=0; i<cov.size(); i++){
-            LCSIO_WRITE( stream, cov[i]  ) ;
-        }
+  void SIOTrackerPulseHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
+    auto hit  = dynamic_cast<IOIMPL::TrackerPulseIOImpl*>(objP) ;
+    SIO_DATA( device ,  &(hit->_cellID0) , 1  ) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_ID1 ) ) {
+      SIO_DATA( device ,  &(hit->_cellID1) , 1  ) ;
     }
-    LCSIO_WRITE( stream, hit->getQuality()  ) ;
-
-    TrackerData* corr = hit->getTrackerData() ;
-    SIO_PNTR( stream ,  & corr ); 
-
-    
-    SIO_PTAG( stream , hit ) ;
-    
-    return ( SIO_BLOCK_SUCCESS ) ;
+    SIO_DATA( device ,  &(hit->_time) , 1  ) ;
+    SIO_DATA( device ,  &(hit->_charge )  , 1  ) ;
+    if( vers > SIO_VERSION_ENCODE( 1, 12 )   ) {
+      if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_CM ) ) {
+        float cov[TRKPULSENCOVMATRIX] ;
+        SIO_DATA( device ,  cov  ,  TRKPULSENCOVMATRIX ) ;
+        hit->setCovMatrix( cov ) ;
+      }
+    }
+    SIO_DATA( device ,  &(hit->_quality )  , 1  ) ;
+    SIO_PNTR( device , &(hit->_corrData) ) ;
+    SIO_PTAG( device , dynamic_cast<const EVENT::TrackerPulse*>(hit) ) ;
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  void SIOTrackerPulseHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto hit = dynamic_cast<const EVENT::TrackerPulse*>(obj)  ;
+    SIO_SDATA( device, hit->getCellID0()  ) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_ID1 ) ) {
+      SIO_SDATA( device, hit->getCellID1()  ) ;
+    }
+    SIO_SDATA( device, hit->getTime()  ) ;
+    SIO_SDATA( device, hit->getCharge()  ) ;
+    if( lcFlag.bitSet( EVENT::LCIO::TRAWBIT_CM ) ) {
+      auto cov = hit->getCovMatrix() ;
+      for(unsigned int i=0; i<cov.size(); i++){
+        SIO_SDATA( device, cov[i]  ) ;
+      }
+    }
+    SIO_SDATA( device, hit->getQuality()  ) ;
+    auto corr = hit->getTrackerData() ;
+    SIO_PNTR( device ,  & corr );
+    SIO_PTAG( device , hit ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOTrackerPulseHandler::create() const {
+    return new IOIMPL::TrackerPulseIOImpl() ;
+  }
+
 } // namespace
