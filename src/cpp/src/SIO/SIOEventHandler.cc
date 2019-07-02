@@ -5,200 +5,93 @@
 #include "EVENT/LCIO.h"
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCCollectionIOVec.h"
-// #include "IOIMPL/LCRelationIOImpl.h"
-#include "LCIOSTLTypes.h"
 #include "SIO/SIOLCParameters.h"
 
-#include "SIO_functions.h"
-#include "SIO_stream.h"
-
-#include <sstream> 
-#include <iostream>
-
-#define SUBSETPOSTFIX "_References"
-
-using namespace EVENT ;
-using namespace IOIMPL ;
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
 namespace SIO  {
 
 
-  SIOEventHandler::SIOEventHandler(const std::string& bname) : 
-    SIO_block( bname.c_str() ),
-    _evtP(0), 
-    _evt(0) {
+  SIOEventHandler::SIOEventHandler(const std::string& bname) :
+    sio::block( bname, LCSIO::blockVersion() ) {
+    /* nop */
   }
 
-  SIOEventHandler::SIOEventHandler(const std::string& bname, LCEventIOImpl** anEvtP) : 
-    SIO_block( bname.c_str() ),
-    _evtP( anEvtP ), 
-    _evt(0) {
- 
-    *_evtP = 0 ;
- }
+  //----------------------------------------------------------------------------
 
-
-  SIOEventHandler::~SIOEventHandler(){
-    //     if (*_evtP )  delete *_evtP ; 
+  void SIOEventHandler::setEvent( EVENT::LCEvent* evt ) {
+    _event = evt ;
   }
 
-  
-  void SIOEventHandler::setEvent(const LCEvent* evt ){
-    _evt = evt ;
+  //----------------------------------------------------------------------------
+
+  void SIOEventHandler::setReadCollectionNames(const std::vector<std::string>& colnames) {
+    _colSubSet.clear() ;
+    _colSubSet.insert( colnames.begin(), colnames.end() ) ;
   }
-  void SIOEventHandler::setEventPtr(IOIMPL::LCEventIOImpl** evtP ){
-    _evtP = evtP ;
-  } 
 
+  //----------------------------------------------------------------------------
 
-  unsigned int SIOEventHandler::xfer( SIO_stream* stream, SIO_operation op, 
-				      unsigned int versionID){
-  
-    unsigned int status ; // needed by the SIO_DATA macro
-  
-
-    if( op == SIO_OP_READ ){ 
-
-      LCSIO::checkVersion(versionID) ;
-
-      // delete the old event object 
-      // -> for every handler there will only be one event object at any given time      
-      if (*_evtP ) {
-// 	std::cout << " ---------- deleting " << *_evtP << "  at " << _evtP << std::endl ;
-	 delete *_evtP ;
+  void SIOEventHandler::read( sio::read_device &device, sio::version_type vers ) {
+    LCSIO::checkVersion( vers ) ;
+    auto evt = dynamic_cast<IOIMPL::LCEventIOImpl*>( _event ) ;
+    SIO_SDATA( device ,  evt->_runNumber ) ;
+    SIO_SDATA( device ,  evt->_eventNumber ) ;
+    SIO_SDATA( device ,  evt->_timeStamp ) ;
+    std::string detName ;
+    SIO_SDATA( device, detName ) ;
+    evt->setDetectorName( detName  )  ;
+    int nCol ;
+    SIO_SDATA( device, nCol ) ;
+    // read collection types and names
+    // not needed for the event record
+    // but SIO crashes if block is not read completely ...
+    for( int i=0; i<nCol ; i++ ) {
+      std::string colName, colType ;
+      SIO_SDATA( device,  colName ) ;
+      SIO_SDATA( device,  colType ) ;
+      std::string::size_type idx ;
+      if( ( idx = colType.rfind( SIOEventHandler::SubsetPostfix ) ) != std::string::npos ) {
+        colType = std::string( colType , 0 , idx ) ;
       }
-       *_evtP = new LCEventIOImpl ;
-//        std::cout << " ---------- created  " << *_evtP << "  at " << _evtP << std::endl ;
-      
-      SIO_DATA( stream ,  &(*_evtP)->_runNumber  , 1  ) ;
-      SIO_DATA( stream ,  &(*_evtP)->_eventNumber  , 1  ) ;
-      SIO_DATA( stream ,  &(*_evtP)->_timeStamp  , 1  ) ;
-    
-      std::string detName ; 
-      LCSIO_READ( stream, detName ) ; 
-      (*_evtP)->setDetectorName( detName  )  ;
+      // if we have a list with the sub set of collection names to be read we only add these to the event
+      if( _colSubSet.empty() || _colSubSet.find( colName ) !=  _colSubSet.end() ) {
+        evt->addCollection( new IOIMPL::LCCollectionIOVec( colType ) , colName) ;
+      }
+    }
+    // read parameters
+    if( vers > SIO_VERSION_ENCODE( 1, 1 ) ) {
+      SIOLCParameters::read( device, evt->parameters(), vers ) ;
+    }
+  }
 
-      // read collection types and names
-      // not needed for the event record 
-      // but SIO crashes if block is not read completely ...
-      int nCol ;
-      SIO_DATA( stream ,  &nCol , 1 ) ;
-      for( int i=0; i<nCol ; i++ ) {
-      	std::string colName;
-        LCSIO_READ( stream,  colName ) ; 
-      	// read type 	
-      	std::string colType;
+  //----------------------------------------------------------------------------
 
-      	LCSIO_READ( stream,  colType ) ; 
-
-      	std::string::size_type idx ;
-      	if( ( idx = colType.rfind( SUBSETPOSTFIX ) ) != std::string::npos ){
-      	  colType = std::string( colType , 0 , idx ) ;
-      	}
-
-      	try { 
-      	  
-      	  // if we have a list with the sub set of collection names to be read we only add these to the event
-      	  if( _colSubSet.empty() || _colSubSet.find( colName ) !=  _colSubSet.end()  ) 
-
-      	    (*_evtP)->addCollection( new LCCollectionIOVec( colType ) , colName) ; 
-      	  
-      	}
-      	catch( EventException ) {  
-          return LCIO::ERROR ; 
+  void SIOEventHandler::write( sio::write_device &device ) {
+    auto colNames = _event->getCollectionNames() ;
+    int nCol = colNames->size() ;
+    for(unsigned int i=0 ; i < colNames->size() ; i++ ) {
+      if( _event->getCollection( (*colNames)[i] )->isTransient() ) nCol-- ;
+    }
+    SIO_SDATA( device, _event->getRunNumber() ) ;
+  	SIO_SDATA( device, _event->getEventNumber() ) ;
+  	SIO_SDATA( device, _event->getTimeStamp()  ) ;
+  	SIO_SDATA( device, _event->getDetectorName() ) ;
+    SIO_SDATA( device, nCol ) ;
+    for(unsigned int i=0 ; i < colNames->size() ; i++ ) {
+      auto col = _event->getCollection( (*colNames)[i] ) ;
+      if( ! col->isTransient() ) {
+        std::string colType( col->getTypeName() ) ;
+        if( col->isSubset() ) {
+          colType += SIOEventHandler::SubsetPostfix ;
         }
-
-      }
-
-      // read parameters
-      if( versionID > SIO_VERSION_ENCODE( 1, 1)   ) 
-	SIOLCParameters::read( stream ,  (*_evtP)->parameters() , versionID) ;
-      
-
-    }  else if( op == SIO_OP_WRITE ){ 
-    
-      if( _evt ){
-	LCSIO_WRITE( stream, _evt->getRunNumber() ) ; 
-	LCSIO_WRITE( stream, _evt->getEventNumber() ) ;
-	LCSIO_WRITE( stream, _evt->getTimeStamp()  ) ;
-	LCSIO_WRITE( stream, _evt->getDetectorName() ) ;
-      
-	// now write a list of colection types and names
-      
-// 	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
-// 	int nCol = strVec->size() ;
-// 	SIO_DATA( stream, &nCol, 1 ) ;
-      
-// 	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-	
-// 	  const LCCollection* col = _evt->getCollection( *name ) ;
-// 	  LCSIO_WRITE( stream, *name ) ;
-// 	  LCSIO_WRITE( stream, col->getTypeName() ) ;
-		
-// 	} 
-
-//	const std::vector<std::string>* strVec = _evt->getCollectionNames() ;
-	const StringVec* colNames =   _evt->getCollectionNames() ;
-// 	const StringVec* relNames =   _evt->getRelationNames() ;
-	
-	int nCol = colNames->size()  ; //+ relNames->size()  ;
-
-	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
-	  if( _evt->getCollection( (*colNames)[i] )->isTransient() ) nCol-- ;
-	}
-
-	SIO_DATA( stream, &nCol, 1 ) ;
-      
-	//	for( std::vector<std::string>::const_iterator name = strVec->begin() ; name != strVec->end() ; name++){
-	for(unsigned int i=0 ; i < colNames->size() ; i++ ) {   
-	  const LCCollection* col = _evt->getCollection( (*colNames)[i] ) ;
-	  if( ! col->isTransient() ){
-	    LCSIO_WRITE( stream, (*colNames)[i] ) ;
-
-	    std::string colType( col->getTypeName() ) ;
-
-	    if( col->isSubset() ) 
-	      colType += SUBSETPOSTFIX ;
-
-	    LCSIO_WRITE( stream,  colType ) ;
-	  }
-	} 
-// 	for(unsigned int i=0 ; i < relNames->size() ; i++ ) {   
-// 	  const LCRelation* rel = _evt->getRelation( (*relNames)[i] ) ;
-// 	  std::stringstream  relTypeName  ;
-// 	  relTypeName <<  LCIO::LCRELATION ; 
-// 	  // << "_" <<   rel->getFromType() << "_"  << rel->getToType() << std::ends ;
-// 	  LCSIO_WRITE( stream, (*relNames)[i] ) ;
-// 	  LCSIO_WRITE( stream, relTypeName.str() ) ;
-// 	} 
-	
-	// write parameters
-	if( version() > SIO_VERSION_ENCODE( 1, 1) ) 
-	  SIOLCParameters::write( stream ,  _evt->getParameters() ) ;
-
-      } else {
-	return 0 ;
+        SIO_SDATA( device, (*colNames)[i] ) ;
+        SIO_SDATA( device,  colType ) ;
       }
     }
-  
-  
-    return ( SIO_BLOCK_SUCCESS ) ;
+    SIOLCParameters::write( device , _event->getParameters() ) ;
   }
 
-  unsigned int   SIOEventHandler::version() const {
-
-   return SIO_VERSION_ENCODE( LCIO::MAJORVERSION, LCIO::MINORVERSION ) ;
-  }
-
-  void SIOEventHandler::setReadCollectionNames(const std::vector<std::string>& colnames){
-
-    if( ! _colSubSet.empty() )
-      _colSubSet.clear() ;
-    
-    for( unsigned i=0,N=colnames.size() ; i<N ; ++i ){
-      
-      _colSubSet.insert( colnames[i] ) ;
-    }
-  }
-  
 }
