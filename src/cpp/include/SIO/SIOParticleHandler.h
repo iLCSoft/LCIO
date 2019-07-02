@@ -6,8 +6,8 @@
 #include "EVENT/LCEvent.h"
 
 namespace SIO {
-    
-    
+
+
 
   /** Implementation of SIOObjectHandler to handle IO of MCParticles.
    *
@@ -15,25 +15,22 @@ namespace SIO {
    * @version $Id: SIOParticleHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOParticleHandler : public SIOObjectHandler {
-
   public:
-	
-    /** Reads lcio MCParticle objects from an SIO stream.
-     */
-    virtual unsigned int read(SIO_stream* stream, 
-			      EVENT::LCObject** objP)  ;
-	
-    /** Writes lcio MCParticle objects to an SIO stream.
-     */
-	
-    virtual unsigned int write(SIO_stream* stream, 
-			       const EVENT::LCObject* obj) ;
+    /// Constructor
+    SIOParticleHandler() ;
 
+    /// Reads lcio objects from an SIO stream.
+    void read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) override ;
 
-    static void restoreParentDaughterRelations( EVENT::LCEvent* evt) ;
+    /// Writes lcio objects to an SIO stream.
+    void write( sio::write_device& device, const EVENT::LCObject* obj ) override ;
 
+    /// Factory method to create an object of the type of the collection
+    EVENT::LCObject *create() const override ;
 
+    /// Restore the MCParticle parent <-> daughter relations
+    static void restoreParentDaughterRelations( EVENT::LCEvent* evt ) ;
   }; // class
-    
+
 } // namespace
 #endif /* ifndef SIO_SIOPARTICLEHANDLER_H */
