@@ -48,7 +48,7 @@ namespace SIO {
 
   template <typename VECTYPE>
   inline SIOLCVecHandler<VECTYPE>::SIOLCVecHandler() :
-    SIOObjectHandler( UTIL::lctypename<VECTYPE> ) {
+    SIOObjectHandler( UTIL::lctypename<VECTYPE>() ) {
     /* nop */
   }
 
