@@ -11,10 +11,10 @@
 #include <sio/version.h>
 
 namespace SIO {
-  
-  SIOCalHitHandler::SIOCalHitHandler() : 
+
+  SIOCalHitHandler::SIOCalHitHandler() :
     SIOObjectHandler( EVENT::LCIO::CALORIMETERHIT ) {
-    
+    /* nop */
   }
 
   //----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ namespace SIO {
     SIO_DATA( device ,  &(hit->_energy) , 1  ) ;
     if( vers > SIO_VERSION_ENCODE( 1, 9 ) && lcFlag.bitSet( EVENT::LCIO::RCHBIT_ENERGY_ERROR )) {
         SIO_DATA( device ,  &(hit->_energyError) , 1  ) ;
-    } 
+    }
     if( vers > SIO_VERSION_ENCODE( 1, 2) && lcFlag.bitSet( EVENT::LCIO::RCHBIT_TIME ) ) {
       SIO_DATA( device ,  &(hit->_time) , 1  ) ;
     }
@@ -47,15 +47,15 @@ namespace SIO {
 	      SIO_PTAG( device , dynamic_cast<const EVENT::CalorimeterHit*>(hit) ) ;
       }
     }
-    else {  
+    else {
       if( lcFlag.bitSet( EVENT::LCIO::RCHBIT_NO_PTR )  ) {
 	      SIO_PTAG( device , dynamic_cast<const EVENT::CalorimeterHit*>(hit) ) ;
       }
     }
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   void SIOCalHitHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
     const EVENT::CalorimeterHit* hit = dynamic_cast<const EVENT::CalorimeterHit*>(obj)  ;
     IMPL::LCFlagImpl lcFlag(_flag) ;
@@ -80,11 +80,11 @@ namespace SIO {
       SIO_PTAG( device , hit  ) ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   EVENT::LCObject *SIOCalHitHandler::create() const {
     return new IOIMPL::CalorimeterHitIOImpl() ;
   }
-  
+
 } // namespace
