@@ -1,111 +1,81 @@
 #include "SIO/SIOSimTrackHitHandler.h"
 
-#include "SIO/LCSIO.h"
 
+#include "EVENT/LCIO.h"
 #include "EVENT/MCParticle.h"
 #include "EVENT/SimTrackerHit.h"
 #include "IOIMPL/SimTrackerHitIOImpl.h"
-
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
-
-#include "EVENT/LCIO.h"
 #include "IMPL/LCFlagImpl.h"
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
+namespace SIO {
 
-namespace SIO{
-    
-  unsigned int SIOSimTrackHitHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
-    unsigned int status ; 
-	
-    // create a new object :
-    SimTrackerHitIOImpl* hit  = new SimTrackerHitIOImpl ;
-    *objP = hit ;
-	
-    LCFlagImpl lcFlag(_flag) ;
+  SIOSimTrackHitHandler::SIOSimTrackHitHandler() :
+    SIOObjectHandler( EVENT::LCIO::SIMTRACKERHIT ) {
+    /* nop */
+  }
 
-    SIO_DATA( stream ,  &(hit->_cellID0) , 1  ) ;
-    if( _vers > SIO_VERSION_ENCODE( 1, 51) ) {
-        if( lcFlag.bitSet( LCIO::THBIT_ID1 ) ){
-            SIO_DATA( stream ,  &(hit->_cellID1) , 1  ) ;
-        }
+  //----------------------------------------------------------------------------
+
+  void SIOSimTrackHitHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
+    auto hit = dynamic_cast<IOIMPL::SimTrackerHitIOImpl*>( objP ) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+
+    SIO_DATA( device ,  &(hit->_cellID0) , 1  ) ;
+    if( vers > SIO_VERSION_ENCODE( 1, 51) ) {
+      if( lcFlag.bitSet( EVENT::LCIO::THBIT_ID1 ) ) {
+        SIO_DATA( device ,  &(hit->_cellID1) , 1  ) ;
+      }
     }
-
-    SIO_DATA( stream ,    hit->_pos  , 3 ) ;
-
-    //SIO_DATA( stream ,  &(hit->_dEdx) , 1  ) ;
-    SIO_DATA( stream ,  &(hit->_EDep) , 1  ) ;
-
-    SIO_DATA( stream ,  &(hit->_time) , 1  ) ;
-
-    SIO_PNTR( stream , &(hit->_particle)  ) ;
-
-    if( lcFlag.bitSet( LCIO::THBIT_MOMENTUM ) ){
-      SIO_DATA( stream ,    hit->_p  , 3 ) ;
-      if( _vers  > SIO_VERSION_ENCODE( 1 , 6 ) ) 
-        SIO_DATA( stream ,    &(hit->_pathLength)  , 1 ) ;
+    SIO_DATA( device ,    hit->_pos  , 3 ) ;
+    SIO_DATA( device ,  &(hit->_EDep) , 1  ) ;
+    SIO_DATA( device ,  &(hit->_time) , 1  ) ;
+    SIO_PNTR( device , &(hit->_particle)  ) ;
+    if( lcFlag.bitSet( EVENT::LCIO::THBIT_MOMENTUM ) ){
+      SIO_DATA( device ,    hit->_p  , 3 ) ;
+      if( vers  > SIO_VERSION_ENCODE( 1 , 6 ) ) {
+        SIO_DATA( device ,    &(hit->_pathLength)  , 1 ) ;
+      }
     }
-
-    if( _vers > SIO_VERSION_ENCODE( 2, 7 )   )
-      SIO_DATA( stream ,  &(hit->_quality) , 1  ) ;
-
+    if( vers > SIO_VERSION_ENCODE( 2, 7 )   ) {
+      SIO_DATA( device ,  &(hit->_quality) , 1  ) ;
+    }
     // read the pointer tag in case we want to point to hits
-    if( _vers > SIO_VERSION_ENCODE( 1, 0) ) {
-      SIO_PTAG( stream , dynamic_cast<const SimTrackerHit*>(hit) ) ;
+    if( vers > SIO_VERSION_ENCODE( 1, 0) ) {
+      SIO_PTAG( device , dynamic_cast<const EVENT::SimTrackerHit*>(hit) ) ;
     }
-	
-    return ( SIO_BLOCK_SUCCESS ) ;
-	
   }
-    
-    
-  unsigned int SIOSimTrackHitHandler::write(SIO_stream* stream, 
-				       const LCObject* obj){
-    
-    unsigned int status ; 
-    // fg 20030609 changed to use SimTrackerHit
-    
-    // this is where we gave up type safety in order to
-    // simplify the API and the implementation
-    // by having a common collection of objects
-    const SimTrackerHit* hit = dynamic_cast<const SimTrackerHit*>(obj)  ;
 
-    LCFlagImpl lcFlag(_flag) ;
+  //----------------------------------------------------------------------------
 
-    LCSIO_WRITE( stream, hit->getCellID0()  ) ;
-
-    if( lcFlag.bitSet( LCIO::THBIT_ID1 ) ){
-        LCSIO_WRITE( stream, hit->getCellID1()  ) ;
+  void SIOSimTrackHitHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto hit = dynamic_cast<const EVENT::SimTrackerHit*>(obj) ;
+    IMPL::LCFlagImpl lcFlag(_flag) ;
+    SIO_SDATA( device, hit->getCellID0()  ) ;
+    if( lcFlag.bitSet( EVENT::LCIO::THBIT_ID1 ) ) {
+      SIO_SDATA( device, hit->getCellID1()  ) ;
     }
-
-    // as SIO doesn't provide a write function with const arguments
-    // we have to cast away the constness 
-    double* pos = const_cast<double*> ( hit->getPosition() ) ; 
-    SIO_DATA( stream,  pos , 3 ) ;
-    LCSIO_WRITE( stream, hit->getEDep()  ) ;
-    LCSIO_WRITE( stream, hit->getTime()  ) ;
-    
-    const MCParticle* part = hit->getMCParticle()  ;
-    SIO_PNTR( stream , &part ) ;
-
-    if( lcFlag.bitSet( LCIO::THBIT_MOMENTUM ) ){
-      float* p = const_cast<float*> ( hit->getMomentum() ) ; 
-      SIO_DATA( stream , p  , 3 ) ;
-      LCSIO_WRITE( stream , hit->getPathLength() ) ;
+    SIO_DATA( device,  hit->getPosition() , 3 ) ;
+    SIO_SDATA( device, hit->getEDep()  ) ;
+    SIO_SDATA( device, hit->getTime()  ) ;
+    auto part = hit->getMCParticle()  ;
+    SIO_PNTR( device , &part ) ;
+    if( lcFlag.bitSet( EVENT::LCIO::THBIT_MOMENTUM ) ){
+      SIO_DATA( device , hit->getMomentum()  , 3 ) ;
+      SIO_SDATA( device , hit->getPathLength() ) ;
     }
-    LCSIO_WRITE( stream, hit->getQuality()  ) ;
-
+    SIO_SDATA( device, hit->getQuality()  ) ;
     // write a ptag in order to be able to point to tracker hits - from v1.1
-    SIO_PTAG( stream , hit ) ;
-
-    return ( SIO_BLOCK_SUCCESS ) ;
-    
+    SIO_PTAG( device , hit ) ;
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOSimTrackHitHandler::create() const {
+    return new IOIMPL::SimTrackerHitIOImpl() ;
+  }
+
 } // namespace
