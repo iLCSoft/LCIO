@@ -1,66 +1,48 @@
 #include "SIO/SIOLCRelationHandler.h"
 
-#include "SIO/LCSIO.h"
-
 #include "EVENT/LCIO.h"
-#include "EVENT/MCParticle.h"
-#include "EVENT/LCRelation.h"
 #include "IOIMPL/LCRelationIOImpl.h"
 #include "IMPL/LCFlagImpl.h"
 
-#include "SIO_functions.h"
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include <sio/io_device.h>
+#include <sio/version.h>
 
-using namespace EVENT ;
-using namespace IMPL ;
-using namespace IOIMPL ;
+namespace SIO {
 
-
-namespace SIO{
-    
-  unsigned int SIOLCRelationHandler::read(SIO_stream* stream, 
-				      LCObject** objP){
-    unsigned int status ; 
-	
-    // create a new object :
-    LCRelationIOImpl* rel  = new LCRelationIOImpl ;
-    *objP = rel ;
-	
-
-    SIO_PNTR( stream , &(rel->_from ) );
-    SIO_PNTR( stream , &(rel->_to ) ) ;
-    
-    if( LCFlagImpl(_flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
-      
-      SIO_DATA( stream ,  &(rel->_weight) , 1  ) ;
-      
-    } 
-    return ( SIO_BLOCK_SUCCESS ) ;
+  SIOLCRelationHandler::SIOLCRelationHandler() :
+    SIOObjectHandler( EVENT::LCIO::LCRELATION ) {
+    /* nop */
   }
-  
-    
-  unsigned int SIOLCRelationHandler::write(SIO_stream* stream, 
-				       const LCObject* obj){
-    
-    unsigned int status ; 
 
-    const LCRelation* rel = dynamic_cast<const LCRelation*>(obj)  ;
-    
-    LCObject* from = rel->getFrom() ;
-    SIO_PNTR( stream,  &from ) ;
+  //----------------------------------------------------------------------------
 
-    LCObject* to = rel->getTo() ;
-    SIO_PNTR( stream,  &to ) ;
-
-    if( LCFlagImpl(_flag).bitSet( LCIO::LCREL_WEIGHTED ) ){
-
-      LCSIO_WRITE( stream ,  rel->getWeight() ) ;
-
-    } 
-
-
-    return ( SIO_BLOCK_SUCCESS ) ;
+  void SIOLCRelationHandler::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type /*vers*/ ) {
+    auto rel = dynamic_cast<IOIMPL::LCRelationIOImpl*>( objP ) ;
+    SIO_PNTR( device , &(rel->_from ) );
+    SIO_PNTR( device , &(rel->_to ) ) ;
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::LCREL_WEIGHTED ) ) {
+      SIO_SDATA( device , rel->_weight ) ;
+    }
   }
-  
+
+  //----------------------------------------------------------------------------
+
+  void SIOLCRelationHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
+    auto rel = dynamic_cast<const EVENT::LCRelation*>( obj ) ;
+    auto from = rel->getFrom() ;
+    SIO_PNTR( device, &from ) ;
+    auto to = rel->getTo() ;
+    SIO_PNTR( device, &to ) ;
+    if( IMPL::LCFlagImpl(_flag).bitSet( EVENT::LCIO::LCREL_WEIGHTED ) ){
+      SIO_SDATA( device , rel->getWeight() ) ;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+
+  EVENT::LCObject *SIOLCRelationHandler::create() const {
+    return new IOIMPL::LCRelationIOImpl() ;
+  }
+
 } // namespace
