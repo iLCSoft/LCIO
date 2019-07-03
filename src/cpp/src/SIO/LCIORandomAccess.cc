@@ -3,15 +3,13 @@
 
 namespace SIO {
 
-  bool operator<(const LCIORandomAccess& ra0, const LCIORandomAccess& other) {  
-
+  bool operator<(const LCIORandomAccess& ra0, const LCIORandomAccess& other) {
     return ra0._maxRunEvt < other._minRunEvt ;
   }
-  
+
   //----------------------------------------------------------------------------
 
-  std::ostream& operator<<(std::ostream& os, const LCIORandomAccess& ra ){
-
+  std::ostream& operator<<(std::ostream& os, const LCIORandomAccess& ra ) {
     os << " LCIORandomAccess:  ----------------------- " << std::endl
        << " minRun " <<  ra._minRunEvt.RunNum << std::endl
        << " minEvt " <<  ra._minRunEvt.EvtNum  << std::endl
@@ -26,8 +24,43 @@ namespace SIO {
        << " firstRecordLocation " <<  ra._firstRecordLocation  << std::endl
        << "---------------------------------------------"
        << std::endl ;
-
     return os ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  LCIORandomAccess::long64 LCIORandomAccess::getIndexLocation() const {
+    return _indexLocation ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  LCIORandomAccess::long64 LCIORandomAccess::getPrevLocation() const {
+    return _prevLocation ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  LCIORandomAccess::long64 LCIORandomAccess::getFirstRecordLocation() const {
+    return _firstRecordLocation ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void LCIORandomAccess::setIndexLocation(long64 il) {
+    _indexLocation = il ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void LCIORandomAccess::setPreviousLocation(long64 pl) {
+    _prevLocation = pl ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void LCIORandomAccess::setFirstRecordLocation(long64 fl) {
+    _firstRecordLocation = fl ;
   }
 
 }
