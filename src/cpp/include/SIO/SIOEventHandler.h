@@ -22,13 +22,12 @@ namespace SIO {
  */
   class SIOEventHandler : public sio::block {
   public:
-    SIOEventHandler() = delete ;
     SIOEventHandler(const SIOEventHandler&) = delete;
     SIOEventHandler& operator=(const SIOEventHandler&) = delete ;
     ~SIOEventHandler() = default ;
 
-    /// Constructor with block name
-    SIOEventHandler( const std::string &bname ) ;
+    /// Constructor
+    SIOEventHandler() ;
 
     // from sio::block
     void read( sio::read_device &device, sio::version_type vers ) override ;

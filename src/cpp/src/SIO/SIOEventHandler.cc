@@ -14,8 +14,8 @@
 namespace SIO  {
 
 
-  SIOEventHandler::SIOEventHandler(const std::string& bname) :
-    sio::block( bname, LCSIO::blockVersion() ) {
+  SIOEventHandler::SIOEventHandler() :
+    sio::block( LCSIO::HeaderBlockName, LCSIO::blockVersion() ) {
     /* nop */
   }
 
