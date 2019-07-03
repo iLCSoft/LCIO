@@ -1,45 +1,45 @@
 #ifndef SIO_SIORandomAccessHandler_H
 #define SIO_SIORandomAccessHandler_H 1
 
-//#include <string>
+// -- sio headers
+#include "sio/block.h"
 
-#include "LCIORandomAccessMgr.h"
-#include "SIO_block.h"
+// -- std headers
+#include <memory>
 
 namespace SIO {
-    
+
+  class LCIORandomAccess ;
+
 /** Handler for LCIOrandomAccess and LCIOIndex objects/blocks.
- * 
+ *
  * @author gaede
  * @version $Id: SIORandomAccessHandler.h,v 1.2 2010-06-22 13:49:54 gaede Exp $
  */
-  class SIORandomAccessHandler : public SIO_block{
-    
-  protected:
-    SIORandomAccessHandler() : SIO_block("UNKNOWN") { /* no default c'tor*/  ;} 
-
+  class SIORandomAccessHandler : public sio::block {
   public:
-    
+    ~SIORandomAccessHandler() = default ;
     SIORandomAccessHandler(const SIORandomAccessHandler&) = delete;
     SIORandomAccessHandler& operator=(const SIORandomAccessHandler&) = delete ;
 
-    /** C'tor.
-     */
-    SIORandomAccessHandler(const std::string& name, LCIORandomAccessMgr* raMgr) ; 
+    /// Constructor
+    SIORandomAccessHandler() ;
 
-//     SIORandomAccessHandler(const std::string& name, LCIORandomAccess** raP) ;
-    virtual ~SIORandomAccessHandler() ;
-    
-    // interface from SIO_block
-    virtual unsigned int   xfer( SIO_stream*, SIO_operation, unsigned int ) ;
-    virtual unsigned int   version() const ;
-    
-  private: 
+    /// Set the random access object to read or write
+    void setRandomAccess( std::shared_ptr<LCIORandomAccess> ra ) ;
 
-    LCIORandomAccessMgr* _raMgr{NULL} ;
+    /// Get the run / event map
+    std::shared_ptr<LCIORandomAccess> randomAccess() const ;
 
+    // from sio::block
+    void read( sio::read_device &device, sio::version_type vers ) override ;
+    void write( sio::write_device &device ) override ;
+
+  private:
+    /// The random access object to read / write
+    std::shared_ptr<LCIORandomAccess> _randomAccess {nullptr} ;
   }; // class
-  
+
 } // namespace
 
 #endif /* ifndef SIO_SIORUNHEADERHANDLER_H */
