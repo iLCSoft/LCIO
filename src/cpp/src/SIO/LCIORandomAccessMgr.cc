@@ -5,63 +5,40 @@
 #include "SIO/SIOIndexHandler.h"
 #include "SIO/SIOEventHandler.h"
 #include "SIO/SIORunHeaderHandler.h"
-
 #include "IOIMPL/LCEventIOImpl.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
-
-#include "SIO_stream.h"
-
 #include "Exceptions.h"
-#include <sstream>
 
+// -- std headers
+#include <sstream>
 #include <stdio.h>
 #include <string.h>
 
-using namespace IO ;
+// -- sio headers
+#include <sio/api.h>
+#include <sio/compression/zlib.h>
 
 namespace SIO {
 
-  LCIORandomAccessMgr::~LCIORandomAccessMgr() {
-    // cleanup 
-    for( std::list<LCIORandomAccess* >::iterator i = _list.begin() ; i != _list.end() ; ++i ){
-      delete *i ; 
-    }
-    if( nullptr != _fileRecord ) {
-      delete _fileRecord ;
-    }
-  }
-  
-  //----------------------------------------------------------------------------
-
   void LCIORandomAccessMgr::clear() {
-    _runEvtMap.clear() ;
-    for( std::list<LCIORandomAccess* >::iterator i = _list.begin() ; i != _list.end() ; ++i ) { 
-      delete *i ; 
-    }
+    _runEvtMap->clear() ;
     _list.clear() ;
-    if( nullptr != _fileRecord ) {
-      delete _fileRecord ;
-      _fileRecord = nullptr ;
-    }
+    _fileRecord = nullptr ;
   }
-  
-  //----------------------------------------------------------------------------
-  
-  LCIORandomAccess* LCIORandomAccessMgr::createFromEventMap() {
 
-    LCIORandomAccess* ra = new LCIORandomAccess ;
-    
-    ra->_minRunEvt =   _runEvtMap.minRunEvent() ;
-    ra->_maxRunEvt =   _runEvtMap.maxRunEvent() ;
-    ra->_nRunHeaders = _runEvtMap.getNumberOfRunRecords() ;
-    ra->_nEvents =     _runEvtMap.getNumberOfEventRecords() ;
-    
-    ra->_recordsAreInOrder =  true ;  //  ???? how is this defined ????  
+  //----------------------------------------------------------------------------
+
+  std::shared_ptr<LCIORandomAccess> LCIORandomAccessMgr::createFromEventMap() const {
+    auto ra = std::make_shared<LCIORandomAccess>() ;
+    ra->_minRunEvt =   _runEvtMap->minRunEvent() ;
+    ra->_maxRunEvt =   _runEvtMap->maxRunEvent() ;
+    ra->_nRunHeaders = _runEvtMap->getNumberOfRunRecords() ;
+    ra->_nEvents =     _runEvtMap->getNumberOfEventRecords() ;
+    ra->_recordsAreInOrder =  true ;  //  ???? how is this defined ????
     ra->_indexLocation = 0 ;
     ra->_prevLocation = 0 ;
     ra->_nextLocation = 0 ;
     ra->_firstRecordLocation = 0 ;
-
     return ra ;
   }
 
@@ -69,236 +46,269 @@ namespace SIO {
 
   void LCIORandomAccessMgr::createFileRecord() {
     if( nullptr == _fileRecord ) {
-      _fileRecord = new LCIORandomAccess ;
-      _fileRecord->_minRunEvt = RunEvent( 2147483647L, 2147483647L ) ; // 2**31-1  - largest 32 bit signed 
+      _fileRecord = std::make_shared<LCIORandomAccess>() ;
+      _fileRecord->_minRunEvt = RunEvent( 2147483647L, 2147483647L ) ; // 2**31-1  - largest 32 bit signed
       _fileRecord->_maxRunEvt = 0 ;
       _fileRecord->_nRunHeaders = 0 ;
       _fileRecord->_nEvents = 0 ;
-      _fileRecord->_recordsAreInOrder = 1 ;  
+      _fileRecord->_recordsAreInOrder = 1 ;
       _fileRecord->_indexLocation = 0 ; // defines file record
-      _fileRecord->_prevLocation = 9223372036854775807LL ; // 2**63-1  - largest 64 bit signed 
+      _fileRecord->_prevLocation = 9223372036854775807LL ; // 2**63-1  - largest 64 bit signed
       _fileRecord->_nextLocation = 0 ;
       _fileRecord->_firstRecordLocation = 0 ;
     }
-    
-    for( std::list<LCIORandomAccess* >::const_iterator i = _list.begin() ; i != _list.end() ; ++i ) {
-      LCIORandomAccess* ra = *i ;
-      
+
+    for( auto i = _list.begin() ; i != _list.end() ; ++i ) {
+      auto ra = *i ;
     	_fileRecord->_minRunEvt = ( ra->_minRunEvt < _fileRecord->_minRunEvt ?  ra->_minRunEvt : _fileRecord->_minRunEvt  ) ;
     	_fileRecord->_maxRunEvt = ( ra->_maxRunEvt > _fileRecord->_maxRunEvt ?  ra->_maxRunEvt : _fileRecord->_maxRunEvt  ) ;
     	_fileRecord->_nRunHeaders += ra->_nRunHeaders ;
     	_fileRecord->_nEvents += ra->_nEvents ;
-    	_fileRecord->_recordsAreInOrder = ( _fileRecord->_recordsAreInOrder * ra->_recordsAreInOrder  ) ; // should be 0 if any record is 0  
+    	_fileRecord->_recordsAreInOrder = ( _fileRecord->_recordsAreInOrder * ra->_recordsAreInOrder  ) ; // should be 0 if any record is 0
     	_fileRecord->_indexLocation = 0 ; // defines file record
-
     	if( ra->_nextLocation > _fileRecord->_nextLocation ) {
     	  _fileRecord->_nextLocation  =  ra->_nextLocation ;
       }
-    	
     	if( 0 < ra->_prevLocation  &&  ra->_prevLocation < _fileRecord->_prevLocation ) {
     	  _fileRecord->_prevLocation  =  ra->_prevLocation ;
       }
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
-  void  LCIORandomAccessMgr::addLCIORandomAccess( LCIORandomAccess* ra ) {
-    _list.push_back( ra ); 
+  void  LCIORandomAccessMgr::addLCIORandomAccess( std::shared_ptr<LCIORandomAccess> ra ) {
+    _list.push_back( ra );
   }
 
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::readLCIORandomAccessAt( SIO_stream* stream , long64 pos) {
+  bool LCIORandomAccessMgr::readLCIORandomAccessAt( sio::ifstream& stream , long64 pos) {
     seekStream( stream, pos ) ;
     return readLCIORandomAccess( stream ) ;
   }
 
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::readLCIORandomAccess( SIO_stream* stream ) {
-
-    auto raRecord = _lcioRecords.createRandomAccessRecord( this ) ;
-    raRecord->set_compression(false);
-    SIO_DEBUG( "LCIORandomAccessMgr::readLCIORandomAccess: Reading at " << stream->file_tell() );
-    auto readResult = stream->read_next_record( {{ raRecord->name(), raRecord }} );
-    if( ! (readResult._status & 1) ) {
-      readResult._status = stream->reset() ;
-      if( readResult._status != SIO_STREAM_SUCCESS ) {
-         throw IOException( "IO error while reading LCIORandomAccess from stream" ) ;
-      }
+  bool LCIORandomAccessMgr::readLCIORandomAccess( sio::ifstream &stream ) {
+    SIO_DEBUG( "LCIORandomAccessMgr::readLCIORandomAccess: Reading at " << stream.tellg() );
+    // first extract the record from the stream (header + data)
+    sio::record_info recinfo ;
+    try {
+      sio::api::read_record( stream, recinfo, _rawBuffer ) ;
+    }
+    catch( sio::exception &e ) {
+      // no way to extract a record !
       return false ;
     }
+    // we got a record but it's not an LCIORandomAccess record...
+    if( recinfo._name != LCSIO::AccessRecordName ) {
+      return false ;
+    }
+    // setup the rando access block
+    sio::block_list blocks {} ;
+    auto raBlock = std::make_shared<SIORandomAccessHandler>() ;
+    blocks.push_back( raBlock ) ;
+    // get a valid buffer span for reading
+    auto recordData = _rawBuffer.span( recinfo._header_length, recinfo._data_length ) ;
+    // read the record blocks
+    sio::api::read_blocks( recordData, blocks ) ;
+    // get our random access object and add it to our list
+    addLCIORandomAccess( raBlock->randomAccess() ) ;
     return true ;
   }
-  
+
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::readLCIOIndexAt( SIO_stream* stream , long64 pos) {
+  bool LCIORandomAccessMgr::readLCIOIndexAt( sio::ifstream &stream , long64 pos) {
     seekStream( stream, pos ) ;
     return readLCIOIndex( stream ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::readLCIOIndex( SIO_stream* stream ) {
-
-    auto raRecord = _lcioRecords.createIndexRecord( this ) ;
-    raRecord->set_compression(false);
-    auto readResult = stream->read_next_record( {{ LCSIO_INDEXRECORDNAME, raRecord }} );
-    if( ! (readResult._status & 1) ) {
-      readResult._status = stream->reset() ;
-      if( readResult._status != SIO_STREAM_SUCCESS ) {
-         throw IOException( "IO error while reading LCIORandomAccess from stream" ) ;
-      }
+  bool LCIORandomAccessMgr::readLCIOIndex( sio::ifstream &stream ) {
+    SIO_DEBUG( "LCIORandomAccessMgr::readLCIOIndex: Reading at " << stream.tellg() );
+    // first extract the record from the stream (header + data)
+    sio::record_info recinfo ;
+    try {
+      sio::api::read_record( stream, recinfo, _rawBuffer ) ;
+    }
+    catch( sio::exception &e ) {
+      // no way to extract a record !
       return false ;
     }
+    // we got a record but it's not an LCIOIndex record...
+    if( recinfo._name != LCSIO::IndexRecordName ) {
+      return false ;
+    }
+    // setup the rando access block
+    sio::block_list blocks {} ;
+    auto indexBlock = std::make_shared<SIOIndexHandler>() ;
+    indexBlock->setRunEventMap( _runEvtMap ) ;
+    blocks.push_back( indexBlock ) ;
+    // get a valid buffer span for reading
+    auto recordData = _rawBuffer.span( recinfo._header_length, recinfo._data_length ) ;
+    // read the record blocks
+    sio::api::read_blocks( recordData, blocks ) ;
     return true ;
   }
 
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::initAppend( SIO_stream* stream ) {
+  bool LCIORandomAccessMgr::initAppend( sio::ifstream & stream ) {
     // check if the last record is LCIORandomAccess  (the file record )
     SIO_DEBUG( "LCIORandomAccessMgr::initAppend: reading random access" );
-    if( ! readLCIORandomAccessAt( stream , -LCSIO_RANDOMACCESS_SIZE) ) {
+    if( ! readLCIORandomAccessAt( stream , -LCSIO::RandomAccessSize ) ) {
       SIO_DEBUG( "LCIORandomAccessMgr::initAppend: No random access" );
-      recreateEventMap( stream ) ; 
+      recreateEventMap( stream ) ;
       return false;
     }
-    // store the file record separately 
+    // store the file record separately
     _fileRecord = _list.back() ;
     _list.pop_back()  ;
     SIO_DEBUG( "LCIORandomAccessMgr::initAppend: Random access found !" );
-    // now read first LCIORandomAccess record 
-    readLCIORandomAccessAt( stream , _fileRecord->_nextLocation ) ; // start of last LCIORandomAccessRecord	
+    // now read first LCIORandomAccess record
+    readLCIORandomAccessAt( stream , _fileRecord->_nextLocation ) ; // start of last LCIORandomAccessRecord
     return true ;
   }
 
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::createEventMap( SIO_stream* stream ) {
+  bool LCIORandomAccessMgr::createEventMap( sio::ifstream & stream ) {
     // check if the last record is LCIORandomAccess ( the file record )
-    if( ! readLCIORandomAccessAt( stream , -LCSIO_RANDOMACCESS_SIZE) )  {
-      return recreateEventMap( stream ) ; 
+    if( ! readLCIORandomAccessAt( stream , -LCSIO::RandomAccessSize) )  {
+      return recreateEventMap( stream ) ;
     }
-    // store the file record separately 
+    // store the file record separately
     _fileRecord = _list.back() ;
     _list.pop_back()  ;
 
-    EVENT::long64 raPos = _fileRecord->_nextLocation ;
-    // start of last LCIORandomAccessRecord	
-    readLCIORandomAccessAt( stream ,  raPos  ) ; 
-    const LCIORandomAccess* ra = lastLCIORandomAccess() ;
+    auto raPos = _fileRecord->_nextLocation ;
+    // start of last LCIORandomAccessRecord
+    readLCIORandomAccessAt( stream ,  raPos  ) ;
+    auto ra = lastLCIORandomAccess() ;
     // and then read all remaining LCIORandomAccess records
     raPos = ra->getPrevLocation() ;
-    EVENT::long64 indexPos = ra->getIndexLocation() ;
+    auto indexPos = ra->getIndexLocation() ;
     readLCIOIndexAt( stream , indexPos ) ;
 
     while( raPos != 0 ) {
-      if( readLCIORandomAccessAt( stream , raPos) ){
+      if( readLCIORandomAccessAt( stream , raPos) ) {
         ra = lastLCIORandomAccess() ;
-      	raPos = ra->getPrevLocation() ;	
-      	EVENT::long64 idxPos = ra->getIndexLocation() ;
+      	raPos = ra->getPrevLocation() ;
+      	auto idxPos = ra->getIndexLocation() ;
       	readLCIOIndexAt( stream , idxPos ) ;
       }
       else {
-	       throw IOException( std::string( "[LCIORandomAccessMgr::ReadEventMap()] Could not read previous LCIORandomAccess record" ) ) ;
-      }      
+	       throw IO::IOException( std::string( "[LCIORandomAccessMgr::ReadEventMap()] Could not read previous LCIORandomAccess record" ) ) ;
+      }
     }
     seekStream( stream, 0 ) ;// go to start of file
     return true ;
   }
-  
+
   //----------------------------------------------------------------------------
 
-  bool LCIORandomAccessMgr::recreateEventMap( SIO_stream* stream ) {
+  bool LCIORandomAccessMgr::recreateEventMap( sio::ifstream & stream ) {
 
     std::cout << " LCIORandomAccessMgr::getEventMap() recreating event map for direct access (old file)" << std::endl ;
+    // read the next record from the stream
+    if( not stream.is_open() ) {
+      throw IO::IOException( "LCIORandomAccessMgr::recreateEventMap: stream is not open" ) ;
+    }
     // go to start of file
     seekStream( stream, 0 ) ;
-
-    IOIMPL::LCEventIOImpl* evtPtr {nullptr} ;
-    IOIMPL::LCRunHeaderIOImpl* runPtr {nullptr} ;
-    auto headerRecord = _lcioRecords.createEventHeaderRecord( evtPtr ) ;
-    auto runRecord = _lcioRecords.createRunRecord( runPtr ) ;
-    
-    sio::record_map records = { {headerRecord->name(), headerRecord}, {runRecord->name(), runRecord} } ;
-    
+    std::set<std::string> recordlist = { LCSIO::HeaderRecordName, LCSIO::RunRecordName } ;
     while( true ) {
-      // read the next record from the stream
-      if( stream->state() != SIO_STATE_OPEN ) {
-        throw IOException( " stream not open" ) ;
-      } 
-      auto readResult = stream->read_next_record( records ) ;
-      if( ! (readResult._status & 1) ) {
-        if( readResult._status & SIO_STREAM_EOF ) {
+      sio::record_info recinfo {} ;
+      try {
+        sio::api::skip_records( stream, [&]( const sio::record_info &ri ){
+          return ( recordlist.find(ri._name) == recordlist.end() ) ;
+        }) ;
+        // we read something valid here. Read the record from the stream
+        sio::api::read_record( stream, recinfo, _rawBuffer ) ;
+        // Get the record data
+        auto recdata = _rawBuffer.span( recinfo._header_length, recinfo._data_length ) ;
+        // deal with zlib uncompression
+        const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+        if( compressed ) {
+          sio::zlib_compression compressor ;
+          _compressBuffer.resize( recinfo._uncompressed_length ) ;
+          compressor.uncompress( recdata, _compressBuffer ) ;
+        }
+        // get the correct buffer depending of compression settings
+        auto databuf = compressed ? _compressBuffer.span() : recdata ;
+        // event case
+        if( recinfo._name == LCSIO::HeaderRecordName ) {
+          auto event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+          // pass a dummy list of read collection with only '__dummy__' inside.
+          // We only need the event and run numbers there, no need to settup all collections
+          SIOEventHeaderRecord::readBlocks( databuf, event.get(), {"__dummy__"} ) ;
+          _runEvtMap->add( RunEvent( event->getRunNumber() , event->getEventNumber() ) , static_cast<long64>(recinfo._file_start) ) ;
+        }
+        // run case
+        else if( recinfo._name == LCSIO::RunRecordName ) {
+          auto run = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
+          SIORunHeaderRecord::readBlocks( recdata, run.get() ) ;
+          _runEvtMap->add( RunEvent( run->getRunNumber() , -1 ) , static_cast<long64>(recinfo._file_start) ) ;
+        }
+      }
+      catch( sio::exception &e ) {
+        // reached end of file
+        if( e.code() == sio::error_code::eof ) {
           break ;
         }
-        throw IOException( " io error on stream" ) ;
+        SIO_RETHROW( e, e.code(), "Couldn't recreate event map !" ) ;
       }
-
-      //--
-      int runNum = -1 ;
-      int evtNum = -1 ;
-      
-      if( readResult._record->name() == LCSIO_HEADERRECORDNAME ) {
-        runNum = evtPtr->getRunNumber() ;
-        evtNum = evtPtr->getEventNumber() ;
-      }
-      if( readResult._record->name() == LCSIO_RUNRECORDNAME ) {
-        runNum = runPtr->getRunNumber() ;
-      }
-      _runEvtMap.add(   RunEvent( runNum , evtNum ) , readResult._record_begin ) ;
     } // while
     // go to start of file
     seekStream( stream, 0 ) ;
     return true ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
-  void LCIORandomAccessMgr::writeRandomAccessRecords(SIO_stream* stream) {
-    // nothing to write
-    if( _runEvtMap.empty() ) { 
-      return ;       
+
+  void LCIORandomAccessMgr::writeRandomAccessRecords( sio::ofstream & stream ) {
+    // nothing to write ?
+    if( _runEvtMap->empty() ) {
+      return ;
     }
-    auto raRecord = _lcioRecords.createRandomAccessRecord( this ) ;
-    raRecord->set_compression( false ) ;
-    auto indexRecord = _lcioRecords.createIndexRecord( this ) ;
-    indexRecord->set_compression( false ) ;
-    
-    if( stream->state() != SIO_STATE_OPEN ){
-      throw IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] stream not opened" ) ;
+    if( not stream.is_open() ) {
+      throw IO::IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] stream not opened" ) ;
     }
-    
-    auto writeResult = stream->write_record( indexRecord );
-    
-    if( !(writeResult._status & 1)  ) {
-      throw IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] couldn't write LCIOIndex to stream" ) ;      
-    }
-    // create the LCIORandomAccess object ( linked list of records ) 
-    LCIORandomAccess* ra = createFromEventMap() ;
-    ra->setIndexLocation( writeResult._record_begin ) ;
-    long64 thisPos = stream->file_tell() ;
+    sio::block_list blocks {} ;
+
+    // 1) write the first index in the file
+    auto indexHandler = std::make_shared<SIOIndexHandler>() ;
+    indexHandler->setRunEventMap( _runEvtMap ) ;
+    blocks.push_back( indexHandler ) ;
+    // write in the buffer first, then the buffer to the file
+    auto recinfo = sio::api::write_record( LCSIO::IndexRecordName, _rawBuffer, blocks, 0 ) ;
+    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+
+    // 2) create the LCIORandomAccess object ( linked list of records )
+    auto ra = createFromEventMap() ;
+    ra->setIndexLocation( recinfo._file_start ) ;
+    long64 thisPos = stream.tellp() ;
     ra->setFirstRecordLocation(  thisPos  ) ;
-    
-    const LCIORandomAccess* lRa  = lastLCIORandomAccess() ;
+    auto lRa  = lastLCIORandomAccess() ;
     SIO_DEBUG( "LCIORandomAccessMgr::writeRandomAccessRecords: lRa is " << lRa );
     long64 prevPos = (  lRa ? lRa->getFirstRecordLocation() : 0 ) ;
     ra->setPreviousLocation(  prevPos ) ;
-    
-    addLCIORandomAccess( ra ) ; 
-    
-    // write LCAccess record
-    writeResult = stream->write_record( raRecord ) ;
-    
-    if( !(writeResult._status & 1)  ) {
-      throw IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] couldn't write LCIORandomAccess to stream" ) ;
-    }
-    
-    createFileRecord() ;
+    addLCIORandomAccess( ra ) ;
 
+    // 3) Write the random access record
+    blocks.clear() ;
+    auto raHandler = std::make_shared<SIORandomAccessHandler>() ;
+    raHandler->setRandomAccess( lastLCIORandomAccess() ) ;
+    blocks.push_back( raHandler ) ;
+    // write in the buffer first, then the buffer to the file
+    recinfo = sio::api::write_record( LCSIO::AccessRecordName, _rawBuffer, blocks, 0 ) ;
+    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+
+    // 4) Create the file record
+    createFileRecord() ;
     if( thisPos > _fileRecord->_nextLocation ) {
       _fileRecord->_nextLocation  =  thisPos ;
     }
@@ -306,43 +316,40 @@ namespace SIO {
       _fileRecord->_prevLocation  =  thisPos ;
     }
 
-    addLCIORandomAccess( _fileRecord ) ; 
-    
-    writeResult = stream->write_record( raRecord ) ;
+    // 5) Write the file random access record to stream
+    raHandler->setRandomAccess( _fileRecord ) ;
+    // write in the buffer first, then the buffer to the file
+    recinfo = sio::api::write_record( LCSIO::AccessRecordName, _rawBuffer, blocks, 0 ) ;
+    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+
     SIO_DEBUG( "Random access manager: =====\n" << *this );
-    
-    if( !(writeResult._status & 1)  ) {
-      throw IOException( "[LCIORandomAccessMgr::writeRandomAccessRecords] couldn't write LCIORandomAccess file record to stream" ) ;
-    }
-    _list.pop_back()  ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
-  void LCIORandomAccessMgr::seekStream( SIO_stream *stream, long64 pos ) {
-    if( stream->state() != SIO_STATE_OPEN ) {
+
+  void LCIORandomAccessMgr::seekStream( sio::ifstream &stream, long64 pos ) {
+    if( not stream.is_open() ) {
       throw IO::IOException( "[LCIORandomAccessMgr::seekStream] Stream not open") ;
     }
     SIO_DEBUG( "LCIORandomAccessMgr::seekStream: seeking at " << pos << ", current position being " << stream->file_tell() );
-    int status ;
     if( pos < 0 ) {
-      status = stream->seek( pos , SEEK_END ) ;
+      stream.seekg( -pos , std::ios_base::end ) ;
     }
     else {
-      status = stream->seek( pos ) ;
-    }    
-    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: current position is now " << stream->file_tell() );
-    if( status != SIO_STREAM_SUCCESS ) {
-      std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos << "  errno : " << errno ;
+      stream.seekg( pos ) ;
+    }
+    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: current position is now " << stream.tellg() );
+    if( not stream.good() ) {
+      std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos ;
       throw IO::IOException( s.str() ) ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   std::ostream& operator<<(std::ostream& os, const LCIORandomAccessMgr& ra ) {
     os << " LCIORandomAccessMgr:  ----------------------- " << std::endl   ;
-    for( std::list<LCIORandomAccess* >::const_iterator i = ra._list.begin() ; i != ra._list.end() ; ++i ){
+    for( auto i = ra._list.begin() ; i != ra._list.end() ; ++i ) {
       os << **i ;
     }
     os  <<  ra._runEvtMap << std::endl ;
