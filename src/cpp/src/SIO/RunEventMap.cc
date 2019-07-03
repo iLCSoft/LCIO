@@ -3,7 +3,7 @@
 #include <iostream>
 
 namespace SIO {
-    
+
   bool operator < ( const RunEvent& r0, const RunEvent& other) {
 
     //std::cout << r0 << " < " << other << " : ["
@@ -17,7 +17,7 @@ namespace SIO {
 
     return ( r0.RunNum == other.RunNum ?  r0.EvtNum < other.EvtNum  :  r0.RunNum < other.RunNum ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   std::ostream & operator<<(std::ostream& os, const RunEvent& re ) {
@@ -26,11 +26,11 @@ namespace SIO {
 
     return os ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   void RunEventMap::add(const RunEvent& re, long64 pos ) {
-    auto p = _map.insert( std::make_pair( (long64) re , pos ) ) ; 
+    auto p = _map.insert( std::make_pair( (long64) re , pos ) ) ;
     // if event/run exists don't count as new entry
     if( p.second ) {
       if( re.EvtNum > -1 ) {
@@ -39,40 +39,40 @@ namespace SIO {
       else {
         ++ _nRun ;
       }
-      
+
     }
     // overwrite with new entry
     else {
       p.first->second = pos ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   RunEventMap::long64 RunEventMap::getPosition( long64 re ) {
     auto it = _map.find( re ) ;
     return ( it != _map.end() ? it->second : npos ) ;
-  } 
+  }
 
   //----------------------------------------------------------------------------
 
-  RunEvent RunEventMap::minRunEvent() {
+  RunEvent RunEventMap::minRunEvent() const {
     if( _map.empty() ) {
       return RunEvent( -1 , -1 ) ;
     }
     return _map.begin()->first ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
-  RunEvent RunEventMap::maxRunEvent() {
+
+  RunEvent RunEventMap::maxRunEvent() const {
     if( _map.empty() ) {
       return RunEvent( -1 , -1 ) ;
     }
     auto it =  _map.rbegin() ;
     return it->first ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   std::ostream & operator<<(std::ostream& os, const RunEventMap& rm ) {
@@ -82,5 +82,5 @@ namespace SIO {
     }
     return os ;
   }
-  
+
 }
