@@ -19,7 +19,7 @@ namespace EVENT {
 }
 
 namespace SIO {
-  
+
   class SIOEventHeaderRecord {
     // static API only
     SIOEventHeaderRecord() = delete ;
@@ -27,113 +27,92 @@ namespace SIO {
     /**
      *  @brief  Read an event header record.
      *          Decode the buffer and setup the collections in the event.
-     *          
+     *          The buffer must have been uncompressed before hand and must
+     *          start on the first block
+     *
      *  @param  buffer the raw SIO buffer to decode
-     *  @param  event the event to populate 
+     *  @param  event the event to populate
      *  @param  readCol the collections to read only
      */
-    static void read( const sio::buffer_span &buffer, IOIMPL::LCEventIOIMPL *event, const std::vector<std::string> &readCol ) ;
-    
+    static void readBlocks( const sio::buffer_span &buffer, EVENT::LCEvent *event, const std::vector<std::string> &readCol ) ;
+
     /**
      *  @brief  Write an event header to the raw sio buffer.
-     *  
+     *          Write the full record to the buffer. The record is not compressed
+     *
      *  @param  outbuf the buffer to fill
      *  @param  event the event to write
      *  @param  rec_info the record info to receive
+     *  @param  opts an optional word with encoded options
      */
-    static void write( sio::buffer &outbuf, const EVENT::LCEvent *event, sio::record_info &rec_info ) ;
+    static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, sio::options_type opts = 0 ) ;
   };
-  
-  class LCIORandomAccessMgr;
 
-  /**
-   *  @brief  LCIORecords class.
-   *          Holds instances of SIO records for the LCIO event data model.
-   *          Manage creation of records and associated blocks
-   *
-   *  @author R. Ete, DESY. 01/2019
-   */
-  class LCIORecords {
-  private:
-    LCIORecords& operator=(const LCIORecords &) = delete;
-    LCIORecords(const LCIORecords &) = delete;
-    
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+
+  class SIOEventRecord {
+    // static API only
+    SIOEventRecord() = delete ;
   public:
     /**
-     *  @brief  Constructor
+     *  @brief  Setup the record blocks for the given event.
+     *          Works for reading and writing
+     *
+     *  @param  event the event containing the collections
+     *  @param  handlerMgr the handler manager to get the collection block handler
+     *  @param  blocks the blocks to receive
      */
-    LCIORecords() = default;
-    
-    /**
-     *  @brief  Create an SIO record for the event header (writing case)
-     * 
-     *  @param  event the event to use for event header writing
-     *  @return a prepared SIO record
-     */
-    // sio::record_ptr createEventHeaderRecord( const EVENT::LCEvent *event ) const;
-    // 
-    // /**
-    //  *  @brief  Create an SIO record for the event header (reading case)
-    //  * 
-    //  *  @param  event the event to use for event header reading
-    //  *  @param  readCol a subset of collection names to read only (empty means read all)
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createEventHeaderRecord( IOIMPL::LCEventIOImpl **event , const std::vector<std::string> &readCol ) const;
-    // 
-    // /**
-    //  *  @brief  Create an SIO record for the event (writing case)
-    //  * 
-    //  *  @param  event the event to write 
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createEventRecord( const EVENT::LCEvent *event ) const;
-    // 
-    // /**
-    //  *  @brief  Create an SIO record for the event (reading case)
-    //  * 
-    //  *  @param  event the event to read
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createEventRecord( IOIMPL::LCEventIOImpl **event ) const;
-    // 
-    // /**
-    //  *  @brief  Create an SIO record for the run header (writing case)
-    //  * 
-    //  *  @param  runHeader the run header to write 
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createRunRecord( const EVENT::LCRunHeader *runHeader ) const;
-    // 
-    // /**
-    //  *  @brief  Create an SIO record for the run header (reading case)
-    //  * 
-    //  *  @param  runHeader the run header to read
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createRunRecord( IOIMPL::LCRunHeaderIOImpl **runHeader ) const;
-    // 
-    // /**
-    //  *  @brief  Create a random access record (reading and writing case)
-    //  *  
-    //  *  @param  raMgr the random access manager for reading/writing a random access object
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createRandomAccessRecord( LCIORandomAccessMgr *raMgr ) const;
-    // 
-    // /**
-    //  *  @brief  Create a index record (reading and writing case)
-    //  *  
-    //  *  @param  raMgr the random access manager for reading/writing an index
-    //  *  @return a prepared SIO record
-    //  */
-    // sio::record_ptr createIndexRecord( LCIORandomAccessMgr *raMgr ) const;
+    static void setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks ) ;
 
-  private:
-    /// The LCIO object handler manager
-    SIOHandlerMgr           _handlerMgr{};
+    /**
+     *  @brief  Read the blocks (collections) from the sio buffer
+     *
+     *  @param buffer the input raw buffer
+     *  @param event the event containing the collections to populate
+     *  @param handlerMgr the collection handler manager to setup the blocks
+     */
+    static void readBlocks( const sio::buffer_span &buffer, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr ) ;
+
+    /**
+     *  @brief  Write an event record. Setup the blocks, write the blocks and
+     *          write an event record into the buffer
+     *
+     *  @param  outbuf the sio buffer to write to
+     *  @param  event the event to write
+     *  @param  handlerMgr the collection block handler manager to setup the blocks
+     *  @param  rec_info the record info object to receive from sio
+     *  @param  opts an optional word with encoded options
+     */
+    static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, sio::options_type opts = 0 ) ;
   };
 
-} // namespace 
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+
+  class SIORunHeaderRecord {
+    // static API only
+    SIORunHeaderRecord() = delete ;
+  public:
+    /**
+     *  @brief  Read the block(s) from the sio buffer and decode a run header
+     *
+     *  @param  buffer the input sio buffer to decode
+     *  @param  rhdr the run header to read
+     */
+    static void readBlocks( const sio::buffer_span &buffer, EVENT::LCRunHeader *rhdr ) ;
+
+    /**
+     *  @brief  Write a run header record to the sio buffer
+     *
+     *  @param  outbuf the sio buffer to write the record to
+     *  @param  rhdr the run header to write
+     *  @param  rec_info the record infor to receive from sio
+     *  @param  opts an optional word with encoded options
+     */
+    static void writeRecord( sio::buffer &outbuf, EVENT::LCRunHeader *rhdr, sio::record_info& rec_info, sio::options_type opts = 0 ) ;
+  };
+
+} // namespace
 
 #endif // ifndef SIO_LCIORECORDS_H

@@ -8,108 +8,83 @@
 #include <EVENT/LCEvent.h>
 #include <Exceptions.h>
 
+// -- sio headers
+#include <sio/exception.h>
+#include <sio/api.h>
+
 namespace SIO {
-  
-  // sio::record_ptr LCIORecords::createEventHeaderRecord( const EVENT::LCEvent *event ) const {
-  //   auto eventHeaderRecord = std::make_shared<SIO_record>( LCSIO_HEADERRECORDNAME );
-  //   eventHeaderRecord->add_block<SIOEventHandler>( LCSIO_HEADERBLOCKNAME );
-  //   auto block = eventHeaderRecord->get_block_as<SIOEventHandler>( LCSIO_HEADERBLOCKNAME );
-  //   block->setEvent( event );
-  //   return eventHeaderRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createEventHeaderRecord( IOIMPL::LCEventIOImpl **event, const std::vector<std::string> &readCol ) const {
-  //   auto eventHeaderRecord = std::make_shared<SIO_record>( LCSIO_HEADERRECORDNAME );
-  //   eventHeaderRecord->add_block<SIOEventHandler>( LCSIO_HEADERBLOCKNAME );
-  //   auto block = eventHeaderRecord->get_block_as<SIOEventHandler>( LCSIO_HEADERBLOCKNAME );
-  //   block->setEventPtr( event );
-  //   block->setReadCollectionNames( readCol );
-  //   return eventHeaderRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createEventRecord( const EVENT::LCEvent *event ) const {
-  //   // create the event record
-  //   auto eventRecord = std::make_shared<SIO_record>( LCSIO_EVENTRECORDNAME );
-  //   // loop over collections and setup the blocks for writing
-  //   auto collectionNames = event->getCollectionNames();
-  //   for( auto collectionName : *collectionNames ) {
-  //     auto collection = event->getCollection( collectionName );
-  //     if( collection->isTransient() ) {
-  //       continue;
-  //     }
-  //     try {
-  //       eventRecord->add_block<SIOCollectionHandler>( collectionName, collection->getTypeName(), nullptr );        
-  //     }
-  //     catch(EVENT::Exception& ex) {
-  //       continue;
-  //     }
-  //     auto block = eventRecord->get_block_as<SIOCollectionHandler>( collectionName );
-  //     auto handler = _handlerMgr.getHandler( collection->getTypeName() );
-  //     block->setHandler( handler );
-  //     block->setCollection( collection );
-  //   }
-  //   return eventRecord;    
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createEventRecord(IOIMPL::LCEventIOImpl **event) const {
-  //   // create the event record
-  //   auto eventRecord = std::make_shared<SIO_record>( LCSIO_EVENTRECORDNAME );
-  //   // loop over collections and setup the blocks for reading/writing an event
-  //   auto collectionNames = (*event)->getCollectionNames();
-  //   for( auto collectionName : *collectionNames ) {
-  //     auto collection = (*event)->getCollection( collectionName );
-  //     try {
-  //       eventRecord->add_block<SIOCollectionHandler>( collectionName, collection->getTypeName(), event );
-  //     }
-  //     catch(EVENT::Exception& ex) {
-  //       continue;
-  //     }
-  //     auto block = eventRecord->get_block_as<SIOCollectionHandler>( collectionName );
-  //     auto handler = _handlerMgr.getHandler( collection->getTypeName() );
-  //     block->setHandler( handler );
-  //     block->setEvent( event );
-  //   }
-  //   return eventRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createRunRecord( const EVENT::LCRunHeader *runHeader ) const {
-  //   auto runRecord = std::make_shared<SIO_record>( LCSIO_RUNRECORDNAME );
-  //   runRecord->add_block<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME );
-  //   runRecord->get_block_as<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME )->setRunHeader( runHeader );
-  //   return runRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createRunRecord( IOIMPL::LCRunHeaderIOImpl **runHeader ) const {
-  //   auto runRecord = std::make_shared<SIO_record>( LCSIO_RUNRECORDNAME );
-  //   runRecord->add_block<SIORunHeaderHandler>( LCSIO_RUNBLOCKNAME, runHeader );
-  //   return runRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createRandomAccessRecord( LCIORandomAccessMgr *raMgr ) const {
-  //   auto raRecord = std::make_shared<SIO_record>( LCSIO_ACCESSRECORDNAME );
-  //   raRecord->add_block<SIORandomAccessHandler>( LCSIO_ACCESSBLOCKNAME, raMgr );
-  //   return raRecord;
-  // }
-  // 
-  // //----------------------------------------------------------------------------
-  // 
-  // sio::record_ptr LCIORecords::createIndexRecord( LCIORandomAccessMgr *raMgr ) const {
-  //   auto indexRecord = std::make_shared<SIO_record>( LCSIO_INDEXRECORDNAME );
-  //   indexRecord->add_block<SIOIndexHandler>( LCSIO_INDEXBLOCKNAME, raMgr );
-  //   return indexRecord;
-  // }
-  
-} // namespace 
- 
+
+  void SIOEventHeaderRecord::readBlocks( const sio::buffer_span &buffer, EVENT::LCEvent *event, const std::vector<std::string> &readCol ) {
+    sio::block_list blocks {} ;
+    auto headerBlock = std::make_shared<SIOEventHandler>() ;
+    headerBlock->setEvent( event ) ;
+    headerBlock->setReadCollectionNames( readCol ) ;
+    blocks.push_back( headerBlock ) ;
+    sio::api::read_blocks( buffer, blocks ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOEventHeaderRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, sio::options_type opts ) {
+    sio::block_list blocks {} ;
+    auto headerBlock = std::make_shared<SIOEventHandler>() ;
+    headerBlock->setEvent( event ) ;
+    blocks.push_back( headerBlock ) ;
+    rec_info = sio::api::write_record( LCSIO::HeaderRecordName, outbuf, blocks, opts ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOEventRecord::setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks ) {
+    auto collectionNames = event->getCollectionNames();
+    for( auto collectionName : *collectionNames ) {
+      auto collection = event->getCollection( collectionName ) ;
+      // this is never true while reading. Can only appear on writing
+      if( collection->isTransient() ) {
+        continue;
+      }
+      auto handler = handlerMgr.getHandler( collection->getTypeName() ) ;
+      auto block = std::make_shared<SIOCollectionHandler>( collectionName, handler ) ;
+      block->setCollection( collection );
+      blocks.push_back( block ) ;
+    }
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOEventRecord::readBlocks( const sio::buffer_span &buffer, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr ) {
+    sio::block_list blocks {} ;
+    SIOEventRecord::setupBlocks( event, handlerMgr, blocks ) ;
+    sio::api::read_blocks( buffer, blocks ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIOEventRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, sio::options_type opts ) {
+    sio::block_list blocks {} ;
+    SIOEventRecord::setupBlocks( event, handlerMgr, blocks ) ;
+    rec_info = sio::api::write_record( LCSIO::HeaderRecordName, outbuf, blocks, opts ) ;
+  }
+
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+
+  void SIORunHeaderRecord::readBlocks( const sio::buffer_span &buffer, EVENT::LCRunHeader *rhdr ) {
+    sio::block_list blocks {} ;
+    auto runBlock = std::make_shared<SIORunHeaderHandler>() ;
+    runBlock->setRunHeader( rhdr ) ;
+    blocks.push_back( runBlock ) ;
+    sio::api::read_blocks( buffer, blocks ) ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  void SIORunHeaderRecord::writeRecord( sio::buffer &outbuf, EVENT::LCRunHeader *rhdr, sio::record_info& rec_info, sio::options_type opts ) {
+    sio::block_list blocks {} ;
+    auto runBlock = std::make_shared<SIORunHeaderHandler>() ;
+    runBlock->setRunHeader( rhdr ) ;
+    blocks.push_back( runBlock ) ;
+    rec_info = sio::api::write_record( LCSIO::RunRecordName, outbuf, blocks, opts ) ;
+  }
+
+} // namespace
