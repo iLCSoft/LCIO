@@ -28,37 +28,33 @@ namespace SIO {
   SIOHandlerMgr::SIOHandlerMgr(){
 
     // add instances for all types to the map
-    _map[ EVENT::LCIO::MCPARTICLE     ] = new SIOParticleHandler ;
-    _map[ EVENT::LCIO::SIMCALORIMETERHIT ] = new SIOSimCalHitHandler ;
-    _map[ EVENT::LCIO::RAWCALORIMETERHIT ] = new SIORawCalHitHandler ;
-    _map[ EVENT::LCIO::CALORIMETERHIT ] = new SIOCalHitHandler ;
-    _map[ EVENT::LCIO::SIMTRACKERHIT ] = new SIOSimTrackHitHandler ;
-    _map[ EVENT::LCIO::TPCHIT ] = new SIOTPCHitHandler ;
-    _map[ EVENT::LCIO::TRACKERRAWDATA ] = new SIOTrackerRawDataHandler ;
-    _map[ EVENT::LCIO::TRACKERDATA ] = new SIOTrackerDataHandler ;
-    _map[ EVENT::LCIO::TRACKERPULSE ] = new SIOTrackerPulseHandler ;
-    _map[ EVENT::LCIO::TRACKERHIT ] = new SIOTrackerHitHandler ;
-    _map[ EVENT::LCIO::TRACKERHITPLANE ] = new SIOTrackerHitPlaneHandler ;
-    _map[ EVENT::LCIO::TRACKERHITZCYLINDER ] = new SIOTrackerHitZCylinderHandler ;
-    _map[ EVENT::LCIO::TRACK ] = new SIOTrackHandler ;
-    _map[ EVENT::LCIO::CLUSTER ] = new SIOClusterHandler ;
-    _map[ EVENT::LCIO::RECONSTRUCTEDPARTICLE ] = new SIOReconstructedParticleHandler ;
-    _map[ EVENT::LCIO::LCRELATION] = new SIOLCRelationHandler ;
-    _map[ EVENT::LCIO::VERTEX] = new SIOVertexHandler ;
+    _map[ EVENT::LCIO::MCPARTICLE     ] = std::make_shared<SIOParticleHandler>() ;
+    _map[ EVENT::LCIO::SIMCALORIMETERHIT ] = std::make_shared<SIOSimCalHitHandler>() ;
+    _map[ EVENT::LCIO::RAWCALORIMETERHIT ] = std::make_shared<SIORawCalHitHandler>() ;
+    _map[ EVENT::LCIO::CALORIMETERHIT ] = std::make_shared<SIOCalHitHandler>() ;
+    _map[ EVENT::LCIO::SIMTRACKERHIT ] = std::make_shared<SIOSimTrackHitHandler>() ;
+    _map[ EVENT::LCIO::TPCHIT ] = std::make_shared<SIOTPCHitHandler>() ;
+    _map[ EVENT::LCIO::TRACKERRAWDATA ] = std::make_shared<SIOTrackerRawDataHandler>() ;
+    _map[ EVENT::LCIO::TRACKERDATA ] = std::make_shared<SIOTrackerDataHandler>() ;
+    _map[ EVENT::LCIO::TRACKERPULSE ] = std::make_shared<SIOTrackerPulseHandler>() ;
+    _map[ EVENT::LCIO::TRACKERHIT ] = std::make_shared<SIOTrackerHitHandler>() ;
+    _map[ EVENT::LCIO::TRACKERHITPLANE ] = std::make_shared<SIOTrackerHitPlaneHandler>() ;
+    _map[ EVENT::LCIO::TRACKERHITZCYLINDER ] = std::make_shared<SIOTrackerHitZCylinderHandler>() ;
+    _map[ EVENT::LCIO::TRACK ] = std::make_shared<SIOTrackHandler>() ;
+    _map[ EVENT::LCIO::CLUSTER ] = std::make_shared<SIOClusterHandler>() ;
+    _map[ EVENT::LCIO::RECONSTRUCTEDPARTICLE ] = std::make_shared<SIOReconstructedParticleHandler>() ;
+    _map[ EVENT::LCIO::LCRELATION] = std::make_shared<SIOLCRelationHandler>() ;
+    _map[ EVENT::LCIO::VERTEX] = std::make_shared<SIOVertexHandler>() ;
     // generic arrays/vectors
-    _map[ EVENT::LCIO::LCSTRVEC ] = new SIOStrVecHandler ;
-    _map[ EVENT::LCIO::LCFLOATVEC ] = new SIOFloatVecHandler ;
-    _map[ EVENT::LCIO::LCINTVEC ] = new SIOIntVecHandler ;
-    _map[ EVENT::LCIO::LCGENERICOBJECT ] = new SIOLCGenericObjectHandler ;
+    _map[ EVENT::LCIO::LCSTRVEC ] = std::make_shared<SIOStrVecHandler>() ;
+    _map[ EVENT::LCIO::LCFLOATVEC ] = std::make_shared<SIOFloatVecHandler>() ;
+    _map[ EVENT::LCIO::LCINTVEC ] = std::make_shared<SIOIntVecHandler>() ;
+    _map[ EVENT::LCIO::LCGENERICOBJECT ] = std::make_shared<SIOLCGenericObjectHandler>() ;
   }
 
-  SIOHandlerMgr::~SIOHandlerMgr(){
-    for( SIOHandlerMap::iterator iter = _map.begin() ; iter  != _map.end() ; iter++ ){
-      delete iter->second ;
-    }
-  }
+  //----------------------------------------------------------------------------
 
-  SIOObjectHandler* SIOHandlerMgr::getHandler( const std::string& type ) const {
+  std::shared_ptr<SIOObjectHandler> SIOHandlerMgr::getHandler( const std::string& type ) const {
     auto findIter = _map.find( type );
     if(  findIter == _map.end( ) ) {
       return nullptr ;
@@ -66,17 +62,13 @@ namespace SIO {
     return findIter->second ;
   }
 
+  //----------------------------------------------------------------------------
 
-  bool SIOHandlerMgr::registerHandler( const std::string& type, SIOObjectHandler* handler ) {
-    // check if type name does not yet exist
+  void SIOHandlerMgr::registerHandler( const std::string& type, std::unique_ptr<SIOObjectHandler> handler ) {
     if(  _map.find( type ) != _map.end( ) ) {
-      return false ;
+      throw EVENT::Exception( "SIOHandlerMgr::registerHandler: Handler of type '" + type + "' already exists !" ) ;
     }
-    if( nullptr == handler ) {
-      return false ;
-    }
-    _map[ type ] = handler ;
-    return true ;
+    _map[ type ] = std::move(handler) ;
   }
 
 } // namespace
