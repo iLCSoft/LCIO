@@ -11,8 +11,8 @@
 
 namespace SIO {
 
-  SIORunHeaderHandler::SIORunHeaderHandler( const std::string &bname ) :
-    sio::block( bname, LCSIO::blockVersion() ) {
+  SIORunHeaderHandler::SIORunHeaderHandler() :
+    sio::block( LCSIO::RunBlockName, LCSIO::blockVersion() ) {
     /* nop */
   }
 

@@ -19,14 +19,12 @@ namespace SIO {
  */
   class SIORunHeaderHandler : public sio::block {
   public:
-    SIORunHeaderHandler() = delete ;
     SIORunHeaderHandler(const SIORunHeaderHandler&) = delete ;
     SIORunHeaderHandler& operator=(const SIORunHeaderHandler&) = delete ;
     ~SIORunHeaderHandler() = default ;
 
-    /** C'tor for writing
-     */
-    SIORunHeaderHandler(const std::string& name) ;
+    /// Constructor
+    SIORunHeaderHandler() ;
 
     /// Set the run header to read/write
     void setRunHeader( EVENT::LCRunHeader* hdr ) ;
