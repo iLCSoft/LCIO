@@ -21,6 +21,7 @@ namespace SIO {
    * @version $Id: SIOCollectionHandler.h,v 1.8 2005-04-15 08:37:42 gaede Exp $
    */
   class SIOCollectionHandler : public sio::block {
+  public:
     SIOCollectionHandler() = delete ;
     SIOCollectionHandler(const SIOCollectionHandler&) = delete;
     SIOCollectionHandler& operator=(const SIOCollectionHandler&) = delete ;
