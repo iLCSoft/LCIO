@@ -89,9 +89,9 @@ namespace SIO {
 
     /** Clear all lists and maps before closing a file */
     void clear() ;
-    
+
     /** Seek the stream at the given position */
-    void seekStream( SIO_stream *stream, long64 pos ) ;
+    void seekStream( sio::ifstream &stream, long64 pos ) ;
 
     /** Seek the stream at the given position */
     void seekStream( sio::ifstream &stream, long64 pos ) ;
