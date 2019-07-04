@@ -22,7 +22,7 @@ namespace SIO {
     _readEventMap( lcReaderFlag & IO::LCReader::directAccess  ) {
     /* nop */
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -30,7 +30,7 @@ namespace SIO {
   SIOReader::~SIOReader() {
     /* nop */
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace SIO {
     _currentFileIndex = 0 ;
     open( _myFilenames[0] ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -100,7 +100,7 @@ namespace SIO {
     }
     return _raMgr.getEventMap()->getNumberOfEventRecords() ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace SIO {
     }
     return _raMgr.getEventMap()->getNumberOfRunRecords() ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -318,7 +318,7 @@ namespace SIO {
       }
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -326,7 +326,7 @@ namespace SIO {
   EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber) {
     return readRunHeader( runNumber, EVENT::LCIO::READ_ONLY ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -358,7 +358,7 @@ namespace SIO {
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) {
     return readEvent( runNumber, evtNumber , EVENT::LCIO::READ_ONLY ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -473,7 +473,7 @@ namespace SIO {
   void SIOReader::registerLCRunListener(IO::LCRunListener * ls) {
     _runListeners.insert( _runListeners.end() , ls );
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -582,6 +582,10 @@ namespace SIO {
             throw IO::EndOfDataException( message.str() )  ;
           }
         }
+        std::stringstream message ;
+        message << "SIOReader::readStream(int maxRecord) : EOF before "
+          << maxRecord << " records read from file" << std::ends ;
+        throw IO::EndOfDataException( message.str() )  ;
       }
     }
 
