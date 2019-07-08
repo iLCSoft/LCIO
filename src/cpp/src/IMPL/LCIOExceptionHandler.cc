@@ -29,11 +29,7 @@ void lcio_unexpected(){
   }
 }
 
-  LCIOExceptionHandler::LCIOExceptionHandler(){
-      
-    std::set_unexpected( lcio_unexpected ) ;
-    std::set_terminate( lcio_unexpected ) ;
-  }
+  LCIOExceptionHandler::LCIOExceptionHandler(){}
     
 
   LCIOExceptionHandler* LCIOExceptionHandler::createInstance(){
