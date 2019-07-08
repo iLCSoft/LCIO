@@ -439,7 +439,7 @@ namespace SIO {
           if( recinfo._name == LCSIO::RunRecordName ) {
             recordsRead++ ;
             auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
-            SIORunHeaderRecord::readBlocks( data, _runHeader.get() ) ;
+            SIORunHeaderRecord::readBlocks( data, runheader.get() ) ;
             runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
             std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
             while( iter != _runListeners.end() ){
