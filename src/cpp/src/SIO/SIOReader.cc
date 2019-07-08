@@ -186,7 +186,7 @@ namespace SIO {
         }
         auto rundata = compressed ? _compBuffer.span() : recdata ;
         auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
-        SIORunHeaderRecord::readBlocks( rundata, _runHeader.get() ) ;
+        SIORunHeaderRecord::readBlocks( rundata, runheader.get() ) ;
         runheader->setReadOnly( accessMode == EVENT::LCIO::READ_ONLY ) ;
         runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
         _runHeader = runheader ;
