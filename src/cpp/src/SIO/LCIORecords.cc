@@ -63,7 +63,7 @@ namespace SIO {
   void SIOEventRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, sio::options_type opts ) {
     sio::block_list blocks {} ;
     SIOEventRecord::setupBlocks( event, handlerMgr, blocks ) ;
-    rec_info = sio::api::write_record( LCSIO::HeaderRecordName, outbuf, blocks, opts ) ;
+    rec_info = sio::api::write_record( LCSIO::EventRecordName, outbuf, blocks, opts ) ;
   }
 
   //----------------------------------------------------------------------------
