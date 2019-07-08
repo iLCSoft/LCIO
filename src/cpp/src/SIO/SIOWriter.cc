@@ -1,34 +1,19 @@
-#include "SIO/SIOWriter.h" 
+#include "SIO/SIOWriter.h"
 
+// -- lcio headers
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
 #include "EVENT/LCIO.h"
 #include "EVENT/LCCollection.h"
-
 #include "SIO/LCSIO.h"
-#include "SIO/SIOEventHandler.h" 
-#include "SIO/SIOCollectionHandler.h" 
-//#include "SIO/SIOLCRelationHandler.h" 
-#include "SIO/SIORunHeaderHandler.h" 
 
-#include "SIO/SIORandomAccessHandler.h"
-#include "SIO/SIOIndexHandler.h"
+// -- sio headers
+#include <sio/exception.h>
+#include <sio/api.h>
+#include <sio/compression/zlib.h>
 
-#include "LCIOSTLTypes.h"
- 
-#include "SIO_stream.h" 
-#include "SIO_record.h" 
-#include "IMPL/LCIOExceptionHandler.h"
-
-//#define DEBUG 1
-#include "IMPL/LCTOOLS.h"
-#include "IMPL/LCRelationImpl.h" 
-
-#include <cstring>
-
-using namespace EVENT ;
-using namespace IO ;
-using namespace IMPL ;
+// -- std headers
+#include <sys/stat.h>
 
 namespace SIO {
 
@@ -36,17 +21,16 @@ namespace SIO {
     _compressionLevel(-1) {
     /* nop */
   }
-  
+
   //----------------------------------------------------------------------------
 
   void SIOWriter::open(const std::string & filename)  {
-    std::string sioFilename ;  
+    std::string sioFilename ;
     getSIOFileName( filename, sioFilename ) ;
+    struct stat fileinfo ;
     // if the file exists we throw an exception
-    FILE* f = FOPEN( sioFilename.c_str() , "r") ;
-    if( f != 0 ){
-      FCLOSE(f) ;
-      throw IOException( std::string( "[SIOWriter::open()] File already exists: " 
+    if ( ::stat( sioFilename.c_str(), &fileinfo ) == 0 ) {
+      throw IO::IOException( std::string( "[SIOWriter::open()] File already exists: "
     				      + sioFilename
 				      + " \n              open it in append or new mode !\n"
 				      )) ;
@@ -54,66 +38,58 @@ namespace SIO {
     // open new file for writing
     open( filename, EVENT::LCIO::WRITE_NEW ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   void SIOWriter::getSIOFileName(const std::string& filename, std::string& sioFilename ) {
-    if( filename.rfind(LCSIO::FILE_EXTENSION) == std::string::npos ||  // .slcio not found at all
-	   !( filename.rfind(LCSIO::FILE_EXTENSION) + strlen( LCSIO::FILE_EXTENSION ) == filename.length() ) ) {  // found, but not at end 
-      sioFilename = filename + LCSIO::FILE_EXTENSION ;
-    } 
+    if( filename.rfind( LCSIO::FileExtension ) == std::string::npos ||  // .slcio not found at all
+	   !( filename.rfind(LCSIO::FileExtension) + strlen( LCSIO::FileExtension ) == filename.length() ) ) {  // found, but not at end
+      sioFilename = filename + LCSIO::FileExtension ;
+    }
     else {
-      sioFilename = filename ;          
+      sioFilename = filename ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   void SIOWriter::open(const std::string& filename, int writeMode)  {
-    // make sure filename has the proper extension (.slcio) 
-    std::string sioFilename ;  
+    // make sure filename has the proper extension (.slcio)
+    std::string sioFilename ;
     getSIOFileName( filename, sioFilename ) ;
-
-    _stream = std::make_shared<sio::stream>();
-
-    // SIO_stream takes any value and maps it to [-1,0,1...,9]
-    _stream->set_compression_level( _compressionLevel ) ;
-    
-    // needed by SIO macros
-    unsigned int status = 0  ;
-    
     switch( writeMode ) {
-      case EVENT::LCIO::WRITE_NEW : 
-      	status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_NEW ) ; 
+      case EVENT::LCIO::WRITE_NEW :
+      _stream.open( sioFilename , std::ios::binary ) ;
       	break ;
       case EVENT::LCIO::WRITE_APPEND :
       	// try to read the last LCIORandomAccess record at the end --------------------
         SIO_DEBUG( "SIOWriter::open: Opening in write append mode" );
-      	status  = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ;         
-      	if( status != SIO_STREAM_SUCCESS ) {
-      	  throw IOException( std::string( "[SIOWriter::open()] Can't open stream for reading TOC: " + sioFilename ) ) ;
+        sio::ifstream istr ;
+        istr.open( sioFilename, std::ios::binary ) ;
+        // status  = _stream->open( sioFilename.c_str() , SIO_MODE_READ ) ;
+      	if( not istr.is_open() ) {
+      	  throw IO::IOException( std::string( "[SIOWriter::open()] Can't open stream for reading TOC: " + sioFilename ) ) ;
         }
-        SIO_DEBUG( "SIOWriter::open: Opening in write append mode 1" );        
-      	bool hasRandomAccess = _raMgr.initAppend( _stream.get() ) ;
-       	_stream->close() ;
+        SIO_DEBUG( "SIOWriter::open: Opening in write append mode 1" );
+      	bool hasRandomAccess = _raMgr.initAppend(istr ) ;
+       	istr.close() ;
         SIO_DEBUG( "SIOWriter::open: Opening in write append mode 2" );
       	if( hasRandomAccess ) {
-      	  status  = _stream->open( sioFilename.c_str() , SIO_MODE_READ_WRITE ) ;
+      	  _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::in | std::ios::app ) ;
       	  // position at the beginnning of the file record which will then be overwritten with the next record ...
-      	  _raMgr.seekStream( _stream.get(), -LCSIO_RANDOMACCESS_SIZE ) ; 
-      	} 
+          _stream.seekp( -LCSIO::RandomAccessSize, std::ios::end ) ;
+      	}
         else {
-      	  // --- old files: ll simjopen the file in append mode 	
-      	  status  = _stream->open( sioFilename.c_str() , SIO_MODE_WRITE_APPEND ) ; 
+          _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::app ) ;
       	}
         SIO_DEBUG( "SIOWriter::open: Opening in write append mode ... OK" );
       	break ;
     }
-    if( !(status &1) ) {
-      throw IOException( std::string( "[SIOWriter::open()] Couldn't open file: " +  sioFilename ) ) ;
+    if( not _stream.good() or not _stream.is_open() ) {
+      SIO_THROW( sio::error_code::not_open, "[SIOWriter::open()] Couldn't open file: '" + sioFilename + "'" ) ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   void SIOWriter::setCompressionLevel(int level) {
@@ -121,70 +97,77 @@ namespace SIO {
   }
 
   //----------------------------------------------------------------------------
-
+  // TODO restart from here !!!!!
   void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)   {
-
-    auto runRecord = _lcioRecords.createRunRecord( hdr );
-    
-    if( _stream->state() == SIO_STATE_OPEN ) {
-      runRecord->set_compression( _compressionLevel != 0 );
-      auto result = _stream->write_record( runRecord );
-      _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , result._record_begin ) ;
-      
-      if( !(result._status & 1) ) {
-        throw IOException( "[SIOWriter::writeRunHeader] couldn't write run header to stream") ;
-      }
+    if( not _stream.is_open() ) {
+      throw IO::IOException( "[SIOWriter::writeRunHeader] stream not opened") ;
+    }
+    sio::record_info recinfo {} ;
+    SIORunHeaderRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCRunHeader*>(hdr), recinfo, 0 ) ;
+    // deal with zlib compression here
+    if( _compressionLevel != 0 ) {
+      sio::zlib_compression compressor ;
+      compressor.set_level( _compressionLevel ) ;
+      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, compressor ) ;
+      sio::api::write_record( _stream, _rawBuffer.span(0, recinfo._header_length), _compBuffer.span(), recinfo ) ;
     }
     else {
-      throw IOException( "[SIOWriter::writeRunHeader] stream not opened") ;
+      sio::api::write_record( _stream, _rawBuffer.span(), recinfo ) ;
     }
+    // random access treatment
+    _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_end ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
-  void SIOWriter::writeEvent(const LCEvent* evt) {
-    // create event header and event records
-    auto headerRecord = _lcioRecords.createEventHeaderRecord( evt ) ;
-    headerRecord->set_compression( _compressionLevel != 0 ) ;
-    auto eventRecord = _lcioRecords.createEventRecord( evt ) ;
-    eventRecord->set_compression( _compressionLevel != 0 ) ;
-    if( _stream->state() == SIO_STATE_OPEN ) {
-      // write event header to file
-      auto headerResult = _stream->write_record( headerRecord ) ;
-      // store event record position in random access manager 
-      _raMgr.add( RunEvent(  evt->getRunNumber(), evt->getEventNumber()  ) , headerResult._record_begin ) ;
-      if( ! (headerResult._status & 1) ) {
-        throw IOException( "[SIOWriter::writeEvent] couldn't write event header to stream" ) ;        
-      }
-      // write the event record
-      auto eventResult = _stream->write_record( eventRecord ) ;
-      if( ! (eventResult._status & 1) ) {
-        throw IOException( "[SIOWriter::writeEvent] couldn't write event to stream" ) ;        
-      }
+  void SIOWriter::writeEvent(const EVENT::LCEvent* evt) {
+
+    if( not _stream.is_open() ) {
+      throw IO::IOException( "[SIOWriter::writeEvent] stream not opened") ;
+    }
+    // 1) write the event header record
+    sio::record_info rechdrinfo {} ;
+    SIOEventHeaderRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCEvent*>(evt), rechdrinfo, 0 ) ;
+    // deal with zlib compression here
+    if( _compressionLevel != 0 ) {
+      sio::zlib_compression compressor ;
+      compressor.set_level( _compressionLevel ) ;
+      sio::api::compress_record( rechdrinfo, _rawBuffer, _compBuffer, compressor ) ;
+      sio::api::write_record( _stream, _rawBuffer.span(0, rechdrinfo._header_length), _compBuffer.span(), rechdrinfo ) ;
     }
     else {
-      throw IOException( "[SIOWriter::writeEvent] stream not opened" ) ;      
+      sio::api::write_record( _stream, _rawBuffer.span(), rechdrinfo ) ;
+    }
+    // random access treatment
+    _raMgr.add( RunEvent(  evt->getRunNumber(), evt->getEventNumber()  ) , rechdrinfo._file_start ) ;
+
+    // 2) write the event record
+    sio::record_info recinfo {} ;
+    SIOEventRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCEvent*>(evt), _eventHandlerMgr, recinfo, 0 ) ;
+    // deal with zlib compression here
+    if( _compressionLevel != 0 ) {
+      sio::zlib_compression compressor ;
+      compressor.set_level( _compressionLevel ) ;
+      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, compressor ) ;
+      sio::api::write_record( _stream, _rawBuffer.span(0, recinfo._header_length), _compBuffer.span(), recinfo ) ;
+    }
+    else {
+      sio::api::write_record( _stream, _rawBuffer.span(), recinfo ) ;
     }
   }
 
   //----------------------------------------------------------------------------
 
   void SIOWriter::close() {
-    _raMgr.writeRandomAccessRecords( _stream.get() ) ;
-    SIO_DEBUG( "SIOWriter::close: last position on close: " << _stream->file_tell() );
+    _raMgr.writeRandomAccessRecords( _stream ) ;
     _raMgr.clear() ;
-    _stream->close();
-    _stream = nullptr;
+    _stream.close();
   }
-  
+
   //----------------------------------------------------------------------------
 
   void SIOWriter::flush()  {
-    int status =  _stream->flush() ;
-    if(! (status &1) ) {
-      throw IOException( "[SIOWriter::flush] couldn't flush stream" ) ;
-    }
+    _stream.flush() ;
   }
 
 } // namespace
-

@@ -1,17 +1,20 @@
 #ifndef SIO_SIOWRITER_H
 #define SIO_SIOWRITER_H 1
 
+// -- std headers
 #include <string>
 #include <vector>
+
+// -- lcio headers
 #include "IO/LCWriter.h"
 #include "EVENT/LCEvent.h"
 #include "EVENT/LCRunHeader.h"
 #include "SIO/LCIORecords.h"
+#include "SIO/LCIORandomAccessMgr.h"
 
-#include "LCIORandomAccessMgr.h"
-
-#include "SIO_block.h"
-#include "SIO_stream.h"
+// -- sio headers
+#include "sio/definitions.h"
+#include "sio/buffer.h"
 
 namespace SIO {
 
@@ -34,7 +37,7 @@ namespace SIO {
     /// Destructor
     ~SIOWriter() = default ;
 
-    /** Opens a file for writing. If file with given name exists, 
+    /** Opens a file for writing. If file with given name exists,
      * an exception is thrown. Use append or new mode instead.
      *
      *@throws IOException
@@ -43,23 +46,23 @@ namespace SIO {
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW
-     * (existing files are replaced) and LCIO::WRITE_APPEND. 
+     * (existing files are replaced) and LCIO::WRITE_APPEND.
      *
      *@throws IOException
      */
     virtual void open(const std::string & filename, int writeMode)  ;
-    
+
     /** Set the compression level - needs to be called before open() otherwise
      *  call will have no effect. If not called the Writer will use default compression.<br>
      *  Valid compression levels are:
      *  <ul>
      *    <li> level <  0 : default compression </li>
      *    <li> level == 0 : no compression</li>
-     *    <li> level >  0 : 1 (fastest) - 9 (best compression) 
+     *    <li> level >  0 : 1 (fastest) - 9 (best compression)
      *    </li>
      *  </ul>
      *  Experimental code - don't use for production.
-     * 
+     *
      *@param level compression level
      */
     virtual void setCompressionLevel(int level) ;
@@ -82,31 +85,32 @@ namespace SIO {
      *@throws IOException
      */
     virtual void close()  ;
-    
+
     /** Flushes the output file/stream etc.
      *
      *@throws IOException
      */
     virtual void flush()  ;
 
-  private:  
-    /** Creates a proper filename with extension 'slcio' 
+  private:
+    /** Creates a proper filename with extension 'slcio'
      * in sioFilename.
      */
-    void getSIOFileName(const std::string& filename, std::string& sioFilename)  ; 
-    
-  private:
-    /// 
-    sio::stream_ptr         _stream{nullptr};
-    ///
-    int                     _compressionLevel {0};
-    /// 
-    LCIORecords             _lcioRecords{};
-    
-  private:
-    ///
-    LCIORandomAccessMgr _raMgr{} ;
+    void getSIOFileName(const std::string& filename, std::string& sioFilename)  ;
 
+  private:
+    /// The output file stream
+    sio::ofstream                        _stream {} ;
+    /// The raw buffer for writing bytes to the stream
+    sio::buffer                          _rawBuffer {32*sio::kbyte} ;
+    /// The raw buffer for compression
+    sio::buffer                          _compBuffer {64*sio::kbyte} ;
+    /// The collection block handler manager for events
+    SIOHandlerMgr                        _eventHandlerMgr {} ;
+    ///
+    int                                  _compressionLevel {0};
+    ///
+    LCIORandomAccessMgr                  _raMgr {} ;
   }; // class
 
 } // namespace.
