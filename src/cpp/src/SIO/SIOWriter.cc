@@ -17,13 +17,6 @@
 
 namespace SIO {
 
-  SIOWriter::SIOWriter() :
-    _compressionLevel(-1) {
-    /* nop */
-  }
-
-  //----------------------------------------------------------------------------
-
   void SIOWriter::open(const std::string & filename)  {
     std::string sioFilename ;
     getSIOFileName( filename, sioFilename ) ;
@@ -93,7 +86,7 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   void SIOWriter::setCompressionLevel(int level) {
-    _compressionLevel = level ;
+    _compressor.set_level( level ) ;
   }
 
   //----------------------------------------------------------------------------
@@ -105,10 +98,8 @@ namespace SIO {
     sio::record_info recinfo {} ;
     SIORunHeaderRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCRunHeader*>(hdr), recinfo, 0 ) ;
     // deal with zlib compression here
-    if( _compressionLevel != 0 ) {
-      sio::zlib_compression compressor ;
-      compressor.set_level( _compressionLevel ) ;
-      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, compressor ) ;
+    if( _compressor.level() != 0 ) {
+      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, _compressor ) ;
       sio::api::write_record( _stream, _rawBuffer.span(0, recinfo._header_length), _compBuffer.span(), recinfo ) ;
     }
     else {
@@ -129,10 +120,8 @@ namespace SIO {
     sio::record_info rechdrinfo {} ;
     SIOEventHeaderRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCEvent*>(evt), rechdrinfo, 0 ) ;
     // deal with zlib compression here
-    if( _compressionLevel != 0 ) {
-      sio::zlib_compression compressor ;
-      compressor.set_level( _compressionLevel ) ;
-      sio::api::compress_record( rechdrinfo, _rawBuffer, _compBuffer, compressor ) ;
+    if( _compressor.level() != 0 ) {
+      sio::api::compress_record( rechdrinfo, _rawBuffer, _compBuffer, _compressor ) ;
       sio::api::write_record( _stream, _rawBuffer.span(0, rechdrinfo._header_length), _compBuffer.span(), rechdrinfo ) ;
     }
     else {
@@ -145,10 +134,8 @@ namespace SIO {
     sio::record_info recinfo {} ;
     SIOEventRecord::writeRecord( _rawBuffer, const_cast<EVENT::LCEvent*>(evt), _eventHandlerMgr, recinfo, 0 ) ;
     // deal with zlib compression here
-    if( _compressionLevel != 0 ) {
-      sio::zlib_compression compressor ;
-      compressor.set_level( _compressionLevel ) ;
-      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, compressor ) ;
+    if( _compressor.level() != 0 ) {
+      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, _compressor ) ;
       sio::api::write_record( _stream, _rawBuffer.span(0, recinfo._header_length), _compBuffer.span(), recinfo ) ;
     }
     else {
