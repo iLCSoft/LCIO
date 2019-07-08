@@ -31,7 +31,7 @@ namespace SIO {
     // open new file for writing
     open( filename, EVENT::LCIO::WRITE_NEW ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace SIO {
       SIO_THROW( sio::error_code::not_open, "[SIOWriter::open()] Couldn't open file: '" + sioFilename + "'" ) ;
     }
   }
-  
+
   //----------------------------------------------------------------------------
 
   //----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ namespace SIO {
   }
 
   //----------------------------------------------------------------------------
-
+  // TODO restart from here !!!!!
   void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)   {
     if( not _stream.is_open() ) {
       throw IO::IOException( "[SIOWriter::writeRunHeader] stream not opened") ;
