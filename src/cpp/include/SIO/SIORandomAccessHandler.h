@@ -28,7 +28,7 @@ namespace SIO {
     /// Set the random access object to read or write
     void setRandomAccess( std::shared_ptr<LCIORandomAccess> ra ) ;
 
-    /// Get the run / event map
+    /// Get the random access object to read or write
     std::shared_ptr<LCIORandomAccess> randomAccess() const ;
 
     // from sio::block

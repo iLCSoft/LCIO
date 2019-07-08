@@ -18,6 +18,18 @@ namespace SIO  {
 
   //----------------------------------------------------------------------------
 
+  void SIORandomAccessHandler::setRandomAccess( std::shared_ptr<LCIORandomAccess> ra ) {
+    _randomAccess = ra ;
+  }
+
+  //----------------------------------------------------------------------------
+
+  std::shared_ptr<LCIORandomAccess> SIORandomAccessHandler::randomAccess() const {
+    return _randomAccess ;
+  }
+
+  //----------------------------------------------------------------------------
+
   void SIORandomAccessHandler::read( sio::read_device &device, sio::version_type vers ) {
     LCSIO::checkVersion( vers ) ;
     SIO_SDATA( device ,  _randomAccess->_minRunEvt.RunNum ) ;
