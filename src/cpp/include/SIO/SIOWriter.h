@@ -15,6 +15,7 @@
 // -- sio headers
 #include "sio/definitions.h"
 #include "sio/buffer.h"
+#include <sio/compression/zlib.h>
 
 namespace SIO {
 
@@ -29,7 +30,7 @@ namespace SIO {
   public:
 
     /// Default constructor
-    SIOWriter() ;
+    SIOWriter() = default ;
     /// no copy constructor
     SIOWriter(const SIOWriter&) = delete ;
     /// no assignment operator
@@ -102,14 +103,14 @@ namespace SIO {
     /// The output file stream
     sio::ofstream                        _stream {} ;
     /// The raw buffer for writing bytes to the stream
-    sio::buffer                          _rawBuffer {32*sio::kbyte} ;
+    sio::buffer                          _rawBuffer {2*sio::mbyte} ;
     /// The raw buffer for compression
-    sio::buffer                          _compBuffer {64*sio::kbyte} ;
+    sio::buffer                          _compBuffer {sio::mbyte} ;
+    /// The compression in use
+    sio::zlib_compression                _compressor {} ;
     /// The collection block handler manager for events
     SIOHandlerMgr                        _eventHandlerMgr {} ;
-    ///
-    int                                  _compressionLevel {0};
-    ///
+    /// The random access manager
     LCIORandomAccessMgr                  _raMgr {} ;
   }; // class
 
