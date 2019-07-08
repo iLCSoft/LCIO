@@ -91,14 +91,12 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   bool LCIORandomAccessMgr::readLCIORandomAccess( sio::ifstream &stream ) {
-    SIO_DEBUG( "LCIORandomAccessMgr::readLCIORandomAccess: Reading at " << stream.tellg() );
     // first extract the record from the stream (header + data)
     sio::record_info recinfo ;
     try {
       sio::api::read_record( stream, recinfo, _rawBuffer ) ;
     }
     catch( sio::exception &e ) {
-      // no way to extract a record !
       return false ;
     }
     // we got a record but it's not an LCIORandomAccess record...
@@ -158,16 +156,13 @@ namespace SIO {
 
   bool LCIORandomAccessMgr::initAppend( sio::ifstream & stream ) {
     // check if the last record is LCIORandomAccess  (the file record )
-    SIO_DEBUG( "LCIORandomAccessMgr::initAppend: reading random access" );
     if( ! readLCIORandomAccessAt( stream , -LCSIO::RandomAccessSize ) ) {
-      SIO_DEBUG( "LCIORandomAccessMgr::initAppend: No random access" );
       recreateEventMap( stream ) ;
       return false;
     }
     // store the file record separately
     _fileRecord = _list.back() ;
     _list.pop_back()  ;
-    SIO_DEBUG( "LCIORandomAccessMgr::initAppend: Random access found !" );
     // now read first LCIORandomAccess record
     readLCIORandomAccessAt( stream , _fileRecord->_nextLocation ) ; // start of last LCIORandomAccessRecord
     return true ;
@@ -285,7 +280,7 @@ namespace SIO {
     blocks.push_back( indexHandler ) ;
     // write in the buffer first, then the buffer to the file
     auto recinfo = sio::api::write_record( LCSIO::IndexRecordName, _rawBuffer, blocks, 0 ) ;
-    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+    sio::api::write_record( stream, _rawBuffer.span(), recinfo ) ;
 
     // 2) create the LCIORandomAccess object ( linked list of records )
     auto ra = createFromEventMap() ;
@@ -305,7 +300,7 @@ namespace SIO {
     blocks.push_back( raHandler ) ;
     // write in the buffer first, then the buffer to the file
     recinfo = sio::api::write_record( LCSIO::AccessRecordName, _rawBuffer, blocks, 0 ) ;
-    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+    sio::api::write_record( stream, _rawBuffer.span(), recinfo ) ;
 
     // 4) Create the file record
     createFileRecord() ;
@@ -320,7 +315,7 @@ namespace SIO {
     raHandler->setRandomAccess( _fileRecord ) ;
     // write in the buffer first, then the buffer to the file
     recinfo = sio::api::write_record( LCSIO::AccessRecordName, _rawBuffer, blocks, 0 ) ;
-    sio::api::write_record( stream, _rawBuffer.span(0, recinfo._data_length), recinfo ) ;
+    sio::api::write_record( stream, _rawBuffer.span(), recinfo ) ;
 
     SIO_DEBUG( "Random access manager: =====\n" << *this );
   }
@@ -331,16 +326,22 @@ namespace SIO {
     if( not stream.is_open() ) {
       throw IO::IOException( "[LCIORandomAccessMgr::seekStream] Stream not open") ;
     }
-    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: seeking at " << pos << ", current position being " << stream->file_tell() );
     if( pos < 0 ) {
-      stream.seekg( -pos , std::ios_base::end ) ;
+      stream.seekg( 0 , std::ios_base::end ) ;
+      auto endg = stream.tellg() ;
+      if( endg < -pos ) {
+        std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos ;
+        throw IO::IOException( s.str() ) ;
+      }
+      sio::ifstream::streampos tpos = -pos ;
+      // pos is negative, so addition make sense here !
+      stream.seekg( endg - tpos , std::ios_base::beg ) ;
     }
     else {
       stream.seekg( pos ) ;
     }
-    SIO_DEBUG( "LCIORandomAccessMgr::seekStream: current position is now " << stream.tellg() );
     if( not stream.good() ) {
-      std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos ;
+      std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos << ". rdstate is: " << stream.rdstate() ;
       throw IO::IOException( s.str() ) ;
     }
   }
