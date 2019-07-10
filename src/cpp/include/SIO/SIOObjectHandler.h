@@ -22,9 +22,6 @@ public:
   /// Default destructor
   virtual ~SIOObjectHandler() = default ;
 
-  /// Set the collection flag
-  void setFlag( unsigned int flag ) ;
-
   /// Get the collection flag
   unsigned int flag() const ;
 

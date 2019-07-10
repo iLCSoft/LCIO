@@ -14,12 +14,6 @@ namespace SIO {
 
   //----------------------------------------------------------------------------
 
-  void SIOObjectHandler::setFlag( unsigned int flag ) {
-    _flag = flag ;
-  }
-
-  //----------------------------------------------------------------------------
-
   unsigned int SIOObjectHandler::flag() const {
     return _flag ;
   }
@@ -34,6 +28,7 @@ namespace SIO {
 
   void SIOObjectHandler::initReading( sio::read_device &device, EVENT::LCCollection *collection, sio::version_type vers ) {
     SIO_SDATA( device ,  _flag ) ;
+    collection->setFlag( _flag ) ;
     if( vers > SIO_VERSION_ENCODE( 1, 1 ) ) {
   	  SIOLCParameters::read( device, collection->parameters(), vers ) ;
     }
@@ -42,6 +37,7 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   void SIOObjectHandler::initWriting( sio::write_device &device, EVENT::LCCollection *collection ) {
+    _flag = collection->getFlag() ;
     SIO_SDATA( device , _flag ) ;
     SIOLCParameters::write( device , collection->getParameters() ) ;
   }
