@@ -101,7 +101,7 @@ namespace SIO {
   }
 
   //----------------------------------------------------------------------------
-  // TODO restart from here !!!!!
+
   void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)   {
     if( not _stream.is_open() ) {
       throw IO::IOException( "[SIOWriter::writeRunHeader] stream not opened") ;
