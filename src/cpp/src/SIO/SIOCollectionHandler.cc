@@ -47,23 +47,24 @@ namespace SIO {
     if( _handler->flag() & ( 1 << EVENT::LCCollection::BITSubset ) ) {
       // read out only pointers
       for( int i=0 ; i< nObj ; i ++ ) {
-        auto lcobj = (*ioCol)[i] ;
-        SIO_PNTR( device , lcobj  ) ;
+        SIO_PNTR( device , &(*ioCol)[i]  ) ;
       }
     }
     else {
+      // std::cout << "Reading a full collection" << std::endl ;
       // read out all objects in the collection
       for( int i=0 ; i< nObj ; i ++ ) {
         (*ioCol)[i] = _handler->create() ;
-        auto lcobj = (*ioCol)[i] ;
         try {
-          _handler->read( device , lcobj , vers ) ;
+          _handler->read( device , (*ioCol)[i] , vers ) ;
         }
         catch( std::exception &e ) {
-          SIO_RETHROW( e, sio::error_code::io_failure, "Couldn't read out object of type '" + _handler->collectionType() + "'" ) ;
+          std::stringstream ss ; ss << "Couldn't read out object of type '" << _handler->collectionType() << "' at index " << i ;
+          SIO_RETHROW( e, sio::error_code::io_failure, ss.str() ) ;
         }
         catch( ... ) {
-          SIO_THROW( sio::error_code::io_failure, "Couldn't read out object of type '" + _handler->collectionType() + "'" ) ;
+          std::stringstream ss ; ss << "Couldn't read out object of type '" << _handler->collectionType() << "' at index " << i ;
+          SIO_THROW( sio::error_code::io_failure, ss.str() ) ;
         }
       }
     }
