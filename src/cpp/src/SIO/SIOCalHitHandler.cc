@@ -35,7 +35,7 @@ namespace SIO {
       SIO_DATA( device ,  &(hit->_time) , 1  ) ;
     }
     if( lcFlag.bitSet( EVENT::LCIO::RCHBIT_LONG ) ) {
-      SIO_DATA( device ,  hit->_position  , 3 ) ;
+      SIO_DATA( device ,  &hit->_position[0]  , 3 ) ;
     }
     if( vers > SIO_VERSION_ENCODE( 1, 2)   ) {
       SIO_DATA( device ,  &(hit->_type) , 1  ) ;
