@@ -31,12 +31,12 @@ namespace SIO {
     }
     SIO_DATA( device ,  cluster->_position  , 3 ) ;
     float errpos[ NERRPOS ] ;
-    SIO_DATA( device , errpos   , NERRPOS ) ;
+    SIO_DATA( device , &errpos[0]   , NERRPOS ) ;
     cluster->setPositionError( errpos ) ;
     SIO_DATA( device ,  &(cluster->_theta)  , 1 ) ;
     SIO_DATA( device ,  &(cluster->_phi)  , 1 ) ;
     float errdir[ NERRDIR ] ;
-    SIO_DATA( device , errdir  , NERRDIR ) ;
+    SIO_DATA( device , &errdir[0]  , NERRDIR ) ;
     cluster->setDirectionError( errdir ) ;
     int nShape ;
     if( vers > SIO_VERSION_ENCODE(1,2) ) {
@@ -122,7 +122,8 @@ namespace SIO {
       SIO_SDATA( device, errdir[i]  ) ;
     }
     auto& shape = cluster->getShape() ;
-    SIO_SDATA( device, shape.size() ) ;
+    int nshape = shape.size() ;
+    SIO_SDATA( device, nshape ) ;
     for(unsigned int i=0;i<shape.size();i++){
       SIO_SDATA( device, shape[i]  ) ;
     }
