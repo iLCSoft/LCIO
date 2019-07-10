@@ -68,12 +68,19 @@ namespace SIO {
        	istr.close() ;
         SIO_DEBUG( "SIOWriter::open: Opening in write append mode 2" );
       	if( hasRandomAccess ) {
-      	  _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::in | std::ios::app ) ;
+      	  _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::in ) ;
       	  // position at the beginnning of the file record which will then be overwritten with the next record ...
-          _stream.seekp( -LCSIO::RandomAccessSize, std::ios::end ) ;
+          _stream.seekp( 0 , std::ios_base::end ) ;
+          auto endg = _stream.tellp() ;
+          if( endg < LCSIO::RandomAccessSize ) {
+            std::stringstream s ;  s << "[SIOWriter::open()] Can't seek stream to " << LCSIO::RandomAccessSize ;
+            throw IO::IOException( s.str() ) ;
+          }
+          sio::ifstream::streampos tpos = LCSIO::RandomAccessSize ;
+          _stream.seekp( endg - tpos , std::ios_base::beg ) ;
       	}
         else {
-          _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::app ) ;
+          _stream.open( sioFilename.c_str() , std::ios::binary | std::ios::out | std::ios::ate ) ;
       	}
         SIO_DEBUG( "SIOWriter::open: Opening in write append mode ... OK" );
       	break ;
@@ -90,7 +97,7 @@ namespace SIO {
   }
 
   //----------------------------------------------------------------------------
-  // TODO restart from here !!!!!
+
   void SIOWriter::writeRunHeader(const EVENT::LCRunHeader * hdr)   {
     if( not _stream.is_open() ) {
       throw IO::IOException( "[SIOWriter::writeRunHeader] stream not opened") ;
