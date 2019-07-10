@@ -67,7 +67,8 @@ namespace SIO {
     SIO_SDATA( device, hit->getTime()  ) ;
     SIO_SDATA( device, hit->getQuality()  ) ;
     const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
-    SIO_SDATA( device, rawHits.size()  ) ;
+    int nrawhits = rawHits.size() ;
+    SIO_SDATA( device, nrawhits ) ;
     for(unsigned int i=0; i < rawHits.size() ; i++){
       SIO_PNTR( device , &(rawHits[i]) ) ;
     }
