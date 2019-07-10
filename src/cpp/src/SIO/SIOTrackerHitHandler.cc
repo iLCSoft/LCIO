@@ -35,7 +35,7 @@ namespace SIO {
     }
     SIO_DATA( device ,    hit->_pos  , 3 ) ;
     float cov[TRKHITNCOVMATRIX] ;
-    SIO_DATA( device ,  cov  ,  TRKHITNCOVMATRIX ) ;
+    SIO_DATA( device ,  &cov[0]  ,  TRKHITNCOVMATRIX ) ;
     hit->setCovMatrix( cov ) ;
     SIO_DATA( device ,  &(hit->_EDep) , 1  ) ;
     if( vers > SIO_VERSION_ENCODE( 1, 12 )   ) {
@@ -77,7 +77,8 @@ namespace SIO {
     SIO_SDATA( device, hit->getTime()  ) ;
     SIO_SDATA( device, hit->getQuality()  ) ;
     const EVENT::LCObjectVec& rawHits = hit->getRawHits() ;
-    SIO_SDATA( device, rawHits.size()  ) ;
+    int nrawhits = rawHits.size() ;
+    SIO_SDATA( device, nrawhits  ) ;
     for(unsigned int i=0; i < rawHits.size() ; i++){
         SIO_PNTR( device , &(rawHits[i]) ) ;
     }
