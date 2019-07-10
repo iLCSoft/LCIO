@@ -60,7 +60,7 @@ namespace SIO {
     SIO_DATA( device ,  &(vtx->_probability)  , 1 ) ;
     SIO_DATA( device ,  vtx->_vpos  , 3 ) ;
     float cov[VTXCOVMATRIX] ;
-    SIO_DATA( device ,  cov  ,  VTXCOVMATRIX ) ;
+    SIO_DATA( device ,  &cov[0]  ,  VTXCOVMATRIX ) ;
     vtx->setCovMatrix( cov ) ;
     int nPara  ;
     SIO_DATA( device ,  &nPara  , 1 ) ;
@@ -80,7 +80,7 @@ namespace SIO {
   void SIOVertexHandler::write( sio::write_device& device, const EVENT::LCObject* obj ) {
     auto vtx = dynamic_cast<const EVENT::Vertex*>(obj)  ;
     SIO_SDATA( device, vtx->isPrimary()  ) ;
-    SIO_SDATA( device, static_cast<size_t> (distance( _set.begin(),_set.find( vtx->getAlgorithmType() )))) ;
+    SIO_SDATA( device, static_cast<int> (distance( _set.begin(),_set.find( vtx->getAlgorithmType() )))) ;
     SIO_SDATA( device, vtx->getChi2()  ) ;
     SIO_SDATA( device, vtx->getProbability()  ) ;
     SIO_DATA( device,  vtx->getPosition() , 3 ) ;
