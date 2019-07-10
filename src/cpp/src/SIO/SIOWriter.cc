@@ -113,7 +113,7 @@ namespace SIO {
       sio::api::write_record( _stream, _rawBuffer.span(), recinfo ) ;
     }
     // random access treatment
-    _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_end ) ;
+    _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_start ) ;
   }
 
   //----------------------------------------------------------------------------
