@@ -353,7 +353,7 @@ namespace SIO {
     for( auto i = ra._list.begin() ; i != ra._list.end() ; ++i ) {
       os << **i ;
     }
-    os  <<  ra._runEvtMap << std::endl ;
+    os  <<  *(ra._runEvtMap) << std::endl ;
     return os ;
   }
 }
