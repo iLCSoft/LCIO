@@ -72,9 +72,7 @@ SET( LCIO_SIO_SRCS
   ./src/SIO/SIOClusterHandler.cc
   ./src/SIO/SIOCollectionHandler.cc
   ./src/SIO/SIOEventHandler.cc
-  ./src/SIO/SIOFloatVecHandler.cc
   ./src/SIO/SIOHandlerMgr.cc
-  ./src/SIO/SIOIntVecHandler.cc
   ./src/SIO/SIOLCGenericObjectHandler.cc
   ./src/SIO/SIOLCParameters.cc
   ./src/SIO/SIOLCRelationHandler.cc
@@ -85,7 +83,6 @@ SET( LCIO_SIO_SRCS
   ./src/SIO/SIORunHeaderHandler.cc
   ./src/SIO/SIOSimCalHitHandler.cc
   ./src/SIO/SIOSimTrackHitHandler.cc
-  ./src/SIO/SIOStrVecHandler.cc
   ./src/SIO/SIOTPCHitHandler.cc
   ./src/SIO/SIOTrackHandler.cc
   ./src/SIO/SIOTrackerDataHandler.cc
@@ -220,12 +217,12 @@ if( LCIO_GENERATE_HEADERS )
   SET( EVENT_AID_HEADERS_LIST ${AID_HEADERS_LIST} )
   SET( EVENT_CXX_HEADERS_LIST ${CXX_HEADERS_LIST} )
   SET( EVENT_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
-  
+
   ADD_LCIO_AID_HEADERS_DIRECTORY( "${LCIO_AID_HEADERS_DIR}/IO" )
   SET( IO_AID_HEADERS_LIST ${AID_HEADERS_LIST} )
   SET( IO_CXX_HEADERS_LIST ${CXX_HEADERS_LIST} )
   SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
-  
+
   # make source files depend on generated header files + aid files
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
@@ -235,7 +232,7 @@ if( LCIO_GENERATE_HEADERS )
 else()
 
   #------FG: if the headers are not generated we need to manually set the header lists
-  
+
   # get list of all .h files in pre-generated directory
   FILE( GLOB  EVENT_CXX_HEADERS_LIST "${LCIO_AID_HEADERS_OUTPUT_DIR}/EVENT/*.h" )
   FILE( GLOB  IO_CXX_HEADERS_LIST "${LCIO_AID_HEADERS_OUTPUT_DIR}/IO/*.h" )
@@ -251,8 +248,8 @@ endif()
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
 #---- special flags for cfortran code : --------
-SET_SOURCE_FILES_PROPERTIES( 
-  ${LCIO_CPPFORT_SRCS} PROPERTIES 
+SET_SOURCE_FILES_PROPERTIES(
+  ${LCIO_CPPFORT_SRCS} PROPERTIES
   COMPILE_FLAGS "-Df2cFortran -Wno-unused"
 )
 # ----------------------------------------------------------------------------
@@ -265,7 +262,7 @@ INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
 
 # install public headers
-INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include 
+INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
     PATTERN "*.txt" EXCLUDE
     #PATTERN "*empty_ignore.h" EXCLUDE
     PATTERN "*/SIO*" EXCLUDE
@@ -308,10 +305,10 @@ ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 
 IF( BUILD_ROOTDICT )
 
-  #fg: for ROOT 6 we need the .src/cpp as include directory  
+  #fg: for ROOT 6 we need the .src/cpp as include directory
   INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
 
-    # special rootcint definitions for lcio 
+    # special rootcint definitions for lcio
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
@@ -327,17 +324,17 @@ IF( BUILD_ROOTDICT )
 
     # ------ generate dictionary for UTIL classes ------------------
     # get list of ALL LCIO headers in LCIO_CXX_HEADERS_DIR
-    FILE( GLOB UTIL_CXX_HEADERS_LIST 
-      ${LCIO_CXX_HEADERS_DIR}/*.h 
-      ${LCIO_CXX_HEADERS_DIR}/rootDict/*.h 
+    FILE( GLOB UTIL_CXX_HEADERS_LIST
+      ${LCIO_CXX_HEADERS_DIR}/*.h
+      ${LCIO_CXX_HEADERS_DIR}/rootDict/*.h
       ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h
       )
 
 #    FILE( GLOB_RECURSE UTIL_CXX_HEADERS_LIST ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h )
 
     # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers 
-        ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h 
+    FILE( GLOB_RECURSE exclude_headers
+        ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
     )
@@ -345,7 +342,7 @@ IF( BUILD_ROOTDICT )
     # remove items to exclude
     LIST( REMOVE_ITEM UTIL_CXX_HEADERS_LIST ${exclude_headers} )
 
-    
+
     MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
     # generate dictionary source files!
@@ -410,11 +407,11 @@ IF( BUILD_ROOTDICT )
 
       SET_TARGET_PROPERTIES( lcioDict PROPERTIES LINKER_FLAGS
         "-single_module -undefined dynamic_lookup -bind_at_load" )
-      
+
       ADD_CUSTOM_TARGET(dylib2so
-	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so 
+	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so
 	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
-	WORKING_DIRECTORY  ${CMAKE_INSTALL_PREFIX}/lib 
+	WORKING_DIRECTORY  ${CMAKE_INSTALL_PREFIX}/lib
 	DEPENDS ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib )
 
       INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} dylib2so)" )
@@ -425,9 +422,9 @@ IF( BUILD_ROOTDICT )
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
 
     INSTALL_SHARED_LIBRARY( lcioDict DESTINATION lib )
-    
+
     #fg: for root6 we also need to install the pcm files ...
-    SET( ROOT_DICT_PCM_FILES  
+    SET( ROOT_DICT_PCM_FILES
       ${ROOT_DICT_OUTPUT_DIR}/EVENT_rdict.pcm
       ${ROOT_DICT_OUTPUT_DIR}/IMPL_rdict.pcm
       ${ROOT_DICT_OUTPUT_DIR}/IOIMPL_rdict.pcm
@@ -435,7 +432,7 @@ IF( BUILD_ROOTDICT )
       ${ROOT_DICT_OUTPUT_DIR}/UTIL_rdict.pcm
       ${ROOT_DICT_OUTPUT_DIR}/rootDict_rdict.pcm
       )
-    
+
     message( STATUS "{ROOT_DICT_OUTPUT_DIR} : ${ROOT_DICT_OUTPUT_DIR}  - {ROOT_DICT_PCM_FILES}: ${ROOT_DICT_PCM_FILES} " )
 
     INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION lib)
@@ -457,15 +454,15 @@ MACRO( ADD_LCIO_EXAMPLE file )
   INSTALL( TARGETS bin_${file} DESTINATION bin )
 ENDMACRO()
 
-ADD_LCIO_EXAMPLE( simjob ) 
-ADD_LCIO_EXAMPLE( anajob ) 
-ADD_LCIO_EXAMPLE( recjob ) 
-ADD_LCIO_EXAMPLE( dumpevent ) 
-ADD_LCIO_EXAMPLE( copyfix ) 
-ADD_LCIO_EXAMPLE( stdhepjob ) 
+ADD_LCIO_EXAMPLE( simjob )
+ADD_LCIO_EXAMPLE( anajob )
+ADD_LCIO_EXAMPLE( recjob )
+ADD_LCIO_EXAMPLE( dumpevent )
+ADD_LCIO_EXAMPLE( copyfix )
+ADD_LCIO_EXAMPLE( stdhepjob )
 ADD_LCIO_EXAMPLE( stdhepjob_new )
 ADD_LCIO_EXAMPLE( addRandomAccess )
-ADD_LCIO_EXAMPLE( lcio_event_counter ) 
+ADD_LCIO_EXAMPLE( lcio_event_counter )
 ADD_LCIO_EXAMPLE( lcio_check_col_elements )
 ADD_LCIO_EXAMPLE( lcio_split_file ) 
 ADD_LCIO_EXAMPLE( lcio_merge_files ) 
@@ -492,4 +489,3 @@ IF( BUILD_LCIO_EXAMPLES )
   ENDIF()
 ENDIF()
 # ============================================================================
-
