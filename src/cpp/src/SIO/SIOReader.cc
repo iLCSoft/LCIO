@@ -172,31 +172,44 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCRunHeader* SIOReader::readNextRunHeader(int accessMode) {
+    auto validator = [&]( const sio::record_info &recinfo ) {
+      // we want a run header record only
+      return ( recinfo._name == LCSIO::RunRecordName ) ;
+    } ;
+    auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
+      const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+      if( compressed ) {
+        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        sio::zlib_compression compressor ;
+        compressor.uncompress( recdata, _compBuffer ) ;
+      }
+      auto rundata = compressed ? _compBuffer.span() : recdata ;
+      auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
+      SIORunHeaderRecord::readBlocks( rundata, runheader.get() ) ;
+      runheader->setReadOnly( accessMode == EVENT::LCIO::READ_ONLY ) ;
+      runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
+      _runHeader = runheader ;
+      return false ; // only one record
+    } ;
     try {
-      sio::api::read_records( _stream, _rawBuffer,
-        [&]( const sio::record_info &recinfo ) {
-          // we want a run header record only
-          return ( recinfo._name == LCSIO::RunRecordName ) ;
-        },
-        [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
-          const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-          if( compressed ) {
-            _compBuffer.resize( recinfo._uncompressed_length ) ;
-            sio::zlib_compression compressor ;
-            compressor.uncompress( recdata, _compBuffer ) ;
-          }
-          auto rundata = compressed ? _compBuffer.span() : recdata ;
-          auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
-          SIORunHeaderRecord::readBlocks( rundata, runheader.get() ) ;
-          runheader->setReadOnly( accessMode == EVENT::LCIO::READ_ONLY ) ;
-          runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
-          _runHeader = runheader ;
-          return false ; // only one record
-        }
-      ) ;      
+      sio::api::read_records( _stream, _rawBuffer, validator , processor ) ;
     }
     catch( sio::exception &e ) {
+      // reached end of file. Need to close the current and open the next if available
       if( e.code() == sio::error_code::eof ) {
+        if( !_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()  ) {
+          close() ;
+          open( _myFilenames[ ++_currentFileIndex  ] ) ;
+          try {
+            return readNextRunHeader(accessMode) ;            
+          }
+          catch( sio::exception &e2 ) {
+            if( e2.code() == sio::error_code::eof ) {
+              return nullptr ;
+            }
+            SIO_RETHROW( e2, e2.code(), "Couldn't read next run header!" ) ;
+          }
+        }
         return nullptr ;
       }
       SIO_RETHROW( e, e.code(), "Couldn't read next run header!" ) ;
@@ -215,37 +228,50 @@ namespace SIO {
 
   EVENT::LCEvent* SIOReader::readNextEvent(int accessMode)  {
     std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
-    try {
-      sio::api::read_records( _stream, _rawBuffer,
-        [&]( const sio::record_info &recinfo ) {
-          return ( recinfo._name == LCSIO::HeaderRecordName || recinfo._name == LCSIO::EventRecordName ) ;
-        },
-        [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
-          const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-          if( compressed ) {
-            _compBuffer.resize( recinfo._uncompressed_length ) ;
-            sio::zlib_compression compressor ;
-            compressor.uncompress( recdata, _compBuffer ) ;
-          }
-          auto data = compressed ? _compBuffer.span() : recdata ;
-          if( recinfo._name == LCSIO::HeaderRecordName ) {
-            event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
-            SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
-            return true ;
-          }
-          else if( recinfo._name == LCSIO::EventRecordName ) {
-            if( nullptr == event ) {
-              throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
-            }
-            SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
-            return false ;
-          }
-          return false ;
+    auto validator = [&]( const sio::record_info &recinfo ) {
+      return ( recinfo._name == LCSIO::HeaderRecordName || recinfo._name == LCSIO::EventRecordName ) ;
+    } ;
+    auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
+      const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+      if( compressed ) {
+        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        sio::zlib_compression compressor ;
+        compressor.uncompress( recdata, _compBuffer ) ;
+      }
+      auto data = compressed ? _compBuffer.span() : recdata ;
+      if( recinfo._name == LCSIO::HeaderRecordName ) {
+        event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
+        return true ;
+      }
+      else if( recinfo._name == LCSIO::EventRecordName ) {
+        if( nullptr == event ) {
+          throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
         }
-      ) ;
+        SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        return false ;
+      }
+      return false ;
+    } ;
+    try {
+      sio::api::read_records( _stream, _rawBuffer, validator, processor ) ;
     }
     catch( sio::exception &e ) {
+      // reached end of file. Need to close the current and open the next if available
       if( e.code() == sio::error_code::eof ) {
+        if( !_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()  ) {
+          close() ;
+          open( _myFilenames[ ++_currentFileIndex  ] ) ;
+          try {
+            return readNextEvent(accessMode) ;            
+          }
+          catch( sio::exception &e2 ) {
+            if( e2.code() == sio::error_code::eof ) {
+              return nullptr ;
+            }
+            SIO_RETHROW( e2, e2.code(), "Couldn't read next event!" ) ;
+          }
+        }
         return nullptr ;
       }
       SIO_RETHROW( e, e.code(), "Couldn't read next event!" ) ;
@@ -355,41 +381,40 @@ namespace SIO {
       }
       // look for the specific event in the stream directly. Very slow ...
       std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
-      try {
-        sio::api::read_records( _stream, _rawBuffer,
-          [&]( const sio::record_info &recinfo ) {
-            return ( recinfo._name == LCSIO::HeaderRecordName || recinfo._name == LCSIO::EventRecordName ) ;
-          },
-          [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
-            const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-            if( compressed ) {
-              _compBuffer.resize( recinfo._uncompressed_length ) ;
-              sio::zlib_compression compressor ;
-              compressor.uncompress( recdata, _compBuffer ) ;
-            }
-            auto data = compressed ? _compBuffer.span() : recdata ;
-            if( recinfo._name == LCSIO::HeaderRecordName ) {
-              event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
-              SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
-              return true ;
-            }
-            else if( recinfo._name == LCSIO::EventRecordName ) {
-              if( nullptr == event ) {
-                throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
-              }
-              // if we've found the requested event, we unpack the blocks then
-              if( event->getEventNumber() == evtNumber ) {
-                SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
-                evtFound = true ;
-                // event found ! stop here !
-                return false ;
-              }
-              // not the correct event number, continue looking ...
-              return true ;
-            }
+      auto validator = [&]( const sio::record_info &recinfo ) {
+        return ( recinfo._name == LCSIO::HeaderRecordName || recinfo._name == LCSIO::EventRecordName ) ;
+      } ;
+      auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
+        const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+        if( compressed ) {
+          _compBuffer.resize( recinfo._uncompressed_length ) ;
+          sio::zlib_compression compressor ;
+          compressor.uncompress( recdata, _compBuffer ) ;
+        }
+        auto data = compressed ? _compBuffer.span() : recdata ;
+        if( recinfo._name == LCSIO::HeaderRecordName ) {
+          event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+          SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
+          return true ;
+        }
+        else if( recinfo._name == LCSIO::EventRecordName ) {
+          if( nullptr == event ) {
+            throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
+          }
+          // if we've found the requested event, we unpack the blocks then
+          if( event->getEventNumber() == evtNumber ) {
+            SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+            evtFound = true ;
+            // event found ! stop here !
             return false ;
           }
-        ) ;
+          // not the correct event number, continue looking ...
+          return true ;
+        }
+        return false ;
+      } ;
+      try {
+        sio::api::read_records( _stream, _rawBuffer, validator, processor ) ;
       }
       catch( sio::exception &e ) {
         if( e.code() != sio::error_code::eof ) {
@@ -450,77 +475,115 @@ namespace SIO {
     std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
     int recordsRead = 0 ;
     // loop over records in the stream. SIO does it nicely for us
-    try {
-      sio::api::read_records( _stream, _rawBuffer,
-        [&] ( const sio::record_info &recinfo ) {
-          return ( records.find( recinfo._name ) != records.end() ) ;
-        },
-        [&] ( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
-          const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-          if( compressed ) {
-            _compBuffer.resize( recinfo._uncompressed_length ) ;
-            sio::zlib_compression compressor ;
-            compressor.uncompress( recdata, _compBuffer ) ;
-          }
-          auto data = compressed ? _compBuffer.span() : recdata ;
-          // LCRunHeader case
-          if( recinfo._name == LCSIO::RunRecordName ) {
-            recordsRead++ ;
-            auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
-            SIORunHeaderRecord::readBlocks( data, runheader.get() ) ;
-            runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
-            std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
-            while( iter != _runListeners.end() ){
-              runheader->setReadOnly( false ) ;
-              (*iter)->modifyRunHeader( runheader.get() ) ;
-              runheader->setReadOnly( true ) ;
-              (*iter)->processRunHeader( runheader.get() ) ;
-              iter++ ;
-            }
-          }
-          // Event header case. Setup the event for the next record
-          else if( recinfo._name == LCSIO::HeaderRecordName ) {
-            event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
-            SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
-          }
-          else if( recinfo._name == LCSIO::EventRecordName ) {
-            if( nullptr == event ) {
-              throw IO::IOException( "SIOReader::readStream: Event record before an EventHeader record ..." ) ;
-            }
-            recordsRead++ ;
-            SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
-            std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
-            while( iter != _evtListeners.end() ) {
-              postProcessEvent( event.get() ) ;
-              // fg20070813 changed order of update and process (needed for
-              // Marlin modifying processors )
-              event->setAccessMode( EVENT::LCIO::UPDATE ) ;
-              (*iter)->modifyEvent( event.get() ) ;
-              event->setAccessMode( EVENT::LCIO::READ_ONLY ) ; // set the proper acces mode
-              (*iter)->processEvent( event.get() ) ;
-              iter++ ;
-            }
-            // free ressources here
-            event = nullptr ;
-          }
-          return ( recordsRead < maxRecord ) ;
-        }
-      ) ;
-    }
-    catch( sio::exception &e ) {
-      if( e.code() != sio::error_code::eof ) {
-        SIO_RETHROW( e, e.code(), "SIOReader::readStream: Couldn't read stream" ) ;
+    auto validator = [&] ( const sio::record_info &recinfo ) {
+      return ( records.find( recinfo._name ) != records.end() ) ;
+    } ;
+    auto processor = [&] ( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
+      const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+      if( compressed ) {
+        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        sio::zlib_compression compressor ;
+        compressor.uncompress( recdata, _compBuffer ) ;
       }
-      else {
-        if( readUntilEOF ) {
-          return ;
+      auto data = compressed ? _compBuffer.span() : recdata ;
+      // LCRunHeader case
+      if( recinfo._name == LCSIO::RunRecordName ) {
+        recordsRead++ ;
+        auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
+        SIORunHeaderRecord::readBlocks( data, runheader.get() ) ;
+        runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
+        std::set<IO::LCRunListener*>::iterator iter = _runListeners.begin() ;
+        while( iter != _runListeners.end() ){
+          runheader->setReadOnly( false ) ;
+          (*iter)->modifyRunHeader( runheader.get() ) ;
+          runheader->setReadOnly( true ) ;
+          (*iter)->processRunHeader( runheader.get() ) ;
+          iter++ ;
         }
-        std::stringstream message ;
-        message << "SIOReader::readStream(int maxRecord) : EOF before "
-          << maxRecord << " records read from file" << std::ends ;
-        throw IO::EndOfDataException( message.str() )  ;
+      }
+      // Event header case. Setup the event for the next record
+      else if( recinfo._name == LCSIO::HeaderRecordName ) {
+        event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
+      }
+      else if( recinfo._name == LCSIO::EventRecordName ) {
+        if( nullptr == event ) {
+          throw IO::IOException( "SIOReader::readStream: Event record before an EventHeader record ..." ) ;
+        }
+        recordsRead++ ;
+        SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        std::set<IO::LCEventListener*>::iterator iter = _evtListeners.begin() ;
+        while( iter != _evtListeners.end() ) {
+          postProcessEvent( event.get() ) ;
+          // fg20070813 changed order of update and process (needed for
+          // Marlin modifying processors )
+          event->setAccessMode( EVENT::LCIO::UPDATE ) ;
+          (*iter)->modifyEvent( event.get() ) ;
+          event->setAccessMode( EVENT::LCIO::READ_ONLY ) ; // set the proper acces mode
+          (*iter)->processEvent( event.get() ) ;
+          iter++ ;
+        }
+        // free ressources here
+        event = nullptr ;
+      }
+      return ( recordsRead < maxRecord ) ;
+    } ;
+    while( 1 ) {
+      try {
+        sio::api::read_records( _stream, _rawBuffer, validator , processor ) ;
+      }
+      catch( sio::exception &e ) {
+        if( e.code() != sio::error_code::eof ) {
+          SIO_RETHROW( e, e.code(), "SIOReader::readStream: Couldn't read stream" ) ;
+        }
+        else {
+          // we caught an eof exception here
+          bool nextFileAvailable = (!_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()) ;
+          if( nextFileAvailable ) {
+            close() ;
+            open( _myFilenames[ ++_currentFileIndex  ] ) ;
+            if( readUntilEOF ) {
+              // read all
+              readStream() ;
+            }
+            else {
+              // read the remaining number of records
+              readStream( maxRecord - recordsRead ) ;
+            }
+            return ;
+          }
+          else {
+            if( readUntilEOF ) {
+              return ;
+            }
+            std::stringstream message ;
+            message << "SIOReader::readStream(int maxRecord) : EOF before "
+              << maxRecord << " records read from file" << std::ends ;
+            throw IO::EndOfDataException( message.str() )  ;
+          }
+        }
       }
     }
+
+    
+    // // reached end of file. Need to close the current and open the next if available
+    // if( e.code() == sio::error_code::eof ) {
+    //   if( !_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()  ) {
+    //     close() ;
+    //     open( _myFilenames[ ++_currentFileIndex  ] ) ;
+    //     try {
+    //       return readNextEvent(accessMode) ;            
+    //     }
+    //     catch( sio::exception &e2 ) {
+    //       if( e2.code() == sio::error_code::eof ) {
+    //         return nullptr ;
+    //       }
+    //       SIO_RETHROW( e2, e2.code(), "Couldn't read next event!" ) ;
+    //     }
+    //   }
+    //   return nullptr ;
+    // }
+    // SIO_RETHROW( e, e.code(), "Couldn't read next event!" ) ;
   }
 
   //----------------------------------------------------------------------------
