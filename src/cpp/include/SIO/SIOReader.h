@@ -216,9 +216,9 @@ namespace SIO {
     /// The input file stream
     sio::ifstream                        _stream {} ;
     /// The raw buffer for extracting bytes from the stream
-    sio::buffer                          _rawBuffer {32*sio::kbyte} ;
+    sio::buffer                          _rawBuffer {1*sio::mbyte} ;
     /// The raw buffer for uncompression
-    sio::buffer                          _compBuffer {64*sio::kbyte} ;
+    sio::buffer                          _compBuffer {2*sio::mbyte} ;
     /// The collection block handler manager for events
     SIOHandlerMgr                        _eventHandlerMgr {} ;
     /// The event currently handled by the reader
