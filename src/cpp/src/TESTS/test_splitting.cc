@@ -23,7 +23,7 @@ using namespace lcio ;
 //static const int NRUN = 10 ;
 static const int NEVENT = 10 ; // events
 static const int NHITS = 100 ;  // calorimeter hits per event
-static const int SPLIT_SIZE_KB = 3 ;
+static const int SPLIT_SIZE_KB = 9 ;
 
 static string FILE_BASENAME = "splitting" ;
 static string FILE_EXTENSION = ".slcio" ;
@@ -47,6 +47,8 @@ int main(int /*argc*/, char** /*argv*/ ){
         inputFilesVec.push_back( FILE_BASENAME + ".000" + FILE_EXTENSION );
         inputFilesVec.push_back( FILE_BASENAME + ".001" + FILE_EXTENSION );
         inputFilesVec.push_back( FILE_BASENAME + ".002" + FILE_EXTENSION );
+        inputFilesVec.push_back( FILE_BASENAME + ".003" + FILE_EXTENSION );
+        inputFilesVec.push_back( FILE_BASENAME + ".004" + FILE_EXTENSION );
 
         // remove files if needed
         for(unsigned i=0 ; i<inputFilesVec.size() ; i++){
@@ -99,7 +101,7 @@ int main(int /*argc*/, char** /*argv*/ ){
 
         for(int i=0;i<NEVENT;i++){
 
-            //std::cout << " testing event " << i << std::endl ;
+            std::cout << " testing event " << i << std::endl ;
 
             LCEvent*  evt =  lcRdr->readNextEvent() ;
 
