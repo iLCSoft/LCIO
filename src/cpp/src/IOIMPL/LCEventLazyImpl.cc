@@ -32,7 +32,9 @@ namespace IOIMPL {
     if( nullptr != _recordBuffer ) {
       throw IO::IOException( "LCEventLazyImpl::setBuffer: tried to setup a SIO buffer but already set !" ) ;
     }
+    // take the buffer and shrink the memory to fit its size
     _recordBuffer.reset( new sio::buffer( std::move( recordBuffer ) ) ) ;
+    _recordBuffer->shrink() ;
     _recordInfo = recinfo ;
     // setup the block now as collections may be added before unpacking
     SIO::SIOEventRecord::setupBlocks( this, _eventHandlerMgr, _blocks ) ;
