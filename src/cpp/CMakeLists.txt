@@ -63,6 +63,7 @@ SET( LCIO_IMPL_SRCS
 
 SET( LCIO_IOIMPL_SRCS
   ./src/IOIMPL/LCFactory.cc
+  ./src/IOIMPL/LCEventLazyImpl.cc
 )
 
 SET( LCIO_SIO_SRCS
@@ -270,6 +271,7 @@ INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
     PATTERN "*/EVENT*" EXCLUDE
     PATTERN "*/pre-generated" EXCLUDE
     PATTERN "*/IO" EXCLUDE # watchout: */IO* pattern also excludes IOIMPL
+    PATTERN "*/IOIMPL/LCEventLazyImpl.h" EXCLUDE
 )
 
 # install aid generated c++ headers
