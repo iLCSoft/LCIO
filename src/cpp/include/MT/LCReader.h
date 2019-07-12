@@ -38,6 +38,8 @@ private:
 public:
   /// Bit for direct access
   static const int directAccess =  0x00000001 << 0  ;
+  /// Bit for lazy unpacking of event records
+  static const int lazyUnpack =  0x00000002 << 0  ;
 
 public:
   ~LCReader() = default;
@@ -167,13 +169,15 @@ private:
   /// The input file stream
   sio::ifstream                               _stream {} ;
   /// The raw buffer for extracting bytes from the stream
-  sio::buffer                                 _rawBuffer {32*sio::kbyte} ;
+  sio::buffer                                 _rawBuffer {1*sio::mbyte} ;
   /// The raw buffer for uncompression
-  sio::buffer                                 _compBuffer {64*sio::kbyte} ;
+  sio::buffer                                 _compBuffer {2*sio::mbyte} ;
   /// The collection block handler manager for events
   SIO::SIOHandlerMgr                          _eventHandlerMgr {} ;
   /// Whether to read the event map using the random access manager
   bool                                        _readEventMap {false} ;
+  /// Whether to perform the lazy unpacking of event records
+  bool                                        _lazyUnpack {false} ;
   /// The list of files to open and read
   std::vector<std::string>                    _myFilenames {} ;
   /// A restricted list of collections to read only
@@ -182,6 +186,8 @@ private:
   unsigned int                                _currentFileIndex {0} ;
   /// The random access manager for event/run random access in the file
   std::shared_ptr<SIO::LCIORandomAccessMgr>   _raMgr {nullptr} ;
+  ///
+  sio::buffer::size_type                      _bufferMaxSize {0} ;
 }; // class
 
 } // namespace MT
