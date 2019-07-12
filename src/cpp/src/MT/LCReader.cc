@@ -6,6 +6,7 @@
 #include "SIO/LCIORecords.h"
 #include "SIO/LCIORandomAccessMgr.h"
 #include "IOIMPL/LCEventIOImpl.h"
+#include "IOIMPL/LCEventLazyImpl.h"
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 #include "Exceptions.h"
 #include "SIO/RunEventMap.h"
@@ -26,6 +27,7 @@ namespace MT {
 
   LCReader::LCReader( int lcReaderFlag ) :
     _readEventMap( lcReaderFlag & LCReader::directAccess ),
+    _lazyUnpack( lcReaderFlag & LCReader::lazyUnpack ),
     _raMgr(std::make_shared<SIO::LCIORandomAccessMgr>()) {
     /* nop */
   }
@@ -125,20 +127,29 @@ namespace MT {
   //----------------------------------------------------------------------------
 
   LCEventPtr LCReader::readNextEvent( int accessMode )  {
+    std::shared_ptr<IOIMPL::LCEventLazyImpl> lazyEvent = nullptr ;
     std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
     auto validator = [&]( const sio::record_info &recinfo ) {
       return ( recinfo._name == SIO::LCSIO::HeaderRecordName || recinfo._name == SIO::LCSIO::EventRecordName ) ;
     } ;
     auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
       const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-      if( compressed ) {
+      // do not run uncompression if we have an event record and lazy unpacking... 
+      const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
+      if( uncomp ) {
         _compBuffer.resize( recinfo._uncompressed_length ) ;
         sio::zlib_compression compressor ;
         compressor.uncompress( recdata, _compBuffer ) ;
       }
-      auto data = compressed ? _compBuffer.span() : recdata ;
+      auto data = uncomp ? _compBuffer.span() : recdata ;
       if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
-        event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        if( _lazyUnpack ) {
+          lazyEvent = std::make_shared<IOIMPL::LCEventLazyImpl>() ;
+          event = lazyEvent ;
+        }
+        else {
+          event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        }
         SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
         return true ;
       }
@@ -146,7 +157,16 @@ namespace MT {
         if( nullptr == event ) {
           throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
         }
-        SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        if( _lazyUnpack ) {
+          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+          // move the buffer to the event
+          lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+          // re-allocate a new valid buffer
+          _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+        }
+        else {
+          SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        }
         return false ;
       }
       return false ;
@@ -315,19 +335,27 @@ namespace MT {
       bool evtFound = false ;
       // look for the specific event in the stream directly. Very slow ...
       std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
+      std::shared_ptr<IOIMPL::LCEventLazyImpl> lazyEvent = nullptr ;
       auto validator = [&]( const sio::record_info &recinfo ) {
         return ( recinfo._name == SIO::LCSIO::HeaderRecordName || recinfo._name == SIO::LCSIO::EventRecordName ) ;
       } ;
       auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
         const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-        if( compressed ) {
+        const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
+        if( uncomp ) {
           _compBuffer.resize( recinfo._uncompressed_length ) ;
           sio::zlib_compression compressor ;
           compressor.uncompress( recdata, _compBuffer ) ;
         }
-        auto data = compressed ? _compBuffer.span() : recdata ;
+        auto data = uncomp ? _compBuffer.span() : recdata ;
         if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
-          event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+          if( _lazyUnpack ) {
+            lazyEvent = std::make_shared<IOIMPL::LCEventLazyImpl>() ;
+            event = lazyEvent ;
+          }
+          else {
+            event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+          }
           SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
           return true ;
         }
@@ -337,7 +365,16 @@ namespace MT {
           }
           // if we've found the requested event, we unpack the blocks then
           if( event->getEventNumber() == evtNumber && event->getRunNumber() == runNumber ) {
-            SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+            if( _lazyUnpack ) {
+              _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+              // move the buffer to the event
+              lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+              // re-allocate a new valid buffer
+              _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+            }
+            else {
+              SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+            }
             evtFound = true ;
             // event found ! stop here !
             return false ;
@@ -383,6 +420,7 @@ namespace MT {
     const bool readUntilEOF = (maxRecord == std::numeric_limits<int>::max()) ;
     std::set<std::string> records = { SIO::LCSIO::RunRecordName, SIO::LCSIO::HeaderRecordName, SIO::LCSIO::EventRecordName } ;
     std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
+    std::shared_ptr<IOIMPL::LCEventLazyImpl> lazyEvent = nullptr ;
     int recordsRead = 0 ;
     // loop over records in the stream. SIO does it nicely for us
     auto validator = [&] ( const sio::record_info &recinfo ) {
@@ -390,12 +428,13 @@ namespace MT {
     } ;
     auto processor = [&] ( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
       const bool compressed = sio::api::is_compressed( recinfo._options ) ;
-      if( compressed ) {
+      const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
+      if( uncomp ) {
         _compBuffer.resize( recinfo._uncompressed_length ) ;
         sio::zlib_compression compressor ;
         compressor.uncompress( recdata, _compBuffer ) ;
       }
-      auto data = compressed ? _compBuffer.span() : recdata ;
+      auto data = uncomp ? _compBuffer.span() : recdata ;
       // LCRunHeader case
       if( recinfo._name == SIO::LCSIO::RunRecordName ) {
         recordsRead++ ;
@@ -411,7 +450,13 @@ namespace MT {
       }
       // Event header case. Setup the event for the next record
       else if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
-        event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        if( _lazyUnpack ) {
+          lazyEvent = std::make_shared<IOIMPL::LCEventLazyImpl>() ;
+          event = lazyEvent ;
+        }
+        else {
+          event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+        }
         SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
       }
       else if( recinfo._name == SIO::LCSIO::EventRecordName ) {
@@ -419,7 +464,16 @@ namespace MT {
           throw IO::IOException( "SIOReader::readStream: Event record before an EventHeader record ..." ) ;
         }
         recordsRead++ ;
-        SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        if( _lazyUnpack ) {
+          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+          // move the buffer to the event
+          lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+          // re-allocate a new valid buffer
+          _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+        }
+        else {
+          SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+        }
         auto iter = listeners.begin() ;
         while( iter != listeners.end() ) {
           postProcessEvent( event.get() ) ;
