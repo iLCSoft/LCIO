@@ -167,7 +167,7 @@ namespace MT {
         else {
           SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
         }
-        return false ;
+        return nullptr ;
       }
       return false ;
     } ;
@@ -323,7 +323,7 @@ namespace MT {
 	      return readNextEvent( accessMode ) ;
       }
       else {
-        return 0 ;
+	      return 0 ;
       }
     }
     else {  // no event map ------------------
