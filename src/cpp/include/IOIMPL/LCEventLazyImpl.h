@@ -69,6 +69,14 @@ namespace IOIMPL {
      */
     void unpackEvent() ;
     
+    /** Post process the event after unpacking
+     */
+    void postProcessEvent() ;
+    
+    /** Setup the collection blocks before unpacking
+     */
+    void setupBlocks() ;
+    
   private:
     std::unique_ptr<sio::buffer>     _recordBuffer {nullptr} ;
     sio::record_info                 _recordInfo {} ;
