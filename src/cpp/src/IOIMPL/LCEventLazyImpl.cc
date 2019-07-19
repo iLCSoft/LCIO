@@ -59,21 +59,20 @@ namespace IOIMPL {
     const bool compressed = sio::api::is_compressed( _recordInfo._options ) ;
     // uncompress and unpack
     if( compressed ) {
-      std::cout << "LCEventLazyImpl: uncompressing event" << std::endl ;
       // uncompress
       sio::buffer compBuffer( _recordInfo._uncompressed_length ) ;
       sio::zlib_compression compressor ;
-      compressor.uncompress( _recordBuffer->span(), compBuffer ) ;
+      compressor.uncompress( _recordBuffer->span( _recordInfo._header_length ), compBuffer ) ;
       // unpack the event
       sio::api::read_blocks( compBuffer.span(), _blocks ) ;
     }
     else {
-      sio::api::read_blocks( _recordBuffer->span(), _blocks ) ;      
+      sio::api::read_blocks( _recordBuffer->span( _recordInfo._header_length ), _blocks ) ;      
     }
     // the event record has been unpacked. Release the buffer memory
     _recordBuffer->clear( true ) ;
-    postProcessEvent() ;
     _unpacked = true ;
+    postProcessEvent() ;
   }
   
   //----------------------------------------------------------------------------
