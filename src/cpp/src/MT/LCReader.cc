@@ -77,8 +77,8 @@ namespace MT {
 
   //----------------------------------------------------------------------------
 
-  LCRunHeaderPtr LCReader::readNextRunHeader( int accessMode ) {
-    LCRunHeaderPtr runhdr = nullptr ;
+  std::unique_ptr<EVENT::LCRunHeader> LCReader::readNextRunHeader( int accessMode ) {
+    std::unique_ptr<EVENT::LCRunHeader> runhdr = nullptr ;
     auto validator = [&]( const sio::record_info &recinfo ) {
       // we want a run header record only
       return ( recinfo._name == SIO::LCSIO::RunRecordName ) ;
@@ -91,11 +91,11 @@ namespace MT {
         compressor.uncompress( recdata, _compBuffer ) ;
       }
       auto rundata = compressed ? _compBuffer.span() : recdata ;
-      auto runheader = std::make_shared<IOIMPL::LCRunHeaderIOImpl>() ;
+      auto runheader = std::make_unique<IOIMPL::LCRunHeaderIOImpl>() ;
       SIO::SIORunHeaderRecord::readBlocks( rundata, runheader.get() ) ;
       runheader->setReadOnly( accessMode == EVENT::LCIO::READ_ONLY ) ;
       runheader->parameters().setValue( "LCIOFileName" ,  _myFilenames[ _currentFileIndex  ] ) ;
-      runhdr = runheader ;
+      runhdr = std::move(runheader) ;
       return false ; // only one record
     } ;
     try {
@@ -126,9 +126,9 @@ namespace MT {
 
   //----------------------------------------------------------------------------
 
-  LCEventPtr LCReader::readNextEvent( int accessMode )  {
-    std::shared_ptr<IOIMPL::LCEventLazyImpl> lazyEvent = nullptr ;
-    std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
+  std::unique_ptr<EVENT::LCEvent> LCReader::readNextEvent( int accessMode )  {
+    IOIMPL::LCEventLazyImpl* lazyEvent = nullptr ;
+    std::unique_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
     auto validator = [&]( const sio::record_info &recinfo ) {
       return ( recinfo._name == SIO::LCSIO::HeaderRecordName || recinfo._name == SIO::LCSIO::EventRecordName ) ;
     } ;
@@ -144,11 +144,11 @@ namespace MT {
       auto data = uncomp ? _compBuffer.span() : recdata ;
       if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
         if( _lazyUnpack ) {
-          lazyEvent = std::make_shared<IOIMPL::LCEventLazyImpl>() ;
-          event = lazyEvent ;
+          lazyEvent = new IOIMPL::LCEventLazyImpl() ;
+          event.reset( lazyEvent ) ;
         }
         else {
-          event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+          event = std::make_unique<IOIMPL::LCEventIOImpl>() ;
         }
         SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
         return true ;
@@ -288,7 +288,7 @@ namespace MT {
 
   //----------------------------------------------------------------------------
 
-  LCRunHeaderPtr LCReader::readRunHeader( int runNumber, int accessMode ) {
+  std::unique_ptr<EVENT::LCRunHeader> LCReader::readRunHeader( int runNumber, int accessMode ) {
     if( _readEventMap ) {
       EVENT::long64 pos = _raMgr->getPosition( SIO::RunEvent( runNumber, -1 ) ) ;
       if( pos != SIO::RunEventMap::npos ) {
@@ -312,13 +312,13 @@ namespace MT {
 
   //----------------------------------------------------------------------------
 
-  LCEventPtr LCReader::readEvent( int runNumber, int evtNumber, int accessMode ) {
+  std::unique_ptr<EVENT::LCEvent> LCReader::readEvent( int runNumber, int evtNumber, int accessMode ) {
     if( _readEventMap ) {
       EVENT::long64 pos = _raMgr->getPosition( SIO::RunEvent( runNumber,evtNumber ) ) ;
       if( pos != SIO::RunEventMap::npos ) {
 	      _stream.seekg( pos ) ;
 	      if( not _stream.good() ) {
-	        throw IO::IOException( "[SIOReader::readEvent()] Can't seek stream to requested position" ) ;
+	        throw IO::IOException( "[LCReader::readEvent()] Can't seek stream to requested position" ) ;
         }
 	      return readNextEvent( accessMode ) ;
       }
@@ -334,8 +334,8 @@ namespace MT {
       // ---- OLD code with fast skip -----------
       bool evtFound = false ;
       // look for the specific event in the stream directly. Very slow ...
-      std::shared_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
-      std::shared_ptr<IOIMPL::LCEventLazyImpl> lazyEvent = nullptr ;
+      std::unique_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
+      IOIMPL::LCEventLazyImpl* lazyEvent = nullptr ;
       auto validator = [&]( const sio::record_info &recinfo ) {
         return ( recinfo._name == SIO::LCSIO::HeaderRecordName || recinfo._name == SIO::LCSIO::EventRecordName ) ;
       } ;
@@ -350,11 +350,11 @@ namespace MT {
         auto data = uncomp ? _compBuffer.span() : recdata ;
         if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
           if( _lazyUnpack ) {
-            lazyEvent = std::make_shared<IOIMPL::LCEventLazyImpl>() ;
-            event = lazyEvent ;
+            lazyEvent = new IOIMPL::LCEventLazyImpl() ;
+            event.reset( lazyEvent ) ;
           }
           else {
-            event = std::make_shared<IOIMPL::LCEventIOImpl>() ;
+            event = std::make_unique<IOIMPL::LCEventIOImpl>() ;
           }
           SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
           return true ;
@@ -476,7 +476,9 @@ namespace MT {
         }
         auto iter = listeners.begin() ;
         while( iter != listeners.end() ) {
-          postProcessEvent( event.get() ) ;
+          if( not _lazyUnpack ) {
+            postProcessEvent( event.get() ) ;
+          }
           event->setAccessMode( EVENT::LCIO::UPDATE ) ;
           (*iter)->processEvent( event ) ;
           iter++ ;
@@ -539,19 +541,19 @@ namespace MT {
   //----------------------------------------------------------------------------
 
   void LCReader::readStream( LCReaderListener *listener ) {
-    readStream( {listener} ) ;
+    readStream( LCReaderListenerList{listener} ) ;
   }
 
   //----------------------------------------------------------------------------
 
   void LCReader::readStream( LCReaderListener *listener, int maxRecord ) {
-    readStream( {listener}, maxRecord );
+    readStream( LCReaderListenerList{listener}, maxRecord );
   }
 
   //----------------------------------------------------------------------------
 
   void LCReader::readNextRecord( LCReaderListener *listener ) {
-    readNextRecord( {listener} );
+    readNextRecord( LCReaderListenerList{listener} );
   }
 
   void LCReader::readStream( LCReaderListener *listener ) {
