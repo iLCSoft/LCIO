@@ -3,6 +3,9 @@
 #include "IO/LCWriter.h"
 #include "IO/LCReader.h"
 #include "IO/LCEventListener.h"
+#include "MT/LCReader.h"
+#include "MT/LCReaderListener.h"
+
 #include "EVENT/LCIO.h"
 #include "DATA/LCFloatVec.h"
 #include "DATA/LCIntVec.h"
@@ -45,6 +48,43 @@ static const int NMCPART = 100 ;  // mc particles per event
 static const int NHITS = 50 ;  // calorimeter hits per event
 
 static string FILEN = "lcioperf.slcio" ;
+
+
+class ReadPerformanceProcessorMT : public MT::LCReaderListener {
+  
+public:
+  ReadPerformanceProcessorMT(const ReadPerformanceProcessorMT &) = delete ;
+  ReadPerformanceProcessorMT& operator=(const ReadPerformanceProcessorMT &) = delete ;
+  
+  ReadPerformanceProcessorMT( MT::LCReader *reader ) : 
+    _lcReader(reader) {
+    
+  }
+  
+  void processEvent( MT::LCEventPtr ) {
+    clock_t endTime = clock() ;
+    _totalReadTime += (endTime - _startTime) / static_cast<double>( CLOCKS_PER_SEC ) ;
+    _nEvents ++;
+    _startTime = clock() ;
+  }
+    
+  void processRunHeader( MT::LCRunHeaderPtr  ) {}
+  
+  void readStream() {
+    _startTime = clock() ;
+    _lcReader->readStream( this ) ;
+    std::cout << "Read " << _nEvents << " events" << std::endl ;
+    std::cout << "Total read time: " << _totalReadTime << " secs" << std::endl ;
+    std::cout << "Mean read time:  " << _totalReadTime / _nEvents << " secs / event" << std::endl ;
+  }
+  
+private:
+  clock_t         _startTime {0} ;
+  double          _totalReadTime {0.} ;
+  unsigned int    _nEvents {0} ;
+  MT::LCReader   *_lcReader {nullptr} ;
+};
+
 
 
 class ReadPerformanceProcessor : public LCEventListener {
@@ -545,14 +585,34 @@ int main(int argc, char** argv ){
     std::cout << "Total writing time: " << totalWritingTime << " secs" << std::endl ;
     std::cout << "Mean writing time:  " << totalWritingTime / (NRUN*NEVENT) << " secs / event" << std::endl ;
     
-    // create reader and writer for input and output streams 
-    LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
-    lcReader->open( FILEN ) ;
+    {
+      // create reader and writer for input and output streams 
+      LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
+      lcReader->open( FILEN ) ;
+      ReadPerformanceProcessor listener( lcReader ) ;
+      lcReader->registerLCEventListener( &listener ) ;
+      std::cout << "With standard LCReader: " << std::endl ;
+      listener.readStream() ;      
+      delete lcReader ;
+    }
 
-    ReadPerformanceProcessor listener( lcReader ) ;
-    lcReader->registerLCEventListener( &listener ) ;
-    listener.readStream() ;
-    delete lcReader ;
+    
+    {
+      MT::LCReader mtReader( MT::LCReader::directAccess ) ;
+      mtReader.open( FILEN ) ;
+      ReadPerformanceProcessorMT listener( &mtReader ) ;
+      std::cout << "With MT LCReader: " << std::endl ;
+      listener.readStream() ;
+    }
+    
+    {
+      MT::LCReader mtReader( MT::LCReader::directAccess | MT::LCReader::lazyUnpack ) ;
+      mtReader.open( FILEN ) ;
+      ReadPerformanceProcessorMT listener( &mtReader ) ;
+      std::cout << "With Lazy MT LCReader: " << std::endl ;
+      listener.readStream() ;
+    }
+    
     
   } catch( Exception& ex){
 
