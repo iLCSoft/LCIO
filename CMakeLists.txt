@@ -61,7 +61,8 @@ LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
-
+SET( CMAKE_CXX_STANDARD 14 )
+SET( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # lcio.jar
 OPTION( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
