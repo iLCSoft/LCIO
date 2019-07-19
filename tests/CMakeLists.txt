@@ -264,6 +264,9 @@ ADD_LCIO_TEST( test_randomaccess )  # needs output from t_c_sim
 ADD_LCIO_TEST( test_RTextension )
 ADD_LCIO_TEST( test_splitting )
 ADD_LCIO_TEST( test_lctrackercellid )
+ADD_LCIO_TEST( test_lazy )
+
+SET_TESTS_PROPERTIES( t_test_lazy PROPERTIES DEPENDS t_c_sim )
 
 if( INSTALL_JAR )
   ADD_TEST( t_j_sio_calohit ${SH} "${LCIO_ENV_INIT}" ${PROJECT_SOURCE_DIR}/bin/runSIODump.sh ${PROJECT_SOURCE_DIR}/doc/lcio.xml calohit.slcio )
