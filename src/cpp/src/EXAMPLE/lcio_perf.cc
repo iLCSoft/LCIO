@@ -552,7 +552,7 @@ int main(int argc, char** argv ){
     ReadPerformanceProcessor listener( lcReader ) ;
     lcReader->registerLCEventListener( &listener ) ;
     listener.readStream() ;
-    
+    delete lcReader ;
     
   } catch( Exception& ex){
 
