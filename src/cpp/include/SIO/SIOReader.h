@@ -2,25 +2,24 @@
 #define SIO_SIOREADER_H 1
 
 // -- std headers
-#include <string>
 #include <set>
-#include <map>
-#include <vector>
 
 // -- lcio headers
 #include "IO/LCReader.h"
 #include "IO/LCEventListener.h"
 #include "IO/LCRunListener.h"
-#include "IOIMPL/LCEventIOImpl.h"
-#include "IOIMPL/LCRunHeaderIOImpl.h"
-#include "SIO/SIOHandlerMgr.h"
-#include "SIO/LCIORandomAccessMgr.h"
-#include "EVENT/LCIO.h"
-#include "LCIOTypes.h"
+#include "MT/LCReaderListener.h"
+#include "MT/LCReader.h"
+// #include "IOIMPL/LCEventIOImpl.h"
+// #include "IOIMPL/LCRunHeaderIOImpl.h"
+// #include "SIO/SIOHandlerMgr.h"
+// #include "SIO/LCIORandomAccessMgr.h"
+// #include "EVENT/LCIO.h"
+// #include "LCIOTypes.h"
 
 // -- sio headers
-#include "sio/definitions.h"
-#include "sio/buffer.h"
+// #include "sio/definitions.h"
+// #include "sio/buffer.h"
 
 namespace SIO {
 
@@ -29,12 +28,8 @@ namespace SIO {
  * @author gaede
  * @version $Id: SIOReader.h,v 1.29 2011-03-03 16:00:12 gaede Exp $
  */
-  class SIOReader : public IO::LCReader {
-
-    //    typedef std::map< EVENT::long64 , EVENT::long64 > EventMap ;
-    //    typedef RunEventMap EventMap ;
+  class SIOReader : public IO::LCReader, private MT::LCReaderListener {  // TODO restart from here !
   public:
-
     /** Default constructor.
      */
     SIOReader( int lcReaderFlag=0 ) ;
@@ -206,39 +201,18 @@ namespace SIO {
      * @throws EndOfException
      */
     virtual void readStream(int maxRecord)  ;
-
-  protected:
-    void postProcessEvent( EVENT::LCEvent *event ) ;
-    void getEventMap() ;
-    void recreateEventMap() ;
+    
+  private:
+    void processEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
+    void processRunHeader( std::shared_ptr<EVENT::LCRunHeader> hdr ) override ;
 
   private:
-    /// The input file stream
-    sio::ifstream                        _stream {} ;
-    /// The raw buffer for extracting bytes from the stream
-    sio::buffer                          _rawBuffer {1*sio::mbyte} ;
-    /// The raw buffer for uncompression
-    sio::buffer                          _compBuffer {2*sio::mbyte} ;
-    /// The collection block handler manager for events
-    SIOHandlerMgr                        _eventHandlerMgr {} ;
-    /// The event currently handled by the reader
-    std::shared_ptr<EVENT::LCEvent>      _event {nullptr} ;
-    /// The run header currently handled by the reader
-    std::shared_ptr<EVENT::LCRunHeader>  _runHeader {nullptr} ;
+    /// The underlying implementation of the LCReader
+    MT::LCReader                         _reader ;
     /// The run listeners
     std::set<IO::LCRunListener*>         _runListeners {} ;
     /// The event listeners
     std::set<IO::LCEventListener*>       _evtListeners {} ;
-    /// The list of files to open and read
-    std::vector<std::string>             _myFilenames {} ;
-    /// A restricted list of collections to read only
-    std::vector<std::string>             _readCollectionNames {} ;
-    /// The current file list index when opening multiple files
-    unsigned int                         _currentFileIndex {0} ;
-    /// Whether to read the event map using the random access manager
-    bool                                 _readEventMap {false} ;
-    /// The random access manager for event/run random access in the file
-    LCIORandomAccessMgr                  _raMgr {} ;
   }; // class
 } // namespace
 
