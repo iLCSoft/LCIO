@@ -66,13 +66,13 @@ public:
    *  Returns NULL if 'EOF' read.
    *  Note that this method is not thread safe !
    */
-  LCRunHeaderPtr readNextRunHeader( int accessMode = EVENT::LCIO::READ_ONLY ) ;
+  std::unique_ptr<EVENT::LCRunHeader> readNextRunHeader( int accessMode = EVENT::LCIO::READ_ONLY ) ;
 
   /** Reads the next event from the file.
    *  Returns NULL if 'EOF' read.
    *  Note that this method is not thread safe !
    */
-  LCEventPtr readNextEvent( int accessMode = EVENT::LCIO::READ_ONLY ) ;
+  std::unique_ptr<EVENT::LCEvent> readNextEvent( int accessMode = EVENT::LCIO::READ_ONLY ) ;
 
   /** Return the number of events in the file - the file has to be open. In
    *  case several input files are specified in the open() method -
@@ -113,12 +113,12 @@ public:
   /** Reads the specified runHeader from file. Returns NULL if
    *  the specified runHeader hasn't been found in the file.
    */
-  LCRunHeaderPtr readRunHeader( int runNumber , int accessMode = EVENT::LCIO::READ_ONLY ) ;
+  std::unique_ptr<EVENT::LCRunHeader> readRunHeader( int runNumber , int accessMode = EVENT::LCIO::READ_ONLY ) ;
 
   /** Reads the specified event from file. Returns NULL if
    *  the specified event hasn't been found in the file.
    */
-  LCEventPtr readEvent( int runNumber, int evtNumber , int accessMode = EVENT::LCIO::READ_ONLY ) ;
+  std::unique_ptr<EVENT::LCEvent> readEvent( int runNumber, int evtNumber , int accessMode = EVENT::LCIO::READ_ONLY ) ;
 
   /** Closes the output file/stream etc.
    */
