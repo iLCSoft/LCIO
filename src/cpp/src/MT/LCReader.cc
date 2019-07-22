@@ -10,8 +10,11 @@
 #include "IOIMPL/LCRunHeaderIOImpl.h"
 #include "Exceptions.h"
 #include "SIO/RunEventMap.h"
+#include "SIO/SIOHandlerMgr.h"
 
 // -- sio headers
+#include "sio/definitions.h"
+#include "sio/buffer.h"
 #include <sio/exception.h>
 #include <sio/api.h>
 #include <sio/compression/zlib.h>
@@ -26,6 +29,9 @@ typedef EVENT::long64 long64 ;
 namespace MT {
 
   LCReader::LCReader( int lcReaderFlag ) :
+    _rawBuffer( std::make_shared<sio::buffer>(1*sio::mbyte) ),
+    _compBuffer( std::make_shared<sio::buffer>(2*sio::mbyte) ),
+    _eventHandlerMgr( std::make_shared<SIO::SIOHandlerMgr>() ),
     _readEventMap( lcReaderFlag & LCReader::directAccess ),
     _lazyUnpack( lcReaderFlag & LCReader::lazyUnpack ),
     _raMgr(std::make_shared<SIO::LCIORandomAccessMgr>()) {
@@ -86,11 +92,11 @@ namespace MT {
     auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
       const bool compressed = sio::api::is_compressed( recinfo._options ) ;
       if( compressed ) {
-        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        _compBuffer->resize( recinfo._uncompressed_length ) ;
         sio::zlib_compression compressor ;
-        compressor.uncompress( recdata, _compBuffer ) ;
+        compressor.uncompress( recdata, *_compBuffer ) ;
       }
-      auto rundata = compressed ? _compBuffer.span() : recdata ;
+      auto rundata = compressed ? _compBuffer->span() : recdata ;
       auto runheader = std::make_unique<IOIMPL::LCRunHeaderIOImpl>() ;
       SIO::SIORunHeaderRecord::readBlocks( rundata, runheader.get() ) ;
       runheader->setReadOnly( accessMode == EVENT::LCIO::READ_ONLY ) ;
@@ -99,7 +105,7 @@ namespace MT {
       return false ; // only one record
     } ;
     try {
-      sio::api::read_records( _stream, _rawBuffer, validator , processor ) ;
+      sio::api::read_records( _stream, *_rawBuffer, validator , processor ) ;
     }
     catch( sio::exception &e ) {
       // reached end of file. Need to close the current and open the next if available
@@ -137,11 +143,11 @@ namespace MT {
       // do not run uncompression if we have an event record and lazy unpacking... 
       const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
       if( uncomp ) {
-        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        _compBuffer->resize( recinfo._uncompressed_length ) ;
         sio::zlib_compression compressor ;
-        compressor.uncompress( recdata, _compBuffer ) ;
+        compressor.uncompress( recdata, *_compBuffer ) ;
       }
-      auto data = uncomp ? _compBuffer.span() : recdata ;
+      auto data = uncomp ? _compBuffer->span() : recdata ;
       if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
         if( _lazyUnpack ) {
           lazyEvent = new IOIMPL::LCEventLazyImpl() ;
@@ -158,21 +164,21 @@ namespace MT {
           throw IO::IOException( "SIOReader::readNextEvent: Event record before an EventHeader record ..." ) ;
         }
         if( _lazyUnpack ) {
-          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer->size() ) ;
           // move the buffer to the event
-          lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+          lazyEvent->setBuffer( recinfo, std::move(*_rawBuffer) ) ;
           // re-allocate a new valid buffer
-          _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+          *_rawBuffer = sio::buffer( _bufferMaxSize ) ;
         }
         else {
-          SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+          SIO::SIOEventRecord::readBlocks( data, event.get(), *_eventHandlerMgr ) ;
         }
         return nullptr ;
       }
       return false ;
     } ;
     try {
-      sio::api::read_records( _stream, _rawBuffer, validator, processor ) ;
+      sio::api::read_records( _stream, *_rawBuffer, validator, processor ) ;
     }
     catch( sio::exception &e ) {
       // reached end of file. Need to close the current and open the next if available
@@ -343,11 +349,11 @@ namespace MT {
         const bool compressed = sio::api::is_compressed( recinfo._options ) ;
         const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
         if( uncomp ) {
-          _compBuffer.resize( recinfo._uncompressed_length ) ;
+          _compBuffer->resize( recinfo._uncompressed_length ) ;
           sio::zlib_compression compressor ;
-          compressor.uncompress( recdata, _compBuffer ) ;
+          compressor.uncompress( recdata, *_compBuffer ) ;
         }
-        auto data = uncomp ? _compBuffer.span() : recdata ;
+        auto data = uncomp ? _compBuffer->span() : recdata ;
         if( recinfo._name == SIO::LCSIO::HeaderRecordName ) {
           if( _lazyUnpack ) {
             lazyEvent = new IOIMPL::LCEventLazyImpl() ;
@@ -366,14 +372,14 @@ namespace MT {
           // if we've found the requested event, we unpack the blocks then
           if( event->getEventNumber() == evtNumber && event->getRunNumber() == runNumber ) {
             if( _lazyUnpack ) {
-              _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+              _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer->size() ) ;
               // move the buffer to the event
-              lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+              lazyEvent->setBuffer( recinfo, std::move(*_rawBuffer) ) ;
               // re-allocate a new valid buffer
-              _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+              *_rawBuffer = sio::buffer( _bufferMaxSize ) ;
             }
             else {
-              SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+              SIO::SIOEventRecord::readBlocks( data, event.get(), *_eventHandlerMgr ) ;
             }
             evtFound = true ;
             // event found ! stop here !
@@ -385,7 +391,7 @@ namespace MT {
         return false ;
       } ;
       try {
-        sio::api::read_records( _stream, _rawBuffer, validator, processor ) ;
+        sio::api::read_records( _stream, *_rawBuffer, validator, processor ) ;
       }
       catch( sio::exception &e ) {
         if( e.code() != sio::error_code::eof ) {
@@ -430,11 +436,11 @@ namespace MT {
       const bool compressed = sio::api::is_compressed( recinfo._options ) ;
       const bool uncomp = ( compressed && not (recinfo._name == SIO::LCSIO::EventRecordName && _lazyUnpack) ) ;
       if( uncomp ) {
-        _compBuffer.resize( recinfo._uncompressed_length ) ;
+        _compBuffer->resize( recinfo._uncompressed_length ) ;
         sio::zlib_compression compressor ;
-        compressor.uncompress( recdata, _compBuffer ) ;
+        compressor.uncompress( recdata, *_compBuffer ) ;
       }
-      auto data = uncomp ? _compBuffer.span() : recdata ;
+      auto data = uncomp ? _compBuffer->span() : recdata ;
       // LCRunHeader case
       if( recinfo._name == SIO::LCSIO::RunRecordName ) {
         recordsRead++ ;
@@ -465,14 +471,14 @@ namespace MT {
         }
         recordsRead++ ;
         if( _lazyUnpack ) {
-          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer.size() ) ;
+          _bufferMaxSize = std::max( _bufferMaxSize, _rawBuffer->size() ) ;
           // move the buffer to the event
-          lazyEvent->setBuffer( recinfo, std::move(_rawBuffer) ) ;
+          lazyEvent->setBuffer( recinfo, std::move(*_rawBuffer) ) ;
           // re-allocate a new valid buffer
-          _rawBuffer = sio::buffer( _bufferMaxSize ) ;
+          *_rawBuffer = sio::buffer( _bufferMaxSize ) ;
         }
         else {
-          SIO::SIOEventRecord::readBlocks( data, event.get(), _eventHandlerMgr ) ;
+          SIO::SIOEventRecord::readBlocks( data, event.get(), *_eventHandlerMgr ) ;
         }
         auto iter = listeners.begin() ;
         while( iter != listeners.end() ) {
@@ -490,7 +496,7 @@ namespace MT {
     } ;
     while( 1 ) {
       try {
-        sio::api::read_records( _stream, _rawBuffer, validator , processor ) ;
+        sio::api::read_records( _stream, *_rawBuffer, validator , processor ) ;
       }
       catch( sio::exception &e ) {
         if( e.code() != sio::error_code::eof ) {

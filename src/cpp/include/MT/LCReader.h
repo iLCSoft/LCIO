@@ -4,6 +4,8 @@
 // -- std headers
 #include <string>
 #include <vector>
+#include <fstream>
+#include <memory>
 
 // -- lcio headers
 #include "MT/Types.h"
@@ -11,14 +13,17 @@
 #include "LCIOSTLTypes.h"
 #include "LCIOTypes.h"
 #include "EVENT/LCIO.h"
-#include "SIO/SIOHandlerMgr.h"
 
-// -- sio headers
-#include "sio/definitions.h"
-#include "sio/buffer.h"
+// need to make forward declaration to 
+// avoid lcio dependencies to include directly sio headers
+
+namespace sio {
+  class buffer ;
+}
 
 namespace SIO {
   class LCIORandomAccessMgr ;
+  class SIOHandlerMgr ;
 }
 
 namespace MT {
@@ -167,13 +172,13 @@ private:
 
 private:
   /// The input file stream
-  sio::ifstream                               _stream {} ;
+  std::ifstream                               _stream {} ;
   /// The raw buffer for extracting bytes from the stream
-  sio::buffer                                 _rawBuffer {1*sio::mbyte} ;
+  std::shared_ptr<sio::buffer>                _rawBuffer {nullptr} ; //{1*sio::mbyte} ;
   /// The raw buffer for uncompression
-  sio::buffer                                 _compBuffer {2*sio::mbyte} ;
+  std::shared_ptr<sio::buffer>                _compBuffer {nullptr} ; //{2*sio::mbyte} ;
   /// The collection block handler manager for events
-  SIO::SIOHandlerMgr                          _eventHandlerMgr {} ;
+  std::shared_ptr<SIO::SIOHandlerMgr>         _eventHandlerMgr {nullptr} ;
   /// Whether to read the event map using the random access manager
   bool                                        _readEventMap {false} ;
   /// Whether to perform the lazy unpacking of event records
@@ -187,7 +192,7 @@ private:
   /// The random access manager for event/run random access in the file
   std::shared_ptr<SIO::LCIORandomAccessMgr>   _raMgr {nullptr} ;
   ///
-  sio::buffer::size_type                      _bufferMaxSize {0} ;
+  std::size_t                                 _bufferMaxSize {0} ;
 }; // class
 
 } // namespace MT
