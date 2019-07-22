@@ -5,7 +5,8 @@
 #include "tutil.h"
 
 #include "IO/LCWriter.h"
-#include "MT/LCReader.h" 
+#include "MT/LCReader.h"
+#include "EVENT/LCCollection.h" 
 
 #include <iostream>
 

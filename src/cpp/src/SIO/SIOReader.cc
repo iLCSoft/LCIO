@@ -13,7 +13,7 @@
 // #include <sys/stat.h>
 // #include <sstream>
 // #include <algorithm>
-// #include <cstring>
+#include <limits>
 // #include <assert.h>
 
 namespace SIO {
