@@ -147,10 +147,18 @@ namespace SIO {
     auto indexBlock = std::make_shared<SIOIndexHandler>() ;
     indexBlock->setRunEventMap( _runEvtMap ) ;
     blocks.push_back( indexBlock ) ;
-    // get a valid buffer span for reading
-    auto recordData = _rawBuffer.span( recinfo._header_length, recinfo._data_length ) ;
-    // read the record blocks
-    sio::api::read_blocks( recordData, blocks ) ;
+    const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+    if( compressed ) {
+      sio::buffer compBuffer( recinfo._uncompressed_length ) ;
+      sio::zlib_compression compressor ;
+      compressor.uncompress( _rawBuffer.span( recinfo._header_length, recinfo._data_length ), compBuffer ) ;
+      // read the record blocks
+      sio::api::read_blocks( compBuffer.span(), blocks ) ;
+    }
+    else {
+      // read the record blocks
+      sio::api::read_blocks( _rawBuffer.span( recinfo._header_length, recinfo._data_length ), blocks ) ;
+    }
     return true ;
   }
 
