@@ -47,7 +47,7 @@ INCLUDE( "${LCIO_ROOT}/lib/cmake/MacroCheckPackageLibs.cmake" )
 # only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
 # additional components are set by cmake in variable PKG_FIND_COMPONENTS
 # first argument should be the package name
-CHECK_PACKAGE_LIBS( LCIO lcio sio )
+CHECK_PACKAGE_LIBS( LCIO lcio )
 
 
 
