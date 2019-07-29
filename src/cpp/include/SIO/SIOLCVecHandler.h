@@ -56,9 +56,19 @@ namespace SIO {
 
   template <typename VECTYPE>
   inline void SIOLCVecHandler<VECTYPE>::read( sio::read_device& device, EVENT::LCObject* objP, sio::version_type vers ) {
-    auto vec = dynamic_cast<std::vector<typename VECTYPE::value_type>*>( objP ) ;
+    auto vec = dynamic_cast<VECTYPE*>( objP ) ;
     // read the vector
-    SIO_SDATA( device, vec ) ;
+    // SIO_SDATA( device, vec ) ;
+    
+    int nElements ;
+    SIO_SDATA( device, nElements ) ;
+    vec->reserve( nElements ) ;
+    for( int i=0 ; i<nElements ; i++ ) {
+      typename VECTYPE::value_type x ;
+      SIO_SDATA( device , x ) ;
+      vec->push_back( x ) ;
+    }
+    
     // pointer tag
     if( vers > SIO_VERSION_ENCODE( 1, 2 ) ) {
       SIO_PTAG( device , vec ) ;
@@ -69,9 +79,14 @@ namespace SIO {
 
   template <typename VECTYPE>
   inline void SIOLCVecHandler<VECTYPE>::write( sio::write_device& device, const EVENT::LCObject* obj ) {
-    auto vec = dynamic_cast<const std::vector<typename VECTYPE::value_type>*>( obj ) ;
+    auto vec = dynamic_cast<const VECTYPE*>( obj ) ;
     // write the vector
-    SIO_SDATA( device, vec ) ;
+    // SIO_SDATA( device, vec ) ;
+    int nElements = vec->size() ;
+    SIO_SDATA( device, nElements ) ;
+    for( int i=0 ; i<nElements ; i++ ) {
+      SIO_SDATA( device, (*vec)[i] ) ;
+    }    
     // pointer tag
     SIO_PTAG( device , vec ) ;
   }
