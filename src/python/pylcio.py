@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from pyLCIO.io.EventLoop import EventLoop
 from xml.etree import ElementTree
 

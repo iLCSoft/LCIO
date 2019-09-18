@@ -6,7 +6,7 @@ Script to merge a given number of consecutive events into a single event
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT, IOIMPL, IMPL
 from pyLCIO.io.LcioReader import LcioReader
 from ROOT import vector
