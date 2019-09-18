@@ -6,6 +6,7 @@ Module to handle dynamic decoration of LCIO classes
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+from __future__ import absolute_import
 from ROOT import TVector3, TLorentzVector
 from pyLCIO import EVENT, IMPL, IO, UTIL
 from array import array

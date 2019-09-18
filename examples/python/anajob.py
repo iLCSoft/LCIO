@@ -6,6 +6,7 @@ Illustrates looping over events, run headers and collections, as well as some st
 
 @author: Christian Grefe, CERN
 '''
+from __future__ import absolute_import
 import sys
 
 def formatVecValues( vec ):

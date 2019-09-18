@@ -4,6 +4,7 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+from __future__ import absolute_import
 from pyLCIO.drivers.Driver import Driver
 
 class EventMarkerDriver ( Driver ):

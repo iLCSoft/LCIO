@@ -6,6 +6,7 @@ Example for setting up an @EventLoop
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+from __future__ import absolute_import
 from pyLCIO.io.EventLoop import EventLoop
 from pyLCIO.drivers.EventMarkerDriver import EventMarkerDriver
 from exampleDrivers.McParticlePlotDriver import McParticlePlotDriver

@@ -7,6 +7,7 @@ If an LCIO exception is encountered, the corresponding python exception is raise
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+from __future__ import absolute_import
 import inspect, sys, ROOT, pyLCIO
 import pyLCIO.exceptions.Exceptions
 
