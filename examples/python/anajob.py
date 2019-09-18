@@ -26,17 +26,17 @@ def printParameters( parameters ):
     for intKey in parameters.getIntKeys( keyVec ):
         intVec = vector( 'int' )()
         parameters.getIntVals( intKey, intVec )
-        print(' parameter %s [int]: %s' % ( intKey, formatVecValues( intVec ) ))
+        print(' parameter %s [int]: %s' % (intKey, formatVecValues(intVec)))
     keyVec.clear()
     for floatKey in parameters.getFloatKeys( keyVec ):
         floatVec = vector( 'float' )()
         parameters.getFloatVals( floatKey, floatVec )
-        print(' parameter %s [float]: %s' % ( floatKey, formatVecValues( floatVec ) ))
+        print(' parameter %s [float]: %s' % (floatKey, formatVecValues(floatVec)))
     keyVec.clear()
     for stringKey in parameters.getStringKeys( keyVec ):
         stringVec = vector( 'string' )()
         parameters.getStringVals( stringKey, stringVec )
-        print(' parameter %s [string]: %s' % ( stringKey, formatVecValues( stringVec ) ))
+        print(' parameter %s [string]: %s' % (stringKey, formatVecValues(stringVec)))
 
 def dumpEvent( event ):
     ''' Helper method to print information on all collections in an LCEvent'''
@@ -49,17 +49,17 @@ def dumpEvent( event ):
     print('///////////////////////////////////\n')
     
     print('---------------------------------------------------------------------------')
-    print('{0:30}{1:25}{2:20}'.format( 'COLLECTION NAME', 'COLLECTION TYPE', 'NUMBER OF ELEMENTS' ))
+    print('{0:30}{1:25}{2:20}'.format('COLLECTION NAME', 'COLLECTION TYPE', 'NUMBER OF ELEMENTS'))
     print('===========================================================================')
     
     for collectionName, collection in event:
-        print('{0:30}{1:25}{2:9}'.format( collectionName, collection.getTypeName(), collection.getNumberOfElements() ))
+        print('{0:30}{1:25}{2:9}'.format(collectionName, collection.getTypeName(), collection.getNumberOfElements()))
 
     print('---------------------------------------------------------------------------\n\n')
 
 def dumpRunHeader( run ):
     ''' Helper method to print information on a LCRunHeader'''
-    print('  Run : %d - %s:  %s' % ( run.getRunNumber(), run.getDetectorName(), run.getDescription() ))
+    print('  Run : %d - %s:  %s' % (run.getRunNumber(), run.getDetectorName(), run.getDescription()))
     printParameters( run.parameters() )
     print(' --------------------------------------------------------------- ')
 
@@ -77,7 +77,8 @@ def anajob( fileNames ):
     for fileName in fileNames:
         fileNameVec.push_back( fileName )
         reader.open( fileName )
-        print('     %s     [ number of runs: %d, number of events: %d ]\n' % ( fileName, reader.getNumberOfRuns(), reader.getNumberOfEvents() ))
+        print('     %s     [ number of runs: %d, number of events: %d ]\n' %
+              (fileName, reader.getNumberOfRuns(), reader.getNumberOfEvents()))
         reader.close()
     
     # second loop: print information on all run headers
@@ -92,7 +93,7 @@ def anajob( fileNames ):
     
     print(' will reopen and read from files:')
     for fileName in fileNames:
-        print('     %s' % ( fileName ))
+        print('     %s' % (fileName))
     
     # final loop: print information on all events
     reader.open( fileNameVec )
@@ -105,9 +106,9 @@ def anajob( fileNames ):
         nEvents += 1
     reader.close()
         
-    print('  %s events read from files:' % ( nEvents ))
+    print('  %s events read from files:' % (nEvents))
     for fileName in fileNames:
-        print('     %s' % ( fileName ))
+        print('     %s' % (fileName))
 
 def usage():
     ''' Helper method to inform about the usage of this script '''

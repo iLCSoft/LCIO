@@ -18,17 +18,17 @@ def setupLcioDictionary():
         print('Environment variable $LCIO is not defined!', file=sys.stderr)
         sys.exit( 2 )
     if not os.path.exists( lcioPath ):
-        print('LCIO path %s does not exist' % ( lcioPath ))
+        print('LCIO path %s does not exist' % (lcioPath))
         sys.exit( 2 )
     liblcioPath = os.path.join( lcioPath, 'lib', 'liblcio.so' )
     # See http://root.cern.ch/root/html/TSystem.html#TSystem:Load for error codes
     result = gSystem.Load( liblcioPath )
     if result not in [0, 1]:
-        print('Error loading %s' % ( liblcioPath ), file=sys.stderr)
+        print('Error loading %s' % (liblcioPath), file=sys.stderr)
         sys.exit( 2 )
     liblcioDictPath = os.path.join( lcioPath, 'lib', 'liblcioDict.so' )
     # See http://root.cern.ch/root/html/TSystem.html#TSystem:Load for error codes
     result = gSystem.Load( liblcioDictPath )
     if result not in [0, 1]:
-        print('Error loading %s' % ( liblcioDictPath ), file=sys.stderr)
-        sys.exit( 2 )
+        print('Error loading %s' % (liblcioDictPath), file=sys.stderr)
+        sys.exit(2)

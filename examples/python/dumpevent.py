@@ -26,9 +26,9 @@ def dumpevent( fileName, eventNumber, runNumber=None ):
         from pyLCIO import UTIL
         UTIL.LCTOOLS.dumpEventDetailed( event )
     elif runNumber:
-        print(" couldn't find event %d - run %d in file %s" % ( eventNumber, runNumber, fileName )) 
+        print(" couldn't find event %d - run %d in file %s" % (eventNumber, runNumber, fileName))
     else:
-        print(' less than %d events in file %s' % ( eventNumber, fileName ))
+        print(' less than %d events in file %s' % (eventNumber, fileName))
 
 def usage():
     ''' Helper method to inform about the usage of this script '''
