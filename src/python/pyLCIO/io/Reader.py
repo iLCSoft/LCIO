@@ -6,9 +6,9 @@ Created on Dec 4, 2012
 
 from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT
-from six.moves import range
+from sixlcio.moves import range
 from io import open
-import six
+import sixlcio as six
 
 class Reader( object ):
     ''' Generic reader class '''

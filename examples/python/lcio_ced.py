@@ -26,8 +26,8 @@ import random
 import sys
 
 from pyLCIO.io.LcioReader import LcioReader
-from six.moves import range
-from six.moves import input
+from sixlcio.moves import range
+from sixlcio.moves import input
 
 #---------------------------------------
 # load CED library
