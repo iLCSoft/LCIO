@@ -7,6 +7,7 @@ Created on Dec 4, 2012
 from __future__ import absolute_import, unicode_literals
 from pyLCIO.drivers.Driver import Driver
 from ROOT import TH1D, TCanvas
+from six.moves import input
 
 class McParticlePlotDriver( Driver ):
     ''' Example driver to illustrate how to fill a histogram in an @EventLoop '''
@@ -53,4 +54,4 @@ class McParticlePlotDriver( Driver ):
             self.histograms[histogramName].Draw()
             plots.append( plot )
         
-        userInput = raw_input( 'Press any key to continue' )
+        userInput = input( 'Press any key to continue' )
