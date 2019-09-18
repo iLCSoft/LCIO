@@ -1,3 +1,4 @@
+from __future__ import absolute_import
 from pyLCIO.IOIMPL import LCFactory
 from pyLCIO import IOException
 

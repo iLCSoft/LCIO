@@ -16,6 +16,7 @@ Note: CED (incl. glced) can be downloaded from:
 @author: F.Gaede, DESY
 '''
 
+from __future__ import absolute_import
 import os
 from ctypes import *
 import random

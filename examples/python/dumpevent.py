@@ -5,6 +5,7 @@ Re-implementation of dumpevent.cc
 
 @author: Christian Grefe, CERN
 '''
+from __future__ import absolute_import
 import sys
 
 def dumpevent( fileName, eventNumber, runNumber=None ):
