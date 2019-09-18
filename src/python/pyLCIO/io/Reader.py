@@ -54,18 +54,18 @@ class Reader( object ):
     def next( self ):
         ''' Reads the next event from the stream. '''
         if not self.isOpen:
-            self.__open__( self.fileIter.next() )
+            self.__open__( next(self.fileIter) )
         event = self.__read__()
         if event:
             return event
         else:
             self.__close__()
-            return self.next()
+            return next(self)
     
     def skip( self, nEntries ):
         ''' Skip entries from the stream '''
         for i in range( int( nEntries ) ):
-            self.next()
+            next(self)
         
     def __close__( self ):
         ''' Close the reader and all streams '''
