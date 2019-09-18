@@ -10,6 +10,7 @@ import os
 from pyLCIO.drivers.Driver import Driver
 from pyLCIO.io.LcioReader import LcioReader
 from pyLCIO.io.StdHepReader import StdHepReader
+from io import open
 
 class EventLoop:
     ''' Class that manages a loop of LCIO events '''
