@@ -7,6 +7,7 @@ Example for creating LCIO events and filling them with MCParticles and SimTracke
 '''
 
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 from pyLCIO import EVENT, IMPL, IOIMPL, UTIL
 from ROOT import TVector3, TLorentzVector, TRandom3, TMath
 from time import time
@@ -120,8 +121,8 @@ def generateEvents( outputFileName, nEvents ):
         
 
 def usage():
-    print 'Generates an MCParticle with associated SimTrackerHits for each event'
-    print 'Usage:\n  python %s <outputFile> <nEvents>' % ( sys.argv[0] )
+    print('Generates an MCParticle with associated SimTrackerHits for each event')
+    print('Usage:\n  python %s <outputFile> <nEvents>' % ( sys.argv[0] ))
 
 if __name__ == '__main__':
     if len( sys.argv ) < 3:

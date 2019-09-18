@@ -4,6 +4,7 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 import os
 
 from pyLCIO.drivers.Driver import Driver
@@ -26,7 +27,7 @@ class EventLoop:
             elif extension in ['stdhep']:
                 self.reader = StdHepReader( fileName )
             else:
-                print 'Unknown extension for %s' % ( extension )
+                print('Unknown extension for %s' % ( extension ))
         else:
             self.reader.addFile( fileName )
         
