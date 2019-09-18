@@ -7,7 +7,7 @@ If an LCIO exception is encountered, the corresponding python exception is raise
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import inspect, sys, ROOT, pyLCIO
 import pyLCIO.exceptions.Exceptions
 
@@ -55,4 +55,3 @@ def setupExceptionHandling():
                         # can not wrap singleton calls
                         if methodName not in ["getInstance"]:
                             setattr(object, methodName, handleLcioExceptions(method))
-                        
