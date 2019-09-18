@@ -27,6 +27,7 @@ import sys
 
 from pyLCIO.io.LcioReader import LcioReader
 from six.moves import range
+from six.moves import input
 
 #---------------------------------------
 # load CED library
@@ -118,7 +119,7 @@ def drawEvents( fileName ):
        
         text = "event " + str(event.getEventNumber()) + " " +  str(event.getRunNumber()) +" - hit enter to draw next - [q] to quit ..." 
 
-        c = raw_input( text )
+        c = input( text )
         if( c == 'q' ):
             break ;
 
