@@ -42,9 +42,9 @@ private:
 
 public:
   /// Bit for direct access
-  static const int directAccess =  0x00000001 << 0  ;
+  static constexpr int directAccess =  0x00000001 << 0  ;
   /// Bit for lazy unpacking of event records
-  static const int lazyUnpack =  0x00000002 << 0  ;
+  static constexpr int lazyUnpack =  0x00000002 << 0  ;
 
 public:
   ~LCReader() = default;
