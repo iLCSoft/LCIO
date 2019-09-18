@@ -7,7 +7,7 @@ Example for creating LCIO events and filling them with MCParticles and SimTracke
 '''
 
 from __future__ import absolute_import, unicode_literals
-from __future__ import print_function
+from __future__ import print_function, division
 from pyLCIO import EVENT, IMPL, IOIMPL, UTIL
 from ROOT import TVector3, TLorentzVector, TRandom3, TMath
 from time import time
