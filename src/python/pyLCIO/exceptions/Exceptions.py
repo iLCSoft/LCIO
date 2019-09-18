@@ -5,7 +5,7 @@ class LcioException(Exception):
         super(LcioException, self).__init__(message)
         self.type = 'lcio::Exception'
     def __str__( self ):
-        return repr(self.type + ': ' + self.message)
+        return repr(self.type + ': ' + str(self))
 
 class EventException(LcioException):
     def __init__( self, message ):
