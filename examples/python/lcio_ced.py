@@ -17,6 +17,7 @@ Note: CED (incl. glced) can be downloaded from:
 '''
 
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 import os
 from ctypes import *
 import random
@@ -39,8 +40,8 @@ fname = pathToCED+"/lib/libCED.dylib"
 
 if not( os.path.isfile(fname) ) :
     
-    print "ERROR: cannot load CED library: ",  fname 
-    print "       please set $CED to CED root directory ! " 
+    print("ERROR: cannot load CED library: ",  fname) 
+    print("       please set $CED to CED root directory ! ") 
     exit(1) ;
     
     
@@ -127,7 +128,7 @@ def drawEvents( fileName ):
 
 #-------------------------------------------------------------------------------------
 def usage():
-    print 'Usage:\n\tpython %s <fileName>' % ( os.path.split( sys.argv[0] )[1] )
+    print('Usage:\n\tpython %s <fileName>' % ( os.path.split( sys.argv[0] )[1] ))
 
 
 if __name__ == "__main__":

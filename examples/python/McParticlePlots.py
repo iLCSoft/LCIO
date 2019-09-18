@@ -7,6 +7,7 @@ Example for setting up an @EventLoop
 '''
 
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 from pyLCIO.io.EventLoop import EventLoop
 from pyLCIO.drivers.EventMarkerDriver import EventMarkerDriver
 from exampleDrivers.McParticlePlotDriver import McParticlePlotDriver
@@ -40,7 +41,7 @@ def McParticlePlots( fileName ):
     eventLoop.loop( -1 )
     
 def usage():
-    print 'Usage:\n  python %s <fileName>' % ( os.path.split( sys.argv[0] )[1] )
+    print('Usage:\n  python %s <fileName>' % ( os.path.split( sys.argv[0] )[1] ))
     
 if __name__ == "__main__":
     if len( sys.argv ) < 2:

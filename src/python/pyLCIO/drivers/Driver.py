@@ -4,6 +4,7 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 from pyLCIO import IO 
 from time import time
 
@@ -56,10 +57,10 @@ class Driver():
             
     def printStatistics( self ):
         ''' Method that gives feedback on the processing time '''
-        print '\nExecuted drivers:'
+        print('\nExecuted drivers:')
         for driver in self.drivers:
             msPerEvent = 0
             if driver.processedEvents != 0:
                 msPerEvent = int(1000*driver.processedTime/driver.processedEvents) 
-            print '  {0:25} {1:>7} events {2:>8} ms {3:>7} ms/event'.format(driver.getType(), driver.processedEvents, int(1000*driver.processedTime), msPerEvent)
+            print('  {0:25} {1:>7} events {2:>8} ms {3:>7} ms/event'.format(driver.getType(), driver.processedEvents, int(1000*driver.processedTime), msPerEvent))
 

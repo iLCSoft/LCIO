@@ -5,6 +5,7 @@ Created on Dec 4, 2012
 '''
 
 from __future__ import absolute_import, unicode_literals
+from __future__ import print_function
 from pyLCIO.drivers.Driver import Driver
 
 class EventMarkerDriver ( Driver ):
@@ -39,6 +40,6 @@ class EventMarkerDriver ( Driver ):
         eventNumber = event.getEventNumber()
         if eventNumber % self.interval == 0:
             if self.showRunNumber:
-                print self.runPrefix, event.getRunNumber(), self.eventPrefix, eventNumber
+                print(self.runPrefix, event.getRunNumber(), self.eventPrefix, eventNumber)
             else:
-                print self.eventPrefix, eventNumber
+                print(self.eventPrefix, eventNumber)
