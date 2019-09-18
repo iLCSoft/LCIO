@@ -42,8 +42,8 @@ fname = pathToCED+"/lib/libCED.dylib"
 
 if not( os.path.isfile(fname) ) :
     
-    print("ERROR: cannot load CED library: ",  fname) 
-    print("       please set $CED to CED root directory ! ") 
+    print("ERROR: cannot load CED library: ", fname)
+    print("       please set $CED to CED root directory ! ")
     exit(1) ;
     
     
@@ -66,7 +66,7 @@ def drawEvent(evt):
 
     names = evt.getCollectionNames()
     
-    for i in range(  names.size() ):
+    for i in range(names.size()):
         
         col = evt.getCollection( names[i] )
         
@@ -119,7 +119,7 @@ def drawEvents( fileName ):
        
         text = "event " + str(event.getEventNumber()) + " " +  str(event.getRunNumber()) +" - hit enter to draw next - [q] to quit ..." 
 
-        c = input( text )
+        c = input(text)
         if( c == 'q' ):
             break ;
 
@@ -130,7 +130,7 @@ def drawEvents( fileName ):
 
 #-------------------------------------------------------------------------------------
 def usage():
-    print('Usage:\n\tpython %s <fileName>' % ( os.path.split( sys.argv[0] )[1] ))
+    print('Usage:\n\tpython %s <fileName>' % (os.path.split(sys.argv[0])[1]))
 
 
 if __name__ == "__main__":

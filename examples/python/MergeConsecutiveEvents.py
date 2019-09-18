@@ -51,7 +51,7 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
     # create a reader
     reader = LcioReader( inputFileName )
     
-    print('Processing %d events from %s'%(reader.getNumberOfEvents(), inputFileName))
+    print('Processing %d events from %s' % (reader.getNumberOfEvents(), inputFileName))
     
     # create a writer
     writer = IOIMPL.LCFactory.getInstance().createLCWriter()
@@ -91,7 +91,7 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
 
         mergeEvents( event, combinedEvent )
         if readEvents % 100 == 0 and readEvents != 0:
-            print('Processed %d events'%(readEvents))
+            print('Processed %d events' % (readEvents))
         readEvents += 1
         readEventsSinceLastWrite += 1
     
@@ -105,7 +105,7 @@ def merge( inputFileName, outputFileName, nEventsPerEvent ):
 
 def usage():
     print('Merges the given number of consecutive events into a single event by concatenating all collections.')
-    print('Usage:\n  python %s <inputFile> <outputFile> <nEventsPerEvent>'%(sys.argv[0]))
+    print('Usage:\n  python %s <inputFile> <outputFile> <nEventsPerEvent>' % (sys.argv[0]))
 
 if __name__ == '__main__':
     if len(sys.argv) < 4:

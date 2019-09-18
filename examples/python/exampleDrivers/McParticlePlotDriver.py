@@ -54,4 +54,4 @@ class McParticlePlotDriver( Driver ):
             self.histograms[histogramName].Draw()
             plots.append( plot )
         
-        userInput = input( 'Press any key to continue' )
+        userInput = input('Press any key to continue')

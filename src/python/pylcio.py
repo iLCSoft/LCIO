@@ -72,17 +72,17 @@ class PyLCIOXML:
             try:
                 driverModule = importlib.import_module( driverModuleName )
             except ImportError:
-                print('Module "%s" does not exist'%(driverModuleName), file=sys.stderr)
+                print('Module "%s" does not exist' % (driverModuleName), file=sys.stderr)
                 sys.exit( 2 )
             try:
                 driverClass = getattr( driverModule , driverClassName )
             except AttributeError:
-                print('%s does not have a class "%s"'%(driverModuleName, driverClassName), file=sys.stderr)
+                print('%s does not have a class "%s"' % (driverModuleName, driverClassName), file=sys.stderr)
                 sys.exit( 2 )
             driver = driverClass()
             self.driverDict[driverName] = driver
             if self.printDrivers:
-                print('  %s of type %s'%(driverName, driverType))
+                print('  %s of type %s' % (driverName, driverType))
             for parameterNode in driverNode:
                 parameterName = parameterNode.tag
                 parameterValue = parseValue( parameterNode.text )
@@ -90,11 +90,11 @@ class PyLCIOXML:
                 try:
                     parameterMethod = getattr( driver, parameterMethodName )
                 except AttributeError:
-                    print('%s does not have a method "%s"'%(driverClassName, parameterMethodName), file=sys.stderr)
+                    print('%s does not have a method "%s"' % (driverClassName, parameterMethodName), file=sys.stderr)
                     sys.exit( 2 )
                 parameterMethod( parameterValue )
                 if self.printDrivers:
-                    print('    %s = %s'%(parameterName, parameterValue))
+                    print('    %s = %s' % (parameterName, parameterValue))
         if self.printDrivers:
             print('')
             
@@ -106,7 +106,7 @@ class PyLCIOXML:
             driverName = driverNode.get( 'name' )
             self.eventLoop.add( self.driverDict[driverName] )
             if self.printDrivers:
-                print('  %d) %s'%(index, driverName ))
+                print('  %d) %s' % (index, driverName))
                 index += 1
         if self.printDrivers:
             print('')
