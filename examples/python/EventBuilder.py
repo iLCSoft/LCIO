@@ -13,6 +13,7 @@ from ROOT import TVector3, TLorentzVector, TRandom3, TMath
 from time import time
 
 import sys, math
+from six.moves import range
 
 def generateEvents( outputFileName, nEvents ):
     
@@ -46,7 +47,7 @@ def generateEvents( outputFileName, nEvents ):
     run.setDescription( 'This is a test run' )
     writer.writeRunHeader( run )
     
-    for iEvent in xrange( nEvents ):
+    for iEvent in range( nEvents ):
         
         # create an event and set its parameters
         event = IMPL.LCEventImpl()
