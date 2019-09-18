@@ -17,7 +17,7 @@ def handleLcioExceptions(method):
         try:
             return method(*args, **kargs)
         except Exception as e:
-            message = e.message
+            message = str(e)
             if 'lcio::Exception' in message:
                 message = message.split('lcio::Exception: ')[1].split(' (C++ exception)')[0]
                 raise pyLCIO.LcioException(message), None, sys.exc_info()[2]
