@@ -8,6 +8,7 @@ from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT
 from six.moves import range
 from io import open
+import six
 
 class Reader( object ):
     ''' Generic reader class '''
@@ -19,7 +20,7 @@ class Reader( object ):
         self.fileIter = iter( self.fileList )
         self.isOpen = False
         
-        if fileName and isinstance( fileName, basestring ):
+        if fileName and isinstance( fileName, six.string_types ):
             self.addFile( fileName )
         elif isinstance( fileName, list ):
             self.addFileList( fileName )
