@@ -6,6 +6,7 @@ Created on Dec 4, 2012
 
 from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT
+from six.moves import range
 
 class Reader( object ):
     ''' Generic reader class '''
@@ -61,7 +62,7 @@ class Reader( object ):
     
     def skip( self, nEntries ):
         ''' Skip entries from the stream '''
-        for i in xrange( int( nEntries ) ):
+        for i in range( int( nEntries ) ):
             self.next()
         
     def __close__( self ):

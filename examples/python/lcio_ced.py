@@ -26,6 +26,7 @@ import random
 import sys
 
 from pyLCIO.io.LcioReader import LcioReader
+from six.moves import range
 
 #---------------------------------------
 # load CED library
@@ -64,7 +65,7 @@ def drawEvent(evt):
 
     names = evt.getCollectionNames()
     
-    for i in xrange(  names.size() ):
+    for i in range(  names.size() ):
         
         col = evt.getCollection( names[i] )
         
