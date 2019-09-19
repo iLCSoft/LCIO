@@ -1,5 +1,5 @@
 from __future__ import absolute_import, unicode_literals
-from base.SetupLcioDictionary import setupLcioDictionary
+from .base.SetupLcioDictionary import setupLcioDictionary
 setupLcioDictionary()
 
 import inspect, sys, ROOT, pyLCIO
