@@ -1,12 +1,11 @@
 #!/bin/bash
 
-ILCSOFT=/cvmfs/clicdp.cern.ch/iLCSoft/builds/current/CI_${COMPILER}
-source $ILCSOFT/init_ilcsoft.sh
+source /Package/.travis-ci.d/init_x86_64.sh
 
 cd /Package
 mkdir build
 cd build
-cmake -GNinja -DUSE_CXX11=ON -DBUILD_ROOTDICT=ON -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" .. && \
+cmake -GNinja -DCMAKE_CXX_STANDARD=${STANDARD} -DBUILD_ROOTDICT=ON -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" .. && \
 ninja  -k 0 && \
 ninja install && \
 ctest --output-on-failure

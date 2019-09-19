@@ -8,9 +8,10 @@ language: cpp
 
 env:
   matrix:
-    - COMPILER=gcc
-    - COMPILER=llvm
-
+    - COMPILER=gcc;   LCG_RELEASE=LCG_96b; STANDARD=17; COMPILER_VERSION=gcc8; COVERITY=yes
+    - COMPILER=gcc;   LCG_RELEASE=LCG_96python3; STANDARD=17; COMPILER_VERSION=gcc8; COVERITY=no
+    - COMPILER=clang; LCG_RELEASE=LCG_96b; STANDARD=17; COMPILER_VERSION=clang8; COVERITY=no
+    - COMPILER=gcc;   LCG_RELEASE=LCG_96b; STANDARD=14; COMPILER_VERSION=gcc62; COVERITY=no
 
 before_install:
   - wget --no-check-certificate https://ecsft.cern.ch/dist/cvmfs/cvmfs-release/cvmfs-release-latest_all.deb
@@ -18,14 +19,14 @@ before_install:
   - sudo apt-get update
   - sudo apt-get install cvmfs cvmfs-config-default
   - rm -f cvmfs-release-latest_all.deb
-  - wget https://lcd-data.web.cern.ch/lcd-data/CernVM/default.local
+  - wget --no-check-certificate https://lcd-data.web.cern.ch/lcd-data/CernVM/default.local
   - sudo mkdir -p /etc/cvmfs
   - sudo mv default.local /etc/cvmfs/default.local
   - sudo /etc/init.d/autofs stop
   - sudo cvmfs_config setup
-  - sudo mkdir -p /cvmfs/clicdp.cern.ch
-  - sudo mount -t cvmfs clicdp.cern.ch /cvmfs/clicdp.cern.ch
-  - ls /cvmfs/clicdp.cern.ch
+  - sudo mkdir -p /cvmfs/sft.cern.ch
+  - sudo mount -t cvmfs sft.cern.ch /cvmfs/sft.cern.ch
+  - ls /cvmfs/sft.cern.ch
 
 # command to install dependencies
 install:
@@ -42,20 +43,20 @@ install:
 
 # command to run tests
 script:
-  - docker run -it --name CI_container -v $PKGDIR:/Package -e COMPILER=$COMPILER -v /cvmfs/clicdp.cern.ch:/cvmfs/clicdp.cern.ch -d clicdp/slc6-build /bin/bash
-  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
+  - docker run -it --name CI_container -v $PKGDIR:/Package -e COMPILER_TYPE=$COMPILER -e LCG_RELEASE=${LCG_RELEASE} -e STANDARD=${STANDARD} -e COMPILER_VERSION=${COMPILER_VERSION} -v /cvmfs/sft.cern.ch:/cvmfs/sft.cern.ch -d clicdp/cc7-lcg /bin/bash
+  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COVERITY}" == "yes"  ]];
     then docker exec -it CI_container /bin/bash -c "./Package/.travis-ci.d/coverity_scan.sh";
-    elif [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "llvm"  ]];
+    elif [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COVERITY}" == "no"  ]];
     then echo "Running the weekly Coverity Scan, no LLVM/Clang build this time";
     else docker exec -it CI_container /bin/bash -c "./Package/.travis-ci.d/compile_and_test.sh";
     fi
-  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COMPILER}" == "gcc"  ]];
+  - if [[ "${TRAVIS_EVENT_TYPE}" == "cron" && "${COVERITY}" == "yes"  ]];
     then curl --form token=${COVERITY_SCAN_TOKEN} --form email=noreply@cern.ch --form file=@${PKGDIR}/build/myproject.tgz --form version="master" --form description="${description}" https://scan.coverity.com/builds?project=${COVERITY_REPO} ;
     fi
 
 # Trigger to rebuild iLCSoft
 after_success:
-  - if [[ "${TRAVIS_EVENT_TYPE}" != "cron" && "${TRAVIS_EVENT_TYPE}" != "pull_request" && "${COMPILER}" == "gcc" && "${TRAVIS_REPO_SLUG%/*}" == "iLCSoft" && -z ${TRAVIS_TAG} ]];
+  - if [[ "${TRAVIS_EVENT_TYPE}" != "cron" && "${TRAVIS_EVENT_TYPE}" != "pull_request" && "${COVERITY}" == "yes" && "${TRAVIS_REPO_SLUG%/*}" == "iLCSoft" && -z ${TRAVIS_TAG} ]];
     then curl -X POST -F token=$GITLAB_TOKEN -F ref=master https://gitlab.cern.ch/api/v4/projects/7828/trigger/pipeline;
     fi
 
