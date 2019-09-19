@@ -123,6 +123,7 @@ SET( LCIO_UTIL_SRCS
 
 SET( LCIO_MT_SRCS
   ./src/MT/LCReader.cc
+  ./src/MT/LCWriter.cc
 )
 
 
