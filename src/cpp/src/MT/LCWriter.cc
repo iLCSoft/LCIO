@@ -1,10 +1,23 @@
 #include <MT/LCWriter.h>
 
 // -- lcio headers
+#include "EVENT/LCEvent.h"
+#include "EVENT/LCRunHeader.h"
+#include "EVENT/LCIO.h"
+#include "EVENT/LCCollection.h"
 #include "SIO/LCSIO.h"
+#include "SIO/LCIORandomAccessMgr.h"
+
+// -- sio headers
+#include <sio/exception.h>
+#include <sio/api.h>
+#include <sio/compression/zlib.h>
+
+// -- std headers
+#include <sys/stat.h>
 
 namespace MT {
-  
+
   void LCWriter::open( const std::string &filename )  {
     auto sioFilename = getSIOFileName( filename ) ;
     struct stat fileinfo ;
@@ -18,12 +31,13 @@ namespace MT {
     // open new file for writing
     open( filename, EVENT::LCIO::WRITE_NEW ) ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
   void LCWriter::open( const std::string &filename, int writeMode ) {
     // make sure filename has the proper extension (.slcio)
     auto sioFilename = getSIOFileName( filename ) ;
+    std::lock_guard<std::mutex> lock( _mutex ) ;
     _raMgr = std::make_shared<SIO::LCIORandomAccessMgr>() ;
     switch( writeMode ) {
       case EVENT::LCIO::WRITE_NEW :
@@ -47,11 +61,11 @@ namespace MT {
       	  // position at the beginnning of the file record which will then be overwritten with the next record ...
           _stream.seekp( 0 , std::ios_base::end ) ;
           auto endg = _stream.tellp() ;
-          if( endg < LCSIO::RandomAccessSize ) {
-            std::stringstream s ;  s << "[SIOWriter::open()] Can't seek stream to " << LCSIO::RandomAccessSize ;
+          if( endg < SIO::LCSIO::RandomAccessSize ) {
+            std::stringstream s ;  s << "[SIOWriter::open()] Can't seek stream to " << SIO::LCSIO::RandomAccessSize ;
             throw IO::IOException( s.str() ) ;
           }
-          sio::ifstream::streampos tpos = LCSIO::RandomAccessSize ;
+          sio::ifstream::streampos tpos = SIO::LCSIO::RandomAccessSize ;
           _stream.seekp( endg - tpos , std::ios_base::beg ) ;
       	}
         else {
@@ -63,38 +77,132 @@ namespace MT {
     if( not _stream.good() or not _stream.is_open() ) {
       SIO_THROW( sio::error_code::not_open, "[SIOWriter::open()] Couldn't open file: '" + sioFilename + "'" ) ;
     }
-    _rawBuffer = std::make_shared<sio::buffer>( 2*sio::mbyte ) ;
-    _compBuffer = std::make_shared<sio::buffer>( sio::mbyte ) ;
   }
-  
+
   //----------------------------------------------------------------------------
 
   void LCWriter::setCompressionLevel(int level) {
     _compressionLevel = level ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
-  void LCWriter::writeRunHeader( EVENT::LCRunHeader *hdr )   {
-    if( not _stream.is_open() ) {
-      throw IO::IOException( "[MT::LCWriter::writeRunHeader] stream not opened") ;
-    }
+
+  void LCWriter::writeRunHeader( EVENT::LCRunHeader *hdr ) {
+    // NOTE: the lock is acquired only on stream writing.     
+    // create a buffer with a sufficient length
+    auto buflen = _maxBufferSize.load() ;
+    sio::buffer rawBuffer( buflen ) ;
+    // write the record in the buffer
     sio::record_info recinfo {} ;
-    SIORunHeaderRecord::writeRecord( _rawBuffer, hdr, recinfo, 0 ) ;
+    SIO::SIORunHeaderRecord::writeRecord( rawBuffer, hdr, recinfo, 0 ) ;
     // deal with zlib compression here
-    if( _compressor.level() != 0 ) {
-      sio::api::compress_record( recinfo, _rawBuffer, _compBuffer, _compressor ) ;
-      sio::api::write_record( _stream, _rawBuffer.span(0, recinfo._header_length), _compBuffer.span(), recinfo ) ;
+    if( _compressionLevel.load() != 0 ) {
+      sio::zlib_compression compressor {} ;
+      compressor.set_level( _compressionLevel.load() ) ;
+      // the compressed buffer will have a len
+      // smaller than the uncompressed one
+      sio::buffer compBuffer( rawBuffer.size() ) ;
+      // compress !
+      sio::api::compress_record( recinfo, rawBuffer, compBuffer, compressor ) ;
+      // locked scope
+      {
+        std::lock_guard<std::mutex> lock( _mutex ) ;
+        if( not _stream.is_open() ) {
+          throw IO::IOException( "[MT::LCWriter::writeRunHeader] stream not opened") ;
+        }
+        sio::api::write_record( _stream, rawBuffer.span(0, recinfo._header_length), compBuffer.span(), recinfo ) ;
+        // random access treatment
+        _raMgr->add( SIO::RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_start ) ;
+        // update the maximum size of buffer
+        if( _maxBufferSize.load() < rawBuffer.size() ) {
+          _maxBufferSize = rawBuffer.size() ;
+        }
+      }
     }
     else {
-      sio::api::write_record( _stream, _rawBuffer.span(), recinfo ) ;
+      // locked scope
+      std::lock_guard<std::mutex> lock( _mutex ) ;
+      if( not _stream.is_open() ) {
+        throw IO::IOException( "[MT::LCWriter::writeRunHeader] stream not opened") ;
+      }
+      sio::api::write_record( _stream, rawBuffer.span(), recinfo ) ;
+      // random access treatment
+      _raMgr->add( SIO::RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_start ) ;
+      // update the maximum size of buffer
+      if( _maxBufferSize.load() < rawBuffer.size() ) {
+        _maxBufferSize = rawBuffer.size() ;
+      }
     }
-    // random access treatment
-    _raMgr.add( RunEvent(  hdr->getRunNumber(), -1 ) , recinfo._file_start ) ;
   }
-  
+
   //----------------------------------------------------------------------------
-  
+
+  void LCWriter::writeEvent( EVENT::LCEvent *evt ) {
+    // create buffers with a sufficient length
+    auto buflen = _maxBufferSize.load() ;
+    sio::buffer hdrRawBuffer( buflen ) ;
+    sio::buffer evtRawBuffer( buflen ) ;
+    // 1) write the event header record
+    sio::record_info rechdrinfo {} ;
+    SIO::SIOEventHeaderRecord::writeRecord( hdrRawBuffer, evt, rechdrinfo, 0 ) ;
+    // 2) write the event record
+    sio::record_info recinfo {} ;
+    SIO::SIOHandlerMgr eventHandlerMgr {} ;
+    SIO::SIOEventRecord::writeRecord( evtRawBuffer, evt, eventHandlerMgr, recinfo, 0 ) ;
+    // deal with zlib compression here
+    // and write in locked scope
+    if( _compressionLevel.load() != 0 ) {
+      sio::zlib_compression compressor {} ;
+      compressor.set_level( _compressionLevel.load() ) ;
+      sio::buffer hdrCompBuffer( hdrRawBuffer.size() ) ;
+      sio::buffer evtCompBuffer( evtRawBuffer.size() ) ;
+      // compress records
+      sio::api::compress_record( rechdrinfo, hdrRawBuffer, hdrCompBuffer, compressor ) ;
+      sio::api::compress_record( recinfo, evtRawBuffer, evtCompBuffer, compressor ) ;
+      {
+        std::lock_guard<std::mutex> lock( _mutex ) ;
+        if( not _stream.is_open() ) {
+          throw IO::IOException( "[SIOWriter::writeEvent] stream not opened") ;
+        }
+        // write to disk
+        sio::api::write_record( _stream, hdrRawBuffer.span(0, rechdrinfo._header_length), hdrCompBuffer.span(), rechdrinfo ) ;
+        sio::api::write_record( _stream, evtRawBuffer.span(0, recinfo._header_length), evtCompBuffer.span(), recinfo ) ;
+        // random access treatment
+        _raMgr->add( SIO::RunEvent(  evt->getRunNumber(), evt->getEventNumber()  ) , rechdrinfo._file_start ) ;
+        // update the maximum size of buffer
+        if( _maxBufferSize.load() < evtRawBuffer.size() ) {
+          _maxBufferSize = evtRawBuffer.size() ;
+        }
+      }
+    }
+    else {
+      std::lock_guard<std::mutex> lock( _mutex ) ;
+      if( not _stream.is_open() ) {
+        throw IO::IOException( "[SIOWriter::writeEvent] stream not opened") ;
+      }
+      sio::api::write_record( _stream, hdrRawBuffer.span(), rechdrinfo ) ;
+      sio::api::write_record( _stream, evtRawBuffer.span(), recinfo ) ;
+      // random access treatment
+      _raMgr->add( SIO::RunEvent(  evt->getRunNumber(), evt->getEventNumber()  ) , rechdrinfo._file_start ) ;
+      // update the maximum size of buffer
+      if( _maxBufferSize.load() < evtRawBuffer.size() ) {
+        _maxBufferSize = evtRawBuffer.size() ;
+      }
+    }
+  }
+
+  //----------------------------------------------------------------------------
+
+  void LCWriter::close() {
+    std::lock_guard<std::mutex> lock( _mutex ) ;
+    _raMgr->writeRandomAccessRecords( _stream ) ;
+    _raMgr->clear() ;
+    _raMgr = nullptr ;
+    _stream.close();
+  }
+
+  //----------------------------------------------------------------------------
+
   std::string LCWriter::getSIOFileName( const std::string& filename ) {
     if( filename.rfind( SIO::LCSIO::FileExtension ) == std::string::npos ||  // .slcio not found at all
      !( filename.rfind( SIO::LCSIO::FileExtension ) + strlen( SIO::LCSIO::FileExtension ) == filename.length() ) ) {  // found, but not at end
@@ -104,8 +212,5 @@ namespace MT {
       return filename ;
     }
   }
-  
+
 }
-
-
-
