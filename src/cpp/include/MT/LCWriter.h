@@ -42,7 +42,7 @@ namespace MT {
   class LCWriter {
   public:
     /// Default constructor
-    LCWriter() ;
+    LCWriter() = default ;
     /// no copy constructor
     LCWriter(const LCWriter&) = delete ;
     /// no assignment operator
