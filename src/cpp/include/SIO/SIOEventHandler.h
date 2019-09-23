@@ -35,9 +35,9 @@ namespace SIO {
 
     /// Set the event to read/write
     void setEvent( EVENT::LCEvent* evt ) ;
-
-    /// Set the list of collection to extract on read operation
-    void setReadCollectionNames(const std::vector<std::string>& colnames) ;
+    
+    /// Set the collection to read or write only
+    void setCollectionNames( const std::set<std::string>& colnames ) ;
 
   private:
     static constexpr const char *SubsetPostfix = "_References" ;
@@ -47,7 +47,6 @@ namespace SIO {
     EVENT::LCEvent             *_event {nullptr} ;
     /// List of collection to read only
     std::set<std::string>       _colSubSet {} ;
-
   }; // class
 
 } // namespace
