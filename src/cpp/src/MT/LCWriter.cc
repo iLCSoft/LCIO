@@ -138,17 +138,23 @@ namespace MT {
   //----------------------------------------------------------------------------
 
   void LCWriter::writeEvent( EVENT::LCEvent *evt ) {
+    writeEvent( evt, {} ) ;
+  }
+  
+  //----------------------------------------------------------------------------
+
+  void LCWriter::writeEvent( EVENT::LCEvent *evt, const std::set<std::string> &colsOnly ) {
     // create buffers with a sufficient length
     auto buflen = _maxBufferSize.load() ;
     sio::buffer hdrRawBuffer( buflen ) ;
     sio::buffer evtRawBuffer( buflen ) ;
     // 1) write the event header record
     sio::record_info rechdrinfo {} ;
-    SIO::SIOEventHeaderRecord::writeRecord( hdrRawBuffer, evt, rechdrinfo, 0 ) ;
+    SIO::SIOEventHeaderRecord::writeRecord( hdrRawBuffer, evt, rechdrinfo, colsOnly, 0 ) ;
     // 2) write the event record
     sio::record_info recinfo {} ;
     SIO::SIOHandlerMgr eventHandlerMgr {} ;
-    SIO::SIOEventRecord::writeRecord( evtRawBuffer, evt, eventHandlerMgr, recinfo, 0 ) ;
+    SIO::SIOEventRecord::writeRecord( evtRawBuffer, evt, eventHandlerMgr, recinfo, colsOnly, 0 ) ;
     // deal with zlib compression here
     // and write in locked scope
     if( _compressionLevel.load() != 0 ) {

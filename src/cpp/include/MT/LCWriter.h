@@ -8,6 +8,7 @@
 #include <memory>
 #include <mutex>
 #include <atomic>
+#include <set>
 
 // -- lcio headers
 #include "MT/Types.h"
@@ -89,7 +90,7 @@ namespace MT {
     /**
      *  @brief  Writes the given event to file, but write only the spcified collections
      */
-    // void writeEvent( EVENT::LCEvent *evt, const std::set<std::string> &colsOnly ) ;
+    void writeEvent( EVENT::LCEvent *evt, const std::set<std::string> &colsOnly ) ;
 
     /**
      *  @brief  Closes the output file/stream.
