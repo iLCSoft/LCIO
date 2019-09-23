@@ -1,6 +1,9 @@
 #ifndef SIO_LCIORECORDS_H
 #define SIO_LCIORECORDS_H 1
 
+// -- std headers
+#include <set>
+
 // -- sio headers
 #include <sio/definitions.h>
 
@@ -54,9 +57,10 @@ namespace SIO {
      *  @param  outbuf the buffer to fill
      *  @param  event the event to write
      *  @param  rec_info the record info to receive
+     *  @param  colsOnly the list of collections to write only
      *  @param  opts an optional word with encoded options
      */
-    // static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts = 0 ) ;
+    static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts = 0 ) ;
   };
 
   //----------------------------------------------------------------------------
@@ -74,7 +78,7 @@ namespace SIO {
      *  @param  handlerMgr the handler manager to get the collection block handler
      *  @param  blocks the blocks to receive
      */
-    static void setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks ) ;
+    static void setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks, const std::set<std::string> &colsOnly = {} ) ;
 
     /**
      *  @brief  Read the blocks (collections) from the sio buffer
@@ -96,6 +100,19 @@ namespace SIO {
      *  @param  opts an optional word with encoded options
      */
     static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, sio::options_type opts = 0 ) ;
+    
+    /**
+     *  @brief  Write an event record. Setup the blocks, write the blocks and
+     *          write an event record into the buffer
+     *
+     *  @param  outbuf the sio buffer to write to
+     *  @param  event the event to write
+     *  @param  handlerMgr the collection block handler manager to setup the blocks
+     *  @param  rec_info the record info object to receive from sio
+     *  @param  colsOnly thelist of collections only to write
+     *  @param  opts an optional word with encoded options
+     */
+    static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts = 0 ) ;
   };
 
   //----------------------------------------------------------------------------
