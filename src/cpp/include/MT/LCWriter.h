@@ -87,6 +87,11 @@ namespace MT {
     void writeEvent( EVENT::LCEvent *evt ) ;
 
     /**
+     *  @brief  Writes the given event to file, but write only the spcified collections
+     */
+    // void writeEvent( EVENT::LCEvent *evt, const std::set<std::string> &colsOnly ) ;
+
+    /**
      *  @brief  Closes the output file/stream.
      */
     void close() ;
