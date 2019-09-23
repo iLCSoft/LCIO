@@ -18,7 +18,7 @@ namespace SIO {
     sio::block_list blocks {} ;
     auto headerBlock = std::make_shared<SIOEventHandler>() ;
     headerBlock->setEvent( event ) ;
-    headerBlock->setReadCollectionNames( readCol ) ;
+    headerBlock->setCollectionNames( std::set<std::string>( readCol.begin(), readCol.end() ) ) ;
     blocks.push_back( headerBlock ) ;
     sio::api::read_blocks( buffer, blocks ) ;
   }
@@ -32,16 +32,31 @@ namespace SIO {
     blocks.push_back( headerBlock ) ;
     rec_info = sio::api::write_record( LCSIO::HeaderRecordName, outbuf, blocks, opts ) ;
   }
-
+  
   //----------------------------------------------------------------------------
 
-  void SIOEventRecord::setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks ) {
+  void SIOEventHeaderRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts ) {
+    sio::block_list blocks {} ;
+    auto headerBlock = std::make_shared<SIOEventHandler>() ;
+    headerBlock->setEvent( event ) ;
+    headerBlock->setCollectionNames( colsOnly ) ;
+    blocks.push_back( headerBlock ) ;
+    rec_info = sio::api::write_record( LCSIO::HeaderRecordName, outbuf, blocks, opts ) ;
+  }
+
+  //----------------------------------------------------------------------------
+  //----------------------------------------------------------------------------
+
+  void SIOEventRecord::setupBlocks( EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::block_list &blocks, const std::set<std::string> &colsOnly ) {
     auto collectionNames = event->getCollectionNames();
     for( auto collectionName : *collectionNames ) {
       auto collection = event->getCollection( collectionName ) ;
       // this is never true while reading. Can only appear on writing
       if( collection->isTransient() ) {
         continue;
+      }
+      if( ( not colsOnly.empty() ) and ( colsOnly.end() == colsOnly.find(collectionName) ) ) {
+        continue ;
       }
       auto handler = handlerMgr.getHandler( collection->getTypeName() ) ;
       auto block = std::make_shared<SIOCollectionHandler>( collectionName, handler ) ;
@@ -63,6 +78,14 @@ namespace SIO {
   void SIOEventRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, sio::options_type opts ) {
     sio::block_list blocks {} ;
     SIOEventRecord::setupBlocks( event, handlerMgr, blocks ) ;
+    rec_info = sio::api::write_record( LCSIO::EventRecordName, outbuf, blocks, opts ) ;
+  }
+  
+  //----------------------------------------------------------------------------
+
+  void SIOEventRecord::writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, const SIOHandlerMgr &handlerMgr, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts ) {
+    sio::block_list blocks {} ;
+    SIOEventRecord::setupBlocks( event, handlerMgr, blocks, colsOnly ) ;
     rec_info = sio::api::write_record( LCSIO::EventRecordName, outbuf, blocks, opts ) ;
   }
 
