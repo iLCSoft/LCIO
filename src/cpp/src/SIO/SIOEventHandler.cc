@@ -27,9 +27,8 @@ namespace SIO  {
 
   //----------------------------------------------------------------------------
 
-  void SIOEventHandler::setReadCollectionNames(const std::vector<std::string>& colnames) {
-    _colSubSet.clear() ;
-    _colSubSet.insert( colnames.begin(), colnames.end() ) ;
+  void SIOEventHandler::setCollectionNames(const std::set<std::string>& colnames) {
+    _colSubSet = colnames ;
   }
 
   //----------------------------------------------------------------------------
@@ -71,9 +70,15 @@ namespace SIO  {
 
   void SIOEventHandler::write( sio::write_device &device ) {
     auto colNames = _event->getCollectionNames() ;
-    int nCol = colNames->size() ;
+    unsigned int nCol = 0 ;
     for(unsigned int i=0 ; i < colNames->size() ; i++ ) {
-      if( _event->getCollection( (*colNames)[i] )->isTransient() ) nCol-- ;
+      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() != _colSubSet.find( (*colNames)[i] ) ) ) {
+        continue ;
+      }
+      if( _event->getCollection( (*colNames)[i] )->isTransient() ) {
+        continue ;  
+      }
+      nCol++ ;
     }
     SIO_SDATA( device, _event->getRunNumber() ) ;
   	SIO_SDATA( device, _event->getEventNumber() ) ;
@@ -82,14 +87,18 @@ namespace SIO  {
     SIO_SDATA( device, nCol ) ;
     for(unsigned int i=0 ; i < colNames->size() ; i++ ) {
       auto col = _event->getCollection( (*colNames)[i] ) ;
-      if( ! col->isTransient() ) {
-        std::string colType( col->getTypeName() ) ;
-        if( col->isSubset() ) {
-          colType += SIOEventHandler::SubsetPostfix ;
-        }
-        SIO_SDATA( device, (*colNames)[i] ) ;
-        SIO_SDATA( device,  colType ) ;
+      if( col->isTransient() ) {
+        continue ;
       }
+      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() != _colSubSet.find( (*colNames)[i] ) ) ) {
+        continue ;
+      }
+      std::string colType( col->getTypeName() ) ;
+      if( col->isSubset() ) {
+        colType += SIOEventHandler::SubsetPostfix ;
+      }
+      SIO_SDATA( device, (*colNames)[i] ) ;
+      SIO_SDATA( device,  colType ) ;
     }
     SIOLCParameters::write( device , _event->getParameters() ) ;
   }
