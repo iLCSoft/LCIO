@@ -46,6 +46,17 @@ namespace SIO {
      *  @param  opts an optional word with encoded options
      */
     static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, sio::options_type opts = 0 ) ;
+
+    /**
+     *  @brief  Write an event header to the raw sio buffer.
+     *          Write the full record to the buffer. The record is not compressed
+     *
+     *  @param  outbuf the buffer to fill
+     *  @param  event the event to write
+     *  @param  rec_info the record info to receive
+     *  @param  opts an optional word with encoded options
+     */
+    // static void writeRecord( sio::buffer &outbuf, EVENT::LCEvent *event, sio::record_info& rec_info, const std::set<std::string> &colsOnly, sio::options_type opts = 0 ) ;
   };
 
   //----------------------------------------------------------------------------
