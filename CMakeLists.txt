@@ -139,12 +139,15 @@ IF( NOT EXISTS ${LCIO_ENV_INIT} )
     
     FILE( WRITE "${LCIO_ENV_INIT}"
 "
-    # generated script for calling ant
-    export LCIO=${PROJECT_SOURCE_DIR}
-    export JDK_HOME=${JAVA_HOME}
-    export JAVA_HOME=${JAVA_HOME}
-    export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH
-    eval $*
+#!/usr/bin/env bash
+
+export LCIO=${PROJECT_SOURCE_DIR}
+export LD_LIBRARY_PATH=${PROJECT_BINARY_DIR}/lib:$LD_LIBRARY_PATH
+export PYTHONPATH=${PROJECT_SOURCE_DIR}/src/python:$PYTHONPATH
+export JDK_HOME=${JAVA_HOME}
+export JAVA_HOME=${JAVA_HOME}
+export PATH=${PROJECT_SOURCE_DIR}/tools:${JAVA_BIN_PATH}:$PATH
+eval $*
 "
     )
 
