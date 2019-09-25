@@ -33,7 +33,7 @@ void writeEventTree(const char* FILEN) {
 				     type.c_str(), 
 				     (void*) &treeEvt, 
 				     1024, // record size 
-				     199    // split level 
+				     99    // split level 
 				     );
   
 
