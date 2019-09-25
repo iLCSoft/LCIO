@@ -207,6 +207,7 @@ IF( BUILD_ROOTDICT )
     ADD_TEST( t_root_writeTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeTreeTest.C )
     ADD_TEST( t_root_writeEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/writeEventTreeTest.C )
     ADD_TEST( t_root_readEventTree ${SH} "${LCIO_ENV_INIT}" ${ROOT_WRAPPER} -l -b -q ${PROJECT_SOURCE_DIR}/tests/rootDictTests/readEventTreeTest.C )
+    ADD_TEST( t_pyLCIO_import ${SH} "${LCIO_ENV_INIT}" "python -c \"import pylcio\"")
 
     SET_TESTS_PROPERTIES( t_root_anajob PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
     SET_TESTS_PROPERTIES( t_root_writeTree PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
