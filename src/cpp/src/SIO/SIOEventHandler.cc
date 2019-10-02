@@ -72,7 +72,7 @@ namespace SIO  {
     auto colNames = _event->getCollectionNames() ;
     unsigned int nCol = 0 ;
     for(unsigned int i=0 ; i < colNames->size() ; i++ ) {
-      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() != _colSubSet.find( (*colNames)[i] ) ) ) {
+      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() == _colSubSet.find( (*colNames)[i] ) ) ) {
         continue ;
       }
       if( _event->getCollection( (*colNames)[i] )->isTransient() ) {
