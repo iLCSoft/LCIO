@@ -90,7 +90,7 @@ namespace SIO  {
       if( col->isTransient() ) {
         continue ;
       }
-      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() != _colSubSet.find( (*colNames)[i] ) ) ) {
+      if( ( not _colSubSet.empty() ) and ( _colSubSet.end() == _colSubSet.find( (*colNames)[i] ) ) ) {
         continue ;
       }
       std::string colType( col->getTypeName() ) ;
