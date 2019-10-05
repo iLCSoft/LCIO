@@ -134,13 +134,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCCollection &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCEvent
@@ -204,13 +197,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCEvent  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCFlag
@@ -255,14 +241,6 @@ namespace UTIL{
         out << setw(30) << setfill(' ') << left << "Flag" << right << hex << setw(40) << hit->getFlag() << dec << endl;
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCFlag  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCGenericObject
@@ -338,14 +316,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCGenericObject  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # LCIntVec
     //============================================================================
@@ -402,13 +372,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCIntVec  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCFloatVec
@@ -463,14 +426,6 @@ namespace UTIL{
 
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCFloatVec &v){
-        out << lcio_long(v,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCStrVec
@@ -575,14 +530,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCObject  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # LCParameters
     //============================================================================
@@ -683,14 +630,6 @@ namespace UTIL{
 
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCParameters  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # LCRelation
     //============================================================================
@@ -737,14 +676,6 @@ namespace UTIL{
 
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCRelation &v){
-        out << lcio_long(v,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # LCRunHeader
@@ -797,14 +728,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCRunHeader  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # LCIO
     //============================================================================
@@ -847,14 +770,6 @@ namespace UTIL{
         //print object attributs
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::LCIO  &hit){ //hauke
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # ParticleID
@@ -905,14 +820,6 @@ namespace UTIL{
         out << setw(30) << setfill(' ') << left << "Algorithm type"<< setfill(' ') << right << setw(40) << dec << hit->getAlgorithmType() << endl;
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::ParticleID  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # RawCalorimeterHit
@@ -979,14 +886,6 @@ namespace UTIL{
         out << setw(30) << setfill(' ') << left << "TimeStamp"<< setfill(' ') << right << setw(40) << dec << hit->getTimeStamp() << endl;
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::RawCalorimeterHit  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # TPCHit (deprecated)
@@ -1110,14 +1009,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerData  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # TrackerPulse
     //============================================================================
@@ -1195,14 +1086,6 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerPulse  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # TrackerRawData
     //============================================================================
@@ -1268,15 +1151,6 @@ namespace UTIL{
         out << setw(30) << setfill(' ') << left << "Time"<< setfill(' ') << right << setw(40) << dec << hit->getTime() << endl;
         return out;
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerRawData  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
 
     //============================================================================
     //   # SimCalorimeterHit
@@ -1423,14 +1297,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::SimCalorimeterHit  &hit){
-        out<<lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
-
     //============================================================================
     //   # TrackerHit
     //============================================================================
@@ -1536,14 +1402,6 @@ namespace UTIL{
 
         return(out);
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHit &hit){ //hauke
-        out << lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # TrackerHitPlane
@@ -1664,13 +1522,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitPlane &hit){
-        out << lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
     //============================================================================
     //   # TrackerHitZCylinder
     //============================================================================
@@ -1789,14 +1640,6 @@ namespace UTIL{
 
         return(out);
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitZCylinder &hit){
-        out << lcio_long(hit,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # SimTrackerHit
@@ -1962,14 +1805,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::SimTrackerHit &hit){ //hauke
-        out << lcio_long(hit,NULL);
-        return(out);
-    }
-
-
-
-
     //============================================================================
     //   # CalorimeterHit
     //============================================================================
@@ -2071,17 +1906,6 @@ namespace UTIL{
 
         return(out);
     }
-
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::CalorimeterHit &hit){ //hauke
-        out << lcio_long(hit,NULL);
-        //out << lcio_long(a,NULL);
-
-        return(out);
-    }
-
-
-
 
     //============================================================================
     //   # MCParticle
@@ -2242,14 +2066,6 @@ namespace UTIL{
         << endl ;
         }
      */
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::MCParticle &mcp){ //hauke
-        out << lcio_long(mcp,NULL);
-        return out;
-    }
-
-
-
 
     //============================================================================
     //   # ReconstructedParticle
@@ -2486,14 +2302,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::ReconstructedParticle &part){ //hauke
-        out << lcio_long(part,NULL);
-        return(out);
-    }
-
-
-
-
     //============================================================================
     //   # TrackState
     //============================================================================
@@ -2606,14 +2414,6 @@ namespace UTIL{
         out << noshowpos;
         return(out);
     }
-
-    std::ostream& operator<<( std::ostream& out, const EVENT::TrackState &part){
-        out << lcio_long(part,NULL);
-        return(out);
-    }
-
-
-
 
     //============================================================================
     //   # Track
@@ -2810,14 +2610,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::Track &part){ //hauke
-        out << lcio_long(part,NULL);
-        return(out);
-    }
-
-
-
-
     //============================================================================
     //   # Cluster
     //============================================================================
@@ -2957,14 +2749,6 @@ namespace UTIL{
         return(out);
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::Cluster &clu){ //hauke
-        out << lcio_long(clu,NULL);
-        return(out);
-    }
-
-
-
-
     //============================================================================
     //   # Vertex
     //============================================================================
@@ -3051,11 +2835,151 @@ namespace UTIL{
         return out;
     }
 
-    std::ostream& operator<<( std::ostream& out, const EVENT::Vertex &v){
-        out << lcio_long(v,NULL);
-        return out;
-    }
-
-
 } // namespace
 
+using namespace UTIL ;
+
+// see header file for namespace change here
+namespace EVENT {
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCCollection &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCEvent  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCFlag  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCGenericObject  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCIntVec  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCFloatVec &v){
+    out << lcio_long(v,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCObject  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCParameters  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCRelation &v){
+    out << lcio_long(v,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCRunHeader  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::LCIO  &hit){ //hauke
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::ParticleID  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::RawCalorimeterHit  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerData  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerPulse  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerRawData  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::SimCalorimeterHit  &hit){
+    out<<lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHit &hit){ //hauke
+    out << lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitPlane &hit){
+    out << lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackerHitZCylinder &hit){
+    out << lcio_long(hit,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::SimTrackerHit &hit){ //hauke
+    out << lcio_long(hit,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::CalorimeterHit &hit){ //hauke
+    out << lcio_long(hit,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::MCParticle &mcp){ //hauke
+    out << lcio_long(mcp,NULL);
+    return out;
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::ReconstructedParticle &part){ //hauke
+    out << lcio_long(part,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::TrackState &part){
+    out << lcio_long(part,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::Track &part){
+    out << lcio_long(part,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::Cluster &clu){ //hauke
+    out << lcio_long(clu,NULL);
+    return(out);
+  }
+
+  std::ostream& operator<<( std::ostream& out, const EVENT::Vertex &v){
+    out << lcio_long(v,NULL);
+    return out;
+  }  
+  
+}
