@@ -1,3 +1,29 @@
+# v02-13
+
+* 2019-10-15 Marko Petric ([PR#61](https://github.com/iLCSoft/LCIO/pull/61))
+  - Make pyLCIO compatible with Python3
+
+* 2019-09-25 Frank Gaede ([PR#64](https://github.com/iLCSoft/LCIO/pull/64))
+  - fix the writeEventTree test  (fixes #62)
+
+* 2019-09-25 Marko Petric ([PR#63](https://github.com/iLCSoft/LCIO/pull/63))
+  - Update CI to newer version of ROOT 6.18/04 (LCG_96b)
+  - Fix issue that in the build folder the rootdicts were in the wrong location
+
+* 2019-08-08 Frank Gaede ([PR#60](https://github.com/iLCSoft/LCIO/pull/60))
+  - re-introduce `std::set_terminate` in `LCIOExceptionHandler`, which is not deprecated in c++17
+
+* 2019-08-08 Ete Remi ([PR#54](https://github.com/iLCSoft/LCIO/pull/54))
+  - Added executable to perform IO benchmarking on LCIO file reading
+
+* 2019-07-19 Remi Ete ([PR#59](https://github.com/iLCSoft/LCIO/pull/59))
+  - Added `lcio_perf` utility. Evaluate:
+       - Total / mean writing time for 5000 events (sim job)
+       - Total / mean reading time for 5000 events
+
+* 2019-07-09 Marko Petric ([PR#58](https://github.com/iLCSoft/LCIO/pull/58))
+  - Remove `std::set_unexpected` and `std::set_terminate` which were removed in C++17
+
 # v02-12-01
 
 * 2018-06-21 Frank Gaede ([PR#48](https://github.com/ilcsoft/lcio/pull/48))
