@@ -202,7 +202,9 @@ namespace MT {
     }
     if( nullptr != event ) {
       event->setAccessMode( accessMode ) ;
-      postProcessEvent( event.get() ) ;
+      if( not _lazyUnpack ) {
+        postProcessEvent( event.get() ) ;        
+      }
     }
     return event ;
   }
@@ -402,7 +404,9 @@ namespace MT {
         return nullptr ;
       }
       event->setAccessMode( EVENT::LCIO::READ_ONLY ) ;
-      postProcessEvent( event.get() ) ;
+      if( not _lazyUnpack ) {
+        postProcessEvent( event.get() ) ;
+      }
       return event ;
     } //-- end fast skip
   }
