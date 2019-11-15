@@ -1,3 +1,13 @@
+# v02-13-01
+
+* 2019-11-15 Frank Gaede ([PR#67](https://github.com/ilcsoft/LCIO/pull/67))
+  - fix building for MacOS 10.14
+      - rm superfluous `#include "/usr/include/sys/types.h"` 
+         (thanks P.Mato)
+
+* 2019-10-30 Remi Ete ([PR#66](https://github.com/ilcsoft/LCIO/pull/66))
+  - Moved all stream operator overloads of EVENT class types into EVENT namespace (moved out from UTIL namespace)
+
 # v02-13
 
 * 2019-10-15 Marko Petric ([PR#61](https://github.com/iLCSoft/LCIO/pull/61))
