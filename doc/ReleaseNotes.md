@@ -1,3 +1,8 @@
+# v02-13-02
+
+* 2020-03-12 Marko Petric ([PR#72](https://github.com/iLCSoft/lcio/pull/72))
+  -  Use "Always full RPATH" as as implemented in ROOT
+
 # v02-13-01
 
 * 2019-11-15 Frank Gaede ([PR#67](https://github.com/ilcsoft/LCIO/pull/67))
