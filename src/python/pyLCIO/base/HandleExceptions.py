@@ -12,6 +12,12 @@ from sixlcio import reraise
 import inspect, sys, ROOT, pyLCIO
 import pyLCIO.exceptions.Exceptions
 
+# Cope with API change with ROOT version > 6.20
+if ROOT.gROOT.GetVersionCode() > (6<<16) + (20<<8) :
+  from libcppyy import CPPOverload
+else:
+  CPPOverload = ROOT.MethodProxy 
+
 # helper method to handle LCIO exceptions in a method call
 def handleLcioExceptions(method):
     def wrappedMethod(*args, **kargs):
@@ -52,7 +58,7 @@ def setupExceptionHandling():
         for name, object in vars(module).items():
             if inspect.isclass(object):
                 for methodName, method in vars(object).items():
-                    if isinstance(method, ROOT.MethodProxy):
+                    if isinstance(method, CPPOverload):
                         # can not wrap singleton calls
                         if methodName not in ["getInstance"]:
                             setattr(object, methodName, handleLcioExceptions(method))
