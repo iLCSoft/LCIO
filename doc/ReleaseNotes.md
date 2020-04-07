@@ -1,3 +1,8 @@
+# v02-13-03
+
+* 2020-04-07 SFT Nightlies ([PR#74](https://github.com/ilcsoft/lcio/pull/74))
+  - Small changes in HandleExceptions.py  to cope with the change of API foreseen for ROOT 6.22
+
 # v02-13-02
 
 * 2020-03-12 Marko Petric ([PR#72](https://github.com/iLCSoft/lcio/pull/72))
