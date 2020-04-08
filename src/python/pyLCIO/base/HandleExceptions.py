@@ -13,7 +13,7 @@ import inspect, sys, ROOT, pyLCIO
 import pyLCIO.exceptions.Exceptions
 
 # Cope with API change with ROOT version > 6.20
-if ROOT.gROOT.GetVersionCode() > (6<<16) + (20<<8) :
+if ROOT.gROOT.GetVersionCode() >= (6<<16) + (21<<8) :
   from libcppyy import CPPOverload
 else:
   CPPOverload = ROOT.MethodProxy 
