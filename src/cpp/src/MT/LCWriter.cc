@@ -65,7 +65,7 @@ namespace MT {
             std::stringstream s ;  s << "[SIOWriter::open()] Can't seek stream to " << SIO::LCSIO::RandomAccessSize ;
             throw IO::IOException( s.str() ) ;
           }
-          sio::ifstream::streampos tpos = SIO::LCSIO::RandomAccessSize ;
+          std::streampos tpos = SIO::LCSIO::RandomAccessSize ;
           _stream.seekp( endg - tpos , std::ios_base::beg ) ;
       	}
         else {
