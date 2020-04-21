@@ -345,7 +345,7 @@ namespace SIO {
         std::stringstream s ;  s << "[LCIORandomAccessMgr::seekStream] Can't seek stream to " << pos ;
         throw IO::IOException( s.str() ) ;
       }
-      sio::ifstream::streampos tpos = -pos ;
+      std::streampos tpos = -pos ;
       // pos is negative, so addition make sense here !
       stream.seekg( endg - tpos , std::ios_base::beg ) ;
     }
