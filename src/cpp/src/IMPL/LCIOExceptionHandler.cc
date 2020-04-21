@@ -11,11 +11,6 @@ namespace IMPL {
     // std::set_unexpected( &LCIOExceptionHandler::handler ) ;
     // std::set_terminate( &LCIOExceptionHandler::handler ) ;
   }
-}
-
-  LCIOExceptionHandler::LCIOExceptionHandler(){
-    std::set_terminate( lcio_unexpected ) ;
-  }
   
   void LCIOExceptionHandler::handler() {
     try {

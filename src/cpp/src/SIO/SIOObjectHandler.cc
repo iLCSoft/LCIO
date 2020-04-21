@@ -26,12 +26,6 @@ namespace SIO {
 
   //----------------------------------------------------------------------------
 
-  const std::string &SIOObjectHandler::collectionType() const {
-    return _collectionType ;
-  }
-
-  //----------------------------------------------------------------------------
-
   void SIOObjectHandler::initReading( sio::read_device &device, EVENT::LCCollection *collection, sio::version_type vers ) {
     SIO_SDATA( device ,  _flag ) ;
     collection->setFlag( _flag ) ;

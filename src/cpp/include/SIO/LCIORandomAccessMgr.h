@@ -93,9 +93,6 @@ namespace SIO {
     /** Seek the stream at the given position */
     void seekStream( sio::ifstream &stream, long64 pos ) ;
 
-    /** Seek the stream at the given position */
-    void seekStream( sio::ifstream &stream, long64 pos ) ;
-
   protected:
 
     /** Prepare an LCIORandomAccess object from the current contents of RunEventMap (all file locations set to 0). */

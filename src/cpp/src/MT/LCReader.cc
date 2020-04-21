@@ -173,7 +173,7 @@ namespace MT {
         else {
           SIO::SIOEventRecord::readBlocks( data, event.get(), *_eventHandlerMgr ) ;
         }
-        return nullptr ;
+        return false ;
       }
       return false ;
     } ;
@@ -525,25 +525,14 @@ namespace MT {
           if( readUntilEOF ) {
             return ;
           }
-          else {
-            if( readUntilEOF ) {
-              return ;
-            }
             std::stringstream message ;
             message << "SIOReader::readStream(int maxRecord) : EOF before "
               << maxRecord << " records read from file" << std::ends ;
             throw IO::EndOfDataException( message.str() )  ;
           }
-          return ( recordsRead >= maxRecord ) ;
         }
-      ) ;
-    }
-    catch( sio::exception &e ) {
-      if( e.code() != sio::error_code::eof ) {
-        SIO_RETHROW( e, e.code(), "SIOReader::readStream: Couldn't read stream" ) ;
       }
     }
-  }
 
   //----------------------------------------------------------------------------
 
@@ -567,22 +556,6 @@ namespace MT {
 
   void LCReader::readNextRecord( LCReaderListener *listener ) {
     readNextRecord( LCReaderListenerList{listener} );
-  }
-
-  void LCReader::readStream( LCReaderListener *listener ) {
-    readStream( {listener} ) ;
-  }
-
-  //----------------------------------------------------------------------------
-
-  void LCReader::readStream( LCReaderListener *listener, int maxRecord ) {
-    readStream( {listener}, maxRecord );
-  }
-
-  //----------------------------------------------------------------------------
-
-  void LCReader::readNextRecord( LCReaderListener *listener ) {
-    readNextRecord( {listener} );
   }
 
   //----------------------------------------------------------------------------
