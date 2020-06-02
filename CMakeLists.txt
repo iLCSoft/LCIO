@@ -155,6 +155,19 @@ eval $*
 
 ENDIF()
 
+# Deal with SIO
+FIND_PACKAGE( SIO QUIET )
+
+IF( NOT SIO_FOUND )
+  MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
+  ADD_SUBDIRECTORY( sio )
+ENDIF()
+
+MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
+MESSAGE( STATUS "SIO library: ${SIO_LIBRARIES}" )
+MESSAGE( STATUS "SIO includes: ${SIO_INCLUDE_DIRS}" )
+
+INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIRS} )
 
 FIND_PACKAGE( Threads REQUIRED )
 
@@ -251,10 +264,6 @@ if( INSTALL_JAR )
   ADD_DEPENDENCIES( uninstall uninstall_headers )
 
 endif() 
-
-# find external SIO package
-FIND_PACKAGE( SIO REQUIRED )
-INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIRS} )
 
 ### SUBDIRECTORIES ##########################################################
 
