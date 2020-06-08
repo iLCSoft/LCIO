@@ -27,6 +27,7 @@
 
 #include "TDatabasePDG.h"
 #include "TFile.h"
+#include "TTree.h"
 #include "TLorentzVector.h"
 #include "TObjArray.h"
 #include "TParticlePDG.h"
@@ -39,11 +40,10 @@
 
 #include "ExRootAnalysis/ExRootProgressBar.h"
 #include "ExRootAnalysis/ExRootTreeBranch.h"
+#include "ExRootAnalysis/ExRootTreeWriter.h"
 
-#include "lcio.h"
-#include "IO/LCWriter.h"
-//#include "IOIMPL/LCFactory.h"
-#include "LCIOTreeWriter.h"
+
+#include "DelphesLCIOConverter.h"
 
 using namespace std;
 
@@ -63,9 +63,9 @@ int main(int argc, char *argv[])
   char appName[] = "DelphesSTDHEP";
   stringstream message;
   FILE *inputFile = 0;
-  IO::LCWriter *outputFile = 0;
+  TFile *outputFile = 0;
   TStopwatch readStopWatch, procStopWatch;
-  LCIOTreeWriter *treeWriter = 0;
+  ExRootTreeWriter *treeWriter = 0;
   ExRootTreeBranch *branchEvent = 0;
   ExRootConfReader *confReader = 0;
   Delphes *modularDelphes = 0;
@@ -97,16 +97,17 @@ int main(int argc, char *argv[])
 
   try
   {
-    outputFile= lcio::LCFactory::getInstance()->createLCWriter()  ;
-    outputFile->open( argv[2] , lcio::LCIO::WRITE_NEW )  ;
+    DelphesLCIOConverter lcioConverter( argv[2] ) ;
+    // outputFile = TFile::Open(argv[2], "CREATE");
 
-    if(outputFile == NULL)
-    {
-      message << "can't create output file " << argv[2];
-      throw runtime_error(message.str());
-    }
+    // if(outputFile == NULL)
+    // {
+    //   message << "can't create output file " << argv[2];
+    //   throw runtime_error(message.str());
+    // }
 
-    treeWriter = new LCIOTreeWriter(outputFile, "Delphes");
+    treeWriter = new ExRootTreeWriter(outputFile, "Delphes");
+    treeWriter->setTree( new TTree("Delphes2LCIO","Analysys") ) ; 
 
     branchEvent = treeWriter->NewBranch("Event", LHEFEvent::Class());
 
@@ -201,7 +202,9 @@ int main(int argc, char *argv[])
 
             treeWriter->Fill();
 
-            treeWriter->Clear();
+	    lcioConverter.writeEvent( treeWriter->getTree() ) ;
+
+	    treeWriter->Clear();
           }
 
           modularDelphes->Clear();
@@ -230,7 +233,7 @@ int main(int argc, char *argv[])
     delete modularDelphes;
     delete confReader;
     delete treeWriter;
-    delete outputFile;
+//    delete outputFile;
 
     return 0;
   }
