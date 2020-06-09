@@ -6,6 +6,7 @@ class TTree;
 
 namespace IO{ class LCWriter ; }
 namespace EVENT{ class LCEvent ; }
+namespace IMPL{ class LCEventImpl ; }
 
 
 /** \class DelphesLCIOConverter
@@ -25,7 +26,7 @@ public:
 
 
   /// convert the Delphes tree to LCIO collections and add them to the event
-  void convertTree2LCIO( TTree *tree , EVENT::LCEvent* evt) ;
+  void convertTree2LCIO( TTree *tree , IMPL::LCEventImpl* evt) ;
 
   /// create a new LCIO event and write it to the writer (if valid)
   void writeEvent(TTree* tree) ;
