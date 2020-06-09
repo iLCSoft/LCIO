@@ -23,8 +23,8 @@
 #include "IMPL/MCParticleImpl.h" 
 #include "IMPL/ReconstructedParticleImpl.h"
 #include "IMPL/ParticleIDImpl.h"
-#include "IMPL/LCTOOLS.h"
-
+#include "UTIL/LCTOOLS.h"
+#include "UTIL/LCRelationNavigator.h"
 
 #include <iostream>
 #include <sstream>
@@ -69,11 +69,11 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   //int nEntry =  tree->GetEntriesFast() ;
 
-  size_t n = tree->GetListOfBranches()->GetEntries();
-  for( size_t i = 0; i < n; ++ i ) {
-    TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
-    if( !strcmp(br->GetClassName(),"TClonesArray") )
-      std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName() << std::endl;
+//  size_t n = tree->GetListOfBranches()->GetEntries();
+//  for( size_t i = 0; i < n; ++ i ) {
+//    TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
+//    if( !strcmp(br->GetClassName(),"TClonesArray") )
+//      std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName() << std::endl;
 //      *************** branch "Event --- TClonesArray
 //      *************** branch "Particle --- TClonesArray
 //      *************** branch "GenJet --- TClonesArray
@@ -89,8 +89,20 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 //      *************** branch "Jet --- TClonesArray
 //      *************** branch "MissingET --- TClonesArray
 //      *************** branch "ScalarHT --- TClonesArray
-  }
+//  }
 
+  // create the mandatory LCIO collections
+  auto* mcps = new lcio::LCCollectionVec( lcio::LCIO::MCPARTICLE )  ;
+  evt->addCollection( mcps, "MCParticle" ) ;
+
+  auto* pfos = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  evt->addCollection( pfos, "PFOs" ) ;
+
+  lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
+  lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
+
+  std::map< unsigned, lcio::MCParticleImpl*> mcpd2lmap ;
+  std::map< unsigned, lcio::ReconstructedParticleImpl*> recd2lmap ;
 
   //=====================================================================
   TBranch *evB = tree->GetBranch("Event");
@@ -121,9 +133,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   if( gpB != nullptr ){
 
-    auto* mcps = new lcio::LCCollectionVec( lcio::LCIO::MCPARTICLE )  ;
-    evt->addCollection( mcps, "MCParticle" ) ;
-
     TClonesArray* col = *(TClonesArray**) gpB->GetAddress()  ;
 
     int ngp = col->GetEntriesFast();
@@ -133,6 +142,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       auto* mcp = new lcio::MCParticleImpl ;
       mcps->addElement( mcp ) ;
+
+      mcpd2lmap.insert( std::make_pair( p->GetUniqueID() , mcp ) ) ;
       
       mcp->setPDG(p->PID) ;
       double m[3] = { p->Px , p->Py , p->Pz }  ;
@@ -156,8 +167,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   }
   //=====================================================================
 
-  auto* pfos = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
-  evt->addCollection( pfos, "PFOs" ) ;
 
   TBranch *trB = tree->GetBranch("EFlowTrack");
   if( trB != nullptr ){
@@ -166,13 +175,21 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     int nnh = col->GetEntriesFast();
 
     for(int j = 0; j < nnh ; ++j){
-      std::cout << "  type:  " << col->At(j)->Class()->GetName()  << std::endl ;
+
       Track* trk = static_cast<Track*> (col->At(j));
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
-      std::cout << " charged PFO : " << trk->PID << std::endl ;
+      GenParticle* mcpd = (GenParticle*)trk->Particle.GetObject()  ;
+      auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
+      if( it != mcpd2lmap.end() ){
+
+	mcrecNav.addRelation( it->second, pfo, 1.0 ) ;
+	recmcNav.addRelation( pfo, it->second, 1.0 ) ;
+      } else {
+	std::cout << " ### found no MC truth delphes particle ######### " << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
+      }
 
       pfo->setType( 211 * trk->Charge ); // use pions for all tracks
       double mass = 0.1395701835 ; // use pion mass
@@ -217,13 +234,22 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     int nnh = col->GetEntriesFast();
 
     for(int j = 0; j < nnh ; ++j){
-      std::cout << "  type:  " << col->At(j)->Class()->GetName()  << std::endl ;
+
       Tower* p = static_cast<Tower*> (col->At(j));
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
-      std::cout << "  PFO E = " << p->E << "  mcps: " << p->Particles.GetEntriesFast() << std::endl;
+      GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;// fixme use only first mc truth particle - can there be more than one ?
+      auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
+      if( it != mcpd2lmap.end() ){
+
+	mcrecNav.addRelation( it->second, pfo, 1.0 ) ;
+	recmcNav.addRelation( pfo, it->second, 1.0 ) ;
+
+      } else {
+	std::cout << " ### found no MC truth delphes particle ######### " << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
+      }
 
       pfo->setType( 130 ); //fixme K0L?
 
@@ -266,13 +292,22 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     int nnh = col->GetEntriesFast();
 
     for(int j = 0; j < nnh ; ++j){
-      std::cout << "  type:  " << col->At(j)->Class()->GetName()  << std::endl ;
+
       Tower* p = static_cast<Tower*> (col->At(j));
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
-      std::cout << "  PFO E = " << p->E << "  mcps: " << p->Particles.GetEntriesFast() << std::endl;
+      GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;// fixme use only first mc truth particle - can there be more than one ?
+      auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
+      if( it != mcpd2lmap.end() ){
+
+	mcrecNav.addRelation( it->second, pfo, 1.0 ) ;
+	recmcNav.addRelation( pfo, it->second, 1.0 ) ;
+
+      } else {
+	std::cout << " ### found no MC truth delphes particle ######### " << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
+      }
 
       pfo->setType( 22 );
 
@@ -308,6 +343,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     }
   }
 
+  evt->addCollection( mcrecNav.createLCCollection(), "MCTruthRecoLink");
+  evt->addCollection( recmcNav.createLCCollection(), "RecoMCTruthLink");
 
   lcio::LCTOOLS::dumpEvent( evt ) ;
 
