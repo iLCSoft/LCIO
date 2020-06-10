@@ -98,6 +98,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   auto* pfos = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
   evt->addCollection( pfos, "PFOs" ) ;
 
+  auto* jets = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  evt->addCollection( jets, "Jets" ) ;
+
   lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
 
@@ -181,6 +184,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
+      recd2lmap.insert( std::make_pair( trk->GetUniqueID() , pfo ) ) ;
+
       GenParticle* mcpd = (GenParticle*)trk->Particle.GetObject()  ;
       auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
       if( it != mcpd2lmap.end() ){
@@ -240,6 +245,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
+      recd2lmap.insert( std::make_pair( p->GetUniqueID() , pfo ) ) ;
+
       GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;// fixme use only first mc truth particle - can there be more than one ?
       auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
       if( it != mcpd2lmap.end() ){
@@ -298,6 +305,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
 
+      recd2lmap.insert( std::make_pair( p->GetUniqueID() , pfo ) ) ;
+
       GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;// fixme use only first mc truth particle - can there be more than one ?
       auto it = mcpd2lmap.find( mcpd->GetUniqueID() );
       if( it != mcpd2lmap.end() ){
@@ -342,6 +351,75 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       //pfo->setStartVertex (EVENT::Vertex *sv)
     }
   }
+
+//======================================================================
+
+  TBranch *jB = tree->GetBranch("Jet");
+  if( jB != nullptr ){
+
+    TClonesArray* col = *(TClonesArray**) jB->GetAddress()  ;
+    int nnh = col->GetEntriesFast();
+
+    for(int j = 0; j < nnh ; ++j){
+
+      Jet* jd = static_cast<Jet*> (col->At(j));
+
+      auto* jet = new lcio::ReconstructedParticleImpl ;
+      jets->addElement( jet ) ;
+
+
+      int nc = jd->Constituents.GetEntriesFast() ;
+
+      std::vector<lcio::ReconstructedParticle*> jetPFOs;
+
+      for(int k=0;k<nc;++k){
+	int uid = ((Candidate*)jd->Constituents.At(k))->GetUniqueID() ;
+
+	auto it = recd2lmap.find( uid ) ;
+	if( it != recd2lmap.end() ){
+	  jetPFOs.push_back( it->second ) ;
+	}
+      }
+
+      if( nc !=  jetPFOs.size() )
+	std::cout << "***** WARNING *** jet constituents " << nc << " - pfos " << jetPFOs.size() << std::endl ;
+
+      double eJet(0), pxJet(0), pyJet(0), pzJet(0) ;
+      for( auto* pfo : jetPFOs ){
+
+	jet->addParticle( pfo ) ;
+
+	eJet  += pfo->getEnergy() ;
+	pxJet += pfo->getMomentum()[0] ;
+	pyJet += pfo->getMomentum()[1] ;
+	pzJet += pfo->getMomentum()[2] ;
+      }
+      jet->setEnergy( eJet ) ;
+      double pJet[3] = {pxJet, pyJet,pzJet} ;
+      jet->setMomentum( pJet ) ;
+      jet->setMass( jd->Mass ) ;
+//      pfo->setCovMatrix (const float *cov) ; //fixme
+
+      jet->setCharge(0.) ;
+
+      auto* pid = new lcio::ParticleIDImpl ;
+      pid->setPDG( 22 ) ; //fixme K0L?
+      pid->setLikelihood( 1. ) ;
+      pid->addParameter( p->Eem  / p->E ) ;
+      pid->addParameter( p->Ehad / p->E ) ;
+
+      //jet->setReferencePoint (const float *reference)
+      jet->addParticleID( pid ) ;
+      jet->setParticleIDUsed( pid );
+
+      jet->setGoodnessOfPID( 1. ) ;
+
+    }
+  }
+
+//======================================================================
+
+
 
   evt->addCollection( mcrecNav.createLCCollection(), "MCTruthRecoLink");
   evt->addCollection( recmcNav.createLCCollection(), "RecoMCTruthLink");
