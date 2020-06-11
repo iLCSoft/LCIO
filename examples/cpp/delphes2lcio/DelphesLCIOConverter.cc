@@ -25,6 +25,7 @@
 #include "IMPL/ParticleIDImpl.h"
 #include "UTIL/LCTOOLS.h"
 #include "UTIL/LCRelationNavigator.h"
+#include "UTIL/PIDHandler.h"
 
 #include <iostream>
 #include <sstream>
@@ -117,6 +118,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   gammas->setSubset(true) ;
   evt->addCollection( gammas, "Photons" ) ;
 
+  lcio::PIDHandler pfopidH( pfos );
+  int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
+  int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0","ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
+
+  lcio::PIDHandler jetpidH( jets );
+  int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag","BTagAlgo","BTagPhys","TauTag","Charge","EhadOverEem"} ) ;
 
   lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
@@ -228,12 +235,17 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 //      pfo->setCovMatrix (const float *cov) ; //fixme
       pfo->setCharge( trk->Charge ) ;
 
-      auto* pid = new lcio::ParticleIDImpl ;
-      pid->setPDG( trk->PID ) ;   // write the PID from Delphes here
-      pid->setLikelihood( 1. ) ;
+      // auto* pid = new lcio::ParticleIDImpl ;
+      // pid->setPDG( trk->PID ) ;   // write the PID from Delphes here
+      // pid->setLikelihood( 1. ) ;
+      // pfo->addParticleID( pid ) ;
+      // pfo->setParticleIDUsed( pid );
 
-      pfo->addParticleID( pid ) ;
-      pfo->setParticleIDUsed( pid );
+      pfopidH.setParticleID( pfo, 0, trk->PID , 1. , trackParamID, { trk->L,trk->PT,trk->D0,trk->DZ,trk->Phi,trk->CtgTheta,
+								     trk->ErrorPT, trk->ErrorD0,trk->ErrorDZ,trk->ErrorPhi,trk->ErrorCtgTheta  } ) ;
+      pfopidH.setParticleIDUsed( pfo, trackParamID );
+
+
       pfo->setGoodnessOfPID( 1. ) ;
 
       float ref[3] = { trk->X,  trk->Y,  trk->Z  } ;
@@ -288,17 +300,20 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       pfo->setMass( 0. ) ; //fixme ?
       pfo->setCharge(0.) ;
 
-      auto* pid = new lcio::ParticleIDImpl ;
-      pid->setPDG( 130 ) ; //fixme K0L?
-      pid->setLikelihood( 1. ) ;
-      pid->addParameter( p->Eem  / p->E ) ;
-      pid->addParameter( p->Ehad / p->E ) ;
+      // auto* pid = new lcio::ParticleIDImpl ;
+      // pid->setPDG( 130 ) ; //fixme K0L?
+      // pid->setLikelihood( 1. ) ;
+      // pid->addParameter( p->Eem  / p->E ) ;
+      // pid->addParameter( p->Ehad / p->E ) ;
+      // pfo->addParticleID( pid ) ;
+      // pfo->setParticleIDUsed( pid );
 
-      //pfo->setReferencePoint (const float *reference)
-      pfo->addParticleID( pid ) ;
-      pfo->setParticleIDUsed( pid );
+      pfopidH.setParticleID( pfo, 0, 130, 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
+      pfopidH.setParticleIDUsed( pfo, showerParamID );
 
       pfo->setGoodnessOfPID( 1. ) ;
+
+      //pfo->setReferencePoint (const float *reference)
 
       //pfo->addParticle (EVENT::ReconstructedParticle *particle)
       //pfo->addCluster (EVENT::Cluster *cluster)
@@ -309,6 +324,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     }
   }
   //----------------------------------------------------------------------------------
+
   TBranch *efphB = tree->GetBranch("EFlowPhoton");
   if( efphB != nullptr ){
 
@@ -348,17 +364,20 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       pfo->setMass( 0. ) ; //fixme ?
       pfo->setCharge(0.) ;
 
-      auto* pid = new lcio::ParticleIDImpl ;
-      pid->setPDG( 22 ) ; //fixme K0L?
-      pid->setLikelihood( 1. ) ;
-      pid->addParameter( p->Eem  / p->E ) ;
-      pid->addParameter( p->Ehad / p->E ) ;
+      // auto* pid = new lcio::ParticleIDImpl ;
+      // pid->setPDG( 22 ) ; //fixme K0L?
+      // pid->setLikelihood( 1. ) ;
+      // pid->addParameter( p->Eem  / p->E ) ;
+      // pid->addParameter( p->Ehad / p->E ) ;
+      // pfo->addParticleID( pid ) ;
+      // pfo->setParticleIDUsed( pid );
 
-      //pfo->setReferencePoint (const float *reference)
-      pfo->addParticleID( pid ) ;
-      pfo->setParticleIDUsed( pid );
+      pfopidH.setParticleID( pfo, 0,  22 , 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
+      pfopidH.setParticleIDUsed( pfo, showerParamID );
 
       pfo->setGoodnessOfPID( 1. ) ;
+
+      //pfo->setReferencePoint (const float *reference)
 
       //pfo->addParticle (EVENT::ReconstructedParticle *particle)
       //pfo->addCluster (EVENT::Cluster *cluster)
@@ -419,11 +438,11 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       jet->setCharge(0.) ;
 
-      // auto* pid = new lcio::ParticleIDImpl ;
-      // pid->setPDG( 22 ) ; //fixme K0L?
-      // pid->setLikelihood( 1. ) ;
-      // pid->addParameter( p->Eem  / p->E ) ;
-      // pid->addParameter( p->Ehad / p->E ) ;
+
+      jetpidH.setParticleID( jet, 0, 0 , 1. , jetParamID,  { (float)jd->Flavor, (float)jd->FlavorAlgo, (float)jd->FlavorPhys,
+							     (float)jd->BTag, (float)jd->BTagAlgo, (float)jd->BTagPhys, (float)jd->TauTag,
+							     (float)jd->Charge, jd->EhadOverEem} );
+      jetpidH.setParticleIDUsed( jet, jetParamID );
 
       //jet->setReferencePoint (const float *reference)
       // jet->addParticleID( pid ) ;
