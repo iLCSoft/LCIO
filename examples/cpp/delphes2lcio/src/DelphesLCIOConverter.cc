@@ -120,10 +120,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   lcio::PIDHandler pfopidH( pfos );
   int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
-  int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0","ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
+  int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0",
+								"ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
 
   lcio::PIDHandler jetpidH( jets );
-  int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag","BTagAlgo","BTagPhys","TauTag","Charge","EhadOverEem"} ) ;
+  int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag","BTagAlgo","BTagPhys",
+							    "TauTag","Charge","EhadOverEem"} ) ;
 
   lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
@@ -242,7 +244,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       // pfo->setParticleIDUsed( pid );
 
       pfopidH.setParticleID( pfo, 0, trk->PID , 1. , trackParamID, { trk->L,trk->PT,trk->D0,trk->DZ,trk->Phi,trk->CtgTheta,
-								     trk->ErrorPT, trk->ErrorD0,trk->ErrorDZ,trk->ErrorPhi,trk->ErrorCtgTheta  } ) ;
+								     trk->ErrorPT, trk->ErrorD0,trk->ErrorDZ,trk->ErrorPhi,
+								     trk->ErrorCtgTheta  } ) ;
       pfopidH.setParticleIDUsed( pfo, trackParamID );
 
 
