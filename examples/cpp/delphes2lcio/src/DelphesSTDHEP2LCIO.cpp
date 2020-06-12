@@ -60,7 +60,7 @@ void SignalHandler(int sig)
 
 int main(int argc, char *argv[])
 {
-  char appName[] = "DelphesSTDHEP";
+  char appName[] = "DelphesSTDHEP2LCIO";
   stringstream message;
   FILE *inputFile = 0;
   TFile *outputFile = 0;
@@ -98,8 +98,10 @@ int main(int argc, char *argv[])
   try
   {
     DelphesLCIOConverter lcioConverter( argv[2] ) ;
+    // --- changed from original: do not open a root outputfile:
+    //     instead create a new Tree and use this later with the DelphesLCIOConverter
+    //     see below
     // outputFile = TFile::Open(argv[2], "CREATE");
-
     // if(outputFile == NULL)
     // {
     //   message << "can't create output file " << argv[2];
@@ -202,6 +204,7 @@ int main(int argc, char *argv[])
 
             treeWriter->Fill();
 
+	    // --- changed from original: here we write the tree to LCIO
 	    lcioConverter.writeEvent( treeWriter->getTree() ) ;
 
 	    treeWriter->Clear();
