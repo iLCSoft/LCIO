@@ -14,7 +14,7 @@ SET(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" CACHE PATH "Where to install ${
 
 SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 
-find_package(lcio)
+find_package(LCIO)
 find_package(ROOT)
 find_package(Delphes)
 

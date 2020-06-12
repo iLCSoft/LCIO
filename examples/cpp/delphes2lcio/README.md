@@ -55,7 +55,7 @@ then the build the source
 cd delphes2lcio
 mkdir build
 cd build
-cmake -D lcio_DIR=$LCIO  ..
+cmake -D LCIO_DIR=$LCIO  ..
 
 ```
 
