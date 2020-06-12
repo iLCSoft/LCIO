@@ -40,7 +40,10 @@
 
 #include "ExRootAnalysis/ExRootProgressBar.h"
 #include "ExRootAnalysis/ExRootTreeBranch.h"
-#include "ExRootAnalysis/ExRootTreeWriter.h"
+
+//#include "ExRootAnalysis/ExRootTreeWriter.h"
+// load local overwrite with access to TTree:
+#include "./ExRootTreeWriter.h"
 
 
 #include "DelphesLCIOConverter.h"
