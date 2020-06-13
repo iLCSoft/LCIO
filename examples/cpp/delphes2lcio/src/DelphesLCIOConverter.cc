@@ -114,9 +114,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   electrons->setSubset(true) ;
   evt->addCollection( electrons, "Electrons" ) ;
 
-  auto* gammas = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
-  gammas->setSubset(true) ;
-  evt->addCollection( gammas, "Photons" ) ;
+  auto* photons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  photons->setSubset(true) ;
+  evt->addCollection( photons, "Photons" ) ;
 
   lcio::PIDHandler pfopidH( pfos );
   int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
@@ -475,12 +475,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
 
 	if( !objs.empty() )
-	  electrons->addElement( objs[0] ) ;
+	  photons->addElement( objs[0] ) ;
 	else
 	  std::cout << " ### found no ReconstructedParticle #########  for mcp with uid: " <<  mcp->id()  << std::endl ;
       }
       else
-	std::cout << " ### found no MC truth delphes particle #########  for muon with uid: " <<  ph->GetUniqueID()  << std::endl ;
+	   std::cout << " ### found no MC truth delphes particle #########  for photon with uid: " <<  ph->GetUniqueID()  << std::endl ;
     }
   }
 //======================================================================
@@ -530,7 +530,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
 
 	if( !objs.empty() )
-	  electrons->addElement( objs[0] ) ;
+	  muons->addElement( objs[0] ) ;
 	else
 	  std::cout << " ### found no ReconstructedParticle #########  for mcp with uid: " <<  mcp->id()  << std::endl ;
       }
@@ -545,7 +545,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   evt->addCollection( mcrecNav.createLCCollection(), "MCTruthRecoLink");
   evt->addCollection( recmcNav.createLCCollection(), "RecoMCTruthLink");
 
-  lcio::LCTOOLS::dumpEvent( evt ) ;
+//  lcio::LCTOOLS::dumpEvent( evt ) ;
 
 }
 
