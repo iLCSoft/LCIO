@@ -26,6 +26,11 @@
 #include "UTIL/LCTOOLS.h"
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/PIDHandler.h"
+#include "UTIL/LCIterator.h"
+
+
+#include "EventSummary.h"
+
 
 #include <iostream>
 #include <sstream>
@@ -41,12 +46,27 @@ DelphesLCIOConverter::DelphesLCIOConverter(const char* fileName ) {
   if( ! fn.empty()){
     fWriter = lcio::LCFactory::getInstance()->createLCWriter() ;
     fWriter->open( fn , lcio::LCIO::WRITE_NEW ) ;
+
+    fEvtSumCol = new lcio::LCCollectionVec( lcio::LCIO::LCGENERICOBJECT ) ;
   }
 
 }
 //-----------------------------------------------------------------
 
 DelphesLCIOConverter::~DelphesLCIOConverter(){
+
+  if( fEvtSumCol ){
+
+    auto evt = new lcio::LCEventImpl ;
+    evt->setRunNumber( -99 ) ;
+    evt->setEventNumber( -99 ) ;
+    evt->setWeight( 0. ) ;
+
+    evt->addCollection( fEvtSumCol, "EventSummaries" ) ;
+
+    fWriter->writeEvent( evt ) ;
+  }
+
   if( fWriter ){
 
     fWriter->close() ;
@@ -54,6 +74,7 @@ DelphesLCIOConverter::~DelphesLCIOConverter(){
     delete fWriter ;
   }
 }
+
 //-----------------------------------------------------------------
 
 void DelphesLCIOConverter::writeEvent(TTree* tree){
@@ -74,11 +95,14 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   //int nEntry =  tree->GetEntriesFast() ;
 
-//  size_t n = tree->GetListOfBranches()->GetEntries();
-//  for( size_t i = 0; i < n; ++ i ) {
-//    TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
-//    if( !strcmp(br->GetClassName(),"TClonesArray") )
-//      std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName() << std::endl;
+  // size_t n = tree->GetListOfBranches()->GetEntries();
+  // for( size_t i = 0; i < n; ++ i ) {
+  //   TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
+  //   if( !strcmp(br->GetClassName(),"TClonesArray") )
+  //     std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName()
+  // 		<< " - " <<   (*(TClonesArray**) br->GetAddress())->GetEntriesFast()
+  // 		<< std::endl;
+  // }
 //      *************** branch "Event --- TClonesArray
 //      *************** branch "Particle --- TClonesArray
 //      *************** branch "GenJet --- TClonesArray
@@ -94,7 +118,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 //      *************** branch "Jet --- TClonesArray
 //      *************** branch "MissingET --- TClonesArray
 //      *************** branch "ScalarHT --- TClonesArray
-//  }
+
 
   // create the mandatory LCIO collections
   auto* mcps = new lcio::LCCollectionVec( lcio::LCIO::MCPARTICLE )  ;
@@ -390,7 +414,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       //pfo->setStartVertex (EVENT::Vertex *sv)
     }
   }
-
 //======================================================================
 
   TBranch *jB = tree->GetBranch("Jet");
@@ -406,7 +429,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       auto* jet = new lcio::ReconstructedParticleImpl ;
       jets->addElement( jet ) ;
 
-
       int nc = jd->Constituents.GetEntriesFast() ;
 
       std::vector<lcio::ReconstructedParticle*> jetPFOs;
@@ -417,11 +439,24 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	auto it = recd2lmap.find( uid ) ;
 	if( it != recd2lmap.end() ){
 	  jetPFOs.push_back( it->second ) ;
+	// } else {
+	//   std::cout << "***** WARNING *** jet constituent has no pfo created: "
+	// 	    << "\n  pid = " << ((Candidate*)jd->Constituents.At(k))->PID
+	// 	    << "\n  status = " << ((Candidate*)jd->Constituents.At(k))->Status
+	// 	    << "\n  conversion: = " << ((Candidate*)jd->Constituents.At(k))->IsFromConversion
+	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[0]
+	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[1]
+	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[2]
+	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[3]
+	// 	    << "\n is mcp: = " << ( mcpd2lmap.find( uid ) != mcpd2lmap.end() )
+	// 	    << std::endl ;
 	}
       }
 
       if( nc !=  jetPFOs.size() )
 	std::cout << "***** WARNING *** jet constituents " << nc << " - pfos " << jetPFOs.size() << std::endl ;
+
+#if 1 //--------  jet 4-vector from constituents
 
       double eJet(0), pxJet(0), pyJet(0), pzJet(0) ;
       for( auto* pfo : jetPFOs ){
@@ -436,11 +471,29 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       jet->setEnergy( eJet ) ;
       double pJet[3] = {pxJet, pyJet,pzJet} ;
       jet->setMomentum( pJet ) ;
+
+#else //--- jet 4-vector from Delphes
+
+      double pt = jd->PT ;
+      double ph = jd->Phi ;
+      double jm = jd->Mass ;
+
+      double th = 2.*atan( exp( - jd->Eta ) );
+      double jp = pt / sin(th) ;
+
+      double jp3[3] = { pt * cos( ph )  , pt * sin( ph ) ,   pt / tan( th ) } ;
+      double je  = sqrt( jp*jp + jm * jm ) ;
+
+      jet->setEnergy( je ) ;
+
+      jet->setMomentum( jp3 ) ;
+
+#endif //------------------------------------------
+
       jet->setMass( jd->Mass ) ;
 //      pfo->setCovMatrix (const float *cov) ; //fixme
 
       jet->setCharge(0.) ;
-
 
       jetpidH.setParticleID( jet, 0, 0 , 1. , jetParamID,  { (float)jd->Flavor, (float)jd->FlavorAlgo, (float)jd->FlavorPhys,
 							     (float)jd->BTag, (float)jd->BTagAlgo, (float)jd->BTagPhys, (float)jd->TauTag,
@@ -477,7 +530,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	if( !objs.empty() )
 	  photons->addElement( objs[0] ) ;
 	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with uid: " <<  mcp->id()  << std::endl ;
+	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
       }
       else
 	   std::cout << " ### found no MC truth delphes particle #########  for photon with uid: " <<  ph->GetUniqueID()  << std::endl ;
@@ -504,7 +557,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	if( !objs.empty() )
 	  electrons->addElement( objs[0] ) ;
 	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with uid: " <<  mcp->id()  << std::endl ;
+	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
       }
       else
 	std::cout << " ### found no MC truth delphes particle #########  for electron with uid: " <<  ph->GetUniqueID()  << std::endl ;
@@ -532,14 +585,58 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	if( !objs.empty() )
 	  muons->addElement( objs[0] ) ;
 	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with uid: " <<  mcp->id()  << std::endl ;
+	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
       }
       else
 	std::cout << " ### found no MC truth delphes particle #########  for muon with uid: " <<  ph->GetUniqueID()  << std::endl ;
     }
   }
+
 //======================================================================
 
+  if( fEvtSumCol ){  // add to event summary collection
+
+    auto evts = new EventSummary ;
+
+    evts->setRunNum(   evt->getRunNumber() ) ;
+    evts->setEventNum( evt->getEventNumber() ) ;
+    evts->setPFONum(    pfos->getNumberOfElements() );
+    evts->setMuonNum(   muons->getNumberOfElements() );
+    evts->setPhotonNum( photons->getNumberOfElements() );
+    evts->setElectronNum( electrons->getNumberOfElements() );
+    evts->setJetNum( jets->getNumberOfElements()  );
+
+    // total reconstructed energy
+    double epfoTot = 0;
+    lcio::LCIterator<lcio::ReconstructedParticle> pfoIT( pfos ) ;
+    while( auto p = pfoIT.next() )
+      epfoTot += p->getEnergy() ;
+
+    // total true visible energy
+    double emcpTot = 0;
+    lcio::LCIterator<lcio::MCParticle> mcpIT( mcps ) ;
+    while( auto mcp = mcpIT.next() ){
+
+      // count only stable non-neutrino particles
+      if( mcp->getGeneratorStatus() != 1 ) continue ;
+
+      int pdg = abs( mcp->getPDG() ) ;
+
+      if( pdg == 12 ) continue ;
+      if( pdg == 14 ) continue ;
+      if( pdg == 16 ) continue ;
+
+      emcpTot += mcp->getEnergy() ;
+    }
+    evts->setEpfoTot( epfoTot ) ;
+    evts->setEmcpTot( emcpTot ) ;
+
+    fEvtSumCol->addElement( evts ) ;
+  }
+
+
+
+//======================================================================
 
 
   evt->addCollection( mcrecNav.createLCCollection(), "MCTruthRecoLink");
