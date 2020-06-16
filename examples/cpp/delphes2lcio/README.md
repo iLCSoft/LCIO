@@ -121,6 +121,14 @@ anajob output.slcio | less
 
 ```
 
+- a last event with EventSummaries collection is written to the file, it can be inspected with:
+
+```
+ dumpevent output.slcio -99 -99 | less
+
+```
+
+
 
 Or you can do a full analyis with **Marlin** etc. (see: [http://github.com/iLCSoft](http://github.com/iLCSoft)).
 
@@ -130,6 +138,8 @@ Or you can do a full analyis with **Marlin** etc. (see: [http://github.com/iLCSo
 ### Root macros
 
 Another way of quickly getting started with the analysis is to use ROOT macros.
+
+----------
 
 - first simple example:
 
@@ -147,4 +157,21 @@ root ../build/output.root
 root [3] hetotpfo->Draw()
 ```
 
-More examples to follow ...
+------
+
+- this example creates a higgs recoil mass peak (if run on a suitable stdhep file), e.g.:
+
+```
+cd ../examples/
+root
+
+root [0] .x higgs_recoil_plots.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95.eR.pL.I106480.001.mini-DST.slcio")
+```
+
+-------
+
+- and this is the same, using the EventSummaries collection for reading only events of interest:
+
+```
+root [0] .x higgs_recoil_plots_fast.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95.eR.pL.I106480.001.mini-DST.slcio")
+```
