@@ -6,7 +6,10 @@ class TTree;
 
 namespace IO{ class LCWriter ; }
 namespace EVENT{ class LCEvent ; }
-namespace IMPL{ class LCEventImpl ; }
+namespace IMPL{
+  class LCEventImpl ;
+  class LCCollectionVec;
+}
 
 
 /** \class DelphesLCIOConverter
@@ -35,6 +38,7 @@ public:
   
 private:
   IO::LCWriter *fWriter=nullptr;
+  IMPL::LCCollectionVec *fEvtSumCol=nullptr;
 };
 
 #endif /* DelphesLCIOConverter */
