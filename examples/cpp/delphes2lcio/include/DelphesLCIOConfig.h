@@ -34,17 +34,19 @@ public:
 
   // ---------------------------------------
   int toInt(const std::string& val){
-    std::stringstream s(val) ;
     int i;
-    s >> i  ;
+    std::stringstream s(val) ;  s >> i  ;
+    if( s.fail() )
+      throw std::runtime_error( std::string("\nDelphesLCIOConfig: cannot convert to int:  ") + val ) ;
     return i;
   }
   // ---------------------------------------
 
   int toFloat(const std::string& val){
-    std::stringstream s(val) ;
     float f;
-    s >> f  ;
+    std::stringstream s(val) ; s >> f  ;
+    if( s.fail() )
+      throw std::runtime_error( std::string("\nDelphesLCIOConfig: cannot convert to float:  ") + val ) ;
     return f;
   }
   // ---------------------------------------
@@ -101,8 +103,9 @@ private:
 
     { "JetMap" ,
       {
-	{ "lcioName"   , "Jets" },
-	{ "branchName" , "Jet" }
+	{ "lcioName"       , "Jets" },
+	{ "branchName"     , "Jet" },
+	{ "useDelphes4Vec" , "0" }
       }   
     },
 
