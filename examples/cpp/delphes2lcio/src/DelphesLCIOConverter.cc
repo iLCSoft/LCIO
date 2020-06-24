@@ -93,6 +93,12 @@ DelphesLCIOConverter::~DelphesLCIOConverter(){
     delete _writer ;
   }
 }
+//-----------------------------------------------------------------
+
+void DelphesLCIOConverter::readConfigFile( const char* fileName ){
+
+  _cfg->readConfigFile( fileName ) ;
+}
 
 //-----------------------------------------------------------------
 
