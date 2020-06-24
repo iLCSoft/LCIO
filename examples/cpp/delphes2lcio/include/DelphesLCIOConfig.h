@@ -83,7 +83,11 @@ private:
       {
 	{ "lcioName"          , "PFOs" },
 	{ "branchNameCharged" , "EFlowTrack" },
+	{ "pdgCharged"        , "211" },
+	{ "massCharged"       , "0.1395701835" },
 	{ "branchNameNHadron" , "EFlowNeutralHadron" },
+	{ "pdgNHadron"        , "2112" },
+	{ "massNHadron"       , "0.9395654133" },
 	{ "branchNamePhoton"  , "EFlowPhoton" }
       }
     },

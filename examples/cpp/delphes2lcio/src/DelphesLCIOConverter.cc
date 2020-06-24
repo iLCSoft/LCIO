@@ -199,6 +199,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   //=====================================================================
 
+  // convert the MCParticle branch
+
   TBranch *gpB = tree->GetBranch( _cfg->getMCPParameter("branchName").c_str() );
 
   if( gpB != nullptr ){
@@ -237,8 +239,15 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   }
   //=====================================================================
 
+  // convert the charged PFO branch
+
 
   TBranch *trB = tree->GetBranch( _cfg->getPFOParameter("branchNameCharged").c_str()  );
+
+  int pdgCh = _cfg->toInt( _cfg->getPFOParameter("pdgCharged") ) ;
+
+  float massCh = _cfg->toFloat( _cfg->getPFOParameter("massCharged") ) ;
+
   if( trB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) trB->GetAddress()  ;
@@ -263,12 +272,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	std::cout << " ### found no MC truth delphes particle ######### " << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
       }
 
-      pfo->setType( 211 * trk->Charge ); // use pions for all tracks
-      double mass = 0.1395701835 ; // use pion mass
+      pfo->setType( pdgCh * trk->Charge );
 
-      pfo->setMass( mass ) ;
+      pfo->setMass( massCh ) ;
+
       double p = trk->P ;
-      double e = sqrt( p*p + mass*mass ) ;
+      double e = sqrt( p*p + massCh*massCh ) ;
       double th = 2.*atan( exp( - trk->Eta ) );
       double ph = trk->Phi ;
       double m[3] = { p * cos( ph ) * sin( th ) , p * sin( ph ) * sin( th ) ,   p * cos( th ) } ;
@@ -306,6 +315,11 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   //----------------------------------------------------------------------------
 
   TBranch *nhB = tree->GetBranch( _cfg->getPFOParameter("branchNameNHadron").c_str() );
+
+  int pdgNH = _cfg->toInt( _cfg->getPFOParameter("pdgNHadron") ) ;
+
+  float massNH = _cfg->toFloat( _cfg->getPFOParameter("massNHadron") ) ;
+
   if( nhB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) nhB->GetAddress()  ;
@@ -320,7 +334,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       _recd2lmap.insert( std::make_pair( p->GetUniqueID() , pfo ) ) ;
 
-      GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;// fixme use only first mc truth particle - can there be more than one ?
+      GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;
+
       auto it = _mcpd2lmap.find( mcpd->GetUniqueID() );
       if( it != _mcpd2lmap.end() ){
 
@@ -328,20 +343,23 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 	recmcNav.addRelation( pfo, it->second, 1.0 ) ;
 
       } else {
-	std::cout << " ### found no MC truth delphes particle ######### " << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
+	std::cout << " ### found no MC truth delphes particle ######### "
+		  << mcpd->PID<< "  uid: " <<  mcpd->GetUniqueID()  << std::endl ;
       }
 
-      pfo->setType( 130 ); //fixme K0L?
+      pfo->setType( pdgNH );
 
       double e = p->E ;
       double th = 2.*atan( exp( - p->Eta ) );
       double ph = p->Phi ;
-      double m[3] = { e * cos( ph ) * sin( th ) , e * sin( ph ) * sin( th ) ,   e * cos( th ) } ;
+      double pp = sqrt( e * e - massNH * massNH ) ;
+
+      double m[3] = { pp * cos( ph ) * sin( th ) , pp * sin( ph ) * sin( th ) , pp * cos( th ) } ;
 
       pfo->setEnergy( e ) ;
       pfo->setMomentum( m ) ;
 //      pfo->setCovMatrix (const float *cov) ; //fixme
-      pfo->setMass( 0. ) ; //fixme ?
+      pfo->setMass( massNH ) ;
       pfo->setCharge(0.) ;
 
       // auto* pid = new lcio::ParticleIDImpl ;
@@ -370,6 +388,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   //----------------------------------------------------------------------------------
 
   TBranch *efphB = tree->GetBranch(  _cfg->getPFOParameter("branchNamePhoton").c_str() );
+
   if( efphB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) efphB->GetAddress()  ;
@@ -405,7 +424,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       pfo->setEnergy( e ) ;
       pfo->setMomentum( m ) ;
 //      pfo->setCovMatrix (const float *cov) ; //fixme
-      pfo->setMass( 0. ) ; //fixme ?
+      pfo->setMass( 0. ) ;
       pfo->setCharge(0.) ;
 
       // auto* pid = new lcio::ParticleIDImpl ;
