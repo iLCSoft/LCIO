@@ -32,21 +32,23 @@ public:
   std::string getElectronParameter(const std::string& key) const { return getValue( key , "ElectronMap" ) ; }
 
 
+  // ---------------------------------------
   int toInt(const std::string& val){
     std::stringstream s(val) ;
     int i;
     s >> i  ;
     return i;
   }
+  // ---------------------------------------
+
   int toFloat(const std::string& val){
     std::stringstream s(val) ;
     float f;
     s >> f  ;
     return f;
   }
+  // ---------------------------------------
 
-private:
-  
   std::string getValue(const std::string& key, const std::string& mapName ) const {
 
     auto mit = _maps.find( mapName )  ;
@@ -65,6 +67,7 @@ private:
 
     return it->second ;
   }
+  // ---------------------------------------
 
   std::string getValueSave(const std::string& key, const ConfMap& m) const {
 
@@ -75,25 +78,8 @@ private:
 
   //===============================================================
 
-  ConfMap _mcpMap = {
-    { "lcioName"   , "MCParticle" },
-    { "branchName" , "Particle" }
-  }; 
+private:
 
-
-  ConfMap _pfoMap = {
-    { "lcioName"          , "PFOs" },
-    { "branchNameCharged" , "EFlowTrack" },
-    { "branchNameNHad"    , "EFlowNeutralHadron" },
-    { "branchNamePhoton"  , "EFlowPhoton" },
-  }; 
-
-  ConfMap _jetMap ;
-  ConfMap _muonMap ;
-  ConfMap _photonMap ;
-  ConfMap _electronMap ;
-
-  //===============================================================
 
   std::map< std::string, ConfMap > _maps =
   {

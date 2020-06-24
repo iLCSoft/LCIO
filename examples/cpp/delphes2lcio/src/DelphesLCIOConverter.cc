@@ -243,7 +243,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   //=====================================================================
 
 
-  TBranch *trB = tree->GetBranch("EFlowTrack");
+  TBranch *trB = tree->GetBranch( _cfg->getPFOParameter("branchNameCharged").c_str()  );
   if( trB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) trB->GetAddress()  ;
@@ -310,7 +310,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   }
   //----------------------------------------------------------------------------
 
-  TBranch *nhB = tree->GetBranch("EFlowNeutralHadron");
+  TBranch *nhB = tree->GetBranch( _cfg->getPFOParameter("branchNameNHadron").c_str() );
   if( nhB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) nhB->GetAddress()  ;
@@ -374,7 +374,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   }
   //----------------------------------------------------------------------------------
 
-  TBranch *efphB = tree->GetBranch("EFlowPhoton");
+  TBranch *efphB = tree->GetBranch(  _cfg->getPFOParameter("branchNamePhoton").c_str() );
   if( efphB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) efphB->GetAddress()  ;
