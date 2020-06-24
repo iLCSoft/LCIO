@@ -11,7 +11,6 @@
 #include "DelphesLCIOConverter.h"
 #include "classes/DelphesClasses.h"
 
-//#include "TROOT.h"
 #include "TClonesArray.h"
 #include "TTree.h"
 
@@ -36,7 +35,22 @@
 #include <sstream>
 #include <stdexcept>
 
+//-----------------------------------------------------------------
+// some helper methods
+namespace{
 
+  template <class T>
+    unsigned getUID(TObject* obj){
+    T* p = static_cast<T*>(obj) ;
+    return p->Particle.GetUniqueID() ;
+  }
+  template <>
+    unsigned getUID<Photon>(TObject* obj){
+    Photon* p = static_cast<Photon*>(obj) ;
+    return p->Particles.At(0)->GetUniqueID() ;
+  }
+
+}
 //-----------------------------------------------------------------
 
 DelphesLCIOConverter::DelphesLCIOConverter(const char* fileName ) {
@@ -120,6 +134,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 //      *************** branch "ScalarHT --- TClonesArray
 
 
+  mcpd2lmap.clear();
+  recd2lmap.clear();
+
   // create the mandatory LCIO collections
   auto* mcps = new lcio::LCCollectionVec( lcio::LCIO::MCPARTICLE )  ;
   evt->addCollection( mcps, "MCParticle" ) ;
@@ -129,18 +146,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   auto* jets = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
   evt->addCollection( jets, "Jets" ) ;
-
-  auto* muons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
-  muons->setSubset(true) ;
-  evt->addCollection( muons, "Muons" ) ;
-
-  auto* electrons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
-  electrons->setSubset(true) ;
-  evt->addCollection( electrons, "Electrons" ) ;
-
-  auto* photons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
-  photons->setSubset(true) ;
-  evt->addCollection( photons, "Photons" ) ;
 
   lcio::PIDHandler pfopidH( pfos );
   int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
@@ -154,8 +159,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
 
-  std::map< unsigned, lcio::MCParticleImpl*> mcpd2lmap ;
-  std::map< unsigned, lcio::ReconstructedParticleImpl*> recd2lmap ;
 
   //=====================================================================
   TBranch *evB = tree->GetBranch("Event");
@@ -510,86 +513,48 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   }
   //=====================================================================
 
-  TBranch *phB = tree->GetBranch("Photon");
-  if( phB != nullptr ){
+  auto* muons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  muons->setSubset(true) ;
+  evt->addCollection( muons, "Muons" ) ;
 
-    TClonesArray* col = *(TClonesArray**) phB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+  auto* electrons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  electrons->setSubset(true) ;
+  evt->addCollection( electrons, "Electrons" ) ;
 
-    for(int j = 0; j < nnh ; ++j){
+  auto* photons = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+  photons->setSubset(true) ;
+  evt->addCollection( photons, "Photons" ) ;
 
-      Photon* ph = static_cast<Photon*> (col->At(j));
-
-      auto it = mcpd2lmap.find( ph->Particles.At(0)->GetUniqueID() );
-
-      if( it != mcpd2lmap.end() ){
-
-	auto* mcp = it->second ;
-	auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
-
-	if( !objs.empty() )
-	  photons->addElement( objs[0] ) ;
-	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
-      }
-      else
-	   std::cout << " ### found no MC truth delphes particle #########  for photon with uid: " <<  ph->GetUniqueID()  << std::endl ;
-    }
-  }
 //======================================================================
-  TBranch *elB = tree->GetBranch("Electron");
-  if( elB != nullptr ){
+  TBranch *br ;
 
-    TClonesArray* col = *(TClonesArray**) elB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+  br = tree->GetBranch("Photon");
 
-    for(int j = 0; j < nnh ; ++j){
+  if( br != nullptr ){
 
-      Electron* ph = static_cast<Electron*> (col->At(j));
+    TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
-      auto it = mcpd2lmap.find( ph->Particle.GetUniqueID() );
-
-      if( it != mcpd2lmap.end() ){
-
-	auto* mcp = it->second ;
-	auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
-
-	if( !objs.empty() )
-	  electrons->addElement( objs[0] ) ;
-	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
-      }
-      else
-	std::cout << " ### found no MC truth delphes particle #########  for electron with uid: " <<  ph->GetUniqueID()  << std::endl ;
-
-    }
+    convertPFORefCollection( tca, photons, mcrecNav, ::getUID<Photon>, 22 );
   }
+
 //======================================================================
-  TBranch *muB = tree->GetBranch("Muon");
-  if( muB != nullptr ){
+  br = tree->GetBranch("Electron");
 
-    TClonesArray* col = *(TClonesArray**) muB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+  if( br != nullptr ){
 
-    for(int j = 0; j < nnh ; ++j){
+    TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
-      Muon* ph = static_cast<Muon*> (col->At(j));
+    convertPFORefCollection( tca, electrons, mcrecNav, ::getUID<Electron>, -11 );
+  }
 
-      auto it = mcpd2lmap.find( ph->Particle.GetUniqueID() );
+//======================================================================
+  br = tree->GetBranch("Muon");
 
-      if( it != mcpd2lmap.end() ){
+  if( br != nullptr ){
 
-	auto* mcp = it->second ;
-	auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
+    TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
-	if( !objs.empty() )
-	  muons->addElement( objs[0] ) ;
-	else
-	  std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
-      }
-      else
-	std::cout << " ### found no MC truth delphes particle #########  for muon with uid: " <<  ph->GetUniqueID()  << std::endl ;
-    }
+    convertPFORefCollection( tca, muons, mcrecNav, ::getUID<Muon>, -13 );
   }
 
 //======================================================================
@@ -647,3 +612,48 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 }
 
 //======================================================================
+
+bool DelphesLCIOConverter::convertPFORefCollection(TClonesArray* tca, EVENT::LCCollection* col,
+						   UTIL::LCRelationNavigator& mcrecNav,
+						   std::function<unsigned(TObject*)> uid,
+						   int pdg) {
+  bool success = true ;
+
+  int n = tca->GetEntriesFast();
+
+  for(int j = 0; j < n ; ++j){
+
+    unsigned puid = uid( tca->At(j) ) ;
+
+    auto it = mcpd2lmap.find( puid );
+
+    if( it != mcpd2lmap.end() ){
+
+      auto* mcp = it->second ;
+      auto& objs = mcrecNav.getRelatedToObjects( mcp ) ;
+
+      if( !objs.empty() ){
+
+	auto pfo = static_cast<lcio::ReconstructedParticleImpl*>(objs[0]) ;
+
+	if( pdg != -99 ){ // set the correct pid code
+	  int newPDG = pfo->getCharge() * pdg ;
+	  pfo->setType( newPDG ) ;
+	}
+
+	col->addElement( pfo ) ;
+
+      } else {
+	std::cout << " ### found no ReconstructedParticle #########  for mcp with pdg: " <<  mcp->getPDG()  << std::endl ;
+	success = false ;
+
+      }
+
+    } else {
+
+      std::cout << " ### found no MC truth delphes particle #########  for type  with uid: " <<  puid  << std::endl ;
+      success = false ;
+    }
+  }
+  return success ;
+}

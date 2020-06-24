@@ -2,15 +2,29 @@
 #define DelphesLCIOConverter_h
 
 
+#include <string>
+#include <map>
+#include <functional>
+
 class TTree;
+class TClonesArray;
+class TObject;
 
 namespace IO{ class LCWriter ; }
-namespace EVENT{ class LCEvent ; }
+namespace EVENT{
+  class LCEvent ;
+  class MCParticle;
+  class ReconstructedParticle;
+  class LCCollection;
+}
 namespace IMPL{
   class LCEventImpl ;
   class LCCollectionVec;
 }
 
+namespace UTIL{
+  class LCRelationNavigator;
+}
 
 /** \class DelphesLCIOConverter
  *
@@ -35,10 +49,21 @@ public:
   void writeEvent(TTree* tree) ;
 
 
-  
+  /** Helper function to convert convert a (isolated) particle reference collection. Assumes that the referenced
+   *  ReconstructedParticles (PFOs) have been created and are in the relation nafigator. If pdg is given the PFO
+   *  type is set to pdg*charge.
+   */
+  bool convertPFORefCollection(TClonesArray* tca, EVENT::LCCollection* col, UTIL::LCRelationNavigator& mcrecNav,
+			       std::function<unsigned(TObject*)> uid, int pdg=-99) ;
+
+
 private:
   IO::LCWriter *fWriter=nullptr;
   IMPL::LCCollectionVec *fEvtSumCol=nullptr;
+
+  std::map< unsigned, EVENT::MCParticle*> mcpd2lmap ;
+  std::map< unsigned, EVENT::ReconstructedParticle*> recd2lmap ;
+
 };
 
 #endif /* DelphesLCIOConverter */
