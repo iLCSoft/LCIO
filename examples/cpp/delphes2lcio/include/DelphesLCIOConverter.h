@@ -26,6 +26,9 @@ namespace UTIL{
   class LCRelationNavigator;
 }
 
+class DelphesLCIOConfig ;
+
+
 /** \class DelphesLCIOConverter
  *
  *  Class handling output of ROOT tree in LCIO
@@ -58,11 +61,13 @@ public:
 
 
 private:
-  IO::LCWriter *fWriter=nullptr;
-  IMPL::LCCollectionVec *fEvtSumCol=nullptr;
+  IO::LCWriter *_writer=nullptr;
+  IMPL::LCCollectionVec *_evtSumCol=nullptr;
 
-  std::map< unsigned, EVENT::MCParticle*> mcpd2lmap ;
-  std::map< unsigned, EVENT::ReconstructedParticle*> recd2lmap ;
+  std::map< unsigned, EVENT::MCParticle*> _mcpd2lmap ;
+  std::map< unsigned, EVENT::ReconstructedParticle*> _recd2lmap ;
+
+  DelphesLCIOConfig* _cfg ;
 
 };
 
