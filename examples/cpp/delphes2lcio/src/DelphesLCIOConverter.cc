@@ -170,10 +170,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0",
 								"ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
 
-  lcio::PIDHandler jetpidH( jets );
-  int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag",
-							    "BTagAlgo","BTagPhys",
-							    "TauTag","Charge","EhadOverEem"} ) ;
 
   lcio::LCRelationNavigator recmcNav( lcio::LCIO::RECONSTRUCTEDPARTICLE , lcio::LCIO::MCPARTICLE  ) ;
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
@@ -436,107 +432,28 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       //pfo->setStartVertex (EVENT::Vertex *sv)
     }
   }
-//======================================================================
-
-  TBranch *jB = tree->GetBranch("Jet");
-  if( jB != nullptr ){
-
-    TClonesArray* col = *(TClonesArray**) jB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
-
-    for(int j = 0; j < nnh ; ++j){
-
-      Jet* jd = static_cast<Jet*> (col->At(j));
-
-      auto* jet = new lcio::ReconstructedParticleImpl ;
-      jets->addElement( jet ) ;
-
-      int nc = jd->Constituents.GetEntriesFast() ;
-
-      std::vector<lcio::ReconstructedParticle*> jetPFOs;
-
-      for(int k=0;k<nc;++k){
-	int uid = ((Candidate*)jd->Constituents.At(k))->GetUniqueID() ;
-
-	auto it = _recd2lmap.find( uid ) ;
-	if( it != _recd2lmap.end() ){
-	  jetPFOs.push_back( it->second ) ;
-	// } else {
-	//   std::cout << "***** WARNING *** jet constituent has no pfo created: "
-	// 	    << "\n  pid = " << ((Candidate*)jd->Constituents.At(k))->PID
-	// 	    << "\n  status = " << ((Candidate*)jd->Constituents.At(k))->Status
-	// 	    << "\n  conversion: = " << ((Candidate*)jd->Constituents.At(k))->IsFromConversion
-	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[0]
-	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[1]
-	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[2]
-	// 	    << "\n  mom = " << ((Candidate*)jd->Constituents.At(k))->Momentum[3]
-	// 	    << "\n is mcp: = " << ( _mcpd2lmap.find( uid ) != _mcpd2lmap.end() )
-	// 	    << std::endl ;
-	}
-      }
-
-      if( nc !=  jetPFOs.size() )
-	std::cout << "***** WARNING *** jet constituents " << nc << " - pfos " << jetPFOs.size() << std::endl ;
-
-#if 1 //--------  jet 4-vector from constituents
-
-      double eJet(0), pxJet(0), pyJet(0), pzJet(0) ;
-      for( auto* pfo : jetPFOs ){
-
-	jet->addParticle( pfo ) ;
-
-	eJet  += pfo->getEnergy() ;
-	pxJet += pfo->getMomentum()[0] ;
-	pyJet += pfo->getMomentum()[1] ;
-	pzJet += pfo->getMomentum()[2] ;
-      }
-      jet->setEnergy( eJet ) ;
-      double pJet[3] = {pxJet, pyJet,pzJet} ;
-      jet->setMomentum( pJet ) ;
-
-#else //--- jet 4-vector from Delphes
-
-      double pt = jd->PT ;
-      double ph = jd->Phi ;
-      double jm = jd->Mass ;
-
-      double th = 2.*atan( exp( - jd->Eta ) );
-      double jp = pt / sin(th) ;
-
-      double jp3[3] = { pt * cos( ph )  , pt * sin( ph ) ,   pt / tan( th ) } ;
-      double je  = sqrt( jp*jp + jm * jm ) ;
-
-      jet->setEnergy( je ) ;
-
-      jet->setMomentum( jp3 ) ;
-
-#endif //------------------------------------------
-
-      jet->setMass( jd->Mass ) ;
-//      pfo->setCovMatrix (const float *cov) ; //fixme
-
-      jet->setCharge(0.) ;
-
-      jetpidH.setParticleID( jet, 0, 0 , 1. , jetParamID,  { (float)jd->Flavor, (float)jd->FlavorAlgo, (float)jd->FlavorPhys,
-							     (float)jd->BTag, (float)jd->BTagAlgo, (float)jd->BTagPhys, (float)jd->TauTag,
-							     (float)jd->Charge, jd->EhadOverEem} );
-      jetpidH.setParticleIDUsed( jet, jetParamID );
-
-      //jet->setReferencePoint (const float *reference)
-      // jet->addParticleID( pid ) ;
-      // jet->setParticleIDUsed( pid );
-
-      jet->setGoodnessOfPID( 1. ) ;
-
-    }
-  }
-  //=====================================================================
 
 
 //======================================================================
   TBranch *br ;
   int pdg = -99 ;
 
+//======================================================================
+
+  // convert default jet branch
+
+  br = tree->GetBranch( _cfg->getJetParameter("branchName").c_str() ) ;
+
+  int useDelphes4Vec = _cfg->toInt( _cfg->getJetParameter("useDelphes4Vec") ) ;
+
+  if( br != nullptr ){
+
+    TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
+
+    convertJetCollection( tca, jets , useDelphes4Vec ) ;
+  }
+
+//======================================================================
   br = tree->GetBranch( _cfg->getPhotonParameter("branchName").c_str() ) ;
 
   pdg = _cfg->toInt( _cfg->getPhotonParameter("pdg") ) ;
@@ -674,4 +591,108 @@ bool DelphesLCIOConverter::convertPFORefCollection(TClonesArray* tca, EVENT::LCC
 }
 
 //======================================================================
+
+bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec) {
+
+  bool success = true ;
+
+  lcio::PIDHandler jetpidH( col );
+  int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag",
+							    "BTagAlgo","BTagPhys",
+							    "TauTag","Charge","EhadOverEem"} ) ;
+  int n = tca->GetEntriesFast();
+
+  for(int j = 0; j < n ; ++j){
+
+    Jet* jd = static_cast<Jet*> (tca->At(j));
+
+    auto* jet = new lcio::ReconstructedParticleImpl ;
+
+    col->addElement( jet ) ;
+
+    int nc = jd->Constituents.GetEntriesFast() ;
+
+    std::vector<lcio::ReconstructedParticle*> jetPFOs;
+
+    for(int k=0;k<nc;++k){
+
+      int uid = ((Candidate*)jd->Constituents.At(k))->GetUniqueID() ;
+
+      auto it = _recd2lmap.find( uid ) ;
+
+      if( it != _recd2lmap.end() ){
+
+	jetPFOs.push_back( it->second ) ;
+
+      } else {
+
+        std::cout << "***** WARNING *** jet constituent has no pfo created for pid = "
+		  << ((Candidate*)jd->Constituents.At(k))->PID
+		  << std::endl ;
+
+	success = false ;
+      }
+
+    }
+
+    if( nc !=  jetPFOs.size() ) {
+      std::cout << "***** WARNING *** jet constituents " << nc << " - pfos " << jetPFOs.size() << std::endl ;
+
+      success = false ;
+    }
+
+    if( ! useDelphes4Vec ){ //--------  jet 4-vector from constituents
+
+      double eJet(0), pxJet(0), pyJet(0), pzJet(0) ;
+
+      for( auto* pfo : jetPFOs ){
+
+	jet->addParticle( pfo ) ;
+
+	eJet  += pfo->getEnergy() ;
+	pxJet += pfo->getMomentum()[0] ;
+	pyJet += pfo->getMomentum()[1] ;
+	pzJet += pfo->getMomentum()[2] ;
+      }
+      jet->setEnergy( eJet ) ;
+      double pJet[3] = {pxJet, pyJet,pzJet} ;
+      jet->setMomentum( pJet ) ;
+
+    } else {  //--- jet 4-vector from Delphes
+
+      double pt = jd->PT ;
+      double ph = jd->Phi ;
+      double jm = jd->Mass ;
+
+      double th = 2.*atan( exp( - jd->Eta ) );
+      double jp = pt / sin(th) ;
+
+      double jp3[3] = { pt * cos( ph )  , pt * sin( ph ) ,   pt / tan( th ) } ;
+      double je  = sqrt( jp*jp + jm * jm ) ;
+
+      jet->setEnergy( je ) ;
+
+      jet->setMomentum( jp3 ) ;
+    }
+
+    jet->setMass( jd->Mass ) ;
+//      pfo->setCovMatrix (const float *cov) ; //fixme
+
+    jet->setCharge(0.) ;
+
+    jetpidH.setParticleID( jet, 0, 0 , 1. , jetParamID,  { (float)jd->Flavor, (float)jd->FlavorAlgo, (float)jd->FlavorPhys,
+							   (float)jd->BTag, (float)jd->BTagAlgo, (float)jd->BTagPhys, (float)jd->TauTag,
+							   (float)jd->Charge, jd->EhadOverEem} );
+    jetpidH.setParticleIDUsed( jet, jetParamID );
+
+    // jet->setReferencePoint (const float *reference)
+    // jet->addParticleID( pid ) ;
+    // jet->setParticleIDUsed( pid );
+
+    jet->setGoodnessOfPID( 1. ) ;
+
+  }
+
+  return success ;
+}
 
