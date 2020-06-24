@@ -178,6 +178,9 @@ root [0] .x higgs_recoil_plots_fast.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95
 ```
 
 
+-----
+
+
 ## Advanced Topics
 
 ### Configuration file
@@ -204,3 +207,15 @@ set Delphes2LCIO_ConfigFileName "../examples/delphes2lcio.cfg"
 
 where the path to the config file has to be either relative from your working directory or preferably
 an absolute path name.
+
+The following maps are required:
+
+- *MCParticleMap, PFOMap, JetMap, MuonMap, ElectronMap, PhotonMap*.
+
+These maps for extra jet collections are optional:
+
+- *ExtraJetMap2, ExtraJetMap3, ExtraJetMap4, ExtraJetMap5, ExtraJetMap6*.
+
+Additional jet collections can be added as long as their name contains the string `"ExtraJet"` and is different from
+all other names. For jet collections the parameter `useDelphes4Vec` defines wether the 4-vector is taken from the delphes
+jet (!=0) or wether it is computed from the jet constituent PFOs (default).
