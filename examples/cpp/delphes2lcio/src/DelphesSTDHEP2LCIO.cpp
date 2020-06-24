@@ -122,6 +122,10 @@ int main(int argc, char *argv[])
     maxEvents = confReader->GetInt("::MaxEvents", 0);
     skipEvents = confReader->GetInt("::SkipEvents", 0);
 
+    std::string d2lCfgFile = confReader->GetString("::Delphes2LCIO_ConfigFileName", "");
+    if( ! d2lCfgFile.empty() )
+      lcioConverter.readConfigFile( d2lCfgFile.c_str() ) ;
+
     if(maxEvents < 0)
     {
       throw runtime_error("MaxEvents must be zero or positive");

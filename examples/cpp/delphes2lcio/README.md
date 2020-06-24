@@ -98,6 +98,7 @@ RecoMCTruthLink               LCRelation                     n.a.
 
 ```
 
+See section **Advanced Topics** below how the default collection and branch names can be changed.
 
 This LCIO file can be analyzed like any other LCIO file with the usual tools,e.g.
 
@@ -175,3 +176,31 @@ root [0] .x higgs_recoil_plots.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95.eR.p
 ```
 root [0] .x higgs_recoil_plots_fast.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95.eR.pL.I106480.001.mini-DST.slcio")
 ```
+
+
+## Advanced Topics
+
+### Configuration file
+
+The mapping of Delphes branches to LCIO collection by default works for the new ILD delphes card from
+[https://github.com/ILDAnaSoft/ILDDelphes](https://github.com/ILDAnaSoft/ILDDelphes).
+
+If needed, the configuration can be changed, for example if your delphes card produces different output
+branches such as different jet collections.
+
+For an example configuration see [./examples/delphes2lcio.cfg](./examples/delphes2lcio.cfg).
+
+You can copy and edit this file and the add the following lines to your delphes card
+
+
+```
+#################
+# Delphes2LCIO
+#################
+
+set Delphes2LCIO_ConfigFileName "../examples/delphes2lcio.cfg"
+
+```
+
+where the path to the config file has to be either relative from your working directory or preferably
+an absolute path name.

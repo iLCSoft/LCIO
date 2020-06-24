@@ -81,6 +81,8 @@ std::string DelphesLCIOConfig::toString() const {
   }
   return s.str() ;
 }
+
+
 // ---------------------------------------
 
 void DelphesLCIOConfig::readConfigFile(const std::string& fileName ) {
@@ -94,6 +96,12 @@ void DelphesLCIOConfig::readConfigFile(const std::string& fileName ) {
     exit(1) ;
   }
 
+
+  //std::cout << " --- old config : " << toString() << std::endl ;
+
+  _maps.clear() ;
+
+
   std::string line ;
   std::string mapName ;
 
@@ -101,11 +109,11 @@ void DelphesLCIOConfig::readConfigFile(const std::string& fileName ) {
   
   while (std::getline(in, line)) {
 
-    // Line contains string of length > 0 then save it in vector
+    // ignore empty lines and commented lines
     if( line.empty() || line[0] == '#' )
       continue ;
 
-    // split on white space
+    // split line on white space
     std::vector<std::string> strings ;
     std::istringstream iss(line);
     for(std::string s; iss >> s; )
@@ -134,6 +142,8 @@ void DelphesLCIOConfig::readConfigFile(const std::string& fileName ) {
   if( !cmap.empty() && !mapName.empty() )
     _maps[ mapName ] = cmap ;
   
+  //std::cout << " --- new config : " << toString() << std::endl ;
 
   in.close();
 }
+// ---------------------------------------
