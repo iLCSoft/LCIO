@@ -4,7 +4,7 @@
 
 #include <map>
 #include <string>
-#include <sstream>
+#include <vector>
 
 
 typedef std::map< std::string, std::string > ConfMap ;
@@ -24,60 +24,45 @@ class DelphesLCIOConfig{
 
 public:
   
-  std::string getMCPParameter(const std::string& key)      const { return getValue( key , "MCParticleMap" ) ; }
-  std::string getPFOParameter(const std::string& key)      const { return getValue( key , "PFOMap" ) ; }
-  std::string getJetParameter(const std::string& key)      const { return getValue( key , "JetMap" ) ; }
-  std::string getMuonParameter(const std::string& key)     const { return getValue( key , "MuonMap" ) ; }
-  std::string getPhotonParameter(const std::string& key)   const { return getValue( key , "PhotonMap" ) ; }
-  std::string getElectronParameter(const std::string& key) const { return getValue( key , "ElectronMap" ) ; }
+
+  /// return parameter for default MCParticle collection
+  std::string getMCPParameter(const std::string& key)      const { return getMapParameter( key , "MCParticleMap" ) ; }
+
+  /// return parameter for default PFO collection
+  std::string getPFOParameter(const std::string& key)      const { return getMapParameter( key , "PFOMap" ) ; }
+
+  /// return parameter for default Jet collection
+  std::string getJetParameter(const std::string& key)      const { return getMapParameter( key , "JetMap" ) ; }
+
+  /// return parameter for default Muon collection
+  std::string getMuonParameter(const std::string& key)     const { return getMapParameter( key , "MuonMap" ) ; }
+
+  /// return parameter for default Photon collection
+  std::string getPhotonParameter(const std::string& key)   const { return getMapParameter( key , "PhotonMap" ) ; }
+
+  /// return parameter for default Electron collection
+  std::string getElectronParameter(const std::string& key) const { return getMapParameter( key , "ElectronMap" ) ; }
+
+  /// return list of map names for extra jet collection (containing substring 'ExtraJet' )
+  std::vector<std::string> getExtraJetMapNames() const ;
+
+  /// convert string to int
+  int toInt(const std::string& val) const ;
+
+  /// convert string to float
+  int toFloat(const std::string& val) const ;
+
+  /// return the parameter for the given key from the named map - throws if either does not exist
+  std::string getMapParameter(const std::string& key, const std::string& mapName ) const ;
 
 
-  // ---------------------------------------
-  int toInt(const std::string& val){
-    int i;
-    std::stringstream s(val) ;  s >> i  ;
-    if( s.fail() )
-      throw std::runtime_error( std::string("\nDelphesLCIOConfig: cannot convert to int:  ") + val ) ;
-    return i;
-  }
-  // ---------------------------------------
+  /// return a string with the configuration parameter maps
+  std::string toString() const ;
 
-  int toFloat(const std::string& val){
-    float f;
-    std::stringstream s(val) ; s >> f  ;
-    if( s.fail() )
-      throw std::runtime_error( std::string("\nDelphesLCIOConfig: cannot convert to float:  ") + val ) ;
-    return f;
-  }
-  // ---------------------------------------
+  /// read a new configuration from the given file
+  void readConfigFile(const std::string& fileName ) ;
 
-  std::string getValue(const std::string& key, const std::string& mapName ) const {
-
-    auto mit = _maps.find( mapName )  ;
-
-    if( mit == _maps.end() )
-      throw std::runtime_error( std::string("\nDelphesLCIOConfig: no configuration map found with name: ")
-				+ mapName ) ;
-
-    const ConfMap& m = mit->second ; 
-    
-    auto it = m.find( key ) ;
-
-    if( it == m.end() )
-      throw std::runtime_error( std::string("\nDelphesLCIOConfig: key : ") + key
-				+  std::string(" not found in map: ") + mapName ) ;
-
-    return it->second ;
-  }
-  // ---------------------------------------
-
-  std::string getValueSave(const std::string& key, const ConfMap& m) const {
-
-    auto it = m.find( key ) ;
-
-    return ( it != m.end() ? it->second : std::string("")  ) ;
-  }
-
+  std::string getMapParameterSave(const std::string& key, const ConfMap& m) const ;
   //===============================================================
 
 private:
@@ -85,6 +70,8 @@ private:
 
   std::map< std::string, ConfMap > _maps =
   {
+    // ---- default collections for mini-DST
+
     { "MCParticleMap" ,
       {
 	{ "lcioName"   , "MCParticle" },
@@ -131,7 +118,17 @@ private:
 	{ "branchName" , "Photon" },
 	{ "pdg" , "22" }
       }   
-    }
+    },
+
+    // ----- additional jet collections ----------------
+
+    { "ExtraJetMap2" , { { "lcioName", "Durham2Jets" }, { "branchName", "Jet_N2" }, { "useDelphes4Vec" , "0" } } },
+    { "ExtraJetMap3" , { { "lcioName", "Durham3Jets" }, { "branchName", "Jet_N3" }, { "useDelphes4Vec" , "0" } } },
+    { "ExtraJetMap4" , { { "lcioName", "Durham4Jets" }, { "branchName", "Jet_N4" }, { "useDelphes4Vec" , "0" } } },
+    { "ExtraJetMap5" , { { "lcioName", "Durham5Jets" }, { "branchName", "Jet_N5" }, { "useDelphes4Vec" , "0" } } },
+    { "ExtraJetMap6" , { { "lcioName", "Durham6Jets" }, { "branchName", "Jet_N6" }, { "useDelphes4Vec" , "0" } } }
+
+
   } ;
 
 };

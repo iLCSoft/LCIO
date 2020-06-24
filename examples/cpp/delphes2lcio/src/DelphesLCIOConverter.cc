@@ -114,30 +114,23 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   //int nEntry =  tree->GetEntriesFast() ;
 
-  // size_t n = tree->GetListOfBranches()->GetEntries();
-  // for( size_t i = 0; i < n; ++ i ) {
-  //   TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
-  //   if( !strcmp(br->GetClassName(),"TClonesArray") )
-  //     std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName()
-  // 		<< " - " <<   (*(TClonesArray**) br->GetAddress())->GetEntriesFast()
-  // 		<< std::endl;
-  // }
-//      *************** branch "Event --- TClonesArray
-//      *************** branch "Particle --- TClonesArray
-//      *************** branch "GenJet --- TClonesArray
-//      *************** branch "GenMissingET --- TClonesArray
-//      *************** branch "Track --- TClonesArray
-//      *************** branch "Tower --- TClonesArray
-//      *************** branch "EFlowTrack --- TClonesArray
-//      *************** branch "EFlowPhoton --- TClonesArray
-//      *************** branch "EFlowNeutralHadron --- TClonesArray
-//      *************** branch "Photon --- TClonesArray
-//      *************** branch "Electron --- TClonesArray
-//      *************** branch "Muon --- TClonesArray
-//      *************** branch "Jet --- TClonesArray
-//      *************** branch "MissingET --- TClonesArray
-//      *************** branch "ScalarHT --- TClonesArray
+  static bool first_event = true ;
 
+  if( first_event ) {
+    first_event = false ;
+    size_t n = tree->GetListOfBranches()->GetEntries();
+    for( size_t i = 0; i < n; ++ i ) {
+      TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
+      if( !strcmp(br->GetClassName(),"TClonesArray") )
+	std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName()
+		  << " - " <<   (*(TClonesArray**) br->GetAddress())->GetEntriesFast()
+		  << std::endl;
+    }
+
+    std::cout << _cfg->toString() << std::endl ;
+  }
+
+  // -------------------------------------------- 
 
   _mcpd2lmap.clear();
   _recd2lmap.clear();
@@ -440,7 +433,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
 //======================================================================
 
-  // convert default jet branch
+  // ----  convert default jet branch
 
   br = tree->GetBranch( _cfg->getJetParameter("branchName").c_str() ) ;
 
@@ -453,6 +446,27 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     convertJetCollection( tca, jets , useDelphes4Vec ) ;
   }
 
+  // ----  convert extra jet collections if requested:
+
+  const auto& ejnames = _cfg->getExtraJetMapNames() ;
+
+  for( auto& jName : ejnames ){
+
+    auto* jcol = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+
+    evt->addCollection( jcol,  _cfg->getMapParameter("lcioName", jName ) ) ;
+
+    br = tree->GetBranch( _cfg->getMapParameter("branchName", jName ).c_str() ) ;
+
+    useDelphes4Vec = _cfg->toInt( _cfg->getMapParameter("useDelphes4Vec", jName ) ) ;
+
+    if( br != nullptr ){
+
+      TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
+
+      convertJetCollection( tca, jcol , useDelphes4Vec ) ;
+    }
+  }
 //======================================================================
   br = tree->GetBranch( _cfg->getPhotonParameter("branchName").c_str() ) ;
 
@@ -696,3 +710,4 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
   return success ;
 }
 
+//======================================================================

@@ -79,7 +79,7 @@ Then you can run Delphes with
 DelphesSTDHEP2LCIO $DELPHES_DIR/cards/delphes_card_ILD.tcl output.slcio input.stdhep
 ```
 
-This creates an LCIO files with the following collections:
+This creates an LCIO files with the following default collections:
 
 
 ```
