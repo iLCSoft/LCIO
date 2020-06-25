@@ -29,11 +29,6 @@ Other formats can easily be implemented by the user, based on the original progr
 Delphes2LCIO is shipped with LCIO in `$LCIO/examples/cpp/delphes2lcio`. 
 You can also directly download a recent copy of *delphes2lcio* via
 
-```
-svn co https://github.com/gaede/LCIO/branches/delphes2lcio/examples/cpp/delphes2lcio 
-```
-
-later this will be at:
 
 ```
 svn co https://github.com/iLCSoft/LCIO/trunk/examples/cpp/delphes2lcio 
