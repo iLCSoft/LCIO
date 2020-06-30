@@ -126,11 +126,11 @@ private:
 
     // ----- additional jet collections ----------------
 
-    { "ExtraJetMap2" , { { "lcioName", "Durham2Jets" }, { "branchName", "Jet_N2" }, { "useDelphes4Vec" , "0" } } },
-    { "ExtraJetMap3" , { { "lcioName", "Durham3Jets" }, { "branchName", "Jet_N3" }, { "useDelphes4Vec" , "0" } } },
-    { "ExtraJetMap4" , { { "lcioName", "Durham4Jets" }, { "branchName", "Jet_N4" }, { "useDelphes4Vec" , "0" } } },
-    { "ExtraJetMap5" , { { "lcioName", "Durham5Jets" }, { "branchName", "Jet_N5" }, { "useDelphes4Vec" , "0" } } },
-    { "ExtraJetMap6" , { { "lcioName", "Durham6Jets" }, { "branchName", "Jet_N6" }, { "useDelphes4Vec" , "0" } } }
+    { "ExtraJetMap2" , { { "lcioName", "Durham2Jets" }, { "branchName", "Jet_N2" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "1" } } },
+    { "ExtraJetMap3" , { { "lcioName", "Durham3Jets" }, { "branchName", "Jet_N3" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
+    { "ExtraJetMap4" , { { "lcioName", "Durham4Jets" }, { "branchName", "Jet_N4" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
+    { "ExtraJetMap5" , { { "lcioName", "Durham5Jets" }, { "branchName", "Jet_N5" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
+    { "ExtraJetMap6" , { { "lcioName", "Durham6Jets" }, { "branchName", "Jet_N6" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } }
 
 
   } ;

@@ -68,7 +68,7 @@ public:
    *  ReconstructedParticles (PFOs) have been created beforehand. If useDelphes4Vec != 0  the four vector from
    *  the Delphes jet is used otherwise it is computed from the constituent PFOs.
    */
-  bool convertJetCollection( TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec=0 ) ;
+  bool convertJetCollection( TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec, int storeYMerge ) ;
 
 private:
   IO::LCWriter *_writer=nullptr;
