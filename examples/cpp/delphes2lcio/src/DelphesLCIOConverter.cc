@@ -172,6 +172,11 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   lcio::LCRelationNavigator mcrecNav( lcio::LCIO::MCPARTICLE , lcio::LCIO::RECONSTRUCTEDPARTICLE ) ;
 
 
+  if( _evtSumCol ){  // add an element to event summary collection
+
+    _evtSumCol->addElement( new UTIL::EventSummary  );
+  }
+  
   //=====================================================================
   TBranch *evB = tree->GetBranch("Event");
 
@@ -471,7 +476,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
     TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
-    convertJetCollection( tca, jets , useDelphes4Vec ) ;
+    convertJetCollection( tca, jets , useDelphes4Vec , 0 ) ;
   }
 
   // ----  convert extra jet collections if requested:
@@ -492,7 +497,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
-      convertJetCollection( tca, jcol , useDelphes4Vec ) ;
+      int storeYMerge = _cfg->toInt( _cfg->getMapParameter("storeYMerge", jName ) ) ;
+
+      convertJetCollection( tca, jcol , useDelphes4Vec , storeYMerge ) ;
     }
   }
 //======================================================================
@@ -535,7 +542,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   if( _evtSumCol ){  // add to event summary collection
 
-    auto evts = new UTIL::EventSummary ;
+    auto evts = new UTIL::EventSummary( _evtSumCol->getElementAt(0) )  ;
 
     evts->setRunNum(   evt->getRunNumber() ) ;
     evts->setEventNum( evt->getEventNumber() ) ;
@@ -573,7 +580,6 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     evts->setEpfoTot( epfoTot ) ;
     evts->setEmcpTot( emcpTot ) ;
 
-    _evtSumCol->addElement( evts ) ;
   }
 
 
@@ -637,7 +643,7 @@ bool DelphesLCIOConverter::convertPFORefCollection(TClonesArray* tca, EVENT::LCC
 
 //======================================================================
 
-bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec) {
+bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec, int storeYMerge ) {
 
   bool success = true ;
 
@@ -650,6 +656,13 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
   for(int j = 0; j < n ; ++j){
 
     Jet* jd = static_cast<Jet*> (tca->At(j));
+
+    if( storeYMerge && j==0 ) { // store the ymerge values for the first jet in this collection
+
+      std::vector<float> yflip = { 0.f, (float)jd->ExclYmerge23, (float)jd->ExclYmerge34, (float)jd->ExclYmerge45, (float)jd->ExclYmerge56 , 0.f, 0.f } ;
+
+      col->parameters().setValues("ExclYflip12_78", yflip) ;
+    }
 
     auto* jet = new lcio::ReconstructedParticleImpl ;
 
