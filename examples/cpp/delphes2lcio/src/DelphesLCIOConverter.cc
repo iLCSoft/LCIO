@@ -29,9 +29,7 @@
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/PIDHandler.h"
 #include "UTIL/LCIterator.h"
-
-
-#include "EventSummary.h"
+#include "UTIL/EventSummary.h"
 
 
 #include <iostream>
@@ -248,6 +246,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   float massCh = _cfg->toFloat( _cfg->getPFOParameter("massCharged") ) ;
 
+  int chPFONum(0), neuPFONum(0) ;
+  
   if( trB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) trB->GetAddress()  ;
@@ -259,7 +259,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
-
+      ++chPFONum;
+      
       _recd2lmap.insert( std::make_pair( trk->GetUniqueID() , pfo ) ) ;
 
       GenParticle* mcpd = (GenParticle*)trk->Particle.GetObject()  ;
@@ -331,7 +332,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
-
+      ++neuPFONum ;
+      
       _recd2lmap.insert( std::make_pair( p->GetUniqueID() , pfo ) ) ;
 
       GenParticle* mcpd = (GenParticle*)p->Particles.At(0) ;
@@ -400,6 +402,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
       auto* pfo = new lcio::ReconstructedParticleImpl ;
       pfos->addElement( pfo ) ;
+      ++neuPFONum ;
 
       _recd2lmap.insert( std::make_pair( p->GetUniqueID() , pfo ) ) ;
 
@@ -532,11 +535,14 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   if( _evtSumCol ){  // add to event summary collection
 
-    auto evts = new EventSummary ;
+    auto evts = new UTIL::EventSummary ;
 
     evts->setRunNum(   evt->getRunNumber() ) ;
     evts->setEventNum( evt->getEventNumber() ) ;
-    evts->setPFONum(    pfos->getNumberOfElements() );
+
+    evts->setChargedPFONum(   chPFONum );
+    evts->setNeutralPFONum(   neuPFONum );
+
     evts->setMuonNum(   muons->getNumberOfElements() );
     evts->setPhotonNum( photons->getNumberOfElements() );
     evts->setElectronNum( electrons->getNumberOfElements() );
