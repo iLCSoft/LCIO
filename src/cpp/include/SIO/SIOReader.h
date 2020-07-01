@@ -48,32 +48,32 @@ namespace SIO {
      * user.
      * @throws IOException
      */
-    virtual void open(const std::vector<std::string>& filenames) ;
+    void open(const std::vector<std::string>& filenames) override ;
 
     /** Opens a file for reading (read-only).
      * @throws IOException
      */
-    virtual void open(const std::string & filename)  ;
+    void open(const std::string & filename) override ;
 
     /** Reads the next run header from the file.
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader()  ;
+    EVENT::LCRunHeader * readNextRunHeader() override ;
 
     /** Same as readNextRunHeader() but allows to set the access mode
      *  LCIO::READ_ONLY (default) or LCIO::Update.
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader(int accessMode)  ;
+    EVENT::LCRunHeader * readNextRunHeader(int accessMode) override ;
 
 
     /** Reads the next event from the file.
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent()  ;
+    EVENT::LCEvent* readNextEvent() override ;
 
 
     /** Same as readNextRunHeader() but allows to set the access mode
@@ -81,28 +81,28 @@ namespace SIO {
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent( int accessMode)  ;
+    EVENT::LCEvent* readNextEvent( int accessMode) override ;
 
 
     /** Return the number of events in the file - the file has to be open. In
      *  case several input files are specified in the open() method -
      *  the number of events in the file that is currently open is returned.
      */
-   virtual int getNumberOfEvents()  ;
+    int getNumberOfEvents() override ;
 
 
     /** Return the number of runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method -
      *  the number of runs (run headers) in the file that is currently open is returned.
      */
-    virtual int getNumberOfRuns()  ;
+    int getNumberOfRuns() override ;
 
 
     /** Return the run numbers of the runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method -
      *  the run numbers of the runs (run headers) in the file that is currently open is returned.
      */
-    virtual void getRuns(EVENT::IntVec & runs) ;
+    void getRuns(EVENT::IntVec & runs) override ;
 
     /** Return the run and event numbers of the events in the file - the file has to be open. In
      *  case several input files are specified in the open() method -
@@ -110,13 +110,13 @@ namespace SIO {
      *  The size of the vector events will be twice the number of events, where i-th run number
      *  will be in events[2*i] and the i-th event number in  events[2*i+].
      */
-    virtual void getEvents(EVENT::IntVec & events) ;
+    void getEvents(EVENT::IntVec & events) override ;
 
 
     /** Skips the next n events from the current position. In fact simply reads the next n
       *  event headers so that the next event read is the (n+1)-th event.
       */
-    virtual void skipNEvents(int n)     ;
+    void skipNEvents(int n) override ;
 
 
 
@@ -124,7 +124,7 @@ namespace SIO {
      *  all other collection will be ignored. This might improve the reading performance
      *  considerably in cases where only a small subset of the collections in the event is needed.
      */
-    virtual void setReadCollectionNames(const std::vector<std::string>& colnames) ;
+    void setReadCollectionNames(const std::vector<std::string>& colnames) override ;
 
 
     /** Reads the specified runHeader from file. Returns NULL if
@@ -132,24 +132,21 @@ namespace SIO {
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readRunHeader(int runNumber )
-       ;
+    EVENT::LCRunHeader * readRunHeader(int runNumber ) override ;
 
     /** Same as LCEvent* readRunHeader(int runNumber)
      *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readRunHeader(int runNumber, int accessMode )
-       ;
+    EVENT::LCRunHeader * readRunHeader(int runNumber, int accessMode ) override ;
 
     /** Reads the specified event from file. Returns NULL if
      *  the specified event hasn't been found in the file.
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber)
-       ;
+    EVENT::LCEvent * readEvent(int runNumber, int evtNumber) override ;
 
 
     /** Same as LCEvent* readEvent(int runNumber, int evtNumber
@@ -157,32 +154,31 @@ namespace SIO {
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber, int accessMode)
-       ;
+    EVENT::LCEvent * readEvent(int runNumber, int evtNumber, int accessMode) override ;
 
     /** Closes the output file/stream etc.
      *
      * @throws IOException
      */
-    virtual void close()  ;
+    void close() override ;
 
     // interface for listeners
 
     /** Registers a listener for reading LCEvents from a stream.
      */
-    virtual void registerLCEventListener(IO::LCEventListener * ls) ;
+    void registerLCEventListener(IO::LCEventListener * ls) override ;
 
     /** Remove a listener for reading LCEvents from a stream.
      */
-    virtual void removeLCEventListener(IO::LCEventListener * ls) ;
+    void removeLCEventListener(IO::LCEventListener * ls) override ;
 
     /** Registers a listener for reading LCEventsLCRunHeaders from a stream.
      */
-    virtual void registerLCRunListener(IO::LCRunListener * ls) ;
+    void registerLCRunListener(IO::LCRunListener * ls) override ;
 
     /** Remove a listener for reading LCRunHeaders from a stream.
      */
-    virtual void removeLCRunListener(IO::LCRunListener * ls) ;
+    void removeLCRunListener(IO::LCRunListener * ls) override ;
 
     /** Reads the input stream and notifies registered
      * listeners according to the object type
@@ -191,7 +187,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfException
      */
-    virtual void readStream()  ;
+    void readStream() override ;
 
     /** Reads maxRecord from the input stream and notifies registered
      * listeners according to the object type found in the stream.
@@ -200,7 +196,7 @@ namespace SIO {
      * @throws IOException
      * @throws EndOfException
      */
-    virtual void readStream(int maxRecord)  ;
+    void readStream(int maxRecord) override ;
     
   private:
     void processEvent( std::shared_ptr<EVENT::LCEvent> event ) override ;
