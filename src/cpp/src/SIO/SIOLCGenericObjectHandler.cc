@@ -58,6 +58,7 @@ namespace SIO {
       }
     }
     _flag = colflag.getFlag() ;
+    collection->setFlag( _flag ) ;
     SIOObjectHandler::initWriting( device, collection ) ;
     if( _isFixedSize ) { // need to write the size variables once
       if( gObj != 0 ){
