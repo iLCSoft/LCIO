@@ -9,38 +9,65 @@
 
 namespace UTIL {
 
-  /// helper struct with int values for EventSummary
-  struct EvtSumI{
-    const static int runnum    = 0;
-    const static int evtnum    = 1;
-    const static int chpfonum  = 2;
-    const static int neupfonum = 3;
-    const static int elnum     = 4;
-    const static int munum     = 5;
-    const static int taunum    = 6;
-    const static int phonum    = 7;
-    const static int jetnum    = 8;
-    const static int SIZE      = 9;
+  /// enum class defining valid int values in EventSummary
+  enum struct EventSummaryIntValues {
+    runnum    , ///< run   number
+    evtnum    , ///< event number
+    chpfonum  , ///< number of charged PFOs
+    neupfonum , ///< number of neutral PFOs
+    elnum     , ///< number of isloted electrons
+    munum     , ///< number of isloted muons
+    taunum    , ///< number of isloted taus
+    phonum    , ///< number of isloted photons
+    jetnum    , ///< number of jets - if only one jet collection, -1 else
+    bcpfonum  , ///< number of PFOs in the BeamCal
+    trknum    , ///< number of tracks - if present
+    clunum    , ///< number of clusters - if present
+    mcproc    , ///< generated Monte Carlo ProcessFlag
+    SIZE        ///< internal use only
   } ;
 
-  /// helper struct with float values for EventSummary
-  struct EvtSumF{
-    const static int epfotot =0;
-    const static int emcptot =1;
-    const static int SIZE   = 2;
+  /// Short name for EventSummaryIntValues
+  typedef EventSummaryIntValues ESI ;
+
+  /// enum class defining valid float values in EventSummary
+  enum struct EventSummaryFloatValues {
+    epfotot , ///< total reconstructed energy
+    emcptot , ///< total visible true energy (exluding neutrinos)
+    thrust  , ///< thrust value of the event
+    spher   , ///< spericity value of the event
+    emiss   , ///< missing energy
+    pxmiss  , ///< missing momentum in x
+    pymiss  , ///< missing momentum in y
+    pzmiss  , ///< missing momentum in z
+    y12     , ///< y12 flip value for exclusive jet clustering
+    y23     , ///< y23 flip value for exclusive jet clustering
+    y34     , ///< y34 flip value for exclusive jet clustering
+    y45     , ///< y45 flip value for exclusive jet clustering
+    y56     , ///< y56 flip value for exclusive jet clustering
+    y67     , ///< y67 flip value for exclusive jet clustering
+    y78     , ///< y78 flip value for exclusive jet clustering
+    SIZE  ///< internal use only
   } ;
+
+  /// Short name for EventSummaryFloatValues
+  typedef EventSummaryFloatValues ESF ;
 
   /// helper struct with double values for EventSummary
-  struct EvtSumD{
-    const static int SIZE   = 0;
+  enum struct EventSummaryDoubleValues {
+    SIZE  ///< internal use only
   } ;
+  /// Short name for EventSummaryDoubleValues
+  typedef EventSummaryFloatValues ESD ;
+
+
 
 /** Utility class for storing an event summary as an LCGenericObject.
  *  
  *  \author F.Gaede, DESY
  *  \date June 2020
  */
-  class EventSummary : public UTIL::LCFixedObject<EvtSumI::SIZE,EvtSumF::SIZE,EvtSumD::SIZE> {
+  class EventSummary : public UTIL::LCFixedObject<int(ESI::SIZE),int(ESF::SIZE),int(ESD::SIZE)> {
   
   public: 
   
@@ -50,60 +77,44 @@ namespace UTIL {
 
     /** 'Copy constructor' needed to interpret LCCollection read from file/database.
      */
-    EventSummary(LCObject* o) : UTIL::LCFixedObject<EvtSumI::SIZE,EvtSumF::SIZE,EvtSumD::SIZE>(o) { }
+    EventSummary(LCObject* o) : UTIL::LCFixedObject<int(ESI::SIZE),int(ESF::SIZE),int(ESD::SIZE)>( o ){ }
 
     /** Important for memory handling*/
     virtual ~EventSummary() { /* no op*/  }
   
+// ------  the class interface ------------------------------------
 
-   // ------  the class interface ------------------------------------
-    /// run number
-    int getRunNum() { return obj()->getIntVal(  EvtSumI::runnum ); } 
+    /** return the specified int value - see EventSummaryIntValues for possible values, for example
+     * getI( ESI::chpfonum ) returns the number of charged PFOs in the event.
+     */
+    int getI( ESI intval) { return obj()->getIntVal( (int) intval ); }
 
-    /// event number
-    int getEventNum() { return obj()->getIntVal(  EvtSumI::evtnum ); }
+    /** return the specified float value - see EventSummaryFloatValues for possible values, for example
+     * getF( ESF::thrust ) returns the thrust value of the event.
+     */
+    float getF( ESF floatval) { return obj()->getFloatVal( (int) floatval ); }
 
-    /// number of charged PFOs
-    int getChargedPFONum() { return obj()->getIntVal(  EvtSumI::chpfonum ); }
+    /** return the specified double value - see EventSummaryDoubleValues for possible values, not
+     *  used currently.
+     */
+    double getD( ESD doubleval) { return obj()->getDoubleVal( (int) doubleval ); }
 
-    /// number of neutral PFOs
-    int getNeutralPFONum() { return obj()->getIntVal(  EvtSumI::neupfonum ); }
+    /** set the specified int value - see EventSummaryIntValues for possible values, for example
+     * set( ESI::chpfonum , 42 ) sets the number of charged PFOs in the event.
+     */
+    void setI( ESI intval, int val )  { obj()->setIntVal( (int) intval , val); }
 
-    /// number of isolated electrons
-    int getElectronNum()  { return obj()->getIntVal(  EvtSumI::elnum  ); }
+    /** set the specified float value - see EventSummaryFloatValues for possible values, for example
+     * set( ESF::thrust , .7 ) sets the thrust value the event.
+     */
+    void setF( ESF floatval, float val )  { obj()->setFloatVal( (int) floatval , val); }
 
-    /// number of isolated muons
-    int getMuonNum()  { return obj()->getIntVal(  EvtSumI::munum  ); }
+    /** set the specified double value - see EventSummaryDoubleValues for possible values, not used
+     *  currently
+     */
+    void setD( ESD doubleval, double val )  { obj()->setDoubleVal( (int) doubleval , val); }
 
-    /// number of isolated taus
-    int getTauNum()  { return obj()->getIntVal(  EvtSumI::taunum ); }
-
-    /// number of isolated photons
-    int getPhotonNum() { return obj()->getIntVal(  EvtSumI::phonum ); }
-
-    /// number of jets if only one collection present, else -1
-    int getJetNum()  { return obj()->getIntVal(  EvtSumI::jetnum  ); }
- 
-    /// total reconstructed energy
-    float getEpfoTot() { return obj()->getFloatVal(  EvtSumF::epfotot ); }
-
-    /// total visible MC truth energy
-    float getEmcpTot() { return obj()->getFloatVal(  EvtSumF::emcptot ); }
-
-    // -------- setters -------------------------
-    void setRunNum(int runnum) { obj()->setIntVal(  EvtSumI::runnum , runnum); } 
-    void setEventNum(int evtnum) { obj()->setIntVal(  EvtSumI::evtnum , evtnum); }
-    void setChargedPFONum(int pfonum) { obj()->setIntVal(  EvtSumI::chpfonum , pfonum); }
-    void setNeutralPFONum(int pfonum) { obj()->setIntVal(  EvtSumI::neupfonum , pfonum); }
-    void setElectronNum (int elnum ) { obj()->setIntVal(  EvtSumI::elnum  , elnum ); }
-    void setMuonNum (int munum ) { obj()->setIntVal(  EvtSumI::munum  , munum ); }
-    void setTauNum (int taunum ) { obj()->setIntVal(  EvtSumI::taunum  , taunum ); }
-    void setPhotonNum(int phonum) { obj()->setIntVal(  EvtSumI::phonum , phonum); }
-    void setJetNum (int jetnum ) { obj()->setIntVal(  EvtSumI::jetnum  , jetnum ); }
-
-    void setEpfoTot(float epfotot ) { obj()->setFloatVal(  EvtSumF::epfotot  , epfotot); }
-    void setEmcpTot(float emcptot ) { obj()->setFloatVal(  EvtSumF::emcptot  , emcptot); }
-
+    // -----------------------------------------------------------
 
     void print(  std::ostream& os ) ;
   
