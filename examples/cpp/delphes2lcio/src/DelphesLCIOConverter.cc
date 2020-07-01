@@ -29,8 +29,8 @@
 #include "UTIL/LCRelationNavigator.h"
 #include "UTIL/PIDHandler.h"
 #include "UTIL/LCIterator.h"
+#include "UTIL/Operators.h"
 #include "UTIL/EventSummary.h"
-
 
 #include <iostream>
 #include <sstream>
@@ -483,6 +483,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   const auto& ejnames = _cfg->getExtraJetMapNames() ;
 
+  EVENT::LCCollection* yflipCol = nullptr ;
+
   for( auto& jName : ejnames ){
 
     auto* jcol = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
@@ -498,6 +500,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
 
       int storeYMerge = _cfg->toInt( _cfg->getMapParameter("storeYMerge", jName ) ) ;
+
+      if( storeYMerge > 1 ) // request to store these y flip values in event summary
+	yflipCol = jcol ;
 
       convertJetCollection( tca, jcol , useDelphes4Vec , storeYMerge ) ;
     }
@@ -542,44 +547,94 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
   if( _evtSumCol ){  // add to event summary collection
 
-    auto evts = new UTIL::EventSummary( _evtSumCol->getElementAt(0) )  ;
+    using namespace UTIL;
 
-    evts->setRunNum(   evt->getRunNumber() ) ;
-    evts->setEventNum( evt->getEventNumber() ) ;
+    auto evts = new EventSummary( _evtSumCol->getElementAt( _evtSumCol->getNumberOfElements() - 1 ) )  ;
 
-    evts->setChargedPFONum(   chPFONum );
-    evts->setNeutralPFONum(   neuPFONum );
+    evts->setI( ESI::runnum, evt->getRunNumber() ) ;
+    evts->setI( ESI::evtnum, evt->getEventNumber() ) ;
 
-    evts->setMuonNum(   muons->getNumberOfElements() );
-    evts->setPhotonNum( photons->getNumberOfElements() );
-    evts->setElectronNum( electrons->getNumberOfElements() );
-    evts->setJetNum( jets->getNumberOfElements()  );
+    evts->setI( ESI::chpfonum,  chPFONum );
+    evts->setI( ESI::neupfonum, neuPFONum );
+    evts->setI( ESI::munum,  muons->getNumberOfElements() );
+    evts->setI( ESI::phonum, photons->getNumberOfElements() );
+    evts->setI( ESI::elnum,  electrons->getNumberOfElements() );
+    evts->setI( ESI::jetnum, jets->getNumberOfElements()  );
+
+
+    if( yflipCol != nullptr ){
+
+      EVENT::FloatVec yflip ;
+      yflipCol->getParameters().getFloatVals("ExclYflip12_78", yflip ) ;
+
+      if( yflip.size() != 7 ){
+
+	std::cout << "  ### incorrect number of ExclYflip12_78 parameters " <<  yflip.size()
+		  << std::endl ;
+
+      } else {
+
+	evts->setF( ESF::y12, yflip[0] ) ;
+	evts->setF( ESF::y23, yflip[1] ) ;
+	evts->setF( ESF::y34, yflip[2] ) ;
+	evts->setF( ESF::y45, yflip[3] ) ;
+	evts->setF( ESF::y56, yflip[4] ) ;
+	evts->setF( ESF::y67, yflip[5] ) ;
+	evts->setF( ESF::y78, yflip[6] ) ;
+      }
+    }
 
     // total reconstructed energy
-    double epfoTot = 0;
-    lcio::LCIterator<lcio::ReconstructedParticle> pfoIT( pfos ) ;
-    while( auto p = pfoIT.next() )
-      epfoTot += p->getEnergy() ;
+    double epfoTot(0), pfopx(0), pfopy(0), pfopz(0)  ;
 
-    // total true visible energy
-    double emcpTot = 0;
+    lcio::LCIterator<lcio::ReconstructedParticle> pfoIT( pfos ) ;
+
+    while( auto p = pfoIT.next() ){
+
+      epfoTot += p->getEnergy() ;
+      pfopx += p->getMomentum()[0] ;
+      pfopy += p->getMomentum()[1] ;
+      pfopz += p->getMomentum()[2] ;
+    }
+
+    // total true and visible energy
+    double emcpVis = 0;
+    double emcpTot(0), mcppx(0), mcppy(0), mcppz(0)  ;
+
     lcio::LCIterator<lcio::MCParticle> mcpIT( mcps ) ;
+
     while( auto mcp = mcpIT.next() ){
 
-      // count only stable non-neutrino particles
+      // count only stable Particles
       if( mcp->getGeneratorStatus() != 1 ) continue ;
+
+      emcpTot += mcp->getEnergy() ;
+      mcppx   += mcp->getMomentum()[0] ;
+      mcppy   += mcp->getMomentum()[1] ;
+      mcppz   += mcp->getMomentum()[2] ;
+
 
       int pdg = abs( mcp->getPDG() ) ;
 
+      // exclude neutrinos
       if( pdg == 12 ) continue ;
       if( pdg == 14 ) continue ;
       if( pdg == 16 ) continue ;
 
-      emcpTot += mcp->getEnergy() ;
+      emcpVis += mcp->getEnergy() ;
     }
-    evts->setEpfoTot( epfoTot ) ;
-    evts->setEmcpTot( emcpTot ) ;
 
+
+    evts->setF( ESF::epfotot, epfoTot ) ;
+    evts->setF( ESF::emcptot, emcpVis ) ;
+
+    // missing 4-momentum
+    evts->setF( ESF::emiss,  emcpTot - epfoTot ) ;
+    evts->setF( ESF::pxmiss, mcppx - pfopx ) ;
+    evts->setF( ESF::pymiss, mcppy - pfopy ) ;
+    evts->setF( ESF::pzmiss, mcppz - pfopz ) ;
+
+    std::cout << *evts << std::endl ;
   }
 
 
@@ -659,7 +714,8 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
 
     if( storeYMerge && j==0 ) { // store the ymerge values for the first jet in this collection
 
-      std::vector<float> yflip = { 0.f, (float)jd->ExclYmerge23, (float)jd->ExclYmerge34, (float)jd->ExclYmerge45, (float)jd->ExclYmerge56 , 0.f, 0.f } ;
+      std::vector<float> yflip = { 0.f, (float)jd->ExclYmerge23, (float)jd->ExclYmerge34,
+				        (float)jd->ExclYmerge45, (float)jd->ExclYmerge56 , 0.f, 0.f } ;
 
       col->parameters().setValues("ExclYflip12_78", yflip) ;
     }

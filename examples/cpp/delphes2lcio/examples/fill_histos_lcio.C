@@ -60,7 +60,7 @@ void fill_histos_lcio(const char* FILEN) {
   
  //==================== the event loop ============================================================
  while( ( evt = lcReader->readNextEvent()) != 0  && nEvents++ < maxEvt ) {
-   
+
    
    LCIterator<MCParticle> mcparticles( evt, "MCParticle" ) ;
 
@@ -89,9 +89,6 @@ void fill_histos_lcio(const char* FILEN) {
    }
    hetotpfo->Fill( epfo ) ;
 
-
-   LCCollection* colRel = evt->getCollection("RecoMCTruthLink"); 
-//   LCTOOLS::printRelation( colRel );
  
  }
 

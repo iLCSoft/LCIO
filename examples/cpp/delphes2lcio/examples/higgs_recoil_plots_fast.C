@@ -13,7 +13,7 @@
 #include "TH1F.h"
 #include "TLorentzVector.h"
 
-#include "../include/EventSummary.h"
+#include "UTIL/EventSummary.h"
 
 /*
 put this into your .rootlogon.C file
@@ -101,14 +101,14 @@ void higgs_recoil_plots_fast(const char* FILEN) {
 
    EventSummary es( escol->getElementAt(i)  ) ;
 
-   bool myCut = ( es.getMuonNum()== 2   &&
-		  es.getJetNum() == 2 ) ;
+   bool myCut = ( es.getI( ESI::munum )== 2   &&
+		  es.getI( ESI::jetnum ) == 2 ) ;
 
 
    // read only events fulfilling the pre-cut 
    if( myCut) {
 
-     evt = lcReader->readEvent( es.getRunNum(), es.getEventNum() ) ; 
+     evt = lcReader->readEvent( es.getI( ESI::runnum ), es.getI( ESI::evtnum ) ) ;
 
      if( evt == nullptr )
        break ;
@@ -144,8 +144,8 @@ void higgs_recoil_plots_fast(const char* FILEN) {
      hrecoilm->Fill( recoil.M() ) ;
 
 
-     hetotpfo->Fill( es.getEpfoTot() ) ;
-     hetotmcp->Fill( es.getEmcpTot() ) ;
+     hetotpfo->Fill( es.getF( ESF::epfotot ) ) ;
+     hetotmcp->Fill( es.getF( ESF::emcptot ) ) ;
      
    }
 }
