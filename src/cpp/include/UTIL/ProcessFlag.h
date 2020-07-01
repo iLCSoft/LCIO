@@ -5,33 +5,35 @@
 
 namespace UTIL{
 
-/// helper enum for flag bits
-  enum struct PF{
-    electrons=0, 
-    muons,
-    taus,
-    neutrinos,
-    photons,
-    dquarks,
-    uquarks,
-    squarks,
-    cquarks,
-    bquarks,
-    higgsbb,
-    higgscc,
-    higgsdd,
-    higgsgg,
-    higgstautau,
-    higgsmumu,
-    higgsWW,
-    higgsZZ,
-    higgsgaga,
-    higgsgaZ,
-    higgsinv,
-    higgsother,
-    exotic
+  /// enum class for flag bits in ProcessFlag
+  enum struct ProcessorFlagBits{
+    electrons,   ///< electrons in final state
+    muons,       ///< muons in final state
+    taus,        ///< taus in final state
+    neutrinos,   ///< neutrinos in final state
+    photons,     ///< photons in final state
+    dquarks,     ///< dquarks in final state
+    uquarks,     ///< uquarks in final state
+    squarks,     ///< squarks in final state
+    cquarks,     ///< cquarks in final state
+    bquarks,     ///< bquarks in final state
+    higgsbb,     ///< Higss to bbbar decay
+    higgscc,     ///< Higss to ccbar decay
+    higgsdd,     ///< Higss to ddbar (or uu,ss) decay
+    higgsgg,     ///< Higss to gg decay
+    higgstautau, ///< Higss to tautau decay
+    higgsmumu,   ///< Higss to mumu decay
+    higgsWW,     ///< Higss to WW decay
+    higgsZZ,     ///< Higss to ZZ decay
+    higgsgaga,   ///< Higss to gamma gamma decay
+    higgsgaZ,    ///< Higss to gamma Z decay
+    higgsinv,    ///< Higss to invisible decay
+    higgsother,  ///< Higss to other decay
+    exotic       ///< exotic process (SUSY etc)
   } ;
 
+  /// Short name for ProcessorFlagBits
+  typedef ProcessorFlagBits PF;
 
 /** \class ProcessFlag
  *
@@ -39,7 +41,7 @@ namespace UTIL{
  *  The bits decode if certain particle types are present in the final state
  *  of the hard sub-process. Additionally, in events with a Higgs bosons, its
  *  decay is denoted, e.g. ProcessFlag::has( PF::higssbb ) is true for an
- *  event with a H->bbbar decay. 
+ *  event with a H->bbbar decay. See enum PF for individual flag bits.
  * 
  *  \author F.Gaede, DESY
  *  \date June 2020
@@ -59,36 +61,8 @@ namespace UTIL{
     /** c'tor that takes a list of bit enums in an initialiser list, e.g.
      *  ProcessFlag( {PF::muons, PF::higss } )
      */
-
-    // template <std::size_t N>
-    // ProcessFlag(const std::initializer_list<PF>& bits ) {
-    //   for( auto bit : bits ) add(bit) ;
-    // }
-
-    /// construct with one bit
-    ProcessFlag(PF bit0){
-      add( bit0)  ;
-    }
-
-    /// construct with two bits
-    ProcessFlag(PF bit0, PF bit1){
-      add( bit0)  ;
-      add( bit1)  ;
-    }
-
-    /// construct with three bits
-    ProcessFlag(PF bit0, PF bit1, PF bit2 ){
-      add( bit0)  ;
-      add( bit1)  ;
-      add( bit2)  ;
-    }
-
-    /// construct with four bits
-    ProcessFlag(PF bit0, PF bit1, PF bit2, PF bit3){
-      add( bit0)  ;
-      add( bit1)  ;
-      add( bit2)  ;
-      add( bit3)  ;
+    ProcessFlag(const std::initializer_list<PF>& bits ) {
+       for( auto bit : bits ) add(bit) ;
     }
 
     /// add an individual bit
