@@ -27,8 +27,8 @@ namespace IMPL {
   protected:
     virtual void setReadOnly( bool readOnly ) ;
     
-    void checkAccess() throw ( EVENT::ReadOnlyException ) ;
-    void checkAccess(const char* what) throw ( EVENT::ReadOnlyException ) ;
+    void checkAccess() ;
+    void checkAccess(const char* what) ;
 
   protected: 
     bool _readOnly ;

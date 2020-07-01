@@ -63,7 +63,7 @@ public:
      *
      * @throws DataNotAvailableException
      */
-    virtual LCCollection * getCollection(const std::string & name) const throw (DataNotAvailableException, std::exception )  = 0;
+    virtual LCCollection * getCollection(const std::string & name) const = 0;
 
     /** Returns the collection for the given name and transfers the ownership of the collection
      *  to the caller. The caller is responsible for deleting the collection _after_ the Event is 
@@ -73,7 +73,7 @@ public:
      *  Use with care!
      * @throws DataNotAvailableException
      */
-    virtual LCCollection * takeCollection(const std::string & name) const throw (DataNotAvailableException, std::exception )  = 0;
+    virtual LCCollection * takeCollection(const std::string & name) const = 0;
 
     /** Adds a collection with the given name (has to be a valid C/C++ variable name). 
      *	Throws an exception if the name already
@@ -82,14 +82,14 @@ public:
      *@see validateCollectionName
      *@throws EventException
      */ 
-    virtual void addCollection(LCCollection * col, const std::string & name) throw (EventException, std::exception )  = 0;
+    virtual void addCollection(LCCollection * col, const std::string & name) = 0;
 
     /** Removes (and deletes) the collection with name (if it exists in the event). 
      * Throws an exception if the event is 'read only' as defined by the read mode in LCReader.
      *
      *@throws ReadOnlyException
      */ 
-    virtual void removeCollection(const std::string & name) throw (ReadOnlyException, std::exception )  = 0;
+    virtual void removeCollection(const std::string & name) = 0;
 
     /** Parameters defined for this event.
      */

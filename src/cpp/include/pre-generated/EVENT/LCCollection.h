@@ -91,14 +91,14 @@ public:
      *
      * @throws ReadOnlyException
      */
-    virtual void addElement(LCObject * obj) throw (ReadOnlyException, std::exception )  = 0;
+    virtual void addElement(LCObject * obj) = 0;
 
     /** Removes the i-th element from the collection. Throws an exception 
      * if the collection (event) is 'read only'.
      *
      * @throws ReadOnlyException
      */
-    virtual void removeElementAt(int i) throw (ReadOnlyException, std::exception )  = 0;
+    virtual void removeElementAt(int i) = 0;
 
     /** Set the flag word. This is allowed in 'read only' mode.
      */

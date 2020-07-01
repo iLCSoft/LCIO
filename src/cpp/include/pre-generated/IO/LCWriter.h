@@ -35,7 +35,7 @@ public:
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename) throw (IOException, std::exception )  = 0;
+    virtual void open(const std::string & filename) = 0;
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW
@@ -43,7 +43,7 @@ public:
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename, int writeMode) throw (IOException, std::exception )  = 0;
+    virtual void open(const std::string & filename, int writeMode) = 0;
 
     /** Set the compression level - needs to be called before open() otherwise
      *  call will have no effect. If not called the Writer will use default compression.<br>
@@ -67,25 +67,25 @@ public:
      *
      *@throws IOException
      */
-    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IOException, std::exception )  = 0;
+    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr) = 0;
 
     /** Writes the given event to file.
      *
      *@throws IOException
      */
-    virtual void writeEvent(const EVENT::LCEvent * evt) throw (IOException, std::exception )  = 0;
+    virtual void writeEvent(const EVENT::LCEvent * evt) = 0;
 
     /** Closes the output file/stream.
      *
      *@throws IOException
      */
-    virtual void close() throw (IOException, std::exception )  = 0;
+    virtual void close() = 0;
 
     /** Flushes the output file/stream.
      *
      *@throws IOException
      */
-    virtual void flush() throw (IOException, std::exception )  = 0;
+    virtual void flush() = 0;
 }; // class
 } // namespace IO
 #endif /* ifndef IO_LCWRITER_H */

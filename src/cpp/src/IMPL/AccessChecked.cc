@@ -13,11 +13,11 @@ namespace IMPL {
 
   void AccessChecked::setReadOnly( bool readOnly ) { _readOnly = readOnly ; }
   
-  void AccessChecked::checkAccess() throw ( EVENT::ReadOnlyException ){
+  void AccessChecked::checkAccess() {
 
     if( _readOnly ) throw EVENT::ReadOnlyException("") ;
   }
-  void AccessChecked::checkAccess(const char* what) throw ( EVENT::ReadOnlyException ){
+  void AccessChecked::checkAccess(const char* what) {
 
     if( _readOnly ){
       //      std::cout << " throwing ReadOnlyException " << what << std::endl ;
