@@ -126,8 +126,9 @@ namespace UTIL {
     } 
   
     const std::string getDataDescription() const {
-      return "i:runNum,i:eventNum,i:pfoNum,i:muonNum,i:photonNum,i:electronNum,i:jetNum,f:epfoTot,f:emcpTot" ;
+      return "i:runnum,i:evtnum,i:chpfonum,i:neupfonum,i:elnum,i:munum,i:taunum,i:phonum,i:jetnum,i:bcpfonum,i:trknum,i:clunum,i:mcproc,f:epfotot,f:emcptot,f:thrust,f:spher,f:emiss,f:pxmiss,f:pymiss,f:pzmiss,f:y12,f:y23,f:y34,f:y45,f:y56,f:y67,f:y78" ;
     }
+
 
   }; // class
 
