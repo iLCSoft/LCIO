@@ -47,7 +47,7 @@
   - improve the delphes2lcio tool
        - add configuration options for LCIO collection names and delphes branches to be used
        - the default configuration works for the ILD delphes card [https://github.com/ILDAnaSoft/ILDDelphes](https://github.com/ILDAnaSoft/ILDDelphes)
-       - it can be overwritten with a simple configuration file see ./examples/delphes2lcio.cfg and *Advanced Topics* in the READM.md
+       - it can be overwritten with a simple configuration file see ./examples/delphes2lcio.cfg and *Advanced Topics* in the README.md
        - additional jet collections can be added to the event if available in the delphes output
                - current default are *Durham2Jets-Durham6Jets*
 
