@@ -1,3 +1,11 @@
+# v02-14-01
+
+* 2020-07-02 Frank Gaede ([PR#87](https://github.com/ilcsoft/lcio/pull/87))
+  - updated  documentation
+      -  README.md with some basic introduction 
+      - added slightly updated manual.pdf
+  - minor fixes in delphes2lcio
+
 # v02-14
 
 * 2020-07-01 Frank Gaede ([PR#86](https://github.com/ilcsoft/lcio/pull/86))
