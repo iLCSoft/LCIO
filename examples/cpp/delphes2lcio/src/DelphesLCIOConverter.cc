@@ -634,7 +634,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     evts->setF( ESF::pymiss, mcppy - pfopy ) ;
     evts->setF( ESF::pzmiss, mcppz - pfopz ) ;
 
-    std::cout << *evts << std::endl ;
+//    std::cout << *evts << std::endl ;
   }
 
 
