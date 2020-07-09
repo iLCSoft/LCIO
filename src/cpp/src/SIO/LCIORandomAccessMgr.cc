@@ -97,6 +97,10 @@ namespace SIO {
       sio::api::read_record( stream, recinfo, _rawBuffer ) ;
     }
     catch( sio::exception &e ) {
+      // RE: Need to clear stream state.
+      // Maybe the record is not there and we want to move ahead
+      stream.clear() ;
+      seekStream( stream, 0 ) ;
       return false ;
     }
     // we got a record but it's not an LCIORandomAccess record...
@@ -136,6 +140,10 @@ namespace SIO {
     }
     catch( sio::exception &e ) {
       // no way to extract a record !
+      // RE: Need to clear stream state.
+      // Maybe the record is not there and we want to move ahead
+      stream.clear() ;
+      seekStream( stream, 0 ) ;
       return false ;
     }
     // we got a record but it's not an LCIOIndex record...
@@ -262,6 +270,8 @@ namespace SIO {
       catch( sio::exception &e ) {
         // reached end of file
         if( e.code() == sio::error_code::eof ) {
+          // RE: clear EOF bit in stream. Normal exit in this case
+          stream.clear() ;
           break ;
         }
         SIO_RETHROW( e, e.code(), "Couldn't recreate event map !" ) ;
