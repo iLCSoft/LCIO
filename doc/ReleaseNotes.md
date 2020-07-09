@@ -1,3 +1,11 @@
+# v02-14-02
+
+* 2020-07-09 Ete Remi ([PR#88](https://github.com/iLCSoft/LCIO/pull/88))
+  - Fixed random access manager record reading
+     - Crash observed for old files without random access record
+  - Added unit test for random access record
+     - Run `anajob` on a file without random access record
+
 # v02-14-01
 
 * 2020-07-02 Frank Gaede ([PR#87](https://github.com/ilcsoft/lcio/pull/87))
