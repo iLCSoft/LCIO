@@ -76,6 +76,7 @@ option( BUILD_FORTRAN  "Set to OFF to skip build/install Fortran codes" ON )
 option( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 option( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
 option( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
+option( INSTALL_PYTHON "Set to ON to install python codes" ON)
 
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
@@ -84,8 +85,10 @@ ENDIF()
 
 
 # install python stuff (for out-of-source-build)
-INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/src/python/" DESTINATION python )
-INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/examples/python/" DESTINATION python/examples )
+if( INSTALL_PYTHON )
+  install( DIRECTORY "${PROJECT_SOURCE_DIR}/src/python/" DESTINATION python )
+  install( DIRECTORY "${PROJECT_SOURCE_DIR}/examples/python/" DESTINATION python/examples )
+endif()
 
 
 # JAVA (needed to generate c++ headers)
