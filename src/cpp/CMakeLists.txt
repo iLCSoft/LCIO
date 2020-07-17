@@ -301,6 +301,7 @@ ADD_SHARED_LIBRARY( lcio
 INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
+add_dependencies(lcio ${SIO_LIBRARIES})
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
 # ----------------------------------------------------------------------------
 
