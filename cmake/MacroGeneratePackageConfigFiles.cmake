@@ -7,8 +7,9 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
         IF( ${arg} MATCHES "Config.cmake" )
             IF( EXISTS "${PROJECT_SOURCE_DIR}/cmake/${arg}.in" )
                 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/${arg}.in"
-                                "lib/cmake/${arg}" @ONLY
+                                "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
+                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION "lib/cmake" )
             ENDIF()
         ENDIF()
 
@@ -17,9 +18,10 @@ MACRO( GENERATE_PACKAGE_CONFIGURATION_FILES )
             # version configuration file
             IF( EXISTS "${PROJECT_SOURCE_DIR}/cmake/${arg}.in" )
                 CONFIGURE_FILE( "${PROJECT_SOURCE_DIR}/cmake/${arg}.in"
-                                "lib/cmake/${arg}" @ONLY
+                                "${PROJECT_BINARY_DIR}/${arg}" @ONLY
                 )
-            ENDIF()
+                INSTALL( FILES "${PROJECT_BINARY_DIR}/${arg}" DESTINATION "lib/cmake" )
+            ENDIF( EXISTS "${PROJECT_SOURCE_DIR}/cmake/${arg}.in" )
         ENDIF()
 
     ENDFOREACH()
