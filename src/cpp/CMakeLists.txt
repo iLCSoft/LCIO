@@ -350,7 +350,7 @@ IF( BUILD_ROOTDICT )
     LIST( REMOVE_ITEM UTIL_CXX_HEADERS_LIST ${exclude_headers} )
 
 
-    MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
+    #MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
     # generate dictionary source files!
     GEN_ROOT_DICT_LINKDEF_HEADER( UTIL ${UTIL_CXX_HEADERS_LIST} )
@@ -361,7 +361,7 @@ IF( BUILD_ROOTDICT )
 
 #  MESSAGE( STATUS "********************* IO_CXX_HEADERS_LIST:  ${IO_CXX_HEADERS_LIST}" )
 #  MESSAGE( STATUS "********************* EVENT_CXX_HEADERS_LIST:  ${EVENT_CXX_HEADERS_LIST}" )
-  MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
+  #MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
 
     # ------ generate dictionary for IO classes --------------------
