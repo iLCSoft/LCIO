@@ -8,6 +8,31 @@ cmake_minimum_required( VERSION 3.0 FATAL_ERROR )
 # project name
 project( LCIO VERSION "2.14.2")
 
+# lcio.jar
+option( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
+option( BUILD_APPS "Set to OFF to skip build/install of apps" ON )
+# allow C++ only builds
+option( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
+option( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
+option( BUILD_FORTRAN  "Set to OFF to skip build/install Fortran codes" ON )
+option( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
+option( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
+option( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
+option( INSTALL_PYTHON "Set to ON to install python codes" ON)
+
+include(CheckLanguage)
+
+if(BUILD_FORTRAN OR BUILD_F77_TESTJOBS)
+  check_language(Fortran)
+  if(CMAKE_Fortran_COMPILER)
+    enable_language(Fortran)
+  else()
+  message(STATUS "No Fortran support !!!")
+    set(BUILD_FORTRAN OFF)
+    set(BUILD_F77_TESTJOBS OFF)
+  endif()
+endif()
+
 ### set correct LCIO version in relevant files  ############################
 
 configure_file (
@@ -57,18 +82,6 @@ IF( NOT CMAKE_CXX_STANDARD )
   SET( CMAKE_CXX_STANDARD 14 )
 ENDIF()
 SET( CMAKE_CXX_STANDARD_REQUIRED ON )
-
-# lcio.jar
-option( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
-option( BUILD_APPS "Set to OFF to skip build/install of apps" ON )
-# allow C++ only builds
-option( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
-option( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
-option( BUILD_FORTRAN  "Set to OFF to skip build/install Fortran codes" ON )
-option( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-option( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
-option( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
-option( INSTALL_PYTHON "Set to ON to install python codes" ON)
 
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
