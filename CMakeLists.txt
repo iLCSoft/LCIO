@@ -2,19 +2,11 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+cmake_minimum_required( VERSION 3.0 FATAL_ERROR )
 ########################################################
 
-
-
 # project name
-PROJECT( LCIO )
-
-
-# project version
-SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 14 )
-SET( LCIO_VERSION_PATCH 2 )
+project( LCIO VERSION "2.14.2")
 
 ### set correct LCIO version in relevant files  ############################
 
