@@ -99,9 +99,16 @@ endif()
 
 
 # ROOT
-IF( BUILD_ROOTDICT )
-    FIND_PACKAGE( ROOT 6.04 REQUIRED ) # look for ROOT versions >= 5.27.06
-ENDIF()
+if( BUILD_ROOTDICT )
+  find_package( ROOT 6.04 REQUIRED )
+  ##Need to check if ROOT has been compiled with other CXX_STANDARD
+  get_property(ROOT_CXX_STANDARD TARGET ROOT::Core PROPERTY INTERFACE_COMPILE_FEATURES)
+    if(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_17") 
+      set( CMAKE_CXX_STANDARD 17 )
+    elseif(${ROOT_CXX_STANDARD} STREQUAL "cxx_std_20")  
+      set( CMAKE_CXX_STANDARD 20 )
+  endif()
+endif()
 
 
 # DCAP

@@ -318,7 +318,7 @@ IF( BUILD_ROOTDICT )
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
-    INCLUDE( ${ROOT_DICT_MACROS_FILE} )
+    INCLUDE( MacroRootDict )
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
