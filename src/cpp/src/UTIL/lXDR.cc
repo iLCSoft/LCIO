@@ -74,9 +74,9 @@ void lXDR::setFileName(const char *filename, bool open_for_write)
    }
 
    int n = strlen(filename);
-   _fileName = new char [n + 1];
-   strncpy(_fileName, filename, n);
-   _fileName[n] = '\0';
+   _fileName = new char [n+1];
+   strcpy(_fileName, filename);
+   //_fileName[n] = '\0';
 
    _openForWrite = open_for_write;
 
