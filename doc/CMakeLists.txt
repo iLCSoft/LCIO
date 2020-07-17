@@ -2,6 +2,14 @@
 # cmake file for building LCIO documentation
 # @author Jan Engels, DESY
 ###############################################
+# required packages to build documentation
+FIND_PACKAGE( Doxygen  )
+FIND_PACKAGE( LATEX )
+if(NOT DOXYGEN_FOUND OR NOT LATEX_FOUND)
+  message(STATUS "Doxygen or LATEX not found ! Abording doc generation")
+  return()
+endif()
+
 
 # build documentation out-of-source
 SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
@@ -15,9 +23,6 @@ SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DOC_BIN_DIR}
 ADD_CUSTOM_TARGET( doc )
 
 
-# required packages to build documentation
-FIND_PACKAGE( Doxygen REQUIRED )
-FIND_PACKAGE( LATEX REQUIRED )
 
 
 # out-of-source vs in-source installations
