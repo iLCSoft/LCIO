@@ -68,10 +68,14 @@ SET( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # lcio.jar
 option( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
-option( INSTALL_APPS "Set to OFF to skip build/install of apps" ON )
-
+option( BUILD_APPS "Set to OFF to skip build/install of apps" ON )
 # allow C++ only builds
-OPTION( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
+option( LCIO_GENERATE_HEADERS "Set to OFF to use pre-generated headers (no java needed)" OFF)
+option( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
+option( BUILD_FORTRAN  "Set to OFF to skip build/install Fortran codes" ON )
+option( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
+option( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
+option( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 
 IF( INSTALL_JAR )
     INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} jar)" )
@@ -95,7 +99,6 @@ endif()
 
 
 # ROOT
-OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
 IF( BUILD_ROOTDICT )
     FIND_PACKAGE( ROOT 6.04 REQUIRED ) # look for ROOT versions >= 5.27.06
 ENDIF()
@@ -124,11 +127,11 @@ ENDIF()
 
 
 # UNIX SHELL (needed for calling LCIO_ENV_INIT script)
-FIND_PROGRAM( SH sh ${CYGWIN_INSTALL_PATH}/bin /bin /usr/bin /usr/local/bin /sbin )
-MARK_AS_ADVANCED( SH )
-IF( NOT SH )
-    MESSAGE( FATAL_ERROR "unix shell not found" )
-ENDIF()
+#FIND_PROGRAM( SH sh ${CYGWIN_INSTALL_PATH}/bin /bin /usr/bin /usr/local/bin /sbin )
+#MARK_AS_ADVANCED( SH )
+#IF( NOT SH )
+#    MESSAGE( FATAL_ERROR "unix shell not found" )
+#ENDIF()
 
 
 
@@ -271,7 +274,7 @@ endif()
 # replaced by standard cmake variable BUILD_TESTING
 #OPTION( BUILD_LCIO_TESTS "Set to ON to build LCIO tests under src/cpp/src/TESTS" OFF )
 
-OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
+
 
 # lcio library
 ADD_SUBDIRECTORY( ./src/cpp lcio )
@@ -279,23 +282,22 @@ ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
 # fortran examples
-OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
 IF( BUILD_F77_TESTJOBS )
     ADD_SUBDIRECTORY( ./src/f77 f77 )
 ENDIF()
 
 
 # directory containing lcio tests
-ADD_SUBDIRECTORY( ./tests )
+if( BUILD_TESTING )
+  ADD_SUBDIRECTORY( ./tests )
+endif()
 
 
 ### DOCUMENTATION ###########################################################
-
-OPTION( INSTALL_DOC "Set to OFF to skip build/install Documentation" OFF )
-IF( INSTALL_DOC )
-    ADD_SUBDIRECTORY( ./doc )
-    INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} doc)" )
-ENDIF()
+if( INSTALL_DOC )
+  ADD_SUBDIRECTORY( ./doc )
+  INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} doc)" )
+endif()
 
 
 
@@ -303,6 +305,8 @@ ENDIF()
 DISPLAY_STD_VARIABLES()
 
 MESSAGE( STATUS "BUILD_LCIO_EXAMPLES = ${BUILD_LCIO_EXAMPLES}" )
+message( STATUS "BUILD_APPS = ${BUILD_APPS}" )
+message( STATUS "BUILD_FORTRAN = ${BUILD_FORTRAN}" )
 MESSAGE( STATUS "BUILD_F77_TESTJOBS = ${BUILD_F77_TESTJOBS}" )
 MESSAGE( STATUS "BUILD_ROOTDICT = ${BUILD_ROOTDICT}" )
 MESSAGE( STATUS "INSTALL_JAR = ${INSTALL_JAR}" )

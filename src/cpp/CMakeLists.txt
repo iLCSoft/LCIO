@@ -3,33 +3,44 @@
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
 #################################
-
-SET( LCIO_CPPFORT_SRCS
-  ./src/CPPFORT/HEPEVT.cc
-  ./src/CPPFORT/lccah.cc
-  ./src/CPPFORT/lcclu.cc
-  ./src/CPPFORT/lccol.cc
-  ./src/CPPFORT/lcevt.cc
-  ./src/CPPFORT/lcgob.cc
-  ./src/CPPFORT/lciof77apiext.cc
-  ./src/CPPFORT/lcmcp.cc
-  ./src/CPPFORT/lcobv.cc
-  ./src/CPPFORT/lcpid.cc
-  ./src/CPPFORT/lcrcp.cc
-  ./src/CPPFORT/lcrdr.cc
-  ./src/CPPFORT/lcrdrrep.cc
-  ./src/CPPFORT/lcrel.cc
-  ./src/CPPFORT/lcrhd.cc
-  ./src/CPPFORT/lcrnv.cc
-  ./src/CPPFORT/lcsch.cc
-  ./src/CPPFORT/lcsth.cc
-  ./src/CPPFORT/lctph.cc
-  ./src/CPPFORT/lctrh.cc
-  ./src/CPPFORT/lctrk.cc
-  ./src/CPPFORT/lcvec.cc
-  ./src/CPPFORT/lcvtx.cc
-  ./src/CPPFORT/lcwrt.cc
-)
+if( BUILD_FORTRAN )
+  set( LCIO_CPPFORT_SRCS
+    ./src/CPPFORT/HEPEVT.cc
+    ./src/CPPFORT/lccah.cc
+    ./src/CPPFORT/lcclu.cc
+    ./src/CPPFORT/lccol.cc
+    ./src/CPPFORT/lcevt.cc
+    ./src/CPPFORT/lcgob.cc
+    ./src/CPPFORT/lciof77apiext.cc
+    ./src/CPPFORT/lcmcp.cc
+    ./src/CPPFORT/lcobv.cc
+    ./src/CPPFORT/lcpid.cc
+    ./src/CPPFORT/lcrcp.cc
+    ./src/CPPFORT/lcrdr.cc
+    ./src/CPPFORT/lcrdrrep.cc
+    ./src/CPPFORT/lcrel.cc
+    ./src/CPPFORT/lcrhd.cc
+    ./src/CPPFORT/lcrnv.cc
+    ./src/CPPFORT/lcsch.cc
+    ./src/CPPFORT/lcsth.cc
+    ./src/CPPFORT/lctph.cc
+    ./src/CPPFORT/lctrh.cc
+    ./src/CPPFORT/lctrk.cc
+    ./src/CPPFORT/lcvec.cc
+    ./src/CPPFORT/lcvtx.cc
+    ./src/CPPFORT/lcwrt.cc
+  )
+  #---- special flags for cfortran code : --------
+  SET_SOURCE_FILES_PROPERTIES(
+    ${LCIO_CPPFORT_SRCS} PROPERTIES
+    COMPILE_FLAGS "-Df2cFortran -Wno-unused"
+  )
+  # ----------------------------------------------------------------------------
+  # ------- libraries lcio + lcioF77 -------------------------------------------
+  ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
+  INSTALL( TARGETS lcioF77 DESTINATION lib )
+  TARGET_LINK_LIBRARIES( lcioF77 lcio )
+endif()
 
 SET( LCIO_IMPL_SRCS
   ./src/IMPL/AccessChecked.cc
@@ -226,7 +237,9 @@ if( LCIO_GENERATE_HEADERS )
   SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
 
   # make source files depend on generated header files + aid files
-  SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
+  if( BUILD_FORTRAN)
+    SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
+  endif()
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
   # ----------------------------------------------------------------------------
@@ -249,12 +262,7 @@ endif()
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
-#---- special flags for cfortran code : --------
-SET_SOURCE_FILES_PROPERTIES(
-  ${LCIO_CPPFORT_SRCS} PROPERTIES
-  COMPILE_FLAGS "-Df2cFortran -Wno-unused"
-)
-# ----------------------------------------------------------------------------
+
 
 
 
@@ -281,9 +289,7 @@ INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
 
 
 
-# ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION lib )
+
 
 ADD_SHARED_LIBRARY( lcio
   ${LCIO_IMPL_SRCS}
@@ -296,9 +302,6 @@ INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
-TARGET_LINK_LIBRARIES( lcioF77 lcio )
-
-ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 # ----------------------------------------------------------------------------
 
 
