@@ -6,7 +6,11 @@ cmake_minimum_required( VERSION 3.0 FATAL_ERROR )
 ########################################################
 
 # project name
-project( LCIO VERSION "2.14.2")
+project( LCIO )
+# project version
+SET( LCIO_VERSION_MAJOR 2 )
+SET( LCIO_VERSION_MINOR 14 )
+SET( LCIO_VERSION_PATCH 2 )
 
 # lcio.jar
 option( INSTALL_JAR "Set to OFF to skip build/install lcio.jar" OFF )
