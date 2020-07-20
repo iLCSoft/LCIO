@@ -50,7 +50,8 @@ it still provides a good overview over the philosophy of LCIO and how to use it.
 
 ```sh
 git clone https://github.com/iLCSoft/LCIO.git
-git checkout v02-14    ##  use a specific version
+cd LCIO
+git checkout v02-14-02    ##  use a specific version
 ```
 
 - if you just want to build a plain version of LCIO:
