@@ -3,33 +3,44 @@
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
 #################################
-
-SET( LCIO_CPPFORT_SRCS
-  ./src/CPPFORT/HEPEVT.cc
-  ./src/CPPFORT/lccah.cc
-  ./src/CPPFORT/lcclu.cc
-  ./src/CPPFORT/lccol.cc
-  ./src/CPPFORT/lcevt.cc
-  ./src/CPPFORT/lcgob.cc
-  ./src/CPPFORT/lciof77apiext.cc
-  ./src/CPPFORT/lcmcp.cc
-  ./src/CPPFORT/lcobv.cc
-  ./src/CPPFORT/lcpid.cc
-  ./src/CPPFORT/lcrcp.cc
-  ./src/CPPFORT/lcrdr.cc
-  ./src/CPPFORT/lcrdrrep.cc
-  ./src/CPPFORT/lcrel.cc
-  ./src/CPPFORT/lcrhd.cc
-  ./src/CPPFORT/lcrnv.cc
-  ./src/CPPFORT/lcsch.cc
-  ./src/CPPFORT/lcsth.cc
-  ./src/CPPFORT/lctph.cc
-  ./src/CPPFORT/lctrh.cc
-  ./src/CPPFORT/lctrk.cc
-  ./src/CPPFORT/lcvec.cc
-  ./src/CPPFORT/lcvtx.cc
-  ./src/CPPFORT/lcwrt.cc
-)
+if( BUILD_FORTRAN )
+  set( LCIO_CPPFORT_SRCS
+    ./src/CPPFORT/HEPEVT.cc
+    ./src/CPPFORT/lccah.cc
+    ./src/CPPFORT/lcclu.cc
+    ./src/CPPFORT/lccol.cc
+    ./src/CPPFORT/lcevt.cc
+    ./src/CPPFORT/lcgob.cc
+    ./src/CPPFORT/lciof77apiext.cc
+    ./src/CPPFORT/lcmcp.cc
+    ./src/CPPFORT/lcobv.cc
+    ./src/CPPFORT/lcpid.cc
+    ./src/CPPFORT/lcrcp.cc
+    ./src/CPPFORT/lcrdr.cc
+    ./src/CPPFORT/lcrdrrep.cc
+    ./src/CPPFORT/lcrel.cc
+    ./src/CPPFORT/lcrhd.cc
+    ./src/CPPFORT/lcrnv.cc
+    ./src/CPPFORT/lcsch.cc
+    ./src/CPPFORT/lcsth.cc
+    ./src/CPPFORT/lctph.cc
+    ./src/CPPFORT/lctrh.cc
+    ./src/CPPFORT/lctrk.cc
+    ./src/CPPFORT/lcvec.cc
+    ./src/CPPFORT/lcvtx.cc
+    ./src/CPPFORT/lcwrt.cc
+  )
+  #---- special flags for cfortran code : --------
+  SET_SOURCE_FILES_PROPERTIES(
+    ${LCIO_CPPFORT_SRCS} PROPERTIES
+    COMPILE_FLAGS "-Df2cFortran -Wno-unused"
+  )
+  # ----------------------------------------------------------------------------
+  # ------- libraries lcio + lcioF77 -------------------------------------------
+  ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
+  INSTALL( TARGETS lcioF77 DESTINATION lib )
+  TARGET_LINK_LIBRARIES( lcioF77 lcio )
+endif()
 
 SET( LCIO_IMPL_SRCS
   ./src/IMPL/AccessChecked.cc
@@ -226,7 +237,9 @@ if( LCIO_GENERATE_HEADERS )
   SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
 
   # make source files depend on generated header files + aid files
-  SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
+  if( BUILD_FORTRAN)
+    SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
+  endif()
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
   # ----------------------------------------------------------------------------
@@ -249,12 +262,7 @@ endif()
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
-#---- special flags for cfortran code : --------
-SET_SOURCE_FILES_PROPERTIES(
-  ${LCIO_CPPFORT_SRCS} PROPERTIES
-  COMPILE_FLAGS "-Df2cFortran -Wno-unused"
-)
-# ----------------------------------------------------------------------------
+
 
 
 
@@ -281,9 +289,7 @@ INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
 
 
 
-# ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION lib )
+
 
 ADD_SHARED_LIBRARY( lcio
   ${LCIO_IMPL_SRCS}
@@ -295,10 +301,8 @@ ADD_SHARED_LIBRARY( lcio
 INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
+add_dependencies(lcio ${SIO_LIBRARIES})
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
-TARGET_LINK_LIBRARIES( lcioF77 lcio )
-
-ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 # ----------------------------------------------------------------------------
 
 
@@ -315,7 +319,7 @@ IF( BUILD_ROOTDICT )
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
-    INCLUDE( ${ROOT_DICT_MACROS_FILE} )
+    INCLUDE( MacroRootDict )
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
@@ -347,7 +351,7 @@ IF( BUILD_ROOTDICT )
     LIST( REMOVE_ITEM UTIL_CXX_HEADERS_LIST ${exclude_headers} )
 
 
-    MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
+    #MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
     # generate dictionary source files!
     GEN_ROOT_DICT_LINKDEF_HEADER( UTIL ${UTIL_CXX_HEADERS_LIST} )
@@ -358,7 +362,7 @@ IF( BUILD_ROOTDICT )
 
 #  MESSAGE( STATUS "********************* IO_CXX_HEADERS_LIST:  ${IO_CXX_HEADERS_LIST}" )
 #  MESSAGE( STATUS "********************* EVENT_CXX_HEADERS_LIST:  ${EVENT_CXX_HEADERS_LIST}" )
-  MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
+  #MESSAGE( STATUS "********************* UTIL_CXX_HEADERS_LIST:  ${UTIL_CXX_HEADERS_LIST}" )
 
 
     # ------ generate dictionary for IO classes --------------------
@@ -458,24 +462,26 @@ MACRO( ADD_LCIO_EXAMPLE file )
   INSTALL( TARGETS bin_${file} DESTINATION bin )
 ENDMACRO()
 
-ADD_LCIO_EXAMPLE( simjob )
-ADD_LCIO_EXAMPLE( anajob )
-ADD_LCIO_EXAMPLE( recjob )
-ADD_LCIO_EXAMPLE( dumpevent )
-ADD_LCIO_EXAMPLE( copyfix )
-ADD_LCIO_EXAMPLE( stdhepjob )
-ADD_LCIO_EXAMPLE( stdhepjob_new )
-ADD_LCIO_EXAMPLE( addRandomAccess )
-ADD_LCIO_EXAMPLE( lcio_event_counter )
-ADD_LCIO_EXAMPLE( lcio_check_col_elements )
-ADD_LCIO_EXAMPLE( lcio_split_file ) 
-ADD_LCIO_EXAMPLE( lcio_merge_files ) 
-ADD_LCIO_EXAMPLE( readmcparticles ) 
-ADD_LCIO_EXAMPLE( lcio_performance )
-ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
-ADD_LCIO_EXAMPLE( lcio_parallel_processing ) 
-
-IF( BUILD_ROOTDICT )
+if( INSTALL_APPS )
+  ADD_LCIO_EXAMPLE( simjob )
+  ADD_LCIO_EXAMPLE( anajob )
+  ADD_LCIO_EXAMPLE( recjob )
+  ADD_LCIO_EXAMPLE( dumpevent )
+  ADD_LCIO_EXAMPLE( copyfix )
+  ADD_LCIO_EXAMPLE( stdhepjob )
+  ADD_LCIO_EXAMPLE( stdhepjob_new )
+  ADD_LCIO_EXAMPLE( addRandomAccess )
+  ADD_LCIO_EXAMPLE( lcio_event_counter )
+  ADD_LCIO_EXAMPLE( lcio_check_col_elements )
+  ADD_LCIO_EXAMPLE( lcio_split_file ) 
+  ADD_LCIO_EXAMPLE( lcio_merge_files ) 
+  ADD_LCIO_EXAMPLE( readmcparticles ) 
+  ADD_LCIO_EXAMPLE( lcio_performance )
+  ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
+  ADD_LCIO_EXAMPLE( lcio_parallel_processing ) 
+endif()
+  
+IF( BUILD_ROOTDICT AND BUILD_LCIO_EXAMPLES)
   ADD_LCIO_EXAMPLE( lcio_io_benchmark )
   TARGET_LINK_LIBRARIES( bin_lcio_io_benchmark ${ROOT_LIBRARIES} )
 ENDIF()

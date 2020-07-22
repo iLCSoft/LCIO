@@ -2,6 +2,14 @@
 # cmake file for building LCIO documentation
 # @author Jan Engels, DESY
 ###############################################
+# required packages to build documentation
+FIND_PACKAGE( Doxygen  )
+FIND_PACKAGE( LATEX )
+if(NOT DOXYGEN_FOUND OR NOT LATEX_FOUND)
+  message(STATUS "Doxygen or LATEX not found ! Abording doc generation")
+  return()
+endif()
+
 
 # build documentation out-of-source
 SET( DOC_SRC_DIR "${PROJECT_SOURCE_DIR}/doc" )
@@ -15,9 +23,6 @@ SET_DIRECTORY_PROPERTIES( PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "${DOC_BIN_DIR}
 ADD_CUSTOM_TARGET( doc )
 
 
-# required packages to build documentation
-FIND_PACKAGE( Doxygen REQUIRED )
-FIND_PACKAGE( LATEX REQUIRED )
 
 
 # out-of-source vs in-source installations
@@ -95,21 +100,21 @@ ENDIF()
 IF( DOXYGEN_FOUND AND LATEX_COMPILER AND DVIPS_CONVERTER )
 
     ADD_CUSTOM_COMMAND(
-        OUTPUT  "${DOC_BIN_DIR}/latex/lciorefman.ps"
+        OUTPUT  "${DOC_BIN_DIR}/latex/refman.ps"
         # FIXME: latex returns error, using | xargs at the end ignores the exit code error
         COMMAND "${LATEX_COMPILER}" -interaction=batchmode refman.tex | xargs
         COMMAND "${LATEX_COMPILER}" -interaction=batchmode refman.tex | xargs
         COMMAND "${DVIPS_CONVERTER}" -q -o refman.ps refman.dvi
-        COMMAND psnup -q -2 refman.ps lciorefman.ps # FIXME detect psnup
+        COMMAND psnup -q -2 refman.ps refman.ps # FIXME detect psnup
         WORKING_DIRECTORY "${DOC_BIN_DIR}/latex"
         COMMENT "Building Documentation - Reference Manual..."
     )
 
-    ADD_CUSTOM_TARGET( doc_refman DEPENDS ${DOC_BIN_DIR}/latex/lciorefman.ps )
+    ADD_CUSTOM_TARGET( doc_refman DEPENDS ${DOC_BIN_DIR}/latex/refman.ps )
     ADD_DEPENDENCIES( doc_refman doc_cpp ) # need to generate doxygen documentation first
     ADD_DEPENDENCIES( doc doc_refman )
 
-    INSTALL( FILES "${DOC_BIN_DIR}/latex/lciorefman.ps" DESTINATION ${DOC_INSTALL_PREFIX} )
+    INSTALL( FILES "${DOC_BIN_DIR}/latex/refman.ps" DESTINATION ${DOC_INSTALL_PREFIX} )
 
 ELSE()
     MESSAGE( "Failed to find tools required to build lcio reference manual (latex, dvips)" )

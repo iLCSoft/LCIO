@@ -182,7 +182,7 @@ int main(int argc, char** argv ){
         lcReader->readStream();      
       }
     }
-    catch(IO::EndOfDataException) {
+    catch(const IO::EndOfDataException&) {
         
     }
 

@@ -6,13 +6,9 @@
 # @author: Remi Ete, DESY
 # 
 
-PROJECT( SIO )
+project( SIO VERSION "0.0.2" LANGUAGES CXX)
 
 # project version
-SET( SIO_VERSION_MAJOR 0 )
-SET( SIO_VERSION_MINOR 0 )
-SET( SIO_VERSION_PATCH 2 )
-SET( SIO_VERSION "${SIO_VERSION_MAJOR}.${SIO_VERSION_MINOR}.${SIO_VERSION_PATCH}" )
 SET( SIO_SOVERSION "${SIO_VERSION_MAJOR}.${SIO_VERSION_MINOR}" )
 
 FIND_PACKAGE( ZLIB REQUIRED )
@@ -37,6 +33,6 @@ INSTALL_SHARED_LIBRARY( sio DESTINATION lib )
 
 # mimic the SIOConfig.cmake variables for the LCIO project
 SET( SIO_VERSION                  "${SIO_VERSION}"                       CACHE STRING "The SIO version" )
-SET( SIO_LIBRARIES                "$<TARGET_FILE:sio>"                   CACHE STRING "The SIO library" )
+SET( SIO_LIBRARIES                "sio"                   CACHE STRING "The SIO library" )
 SET( SIO_INCLUDE_DIRS             "${CMAKE_CURRENT_SOURCE_DIR}/include"  CACHE STRING "The path to SIO include directories" )
 SET( CHECK_PACKAGE_SIO_LIBRARY    "sio"                                  CACHE STRING "The name of the builtin SIO library to check when searching for LCIO package" )
