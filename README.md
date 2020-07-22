@@ -57,7 +57,7 @@ git checkout v02-14-02    ##  use a specific version
 - if you just want to build a plain version of LCIO:
 
 ```sh
-mdir build
+mkdir build
 cd build
 cmake ..
 make -j 4 install
@@ -69,6 +69,8 @@ make -j 4 install
 . /data/ilcsoft/root/6.18.04/bin/thisroot.sh   # <-- your path to ROOT goes here
 cmake -DBUILD_ROOTDICT=ON ..
 make -j 4 install
+cd ..
+. ./setup.sh  ## <--- run this in the source directory
 ```
 
 
