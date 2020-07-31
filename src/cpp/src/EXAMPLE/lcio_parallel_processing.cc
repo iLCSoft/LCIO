@@ -145,7 +145,7 @@ int main(int argc, char** argv ){
       try {
         reader.readNextRecord( listeners );        
       }
-      catch ( IO::EndOfDataException ) {
+      catch ( const IO::EndOfDataException& ) {
         break;
       }
     }
