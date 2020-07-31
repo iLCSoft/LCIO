@@ -97,6 +97,7 @@ endif()
 OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
 IF( BUILD_ROOTDICT )
     FIND_PACKAGE( ROOT 6.04 REQUIRED ) # look for ROOT versions >= 5.27.06
+    INCLUDE(${ROOT_USE_FILE})
 ENDIF()
 
 

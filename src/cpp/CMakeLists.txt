@@ -315,7 +315,7 @@ IF( BUILD_ROOTDICT )
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
-    INCLUDE( ${ROOT_DICT_MACROS_FILE} )
+    INCLUDE(MacroRootDict)
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
@@ -351,7 +351,7 @@ IF( BUILD_ROOTDICT )
 
     # generate dictionary source files!
     GEN_ROOT_DICT_LINKDEF_HEADER( UTIL ${UTIL_CXX_HEADERS_LIST} )
-    GEN_ROOT_DICT_SOURCES( UTIL.cxx )
+    GEN_ROOT_DICT_SOURCE( UTIL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
@@ -364,7 +364,7 @@ IF( BUILD_ROOTDICT )
     # ------ generate dictionary for IO classes --------------------
     # IO_CXX_HEADERS_LIST is generated in ADD_LCIO_AID_HEADERS_DIRECTORY
     GEN_ROOT_DICT_LINKDEF_HEADER( IO ${IO_CXX_HEADERS_LIST} )
-    GEN_ROOT_DICT_SOURCES( IO.cxx )
+    GEN_ROOT_DICT_SOURCE( IO.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
@@ -372,7 +372,7 @@ IF( BUILD_ROOTDICT )
     # ------ generate dictionary for EVENT classes -----------------
     # EVENT_CXX_HEADERS_LIST is generated in ADD_LCIO_AID_HEADERS_DIRECTORY
     GEN_ROOT_DICT_LINKDEF_HEADER( EVENT ${EVENT_CXX_HEADERS_LIST} )
-    GEN_ROOT_DICT_SOURCES( EVENT.cxx )
+    GEN_ROOT_DICT_SOURCE( EVENT.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
@@ -380,7 +380,7 @@ IF( BUILD_ROOTDICT )
     # ------ generate dictionary for IMPL classes ------------------
     PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/IMPL )
     GEN_ROOT_DICT_LINKDEF_HEADER( IMPL ${ROOT_DICT_INPUT_HEADERS} )
-    GEN_ROOT_DICT_SOURCES( IMPL.cxx )
+    GEN_ROOT_DICT_SOURCE( IMPL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
@@ -388,13 +388,13 @@ IF( BUILD_ROOTDICT )
     # ------ generate dictionary for IOIMPL classes ------------------
     PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/IOIMPL )
     GEN_ROOT_DICT_LINKDEF_HEADER( IOIMPL ${ROOT_DICT_INPUT_HEADERS} )
-    GEN_ROOT_DICT_SOURCES( IOIMPL.cxx )
+    GEN_ROOT_DICT_SOURCE( IOIMPL.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
     # ------ generate dictionary for templates ------------------
     PREPARE_ROOT_DICT_HEADERS( ${LCIO_CXX_HEADERS_DIR}/rootDict )
     GEN_ROOT_DICT_LINKDEF_HEADER( rootDict ${ROOT_DICT_INPUT_HEADERS} )
-    GEN_ROOT_DICT_SOURCES( rootDict.cxx )
+    GEN_ROOT_DICT_SOURCE( rootDict.cxx )
     LIST( APPEND lcio_rootdict_sources ${ROOT_DICT_OUTPUT_SOURCES} )
 
 
