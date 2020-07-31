@@ -97,7 +97,7 @@ namespace IMPL{
   EVENT::MCParticle * SimCalorimeterHitImpl::getParticleCont(int i) const {
     try{
       return _vec.at(i)->Particle ;
-    }catch( std::out_of_range ){
+    }catch(const std::out_of_range& ){
       std::stringstream err ; err << "SimCalorimeterHitImpl::getParticleCont(): out_of_range :"  << i  ;
       throw EVENT::Exception( err.str() );
     }
