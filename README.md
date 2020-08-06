@@ -1,5 +1,7 @@
 # LCIO: v02-07-05
 
+Modified version for c++17
+
 LCIO ( **L**inear **C**ollider **I/O** ) provides the event data model (EDM) and persistency solution for Linear Collider detector R&D studies.  This version has updates specifically needed by both the Light Dark Matter eXperiment and Heavy Photon Search. 
 
 ## Documentation
