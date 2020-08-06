@@ -2,7 +2,7 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.0 FATAL_ERROR )
 ########################################################
 
 
@@ -17,6 +17,8 @@ SET( LCIO_VERSION_MINOR 7 )
 SET( LCIO_VERSION_PATCH 5 )
 
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 ### DEPENDENCIES ############################################################
 

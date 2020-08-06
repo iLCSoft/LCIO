@@ -48,7 +48,7 @@ namespace UTIL{
      *
      *@throws IO::IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException, std::exception ) ;
+    virtual void open(const std::string & filename);
 
     /** Not implemented - will throw an Exception if called.
      * Overwriting of or appending to split files is not straight forward. Pleas use the default write mode 
@@ -56,14 +56,14 @@ namespace UTIL{
      * 
      * @throws IO::IOException
      */
-    virtual void open(const std::string & filename, int writeMode) throw (IO::IOException, std::exception ) ;
+    virtual void open(const std::string & filename, int writeMode);
 
     /** Writes the given run header to file. Opens a new file if the given file size is already exceeded
      *  before the execution of the write access.
      *
      * @throws IO::IOException
      */
-    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IO::IOException, std::exception ) ;
+    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr);
 
     /** Set CompressionLevel.
      * @see LCWriter::setCompressionLevel()
@@ -78,20 +78,20 @@ namespace UTIL{
      *
      *@throws IO::IOException
      */
-    virtual void writeEvent(const EVENT::LCEvent * evt) throw (IO::IOException, std::exception )  ;
+    virtual void writeEvent(const EVENT::LCEvent * evt);
 
     /** Closes the output file/stream.
      *
      *@throws IO::IOException
      */
-    virtual void close() throw (IO::IOException, std::exception )  ;
+    virtual void close();
 
 
     /** Flushes the output file/stream.
      *
      *@throws IO::IOException
      */
-    virtual void flush() throw (IO::IOException, std::exception )  ;
+    virtual void flush();
 
     
     //---------------------------------------------------------------------------------------------

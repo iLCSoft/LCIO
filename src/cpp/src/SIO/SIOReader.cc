@@ -101,8 +101,7 @@ namespace SIO {
   }
 
 
-  void SIOReader::open(const std::vector<std::string>& filenames) 
-    throw( IOException , std::exception){
+  void SIOReader::open(const std::vector<std::string>& filenames){
 
     unsigned int i;
     struct stat fileinfo ;
@@ -130,7 +129,7 @@ namespace SIO {
     open( _myFilenames[ ++_currentFileIndex ]  ) ;
   }
 
-  void SIOReader::open(const std::string& filename) throw( IOException , std::exception)  {
+  void SIOReader::open(const std::string& filename) {
 
 
     std::string sioFilename ;  
@@ -172,7 +171,7 @@ namespace SIO {
 
 
 
-  int SIOReader::getNumberOfEvents() throw (IOException, std::exception ) {
+  int SIOReader::getNumberOfEvents(){
 
     // create the event map if needed (i.e. not opened in direct access mode)
     if( ! _readEventMap ){  
@@ -186,7 +185,7 @@ namespace SIO {
     
   }
 
-  int SIOReader::getNumberOfRuns() throw (IOException, std::exception ) {
+  int SIOReader::getNumberOfRuns() {
 
     // create the event map if needed (i.e. not opened in direct access mode)
     if( ! _readEventMap ){  
@@ -253,7 +252,7 @@ namespace SIO {
 
   //-------------------------------------------------------------------------------------------
 
-  void SIOReader::readRecord() throw (IOException , EndOfDataException , std::exception) {
+  void SIOReader::readRecord() {
 
     SIO_blockManager::remove(  LCSIO_RUNBLOCKNAME ) ;
     SIO_blockManager::add( _runHandler ) ;
@@ -300,11 +299,11 @@ namespace SIO {
   }
   
 
-  LCRunHeader* SIOReader::readNextRunHeader() throw (IOException , std::exception ) {
+  LCRunHeader* SIOReader::readNextRunHeader() {
     return readNextRunHeader( LCIO::READ_ONLY ) ;
   }
 
-  LCRunHeader* SIOReader::readNextRunHeader(int accessMode) throw (IOException , std::exception ) {
+  LCRunHeader* SIOReader::readNextRunHeader(int accessMode)  {
 
     // set the _runRecord to unpack for this scope
     //SIOUnpack runUnp( SIOUnpack::RUN ) ;
@@ -376,13 +375,13 @@ namespace SIO {
   }
   
 
-  LCEvent* SIOReader::readNextEvent() throw (IOException , std::exception ) {
+  LCEvent* SIOReader::readNextEvent() {
 
     return readNextEvent( LCIO::READ_ONLY ) ;
 
   }
 
-  LCEvent* SIOReader::readNextEvent(int accessMode) throw (IOException, std::exception ) {
+  LCEvent* SIOReader::readNextEvent(int accessMode)  {
     
 
     // first, we need to read the event header 
@@ -437,7 +436,7 @@ namespace SIO {
     }
   }
   
-  void SIOReader::skipNEvents(int n) throw (IO::IOException, std::exception) {
+  void SIOReader::skipNEvents(int n) {
      
     if( n < 1 )  // nothing to skip
       return ;  
@@ -474,14 +473,12 @@ namespace SIO {
     
   }
 
-  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber) 
-    throw (IOException , std::exception) {
+  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber){
 
     return readRunHeader( runNumber, EVENT::LCIO::READ_ONLY ) ;
   }
 
-  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber, int accessMode) 
-    throw (IOException , std::exception) {
+  EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber, int accessMode){
     
     if( _readEventMap ) {
       
@@ -519,14 +516,12 @@ namespace SIO {
   }
 
 
-  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber) 
-    throw (IOException , std::exception) {
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber){
 
     return readEvent( runNumber, evtNumber , EVENT::LCIO::READ_ONLY ) ;
   }
 
-  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber, int accessMode) 
-    throw (IOException , std::exception) {
+  EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber, int accessMode){
     
     if( _readEventMap ) {
       
@@ -623,7 +618,7 @@ namespace SIO {
    
   }
   
-  void SIOReader::close() throw (IOException, std::exception ){
+  void SIOReader::close() {
   
     _raMgr.clear() ;
 
@@ -654,12 +649,12 @@ namespace SIO {
     _runListeners.erase( _runListeners.find( ls ) );
  }
 
-  void SIOReader::readStream() throw ( IO::IOException, std::exception ){
+  void SIOReader::readStream() {
 
     int maxInt = INT_MAX ; // numeric_limits<int>::max() ;
     readStream( maxInt ) ;
   }
-  void SIOReader::readStream(int maxRecord) throw (IOException, std::exception ){
+  void SIOReader::readStream(int maxRecord) {
     
 
     bool readUntilEOF = false ;

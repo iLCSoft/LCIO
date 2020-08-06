@@ -121,7 +121,7 @@ void LCCollectionVec::setFlag(int flag){
 }
 
 
-  void LCCollectionVec::addElement(EVENT::LCObject * obj) throw (ReadOnlyException){
+  void LCCollectionVec::addElement(EVENT::LCObject * obj){
     
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
@@ -129,7 +129,7 @@ void LCCollectionVec::setFlag(int flag){
     this->push_back( obj ) ; 
   }
 
-  void LCCollectionVec::removeElementAt(int i) throw (EVENT::ReadOnlyException){
+  void LCCollectionVec::removeElementAt(int i){
     
     //    if(_access != LCIO::UPDATE )
     //  throw ReadOnlyException("LCCollectionVec::addElement:  event is read only") ;
