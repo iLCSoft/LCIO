@@ -1,7 +1,13 @@
 #ifndef ProcessFlag_h
 #define ProcessFlag_h
 
+#include <map>
 #include <iostream>
+
+namespace EVENT{
+  class LCCollection ;
+}
+
 
 namespace UTIL{
 
@@ -54,12 +60,15 @@ namespace UTIL{
     ProcessFlag() = default ;
     ~ProcessFlag() = default ;
 
+    ProcessFlag(const ProcessFlag& f) = default ;
+    ProcessFlag& operator=(const ProcessFlag& f) = default ;
+
     /// construct from int 
     ProcessFlag(int flag) : _flag(flag) {}
 
 
     /** c'tor that takes a list of bit enums in an initialiser list, e.g.
-     *  ProcessFlag( {PF::muons, PF::higss } )
+     *  ProcessFlag( {PF::muons, PF::higssbb } )
      */
     ProcessFlag(const std::initializer_list<PF>& bits ) {
        for( auto bit : bits ) add(bit) ;
@@ -69,6 +78,25 @@ namespace UTIL{
     void add( PF bit ){
       _flag = _flag | ( 1 << (int) bit ) ; 
     } 
+
+    /// add the bit for the final state particles with given PDG code - false if not known
+    bool addFSParticles(int pdg){
+      auto m = _mapFS.find( pdg ) ;
+      if( m != _mapFS.end() ){
+	add( m->second ) ;
+	return true ;
+      }
+      return false ;
+    }
+    /// add the bit for the Higgs decaying to a particles with given PDG code - false if not known
+    bool addHiggsDecay(int pdg){
+      auto m = _mapH.find( pdg ) ;
+      if( m != _mapH.end() ){
+	add( m->second ) ;
+	return true ;
+      }
+      return false ;
+    }
 
     /// assign complete int flag
     ProcessFlag& operator=( int flag) { _flag = flag ; return *this ;}
@@ -88,7 +116,39 @@ namespace UTIL{
 
   private:
     int _flag=0 ;
-  
+
+    std::map< int, PF > _mapFS =
+    {
+      { 11, PF::electrons },
+      { 13, PF::muons     },
+      { 15, PF::taus      },
+      { 12, PF::neutrinos },
+      { 14, PF::neutrinos },
+      { 16, PF::neutrinos },
+      { 22, PF::photons   },
+      {  1, PF::dquarks   },
+      {  2, PF::uquarks   },
+      {  3, PF::squarks   },
+      {  4, PF::cquarks   },
+      {  5, PF::bquarks   }
+    } ;
+    std::map< int, PF > _mapH =
+    {
+      {  5, PF::higgsbb     },
+      {  1, PF::higgsdd     },
+      {  2, PF::higgsdd     },
+      {  3, PF::higgsdd     },
+      {  4, PF::higgscc     },
+      { 15, PF::higgstautau },
+      { 13, PF::higgsmumu   },
+      { 24, PF::higgsWW     },
+      { 23, PF::higgsZZ     },
+      { 22, PF::higgsgaga   },
+      { 12, PF::higgsinv    },
+      { 14, PF::higgsinv    },
+      { 16, PF::higgsinv    }
+    } ;
+ 
   } ;
 
 
@@ -121,6 +181,14 @@ namespace UTIL{
 
     return os;
   }
+
+
+  /** Helper function that decodes the MC truth process from an LCCollection with MCParticles.
+   *  Assumes that the MCParticle collection has been created with a recent version of the Whizard
+   *  event generator (since DBD). At most, the first maxParticles are evaluated for identifying 
+   *  the hard sub-process.
+   */
+  ProcessFlag decodeMCTruthProcess(const EVENT::LCCollection* mcps , int maxParticle=10);
 
 }
 #endif

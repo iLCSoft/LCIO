@@ -31,6 +31,7 @@
 #include "UTIL/LCIterator.h"
 #include "UTIL/Operators.h"
 #include "UTIL/EventSummary.h"
+#include "UTIL/ProcessFlag.h"
 
 #include <iostream>
 #include <sstream>
@@ -638,7 +639,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     evts->setF( ESF::pymiss, mcppy - pfopy ) ;
     evts->setF( ESF::pzmiss, mcppz - pfopz ) ;
 
-//    std::cout << *evts << std::endl ;
+
+
+    ProcessFlag pFlag = decodeMCTruthProcess( mcps ) ;
+    evts->setI( ESI::mcproc,  pFlag ) ;
+
+//    std::cout << " ---- mc truth process : " << pFlag << std::endl ;
   }
 
 
