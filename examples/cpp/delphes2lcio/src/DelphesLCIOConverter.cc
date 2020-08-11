@@ -198,6 +198,10 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     evt->setEventNumber( e->Number ) ;
     evt->setWeight( e->Weight ) ;
     evt->setTimeStamp( e->ReadTime ) ;
+
+    evt->parameters().setValue("crossSection",  e->CrossSection ) ;
+    evt->parameters().setValue("ProcessID",     e->ProcessID  ) ;
+
   }
 
   //=====================================================================
