@@ -74,7 +74,7 @@ namespace UTIL {
   
     /** Constructor for the given collection.
      */
-    LCIterator<T>( EVENT::LCCollection* col) : _i(0) , _col( col ) {
+    LCIterator<T>( const EVENT::LCCollection* col) : _i(0) , _col( col ) {
     
       _n = (_col ? _col->getNumberOfElements() : 0 ) ;
     
@@ -109,15 +109,15 @@ namespace UTIL {
 
     /** Serves as a handle to the LCCollection itself, to provide access to the collection parameters etc.
      */
-    EVENT::LCCollection* operator->() { return _col ; }
+    const EVENT::LCCollection* operator->() { return _col ; }
 
     /** Return pointer to LCCollection, e.g. for testing whether the collections was in the event.
      */
-    EVENT::LCCollection* operator()() { return _col ; }
+    const EVENT::LCCollection* operator()() { return _col ; }
 
   private:
     int _n{0}, _i ;
-    EVENT::LCCollection* _col ;
+    const EVENT::LCCollection* _col ;
   } ;
 
 } // namespace UTIL
