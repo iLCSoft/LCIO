@@ -4,13 +4,19 @@
 #include "EVENT/LCCollection.h"
 #include "EVENT/MCParticle.h" 
 #include "UTIL/LCTOOLS.h"
-//#include "UTIL/LCIterator.h"
 #include "UTIL/Operators.h"
 
 
 namespace UTIL{
 
   ProcessFlag decodeMCTruthProcess(const EVENT::LCCollection* col, int maxParticles){
+
+    // this is WIP and needs iteration:
+    //  - make more general for different Whizrd versions
+    //  - deal with BSM and other exotic cases
+    //  - decide on whether individual fermions from W's are used to set the corresponging flag
+    //  - ...
+
 
 //    LCTOOLS::printMCParticles( col ) ;
 
