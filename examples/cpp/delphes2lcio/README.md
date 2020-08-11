@@ -81,13 +81,13 @@ This creates an LCIO files with the following default collections:
 ---------------------------------------------------------------------------
 COLLECTION NAME               COLLECTION TYPE            DELPHES BRANCH
 ===========================================================================
-Electrons                     ReconstructedParticle        Electron
+IsolatedElectrons             ReconstructedParticle        Electron
 Jets                          ReconstructedParticle        Jet
-MCParticle                    MCParticle                   Particle
+MCParticles                   MCParticle                   Particle
 MCTruthRecoLink               LCRelation                     n.a.
-Muons                         ReconstructedParticle        Muon
+IsolatedMuons                 ReconstructedParticle        Muon
 PFOs                          ReconstructedParticle        EFlowTrack,EFlowPhoton,EFlowNeutralHadron
-Photons                       ReconstructedParticle        Photon
+IsolatedPhotons               ReconstructedParticle        Photon
 RecoMCTruthLink               LCRelation                     n.a.
 ---------------------------------------------------------------------------
 

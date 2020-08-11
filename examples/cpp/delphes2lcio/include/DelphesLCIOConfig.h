@@ -74,7 +74,7 @@ private:
 
     { "MCParticleMap" ,
       {
-	{ "lcioName"   , "MCParticle" },
+	{ "lcioName"   , "MCParticles" },
 	{ "branchName" , "Particle" }
       }   
     },
@@ -102,7 +102,7 @@ private:
 
     { "MuonMap" ,
       {
-	{ "lcioName"   , "Muons" },
+	{ "lcioName"   , "IsolatedMuons" },
 	{ "branchName" , "Muon" },
 	{ "pdg" , "-13" }
       }   
@@ -110,7 +110,7 @@ private:
 
     { "ElectronMap" ,
       {
-	{ "lcioName"   , "Electrons" },
+	{ "lcioName"   , "IsolatedElectrons" },
 	{ "branchName" , "Electron" },
 	{ "pdg" , "-11" }
       }   
@@ -118,7 +118,7 @@ private:
 
     { "PhotonMap" ,
       {
-	{ "lcioName"   , "Photons" },
+	{ "lcioName"   , "IsolatedPhotons" },
 	{ "branchName" , "Photon" },
 	{ "pdg" , "22" }
       }   
