@@ -39,11 +39,11 @@ void fill_histos_lcio(const char* FILEN) {
  std::string rootFileName = rootFileBaseName + std::string(".root") ;
  TFile* file = new TFile( rootFileName.c_str()  , "RECREATE");    
 
- TH1F* henmcp = new TH1F("henmcp","MCParticle energy", 100, 0. , 50. ) ;
- TH1F* henpfo = new TH1F("henpfo","Reco particle energy", 100, 0. , 50. ) ;
+ TH1F* henmcp = new TH1F("henmcp","MCParticle energy", 100, 0. , 30. ) ;
+ TH1F* henpfo = new TH1F("henpfo","Reco particle energy", 100, 0. , 30. ) ;
 
- TH1F* hetotmcp = new TH1F("hetotmcp","MCParticle total energy", 100, 200. , 600. ) ;
- TH1F* hetotpfo = new TH1F("hetotpfo","Reco particle total energy", 100, 200. , 600. ) ;
+ TH1F* hetotmcp = new TH1F("hetotmcp","MCParticle total energy", 100, 0. , 300. ) ;
+ TH1F* hetotpfo = new TH1F("hetotpfo","Reco particle total energy", 100, 0. , 300. ) ;
 
 
 //---------------------------------
@@ -52,7 +52,9 @@ void fill_histos_lcio(const char* FILEN) {
  int maxEvt = 10000 ;  // change as needed
 
  IO::LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
- lcReader->setReadCollectionNames( {"MCParticle", "PFOs", "RecoMCTruthLink" ,"MCTruthRecoLink" } ) ;
+
+ // read only these collections from the file (faster):
+ lcReader->setReadCollectionNames( {"MCParticles", "PFOs", "RecoMCTruthLink" ,"MCTruthRecoLink" } ) ;
  lcReader->open( FILEN ) ;
   
 
@@ -62,7 +64,7 @@ void fill_histos_lcio(const char* FILEN) {
  while( ( evt = lcReader->readNextEvent()) != 0  && nEvents++ < maxEvt ) {
 
    
-   LCIterator<MCParticle> mcparticles( evt, "MCParticle" ) ;
+   LCIterator<MCParticle> mcparticles( evt, "MCParticles" ) ;
 
    double emcp = 0., epfo=0. ;
    while( auto mcp = mcparticles.next()  ){
@@ -89,21 +91,37 @@ void fill_histos_lcio(const char* FILEN) {
    }
    hetotpfo->Fill( epfo ) ;
 
- 
  }
 
  //===================================================================================================
-  file->Write() ;
-  file->Close() ;
-  delete file ;
+#if 0  // draw directly
+ TCanvas* c1 = new TCanvas("LCIO histos");
+
+ c1->Divide(1,2);
+ c1->cd(1) ;
+ henmcp->Draw() ;
+ henpfo->Draw("E;same") ;
+
+ c1->cd(2) ;
+ hetotmcp->Draw() ;
+ hetotpfo->Draw("E;same") ;
+
+ //===================================================================================================
+
+#else   // safe to file
+
+ file->Write() ;
+ file->Close() ;
+ delete file ;
+
+#endif
+
+ std::cout << std::endl
+	   <<  "  " <<  nEvents
+	   << " events read from file: "
+	   << FILEN << std::endl  ;
 
 
-  std::cout << std::endl 
-	    <<  "  " <<  nEvents 
-	    << " events read from file: " 
-	    << FILEN << std::endl  ;
-  
-  
-  lcReader->close() ;
-  delete lcReader ;
+ lcReader->close() ;
+ delete lcReader ;
 }

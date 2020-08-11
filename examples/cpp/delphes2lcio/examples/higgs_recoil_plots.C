@@ -63,8 +63,8 @@ void higgs_recoil_plots(const char* FILEN) {
 //---------------------------------
  
  IO::LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
- lcReader->setReadCollectionNames( { "PFOs","Jets","Muons" } );
- //lcReader->setReadCollectionNames( {"MCParticle", "PFOs", "RecoMCTruthLink" ,"MCTruthRecoLink","Jets","Muons" } ) ;
+ lcReader->setReadCollectionNames( { "PFOs","Jets","IsolatedMuons" } );
+ //lcReader->setReadCollectionNames( {"MCParticle", "PFOs", "RecoMCTruthLink" ,"MCTruthRecoLink","Jets","IsolatedMuons" } ) ;
  lcReader->open( FILEN ) ;
   
 
@@ -75,7 +75,7 @@ void higgs_recoil_plots(const char* FILEN) {
    
    
    LCIterator<ReconstructedParticle> jets( evt, "Jets" ) ;
-   LCIterator<ReconstructedParticle> muons( evt, "Muons" ) ;
+   LCIterator<ReconstructedParticle> muons( evt, "IsolatedMuons" ) ;
 
    if( jets.size() != 2)
      continue;

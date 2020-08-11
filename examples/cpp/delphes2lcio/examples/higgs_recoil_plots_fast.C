@@ -68,8 +68,10 @@ void higgs_recoil_plots_fast(const char* FILEN) {
 //---------------------------------
  
  IO::LCReader* lcReader = IOIMPL::LCFactory::getInstance()->createLCReader() ;
- lcReader->setReadCollectionNames( { "PFOs","Jets","Muons" , "EventSummaries"} );
- //lcReader->setReadCollectionNames( {"MCParticle", "PFOs", "RecoMCTruthLink" ,"MCTruthRecoLink","Jets","Muons" } ) ;
+
+ // read only these collections from the file (faster):
+ lcReader->setReadCollectionNames( { "PFOs","Jets","IsolatedMuons" , "EventSummaries"} );
+
  lcReader->open( FILEN ) ;
   
 
@@ -119,7 +121,7 @@ void higgs_recoil_plots_fast(const char* FILEN) {
      //----------  the actual event processing
    
      LCIterator<ReconstructedParticle> jets( evt, "Jets" ) ;
-     LCIterator<ReconstructedParticle> muons( evt, "Muons" ) ;
+     LCIterator<ReconstructedParticle> muons( evt, "IsolatedMuons" ) ;
      
      if( jets.size() != 2)
        continue;
