@@ -119,6 +119,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/CollectionParameterMap.cc
   ./src/UTIL/PIDHandler.cc
   ./src/UTIL/ILDConf.cc
+  ./src/UTIL/ProcessFlag.cc
 )
 
 SET( LCIO_MT_SRCS
