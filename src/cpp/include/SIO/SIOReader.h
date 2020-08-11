@@ -209,6 +209,11 @@ namespace SIO {
     std::set<IO::LCRunListener*>         _runListeners {} ;
     /// The event listeners
     std::set<IO::LCEventListener*>       _evtListeners {} ;
+    /// pointer to current Event
+    EVENT::LCEvent* _currentEvent = nullptr ;
+    /// pointer to current RunHeader
+    EVENT::LCRunHeader* _currentRun = nullptr ;
+
   }; // class
 } // namespace
 

@@ -81,7 +81,13 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCRunHeader* SIOReader::readNextRunHeader(int accessMode) {
-    return _reader.readNextRunHeader( accessMode ).release() ;
+
+    if( _currentRun != nullptr ){
+      delete _currentRun ;
+    }
+    _currentRun = _reader.readNextRunHeader( accessMode ).release() ;
+
+    return _currentRun ;
   }
   
   //----------------------------------------------------------------------------
@@ -93,7 +99,13 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCEvent* SIOReader::readNextEvent(int accessMode)  {
-    return _reader.readNextEvent( accessMode ).release() ;
+
+    if( _currentEvent != nullptr ){
+      delete _currentEvent ;
+    }
+    _currentEvent = _reader.readNextEvent( accessMode ).release() ;
+
+    return _currentEvent ;
   }
 
   //----------------------------------------------------------------------------
@@ -111,7 +123,13 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber, int accessMode) {
-    return _reader.readRunHeader( runNumber, accessMode ).release() ;
+
+    if( _currentRun != nullptr ){
+      delete _currentRun ;
+    }
+    _currentRun = _reader.readRunHeader( runNumber, accessMode ).release() ;
+
+    return _currentRun ;
   }
 
   //----------------------------------------------------------------------------
@@ -123,7 +141,13 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber, int accessMode) {
-    return _reader.readEvent( runNumber, evtNumber, accessMode ).release() ;
+
+    if( _currentEvent != nullptr ){
+      delete _currentEvent ;
+    }
+    _currentEvent = _reader.readEvent( runNumber, evtNumber, accessMode ).release() ;
+
+    return _currentEvent ;
   }
 
   //----------------------------------------------------------------------------
