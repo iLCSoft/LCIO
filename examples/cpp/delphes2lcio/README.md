@@ -51,7 +51,7 @@ cd delphes2lcio
 mkdir build
 cd build
 cmake -D LCIO_DIR=$LCIO  ..
-
+make -j 4 install
 ```
 
 ----------
@@ -68,11 +68,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LCIO/lib:$DELPHES_DIR/lib
 
 
 ### Running Delphes
-Then you can run Delphes with
+Then you can run Delphes, e.g. with
 
 ```
 DelphesSTDHEP2LCIO $DELPHES_DIR/cards/delphes_card_ILD.tcl output.slcio input.stdhep
 ```
+
+**This is just an example delphes card for ILD that does not work really. Better use the 
+generic ILC Delphes card from [https://github.com/iLCSoft/ILCDelphes](https://github.com/iLCSoft/ILCDelphes)**
+
 
 This creates an LCIO files with the following default collections:
 
