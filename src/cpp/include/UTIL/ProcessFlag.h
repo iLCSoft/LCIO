@@ -192,6 +192,18 @@ namespace UTIL{
    *  Assumes that the MCParticle collection has been created with a recent version of the Whizard
    *  event generator (since DBD). At most, the first maxParticles are evaluated for identifying 
    *  the hard sub-process.
+   *  icase 1: Whizard 2.8.4: incoming particles of hard subprocess (i.e. after BS, ISR etc) have generatorStatus 3
+   *      => use their daughters as hard final state
+   *  icase 2: DBD files WITHOUT beam particles (e.g. 250 GeV DBD samples) have more than 2 PARENTLESS particles
+   *      => use these as hard final state
+   *  icase 3: DBD files WITH beam particles (e.g. non-Higgs 500 GeV DBD samples) have exactly 2 PARENTLESS particles
+   *      => their daughters are the incoming particles of hard subprocess and the ISR and/or outgoing beam particles
+   *      => select those daughters which have more than one daughter
+   *      => take the daughters of these daughters of the parentless particles as hard final state
+   *  else => only PF::unknown is set
+   * 
+   * \author F.Gaede, J.List, DESY
+   * \date August 2020
    */
   ProcessFlag decodeMCTruthProcess(const EVENT::LCCollection* mcps , int maxParticle=10);
 

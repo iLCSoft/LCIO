@@ -11,52 +11,122 @@ namespace UTIL{
 
   ProcessFlag decodeMCTruthProcess(const EVENT::LCCollection* col, int maxParticles){
 
-    // this is WIP and needs iteration:
-    //  - make more general for different Whizrd versions
-    //  - deal with BSM and other exotic cases
-    //  - decide on whether individual fermions from W's are used to set the corresponging flag
-    //  - ...
+    /// first step: decide which type of file we have:
+    ///  icase 1: Whizard 2.8.4: incoming particles of hard subprocess (i.e. after BS, ISR etc) have generatorStatus 3
+    ///      => use their daughters as hard final state
+    ///  icase 2: DBD files WITHOUT beam particles (e.g. 250 GeV DBD samples) have more than 2 PARENTLESS particles
+    ///      => use these as hard final state
+    ///  icase 3: DBD files WITH beam particles (e.g. non-Higgs 500 GeV DBD samples) have exactly 2 PARENTLESS particles
+    ///      => their daughters are the incoming particles of hard subprocess and the ISR and/or outgoing beam particles
+    ///      => select those daughters which have more than one daughter
+    ///      => take the daughters of these daughters of the parentless particles as hard final state
 
+    ProcessFlag flag ;
 
 //    LCTOOLS::printMCParticles( col ) ;
 
-    ProcessFlag flag ;
     std::map< int, int> pdgFSCount ;
     EVENT::MCParticle* higgs = nullptr ;
     int hDpdg0 =0 , hDpdg1 =0;
+    int icase = 0;
+    int n_parentless = 0;
+    EVENT::MCParticleVec hf_vec;
     
-    int np = col->getNumberOfElements() > maxParticles ? maxParticles :  col->getNumberOfElements() ;
-    
+    for( int i=0 ; i<maxParticles ; ++i){
+      auto* mcp = static_cast<EVENT::MCParticle*>( col->getElementAt(i) ) ;
 
-    for( int i=0 ; i<np ; ++i){
+      if( mcp->getGeneratorStatus() == 3 ){
+	icase = 1 ;
+        hf_vec = mcp->getDaughters();
+        break; // in this case we're done!
+      }
 
-      EVENT::MCParticle* mcp = static_cast<EVENT::MCParticle*>( col->getElementAt(i) ) ;
+      if( mcp->getParents().empty() ){
+	n_parentless++ ;
+      }
+    }
+
+    /// if not Whizard 2, still need to decide which DBD case
+    /// and find hard final state
+    if (icase == 0) {
+
+      if (n_parentless > 2) { // 2 ISRs and more parentless particles
+
+        icase = 2;
+
+	for( int i=0 ; i<n_parentless ; ++i){ // this assumes that all parentless particles are at the beginning of the list
+
+	  auto* mcp = static_cast<EVENT::MCParticle*>( col->getElementAt(i) ) ;
+
+	  hf_vec.push_back(mcp);
+	}
+      }
+      else if (n_parentless == 2) {
+
+        auto* mcp = static_cast<EVENT::MCParticle*>( col->getElementAt(0) ) ;
+        auto& daughter_vec = mcp->getDaughters();
+
+        for( unsigned i=0 ; i<daughter_vec.size() ; ++i){
+          auto* dmcp = daughter_vec[i] ;
+
+          if (dmcp->getDaughters().size() > 1) {   // found daughter with more than one daughter -> hard final state
+
+	    icase = 3;   // set icase only here to keep icase == 0 in case there is no daughter with more than one daughter...
+	    hf_vec = dmcp->getDaughters();
+	    break;
+          }
+        }
+      }
+      else { // something is WRONG - cannot decode MC process
+
+	icase = 0;
+      }
+    }
+
+    if(icase == 0 || hf_vec.empty() ) {
+
+      flag.add( PF::unknown ) ;
+      return flag ;
+    }
+
+    // ------------------------------------------------------------------------------------------
+    // NOW we safely have the pointers to the MCParticles forming the hard final state in hf_vec !
+
+    for(unsigned i=0 ; i<hf_vec.size() ; ++i){
+
+      auto* mcp = hf_vec[i] ;
 
       int pdg = std::abs( mcp->getPDG() ) ;
+      pdgFSCount[ pdg ]++ ;
 
-      /// for DBD stdhep files these seem to be the particles of the hard sub-process
-      ///      -> needs generalization to other versions of Whizard ....
+      /// the first higgs is usually not the one which decays
+      if( pdg == 25 ){ // higgs
 
-      if( mcp->getParents().empty() ){ 
-	pdgFSCount[ pdg ]++ ;
+        while (mcp->getDaughters().size() == 1 && std::abs( mcp->getDaughters()[0]->getPDG() ) == 25) {
+
+          // keep going while single daughter is still a (SM) Higgs
+          mcp = mcp->getDaughters()[0] ;
+        }
+
+        hDpdg0 = mcp->getDaughters()[0]->getPDG() ;
+	if( mcp->getDaughters().size() > 1 )
+	  hDpdg1 = mcp->getDaughters()[1]->getPDG() ;
+
+        higgs = mcp ;
       }
-
-      if( pdg == 25 && mcp->getDaughters().size()==2 ){ // higgs decay
-
-	hDpdg0 = mcp->getDaughters()[0]->getPDG() ;
-	hDpdg1 = mcp->getDaughters()[1]->getPDG() ;
-	higgs = mcp ;
-      }
-
     }
-    pdgFSCount[22] -= 2 ; // remove the FSR photons
-
+    //---------------------------------------------------------------------------------------------------
 
     // fill final state particles into flag:
+    // set flag already for single occurrance of a given particle, so that eg muons and neutrinos from WW-> qqmunu will be visible
 
     for( auto m : pdgFSCount ){
-      if( m.second  > 1 )
+
+      if( m.second  > 0 )
 	flag.addFSParticles( m.first ) ;
+
+      if( m.second > 1000000 )
+	flag.add( PF::exotic ) ;
     }
 
     // fill Higgs decay
@@ -66,11 +136,17 @@ namespace UTIL{
       if( std::abs( hDpdg0 ) == std::abs( hDpdg1 ) ) // particle anti-particle pair
 	flag.addHiggsDecay( std::abs( hDpdg0 ) ) ;
 
-      
-      //FIXME: else deal with other more exotic cases ....
+      if( hDpdg0 == 22 && hDpdg1 == 23 )
+	flag.add( PF::higgsgaZ ) ;
+
+      if( hDpdg0 == 23 && hDpdg1 == 22 )
+	flag.add( PF::higgsgaZ ) ;
+
+      if( (std::abs( hDpdg0 ) > 1000000 ) || (std::abs( hDpdg1 ) > 1000000 ) )
+	flag.add( PF::exotic ) ;
+
     }
 
-    
     return flag ;
   }
 
