@@ -640,11 +640,12 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     evts->setF( ESF::pzmiss, mcppz - pfopz ) ;
 
 
-
+#if LCIO_VERSION_GE( 2 , 15 )
     ProcessFlag pFlag = decodeMCTruthProcess( mcps ) ;
     evts->setI( ESI::mcproc,  pFlag ) ;
-
 //    std::cout << " ---- mc truth process : " << pFlag << std::endl ;
+#endif
+
   }
 
 
