@@ -25,7 +25,8 @@ namespace UTIL{
     bquarks,     ///< bquarks in final state
     higgsbb,     ///< Higss to bbbar decay
     higgscc,     ///< Higss to ccbar decay
-    higgsdd,     ///< Higss to ddbar (or uu,ss) decay
+    higgsdu,     ///< Higss to ddbar or uubar decay
+    higgsss,     ///< Higss to ssbar decay
     higgsgg,     ///< Higss to gg decay
     higgstautau, ///< Higss to tautau decay
     higgsmumu,   ///< Higss to mumu decay
@@ -35,7 +36,8 @@ namespace UTIL{
     higgsgaZ,    ///< Higss to gamma Z decay
     higgsinv,    ///< Higss to invisible decay
     higgsother,  ///< Higss to other decay
-    exotic       ///< exotic process (SUSY etc)
+    exotic,      ///< exotic process (SUSY etc)
+    unknown      ///< unknwon process
   } ;
 
   /// Short name for ProcessorFlagBits
@@ -135,9 +137,9 @@ namespace UTIL{
     std::map< int, PF > _mapH =
     {
       {  5, PF::higgsbb     },
-      {  1, PF::higgsdd     },
-      {  2, PF::higgsdd     },
-      {  3, PF::higgsdd     },
+      {  1, PF::higgsdu     },
+      {  2, PF::higgsdu     },
+      {  3, PF::higgsss     },
       {  4, PF::higgscc     },
       { 15, PF::higgstautau },
       { 13, PF::higgsmumu   },
@@ -146,7 +148,8 @@ namespace UTIL{
       { 22, PF::higgsgaga   },
       { 12, PF::higgsinv    },
       { 14, PF::higgsinv    },
-      { 16, PF::higgsinv    }
+      { 16, PF::higgsinv    },
+      { 1000022, PF::higgsinv }
     } ;
  
   } ;
@@ -167,7 +170,8 @@ namespace UTIL{
     if( flag.has( PF::cquarks   ) ) os << "cquarks|" ;
     if( flag.has( PF::bquarks   ) ) os << "bquarks|" ;
     if( flag.has( PF::higgsbb     ) ) os << "higgsbb|" ;
-    if( flag.has( PF::higgsdd     ) ) os << "higgsdd|" ;
+    if( flag.has( PF::higgsdu     ) ) os << "higgsdu|" ;
+    if( flag.has( PF::higgsss     ) ) os << "higgsss|" ;
     if( flag.has( PF::higgscc     ) ) os << "higgscc|" ;
     if( flag.has( PF::higgstautau ) ) os << "higgstautau|" ;
     if( flag.has( PF::higgsmumu   ) ) os << "higgsmumu|" ;
@@ -178,6 +182,7 @@ namespace UTIL{
     if( flag.has( PF::higgsinv    ) ) os << "higgsinv|" ;
     if( flag.has( PF::higgsother  ) ) os << "higgsother|" ;
     if( flag.has( PF::exotic      ) ) os << "exotic|" ;
+    if( flag.has( PF::unknown     ) ) os << "unknown|" ;
 
     return os;
   }
