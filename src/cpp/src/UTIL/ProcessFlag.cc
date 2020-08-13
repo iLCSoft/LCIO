@@ -115,6 +115,11 @@ namespace UTIL{
         higgs = mcp ;
       }
     }
+    // for (icase == 2) we have falsly counted 2 ISR photons:
+    if( icase == 2 )
+      pdgFSCount[ 22 ] -= 2 ;
+
+
     //---------------------------------------------------------------------------------------------------
 
     // fill final state particles into flag:
