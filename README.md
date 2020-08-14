@@ -66,11 +66,12 @@ make -j 4 install
 - to get a ROOT dictionary for LCIO that allows to read LCIO files in ROOT macros and provides the Python bindings you need ROOT installed:
 
 ```sh
-. /data/ilcsoft/root/6.18.04/bin/thisroot.sh   # <-- your path to ROOT goes here
-cmake -DBUILD_ROOTDICT=ON ..
+/cvmfs/ilc.desy.de/sw/x86_64_gcc82_sl6/root/6.18.04/bin/thisroot.sh   # <-- your path to ROOT goes here (careful with compiler versions and flags!)
+cmake -DBUILD_ROOTDICT=ON  -D CMAKE_CXX_STANDARD=17 ..
 make -j 4 install
 cd ..
 . ./setup.sh  ## <--- run this in the source directory
+export LD_LIBRARY_PATH=$LCIO/lib:$LD_LIBRARY_PATH  ## <--- 
 ```
 
 
