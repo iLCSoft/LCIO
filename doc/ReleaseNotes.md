@@ -1,3 +1,11 @@
+# v02-15-01
+
+* 2020-08-14 Frank Gaede ([PR#104](https://github.com/ilcsoft/lcio/pull/104))
+  - fix the compression level:  use zlib default compression again
+          in `SIOWriter` and `MT::LCWriter`
+  - update the build instructions with ROOT in README.md
+         - and set LD_LIBRARY_PATH in setup.sh
+
 # v02-15
 
 * 2020-08-13 Frank Gaede ([PR#102](https://github.com/ilcsoft/lcio/pull/102))
