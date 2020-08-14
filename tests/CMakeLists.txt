@@ -311,7 +311,7 @@ ENDIF( CLHEP_FOUND )
 
 # ==== lcio_merge_files tests  ========
 ADD_TEST( t_lcio_merge_files "${EXECUTABLE_OUTPUT_PATH}/lcio_merge_files" merged.slcio splitting.000.slcio splitting.001.slcio splitting.002.slcio splitting.003.slcio splitting.004.slcio )
-SET_TESTS_PROPERTIES( t_lcio_merge_files PROPERTIES PASS_REGULAR_EXPRESSION "merged 10 events from 5 input files." )
+SET_TESTS_PROPERTIES( t_lcio_merge_files PROPERTIES PASS_REGULAR_EXPRESSION "merged 40 events from 5 input files." )
 
 
 # ==== lcio_event_counter tests  ========
@@ -319,13 +319,13 @@ ADD_TEST( t_lcio_event_counter "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" tr
 SET_TESTS_PROPERTIES( t_lcio_event_counter PROPERTIES PASS_REGULAR_EXPRESSION "3" )
 
 ADD_TEST( t_lcio_event_counter_splitting "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" splitting.000.slcio splitting.001.slcio splitting.002.slcio splitting.003.slcio splitting.004.slcio )
-SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "10" )
+SET_TESTS_PROPERTIES( t_lcio_event_counter_splitting PROPERTIES PASS_REGULAR_EXPRESSION "40" )
 
 ADD_TEST( t_lcio_split_file_read "${EXECUTABLE_OUTPUT_PATH}/anajob" splitting.000.slcio splitting.001.slcio splitting.002.slcio splitting.003.slcio splitting.004.slcio )
-SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "10[ ]+events read from files" )
+SET_TESTS_PROPERTIES( t_lcio_split_file_read PROPERTIES PASS_REGULAR_EXPRESSION "40[ ]+events read from files" )
 
 ADD_TEST( t_lcio_event_counter_merged "${EXECUTABLE_OUTPUT_PATH}/lcio_event_counter" merged.slcio )
-SET_TESTS_PROPERTIES( t_lcio_event_counter_merged PROPERTIES PASS_REGULAR_EXPRESSION "10" )
+SET_TESTS_PROPERTIES( t_lcio_event_counter_merged PROPERTIES PASS_REGULAR_EXPRESSION "40" )
 
 
 
