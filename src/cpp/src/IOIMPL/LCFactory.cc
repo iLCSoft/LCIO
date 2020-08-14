@@ -37,8 +37,9 @@ namespace IOIMPL{
     
     // the reason for having this class
     // so far we just create SIO objects
-
-    return new SIOWriter ;
+    auto* wrt = new SIOWriter ;
+    wrt->setCompressionLevel( -1 ) ; // default compression level
+    return  wrt ;
   }
   
   LCReader * LCFactory::createLCReader(int lcReaderFlag) {
