@@ -51,7 +51,7 @@ it still provides a good overview over the philosophy of LCIO and how to use it.
 ```sh
 git clone https://github.com/iLCSoft/LCIO.git
 cd LCIO
-git checkout v02-14-02    ##  use a specific version
+git checkout v02-15-01    ##  use a specific version
 ```
 
 - if you just want to build a plain version of LCIO:
@@ -63,13 +63,19 @@ cmake ..
 make -j 4 install
 ```
 
-- to get a ROOT dictionary for LCIO that allows to read LCIO files in ROOT macros and provides the Python bindings you need ROOT installed:
+- to get a ROOT dictionary for LCIO that allows to read LCIO files in ROOT macros and provides the Python bindings you need a compatible
+  version of ROOT installed and initialized (*make sure you use a compatible compiler and  C++ standard*), e.g.
 
 ```sh
-. /data/ilcsoft/root/6.18.04/bin/thisroot.sh   # <-- your path to ROOT goes here
-cmake -DBUILD_ROOTDICT=ON ..
+. /cvmfs/ilc.desy.de/sw/x86_64_gcc82_sl6/root/6.18.04/bin/thisroot.sh
+cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 ..
 make -j 4 install
 cd ..
+```
+
+and then initialize your LCIO installation:
+
+```sh
 . ./setup.sh  ## <--- run this in the source directory
 ```
 
