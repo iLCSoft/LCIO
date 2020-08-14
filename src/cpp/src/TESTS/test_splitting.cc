@@ -21,7 +21,7 @@ using namespace std ;
 using namespace lcio ;
 
 //static const int NRUN = 10 ;
-static const int NEVENT = 10 ; // events
+static const int NEVENT = 40 ; // events
 static const int NHITS = 100 ;  // calorimeter hits per event
 static const int SPLIT_SIZE_KB = 9 ;
 
