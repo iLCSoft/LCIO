@@ -7,10 +7,6 @@
 #include <vector>
 
 
-typedef std::map< std::string, std::string > ConfMap ;
-
-
-
 /** \class DelphesLCIOConfig
  *
  *  Configuration helper class for Delphes to LCIO conversion
@@ -24,6 +20,10 @@ class DelphesLCIOConfig{
 
 public:
   
+  typedef std::map< std::string, std::string > ConfMap ;
+  typedef std::map< std::string, std::string > StringMap ;
+  typedef std::map< std::string, float > FloatMap ;
+  typedef std::map< std::string, int > IntMap ;
 
   /// return parameter for default MCParticle collection
   std::string getMCPParameter(const std::string& key)      const { return getMapParameter( key , "MCParticleMap" ) ; }
@@ -43,6 +43,16 @@ public:
   /// return parameter for default Electron collection
   std::string getElectronParameter(const std::string& key) const { return getMapParameter( key , "ElectronMap" ) ; }
 
+  /// return map of named float parameters, e.g. for event parameters of type float
+  DelphesLCIOConfig::FloatMap getFloatMap(const std::string& mapName) const ;
+
+  /// return map of named int parameters, event parameters of type int
+  DelphesLCIOConfig::IntMap getIntMap(const std::string& mapName) const ;
+
+  /// return map of named string parameters, e.g. for event parameters of type string
+  DelphesLCIOConfig::StringMap getStringMap(const std::string& mapName) const ;
+
+
   /// return list of map names for extra jet collection (containing substring 'ExtraJet' )
   std::vector<std::string> getExtraJetMapNames() const ;
 
@@ -50,7 +60,7 @@ public:
   int toInt(const std::string& val) const ;
 
   /// convert string to float
-  int toFloat(const std::string& val) const ;
+  float toFloat(const std::string& val) const ;
 
   /// return the parameter for the given key from the named map - throws if either does not exist
   std::string getMapParameter(const std::string& key, const std::string& mapName ) const ;

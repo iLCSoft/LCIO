@@ -10,7 +10,6 @@
 
 #include "DelphesLCIOConverter.h"
 
-#include "DelphesLCIOConfig.h"
 
 #include "classes/DelphesClasses.h"
 
@@ -97,6 +96,11 @@ DelphesLCIOConverter::~DelphesLCIOConverter(){
 void DelphesLCIOConverter::readConfigFile( const char* fileName ){
 
   _cfg->readConfigFile( fileName ) ;
+
+  // read optional event parameter maps
+  _evtParF = _cfg->getFloatMap("EventParametersFloat") ;
+  _evtParI = _cfg->getIntMap("EventParametersInt") ;
+  _evtParS = _cfg->getStringMap("EventParametersString") ;
 }
 
 //-----------------------------------------------------------------
@@ -202,6 +206,21 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
     evt->parameters().setValue("crossSection",  e->CrossSection ) ;
     evt->parameters().setValue("ProcessID",     e->ProcessID  ) ;
+
+
+    // set event meta data as given in the configuration file
+    for( auto p : _evtParF ){
+      evt->parameters().setValue( p.first , (float ) p.second ) ;
+    }
+    for( auto p : _evtParI ){
+      evt->parameters().setValue( p.first , (int) p.second ) ;
+    }
+    for( auto p : _evtParS ){
+      evt->parameters().setValue( p.first , p.second ) ;
+    }
+
+
+
 
   }
 
@@ -572,12 +591,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       EVENT::FloatVec yflip ;
       yflipCol->getParameters().getFloatVals("ExclYflip12_78", yflip ) ;
 
-      if( yflip.size() != 7 ){
-
-	std::cout << "  ### incorrect number of ExclYflip12_78 parameters " <<  yflip.size()
-		  << std::endl ;
-
-      } else {
+      if( yflip.size() == 7 ){
 
 	evts->setF( ESF::y12, yflip[0] ) ;
 	evts->setF( ESF::y23, yflip[1] ) ;
@@ -723,7 +737,7 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
 
     Jet* jd = static_cast<Jet*> (tca->At(j));
 
-    if( storeYMerge && j==0 ) { // store the ymerge values for the first jet in this collection
+    if( storeYMerge && (j==0) ) { // store the ymerge values for the first jet in this collection
 
       std::vector<float> yflip = { 0.f, (float)jd->ExclYmerge23, (float)jd->ExclYmerge34,
 				        (float)jd->ExclYmerge45, (float)jd->ExclYmerge56 , 0.f, 0.f } ;

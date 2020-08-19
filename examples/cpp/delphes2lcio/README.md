@@ -1,7 +1,7 @@
 # Delphes2LCIO
 - author: F.Gaede, DESY
 - date June, 2020
-- status: EXPERIMENTAL
+
 
 
 ## Overview
@@ -71,14 +71,15 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LCIO/lib:$DELPHES_DIR/lib
 Then you can run Delphes, e.g. with
 
 ```
-DelphesSTDHEP2LCIO $DELPHES_DIR/cards/delphes_card_ILD.tcl output.slcio input.stdhep
+DelphesSTDHEP2LCIO $DELPHES_DIR/cards/delphes_card_ILC.tcl output.slcio input.stdhep
 ```
 
-**This is just an example delphes card for ILD that does not work really. Better use the 
-generic ILC Delphes card from [https://github.com/iLCSoft/ILCDelphes](https://github.com/iLCSoft/ILCDelphes)**
+**This is requires a recent version of Delphes that has the new ILC card.
+This generic ILC Delphes card can also be downloaded from
+[https://github.com/iLCSoft/ILCDelphes](https://github.com/iLCSoft/ILCDelphes)**
 
 
-This creates an LCIO files with the following default collections:
+This creates an LCIO file with the following default collections:
 
 
 ```
@@ -93,6 +94,9 @@ IsolatedMuons                 ReconstructedParticle        Muon
 PFOs                          ReconstructedParticle        EFlowTrack,EFlowPhoton,EFlowNeutralHadron
 IsolatedPhotons               ReconstructedParticle        Photon
 RecoMCTruthLink               LCRelation                     n.a.
+Durham2Jets                   ReconstructedParticle        Durham2Jets
+...                           ...                          ...
+Durham6Jets                   ReconstructedParticle        Durham6Jets
 ---------------------------------------------------------------------------
 
 ```
@@ -184,8 +188,9 @@ root [0] .x higgs_recoil_plots_fast.C("../build/E250-TDR_ws.Pe2e2h.Gwhizard-1_95
 
 ### Configuration file
 
-The mapping of Delphes branches to LCIO collection by default works for the new ILD delphes card from
-[https://github.com/ILDAnaSoft/ILDDelphes](https://github.com/ILDAnaSoft/ILDDelphes).
+The mapping of Delphes branches to LCIO collection by default works for the new ILC delphes card from
+[https://github.com/iLCSoft/ILCDelphes](https://github.com/iLCSoft/ILCDelphes).
+
 
 If needed, the configuration can be changed, for example if your delphes card produces different output
 branches such as different jet collections.
@@ -218,3 +223,23 @@ These maps for extra jet collections are optional:
 Additional jet collections can be added as long as their name contains the string `"ExtraJet"` and is different from
 all other names. For jet collections the parameter `useDelphes4Vec` defines wether the 4-vector is taken from the delphes
 jet (!=0) or wether it is computed from the jet constituent PFOs (default).
+
+
+
+#### Event Meta data
+
+Event meta data, such as cross sections or polarization data can also be added to the
+configuration file and will then be added to every event as `LCParameters`.
+
+For example add sth. like this at the end of the file:
+
+```
+# --------------------------------
+EventParametersFloat
+CrossSection_fb  1.23456
+beamPol1  1.
+beamPol2 -1.
+Energy  250.
+# --------------------------------
+
+```

@@ -6,6 +6,8 @@
 #include <map>
 #include <functional>
 
+#include "DelphesLCIOConfig.h"
+
 class TTree;
 class TClonesArray;
 class TObject;
@@ -25,8 +27,6 @@ namespace IMPL{
 namespace UTIL{
   class LCRelationNavigator;
 }
-
-class DelphesLCIOConfig ;
 
 
 /** \class DelphesLCIOConverter
@@ -78,7 +78,9 @@ private:
   std::map< unsigned, EVENT::ReconstructedParticle*> _recd2lmap ;
 
   DelphesLCIOConfig* _cfg ;
-
+  DelphesLCIOConfig::FloatMap  _evtParF ; /// optional float event parameters
+  DelphesLCIOConfig::IntMap    _evtParI ; /// optional int event parameters
+  DelphesLCIOConfig::StringMap _evtParS ; /// optional string event parameters
 };
 
 #endif /* DelphesLCIOConverter */
