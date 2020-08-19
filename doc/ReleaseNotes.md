@@ -1,3 +1,10 @@
+# v02-15-02
+
+* 2020-08-19 Frank Gaede ([PR#107](https://github.com/ilcsoft/lcio/pull/107))
+  - add optional event meta data in delphes2lcio
+        - meta data like cross sections can be added via the configuration file
+        - see [../examples/cpp/delphes2lcio/README.md](../examples/cpp/delphes2lcio/README.md) for details
+
 # v02-15-01
 
 * 2020-08-14 Frank Gaede ([PR#104](https://github.com/ilcsoft/lcio/pull/104))
