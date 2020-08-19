@@ -29,11 +29,12 @@ int DelphesLCIOConfig::toInt(const std::string& val) const {
 }
 
 /// convert string to float
-int DelphesLCIOConfig::toFloat(const std::string& val) const {
+float DelphesLCIOConfig::toFloat(const std::string& val) const {
   float f;
   std::stringstream s(val) ; s >> f  ;
   if( s.fail() )
     throw std::runtime_error( std::string("\nDelphesLCIOConfig: cannot convert to float:  ") + val ) ;
+
   return f;
 }
 // ---------------------------------------
@@ -63,6 +64,63 @@ std::string DelphesLCIOConfig::getMapParameterSave(const std::string& key, const
   auto it = m.find( key ) ;
 
   return ( it != m.end() ? it->second : std::string("")  ) ;
+}
+
+// ---------------------------------------
+
+DelphesLCIOConfig::FloatMap DelphesLCIOConfig::getFloatMap(const std::string& mapName) const {
+
+  FloatMap fmap ;
+
+  auto mit = _maps.find( mapName )  ;
+
+  if( mit != _maps.end() ){
+
+    for(auto it : mit->second ){
+
+      fmap[ it.first ] = toFloat( it.second ) ;
+    }
+  }
+
+  return fmap ;
+}
+
+
+DelphesLCIOConfig::IntMap DelphesLCIOConfig::getIntMap(const std::string& mapName) const {
+
+  IntMap imap ;
+
+  auto mit = _maps.find( mapName )  ;
+
+  if( mit != _maps.end() ){
+
+    for(auto it : mit->second ){
+
+      imap[ it.first ] = toInt( it.second ) ;
+    }
+  }
+
+  return imap ;
+
+}
+
+
+DelphesLCIOConfig::StringMap DelphesLCIOConfig::getStringMap(const std::string& mapName) const {
+
+  StringMap smap ;
+
+  auto mit = _maps.find( mapName )  ;
+
+  if( mit != _maps.end() ){
+
+    for(auto it : mit->second ){
+
+      smap[ it.first ] = it.second ;
+    }
+  }
+
+  return smap ;
+
 }
 
 // ---------------------------------------
