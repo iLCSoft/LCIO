@@ -1,4 +1,4 @@
-from base.SetupLcioDictionary import setupLcioDictionary
+from .base.SetupLcioDictionary import setupLcioDictionary
 setupLcioDictionary()
 
 import inspect, sys, ROOT, pyLCIO
@@ -9,8 +9,8 @@ for namespace in namespaces:
     setattr(pyLCIO, namespace, module)
     sys.modules['pyLCIO.' + namespace] = module
 
-from base.DecorateLcioClasses import decorateLcioClasses
+from .base.DecorateLcioClasses import decorateLcioClasses
 decorateLcioClasses()
 
-from base.HandleExceptions import setupExceptionHandling
+from .base.HandleExceptions import setupExceptionHandling
 setupExceptionHandling()

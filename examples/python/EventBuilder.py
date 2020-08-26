@@ -44,7 +44,7 @@ def generateEvents( outputFileName, nEvents ):
     run.setDescription( 'This is a test run' )
     writer.writeRunHeader( run )
     
-    for iEvent in xrange( nEvents ):
+    for iEvent in range( nEvents ):
         
         # create an event and set its parameters
         event = IMPL.LCEventImpl()
@@ -119,8 +119,8 @@ def generateEvents( outputFileName, nEvents ):
         
 
 def usage():
-    print 'Generates an MCParticle with associated SimTrackerHits for each event'
-    print 'Usage:\n  python %s <outputFile> <nEvents>' % ( sys.argv[0] )
+    print('Generates an MCParticle with associated SimTrackerHits for each event')
+    print('Usage:\n  python %s <outputFile> <nEvents>' % ( sys.argv[0] ))
 
 if __name__ == '__main__':
     if len( sys.argv ) < 3:

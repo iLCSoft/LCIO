@@ -16,7 +16,7 @@ class Reader( object ):
         self.fileIter = iter( self.fileList )
         self.isOpen = False
         
-        if fileName and isinstance( fileName, basestring ):
+        if fileName and isinstance( fileName, str ):
             self.addFile( fileName )
         elif isinstance( fileName, list ):
             self.addFileList( fileName )
@@ -47,21 +47,21 @@ class Reader( object ):
             self.fileList.append( line.strip() )
         fileListFile.close()
     
-    def next( self ):
+    def __next__( self ):
         ''' Reads the next event from the stream. '''
         if not self.isOpen:
-            self.__open__( self.fileIter.next() )
+            self.__open__( next(self.fileIter) )
         event = self.__read__()
         if event:
             return event
         else:
             self.__close__()
-            return self.next()
+            return next(self)
     
     def skip( self, nEntries ):
         ''' Skip entries from the stream '''
-        for i in xrange( int( nEntries ) ):
-            self.next()
+        for i in range( int( nEntries ) ):
+            next(self)
         
     def __close__( self ):
         ''' Close the reader and all streams '''

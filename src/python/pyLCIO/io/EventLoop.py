@@ -25,7 +25,7 @@ class EventLoop:
             elif extension in ['stdhep']:
                 self.reader = StdHepReader( fileName )
             else:
-                print 'Unknown extension for %s' % ( extension )
+                print('Unknown extension for %s' % ( extension ))
         else:
             self.reader.addFile( fileName )
         
