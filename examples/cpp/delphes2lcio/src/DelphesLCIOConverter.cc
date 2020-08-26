@@ -655,7 +655,9 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
 
 #if LCIO_VERSION_GE( 2 , 15 )
-    ProcessFlag pFlag = decodeMCTruthProcess( mcps ) ;
+    const int maxParticles = 10 ; // defined in ProcessFlag.h
+    int nMCPCheck = maxParticles > mcps->getNumberOfElements() ? mcps->getNumberOfElements()  : maxParticles ;
+    ProcessFlag pFlag = decodeMCTruthProcess( mcps, nMCPCheck ) ;
     evts->setI( ESI::mcproc,  pFlag ) ;
 //    std::cout << " ---- mc truth process : " << pFlag << std::endl ;
 #endif
