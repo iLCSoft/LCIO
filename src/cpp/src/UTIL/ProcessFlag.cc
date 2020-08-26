@@ -32,7 +32,9 @@ namespace UTIL{
     int n_parentless = 0;
     EVENT::MCParticleVec hf_vec;
     
-    for( int i=0 ; i<maxParticles ; ++i){
+    int nP = maxParticles > col->getNumberOfElements() ? col->getNumberOfElements()  : maxParticles ;
+
+    for( int i=0 ; i<nP ; ++i){
       auto* mcp = static_cast<EVENT::MCParticle*>( col->getElementAt(i) ) ;
 
       if( mcp->getGeneratorStatus() == 3 ){
