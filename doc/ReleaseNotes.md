@@ -1,3 +1,10 @@
+# v02-15-03
+
+* 2020-08-26 Frank Gaede ([PR#108](https://github.com/ilcsoft/lcio/pull/108))
+  - fix in UTIL::ProcessFlag::decodeMCTruthProcess
+        - protection for events where nMCParticles < 10
+  - fix also, independently in delphes2lcio
+
 # v02-15-02
 
 * 2020-08-19 Frank Gaede ([PR#107](https://github.com/ilcsoft/lcio/pull/107))
