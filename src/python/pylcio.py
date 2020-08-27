@@ -61,7 +61,7 @@ class PyLCIOXML:
             
     def __parseDriversNode__( self, driversNode ):
         if self.printDrivers:
-            print 'Drivers:'
+            print('Drivers:')
         for driverNode in driversNode.findall( 'driver' ):
             driverName = driverNode.get( 'name' )
             driverType = driverNode.get( 'type' )
@@ -70,17 +70,17 @@ class PyLCIOXML:
             try:
                 driverModule = importlib.import_module( driverModuleName )
             except ImportError:
-                print >> sys.stderr, 'Module "%s" does not exist'%(driverModuleName)
+                print('Module "%s" does not exist'%(driverModuleName), file=sys.stderr)
                 sys.exit( 2 )
             try:
                 driverClass = getattr( driverModule , driverClassName )
             except AttributeError:
-                print >> sys.stderr, '%s does not have a class "%s"'%(driverModuleName, driverClassName)
+                print('%s does not have a class "%s"'%(driverModuleName, driverClassName), file=sys.stderr)
                 sys.exit( 2 )
             driver = driverClass()
             self.driverDict[driverName] = driver
             if self.printDrivers:
-                print '  %s of type %s'%(driverName, driverType)
+                print('  %s of type %s'%(driverName, driverType))
             for parameterNode in driverNode:
                 parameterName = parameterNode.tag
                 parameterValue = parseValue( parameterNode.text )
@@ -88,26 +88,26 @@ class PyLCIOXML:
                 try:
                     parameterMethod = getattr( driver, parameterMethodName )
                 except AttributeError:
-                    print >> sys.stderr, '%s does not have a method "%s"'%(driverClassName, parameterMethodName)
+                    print('%s does not have a method "%s"'%(driverClassName, parameterMethodName), file=sys.stderr)
                     sys.exit( 2 )
                 parameterMethod( parameterValue )
                 if self.printDrivers:
-                    print '    %s = %s'%(parameterName, parameterValue)
+                    print('    %s = %s'%(parameterName, parameterValue))
         if self.printDrivers:
-            print ''
+            print('')
             
     def __parseExecuteNode__( self, executeNode ):
         if self.printDrivers:
-            print 'Executed drivers:'
+            print('Executed drivers:')
             index = 1
         for driverNode in executeNode.findall( 'driver' ):
             driverName = driverNode.get( 'name' )
             self.eventLoop.add( self.driverDict[driverName] )
             if self.printDrivers:
-                print '  %d) %s'%(index, driverName )
+                print('  %d) %s'%(index, driverName ))
                 index += 1
         if self.printDrivers:
-            print ''
+            print('')
                 
     
     def run( self ):

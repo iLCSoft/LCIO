@@ -24,16 +24,16 @@ def dumpevent( fileName, eventNumber, runNumber=None ):
         from pyLCIO import UTIL
         UTIL.LCTOOLS.dumpEventDetailed( event )
     elif runNumber:
-        print " couldn't find event %d - run %d in file %s" % ( eventNumber, runNumber, fileName ) 
+        print(" couldn't find event %d - run %d in file %s" % ( eventNumber, runNumber, fileName )) 
     else:
-        print ' less than %d events in file %s' % ( eventNumber, fileName )
+        print(' less than %d events in file %s' % ( eventNumber, fileName ))
 
 def usage():
     ''' Helper method to inform about the usage of this script '''
-    print ' usage: python dumpevent.py filename runNum evtNum '
-    print '    or: python dumpevent.py filename n      '
-    print '  where the first dumps the event with the specified run and event number'
-    print '  and the second simply dumps the n-th event in the file'
+    print(' usage: python dumpevent.py filename runNum evtNum ')
+    print('    or: python dumpevent.py filename n      ')
+    print('  where the first dumps the event with the specified run and event number')
+    print('  and the second simply dumps the n-th event in the file')
 
 if __name__ == '__main__':
     # check the command line parameters

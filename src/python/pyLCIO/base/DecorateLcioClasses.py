@@ -13,7 +13,7 @@ from array import array
 def addMethod( self, method, name=None ):
     ''' Convenience method to add a method to a class '''
     if not name:
-        name = method.func_name
+        name = method.__name__
     setattr( self, name, method )
 
 def getEndpointVec( self ):

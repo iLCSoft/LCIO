@@ -38,6 +38,6 @@ class EventMarkerDriver ( Driver ):
         eventNumber = event.getEventNumber()
         if eventNumber % self.interval == 0:
             if self.showRunNumber:
-                print self.runPrefix, event.getRunNumber(), self.eventPrefix, eventNumber
+                print(self.runPrefix, event.getRunNumber(), self.eventPrefix, eventNumber)
             else:
-                print self.eventPrefix, eventNumber
+                print(self.eventPrefix, eventNumber)
