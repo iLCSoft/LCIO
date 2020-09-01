@@ -216,13 +216,28 @@ The following maps are required:
 
 - *MCParticleMap, PFOMap, JetMap, MuonMap, ElectronMap, PhotonMap*.
 
-These maps for extra jet collections are optional:
+These maps for extra jet collections are optional (comment out from the configuration file, if not present for your delphes card) :
 
 - *ExtraJetMap2, ExtraJetMap3, ExtraJetMap4, ExtraJetMap5, ExtraJetMap6*.
 
 Additional jet collections can be added as long as their name contains the string `"ExtraJet"` and is different from
 all other names. For jet collections the parameter `useDelphes4Vec` defines wether the 4-vector is taken from the delphes
 jet (!=0) or wether it is computed from the jet constituent PFOs (default).
+
+
+Additional PFO maps can also be added. Their names have to start with `"ExtraPFO"`. For example
+this will create an extra PFO collection called `BCalPFOs` from the Delphes branch `BCalPhoton`
+and assign the photon PDG code:
+
+```
+ExtraPFOMapBCal
+branchName  BCalPhoton
+isCharged  0
+lcioName  BCalPFOs
+mass  0.
+pdg  22
+
+```
 
 
 
