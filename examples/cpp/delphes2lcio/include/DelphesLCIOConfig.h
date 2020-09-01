@@ -56,6 +56,9 @@ public:
   /// return list of map names for extra jet collection (containing substring 'ExtraJet' )
   std::vector<std::string> getExtraJetMapNames() const ;
 
+  /// return list of map names for extra jet collection (containing substring 'ExtraPFO' )
+  std::vector<std::string> getExtraPFOMapNames() const ;
+
   /// convert string to int
   int toInt(const std::string& val) const ;
 
@@ -140,8 +143,17 @@ private:
     { "ExtraJetMap3" , { { "lcioName", "Durham3Jets" }, { "branchName", "Jet_N3" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
     { "ExtraJetMap4" , { { "lcioName", "Durham4Jets" }, { "branchName", "Jet_N4" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
     { "ExtraJetMap5" , { { "lcioName", "Durham5Jets" }, { "branchName", "Jet_N5" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
-    { "ExtraJetMap6" , { { "lcioName", "Durham6Jets" }, { "branchName", "Jet_N6" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } }
+    { "ExtraJetMap6" , { { "lcioName", "Durham6Jets" }, { "branchName", "Jet_N6" }, { "useDelphes4Vec" , "0" }, { "storeYMerge" , "0" } } },
 
+    { "ExtraPFOMapBCal" ,
+      {
+	{ "lcioName"          , "BCalPFOs" },
+	{ "branchName"        , "BCalPhoton" },
+	{ "pdg"               , "22" },
+	{ "mass"              , "0." },
+	{ "isCharged"         , "0" },
+      }
+    },
 
   } ;
 

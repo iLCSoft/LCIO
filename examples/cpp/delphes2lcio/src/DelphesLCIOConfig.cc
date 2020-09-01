@@ -11,8 +11,21 @@ std::vector<std::string> DelphesLCIOConfig::getExtraJetMapNames() const {
   std::vector<std::string> ejmapNames ;
 
   for( auto& it : _maps ){
-      
+
     if( ( it.first.find( "ExtraJet" ) != std::string::npos) )
+      ejmapNames.push_back( it.first ) ;
+  }
+  return ejmapNames ;
+}
+
+/// return list of map names for extra PFO collection (containing substring 'ExtraPFO' )
+std::vector<std::string> DelphesLCIOConfig::getExtraPFOMapNames() const {
+
+  std::vector<std::string> ejmapNames ;
+
+  for( auto& it : _maps ){
+
+    if( ( it.first.find( "ExtraPFO" ) != std::string::npos) )
       ejmapNames.push_back( it.first ) ;
   }
   return ejmapNames ;

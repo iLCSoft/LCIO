@@ -168,6 +168,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   evt->addCollection( photons, _cfg->getPhotonParameter("lcioName") ) ;
 
   lcio::PIDHandler pfopidH( pfos );
+
   int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
   int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0",
 								"ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
@@ -532,6 +533,38 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
     }
   }
 //======================================================================
+  // ----  convert extra pfo collections if requested:
+
+  const auto& epnames = _cfg->getExtraPFOMapNames() ;
+
+  for( auto& pName : epnames ){
+
+    auto* pcol = new lcio::LCCollectionVec( lcio::LCIO::RECONSTRUCTEDPARTICLE )  ;
+
+    evt->addCollection( pcol,  _cfg->getMapParameter("lcioName", pName ) ) ;
+
+    br = tree->GetBranch( _cfg->getMapParameter("branchName", pName ).c_str() ) ;
+
+    int pdg = _cfg->toInt( _cfg->getMapParameter("pdg", pName ) ) ;
+
+    int isCharged = _cfg->toInt( _cfg->getMapParameter("isCharged", pName ) ) ;
+
+    double mass = _cfg->toFloat( _cfg->getMapParameter("mass", pName ) ) ;
+
+    if( br != nullptr ){
+
+      TClonesArray* tca = *(TClonesArray**) br->GetAddress()  ;
+
+//      std::cout << " convertExtraPFOsCharged(" << pName <<", "  << pdg << ", " << mass << ")" << std::endl ;
+
+      if( isCharged )
+	convertExtraPFOsCharged( tca, pcol , pdg, mass ) ;
+      else
+	convertExtraPFOsNeutral( tca, pcol , pdg, mass ) ;
+    }
+  }
+//======================================================================
+
   br = tree->GetBranch( _cfg->getPhotonParameter("branchName").c_str() ) ;
 
   pdg = _cfg->toInt( _cfg->getPhotonParameter("pdg") ) ;
@@ -837,4 +870,97 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
   return success ;
 }
 
+//======================================================================
+
+int DelphesLCIOConverter::convertExtraPFOsCharged(  TClonesArray* tca, EVENT::LCCollection* pfos,
+						    int pdgCh, double massCh ) {
+
+  int chPFONum = 0;
+
+  lcio::PIDHandler pfopidH( pfos );
+  int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0",
+								"ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
+
+  int nnh = tca->GetEntriesFast();
+
+  for(int j = 0; j < nnh ; ++j){
+    Track* trk = static_cast<Track*> (tca->At(j));
+
+    auto* pfo = new lcio::ReconstructedParticleImpl ;
+    pfos->addElement( pfo ) ;
+    ++chPFONum;
+
+    pfo->setType( pdgCh * trk->Charge );
+
+    pfo->setMass( massCh ) ;
+
+    double p = trk->P ;
+    double e = sqrt( p*p + massCh*massCh ) ;
+    double th = 2.*atan( exp( - trk->Eta ) );
+    double ph = trk->Phi ;
+    double m[3] = { p * cos( ph ) * sin( th ) , p * sin( ph ) * sin( th ) ,   p * cos( th ) } ;
+
+    pfo->setEnergy( e ) ;
+    pfo->setMomentum( m ) ;
+//      pfo->setCovMatrix (const float *cov) ; //fixme
+    pfo->setCharge( trk->Charge ) ;
+
+    pfopidH.setParticleID( pfo, 0, trk->PID , 1.,
+			   trackParamID, { trk->L,trk->PT,trk->D0,trk->DZ,trk->Phi,trk->CtgTheta,
+					   trk->ErrorPT, trk->ErrorD0,trk->ErrorDZ,trk->ErrorPhi,
+					   trk->ErrorCtgTheta  } ) ;
+
+    pfopidH.setParticleIDUsed( pfo, trackParamID );
+
+    pfo->setGoodnessOfPID( 1. ) ;
+
+    float ref[3] = { trk->X,  trk->Y,  trk->Z  } ;
+    pfo->setReferencePoint ( ref ) ;
+
+  }
+  return chPFONum ;
+}
+//======================================================================
+int DelphesLCIOConverter::convertExtraPFOsNeutral(  TClonesArray* tca, EVENT::LCCollection* pfos,
+						    int pdgNH, double massNH ) {
+
+  int neuPFONum = 0;
+
+  lcio::PIDHandler pfopidH( pfos );
+  int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
+
+  int nnh = tca->GetEntriesFast();
+
+  for(int j = 0; j < nnh ; ++j){
+
+    Tower* p = static_cast<Tower*> (tca->At(j));
+
+    auto* pfo = new lcio::ReconstructedParticleImpl ;
+    pfos->addElement( pfo ) ;
+    ++neuPFONum ;
+
+    pfo->setType( pdgNH );
+
+    double e = p->E ;
+    double th = 2.*atan( exp( - p->Eta ) );
+    double ph = p->Phi ;
+    double pp = sqrt( e * e - massNH * massNH ) ;
+
+    double m[3] = { pp * cos( ph ) * sin( th ) , pp * sin( ph ) * sin( th ) , pp * cos( th ) } ;
+
+    pfo->setEnergy( e ) ;
+    pfo->setMomentum( m ) ;
+    //pfo->setCovMatrix (const float *cov) ; //fixme
+    pfo->setMass( massNH ) ;
+    pfo->setCharge(0.) ;
+
+    pfopidH.setParticleID( pfo, 0, 130, 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
+    pfopidH.setParticleIDUsed( pfo, showerParamID );
+
+    pfo->setGoodnessOfPID( 1. ) ;
+  }
+
+
+  return neuPFONum ;
+}
 //======================================================================

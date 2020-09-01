@@ -26,6 +26,7 @@ namespace IMPL{
 
 namespace UTIL{
   class LCRelationNavigator;
+  class PIDHandler;
 }
 
 
@@ -69,6 +70,18 @@ public:
    *  the Delphes jet is used otherwise it is computed from the constituent PFOs.
    */
   bool convertJetCollection( TClonesArray* tca, EVENT::LCCollection* col, int useDelphes4Vec, int storeYMerge ) ;
+
+  /** Helper function to convert extra charged (Track) particles to ReconstructedParticles (PFOs).
+   *  The new elements are added to the LCIO collection. They will not be linked to the MCParticles as is done
+   *  for the standard PFOs.
+   */
+  int convertExtraPFOsCharged(  TClonesArray* tca, EVENT::LCCollection* col, int pdg, double mass );
+
+  /** Helper function to convert extra neutral (Tower) particles to ReconstructedParticles (PFOs).
+   *  The new elements are added to the LCIO collection. They will not be linked to the MCParticles as is done
+   *  for the standard PFOs.
+   */
+  int convertExtraPFOsNeutral(  TClonesArray* tca, EVENT::LCCollection* col, int pdg, double mass );
 
 private:
   IO::LCWriter *_writer=nullptr;
