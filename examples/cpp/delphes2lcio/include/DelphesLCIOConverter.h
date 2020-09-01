@@ -26,7 +26,6 @@ namespace IMPL{
 
 namespace UTIL{
   class LCRelationNavigator;
-  class PIDHandler;
 }
 
 
