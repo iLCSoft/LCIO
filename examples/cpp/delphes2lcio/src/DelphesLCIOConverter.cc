@@ -394,27 +394,11 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       pfo->setMass( massNH ) ;
       pfo->setCharge(0.) ;
 
-      // auto* pid = new lcio::ParticleIDImpl ;
-      // pid->setPDG( 130 ) ; //fixme K0L?
-      // pid->setLikelihood( 1. ) ;
-      // pid->addParameter( p->Eem  / p->E ) ;
-      // pid->addParameter( p->Ehad / p->E ) ;
-      // pfo->addParticleID( pid ) ;
-      // pfo->setParticleIDUsed( pid );
-
-      pfopidH.setParticleID( pfo, 0, 130, 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
+      pfopidH.setParticleID( pfo, 0, pdgNH , 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
       pfopidH.setParticleIDUsed( pfo, showerParamID );
 
       pfo->setGoodnessOfPID( 1. ) ;
 
-      //pfo->setReferencePoint (const float *reference)
-
-      //pfo->addParticle (EVENT::ReconstructedParticle *particle)
-      //pfo->addCluster (EVENT::Cluster *cluster)
-      //pfo->Add a cluster that has been used to create this particle.
-      //pfo->addTrack (EVENT::Track *track)
-      //pfo->Add a track that has been used to create this particle.
-      //pfo->setStartVertex (EVENT::Vertex *sv)
     }
   }
   //----------------------------------------------------------------------------------
@@ -954,7 +938,7 @@ int DelphesLCIOConverter::convertExtraPFOsNeutral(  TClonesArray* tca, EVENT::LC
     pfo->setMass( massNH ) ;
     pfo->setCharge(0.) ;
 
-    pfopidH.setParticleID( pfo, 0, 130, 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
+    pfopidH.setParticleID( pfo, 0, pdgNH , 1. , showerParamID, { p->Eem  / p->E , p->Ehad / p->E   } ) ;
     pfopidH.setParticleIDUsed( pfo, showerParamID );
 
     pfo->setGoodnessOfPID( 1. ) ;
