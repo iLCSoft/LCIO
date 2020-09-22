@@ -94,6 +94,7 @@
                     <forkMode>pertest</forkMode>
                 </configuration>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.freehep</groupId>
                 <artifactId>freehep-aid-plugin</artifactId>
@@ -123,7 +124,6 @@
                             <targetDirectory>${basedir}/src/java/</targetDirectory>
                         </configuration>
                     </execution>
-<!--                    
                     <execution>
                         <id>generate-cpp-event-headers</id>
                         <phase>generate-sources</phase>
@@ -150,9 +150,9 @@
                             <targetDirectory>${basedir}/src/cpp/include/</targetDirectory>
                         </configuration>
                     </execution>
--->                    
                 </executions>
             </plugin>
+-->                    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -181,6 +181,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!--
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
@@ -209,6 +210,7 @@
                     </execution>
                 </executions>
             </plugin>
+-->
         </plugins>
     </build>
     <dependencies>
