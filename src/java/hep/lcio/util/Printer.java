@@ -8,6 +8,7 @@ import hep.lcio.event.LCFloatVec;
 import hep.lcio.event.LCGenericObject;
 import hep.lcio.event.LCIO;
 import hep.lcio.event.LCIntVec;
+import hep.lcio.event.LCObject;
 import hep.lcio.event.LCParameters;
 import hep.lcio.event.LCRelation;
 import hep.lcio.event.LCStrVec;
@@ -38,7 +39,7 @@ import java.util.Map;
  * A utility class for printing LCEvents and LCCollections of all the LCIO
  * types. It borrows heavily from Frank Gaede's C++ dumpevent utility found in
  * <code>src/cpp/UTIL/LCTOOLS.cc</code>.
- * 
+ *
  * @author Jeremy McCormick <jeremym@slac.stanford.edu>
  */
 public class Printer {
@@ -232,9 +233,19 @@ public class Printer {
 
 			for (int i = 0; i < nprint; i++) {
 				LCRelation rel = (LCRelation) coll.getElementAt(i);
+				LCObject from = rel.getFrom();
+				LCObject to = rel.getTo();
+				int fromVal = 0;
+				int toVal = 0;
+				if (from != null) {
+					fromVal = from.hashCode();
+				}
+				if (to != null) {
+					toVal = to.hashCode();
+				}
 				ps.format(" [%08x] |  [[%08x]   | %5.3e \n",
-						Integer.valueOf(rel.getFrom().hashCode()),
-						Integer.valueOf(rel.getTo().hashCode()),
+						Integer.valueOf(fromVal),
+						Integer.valueOf(toVal),
 						Double.valueOf(rel.getWeight()));
 			}
 		}
