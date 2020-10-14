@@ -384,7 +384,8 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       double e = p->E ;
       double th = 2.*atan( exp( - p->Eta ) );
       double ph = p->Phi ;
-      double pp = sqrt( e * e - massNH * massNH ) ;
+      double pp = e ; // sqrt( e * e - massNH * massNH ) ;
+      // create a massless 4-vector to avoid nan's
 
       double m[3] = { pp * cos( ph ) * sin( th ) , pp * sin( ph ) * sin( th ) , pp * cos( th ) } ;
 
@@ -928,7 +929,8 @@ int DelphesLCIOConverter::convertExtraPFOsNeutral(  TClonesArray* tca, EVENT::LC
     double e = p->E ;
     double th = 2.*atan( exp( - p->Eta ) );
     double ph = p->Phi ;
-    double pp = sqrt( e * e - massNH * massNH ) ;
+    double pp = e ; // sqrt( e * e - massNH * massNH ) ;
+    // create a massless 4-vector to avoid nan's
 
     double m[3] = { pp * cos( ph ) * sin( th ) , pp * sin( ph ) * sin( th ) , pp * cos( th ) } ;
 
