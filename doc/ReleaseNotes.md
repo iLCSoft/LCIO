@@ -1,3 +1,17 @@
+# v02-15-04
+
+* 2020-10-14 Frank Gaede ([PR#115](https://github.com/ilcsoft/lcio/pull/115))
+  - fix in `delphes2lcio` example
+       - avoid NANs in jet 4-momenta by using zero mass hyptheses
+       - NB: the mass is still set independently to the specified value (following PandoraPFA)
+
+* 2020-09-02 Frank Gaede ([PR#111](https://github.com/ilcsoft/lcio/pull/111))
+  - delphes2lcio: fix PDG in PID objects of neutral hadrons
+
+* 2020-09-01 Frank Gaede ([PR#110](https://github.com/ilcsoft/lcio/pull/110))
+  - delphes2lcio: add optional extra PFO collections
+          - add by default BCalPFOs created from branch BCalPhotons
+
 # v02-15-03
 
 * 2020-08-26 Frank Gaede ([PR#108](https://github.com/ilcsoft/lcio/pull/108))
