@@ -121,7 +121,7 @@ void DelphesLCIOConverter::writeEvent(TTree* tree){
 void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* evt){
 
 
-  //int nEntry =  tree->GetEntriesFast() ;
+  //int nEntry =  tree->GetEntries() ;
 
   static bool first_event = true ;
 
@@ -132,7 +132,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
       TBranch *br = dynamic_cast<TBranch*>(tree->GetListOfBranches()->At(i));
       if( !strcmp(br->GetClassName(),"TClonesArray") )
 	std::cout << " *************** branch \"" << br->GetName() << " --- " << br->GetClassName()
-		  << " - " <<   (*(TClonesArray**) br->GetAddress())->GetEntriesFast()
+		  << " - " <<   (*(TClonesArray**) br->GetAddress())->GetEntries()
 		  << std::endl;
     }
 
@@ -235,7 +235,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
 
     TClonesArray* col = *(TClonesArray**) gpB->GetAddress()  ;
 
-    int ngp = col->GetEntriesFast();
+    int ngp = col->GetEntries();
 
     for(int j = 0; j < ngp ; ++j){
       GenParticle* p = (GenParticle*) col->At(j);
@@ -281,7 +281,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   if( trB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) trB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+    int nnh = col->GetEntries();
 
     for(int j = 0; j < nnh ; ++j){
 
@@ -354,7 +354,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   if( nhB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) nhB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+    int nnh = col->GetEntries();
 
     for(int j = 0; j < nnh ; ++j){
 
@@ -409,7 +409,7 @@ void DelphesLCIOConverter::convertTree2LCIO( TTree *tree , lcio::LCEventImpl* ev
   if( efphB != nullptr ){
 
     TClonesArray* col = *(TClonesArray**) efphB->GetAddress()  ;
-    int nnh = col->GetEntriesFast();
+    int nnh = col->GetEntries();
 
     for(int j = 0; j < nnh ; ++j){
 
@@ -702,7 +702,7 @@ bool DelphesLCIOConverter::convertPFORefCollection(TClonesArray* tca, EVENT::LCC
 						   int pdg) {
   bool success = true ;
 
-  int n = tca->GetEntriesFast();
+  int n = tca->GetEntries();
 
   for(int j = 0; j < n ; ++j){
 
@@ -751,7 +751,7 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
   int jetParamID = jetpidH.addAlgorithm( "JetParameters" , {"Flavor","FlavorAlgo","FlavorPhys","BTag",
 							    "BTagAlgo","BTagPhys",
 							    "TauTag","Charge","EhadOverEem"} ) ;
-  int n = tca->GetEntriesFast();
+  int n = tca->GetEntries();
 
   for(int j = 0; j < n ; ++j){
 
@@ -769,7 +769,7 @@ bool DelphesLCIOConverter::convertJetCollection(TClonesArray* tca, EVENT::LCColl
 
     col->addElement( jet ) ;
 
-    int nc = jd->Constituents.GetEntriesFast() ;
+    int nc = jd->Constituents.GetEntries() ;
 
     std::vector<lcio::ReconstructedParticle*> jetPFOs;
 
@@ -866,7 +866,7 @@ int DelphesLCIOConverter::convertExtraPFOsCharged(  TClonesArray* tca, EVENT::LC
   int trackParamID = pfopidH.addAlgorithm( "TrackParameters" , {"L","PT","D0","DZ","Phi","CtgTheta","ErrorPT","ErrorD0",
 								"ErrorDZ","ErrorPhi","ErrorCtgTheta"} ) ;
 
-  int nnh = tca->GetEntriesFast();
+  int nnh = tca->GetEntries();
 
   for(int j = 0; j < nnh ; ++j){
     Track* trk = static_cast<Track*> (tca->At(j));
@@ -914,7 +914,7 @@ int DelphesLCIOConverter::convertExtraPFOsNeutral(  TClonesArray* tca, EVENT::LC
   lcio::PIDHandler pfopidH( pfos );
   int showerParamID = pfopidH.addAlgorithm( "ShowerParameters" , {"emFraction","hadFraction"} ) ;
 
-  int nnh = tca->GetEntriesFast();
+  int nnh = tca->GetEntries();
 
   for(int j = 0; j < nnh ; ++j){
 
