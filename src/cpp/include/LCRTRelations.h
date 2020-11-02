@@ -493,7 +493,7 @@ namespace lcrtrel{
     // traits definitions
     typedef std::type_index                         ext_index ;
     typedef std::shared_ptr<void>                   ext_type ;
-    typedef std::map<const ext_index, ext_type>     ext_map ;
+    typedef std::map<ext_index, ext_type>     ext_map ;
     
   public:
     /** Provides access to an extension object - the type and ownership is defined 
