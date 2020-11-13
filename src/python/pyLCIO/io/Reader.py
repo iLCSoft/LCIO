@@ -26,7 +26,7 @@ class Reader( object ):
             self.addFileList( fileName )
     
     def __iter__( self ):
-        return self
+        return self.reader.__iter__()
     
     def getNumberOfEvents( self ):
         ''' Get the number of events in the stream '''
