@@ -57,6 +57,8 @@ configure_file (
 
 LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
+option(LCIO_SET_RPATH   "Link libraries with built-in RPATH (run-time search path)" ON)
+
 #FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
 
 # load default settings from ILCSOFT_CMAKE_MODULES
