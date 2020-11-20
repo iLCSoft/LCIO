@@ -1,35 +1,43 @@
-## Set the default compiler flags for all projects picking up default ilcutil settings
-## This runs checks if compilers support the flag and sets them, if they do
-## this will create a humongous amount of warnings when compiling :)
+include(CheckCXXCompilerFlag)
 
-INCLUDE(CheckCXXCompilerFlag)
+SET(COMPILER_FLAGS -Wall -Wdeprecated -Weffc++ -Wextra -Wformat-security -Wno-long-long -Wno-non-virtual-dtor -Wshadow -Wuninitialized -pedantic -fdiagnostics-color=auto)
 
-SET(COMPILER_FLAGS -Wall -Wextra -Wshadow -Weffc++ -pedantic -Wno-long-long -Wuninitialized -Wno-non-virtual-dtor -Wheader-hygiene)
+# AppleClang/Clang specific warning flags
+if(CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
+  set ( COMPILER_FLAGS ${COMPILER_FLAGS} -Winconsistent-missing-override -Wno-c++1z-extensions -Wheader-hygiene )
+endif()
 
-IF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" )
- LIST( APPEND COMPILER_FLAGS -Wl,-no-undefined )
-ENDIF()
-
-
-MESSAGE( STATUS "FLAGS ${COMPILER_FLAGS}" )
 FOREACH( FLAG ${COMPILER_FLAGS} )
-
-  ## meed to replace the minus or plus signs from the variables, because it is passed
-  ## as a macro to g++ which causes a warning about no whitespace after macro
-  ## definition
   STRING(REPLACE "-" "_" FLAG_WORD ${FLAG} )
   STRING(REPLACE "+" "P" FLAG_WORD ${FLAG_WORD} )
 
   CHECK_CXX_COMPILER_FLAG( "${FLAG}" CXX_FLAG_WORKS_${FLAG_WORD} )
   IF( ${CXX_FLAG_WORKS_${FLAG_WORD}} )
-    MESSAGE ( STATUS "Adding ${FLAG} to CXX_FLAGS" )
-    ### We prepend the flag, so they are overwritten by whatever the user sets in his own configuration
-    SET ( CMAKE_CXX_FLAGS "${FLAG} ${CMAKE_CXX_FLAGS}")
+    MESSAGE("Adding ${FLAG} to CXX_FLAGS" )
+    SET ( CMAKE_CXX_FLAGS "${FLAG} ${CMAKE_CXX_FLAGS} ")
   ELSE()
-    MESSAGE ( STATUS "NOT Adding ${FLAG} to CXX_FLAGS" )
+    MESSAGE("NOT Adding ${FLAG} to CXX_FLAGS" )
   ENDIF()
 ENDFOREACH()
 
-IF( "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.9 )
-  SET( CMAKE_CXX_FLAGS "-fdiagnostics-color=auto ${CMAKE_CXX_FLAGS}" )
-ENDIF()
+# resolve which linker we use
+execute_process(COMMAND ${CMAKE_CXX_COMPILER} -Wl,--version OUTPUT_VARIABLE stdout ERROR_QUIET)
+if("${stdout}" MATCHES "GNU ")
+  set(LINKER_TYPE "GNU")
+else()
+  execute_process(COMMAND ${CMAKE_CXX_COMPILER} -Wl,-v ERROR_VARIABLE stderr )
+  if(("${stderr}" MATCHES "PROGRAM:ld") AND ("${stderr}" MATCHES "PROJECT:ld64"))
+    set(LINKER_TYPE "APPLE")
+  else()
+    set(LINKER_TYPE "unknown")
+    MESSAGE("Detected unknown linker: ${stdout} ${stderr}" )
+  endif()
+endif()
+
+if("${LINKER_TYPE}" STREQUAL "APPLE")
+  SET ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,-undefined,error")
+elseif("${LINKER_TYPE}" STREQUAL "GNU")
+  SET ( CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")
+else()
+  MESSAGE( WARNING "No known linker (GNU or Apple) has been detected, pass no flags to linker" )
+endif()
