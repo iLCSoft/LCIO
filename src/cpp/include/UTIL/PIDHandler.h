@@ -138,7 +138,7 @@ namespace UTIL{
   protected:
     UnknownAlgorithm() {  /*no_op*/ ; } 
   public: 
-    virtual ~UnknownAlgorithm() throw() { /*no_op*/; } 
+    virtual ~UnknownAlgorithm() { /*no_op*/; } 
     
     UnknownAlgorithm( std::string text ){
       message = "lcio::UnknownAlgorithm: " + text ;
