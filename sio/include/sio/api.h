@@ -469,7 +469,7 @@ namespace sio {
       device.data( rec_info._options ) ;
       device.data( rec_info._data_length ) ;
       // get back the buffer
-      rec_buf = std::move( device.take_buffer() ) ;
+      rec_buf = device.take_buffer() ;
     }
     catch( sio::exception &e ) {
       SIO_RETHROW( e, sio::error_code::io_failure, "Couldn't compress record buffer" ) ;

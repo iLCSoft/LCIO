@@ -18,9 +18,9 @@ namespace sio {
     /**
      *  @brief  Set the compression level.
      *          - Z_DEFAULT_COMPRESSION: default zlib compression level
-     *          - -1: no commpression
+     *          - 0: no commpression
      *          - [1-9] various levels
-     *          Note that above 9, the level is to 9
+     *          Note that above 9, the level is set to 9
      *          
      *  @param  level the compression level to use
      */
@@ -50,8 +50,8 @@ namespace sio {
     void compress( const buffer_span &inbuf, buffer &outbuf ) ;
     
   private:
-    ///< The compression level (on compress)
-    int               _level {0} ;
+    ///< The compression level (on compress) - default: Z_DEFAULT_COMPRESSION (-1)
+    int               _level {-1} ;
   };
 
 }

@@ -161,11 +161,11 @@ namespace sio {
     /// No default constructor
     write_device() = delete ;
     /// Default copy constructor
-    write_device( const write_device & ) = default ;
+    write_device( const write_device & ) = delete ;
     /// Default move constructor
     write_device( write_device && ) = default ;
     /// Default assignement operator
-    write_device& operator=( const write_device & ) = default ;
+    write_device& operator=( const write_device & ) = delete ;
     /// Default move assignement operator
     write_device& operator=( write_device && ) = default ;
     /// Default destructor
