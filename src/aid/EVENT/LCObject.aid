@@ -28,6 +28,11 @@ using namespace lcrtrel ;
 public interface LCObject extends Cloneable, LCRTRelations{
 @ifdef cpp
 
+@cpp{
+  LCObject() = default ;
+  LCObject(const LCObject&) = default ;
+}
+  
     /** Returns an object id for internal (debugging) use in LCIO.
      */
     public int id() const ;
