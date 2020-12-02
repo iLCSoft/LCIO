@@ -97,6 +97,10 @@ public interface LCEvent {
     /** Parameters defined for this event.
      */
     public LCParameters& parameters() ;
+
+    /** Get the runtime extensions for this event.
+     */
+    public LCRTRelations& runtime() ;
 @endif
 
 
