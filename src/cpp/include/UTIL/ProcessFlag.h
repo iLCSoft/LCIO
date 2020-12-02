@@ -104,14 +104,14 @@ namespace UTIL{
     ProcessFlag& operator=( int flag) { _flag = flag ; return *this ;}
 
     /// conparison - true if identical processes
-    bool operator==(ProcessFlag& f) { return _flag == f._flag ; }
+    bool operator==(const ProcessFlag& f) const { return _flag == f._flag ; }
 
     /// true if this ProcessFlag contains everything in f
-    bool contains(ProcessFlag& f) { return ( _flag & f._flag ) == f._flag ; }
+    bool contains(const ProcessFlag& f) const { return ( _flag & f._flag ) == f._flag ; }
 
   
     /// conversion to int
-    operator int() { return _flag ; }
+    operator int() const { return _flag ; }
 
     /// check if this bit is present
     bool has(PF bit) const { return (_flag & (1<< (int) bit)   ) ? true : false ; } 
@@ -155,7 +155,7 @@ namespace UTIL{
   } ;
 
 
-  std::ostream& operator<<(std::ostream& os, ProcessFlag flag ){
+  inline std::ostream& operator<<(std::ostream& os, ProcessFlag flag ){
 
     os << std::hex << "0x" << (int) flag << std::dec << " -> |" ;
 
