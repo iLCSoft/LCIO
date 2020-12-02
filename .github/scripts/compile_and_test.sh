@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /Package/.travis-ci.d/init_x86_64.sh
+source /cvmfs/sft.cern.ch/lcg/views/${VIEW}/setup.sh
 
 cd /Package
 mkdir build
