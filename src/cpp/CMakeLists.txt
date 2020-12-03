@@ -485,14 +485,15 @@ IF( BUILD_LCIO_EXAMPLES )
   ADD_LCIO_EXAMPLE( lcrtrelation )
   ADD_LCIO_EXAMPLE( readcalibration )
 
-  # LCIO SHELL needs curses and readline libraries
-  FIND_PACKAGE( Curses QUIET )
-  FIND_LIBRARY( READLINE_LIBRARY readline PATHS /usr/local/lib64 /usr/local/lib )
-  IF( CURSES_LIBRARY AND READLINE_LIBRARY )
-    ADD_LCIO_EXAMPLE( lsh )
-    TARGET_LINK_LIBRARIES( bin_lsh ${CURSES_LIBRARY} ${READLINE_LIBRARY} )
-  ELSE()
-    MESSAGE( STATUS "cannot build lsh: curses and/or readline libraries not found" )
-  ENDIF()
+## do not build the out-of data lsh example
+##  # LCIO SHELL needs curses and readline libraries
+##  FIND_PACKAGE( Curses QUIET )
+##  FIND_LIBRARY( READLINE_LIBRARY readline PATHS /usr/local/lib64 /usr/local/lib )
+##  IF( CURSES_LIBRARY AND READLINE_LIBRARY )
+##    ADD_LCIO_EXAMPLE( lsh )
+##    TARGET_LINK_LIBRARIES( bin_lsh ${CURSES_LIBRARY} ${READLINE_LIBRARY} )
+##  ELSE()
+##    MESSAGE( STATUS "cannot build lsh: curses and/or readline libraries not found" )
+##  ENDIF()
 ENDIF()
 # ============================================================================
