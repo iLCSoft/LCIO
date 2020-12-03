@@ -51,7 +51,7 @@ class Reader( object ):
             self.fileList.append( line.strip() )
         fileListFile.close()
     
-    def next( self ):
+    def __next__( self ):
         ''' Reads the next event from the stream. '''
         if not self.isOpen:
             self.__open__(next(self.fileIter))
@@ -61,7 +61,9 @@ class Reader( object ):
         else:
             self.__close__()
             return next(self)
-    
+
+    next = __next__  # for Python 2
+
     def skip( self, nEntries ):
         ''' Skip entries from the stream '''
         for i in range(int(nEntries)):
