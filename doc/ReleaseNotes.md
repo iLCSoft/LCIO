@@ -1,3 +1,8 @@
+# v02-16-01
+
+* 2021-01-06 Remi Ete ([PR#129](https://github.com/iLCSoft/LCIO/pull/129))
+  - Fixed skip record condition in Random Access Manager
+
 # v02-16
 
 * 2020-12-03 Marko Petric ([PR#127](https://github.com/ilcsoft/lcio/pull/127))
