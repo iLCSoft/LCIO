@@ -9,7 +9,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
 
 # project name
 PROJECT( LCIO )
-
+include(GNUInstallDirs)
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
@@ -316,4 +316,4 @@ MESSAGE( STATUS "" )
 # generate and install following configuration files
 GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake )
 
-INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION lib/cmake)
+INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
