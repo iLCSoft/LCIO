@@ -42,7 +42,7 @@ FIND_PATH( LCIO_INCLUDE_DIRS
 
 
 # ---------- libraries --------------------------------------------------------
-INCLUDE( "${LCIO_ROOT}/lib/cmake/MacroCheckPackageLibs.cmake" )
+INCLUDE( "${LCIO_ROOT}/@CMAKE_INSTALL_LIBDIR@/cmake/MacroCheckPackageLibs.cmake" )
 
 # only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
 # additional components are set by cmake in variable PKG_FIND_COMPONENTS
@@ -54,7 +54,7 @@ CHECK_PACKAGE_LIBS( LCIO lcio @CHECK_PACKAGE_SIO_LIBRARY@ )
 
 # ---------- libraries dependencies -------------------------------------------
 # this sets LCIO_${COMPONENT}_LIB_DEPENDS variables
-#INCLUDE( "${LCIO_ROOT}/lib/cmake/LCIOLibDeps.cmake" )
+#INCLUDE( "${LCIO_ROOT}/@CMAKE_INSTALL_LIBDIR@/cmake/LCIOLibDeps.cmake" )
  
 
 
