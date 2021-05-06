@@ -296,13 +296,11 @@ ADD_SHARED_LIBRARY( lcio
 INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
-TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
+TARGET_LINK_LIBRARIES( lcio PUBLIC SIO::sio )
 TARGET_LINK_LIBRARIES( lcioF77 lcio )
 
 ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 # ----------------------------------------------------------------------------
-
-
 
 
 # -------- rootdict library --------------------------------------------------
@@ -317,6 +315,8 @@ IF( BUILD_ROOTDICT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
     INCLUDE(MacroRootDict)
+
+    GET_TARGET_PROPERTY(SIO_INCLUDE_DIRS SIO::sio INTERFACE_INCLUDE_DIRECTORIES)
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
