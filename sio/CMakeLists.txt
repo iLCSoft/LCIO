@@ -43,11 +43,13 @@ SET_TARGET_PROPERTIES(sio PROPERTIES
   SOVERSION ${${PROJECT_NAME}_SOVERSION}
   )
 
-
+# Install the targets and the headers
 INSTALL(TARGETS sio
   EXPORT SIOTargets
   DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
+INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/sio DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SIO)
+
 # mimic the SIOConfig.cmake variables for the LCIO project
 SET( SIO_VERSION                  "${SIO_VERSION}"                       CACHE STRING "The SIO version" )
-SET( CHECK_PACKAGE_SIO_LIBRARY    "sio"                                  CACHE STRING "The name of the builtin SIO library to check when searching for LCIO package" )
+SET( CHECK_PACKAGE_SIO_LIBRARY    "SIO::sio"                                  CACHE STRING "The name of the builtin SIO library to check when searching for LCIO package" )

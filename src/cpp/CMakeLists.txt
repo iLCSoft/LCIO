@@ -257,15 +257,8 @@ SET_SOURCE_FILES_PROPERTIES(
 )
 # ----------------------------------------------------------------------------
 
-
-
-
-# -------- include directories -----------------------------------------------
-INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
-INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
-
 # install public headers
-INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
+INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     PATTERN "*.txt" EXCLUDE
     #PATTERN "*empty_ignore.h" EXCLUDE
     PATTERN "*/SIO/*" EXCLUDE
@@ -277,27 +270,42 @@ INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
 )
 
 # install aid generated c++ headers
-INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
+INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 # ----------------------------------------------------------------------------
 
-
-
 # ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
-ADD_SHARED_LIBRARY( lcio
+
+ADD_LIBRARY(lcio SHARED
   ${LCIO_IMPL_SRCS}
   ${LCIO_IOIMPL_SRCS}
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
   ${LCIO_MT_SRCS}
-)
-INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+  )
+ADD_LIBRARY(LCIO::lcio ALIAS lcio)
 
-TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
+TARGET_LINK_LIBRARIES( lcio PUBLIC Threads::Threads )
 TARGET_LINK_LIBRARIES( lcio PUBLIC SIO::sio )
+target_include_directories(lcio
+  PUBLIC
+  $<BUILD_INTERFACE:${LCIO_AID_HEADERS_OUTPUT_DIR}>
+  $<BUILD_INTERFACE:${LCIO_CXX_HEADERS_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+
+SET_TARGET_PROPERTIES(lcio PROPERTIES
+  # create *nix style library versions + symbolic links
+  VERSION ${${PROJECT_NAME}_VERSION}
+  SOVERSION ${${PROJECT_NAME}_SOVERSION}
+  )
+
+ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
 TARGET_LINK_LIBRARIES( lcioF77 lcio )
+
+INSTALL(TARGETS lcio lcioF77
+  EXPORT LCIOTargets
+  DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 # ----------------------------------------------------------------------------

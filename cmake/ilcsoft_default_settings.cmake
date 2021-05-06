@@ -10,7 +10,6 @@ INCLUDE( MacroAddSharedLibrary )
 INCLUDE( MacroInstallSharedLibrary )
 INCLUDE( MacroInstallDirectory )
 INCLUDE( MacroDisplayStandardVariables )
-INCLUDE( MacroGeneratePackageConfigFiles )
 
 
 # include ilcsoft default settings
