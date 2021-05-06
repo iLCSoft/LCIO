@@ -196,7 +196,7 @@ c--------   set the flag bits to store position and pdg for simulated calorimete
             do k=1,nhit
 
                hit = lcsthcreate() 
-               status = lcsthsetcellid( hit,  314159 ) 
+               status = lcsthsetcellid0( hit,  314159 )
                sthpos(1) = 1.
                sthpos(2) = 2.
                sthpos(3) = 3.
