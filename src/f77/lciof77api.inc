@@ -128,12 +128,12 @@ c-----the MCParticle interface
 
 c-----the SimTrackerHit interface
       PTRTYPE lcsthcreate, lcsthgetmcparticle
-      integer lcsthdelete, lcsthgetcellid
+      integer lcsthdelete, lcsthgetcellid, lcsthgetcellid0, lcsthgetcellid1
       real    lcsthgetdedx, lcsthgetedep, lcsthgettime
       double precision lcsthgetposition
       real lcsthgetmomentum, lcsthgetpathlength
-      integer lcsthsetcellid, lcsthsetposition, lcsthsetdedx
-      integer lcsthsetedep
+      integer lcsthsetcellid0, lcsthsetcellid1, lcsthsetposition
+      integer lcsthsetedep, lcsthsetdedx
       integer lcsthsettime, lcsthsetmcparticle, lcsthsetmomentum
       integer lcsthsetmomentumxyz, lcsthsetpathlength
 

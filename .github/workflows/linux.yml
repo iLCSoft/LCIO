@@ -24,7 +24,12 @@ jobs:
         run: |
           mkdir build install
           cd build
-          cmake -GNinja -DCMAKE_CXX_STANDARD=17 -DBUILD_ROOTDICT=ON -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" -DCMAKE_INSTALL_PREFIX=../install ..
-          ninja -k0
-          ninja install
+          cmake -DCMAKE_CXX_STANDARD=17 \
+            -DBUILD_ROOTDICT=ON \
+            -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
+            -DCMAKE_INSTALL_PREFIX=../install \
+            -DBUILD_F77_TESTJOBS=ON \
+            ..
+          make -k
+          make install
           ctest --output-on-failure

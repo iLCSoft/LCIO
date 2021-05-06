@@ -25,7 +25,6 @@ int lcsthgetquality( PTRTYPE hit ) ;
 
 PTRTYPE lcsthgetmcparticle( PTRTYPE hit )  ;
 
-int lcsthsetcellid( PTRTYPE hit, int id ) ;
 int lcsthsetcellid0( PTRTYPE hit, int id ) ;
 int lcsthsetcellid1( PTRTYPE hit, int id ) ;
 int lcsthsetposition( PTRTYPE hit, double pos[3] )  ;
@@ -57,8 +56,7 @@ FCALLSCFUN1(INT, lcsthgetquality,LCSTHGETQUALITY,lcsthgetquality,CFORTRANPNTR)
 
 FCALLSCFUN1(CFORTRANPNTR,lcsthgetmcparticle,LCSTHGETMCPARTICLE,lcsthgetmcparticle,CFORTRANPNTR) 
 
-FCALLSCFUN2(INT, lcsthsetcellid, LCSTHSETCELLID, lcsthsetcellid, CFORTRANPNTR, INT ) 
-FCALLSCFUN2(INT, lcsthsetcellid0, LCSTHSETCELLID0, lcsthsetcellid0, CFORTRANPNTR, INT ) 
+FCALLSCFUN2(INT, lcsthsetcellid0, LCSTHSETCELLID0, lcsthsetcellid0, CFORTRANPNTR, INT )
 FCALLSCFUN2(INT, lcsthsetcellid1, LCSTHSETCELLID1, lcsthsetcellid1, CFORTRANPNTR, INT ) 
 FCALLSCFUN2(INT, lcsthsetposition, LCSTHSETPOSITION, lcsthsetposition, CFORTRANPNTR, DOUBLEV ) 
 FCALLSCFUN2(INT, lcsthsetmomentum, LCSTHSETMOMENTUM, lcsthsetmomentum, CFORTRANPNTR, FLOATV ) 
