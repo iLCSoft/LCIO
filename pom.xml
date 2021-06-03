@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>lcio</artifactId>
     <groupId>org.lcsim</groupId>
@@ -9,25 +9,25 @@
     <scm>
         <connection>scm:cvs:pserver:${maven.username}@cvs.freehep.org:/cvs/lcd:lcio</connection>
         <developerConnection>scm:cvs:pserver:${maven.username}@cvs.freehep.org:/cvs/lcd:lcio</developerConnection>
-        <url>http://source.freehep.org/jcvsweb/ilc/LCSIM/list/lcio</url>
+        <url>https://source.freehep.org/jcvsweb/ilc/LCSIM/list/lcio</url>
     </scm>
     <distributionManagement>
         <repository>
             <id>lcsim-repo-releases</id>
             <name>LCSIM Releases maven repository</name>
-            <url>http://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-releases/</url>
+            <url>https://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-releases/</url>
         </repository>
         <snapshotRepository>
             <id>lcsim-repo-snapshots</id>
             <name>LCSIM Snapshots maven repository</name>
-            <url>http://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-snapshot/</url>
+            <url>https://srs.slac.stanford.edu/nexus/content/repositories/lcsim-maven2-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
     <repositories>
         <repository>
             <id>lcsim-maven</id>
             <name>org.lcsim Maven Repository</name>
-            <url>http://lcsim.org/maven2</url>
+            <url>https://lcsim.org/maven2</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -37,7 +37,7 @@
         <repository>
             <id>freehep-maven</id>
             <name>FreeHEP Maven 2 Repository</name>
-            <url>http://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
+            <url>https://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -47,14 +47,14 @@
         <repository>
             <id>repo1</id>
             <name>repo1</name>
-            <url>http://repo1.maven.org/maven2/</url>
+            <url>https://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
             <id>freehep-maven-plugin-repo</id>
             <name>Freehep Plugin Repository</name>
-            <url>http://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
+            <url>https://srs.slac.stanford.edu/nexus/content/groups/freehep-maven2-public/</url>
         </pluginRepository>
     </pluginRepositories>
     <build>
