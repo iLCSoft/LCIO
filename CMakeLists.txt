@@ -289,7 +289,9 @@ ENDIF()
 
 
 # directory containing lcio tests
-ADD_SUBDIRECTORY( ./tests )
+IF( BUILD_TESTING )
+  ADD_SUBDIRECTORY( ./tests )
+ENDIF()
 
 
 ### DOCUMENTATION ###########################################################
