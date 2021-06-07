@@ -7,9 +7,10 @@
     <version>2.7.4-SNAPSHOT</version>
     <description>Compilation, tests, and dependencies for LCIO Java Library.</description>
     <scm>
-        <connection>scm:cvs:pserver:${maven.username}@cvs.freehep.org:/cvs/lcd:lcio</connection>
-        <developerConnection>scm:cvs:pserver:${maven.username}@cvs.freehep.org:/cvs/lcd:lcio</developerConnection>
-        <url>https://source.freehep.org/jcvsweb/ilc/LCSIM/list/lcio</url>
+        <connection>scm:git:git://github.com/jeffersonlab/hps-lcio.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jeffersonlab/hps-lcio.git</developerConnection>
+        <url>http://github.com/jeffersonlab/hps-lcio</url>
+        <tag>HEAD</tag>
     </scm>
     <distributionManagement>
         <repository>
