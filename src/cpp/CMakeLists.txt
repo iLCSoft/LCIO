@@ -315,9 +315,6 @@ ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 
 IF( BUILD_ROOTDICT )
 
-  #fg: for ROOT 6 we need the .src/cpp as include directory
-  INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
-
     # special rootcint definitions for lcio
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
@@ -346,7 +343,7 @@ IF( BUILD_ROOTDICT )
 #    FILE( GLOB_RECURSE UTIL_CXX_HEADERS_LIST ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h )
 
     # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers
+    SET( exclude_headers
         ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
@@ -409,12 +406,13 @@ IF( BUILD_ROOTDICT )
 
 
     # ------ build lcioDict library ---------------------------------
+    ADD_LIBRARY( lcioDict ${lcio_rootdict_sources} )
+    SET_TARGET_PROPERTIES( lcioDict PROPERTIES
+      # create *nix style library versions + symbolic links
+      VERSION ${${PROJECT_NAME}_VERSION}
+      SOVERSION ${${PROJECT_NAME}_SOVERSION})
 
-    INCLUDE_DIRECTORIES( "${ROOT_DICT_OUTPUT_DIR}" )
-    INCLUDE_DIRECTORIES( SYSTEM "${ROOT_INCLUDE_DIRS}" )
-
-    ADD_SHARED_LIBRARY( lcioDict ${lcio_rootdict_sources} )
-    TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} lcio )
+    TARGET_LINK_LIBRARIES(lcioDict LCIO::lcio ROOT::Core)
 
     IF( APPLE )
 
@@ -433,8 +431,9 @@ IF( BUILD_ROOTDICT )
 
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
-
-    INSTALL_SHARED_LIBRARY( lcioDict DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+    INSTALL( TARGETS lcioDict
+      EXPORT LCIOTargets
+      DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     #fg: for root6 we also need to install the pcm files ...
     SET( ROOT_DICT_PCM_FILES
