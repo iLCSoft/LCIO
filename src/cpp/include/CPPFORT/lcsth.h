@@ -6,36 +6,38 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcsthcreate() ;
-int lcsthdelete( PTRTYPE hit ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcsthcreate() ;
+LCIO_DEPRECATED_CAPI int lcsthdelete( PTRTYPE hit ) ;
 
-int lcsthgetcellid( PTRTYPE hit )  ;
-int lcsthgetcellid0( PTRTYPE hit )  ;
-int lcsthgetcellid1( PTRTYPE hit )  ;
-double lcsthgetposition( PTRTYPE hit, int index )  ;
-float lcsthgetmomentum( PTRTYPE hit, int index )  ;
-float lcsthgetpathlength ( PTRTYPE hit )  ;
-float lcsthgetdedx( PTRTYPE hit )  ;
-float lcsthgetedep( PTRTYPE hit ) ;
-float lcsthgettime( PTRTYPE hit )  ;
-int lcsthgetquality( PTRTYPE hit ) ;
+LCIO_DEPRECATED_CAPI int lcsthgetcellid( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lcsthgetcellid0( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lcsthgetcellid1( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI double lcsthgetposition( PTRTYPE hit, int index )  ;
+LCIO_DEPRECATED_CAPI float lcsthgetmomentum( PTRTYPE hit, int index )  ;
+LCIO_DEPRECATED_CAPI float lcsthgetpathlength ( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI float lcsthgetdedx( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI float lcsthgetedep( PTRTYPE hit ) ;
+LCIO_DEPRECATED_CAPI float lcsthgettime( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lcsthgetquality( PTRTYPE hit ) ;
 
-PTRTYPE lcsthgetmcparticle( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcsthgetmcparticle( PTRTYPE hit )  ;
 
-int lcsthsetcellid0( PTRTYPE hit, int id ) ;
-int lcsthsetcellid1( PTRTYPE hit, int id ) ;
-int lcsthsetposition( PTRTYPE hit, double pos[3] )  ;
-int lcsthsetmomentum( PTRTYPE hit, float pos[3] )  ;
-int lcsthsetmomentumxyz( PTRTYPE hit, float px, float py, float pz ) ;
-int lcsthsetpathlength( PTRTYPE hit, float pathLength ) ;
-int lcsthsetdedx( PTRTYPE hit, float dEdX )  ;
-int lcsthsetedep( PTRTYPE hit, float e ) ;
-int lcsthsettime( PTRTYPE hit, float t )  ;
-int lcsthsetmcparticle( PTRTYPE hit,  PTRTYPE  particle )  ;
-int lcsthsetquality( PTRTYPE hit, int quality ) ;
+LCIO_DEPRECATED_CAPI int lcsthsetcellid0( PTRTYPE hit, int id ) ;
+LCIO_DEPRECATED_CAPI int lcsthsetcellid1( PTRTYPE hit, int id ) ;
+LCIO_DEPRECATED_CAPI int lcsthsetposition( PTRTYPE hit, double pos[3] )  ;
+LCIO_DEPRECATED_CAPI int lcsthsetmomentum( PTRTYPE hit, float pos[3] )  ;
+LCIO_DEPRECATED_CAPI int lcsthsetmomentumxyz( PTRTYPE hit, float px, float py, float pz ) ;
+LCIO_DEPRECATED_CAPI int lcsthsetpathlength( PTRTYPE hit, float pathLength ) ;
+LCIO_DEPRECATED_CAPI int lcsthsetdedx( PTRTYPE hit, float dEdX )  ;
+LCIO_DEPRECATED_CAPI int lcsthsetedep( PTRTYPE hit, float e ) ;
+LCIO_DEPRECATED_CAPI int lcsthsettime( PTRTYPE hit, float t )  ;
+LCIO_DEPRECATED_CAPI int lcsthsetmcparticle( PTRTYPE hit,  PTRTYPE  particle )  ;
+LCIO_DEPRECATED_CAPI int lcsthsetquality( PTRTYPE hit, int quality ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

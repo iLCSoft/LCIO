@@ -6,29 +6,31 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
 // the genericobject interface
-PTRTYPE lcgobcreate() ;
-PTRTYPE lcgobcreatefixed( int nint, int nfloat, int ndouble ) ;
-int     lcgobdelete( PTRTYPE genericobject ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcgobcreate() ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcgobcreatefixed( int nint, int nfloat, int ndouble ) ;
+LCIO_DEPRECATED_CAPI int     lcgobdelete( PTRTYPE genericobject ) ;
 
-int     lcgobid( PTRTYPE genericobject ) ;
-int     lcgobgetnint( PTRTYPE genericobject ) ;
-int     lcgobgetnfloat( PTRTYPE genericobject ) ;
-int     lcgobgetndouble( PTRTYPE genericobject ) ;
-int     lcgobgetintval( PTRTYPE genericobject, int index ) ;
-float   lcgobgetfloatval( PTRTYPE genericobject, int index ) ;
-double  lcgobgetdoubleval( PTRTYPE genericobject, int index ) ;
+LCIO_DEPRECATED_CAPI int     lcgobid( PTRTYPE genericobject ) ;
+LCIO_DEPRECATED_CAPI int     lcgobgetnint( PTRTYPE genericobject ) ;
+LCIO_DEPRECATED_CAPI int     lcgobgetnfloat( PTRTYPE genericobject ) ;
+LCIO_DEPRECATED_CAPI int     lcgobgetndouble( PTRTYPE genericobject ) ;
+LCIO_DEPRECATED_CAPI int     lcgobgetintval( PTRTYPE genericobject, int index ) ;
+LCIO_DEPRECATED_CAPI float   lcgobgetfloatval( PTRTYPE genericobject, int index ) ;
+LCIO_DEPRECATED_CAPI double  lcgobgetdoubleval( PTRTYPE genericobject, int index ) ;
 
-int     lcgobsetintval( PTRTYPE genericobject, int index, int value) ;
-int     lcgobsetfloatval( PTRTYPE genericobject, int index, float value) ;
-int     lcgobsetdoubleval( PTRTYPE genericobject, int index, double value) ;
+LCIO_DEPRECATED_CAPI int     lcgobsetintval( PTRTYPE genericobject, int index, int value) ;
+LCIO_DEPRECATED_CAPI int     lcgobsetfloatval( PTRTYPE genericobject, int index, float value) ;
+LCIO_DEPRECATED_CAPI int     lcgobsetdoubleval( PTRTYPE genericobject, int index, double value) ;
 
-bool    lcgobisfixedsize(PTRTYPE genericobject) ;
-char*   lcgobgettypename(PTRTYPE genericobject) ;
-char*   lcgobgetdatadescription(PTRTYPE genericobject) ;
+LCIO_DEPRECATED_CAPI bool    lcgobisfixedsize(PTRTYPE genericobject) ;
+LCIO_DEPRECATED_CAPI char*   lcgobgettypename(PTRTYPE genericobject) ;
+LCIO_DEPRECATED_CAPI char*   lcgobgetdatadescription(PTRTYPE genericobject) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

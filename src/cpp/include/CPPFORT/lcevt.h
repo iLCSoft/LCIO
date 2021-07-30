@@ -8,33 +8,35 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
 // the event interface
-PTRTYPE lcevtcreate() ;
-int     lcevtdelete( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcevtcreate() ;
+LCIO_DEPRECATED_CAPI int     lcevtdelete( PTRTYPE event ) ;
 
-int lcevtgetrunnumber( PTRTYPE event ) ;
-int lcevtgeteventnumber( PTRTYPE event )  ;
-char* lcevtgetdetectorname( PTRTYPE event );
+LCIO_DEPRECATED_CAPI int lcevtgetrunnumber( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI int lcevtgeteventnumber( PTRTYPE event )  ;
+LCIO_DEPRECATED_CAPI char* lcevtgetdetectorname( PTRTYPE event );
 
-long lcevtgettimestamp( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI long lcevtgettimestamp( PTRTYPE event ) ;
 
-PTRTYPE lcevtgetcollectionnames( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcevtgetcollectionnames( PTRTYPE event ) ;
 // PTRTYPE lcevtgettrelationnames( PTRTYPE event ) ;
-PTRTYPE lcevtgetcollection( PTRTYPE event, const char* colname ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcevtgetcollection( PTRTYPE event, const char* colname ) ;
 // PTRTYPE lcevtgetrelation( PTRTYPE event, const char* name ) ;
 
-int lcevtaddcollection(     PTRTYPE event, PTRTYPE collection , char* colname ) ;
-int lcevtremovecollection(  PTRTYPE event, char* name ) ; 
+LCIO_DEPRECATED_CAPI int lcevtaddcollection(     PTRTYPE event, PTRTYPE collection , char* colname ) ;
+LCIO_DEPRECATED_CAPI int lcevtremovecollection(  PTRTYPE event, char* name ) ;
 // int lcevtaddrelation(  PTRTYPE event, PTRTYPE relation, char* name ) ;
 // int lcevtremoverelation( PTRTYPE event, const char* name ) ;
 
-int lcevtsetrunnumber(    PTRTYPE event, int rn ) ;
-int lcevtseteventnumber(  PTRTYPE event, int en ) ;
-int lcevtsetdetectorname( PTRTYPE event, char* dn ) ;
-int lcevtsettimestamp(    PTRTYPE event, long ts ) ;
+LCIO_DEPRECATED_CAPI int lcevtsetrunnumber(    PTRTYPE event, int rn ) ;
+LCIO_DEPRECATED_CAPI int lcevtseteventnumber(  PTRTYPE event, int en ) ;
+LCIO_DEPRECATED_CAPI int lcevtsetdetectorname( PTRTYPE event, char* dn ) ;
+LCIO_DEPRECATED_CAPI int lcevtsettimestamp(    PTRTYPE event, long ts ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

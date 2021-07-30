@@ -7,24 +7,26 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
 // the RelationNavigator interface
-PTRTYPE lcrnvcreate( const char* fromType, const char* toType ) ;
-int lcrnvdelete( PTRTYPE relation ) ;
-PTRTYPE lcrnvcreatefromcollection( PTRTYPE collection ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvcreate( const char* fromType, const char* toType ) ;
+LCIO_DEPRECATED_CAPI int lcrnvdelete( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvcreatefromcollection( PTRTYPE collection ) ;
 
-char* lcrnvgetfromtype( PTRTYPE relation ) ;
-char* lcrnvgettotype( PTRTYPE relation ) ;
-PTRTYPE lcrnvgetrelatedtoobjects( PTRTYPE relation, PTRTYPE object ) ;
-PTRTYPE lcrnvgetrelatedfromobjects( PTRTYPE relation, PTRTYPE object ) ;
-PTRTYPE lcrnvgetrelatedtoweights ( PTRTYPE relation, PTRTYPE object ) ;
-PTRTYPE lcrnvgetrelatedfromweights ( PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI char* lcrnvgetfromtype( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI char* lcrnvgettotype( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvgetrelatedtoobjects( PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvgetrelatedfromobjects( PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvgetrelatedtoweights ( PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvgetrelatedfromweights ( PTRTYPE relation, PTRTYPE object ) ;
 
-int lcrnvgaddrelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
-int lcrnvgremoverelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto ) ;
-PTRTYPE lcrnvcreatecollection(PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI int lcrnvgaddrelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
+LCIO_DEPRECATED_CAPI int lcrnvgremoverelation(PTRTYPE relation, PTRTYPE objectfrom, PTRTYPE objectto ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrnvcreatecollection(PTRTYPE relation ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

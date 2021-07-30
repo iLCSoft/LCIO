@@ -7,23 +7,25 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcrhdcreate() ;
-int lcrhddelete( PTRTYPE runHeader ) ;
-int lcrhdgetrunnumber( PTRTYPE runHeader )  ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrhdcreate() ;
+LCIO_DEPRECATED_CAPI int lcrhddelete( PTRTYPE runHeader ) ;
+LCIO_DEPRECATED_CAPI int lcrhdgetrunnumber( PTRTYPE runHeader )  ;
 
-char* lcrhdgetdetectorname( PTRTYPE runHeader  ) ;
-char* lcrhdgetdescription( PTRTYPE runHeader )  ;
+LCIO_DEPRECATED_CAPI char* lcrhdgetdetectorname( PTRTYPE runHeader  ) ;
+LCIO_DEPRECATED_CAPI char* lcrhdgetdescription( PTRTYPE runHeader )  ;
 
-PTRTYPE lcrhdgetactivesubdetectors(PTRTYPE runHeader) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrhdgetactivesubdetectors(PTRTYPE runHeader) ;
 
-int lcrhdsetrunnumber( PTRTYPE runHeader, int rn) ;
-int lcrhdsetdetectorname( PTRTYPE runHeader, const char* dn) ;
-int lcrhdsetdescription( PTRTYPE runHeader, const char* dsc) ;
-int lcrhdaddactivesubdetector( PTRTYPE runHeader, const char* adn) ;
+LCIO_DEPRECATED_CAPI int lcrhdsetrunnumber( PTRTYPE runHeader, int rn) ;
+LCIO_DEPRECATED_CAPI int lcrhdsetdetectorname( PTRTYPE runHeader, const char* dn) ;
+LCIO_DEPRECATED_CAPI int lcrhdsetdescription( PTRTYPE runHeader, const char* dsc) ;
+LCIO_DEPRECATED_CAPI int lcrhdaddactivesubdetector( PTRTYPE runHeader, const char* adn) ;
 
 
 // now the fortran wrappers from cfortran.h
