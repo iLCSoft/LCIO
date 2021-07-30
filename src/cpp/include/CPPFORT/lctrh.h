@@ -6,38 +6,40 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lctrhcreate() ;
-int     lctrhdelete( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctrhcreate() ;
+LCIO_DEPRECATED_CAPI int     lctrhdelete( PTRTYPE trh ) ;
 
-int     lctrhid( PTRTYPE trh ) ;
-int     lctrhgetposition( PTRTYPE trh, double* pos ) ;
-int     lctrhgetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
-float   lctrhgetdedx( PTRTYPE trh ) ;
-float   lctrhgetedep( PTRTYPE trh ) ;
-float   lctrhgetedeperr( PTRTYPE trh ) ;
-float   lctrhgettime( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI int     lctrhid( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI int     lctrhgetposition( PTRTYPE trh, double* pos ) ;
+LCIO_DEPRECATED_CAPI int     lctrhgetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI float   lctrhgetdedx( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI float   lctrhgetedep( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI float   lctrhgetedeperr( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI float   lctrhgettime( PTRTYPE trh ) ;
 //char*   lctrhgettype( PTRTYPE trh ) ;
-int   lctrhgettype( PTRTYPE trh ) ;
-int     lctrhgetquality( PTRTYPE trh )  ;
-int lctrhgetcellid0( PTRTYPE trh )  ;
-int lctrhgetcellid1( PTRTYPE trh )  ;
+LCIO_DEPRECATED_CAPI int   lctrhgettype( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI int     lctrhgetquality( PTRTYPE trh )  ;
+LCIO_DEPRECATED_CAPI int lctrhgetcellid0( PTRTYPE trh )  ;
+LCIO_DEPRECATED_CAPI int lctrhgetcellid1( PTRTYPE trh )  ;
 
-PTRTYPE lctrhgetrawhits( PTRTYPE trh ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctrhgetrawhits( PTRTYPE trh ) ;
 
-int     lctrhsetposition( PTRTYPE trh, double* pos ) ;
-int     lctrhsetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
-int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
-int     lctrhsetedep( PTRTYPE trh, float e ) ;
-int     lctrhsetedeperr( PTRTYPE trh, float e ) ;
-int     lctrhsettime( PTRTYPE trh, float time ) ;
-int     lctrhsettype( PTRTYPE trh, int type ) ;
-int     lctrhsetquality( PTRTYPE trh, int q );
-int     lctrhsetcellid0( PTRTYPE trh, int id0) ;
-int     lctrhsetcellid1( PTRTYPE trh, int id1) ;
-int     lctrhaddrawhit( PTRTYPE trh, PTRTYPE rawhit ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetposition( PTRTYPE trh, double* pos ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetcovmatrix( PTRTYPE trh, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetdedx( PTRTYPE trh, float dedx ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetedep( PTRTYPE trh, float e ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetedeperr( PTRTYPE trh, float e ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsettime( PTRTYPE trh, float time ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsettype( PTRTYPE trh, int type ) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetquality( PTRTYPE trh, int q );
+LCIO_DEPRECATED_CAPI int     lctrhsetcellid0( PTRTYPE trh, int id0) ;
+LCIO_DEPRECATED_CAPI int     lctrhsetcellid1( PTRTYPE trh, int id1) ;
+LCIO_DEPRECATED_CAPI int     lctrhaddrawhit( PTRTYPE trh, PTRTYPE rawhit ) ;
 
 
 // now the fortran wrappers from cfortran.h              

@@ -6,54 +6,56 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lctrkcreate() ;
-int     lctrkdelete( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctrkcreate() ;
+LCIO_DEPRECATED_CAPI int     lctrkdelete( PTRTYPE trk ) ;
 
-int     lctrkid( PTRTYPE trk ) ;
-int     lctrkgettype( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI int     lctrkid( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI int     lctrkgettype( PTRTYPE trk ) ;
 // int     lctrktesttype( PTRTYPE trk , int bit ) ;
 
-float   lctrkgetd0( PTRTYPE trk ) ;
-float   lctrkgetphi( PTRTYPE trk ) ;
-float   lctrkgetomega( PTRTYPE trk ) ;
-float   lctrkgetz0( PTRTYPE trk ) ;
-float   lctrkgettanlambda( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetd0( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetphi( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetomega( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetz0( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgettanlambda( PTRTYPE trk ) ;
 
-int     lctrkgetcovmatrix( PTRTYPE trk, float* cvmtx ) ;
-int     lctrkgetreferencepoint( PTRTYPE trk, float* refpoint ) ;
+LCIO_DEPRECATED_CAPI int     lctrkgetcovmatrix( PTRTYPE trk, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI int     lctrkgetreferencepoint( PTRTYPE trk, float* refpoint ) ;
 //int     lctrkisreferencepointpca( PTRTYPE trk ) ;
-float   lctrkgetchi2( PTRTYPE trk ) ;
-int     lctrkgetndf( PTRTYPE trk ) ;
-float   lctrkgetdedx( PTRTYPE trk ) ;
-float   lctrkgetdedxerror( PTRTYPE trk ) ;
-float   lctrkgetradiusofinnermosthit(  PTRTYPE trk ) ;
-int     lctrkgetsubdetectorhitnumbers( PTRTYPE trk, int* intv, int* nintv) ;
-PTRTYPE lctrkgettracks( PTRTYPE trk ) ;
-PTRTYPE lctrkgettrackerhits( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetchi2( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI int     lctrkgetndf( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetdedx( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetdedxerror( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI float   lctrkgetradiusofinnermosthit(  PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI int     lctrkgetsubdetectorhitnumbers( PTRTYPE trk, int* intv, int* nintv) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctrkgettracks( PTRTYPE trk ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctrkgettrackerhits( PTRTYPE trk ) ;
 
-int     lctrksettypebit( PTRTYPE trk, int index, int val ) ;
-int     lctrksetomega( PTRTYPE trk, float omega ) ;
-int     lctrksettanlambda( PTRTYPE trk, float tanlambda ) ;
-int     lctrksetphi( PTRTYPE trk, float phi ) ;
-int     lctrksetd0( PTRTYPE trk, float d0 ) ;
-int     lctrksetz0( PTRTYPE trk, float z0 ) ;
-int     lctrksetcovmatrix( PTRTYPE trk, float* cvmtx ) ;
-int     lctrksetreferencepoint( PTRTYPE trk, float* refpoint ) ;
+LCIO_DEPRECATED_CAPI int     lctrksettypebit( PTRTYPE trk, int index, int val ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetomega( PTRTYPE trk, float omega ) ;
+LCIO_DEPRECATED_CAPI int     lctrksettanlambda( PTRTYPE trk, float tanlambda ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetphi( PTRTYPE trk, float phi ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetd0( PTRTYPE trk, float d0 ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetz0( PTRTYPE trk, float z0 ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetcovmatrix( PTRTYPE trk, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetreferencepoint( PTRTYPE trk, float* refpoint ) ;
 //int     lctrksetisreferencepointpca( PTRTYPE trk , int val) ;
-int     lctrksetchi2( PTRTYPE trk, float chi2 ) ;
-int     lctrksetndf( PTRTYPE trk, int ndf ) ;
-int     lctrksetdedx( PTRTYPE trk, float dedx ) ;
-int     lctrksetdedxerror( PTRTYPE trk, float dedxerr ) ;
-int     lctrksetradiusofinnermosthit(  PTRTYPE trk , float r) ;
-int     lctrkaddtrack( PTRTYPE trk, PTRTYPE track ) ;
-int     lctrkaddhit( PTRTYPE trk, PTRTYPE hit ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetchi2( PTRTYPE trk, float chi2 ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetndf( PTRTYPE trk, int ndf ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetdedx( PTRTYPE trk, float dedx ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetdedxerror( PTRTYPE trk, float dedxerr ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetradiusofinnermosthit(  PTRTYPE trk , float r) ;
+LCIO_DEPRECATED_CAPI int     lctrkaddtrack( PTRTYPE trk, PTRTYPE track ) ;
+LCIO_DEPRECATED_CAPI int     lctrkaddhit( PTRTYPE trk, PTRTYPE hit ) ;
 
 // fg: this method has no direct correspondence in the C++ API as there the vector is manipulated
 // directly through it's interface via getSubdetectorHitNumbers
-int     lctrksetsubdetectorhitnumbers( PTRTYPE trk, int* intv, const int nintv ) ;
+LCIO_DEPRECATED_CAPI int     lctrksetsubdetectorhitnumbers( PTRTYPE trk, int* intv, const int nintv ) ;
                                                  
 
 // now the fortran wrappers from cfortran.h              

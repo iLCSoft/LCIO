@@ -7,30 +7,33 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lccahcreate() ;
-int lccahdelete( PTRTYPE calhit ) ;
-int lccahid( PTRTYPE calhit ) ;
 
-int lccahgetcellid0( PTRTYPE calhit )  ;
-int lccahgetcellid1( PTRTYPE calhit )  ;
-float lccahgetenergy( PTRTYPE calhit )  ;
-float lccahgetenergyerr( PTRTYPE calhit )  ;
-float lccahgettime( PTRTYPE calhit )  ;
-int lccahgetposition( PTRTYPE calhit, float * )  ;
-int   lccahgettype( PTRTYPE calhit ) ;
-PTRTYPE lccahgetrawhit( PTRTYPE calhit ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lccahcreate() ;
+LCIO_DEPRECATED_CAPI int lccahdelete( PTRTYPE calhit ) ;
+LCIO_DEPRECATED_CAPI int lccahid( PTRTYPE calhit ) ;
 
-int lccahsetcellid0( PTRTYPE calhit, int id0) ;
-int lccahsetcellid1( PTRTYPE calhit, int id1) ;
-int lccahsetenergy( PTRTYPE calhit, float en) ;
-int lccahsetenergyerr( PTRTYPE calhit, float enerr) ;
-int lccahsettime( PTRTYPE calhit, float time) ;
-int lccahsetposition( PTRTYPE calhit, float pos[3])  ;
-int lccahsettype( PTRTYPE calhit, int type ) ;
-int lccahsetrawhit( PTRTYPE calhit, PTRTYPE rawHit ) ;
+LCIO_DEPRECATED_CAPI int lccahgetcellid0( PTRTYPE calhit )  ;
+LCIO_DEPRECATED_CAPI int lccahgetcellid1( PTRTYPE calhit )  ;
+LCIO_DEPRECATED_CAPI float lccahgetenergy( PTRTYPE calhit )  ;
+LCIO_DEPRECATED_CAPI float lccahgetenergyerr( PTRTYPE calhit )  ;
+LCIO_DEPRECATED_CAPI float lccahgettime( PTRTYPE calhit )  ;
+LCIO_DEPRECATED_CAPI int lccahgetposition( PTRTYPE calhit, float * )  ;
+LCIO_DEPRECATED_CAPI int   lccahgettype( PTRTYPE calhit ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lccahgetrawhit( PTRTYPE calhit ) ;
+
+LCIO_DEPRECATED_CAPI int lccahsetcellid0( PTRTYPE calhit, int id0) ;
+LCIO_DEPRECATED_CAPI int lccahsetcellid1( PTRTYPE calhit, int id1) ;
+LCIO_DEPRECATED_CAPI int lccahsetenergy( PTRTYPE calhit, float en) ;
+LCIO_DEPRECATED_CAPI int lccahsetenergyerr( PTRTYPE calhit, float enerr) ;
+LCIO_DEPRECATED_CAPI int lccahsettime( PTRTYPE calhit, float time) ;
+LCIO_DEPRECATED_CAPI int lccahsetposition( PTRTYPE calhit, float pos[3])  ;
+LCIO_DEPRECATED_CAPI int lccahsettype( PTRTYPE calhit, int type ) ;
+LCIO_DEPRECATED_CAPI int lccahsetrawhit( PTRTYPE calhit, PTRTYPE rawHit ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

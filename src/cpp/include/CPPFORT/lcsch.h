@@ -7,30 +7,32 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcschcreate() ;
-int lcschdelete( PTRTYPE simcalhit ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcschcreate() ;
+LCIO_DEPRECATED_CAPI int lcschdelete( PTRTYPE simcalhit ) ;
 
-int lcschid( PTRTYPE simcalhit ) ;
-int lcschgetcellid0( PTRTYPE simcalhit )  ;
-int lcschgetcellid1( PTRTYPE simcalhit )  ;
-float lcschgetenergy( PTRTYPE simcalhit )  ;
-int lcschgetposition( PTRTYPE simcalhit, float * )  ;
-int lcschgetnmcparticles( PTRTYPE simcalhit )  ;
-int lcschgetnmccontributions( PTRTYPE simcalhit )  ;
+LCIO_DEPRECATED_CAPI int lcschid( PTRTYPE simcalhit ) ;
+LCIO_DEPRECATED_CAPI int lcschgetcellid0( PTRTYPE simcalhit )  ;
+LCIO_DEPRECATED_CAPI int lcschgetcellid1( PTRTYPE simcalhit )  ;
+LCIO_DEPRECATED_CAPI float lcschgetenergy( PTRTYPE simcalhit )  ;
+LCIO_DEPRECATED_CAPI int lcschgetposition( PTRTYPE simcalhit, float * )  ;
+LCIO_DEPRECATED_CAPI int lcschgetnmcparticles( PTRTYPE simcalhit )  ;
+LCIO_DEPRECATED_CAPI int lcschgetnmccontributions( PTRTYPE simcalhit )  ;
 
-PTRTYPE lcschgetparticlecont( PTRTYPE simcalhit, int i)  ;
-float lcschgetenergycont( PTRTYPE simcalhit, int i)  ;
-float lcschgettimecont( PTRTYPE simcalhit, int i)  ;
-int lcschgetpdgcont( PTRTYPE simcalhit, int i)  ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcschgetparticlecont( PTRTYPE simcalhit, int i)  ;
+LCIO_DEPRECATED_CAPI float lcschgetenergycont( PTRTYPE simcalhit, int i)  ;
+LCIO_DEPRECATED_CAPI float lcschgettimecont( PTRTYPE simcalhit, int i)  ;
+LCIO_DEPRECATED_CAPI int lcschgetpdgcont( PTRTYPE simcalhit, int i)  ;
 
-int lcschsetcellid0( PTRTYPE simcalhit, int id0) ;
-int lcschsetcellid1( PTRTYPE simcalhit, int id1) ;
-int lcschsetenergy( PTRTYPE simcalhit, float en) ;
-int lcschsetposition( PTRTYPE simcalhit, float pos[3])  ;
-int lcschaddmcparticlecontribution(  PTRTYPE simcalhit, PTRTYPE mcparticle, float en,float t, int pdg ) ; 
+LCIO_DEPRECATED_CAPI int lcschsetcellid0( PTRTYPE simcalhit, int id0) ;
+LCIO_DEPRECATED_CAPI int lcschsetcellid1( PTRTYPE simcalhit, int id1) ;
+LCIO_DEPRECATED_CAPI int lcschsetenergy( PTRTYPE simcalhit, float en) ;
+LCIO_DEPRECATED_CAPI int lcschsetposition( PTRTYPE simcalhit, float pos[3])  ;
+LCIO_DEPRECATED_CAPI int lcschaddmcparticlecontribution(  PTRTYPE simcalhit, PTRTYPE mcparticle, float en,float t, int pdg ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

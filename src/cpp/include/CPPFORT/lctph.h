@@ -6,26 +6,28 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lctphcreate() ;
-int lctphdelete( PTRTYPE hit ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lctphcreate() ;
+LCIO_DEPRECATED_CAPI int lctphdelete( PTRTYPE hit ) ;
 
-int lctphid( PTRTYPE hit )  ;
-int lctphgetcellid( PTRTYPE hit )  ;
-float lctphgettime( PTRTYPE hit )  ;
-float lctphgcharge( PTRTYPE hit )  ;
-int lctphgetquality( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lctphid( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lctphgetcellid( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI float lctphgettime( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI float lctphgcharge( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lctphgetquality( PTRTYPE hit )  ;
 
-int lctphgetnrawdatawords( PTRTYPE hit )  ;
-int lctphgetrawdataword( PTRTYPE hit, int i)  ;
+LCIO_DEPRECATED_CAPI int lctphgetnrawdatawords( PTRTYPE hit )  ;
+LCIO_DEPRECATED_CAPI int lctphgetrawdataword( PTRTYPE hit, int i)  ;
 
-int lctphsetcellid( PTRTYPE hit, int id ) ;
-int lctphsettime( PTRTYPE hit, float t );
-int lctphsetcharge( PTRTYPE hit, float c );
-int lctphsetquality( PTRTYPE hit, int q );
-int lctphsetrawdata( PTRTYPE hit, int* rawData, int size ) ;
+LCIO_DEPRECATED_CAPI int lctphsetcellid( PTRTYPE hit, int id ) ;
+LCIO_DEPRECATED_CAPI int lctphsettime( PTRTYPE hit, float t );
+LCIO_DEPRECATED_CAPI int lctphsetcharge( PTRTYPE hit, float c );
+LCIO_DEPRECATED_CAPI int lctphsetquality( PTRTYPE hit, int q );
+LCIO_DEPRECATED_CAPI int lctphsetrawdata( PTRTYPE hit, int* rawData, int size ) ;
 //int lctphinitrawdataarray( PTRTYPE hit, int size ) ;
 
 // now the fortran wrappers from cfortran.h
