@@ -237,7 +237,7 @@ namespace SIO {
       sio::record_info recinfo {} ;
       try {
         sio::api::skip_records( stream, [&]( const sio::record_info &ri ){
-          return ( recordlist.find(ri._name) == recordlist.end() ) ;
+          return ( recordlist.find(ri._name) != recordlist.end() ) ;
         }) ;
         // we read something valid here. Read the record from the stream
         sio::api::read_record( stream, recinfo, _rawBuffer ) ;

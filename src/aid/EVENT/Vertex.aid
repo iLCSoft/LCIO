@@ -23,6 +23,10 @@ public interface Vertex extends LCObject {
 
 @ifdef cpp
 @cpp{
+   Vertex() = default ;
+   Vertex(Const Vertex&) = default ;
+}
+@cpp{
     /** Useful typedef for template programming with LCIO */
     typedef Vertex lcobject_type ;
 }

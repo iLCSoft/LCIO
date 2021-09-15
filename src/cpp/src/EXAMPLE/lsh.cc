@@ -4,7 +4,8 @@
  * directory trees.
  * 
  * (developed during DESY summerstudent programme 2007)
- * 
+ *
+ * @deprecated  this code no longer functions fully on some systems
  * @author N. Chiapolini, DESY
  * @version $Id: lsh.cc,v 1.3 2010-04-13 10:58:09 engels Exp $
  */

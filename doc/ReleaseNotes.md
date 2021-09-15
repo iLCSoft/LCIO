@@ -1,3 +1,46 @@
+# v02-16-01
+
+* 2021-01-06 Remi Ete ([PR#129](https://github.com/iLCSoft/LCIO/pull/129))
+  - Fixed skip record condition in Random Access Manager
+
+# v02-16
+
+* 2020-12-03 Marko Petric ([PR#127](https://github.com/ilcsoft/lcio/pull/127))
+  - Fix Python3 compatibility issue with next method defined
+
+* 2020-12-03 Frank Gaede ([PR#126](https://github.com/ilcsoft/lcio/pull/126))
+  - no longer build the out-of-date lsh example
+
+* 2020-12-03 Marko Petric ([PR#125](https://github.com/ilcsoft/lcio/pull/125))
+  - Migrate CI to GitHub Actions
+
+* 2020-12-03 Remi Ete ([PR#124](https://github.com/ilcsoft/lcio/pull/124))
+  - Updated SIO sources to v00-00-04
+
+* 2020-12-03 Frank Gaede ([PR#123](https://github.com/ilcsoft/lcio/pull/123))
+  - fix some warning:
+         - deprecated dynamic exception specifications in Exceptions
+  - fix the build from generated C++ files
+
+* 2020-12-03 Frank Gaede ([PR#122](https://github.com/ilcsoft/lcio/pull/122))
+  - fix in `UTIL::ProcessFlag`
+        - fixed const correctness and make the operator<<(ostream) inline
+
+* 2020-11-25 Marko Petric ([PR#121](https://github.com/ilcsoft/lcio/pull/121))
+  - Update compiler flag handling
+  - Resolve which type of linker is used and assign proper linking flags
+  - Improve RPATH handling on macOS and add flag `LCIO_SET_RPATH` default `ON`
+
+* 2020-11-05 Frank Gaede ([PR#119](https://github.com/ilcsoft/lcio/pull/119))
+  - make compatible w/ clang 12 (on MacOs)
+      - remove const from map key in LCRTRelations
+      - map keys are immutable anyways
+
+* 2020-10-23 Frank Gaede ([PR#117](https://github.com/ilcsoft/lcio/pull/117))
+  - fix delphes2lcio
+         - replace GetEntriesFast w/ GetEntries
+         - fixes #113
+
 # v02-15-04
 
 * 2020-10-14 Frank Gaede ([PR#115](https://github.com/ilcsoft/lcio/pull/115))

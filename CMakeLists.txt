@@ -13,8 +13,8 @@ PROJECT( LCIO )
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 15 )
-SET( LCIO_VERSION_PATCH 4 )
+SET( LCIO_VERSION_MINOR 16 )
+SET( LCIO_VERSION_PATCH 1 )
 
 ### set correct LCIO version in relevant files  ############################
 
@@ -56,6 +56,8 @@ configure_file (
 ### DEPENDENCIES ############################################################
 
 LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+
+option(LCIO_SET_RPATH   "Link libraries with built-in RPATH (run-time search path)" ON)
 
 #FIND_PACKAGE( ILCUTIL COMPONENTS ILCSOFT_CMAKE_MODULES REQUIRED )
 
