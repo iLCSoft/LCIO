@@ -21,6 +21,11 @@ IF( CMAKE_COMPILER_IS_GNUCC )
         MESSAGE( STATUS "adding -fno-range-check fortran compiler flag" )
         SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-range-check" )
     ENDIF()
+    IF ( ${GCC_VERSION} VERSION_GREATER 10 )
+      # fix the BOZ literal constant errors that are treated more stringent
+      # starting from gcc10 (turns the errors into warnings)
+      SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-invalid-boz")
+    ENDIF()
 ENDIF()
 
 
