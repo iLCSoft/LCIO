@@ -314,7 +314,7 @@ c--------     test new relation navigator object
               status     = lctphsetcellid( tpcHit, j-1 )
               status     = lctphsettime( tpcHit, 0.1234567 )
               status     = lctphsetcharge( tpcHit, 3.14159 )
-              status     = lctphsetquality( tpcHit, z'bad' )
+              status     = lctphsetquality( tpcHit, int(z'bad') )
               if (storeRawData)  then
                 size       = ( dble(irand( 0 ) )/RAND_MAX )*10
                 do  k = 1,size

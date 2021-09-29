@@ -190,7 +190,7 @@ c-------- create some monte carlo particles
 c------   simulated tracker hits
 
 c--------   set the flag bits to store position and pdg for simulated calorimeter hits
-            flag = 2**31 + 2**28
+            flag = (-2)**31 + 2**28
             status = lccolsetflag( schcol, flag )
 
             do k=1,nhit
@@ -239,7 +239,7 @@ c ---            add energy from 2 MCParticles to each hit
 c---- real data calorimeter hits
 
 c ----      set the flag bits to store position for calorimeter hits
-            flag = 2**31
+            flag = (-2)**31
             status = lccolsetflag( cahcol, flag )
 
             do k=1,nhit
