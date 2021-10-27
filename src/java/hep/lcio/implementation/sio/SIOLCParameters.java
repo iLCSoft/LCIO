@@ -40,6 +40,17 @@ class SIOLCParameters extends ILCParameters
 	  _floatMap.put( key , fv ) ; 
 	}	
 
+	int nDoubleParameters =  in.readInt(); 
+	for (int i = 0; i < nDoubleParameters; i++) {
+	  String key = in.readString();
+	  int nDouble = in.readInt() ;
+	  double[] fv = new double[nDouble] ;
+	  for (int j = 0; j < nDouble; j++) {
+		  fv[j] = in.readDouble() ;
+	  }
+	  _doubleMap.put( key , fv ) ; 
+	}	
+
 	int nStringParameters =  in.readInt(); 
 	for (int i = 0; i < nStringParameters; i++) {
 	  String key = in.readString();
@@ -83,6 +94,18 @@ class SIOLCParameters extends ILCParameters
 	  out.writeInt(nVal) ;
 	  for (int j = 0; j < nVal; j++) {
 		 out.writeFloat( v[j] ) ; 
+	  }
+	}	
+	keys = params.getDoubleKeys() ;
+	nKeys = keys.length;  
+	out.writeInt( nKeys ) ;
+	for (int i = 0; i < nKeys; i++) {
+	  out.writeString( keys[i] ) ;
+	  double[] v = params.getDoubleVals( keys[i] ) ;
+	  int nVal = v.length ;
+	  out.writeInt(nVal) ;
+	  for (int j = 0; j < nVal; j++) {
+		 out.writeDouble( v[j] ) ; 
 	  }
 	}	
 	keys = params.getStringKeys() ;
