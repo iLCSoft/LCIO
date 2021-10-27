@@ -1347,6 +1347,21 @@ namespace UTIL {
             }
             cout << endl ;
         }
+        StringVec doubleKeys ;
+        int nDoubleParameters = params.getDoubleKeys( doubleKeys ).size() ;
+        for(int i=0; i< nDoubleParameters ; i++ ){
+            DoubleVec doubleVec ;
+            params.getDoubleVals(  doubleKeys[i], doubleVec ) ;
+            int nDouble  = doubleVec.size()  ;   
+            cout << " parameter " << doubleKeys[i] << " [double]: " ; 
+            if( nDouble == 0 ){ 
+                cout << " [empty] " << std::endl ;
+            }
+            for(int j=0; j< nDouble ; j++ ){
+                cout << doubleVec[j] << ", " ;
+            }
+            cout << endl ;
+        }
         StringVec stringKeys ;
         int nStringParameters = params.getStringKeys( stringKeys ).size() ;
         for(int i=0; i< nStringParameters ; i++ ){
