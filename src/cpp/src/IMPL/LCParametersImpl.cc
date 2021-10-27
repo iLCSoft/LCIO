@@ -33,6 +33,17 @@ namespace IMPL{
     return fv[0] ;
   }
 
+  double LCParametersImpl::getDoubleVal(const std::string & key) const {
+
+    DoubleMap::iterator it = _doubleMap.find( key ) ;
+
+    if( it == _doubleMap.end() )  return 0 ;
+
+    DoubleVec &  fv =  it->second ;
+
+    return fv[0] ;
+  }
+
   const std::string & LCParametersImpl::getStringVal(const std::string & key) const {
 
     static std::string empty("") ;
@@ -62,6 +73,16 @@ namespace IMPL{
     FloatMap::iterator it = _floatMap.find( key ) ;
 
     if( it != _floatMap.end() ) {
+      values.insert( values.end() , it->second.begin() , it->second.end() ) ;
+    }
+    return values ;
+  }
+
+  DoubleVec & LCParametersImpl::getDoubleVals(const std::string & key, DoubleVec & values) const {
+
+    DoubleMap::iterator it = _doubleMap.find( key ) ;
+
+    if( it != _doubleMap.end() ) {
       values.insert( values.end() , it->second.begin() , it->second.end() ) ;
     }
     return values ;
@@ -99,6 +120,16 @@ namespace IMPL{
     return keys ;
   }
 
+  const StringVec & LCParametersImpl::getDoubleKeys(StringVec & keys) const  {
+    
+     for( DoubleMap::iterator iter = _doubleMap.begin() ; iter !=  _doubleMap.end() ; iter++ ){
+       keys.push_back( iter->first ) ; 
+     }
+// fg: select1st is non-standard
+//    transform( _doubleMap.begin() , _doubleMap.end() , back_inserter( keys )  , select1st< DoubleMap::value_type >() ) ;
+    return keys ;
+  }
+
   const StringVec & LCParametersImpl::getStringKeys(StringVec & keys) const  {
 
     for( StringMap::iterator iter = _stringMap.begin() ; iter !=  _stringMap.end() ; iter++ ){
@@ -129,6 +160,16 @@ namespace IMPL{
       return it->second.size() ;
   }
 
+  int LCParametersImpl::getNDouble(const std::string & key) const {
+
+    DoubleMap::iterator it = _doubleMap.find( key ) ;
+
+    if( it == _doubleMap.end() )  
+      return 0 ;
+    else
+      return it->second.size() ;
+  }
+
   int LCParametersImpl::getNString(const std::string & key) const {
 
     StringMap::iterator it = _stringMap.find( key ) ;
@@ -151,6 +192,13 @@ namespace IMPL{
 //     if(  _floatMap[ key ].size() > 0 ) 
     _floatMap[ key ].clear() ;
     _floatMap[ key ].push_back( value ) ;
+  }
+
+  void LCParametersImpl::setValue(const std::string & key, double value){
+    checkAccess("LCParametersImpl::setValue") ;
+//     if(  _doubleMap[ key ].size() > 0 ) 
+    _doubleMap[ key ].clear() ;
+    _doubleMap[ key ].push_back( value ) ;
   }
 
   void LCParametersImpl::setValue(const std::string & key, const std::string & value) {
@@ -181,6 +229,16 @@ namespace IMPL{
 //     copy( values.begin() , values.end() , back_inserter(  _floatMap[ key ] )  ) ;
 
     _floatMap[ key ].assign(  values.begin() , values.end() ) ;
+  }
+  
+  void LCParametersImpl::setValues(const std::string & key,const  EVENT::DoubleVec & values){
+
+    checkAccess("LCParametersImpl::setValues") ;
+
+//     if(  _doubleMap[ key ].size() > 0 ) _doubleMap[ key ].clear() ;
+//     copy( values.begin() , values.end() , back_inserter(  _doubleMap[ key ] )  ) ;
+
+    _doubleMap[ key ].assign(  values.begin() , values.end() ) ;
   }
   
   void LCParametersImpl::setValues(const std::string & key, const EVENT::StringVec & values){
