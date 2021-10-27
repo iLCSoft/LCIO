@@ -33,6 +33,19 @@ namespace SIO {
       }
       params.setValues( key , floatVec ) ;
     }
+    int nDoubleParameters ;
+    SIO_DATA( device , &nDoubleParameters , 1 ) ;
+    for(int i=0; i< nDoubleParameters ; i++ ) {
+      std::string key;
+      SIO_SDATA( device,  key ) ;
+      int nDouble  ;
+      SIO_DATA( device , &nDouble , 1 ) ;
+      EVENT::DoubleVec doubleVec(nDouble) ;
+      for(int j=0; j< nDouble ; j++ ) {
+	      SIO_DATA( device , &doubleVec[j]  , 1 ) ;
+      }
+      params.setValues( key , doubleVec ) ;
+    }
     int nStringParameters ;
     SIO_DATA( device , &nStringParameters , 1 ) ;
     for(int i=0; i< nStringParameters ; i++ ) {
@@ -76,6 +89,19 @@ namespace SIO {
     	for(int j=0; j< nFloat ; j++ ){
     	  SIO_SDATA( device, floatVec[j]  ) ;
     	}
+    }
+    EVENT::StringVec doubleKeys ;
+    int nDoubleParameters = params.getDoubleKeys( doubleKeys ).size() ;
+    SIO_DATA( device , &nDoubleParameters , 1 ) ;
+    for(int i=0; i< nDoubleParameters ; i++ ) {
+      EVENT::DoubleVec doubleVec ;
+      params.getDoubleVals(  doubleKeys[i], doubleVec ) ;
+      int nDouble  = doubleVec.size()  ;     // = params.getNDouble( doubleKeys[i] ) ;
+	SIO_SDATA( device, doubleKeys[i]  ) ;
+	SIO_DATA( device , &nDouble , 1 ) ;
+	for(int j=0; j< nDouble ; j++ ){
+	  SIO_SDATA( device, doubleVec[j]  ) ;
+	}
     }
     EVENT::StringVec stringKeys ;
     int nStringParameters = params.getStringKeys( stringKeys ).size() ;

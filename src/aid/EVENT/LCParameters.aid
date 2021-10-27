@@ -90,6 +90,11 @@ public interface LCParameters
 
     /** Returns values for the given key.
      */
+    public DoubleVec& getDoubleVals( const String& key ) const;
+
+
+    /** Returns values for the given key.
+     */
     public StringVec& getStringVals( const String& key  ) const;
 
     /** Returns a list of all keys of integer parameters.
