@@ -47,7 +47,7 @@ public interface LCParameters
     public FloatVec& getFloatVals( const String& key ,  FloatVec& values ) const ;
 
 
-    /** Adds all float values for the given key to values.
+    /** Adds all string values for the given key to values.
      *  Returns a reference to values for convenience.
      */
     public StringVec& getStringVals( const String& key  , StringVec & values ) const ;

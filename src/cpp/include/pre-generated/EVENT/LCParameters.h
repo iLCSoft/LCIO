@@ -53,7 +53,7 @@ public:
      */
     virtual FloatVec & getFloatVals(const std::string & key, FloatVec & values) const = 0;
 
-    /** Adds all float values for the given key to values.
+    /** Adds all string values for the given key to values.
      *  Returns a reference to values for convenience.
      */
     virtual StringVec & getStringVals(const std::string & key, StringVec & values) const = 0;

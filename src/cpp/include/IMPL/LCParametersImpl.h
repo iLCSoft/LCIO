@@ -67,7 +67,7 @@ namespace IMPL {
      */
     virtual EVENT::FloatVec & getFloatVals(const std::string & key, EVENT::FloatVec & values) const ;
     
-    /** Adds all float values for the given key to values.
+    /** Adds all string values for the given key to values.
      *  Returns a reference to values for convenience.
      */
     virtual  EVENT::StringVec & getStringVals(const std::string & key, EVENT::StringVec & values) const ;
