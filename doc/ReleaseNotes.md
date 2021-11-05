@@ -1,3 +1,35 @@
+# v02-17
+
+* 2021-11-05 Frank Gaede ([PR#143](https://github.com/iLCSoft/LCIO/pull/143))
+  - add support for storing double values in LCParameters
+      - used in run, event and collection parameters
+      - example 
+  
+  ```cpp
+  	DoubleVec dv ;
+  	dv.push_back( 1.111111111111111111111111111111111111111111111111 ) ;
+  	dv.push_back( 2.222222222222222222222222222222222222222222222222 ) ;
+  	dv.push_back( 3.333333333333333333333333333333333333333333333333 ) ;
+  	evt->parameters().setValues( "SomeDoubleNumbers" , dv ) ;
+  
+  ```
+  - should resolve #138
+
+* 2021-11-05 Bohdan Dudar ([PR#141](https://github.com/iLCSoft/LCIO/pull/141))
+  - LCTrackerConf constructor now protected
+
+* 2021-10-12 Thomas Madlener ([PR#137](https://github.com/iLCSoft/LCIO/pull/137))
+  - Deprecate the C-API which is used by the fortran interface. However, since no one seems to be actively using that interface we introduce a deprecation warning for the C-API to see if that has any users outside of the internal fortran interface. **If you are seeing deprecation messages in your build outputs please let us know.**
+  - Fix F77 tests and run them in the CI.
+    - Degrade some compiler errors back to warnings for gcc10 as it has become more strict than previous versions.
+
+* 2021-05-05 Thomas Madlener ([PR#136](https://github.com/iLCSoft/LCIO/pull/136))
+  - Update the CI to use the cvmfs and lcg-view github actions for a more streamlined configuration. Fixes #135.
+  - Make the python dictionary loading look on `LD_LIBRARY_PATH` first, before falling back to rely on the `LCIO` environment variable which has more assumptions built into it. Fixes #134
+
+* 2021-05-05 Andrii Verbytskyi ([PR#132](https://github.com/iLCSoft/LCIO/pull/132))
+  - Replace hardcoded lib with CMAKE_INSTALL_LIBDIR when appropriate
+
 # v02-16-01
 
 * 2021-01-06 Remi Ete ([PR#129](https://github.com/iLCSoft/LCIO/pull/129))
