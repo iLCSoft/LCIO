@@ -257,15 +257,8 @@ SET_SOURCE_FILES_PROPERTIES(
 )
 # ----------------------------------------------------------------------------
 
-
-
-
-# -------- include directories -----------------------------------------------
-INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
-INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
-
 # install public headers
-INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
+INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     PATTERN "*.txt" EXCLUDE
     #PATTERN "*empty_ignore.h" EXCLUDE
     PATTERN "*/SIO/*" EXCLUDE
@@ -277,46 +270,58 @@ INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
 )
 
 # install aid generated c++ headers
-INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
+INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
 # ----------------------------------------------------------------------------
 
-
-
 # ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
-ADD_SHARED_LIBRARY( lcio
+
+ADD_LIBRARY(lcio SHARED
   ${LCIO_IMPL_SRCS}
   ${LCIO_IOIMPL_SRCS}
   ${LCIO_UTIL_SRCS}
   ${LCIO_SIO_SRCS}
   ${LCIO_MT_SRCS}
-)
-INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+  )
+ADD_LIBRARY(LCIO::lcio ALIAS lcio)
 
-TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
-TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
+TARGET_LINK_LIBRARIES( lcio PUBLIC Threads::Threads )
+TARGET_LINK_LIBRARIES( lcio PUBLIC SIO::sio )
+target_include_directories(lcio
+  PUBLIC
+  $<BUILD_INTERFACE:${LCIO_AID_HEADERS_OUTPUT_DIR}>
+  $<BUILD_INTERFACE:${LCIO_CXX_HEADERS_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+
+SET_TARGET_PROPERTIES(lcio PROPERTIES
+  # create *nix style library versions + symbolic links
+  VERSION ${${PROJECT_NAME}_VERSION}
+  SOVERSION ${${PROJECT_NAME}_SOVERSION}
+  )
+
+ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
 TARGET_LINK_LIBRARIES( lcioF77 lcio )
+
+INSTALL(TARGETS lcio lcioF77
+  EXPORT LCIOTargets
+  DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
 # ----------------------------------------------------------------------------
-
-
 
 
 # -------- rootdict library --------------------------------------------------
 
 IF( BUILD_ROOTDICT )
 
-  #fg: for ROOT 6 we need the .src/cpp as include directory
-  INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
-
     # special rootcint definitions for lcio
 #    SET( ROOT_DICT_CINT_DEFINITIONS -DHANDLE_LCIO_EXCEPTIONS=IGNORED_FOR_CINT )
 
     # load MacroRootDict.cmake from ILCSOFT_CMAKE_MODULES
     INCLUDE(MacroRootDict)
+
+    GET_TARGET_PROPERTY(SIO_INCLUDE_DIRS SIO::sio INTERFACE_INCLUDE_DIRECTORIES)
 
     # include directories to be passed over to rootcint
     SET( ROOT_DICT_INCLUDE_DIRS
@@ -338,7 +343,7 @@ IF( BUILD_ROOTDICT )
 #    FILE( GLOB_RECURSE UTIL_CXX_HEADERS_LIST ${LCIO_CXX_HEADERS_DIR}/UTIL/*.h )
 
     # list of headers to exclude
-    FILE( GLOB_RECURSE exclude_headers
+    SET( exclude_headers
         ${LCIO_CXX_HEADERS_DIR}/empty_ignore.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCWarning.h
         ${LCIO_CXX_HEADERS_DIR}/UTIL/LCFourVector.h
@@ -401,12 +406,13 @@ IF( BUILD_ROOTDICT )
 
 
     # ------ build lcioDict library ---------------------------------
+    ADD_LIBRARY( lcioDict ${lcio_rootdict_sources} )
+    SET_TARGET_PROPERTIES( lcioDict PROPERTIES
+      # create *nix style library versions + symbolic links
+      VERSION ${${PROJECT_NAME}_VERSION}
+      SOVERSION ${${PROJECT_NAME}_SOVERSION})
 
-    INCLUDE_DIRECTORIES( "${ROOT_DICT_OUTPUT_DIR}" )
-    INCLUDE_DIRECTORIES( SYSTEM "${ROOT_INCLUDE_DIRS}" )
-
-    ADD_SHARED_LIBRARY( lcioDict ${lcio_rootdict_sources} )
-    TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} lcio )
+    TARGET_LINK_LIBRARIES(lcioDict LCIO::lcio ROOT::Core)
 
     IF( APPLE )
 
@@ -425,8 +431,9 @@ IF( BUILD_ROOTDICT )
 
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
-
-    INSTALL_SHARED_LIBRARY( lcioDict DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+    INSTALL( TARGETS lcioDict
+      EXPORT LCIOTargets
+      DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
     #fg: for root6 we also need to install the pcm files ...
     SET( ROOT_DICT_PCM_FILES

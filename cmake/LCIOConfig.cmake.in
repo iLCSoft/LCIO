@@ -1,77 +1,58 @@
 ##############################################################################
 # cmake configuration file for LCIO
 #
-# requires:
-#   MacroCheckPackageLibs.cmake for checking package libraries
+# Exported Targets:
 #
-# returns following variables:
+#   LCIO::lcio            Base LCIO library
+#   LCIO::lcioF77         Fortran77 bindings library
+#   SIO::sio              The SIO library (ONLY if builtin SIO is used)
 #
-#   LCIO_FOUND      : set to TRUE if LCIO found
-#       if FIND_PACKAGE called with REQUIRED and COMPONENTS arguments
-#       LCIO_FOUND is only set to TRUE if ALL components are also found
-#       if REQUIRED is NOT set components may or may not be available
 #
-#   LCIO_ROOT       : path to this LCIO installation
-#   LCIO_VERSION    : package version
+# Exported Variables:
+# The following variables are exported to keep a bit of backward compatibility
+#
 #   LCIO_LIBRARIES  : list of LCIO libraries (NOT including COMPONENTS)
 #   LCIO_INCLUDE_DIRS  : list of paths to be used with INCLUDE_DIRECTORIES
-#   LCIO_LIBRARY_DIRS  : list of paths to be used with LINK_DIRECTORIES
-#   LCIO_COMPONENT_LIBRARIES      : list of LCIO component libraries
-#   LCIO_${COMPONENT}_FOUND       : set to TRUE or FALSE for each library
-#   LCIO_${COMPONENT}_LIBRARY     : path to individual libraries
-#   LCIO_${COMPONENT}_LIB_DEPENDS : individual library dependencies
+#   LCIO_LIBRARY_DIRS  : list of paths to be used with LINK_DIRECTORIES#
 #
 # @author Jan Engels, Desy
 ##############################################################################
+@PACKAGE_INIT@
 
-SET( LCIO_ROOT "@CMAKE_INSTALL_PREFIX@" )
-SET( LCIO_VERSION "@LCIO_VERSION@" )
+set_and_check(LCIO_INCLUDE_DIRS "@PACKAGE_CMAKE_INSTALL_INCLUDEDIR@")
+mark_as_advanced( LCIO_INCLUDE_DIRS )
 
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
 
-# ---------- include dirs -----------------------------------------------------
-# do not store find results in cache
-SET( LCIO_INCLUDE_DIRS LCIO_INCLUDE_DIRS-NOTFOUND )
-MARK_AS_ADVANCED( LCIO_INCLUDE_DIRS )
+# Other dependencies depend on the configuration we are using
+if(@BUILD_ROOTDICT@)
+  find_dependency(ROOT @ROOT_VERSION@)
+endif()
 
-FIND_PATH( LCIO_INCLUDE_DIRS
-	NAMES EVENT/MCParticle.h
-	PATHS ${LCIO_ROOT}/include
-	NO_DEFAULT_PATH
-)
+if(@SIO_FOUND@)
+  find_dependency(SIO)
+else()
+  # If we have builtin SIO make the targets available
+  if(NOT TARGET SIO::sio)
+    include("${CMAKE_CURRENT_LIST_DIR}/SIOTargets.cmake")
+  endif()
+endif()
 
+if(NOT TARGET LCIO::lcio)
+  include("${CMAKE_CURRENT_LIST_DIR}/LCIOTargets.cmake")
+endif()
 
+check_required_components(LCIO)
 
-# ---------- libraries --------------------------------------------------------
-INCLUDE( "${LCIO_ROOT}/@CMAKE_INSTALL_LIBDIR@/cmake/MacroCheckPackageLibs.cmake" )
-
-# only standard libraries should be passed as arguments to CHECK_PACKAGE_LIBS
-# additional components are set by cmake in variable PKG_FIND_COMPONENTS
-# first argument should be the package name
-CHECK_PACKAGE_LIBS( LCIO lcio @CHECK_PACKAGE_SIO_LIBRARY@ )
-
-
-
-
-# ---------- libraries dependencies -------------------------------------------
-# this sets LCIO_${COMPONENT}_LIB_DEPENDS variables
-#INCLUDE( "${LCIO_ROOT}/@CMAKE_INSTALL_LIBDIR@/cmake/LCIOLibDeps.cmake" )
- 
-
-
-## ------- zlib dependency ---------------------------------------
-# better to install zlib together with lcio libraries
-#FIND_PACKAGE( ZLIB QUIET )
-#SET( LCIO_DEPENDS_LIBRARIES ${ZLIB_LIBRARIES} )
-#INCLUDE( "@ILCSOFT_CMAKE_MODULES_ROOT@/MacroExportPackageDeps.cmake" )
-#EXPORT_PACKAGE_DEPENDENCIES( LCIO ) # append ZLIB_LIBRARIES to LCIO_LIBRARIES unless FIND_PACKAGE_SKIP_DEPENDENCIES is set
-## ---------------------------------------------------------------
-
-
-
+# Make the target based approach backwards compatible by also exporting
+# something in LCIO_LIBRARIES
+get_target_property(LCIO_LIBRARY_DIRS LCIO::lcio LOCATION)
+set(LCIO_LIBRARIES LCIO::lcio)
+mark_as_advanced(LCIO_LIBRARIES LCIO_LIBRARY_DIRS)
 
 # ---------- final checking ---------------------------------------------------
 INCLUDE( FindPackageHandleStandardArgs )
 # set LCIO_FOUND to TRUE if all listed variables are TRUE and not empty
 # LCIO_COMPONENT_VARIABLES will be set if FIND_PACKAGE is called with REQUIRED argument
-FIND_PACKAGE_HANDLE_STANDARD_ARGS( LCIO DEFAULT_MSG LCIO_ROOT LCIO_INCLUDE_DIRS LCIO_LIBRARIES ${LCIO_COMPONENT_VARIABLES} ) #ZLIB_LIBRARIES )
-
+FIND_PACKAGE_HANDLE_STANDARD_ARGS( LCIO DEFAULT_MSG LCIO_INCLUDE_DIRS LCIO_LIBRARIES ${LCIO_COMPONENT_VARIABLES} )

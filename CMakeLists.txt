@@ -2,7 +2,7 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 ########################################################
 
 
@@ -15,6 +15,8 @@ include(GNUInstallDirs)
 SET( LCIO_VERSION_MAJOR 2 )
 SET( LCIO_VERSION_MINOR 17 )
 SET( LCIO_VERSION_PATCH 0 )
+
+SET( ${PROJECT_NAME}_VERSION  "${${PROJECT_NAME}_VERSION_MAJOR}.${${PROJECT_NAME}_VERSION_MINOR}.${${PROJECT_NAME}_VERSION_PATCH}" )
 
 ### set correct LCIO version in relevant files  ############################
 
@@ -164,13 +166,12 @@ FIND_PACKAGE( SIO QUIET )
 IF( NOT SIO_FOUND )
   MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
   ADD_SUBDIRECTORY( sio )
+ELSE()
+  GET_TARGET_PROPERTY(_sio_lib_dir SIO::sio LOCATION)
+  MESSAGE(STATUS "Found SIO: " ${_sio_lib_dir})
 ENDIF()
 
 MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
-MESSAGE( STATUS "SIO library: ${SIO_LIBRARIES}" )
-MESSAGE( STATUS "SIO includes: ${SIO_INCLUDE_DIRS}" )
-
-INCLUDE_DIRECTORIES( SYSTEM ${SIO_INCLUDE_DIRS} )
 
 FIND_PACKAGE( Threads REQUIRED )
 
@@ -288,7 +289,9 @@ ENDIF()
 
 
 # directory containing lcio tests
-ADD_SUBDIRECTORY( ./tests )
+IF( BUILD_TESTING )
+  ADD_SUBDIRECTORY( ./tests )
+ENDIF()
 
 
 ### DOCUMENTATION ###########################################################
@@ -313,7 +316,6 @@ MESSAGE( STATUS "SIO_PRINT_DEBUG = ${SIO_PRINT_DEBUG}" )
 MESSAGE( STATUS "" )
 
 
-# generate and install following configuration files
-GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake )
-
-INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+# generate and install the cmake configuration files for downstream consuming
+# packages
+include(cmake/lcioCreateConfig.cmake)
