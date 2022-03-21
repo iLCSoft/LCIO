@@ -442,6 +442,25 @@ IF( BUILD_ROOTDICT )
 
     INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
+    # We need to install some headers which are necessary for the python
+    # bindings, even though these are essentially internal implementation
+    # headers only and should not be publicly reachable. However, if we do not
+    # install these then, the ROOT generated python bindings will not work if
+    # the LCIO sources are removed after the installation. See #106
+    INSTALL(FILES
+      ${CMAKE_CURRENT_LIST_DIR}/include/IOIMPL/LCEventLazyImpl.h
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/IOIMPL
+    )
+    INSTALL(FILES
+      ${CMAKE_CURRENT_LIST_DIR}/include/SIO/SIOHandlerMgr.h
+      ${CMAKE_CURRENT_LIST_DIR}/include/SIO/SIOObjectHandler.h
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SIO
+    )
+
+    INSTALL(DIRECTORY
+      ${CMAKE_CURRENT_LIST_DIR}/include/pre-generated
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
 ENDIF()
 # ----------------------------------------------------------------------------
 
