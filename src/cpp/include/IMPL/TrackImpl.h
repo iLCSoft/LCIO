@@ -113,6 +113,10 @@ namespace IMPL {
      */
     virtual float getdEdxError() const;
 
+    /** Number of holes of the track.
+     */
+    virtual int getNholes() const;
+
     /** The radius of the innermost hit that has been used in the track fit.
      *  Helps to detect V0 tracks with small impact paramters or haevy mesons.
      *  To be used as convenient information or if hits are not stored in 
@@ -174,6 +178,7 @@ namespace IMPL {
     virtual void  setNdf( int ndf ) ;
     virtual void  setdEdx( float dEdx ) ;
     virtual void  setdEdxError( float dEdxError ) ;
+    virtual void  setNholes( int nholes ) ;
 
     virtual void  addTrack( EVENT::Track* trk ) ;
     virtual void  addTrackState( EVENT::TrackState* trkstate ) ;
@@ -202,6 +207,7 @@ namespace IMPL {
     int   _ndf{0} ; 
     float _dEdx{0} ;
     float _dEdxError{0} ;
+    int   _nholes{0} ;
     float _radiusOfInnermostHit{0} ;
     EVENT::IntVec _subdetectorHitNumbers{} ;
 
