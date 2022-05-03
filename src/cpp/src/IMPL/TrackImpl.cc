@@ -16,6 +16,7 @@ namespace IMPL {
         _ndf(0),
         _dEdx(0),
         _dEdxError(0),
+        _nholes(0),
         _radiusOfInnermostHit(0) { 
         }
 
@@ -34,6 +35,7 @@ namespace IMPL {
     _ndf = o._ndf ;
     _dEdx = o._dEdx ;
     _dEdxError = o._dEdxError ;
+    _nholes = o._nholes ;
     _radiusOfInnermostHit = o._radiusOfInnermostHit ;
 
     std::copy( o._subdetectorHitNumbers.begin() ,  o._subdetectorHitNumbers.end() , std::back_inserter( _subdetectorHitNumbers ) ) ;
@@ -110,6 +112,7 @@ namespace IMPL {
     int   TrackImpl::getNdf() const { return _ndf ;}
     float TrackImpl::getdEdx() const { return _dEdx ; }
     float TrackImpl::getdEdxError() const { return _dEdxError ; }
+    int TrackImpl::getNholes() const { return _nholes ; }
 
 
     float TrackImpl::getRadiusOfInnermostHit() const {
@@ -336,6 +339,10 @@ namespace IMPL {
     void  TrackImpl::setdEdxError( float dEdxError ){
         checkAccess("TrackImpl::setdEdxError") ;
         _dEdxError = dEdxError  ;
+    }   
+    void  TrackImpl::setNholes( int nholes ){
+        checkAccess("TrackImpl::setNholes") ;
+        _nholes = nholes  ;
     }   
 
     void TrackImpl::addHit( TrackerHit* hit) {
