@@ -50,6 +50,7 @@ namespace SIO {
     SIO_DATA( device ,  &(trk->_ndf)  , 1 ) ;
     SIO_DATA( device ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( device ,  &(trk->_dEdxError) , 1  ) ;
+    SIO_DATA( device ,  &(trk->_nholes) , 1  ) ;
     SIO_DATA( device ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
     int nHitNumbers ;
     SIO_DATA( device, &nHitNumbers , 1  ) ;
@@ -100,6 +101,7 @@ namespace SIO {
     SIO_SDATA( device, trk->getNdf()  ) ;
     SIO_SDATA( device, trk->getdEdx()  ) ;
     SIO_SDATA( device, trk->getdEdxError()  ) ;
+    SIO_SDATA( device, trk->getNholes()  ) ;
     SIO_SDATA( device , trk->getRadiusOfInnermostHit()  ) ;
     auto hitNums = trk->getSubdetectorHitNumbers() ;
     int nHitNumbers = hitNums.size() ;

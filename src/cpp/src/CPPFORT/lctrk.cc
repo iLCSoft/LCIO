@@ -112,6 +112,11 @@ float lctrkgetdedxerror( PTRTYPE track ) {
   return trk->getdEdxError() ;
 }
 
+int lctrkgetnholes( PTRTYPE track ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  return trk->getNholes() ;
+}
+
 float lctrkgetradiusofinnermosthit( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   return trk->getRadiusOfInnermostHit() ;
@@ -235,6 +240,12 @@ int lctrksetdedxerror( PTRTYPE track, float dedxerr) {
 int lctrksetradiusofinnermosthit( PTRTYPE track, float r) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   trk->setRadiusOfInnermostHit( r ) ;
+  return LCIO::SUCCESS ;
+}
+
+int lctrksetnholes( PTRTYPE track, int nholes) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  trk->setNholes( nholes ) ;
   return LCIO::SUCCESS ;
 }
 

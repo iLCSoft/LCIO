@@ -31,6 +31,7 @@ public class ITrack extends ILCObject implements Track
    protected float chi2;
    protected float dEdx;
    protected float dEdxError;
+   protected int nholes;
    protected int ndf;
    protected List tracks = new ArrayList();
    protected List trackStates = new ArrayList();
@@ -239,6 +240,11 @@ public class ITrack extends ILCObject implements Track
    {
       return dEdxError;
    }
+      
+   public int getNholes()
+   {
+      return nholes;
+   }
 
    public void setChi2(float chi2)
    {
@@ -256,6 +262,12 @@ public class ITrack extends ILCObject implements Track
    {
       checkAccess();
       this.dEdxError = dEdxError;
+   } 
+
+   public void setNholes(int nholes)
+   {
+      checkAccess();
+      this.nholes = nholes;
    }
   
    protected void setType(int type)

@@ -191,6 +191,7 @@ public:
       trk->setZ0( (i+1)*10. ) ;
       trk->setChi2( 1.01 ) ;
       trk->setNdf( 42 ) ;
+      trk->setNholes( 2 ) ;
 
       trk->setRadiusOfInnermostHit( 3.141592 ) ;
 
