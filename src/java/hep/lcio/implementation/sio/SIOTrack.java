@@ -78,6 +78,7 @@ class SIOTrack extends ITrack
       ndf = in.readInt() ;
       dEdx = in.readFloat();
       dEdxError = in.readFloat();
+      nholes = in.readInt() ;
       radiusOfInnermostHit = in.readFloat() ;
       int nHitNumbers = in.readInt() ;
       int[] hitNumbers = new int[nHitNumbers] ;
@@ -152,6 +153,7 @@ class SIOTrack extends ITrack
          out.writeInt(track.getNdf());
          out.writeFloat(track.getdEdx());
          out.writeFloat(track.getdEdxError());
+         out.writeFloat(track.getNholes());
          out.writeFloat(track.getRadiusOfInnermostHit()) ;
          int[] hitNumbers = track.getSubdetectorHitNumbers();
          out.writeInt( hitNumbers.length ) ;
@@ -217,6 +219,7 @@ class SIOTrack extends ITrack
       out.writeFloat(ndf);
       out.writeFloat(dEdx);
       out.writeFloat(dEdxError);
+      out.writeInt(nholes);
       out.writeFloat(radiusOfInnermostHit) ;
       out.writeInt( subdetectorHitNumbers.length ) ;
       for (int i = 0; i < subdetectorHitNumbers.length; i++)

@@ -104,6 +104,10 @@ public:
      */
     virtual float getdEdxError() const = 0;
 
+    /** Number of holes.
+     */
+    virtual int getNholes() const = 0;
+
     /** The radius of the innermost hit that has been used in the track fit.
      *  Helps to detect V0 tracks with small impact paramters or heavy mesons.
      *  To be used as convenient information or if hits are not stored in 
