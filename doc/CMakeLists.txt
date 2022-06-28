@@ -64,6 +64,11 @@ IF( DOXYGEN_FOUND )
     #    COMMENT "Generating header files with ant aid.generate..."
     #)
 
+    FILE(GLOB DOXYGEN_SOURCES
+        ${LCIO_AID_HEADERS_OUTPUT_DIR}/EVENT/*
+        ${LCIO_AID_HEADERS_OUTPUT_DIR}/IO/*
+    )
+
     ADD_CUSTOM_COMMAND(
         OUTPUT  "${DOC_BIN_DIR}/html/index.html"
         COMMAND DOX_PROJECT_NUMBER="${${PROJECT_NAME}_VERSION}"
@@ -73,8 +78,7 @@ IF( DOXYGEN_FOUND )
         WORKING_DIRECTORY ${DOC_SRC_DIR}/doxygen_api
         COMMENT "Building C++ API Documentation..."
         DEPENDS ./doxygen_api/Doxyfile ./CMakeLists.txt
-                ${LCIO_AID_HEADERS_OUTPUT_DIR}/EVENT/*
-                ${LCIO_AID_HEADERS_OUTPUT_DIR}/IO/*
+                ${DOXYGEN_SOURCES}
     )
     
     ADD_CUSTOM_TARGET( doc_cpp DEPENDS "${DOC_BIN_DIR}/html/index.html" )

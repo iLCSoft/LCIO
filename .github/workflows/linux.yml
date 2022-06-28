@@ -29,6 +29,7 @@ jobs:
             -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
             -DCMAKE_INSTALL_PREFIX=../install \
             -DBUILD_F77_TESTJOBS=ON \
+            -DINSTALL_DOC=ON \
             ..
           make -k
           make install
