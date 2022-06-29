@@ -1,3 +1,8 @@
+# v02-17-01
+
+* 2022-05-09 Thomas Madlener ([PR#146](https://github.com/iLCSoft/LCIO/pull/146))
+  - Install all the necessary headers to make the python bindings work, even if the sources are removed after installation. Fixes #106
+
 # v02-17
 
 * 2021-11-05 Frank Gaede ([PR#143](https://github.com/iLCSoft/LCIO/pull/143))
