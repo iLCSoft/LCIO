@@ -14,7 +14,7 @@ include(GNUInstallDirs)
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
 SET( LCIO_VERSION_MINOR 17 )
-SET( LCIO_VERSION_PATCH 0 )
+SET( LCIO_VERSION_PATCH 1 )
 
 ### set correct LCIO version in relevant files  ############################
 
