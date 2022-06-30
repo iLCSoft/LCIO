@@ -599,6 +599,10 @@
 	<repeat count="nHitNumbers">
 	  <data type="int" name="subdetectorHitNumbers">number of hits in particular subdetectors. TODO need way to define mapping in run/event header</data>
 	</repeat>
+	<data type="int" name="nHoleNumbers"></data>
+	<repeat count="nHoleNumbers">
+	  <data type="int" name="subdetectorHoleNumbers">number of holes in particular subdetectors. TODO need way to define mapping in run/event header</data>
+	</repeat>
 	<data type="int" name="nTracks"></data>
 	<repeat count="nTracks">
 	  <data type="pntr" name="Track">tracks that have been combined to this track</data>

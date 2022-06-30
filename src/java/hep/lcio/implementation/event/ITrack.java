@@ -40,6 +40,7 @@ public class ITrack extends ILCObject implements Track
    
    //public final static int BITISREFERENCEPOINTPCA = 31;
    protected int[] subdetectorHitNumbers = null0;
+   protected int[] subdetectorHoleNumbers = null0;
    
    public float getD0()
    {
@@ -321,21 +322,32 @@ public class ITrack extends ILCObject implements Track
    {
       return radiusOfInnermostHit;
    }
-   
+
    public void setRadiusOfInnermostHit(float f)
    {
       checkAccess();
       radiusOfInnermostHit = f;
    }
-   
+
    public int[] getSubdetectorHitNumbers()
    {
       return subdetectorHitNumbers ;
    }
-   
+
    public void setSubdetectorHitNumbers(int[] is)
    {
       checkAccess();
       subdetectorHitNumbers = is;
+   }
+
+   public int[] getSubdetectorHoleNumbers()
+   {
+      return subdetectorHoleNumbers ;
+   }
+
+   public void setSubdetectorHoleNumbers(int[] is)
+   {
+      checkAccess();
+      subdetectorHoleNumbers = is;
    }
 }

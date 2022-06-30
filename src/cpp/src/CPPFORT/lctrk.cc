@@ -138,6 +138,22 @@ int     lctrkgetsubdetectorhitnumbers( PTRTYPE track, int* intv, int* nintv ) {
   return LCIO::SUCCESS ;
 }
 
+int     lctrkgetsubdetectorholenumbers( PTRTYPE track, int* intv, int* nintv ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  IntVec& intVec =  trk->subdetectorHoleNumbers() ;
+  int n = intVec.size() ;
+  if (n > *nintv) {
+    std::cerr << "Warning in lctrkgetsubdetectorholenumbers: vector size " <<  n
+              << " larger then target array size " << *nintv << std::endl ;
+      n = *nintv ;
+  }
+  for(int j=0;j<n;j++) {
+    intv[j] = intVec[j] ;
+  }
+  *nintv = n ;
+  return LCIO::SUCCESS ;
+}
+
 PTRTYPE lctrkgettracks( PTRTYPE track ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   const TrackVec& idvect = trk->getTracks();
@@ -267,6 +283,16 @@ int lctrkaddhit( PTRTYPE track, PTRTYPE hit ) {
 int     lctrksetsubdetectorhitnumbers( PTRTYPE track, int* intv, const int nintv ) {
   TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
   IntVec& intVec =  trk->subdetectorHitNumbers() ;
+  intVec.resize( nintv ) ;
+  for(int j=0;j<nintv;j++) {
+    intVec[j] =  intv[j]  ;
+  }
+  return LCIO::SUCCESS ;
+}
+
+int     lctrksetsubdetectorholenumbers( PTRTYPE track, int* intv, const int nintv ) {
+  TrackImpl* trk = f2c_pointer<TrackImpl,LCObject>( track ) ;
+  IntVec& intVec =  trk->subdetectorHoleNumbers() ;
   intVec.resize( nintv ) ;
   for(int j=0;j<nintv;j++) {
     intVec[j] =  intv[j]  ;
