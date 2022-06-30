@@ -58,6 +58,10 @@ namespace SIO {
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_DATA( device , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
     }
+    trk->subdetectorHoleNumbers().resize( nHoleNumbers ) ;
+    for( int i=0 ; i<nHoleNumbers ; i++ ) {
+      SIO_DATA( device , &(trk->_subdetectorHoleNumbers[i] ), 1 ) ;
+    }
     int nTracks ;
     SIO_DATA( device, &nTracks , 1  ) ;
     trk->_tracks.resize( nTracks ) ;
@@ -108,6 +112,12 @@ namespace SIO {
     SIO_DATA( device, &nHitNumbers , 1  ) ;
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_SDATA( device , hitNums[i]  ) ;
+    }
+    auto holeNums = trk->getSubdetectorHoleNumbers() ;
+    int nHoleNumbers = holeNums.size() ;
+    SIO_DATA( device, &nHoleNumbers , 1  ) ;
+    for( int i=0 ; i<nHoleNumbers ; i++ ) {
+      SIO_SDATA( device , holeNums[i]  ) ;
     }
     auto tracks = trk->getTracks() ;
     int nTracks = tracks.size() ;
