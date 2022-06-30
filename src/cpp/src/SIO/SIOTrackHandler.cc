@@ -58,6 +58,8 @@ namespace SIO {
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_DATA( device , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
     }
+    int nHoleNumbers ;
+    SIO_DATA( device, &nHoleNumbers , 1  ) ;
     trk->subdetectorHoleNumbers().resize( nHoleNumbers ) ;
     for( int i=0 ; i<nHoleNumbers ; i++ ) {
       SIO_DATA( device , &(trk->_subdetectorHoleNumbers[i] ), 1 ) ;
