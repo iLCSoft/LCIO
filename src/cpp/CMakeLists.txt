@@ -121,6 +121,7 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/ILDConf.cc
   ./src/UTIL/ProcessFlag.cc
   ./src/UTIL/TrackTools.cc
+  ./src/UTIL/LCCollectionTools.cc
 )
 
 SET( LCIO_MT_SRCS
