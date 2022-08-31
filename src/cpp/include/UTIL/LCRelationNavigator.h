@@ -68,6 +68,26 @@ namespace UTIL {
      */
     virtual const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
+    /** Object with a highest weight that the given from-object is related to.
+     *  LCObject is of type getToType().
+     */
+    virtual const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const ;
+
+    /** From-object related to the given object with a highest weight (the inverse relationship).
+     *  LCObject is of type getFromType().
+     */
+    virtual const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const ;
+
+    /** The highest weight of the relations returned by a call to getRelatedToObjects(from).
+     * @see getRelatedToObjects
+     */
+    virtual float getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const ;
+
+    /** The highest weight of the relations returned by a call to getRelatedFromObjects(to). 
+     * @see getRelatedFromObjects
+     */
+    virtual float getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const ;
+
     /** Adds a relation. If there is already an existing relation between the two given objects
      * the weight (or default weight 1.0) is added to that relationship's weight.
      */
