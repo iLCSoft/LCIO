@@ -38,75 +38,75 @@ namespace UTIL {
     LCRelationNavigator( const EVENT::LCCollection* col ) ;
     
     /// Destructor.
-    virtual ~LCRelationNavigator() { /* nop */; }
+    ~LCRelationNavigator() { /* nop */; }
     
     /**The type of the 'from' objects in this relation.
      */
-    virtual const std::string & getFromType() const ;
+    const std::string & getFromType() const ;
     
     /**The type of the 'to' objects in this relation.
      */
-    virtual const std::string & getToType() const ;
+    const std::string & getToType() const ;
     
     /** All objects that the given from-object is related to.
      *  LCObjects are of type getToType().
      */
-    virtual const EVENT::LCObjectVec & getRelatedToObjects(EVENT::LCObject * from) const ;
+    const EVENT::LCObjectVec & getRelatedToObjects(EVENT::LCObject * from) const ;
 
     /** All from-objects related to the given object ( the  inverse relationship).
      *  LCObjects are of type getFromType().
      */
-    virtual const EVENT::LCObjectVec & getRelatedFromObjects(EVENT::LCObject * to) const ;
+    const EVENT::LCObjectVec & getRelatedFromObjects(EVENT::LCObject * to) const ;
 
     /** The weights of the relations returned by  a call to getRelatedToObjects(from). 
      * @see getRelatedToObjects
      */
-    virtual const EVENT::FloatVec & getRelatedToWeights(EVENT::LCObject * from) const ;
+    const EVENT::FloatVec & getRelatedToWeights(EVENT::LCObject * from) const ;
 
     /** The weights of the relations returned by  a call to getRelatedFromObjects(to). 
      * @see getRelatedFromObjects
      */
-    virtual const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
+    const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
     /** Object with a highest weight that the given from-object is related to.
      *  LCObject is of type getToType().
      */
-    virtual const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const ;
+    const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const ;
 
     /** From-object related to the given object with a highest weight (the inverse relationship).
      *  LCObject is of type getFromType().
      */
-    virtual const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const ;
+    const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const ;
 
     /** The highest weight of the relations returned by a call to getRelatedToObjects(from).
      * @see getRelatedToObjects
      */
-    virtual float getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const ;
+    float getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const ;
 
     /** The highest weight of the relations returned by a call to getRelatedFromObjects(to). 
      * @see getRelatedFromObjects
      */
-    virtual float getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const ;
+    float getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const ;
 
     /** Adds a relation. If there is already an existing relation between the two given objects
      * the weight (or default weight 1.0) is added to that relationship's weight.
      */
-    virtual void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight = 1.0) ;
+    void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight = 1.0) ;
     
     /** Remove a given relation.
      */
-    virtual void removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) ;
+    void removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) ;
 
     /** Remove a given relation. To reduce the weight of the relationship, call 
      *  addRelation( from, to, weight  ) with  weight<0.
      */
-    virtual EVENT::LCCollection * createLCCollection() ;
+    EVENT::LCCollection * createLCCollection() ;
 
   protected:
 
     LCRelationNavigator() ;
 
-    virtual void initialize( const EVENT::LCCollection* col ) ;
+    void initialize( const EVENT::LCCollection* col ) ;
 
     void removeRelation(EVENT::LCObject * from, EVENT::LCObject * to, RelMap& map ) ;
     void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight, RelMap& map) ;
