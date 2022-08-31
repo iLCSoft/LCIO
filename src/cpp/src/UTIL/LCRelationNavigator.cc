@@ -98,11 +98,9 @@ namespace UTIL{
       const auto& weights = getRelatedToWeights(from);
       if ( objects.empty() ) return 0.;
 
-      float maxWeight = 0.;
-      if (weightType == "track") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
-      else if (weightType == "cluster") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
-      else maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
-      return maxWeight;
+      if (weightType == "track") return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+      return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
   }
 
   float LCRelationNavigator::getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const {
@@ -110,11 +108,9 @@ namespace UTIL{
       const auto& weights = getRelatedToWeights(to);
       if ( objects.empty() ) return 0.;
 
-      float maxWeight = 0.;
-      if (weightType == "track") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
-      else if (weightType == "cluster") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
-      else maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
-      return maxWeight;
+      if (weightType == "track") return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+      return *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
   }
 
   void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
