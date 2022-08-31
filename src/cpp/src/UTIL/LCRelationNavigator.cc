@@ -68,6 +68,55 @@ namespace UTIL{
     return _rMap[ to ].second ;
   }
 
+  const EVENT::LCObject* LCRelationNavigator::getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const {
+      const auto& objects = getRelatedToObjects(from);
+      const auto& weights = getRelatedToWeights(from);
+      if ( objects.empty() ) return nullptr;
+      auto maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b;});
+      if (weightType == "track") maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+
+      int i = std::distance(weights.begin(), maxWeightIt);
+      return objects[i];    
+  }
+
+  const EVENT::LCObject* LCRelationNavigator::getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const {
+      const auto& objects = getRelatedToObjects(to);
+      const auto& weights = getRelatedToWeights(to);
+      if ( objects.empty() ) return nullptr;
+
+      auto maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b;});
+      if (weightType == "track") maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") maxWeightIt = std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+
+      int i = std::distance(weights.begin(), maxWeightIt);
+      return objects[i];    
+  }
+
+  float LCRelationNavigator::getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const {
+      const auto& objects = getRelatedToObjects(from);
+      const auto& weights = getRelatedToWeights(from);
+      if ( objects.empty() ) return 0.;
+
+      float maxWeight = 0.;
+      if (weightType == "track") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+      else maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
+      return maxWeight;
+  }
+
+  float LCRelationNavigator::getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const {
+      const auto& objects = getRelatedToObjects(to);
+      const auto& weights = getRelatedToWeights(to);
+      if ( objects.empty() ) return 0.;
+
+      float maxWeight = 0.;
+      if (weightType == "track") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)%10000)/1000. < (int(b)%10000)/1000.;});
+      else if (weightType == "cluster") maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return (int(a)/10000)/1000. < (int(b)/10000)/1000. ;});
+      else maxWeight = *std::max_element(weights.begin(), weights.end(), [](float a, float b){return a < b ;});
+      return maxWeight;
+  }
+
   void LCRelationNavigator::addRelation(EVENT::LCObject * from, 
 					       EVENT::LCObject * to, 
 					       float weight) {
