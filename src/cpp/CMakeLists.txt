@@ -120,7 +120,6 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/PIDHandler.cc
   ./src/UTIL/ILDConf.cc
   ./src/UTIL/ProcessFlag.cc
-  ./src/UTIL/TrackTools.cc
   ./src/UTIL/LCCollectionTools.cc
   ./src/UTIL/ReconstructedParticleTools.cc
 )
