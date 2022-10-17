@@ -9,7 +9,7 @@ namespace UTIL{
     * @author Bohdan Dudar
     * @version August 2022
     */
-    EVENT::Track* getLeadingTrack(const EVENT::ReconstructedParticle* particle, double bz);
+    EVENT::Track* getLeadingTrack(const EVENT::ReconstructedParticle* particle);
 }
 
 #endif
