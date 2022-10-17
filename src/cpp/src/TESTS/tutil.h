@@ -3,6 +3,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <array>
 
 class TEST{
   
@@ -61,3 +62,16 @@ private:
     std::string _testname;
     std::ostream& _out;
 };
+
+template<typename T, size_t N>
+std::ostream& operator<<(std::ostream& os, const std::array<T, N>& arr) {
+  if constexpr (N == 0) {
+    return os << "[]";
+  }
+
+  os << "[" << arr[0];
+  for (size_t i = 1; i < N; ++i) {
+    os << ", " << arr[i];
+  }
+  return os << "]";
+}
