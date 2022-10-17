@@ -1,7 +1,6 @@
 # LCIO
 
 ![linux](https://github.com/iLCSoft/LCIO/workflows/linux/badge.svg)
-![mac](https://github.com/iLCSoft/LCIO/workflows/macOS/badge.svg)
 ![python](https://github.com/iLCSoft/LCIO/workflows/python/badge.svg)
 [![Coverity Scan Build Status](https://scan.coverity.com/projects/11178/badge.svg)](https://scan.coverity.com/projects/ilcsoft-lcio)
 
