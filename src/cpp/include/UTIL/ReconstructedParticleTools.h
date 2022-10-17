@@ -5,7 +5,7 @@
 #include "EVENT/Track.h"
 
 namespace UTIL{
-    /** Extract the leading track in case of multiple tracks attached to a single ReconstructedParticle.
+    /** Extract the leading track (sorted by momentum) in case of multiple tracks attached to a single ReconstructedParticle.
     * @author Bohdan Dudar
     * @version August 2022
     */
