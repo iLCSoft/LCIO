@@ -63,9 +63,13 @@ option(LCIO_SET_RPATH   "Link libraries with built-in RPATH (run-time search pat
 
 # load default settings from ILCSOFT_CMAKE_MODULES
 INCLUDE( ilcsoft_default_settings )
-IF( NOT CMAKE_CXX_STANDARD )
-  SET( CMAKE_CXX_STANDARD 14 )
-ENDIF()
+
+# ``-DCMAKE_CXX_STANDARD=<standard>`` when invoking CMake
+SET(CMAKE_CXX_STANDARD 17 CACHE STRING "")
+
+if(NOT CMAKE_CXX_STANDARD MATCHES "17|20")
+  MESSAGE(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD} (need >= 17)")
+endif()
 SET( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # lcio.jar
