@@ -7,6 +7,7 @@
 
 #include "EVENT/TrackState.h"
 #include "IMPL/TrackStateImpl.h"
+#include "UTIL/TrackTools.h"
 
 //#include "UTIL/Operators.h"
 
@@ -41,7 +42,8 @@ int main(int /*argc*/, char** /*argv*/ ){
         MYTEST( a.getPhi(),  float( .0 ), "getPhi" ) ;
         MYTEST( a.getOmega(),  float( .0 ), "getOmega" ) ;
 
-
+        // Omega == 0, will yield zero momentum as there is no reasonable value in that case
+        MYTEST( getTrackMomentum(&a, 3.5), std::array<double, 3>{0, 0, 0}, "getTrackMomentum" );
 
         MYTEST.LOG( "test constructor with arguments" );
 
@@ -64,6 +66,17 @@ int main(int /*argc*/, char** /*argv*/ ){
         MYTEST( b.getD0(),  float( .1 ), "getD0" ) ;
         MYTEST( b.getPhi(),  float( .2 ), "getPhi" ) ;
         MYTEST( b.getOmega(),  float( .3 ), "getOmega" ) ;
+
+        const std::array<double, 3> trueMomentum = {
+          1e-6 * 299.7922458 * 3.5 / .3 * std::cos(.2), // pt * cos(phi), with pt = c * B / omega
+          1e-6 * 299.7922458 * 3.5 / .3 * std::sin(.2), // pt * sin(phi)
+          1e-6 * 299.7922458 * 3.5 / .3 * .5 // pt * tanL
+        };
+
+        std::stringstream failMsg;
+        const auto tsMomentum = getTrackMomentum(&b, 3.5);
+        failMsg << "  getTrackMomentum : [" << tsMomentum << "] != << [" << trueMomentum << "]";
+        MYTEST(approxEqArray(tsMomentum, trueMomentum), failMsg.str());
 
 
 
