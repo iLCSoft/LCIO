@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <array>
+#include <limits>
+#include <cmath>
 
 class TEST{
   
@@ -35,10 +37,10 @@ public:
     return ;
   }
 
-//   void operator()(bool cond, const std::string msg) {
-//     if ( ! cond ) FAILED( msg ) ;
-//     return ;
-//   } 
+  void operator()(bool cond, const std::string msg) {
+    if ( ! cond ) FAILED( msg ) ;
+    return ;
+  }
 
     void FAILED( const std::string& msg ){
         
@@ -75,3 +77,21 @@ std::ostream& operator<<(std::ostream& os, const std::array<T, N>& arr) {
   }
   return os << "]";
 }
+
+bool approxEqual(double lhs, double rhs) {
+  // Following a similar, but slightly simplified approach as Catch2::Approx here
+  constexpr double epsilon = std::numeric_limits<float>::epsilon() * 100;
+  const double margin = std::fabs(lhs) * epsilon;
+  return (lhs + margin >= rhs) && (rhs + margin >= lhs);
+}
+
+template<typename T, size_t N, typename ApproxComp=decltype(approxEqual)>
+bool approxEqArray(const std::array<T, N>& arr1, const std::array<T, N>& arr2, ApproxComp&& comp=approxEqual) {
+  for (size_t i = 0; i < N; ++i) {
+    if (!comp(arr1[i], arr2[i])) {
+      return false;
+    }
+  }
+  return true;
+}
+

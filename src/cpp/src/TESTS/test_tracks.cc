@@ -229,7 +229,9 @@ int main(int /*argc*/, char** /*argv*/ ){
                     double trkPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*(i+j) * .2;
                     trkTrueMomentum = {trkPx, trkPy, trkPz};
                 }
-                MYTEST(trkRecoMomentum, trkTrueMomentum, "getTrackMomentum");                    
+                std::stringstream failMsg;
+                failMsg << "  getTrackMomentum : [" << trkRecoMomentum << "] != [" << trkTrueMomentum << "]";
+                MYTEST(approxEqArray(trkRecoMomentum, trkTrueMomentum), failMsg.str());
 
                 ++j ;
             }
@@ -270,17 +272,6 @@ int main(int /*argc*/, char** /*argv*/ ){
                     ss << " ref[" << k << "] " ;
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
-
-                //Test of the getTrackMomentum
-                std::array<double, 3> trkRecoMomentum = UTIL::getTrackMomentum(trk, 3.5);
-                std::array<double, 3> trkTrueMomentum = {0., 0., 0.};
-                if (trk->getOmega() != 0.){
-                    double trkPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::cos((i+j) * .3);
-                    double trkPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::sin((i+j) * .3);
-                    double trkPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*(i+j) * .2;
-                    trkTrueMomentum = {trkPx, trkPy, trkPz};
-                }
-                MYTEST(trkRecoMomentum, trkTrueMomentum, "getTrackMomentum");                    
 
                 ++j ;
             }
@@ -330,17 +321,6 @@ int main(int /*argc*/, char** /*argv*/ ){
                     ss << " ref[" << k << "] " ;
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
-                
-                //Test of the getTrackMomentum
-                std::array<double, 3> trkRecoMomentum = UTIL::getTrackMomentum(trk, 3.5);
-                std::array<double, 3> trkTrueMomentum = {0., 0., 0.};
-                if (trk->getOmega() != 0.){
-                    double trkPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::cos((i+j) * .3);
-                    double trkPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::sin((i+j) * .3);
-                    double trkPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*(i+j) * .2;
-                    trkTrueMomentum = {trkPx, trkPy, trkPz};
-                }
-                MYTEST(trkRecoMomentum, trkTrueMomentum, "getTrackMomentum");                    
 
                 // more than one trackstate
                 const TrackStateVec& trackstates = trk->getTrackStates() ;
@@ -371,17 +351,6 @@ int main(int /*argc*/, char** /*argv*/ ){
                         ss << " ref[" << l << "] " ;
                         MYTEST( refL[l] , float(k*(l+1)) , ss.str() ) ;
                     }
-                    
-                    //Test of the getTrackMomentum
-                    std::array<double, 3> tsRecoMomentum = UTIL::getTrackMomentum(trackstates[k], 3.5);
-                    std::array<double, 3> tsTrueMomentum = {0., 0., 0.};
-                    if (trackstates[k]->getOmega() != 0.){
-                        double tsPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*std::cos((i+j+k) * .3);
-                        double tsPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*std::sin((i+j+k) * .3);
-                        double tsPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*(i+j+k) * .2;
-                        tsTrueMomentum = {tsPx, tsPy, tsPz};
-                    }
-                    MYTEST(tsRecoMomentum, tsTrueMomentum, "getTrackMomentum");                    
                 }
 
 
@@ -416,17 +385,6 @@ int main(int /*argc*/, char** /*argv*/ ){
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
 
-                //Test of the getTrackMomentum
-                std::array<double, 3> trkcRecoMomentum = UTIL::getTrackMomentum(trkc, 3.5);
-                std::array<double, 3> trkcTrueMomentum = {0., 0., 0.};
-                if (trkc->getOmega() != 0.){
-                    double trkcPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::cos((i+j) * .3);
-                    double trkcPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::sin((i+j) * .3);
-                    double trkcPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*(i+j) * .2;
-                    trkcTrueMomentum = {trkcPx, trkcPy, trkcPz};
-                }
-                MYTEST(trkcRecoMomentum, trkcTrueMomentum, "getTrackMomentum");                    
-            
                 // more than one trackstate
                 const TrackStateVec& trackstatesc = trkc->getTrackStates() ;
 
@@ -453,18 +411,6 @@ int main(int /*argc*/, char** /*argv*/ ){
                         ss << " ref[" << l << "] " ;
                         MYTEST( refL[l] , float(k*(l+1)) , ss.str() ) ;
                     }
-
-                    //Test of the getTrackMomentum
-                    std::array<double, 3> tscRecoMomentum = UTIL::getTrackMomentum(trackstatesc[k], 3.5);
-                    std::array<double, 3> tscTrueMomentum = {0., 0., 0.};
-                    if (trackstatesc[k]->getOmega() != 0.){
-                        double tscPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*std::cos((i+j+k) * .3);
-                        double tscPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*std::sin((i+j+k) * .3);
-                        double tscPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j+k) * .1)*(i+j+k) * .2;
-                        tscTrueMomentum = {tscPx, tscPy, tscPz};
-                    }
-                    MYTEST(tscRecoMomentum, tscTrueMomentum, "getTrackMomentum");                    
-
                 }
 
                 // ---------- end test copies -------------------------------
@@ -506,8 +452,8 @@ int main(int /*argc*/, char** /*argv*/ ){
         } catch( Exception &e ){
             MYTEST.FAILED( e.what() );
         }
-
         return 0;
+
     }
 
     //=============================================================================
