@@ -108,6 +108,10 @@ public interface LCParameters
     /** Returns a list of all keys of string parameters.
      */
     public const StringVec& getStringKeys() const ;
+
+   /** Returns a list of all keys of string parameters.
+    */
+    public const StringVec& getDoubleKeys() const ;
 @endif
 
 
