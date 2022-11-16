@@ -52,7 +52,7 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException, std::exception) ;
+    virtual void open(const std::string & filename) ;
 
     /** Opens a file for writing.
      * Possible write modes are: LCIO::WRITE_NEW
@@ -60,8 +60,7 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void open(const std::string & filename, int writeMode)throw (IO::IOException, std::exception) ;
-    
+    virtual void open(const std::string & filename, int writeMode); 
     /** Set the compression level - needs to be called before open() otherwise
      *  call will have no effect. If not called the Writer will use default compression.<br>
      *  Valid compression levels are:
@@ -82,25 +81,24 @@ namespace SIO {
      *
      *@throws IOException
      */
-    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr)throw (IO::IOException, std::exception) ;
-
+    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr);
     /** Writes the given event to file.
      *
      *@throws IOException
      */
-    virtual void writeEvent(const EVENT::LCEvent * evt) throw (IO::IOException, std::exception) ;
+    virtual void writeEvent(const EVENT::LCEvent * evt) ;
 
     /** Closes the output file/stream etc.
      *
      *@throws IOException
      */
-    virtual void close() throw (IO::IOException, std::exception) ;
+    virtual void close() ;
     
     /** Flushes the output file/stream etc.
      *
      *@throws IOException
      */
-    virtual void flush() throw (IO::IOException, std::exception) ;
+    virtual void flush() ;
 
 
   protected:

@@ -22,8 +22,7 @@ namespace SIO {
 
   SIOCollectionHandler::SIOCollectionHandler(const std::string& name, 
 					     const std::string& type,
-					     LCEventIOImpl**  anEvtP)
-    throw (Exception) : 
+					     LCEventIOImpl**  anEvtP): 
     SIO_block( name.c_str() ), 
     _evtP( anEvtP ) , _col(0) , 
     _myType( type )   {

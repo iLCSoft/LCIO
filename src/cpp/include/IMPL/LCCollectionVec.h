@@ -123,17 +123,13 @@ namespace IMPL {
 
     /** Adds the given element to (end of) the collection. Throws an exception 
      * if the collection (event) is 'read only'.
-     *
-     * @throws ReadOnlyException
      */
-    virtual void addElement(EVENT::LCObject * obj) throw (EVENT::ReadOnlyException) ;
+    virtual void addElement(EVENT::LCObject * obj); 
 
     /** Removes the i-th element from the collection. Throws an exception 
      * if the collection (event) is 'read only'.
-     *
-     * @throws ReadOnlyException
      */
-    virtual void removeElementAt(int i) throw (EVENT::ReadOnlyException) ;
+    virtual void removeElementAt(int i);
     
     /** Parameters defined for this run.
      */

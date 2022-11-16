@@ -52,33 +52,33 @@ class SIOEventHandler ;
      * @throws IOException
      */
     virtual void open(const std::vector<std::string>& filenames) 
-      throw (IO::IOException, std::exception) ;
+      ;
 
 
     /** Opens a file for reading (read-only).
      * @throws IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException, std::exception) ;
+    virtual void open(const std::string & filename) ;
     
     /** Reads the next run header from the file. 
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader() throw (IO::IOException, std::exception) ;
+    virtual EVENT::LCRunHeader * readNextRunHeader() ;
 
     /** Same as readNextRunHeader() but allows to set the access mode 
      *  LCIO::READ_ONLY (default) or LCIO::Update. 
      *
      * @throws IOException
      */
-    virtual EVENT::LCRunHeader * readNextRunHeader(int accessMode) throw (IO::IOException, std::exception) ;
+    virtual EVENT::LCRunHeader * readNextRunHeader(int accessMode) ;
 
 
     /** Reads the next event from the file. 
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent() throw (IO::IOException, std::exception) ;
+    virtual EVENT::LCEvent* readNextEvent() ;
     
 
     /** Same as readNextRunHeader() but allows to set the access mode 
@@ -86,21 +86,21 @@ class SIOEventHandler ;
      *
      * @throws IOException
      */
-    virtual EVENT::LCEvent* readNextEvent( int accessMode) throw (IO::IOException, std::exception) ;
+    virtual EVENT::LCEvent* readNextEvent( int accessMode) ;
     
 
     /** Return the number of events in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
      *  the number of events in the file that is currently open is returned. 
      */
-   virtual int getNumberOfEvents() throw (IO::IOException, std::exception ) ;
+   virtual int getNumberOfEvents() ;
 
 
     /** Return the number of runs (run headers) in the file - the file has to be open. In
      *  case several input files are specified in the open() method - 
      *  the number of runs (run headers) in the file that is currently open is returned. 
      */
-    virtual int getNumberOfRuns() throw (IO::IOException, std::exception ) ;
+    virtual int getNumberOfRuns() ;
 
 
     /** Return the run numbers of the runs (run headers) in the file - the file has to be open. In
@@ -121,7 +121,7 @@ class SIOEventHandler ;
     /** Skips the next n events from the current position. In fact simply reads the next n
       *  event headers so that the next event read is the (n+1)-th event.
       */
-    virtual void skipNEvents(int n)   throw (IO::IOException, std::exception )  ;
+    virtual void skipNEvents(int n)    ;
 
 
 
@@ -138,7 +138,7 @@ class SIOEventHandler ;
      * @throws IOException
      */
     virtual EVENT::LCRunHeader * readRunHeader(int runNumber ) 
-      throw (IO::IOException , std::exception) ;
+      ;
 
     /** Same as LCEvent* readRunHeader(int runNumber) 
      *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
@@ -146,7 +146,7 @@ class SIOEventHandler ;
      * @throws IOException
      */
     virtual EVENT::LCRunHeader * readRunHeader(int runNumber, int accessMode ) 
-      throw (IO::IOException , std::exception) ;
+      ;
 
     /** Reads the specified event from file. Returns NULL if
      *  the specified event hasn't been found in the file.
@@ -154,7 +154,7 @@ class SIOEventHandler ;
      * @throws IOException
      */
     virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber) 
-      throw (IO::IOException, std::exception ) ;
+      ;
 
 
     /** Same as LCEvent* readEvent(int runNumber, int evtNumber 
@@ -163,13 +163,13 @@ class SIOEventHandler ;
      * @throws IOException
      */
     virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber, int accessMode) 
-      throw (IO::IOException, std::exception ) ;
+      ;
     
     /** Closes the output file/stream etc.
      *
      * @throws IOException
      */
-    virtual void close() throw (IO::IOException, std::exception) ;
+    virtual void close() ;
     
     // interface for listeners
  
@@ -196,7 +196,7 @@ class SIOEventHandler ;
      * @throws IOException
      * @throws EndOfException
      */
-    virtual void readStream() throw (IO::IOException, std::exception) ;
+    virtual void readStream() ;
 
     /** Reads maxRecord from the input stream and notifies registered 
      * listeners according to the object type found in the stream. 
@@ -205,7 +205,7 @@ class SIOEventHandler ;
      * @throws IOException
      * @throws EndOfException
      */
-    virtual void readStream(int maxRecord) throw (IO::IOException, std::exception) ;
+    virtual void readStream(int maxRecord) ;
 
 
 
@@ -213,7 +213,7 @@ class SIOEventHandler ;
   protected:
 
     void setUpHandlers() ;
-    void readRecord() throw (IO::IOException , IO::EndOfDataException , std::exception) ;
+    void readRecord(); 
 
 
     void postProcessEvent() ;

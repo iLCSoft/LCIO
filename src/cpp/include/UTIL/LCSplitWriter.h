@@ -46,24 +46,21 @@ namespace UTIL{
     /** Opens a file for writing where the filename has to include the extension but not the number, e.g.
      *  myfile.slcio. Note that this is  different from the LCWriter specification.
      *
-     *@throws IO::IOException
      */
-    virtual void open(const std::string & filename) throw (IO::IOException, std::exception ) ;
+    virtual void open(const std::string & filename);
 
     /** Not implemented - will throw an Exception if called.
      * Overwriting of or appending to split files is not straight forward. Pleas use the default write mode 
      * and remove exisiting files.
      * 
-     * @throws IO::IOException
      */
-    virtual void open(const std::string & filename, int writeMode) throw (IO::IOException, std::exception ) ;
+    virtual void open(const std::string & filename, int writeMode); 
 
     /** Writes the given run header to file. Opens a new file if the given file size is already exceeded
      *  before the execution of the write access.
      *
-     * @throws IO::IOException
      */
-    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr) throw (IO::IOException, std::exception ) ;
+    virtual void writeRunHeader(const EVENT::LCRunHeader * hdr); 
 
     /** Set CompressionLevel.
      * @see LCWriter::setCompressionLevel()
@@ -76,22 +73,17 @@ namespace UTIL{
     /** Writes the given file to file. Opens a new file if the given file size is already exceeded
      *  before the execution of the write access.
      *
-     *@throws IO::IOException
      */
-    virtual void writeEvent(const EVENT::LCEvent * evt) throw (IO::IOException, std::exception )  ;
+    virtual void writeEvent(const EVENT::LCEvent * evt); 
 
     /** Closes the output file/stream.
-     *
-     *@throws IO::IOException
      */
-    virtual void close() throw (IO::IOException, std::exception )  ;
+    virtual void close(); 
 
 
     /** Flushes the output file/stream.
-     *
-     *@throws IO::IOException
      */
-    virtual void flush() throw (IO::IOException, std::exception )  ;
+    virtual void flush();
 
     
     //---------------------------------------------------------------------------------------------
