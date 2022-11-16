@@ -145,13 +145,13 @@ namespace IMPL {
 
     //    int _type ;
     //    std::string _type ;
-    std::bitset<32> _type ;
-    float _energy ;
-    float _energyError ;
+    std::bitset<32> _type{0} ;
+    float _energy{0} ;
+    float _energyError{0} ;
     float _position[3] ;
     EVENT::FloatVec _errpos ;
-    float _theta;
-    float _phi ;
+    float _theta{0};
+    float _phi{0} ;
     EVENT::FloatVec _errdir ;
     EVENT::FloatVec _shape ;
     EVENT::ParticleIDVec _pid ;

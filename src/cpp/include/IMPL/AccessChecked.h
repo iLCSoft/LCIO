@@ -31,8 +31,8 @@ namespace IMPL {
     void checkAccess(const char* what) ;
 
   protected: 
-    bool _readOnly ;
-    int _id ;
+    bool _readOnly{false} ;
+    int _id{0} ;
     
   };
 } // namespace IMPL

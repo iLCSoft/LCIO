@@ -4,7 +4,7 @@
 
 namespace IMPL {
   
-  AccessChecked::AccessChecked() : _readOnly(false) {
+  AccessChecked::AccessChecked() {
     // provide a simple unique id for LCObjects
     static int lCObjectId(0) ;
     _id = lCObjectId++ ;

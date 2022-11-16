@@ -544,7 +544,7 @@ namespace lcrtrel{
   
   
     //   PtrVec* _vec ; 
-    mutable PtrMap _map ;
+    mutable PtrMap _map{};
   
   } ;
   

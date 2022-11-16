@@ -22,7 +22,7 @@ namespace EVENT {
 
     
   protected:
-    std::string message ;
+    std::string message{""} ;
     
     Exception(){  /*no_op*/ ; } 
     

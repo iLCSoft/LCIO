@@ -16,6 +16,8 @@
 #include <map>
 #include <string>
 
+#include "zlib.h"
+
 #include <stdio.h>
 
 #include "SIO_definitions.h"
@@ -110,33 +112,33 @@ private:
 
     unsigned int           write( SIO_record*, const char* );
 
-    unsigned char*         bufloc;        // Buffer pointer (beginning)
-    unsigned char*         buffer;        // Buffer pointer (current)
-    unsigned char*         bufmax;        // Buffer pointer (end)
-    unsigned char*         recmax;        // Record pointer (end)
-    unsigned char*         blkmax;        // Block  pointer (end)
+    unsigned char*         bufloc{nullptr};        // Buffer pointer (beginning)
+    unsigned char*         buffer{nullptr};        // Buffer pointer (current)
+    unsigned char*         bufmax{nullptr};        // Buffer pointer (end)
+    unsigned char*         recmax{nullptr};        // Record pointer (end)
+    unsigned char*         blkmax{nullptr};        // Block  pointer (end)
 
-    unsigned char*         cmploc;        // Compression buffer pointer (beg)
-    unsigned char*         cmpmax;        // Compression buffer pointer (end)
-    struct z_stream_s*     z_strm;        // Compression buffer control
+    unsigned char*         cmploc{nullptr};        // Compression buffer pointer (beg)
+    unsigned char*         cmpmax{nullptr};        // Compression buffer pointer (end)
+    struct z_stream_s*     z_strm{nullptr};        // Compression buffer control
 
-    std::string            name;          // Stream's name
-    std::string            filename;      // Stream's associated file
-    FILE*                  handle;        // File handle
+    std::string            name{""};          // Stream's name
+    std::string            filename{""};      // Stream's associated file
+    FILE*                  handle{nullptr};        // File handle
 
-    std::string            rec_name;      // Record name being read
-    std::string            blk_name;      // Block  name being read
+    std::string            rec_name{""};      // Record name being read
+    std::string            blk_name{""};      // Block  name being read
 
-    pointedAtMap_c*        pointedAt;     // Map      of 'pointed at'
-    pointerToMap_c*        pointerTo;     // Multimap of 'pointer to'
+    pointedAtMap_c*        pointedAt{nullptr};     // Map      of 'pointed at'
+    pointerToMap_c*        pointerTo{nullptr};     // Multimap of 'pointer to'
 
-    SIO_stream_mode        mode;          // Stream mode
-    unsigned int           reserve;       // Reserved size of buffer
-    SIO_stream_state       state;         // Stream state  
-    SIO_verbosity          verbosity;     // Reporting level
+    SIO_stream_mode        mode{SIO_MODE_UNDEFINED};          // Stream mode
+    unsigned int           reserve{0};       // Reserved size of buffer
+    SIO_stream_state       state{SIO_STATE_CLOSED};         // Stream state  
+    SIO_verbosity          verbosity{};     // Reporting level
 
-    SIO_64BITINT           recPos  ;      // start Position of last record read
-    int                    compLevel ;    // compression level
+    SIO_64BITINT           recPos{0}  ;      // start Position of last record read
+    int                    compLevel{Z_DEFAULT_COMPRESSION} ;    // compression level
 
 friend class SIO_streamManager;           // Access to constructor/destructor
 friend class SIO_record;                  // Access to buffer

@@ -8,12 +8,7 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ClusterImpl::ClusterImpl() :
-    _type(0),
-    _energy(0),
-    _energyError(0),
-    _theta(0),
-    _phi(0) {
+  ClusterImpl::ClusterImpl() {
 
     _errpos.resize( NERRPOS ) ;
     _errdir.resize( NERRDIR ) ;

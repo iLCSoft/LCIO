@@ -18,7 +18,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "zlib.h"
 
 #include "SIO_block.h"
 #include "SIO_definitions.h"
@@ -41,33 +40,8 @@ SIO_stream::SIO_stream
     const char*      i_name,
     unsigned int     i_reserve,
     SIO_verbosity    i_verbosity
-)
+) : name(i_name), reserve(i_reserve), verbosity(i_verbosity) 
 {
-
-bufloc    = NULL;
-buffer    = NULL;
-bufmax    = NULL;
-recmax    = NULL;
-blkmax    = NULL;
-
-cmploc    = NULL;
-cmpmax    = NULL;
-z_strm    = NULL;
-
-name      = i_name;
-handle    = NULL;
-
-mode      = SIO_MODE_UNDEFINED;
-reserve   = i_reserve;
-state     = SIO_STATE_CLOSED;
-verbosity = i_verbosity;
-
-pointedAt = NULL ;
-pointerTo = NULL ;
-
-recPos = 0 ;
-
-compLevel = Z_DEFAULT_COMPRESSION ;
 }
 
 // ----------------------------------------------------------------------------
