@@ -101,6 +101,12 @@ public:
 private:
     SIO_stream( const char *, unsigned int, SIO_verbosity );
    ~SIO_stream();
+    
+    /// Disable the copy constructor
+    SIO_stream(const SIO_stream&) = delete; 
+
+    /// Disable the assingment operator
+    SIO_stream& operator=(const SIO_stream&) = delete;
 
     unsigned int           write( SIO_record*, const char* );
 
