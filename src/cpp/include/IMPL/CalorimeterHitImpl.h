@@ -24,9 +24,11 @@ namespace IMPL {
      */
     CalorimeterHitImpl() ;
 
-    /** Copy constructor. Not yet - needs pointer chasing ... 
-     */
-    //    CalorimeterHitImpl(const CalorimeterHit& hit) ;
+    /// Copy constructor
+    CalorimeterHitImpl(const IMPL::CalorimeterHitImpl& hit) = default;
+    
+    /// Assignment operator
+    CalorimeterHitImpl& operator=(const IMPL::CalorimeterHitImpl&) = default;
 
     /// Destructor.
     virtual ~CalorimeterHitImpl() ;
