@@ -476,7 +476,7 @@ namespace lcrtrel{
 
 
 
-    ~LCRTRelations() {
+    virtual ~LCRTRelations() {
       for( PtrMap::iterator it = _map.begin() ; it != _map.end() ; ++it ){
 	cleaners()[ it->first ] ( it->second ) ;  // call the delete function
       }
