@@ -8,15 +8,9 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ClusterImpl::ClusterImpl() {
-
-    _errpos.resize( NERRPOS ) ;
-    _errdir.resize( NERRDIR ) ;
-//     for(int i=0 ; i < NERRPOS ; i++ ) { _errpos.push_back( 0.0 ) ;  }
-//     for(int i=0 ; i < NERRDIR ; i++ ) { _errdir.push_back( 0.0 ) ;  }
-    _position[0] = 0. ;
-    _position[1] = 0. ;
-    _position[2] = 0. ;
+  ClusterImpl::ClusterImpl() : 
+    _errpos( NERRPOS ), 
+    _errdir( NERRDIR ) { 
   }
 
   ClusterImpl::~ClusterImpl(){

@@ -148,17 +148,17 @@ namespace IMPL {
     std::bitset<32> _type{0} ;
     float _energy{0} ;
     float _energyError{0} ;
-    float _position[3] ;
+    float _position[3] = {0, 0, 0};
     EVENT::FloatVec _errpos ;
     float _theta{0};
     float _phi{0} ;
     EVENT::FloatVec _errdir ;
-    EVENT::FloatVec _shape ;
-    EVENT::ParticleIDVec _pid ;
-    EVENT::ClusterVec _clusters ;
-    EVENT::CalorimeterHitVec _hits ;
-    EVENT::FloatVec _weights ;
-    EVENT::FloatVec _subdetectorEnergies ;
+    EVENT::FloatVec _shape{} ;
+    EVENT::ParticleIDVec _pid{} ;
+    EVENT::ClusterVec _clusters{} ;
+    EVENT::CalorimeterHitVec _hits{} ;
+    EVENT::FloatVec _weights{} ;
+    EVENT::FloatVec _subdetectorEnergies{} ;
 
 }; // class
 
