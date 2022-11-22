@@ -54,7 +54,7 @@ namespace IMPL {
     
     /** Default constructor, initializes values to 0.
      */
-    SimCalorimeterHitImpl() ;
+    SimCalorimeterHitImpl() = default;
 
     /** Copy constructor - shallow copy. 
      */
@@ -189,12 +189,12 @@ namespace IMPL {
 
   protected:
 
-    int _cellID0 ;
-    int _cellID1 ;
-    float _energy ;
-    float _position[3] ;
+    int _cellID0{0} ;
+    int _cellID1{0} ;
+    float _energy{0.} ;
+    float _position[3] = {0., 0., 0.} ;
 
-    MCParticleContVec _vec ;
+    MCParticleContVec _vec{} ;
     
   }; // class
 } // namespace IMPL

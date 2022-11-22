@@ -5,18 +5,6 @@
 
 namespace IMPL{
   
-
-
-
-  SimCalorimeterHitImpl::SimCalorimeterHitImpl() :
-    _cellID0(0),
-    _cellID1(0),
-    _energy(0){
-    _position[0] = 0. ;
-    _position[1] = 0. ;
-    _position[2] = 0. ; 
-  }
-
   //   // copy of the SimCalorimeterHit hit
   SimCalorimeterHitImpl::SimCalorimeterHitImpl(const SimCalorimeterHit& hit) :
 
