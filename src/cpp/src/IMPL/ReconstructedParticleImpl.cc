@@ -8,24 +8,8 @@ using namespace EVENT ;
 namespace IMPL{
 
 
-  ReconstructedParticleImpl::ReconstructedParticleImpl() :
-    _type(0) ,
-    _energy(0) ,
-    _mass(0) ,
-    _charge(0),
-    _pidUsed(0),
-    _goodnessOfPID(0),
-    _sv(0)
-    //_ev(0)
-  {
+  ReconstructedParticleImpl::ReconstructedParticleImpl() {
     _cov.resize( NCOVARIANCE ) ;
-    //     for(int i=0 ; i < NCOVARIANCE ; i++ ) { _cov.push_back( 0.0 ) ;  }
-    _momentum[0] = 0. ;
-    _momentum[1] = 0. ;
-    _momentum[2] = 0. ;
-    _reference[0] = 0. ;
-    _reference[1] = 0. ;
-    _reference[2] = 0. ;    
   }
 
   ReconstructedParticleImpl::~ReconstructedParticleImpl(){

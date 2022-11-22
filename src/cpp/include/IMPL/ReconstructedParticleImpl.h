@@ -26,7 +26,13 @@ namespace IMPL {
     /** Default constructor, initializes values to 0.
      */
     ReconstructedParticleImpl() ;
-    
+
+    /// Copy constructor
+    ReconstructedParticleImpl(const ReconstructedParticleImpl&) = default;
+
+    /// Assignment operator
+    ReconstructedParticleImpl& operator=(const ReconstructedParticleImpl&) = default;
+
     /// Destructor.
     virtual ~ReconstructedParticleImpl() ; 
 
@@ -129,20 +135,20 @@ namespace IMPL {
 
   protected:
 
-    int _type ;
-    double _momentum[3] ;
-    double _energy ;
-    EVENT::FloatVec _cov ;
-    double _mass ;
-    float _charge ;
-    float _reference[3] ;
-    EVENT::ParticleID* _pidUsed ;
-    float _goodnessOfPID ;
-    EVENT::ParticleIDVec _pid ;
-    EVENT::ReconstructedParticleVec _particles ;
-    EVENT::ClusterVec _clusters ;
-    EVENT::TrackVec _tracks ;
-    EVENT::Vertex* _sv ;
+    int _type{0} ;
+    double _momentum[3] = {0., 0., 0.} ;
+    double _energy{0.} ;
+    EVENT::FloatVec _cov{} ;
+    double _mass{0.} ;
+    float _charge{0.} ;
+    float _reference[3] = {0., 0., 0.} ;
+    EVENT::ParticleID* _pidUsed{nullptr} ;
+    float _goodnessOfPID{0.} ;
+    EVENT::ParticleIDVec _pid{} ;
+    EVENT::ReconstructedParticleVec _particles{} ;
+    EVENT::ClusterVec _clusters{} ;
+    EVENT::TrackVec _tracks{} ;
+    EVENT::Vertex* _sv{} ;
 
     
 }; // class
