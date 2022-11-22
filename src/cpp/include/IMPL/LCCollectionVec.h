@@ -1,3 +1,11 @@
+
+// This class inherits from std::vector<> via the class LCObjectVec.
+// As a result, a warning is thrown because std::vector doesn't have
+// a virtual destructor.  Fixing this requires redesigning the 
+// class so the following pragmas just supress the warning instead.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+
 #ifndef EVENT_LCCOLLECTIONVEC_H
 #define EVENT_LCCOLLECTIONVEC_H 1
 
@@ -32,7 +40,7 @@ namespace IMPL {
     /**  Default Constructor should be protected - every LCCollection needs to know the type
      *   of its elements.
      */
-    LCCollectionVec() : _flag(0) {  /* no default c'tor */ }
+    LCCollectionVec() = default;
     
   public:
     
@@ -46,7 +54,7 @@ namespace IMPL {
     
     /** Destructor.
      */    
-    virtual ~LCCollectionVec() ;
+    virtual ~LCCollectionVec();
     
     /**Returns the number of entries in the collection.
      */
@@ -143,11 +151,13 @@ namespace IMPL {
   protected:
     void setReadOnly(bool readOnly) ;
 
-    std::string _typeName ;
-    int _flag ;
-    LCParametersImpl _params ;
+    std::string _typeName{"UNKNOWN"} ;
+    int _flag{0} ;
+    LCParametersImpl _params{} ;
     //    int _access ;
 
 }; // class
 } // namespace IMPL
 #endif /* ifndef EVENT_LCCOLLECTIONVEC_H */
+
+#pragma GCC diagnostic pop

@@ -14,8 +14,7 @@ namespace IMPL {
 
 
 LCCollectionVec::LCCollectionVec( const std::string& type ) :
-  _typeName( type ),
-  _flag(0){ 
+  _typeName( type ) {
   //,
   // _access(LCIO::UPDATE ) {
 
