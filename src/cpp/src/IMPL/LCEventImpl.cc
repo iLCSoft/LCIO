@@ -14,13 +14,6 @@ using namespace EVENT ;
 
 namespace IMPL {
   
-LCEventImpl::LCEventImpl() :
-  _runNumber(0),
-  _eventNumber(0),
-  _timeStamp(0),
-  _detectorName("unknown") {
-}
-  
 // LCEventImpl::LCEventImpl(const LCEvent& evt) : 
 //   _runNumber( evt.getRunNumber() ),
 //   _eventNumber( evt.getEventNumber() ),

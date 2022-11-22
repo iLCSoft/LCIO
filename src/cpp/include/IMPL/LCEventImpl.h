@@ -31,7 +31,7 @@ namespace IMPL{
   class LCEventImpl : public EVENT::LCEvent, public AccessChecked {
     
   public: 
-    LCEventImpl() ;
+    LCEventImpl() = default;
     /** Copy contructor, creates a deep copy of the event.
      * Not yet - needs pointer chasing ...
      */
@@ -164,10 +164,10 @@ namespace IMPL{
     // for friends of sub classes ...
     
   protected:  
-    int _runNumber ;
-    int _eventNumber ;
-    EVENT::long64 _timeStamp ;
-    std::string _detectorName ;
+    int _runNumber{0} ;
+    int _eventNumber{0} ;
+    EVENT::long64 _timeStamp{0} ;
+    std::string _detectorName{"unknown"} ;
     
     // map has to be defined mutable in order to use _map[]  for const methods ...
     mutable LCCollectionMap _colMap ;
