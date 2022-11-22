@@ -6,30 +6,6 @@ using namespace EVENT ;
 
 namespace IMPL {
   
-  SimTrackerHitImpl::SimTrackerHitImpl() :
-    _cellID0(0),
-    _cellID1(0),
-    //_dEdx(0),
-    _EDep(0),
-    _time(0),
-    _particle(0),
-    _pathLength(0){
-    _pos[0] = 0. ;
-    _pos[1] = 0. ;
-    _pos[2] = 0. ;
-    _p[0] = 0. ;
-    _p[1] = 0. ;
-    _p[2] = 0. ;
-  }
-
-  SimTrackerHitImpl::~SimTrackerHitImpl(){  
-  } 
-
-  // DEPRECATED. use getCellID0()
-  int SimTrackerHitImpl::getCellID() const {
-      UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_GETCELLID" ) ;
-      return getCellID0();
-  }
   int SimTrackerHitImpl::getCellID0() const { return _cellID0 ; }
   int SimTrackerHitImpl::getCellID1() const { return _cellID1 ; }
 
@@ -53,13 +29,6 @@ namespace IMPL {
   float SimTrackerHitImpl::getPathLength() const { return _pathLength ; }
 
   const float* SimTrackerHitImpl::getMomentum() const { return _p ; }
-
-  void SimTrackerHitImpl::setCellID( int id) {
-    UTIL::LCWarning::getInstance().printWarning( "SIMTRACKERHIT_DEPRECATED_SETCELLID" ) ;
-    //checkAccess("SimTrackerHitImpl::setCellID") ;
-    //_cellID = id ;
-    setCellID0( id );
-  }
 
   void SimTrackerHitImpl::setCellID0( int id0) {
     checkAccess("SimTrackerHitImpl::setCellID0") ;

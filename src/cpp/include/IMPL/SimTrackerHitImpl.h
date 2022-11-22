@@ -23,16 +23,18 @@ namespace IMPL {
     
     /** Default constructor, initializes values to 0.
      */
-    SimTrackerHitImpl() ;
-    
+    SimTrackerHitImpl() = default ;
+
+    /// Copy constructor
+    SimTrackerHitImpl(const SimTrackerHitImpl&) = default; 
+
+    /// Assignment operator
+    SimTrackerHitImpl& operator=(const SimTrackerHitImpl&) = default;  
+
     /// Destructor.
-    virtual ~SimTrackerHitImpl() ; 
+    virtual ~SimTrackerHitImpl() = default; 
     
     virtual int id() const { return simpleUID() ; }
-
-    /** DEPRECATED: use @getCellID0()
-     */
-    virtual int getCellID() const ;
 
     /** Same name as in CalorimeterHit, even though there are no 'cells' in this case
      */
@@ -81,11 +83,6 @@ namespace IMPL {
      */
     virtual float getPathLength() const ;
 
-    // ---------- setters ------------------------
-    /** DEPRECATED: use @setCellID0
-     */
-    void setCellID( int id) ;
-
     /** Sets the first cell id;
      */
     void setCellID0(int id0) ;
@@ -131,14 +128,14 @@ namespace IMPL {
     void setPathLength(float pathLength);
 
   protected:
-    int _cellID0 ;
-    int _cellID1 ;
-    double _pos[3] ;
-    float _EDep ;
-    float _time ;
-    EVENT::MCParticle* _particle ;   //! <-- fixme: ROOT cannot handle this pointer !!????
-    float _p[3] ;
-    float _pathLength ;
+    int _cellID0{0} ;
+    int _cellID1{0} ;
+    double _pos[3] = {0., 0., 0.};
+    float _EDep{0.} ;
+    float _time{0.} ;
+    EVENT::MCParticle* _particle{nullptr} ;   //! <-- fixme: ROOT cannot handle this pointer !!????
+    float _p[3] = {0., 0., 0.} ;
+    float _pathLength{0.} ;
 
 }; // class
 } // namespace IMPL
