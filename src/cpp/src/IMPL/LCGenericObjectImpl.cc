@@ -9,14 +9,6 @@ namespace IMPL {
   std::string  LCGenericObjectImpl::_typeName = "LCGenericObject" ;
   std::string  LCGenericObjectImpl::_dataDescription = "" ;
 
-
-
-  LCGenericObjectImpl::LCGenericObjectImpl():
-  _isFixedSize( false ) {
-    
-  }
-
-
   LCGenericObjectImpl::LCGenericObjectImpl(int nInt, int nFloat, int nDouble):
     _isFixedSize( true ) {  // FIXME - fixed size is a collection property !!!
     _intVec.resize( nInt ) ;

@@ -7,10 +7,6 @@ using namespace EVENT ;
 
 namespace IMPL{
 
-  LCParametersImpl::LCParametersImpl(){
-    
-  }
-
   int LCParametersImpl::getIntVal(const std::string & key) const {
     
     IntMap::iterator it = _intMap.find( key ) ;

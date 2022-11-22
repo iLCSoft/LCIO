@@ -3,13 +3,6 @@
 using namespace EVENT ;
 
 namespace IMPL{
-
-
-  LCRunHeaderImpl::LCRunHeaderImpl() :
-    _runNumber(0){ 
-  }
-  
-  LCRunHeaderImpl::~LCRunHeaderImpl() { } 
   
   int LCRunHeaderImpl::getRunNumber() const { return _runNumber ; }
   const std::string & LCRunHeaderImpl::getDetectorName() const  { return _detectorName ; }

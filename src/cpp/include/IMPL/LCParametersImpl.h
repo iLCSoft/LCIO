@@ -40,7 +40,7 @@ namespace IMPL {
     
   public: 
     
-    LCParametersImpl() ; 
+    LCParametersImpl() = default; 
     
     /// Destructor.
     virtual ~LCParametersImpl() { /* nop */; }
@@ -123,9 +123,9 @@ namespace IMPL {
 
   protected:
 
-    mutable IntMap _intMap ;
-    mutable FloatMap _floatMap ;
-    mutable StringMap _stringMap ;
+    mutable IntMap _intMap{} ;
+    mutable FloatMap _floatMap{} ;
+    mutable StringMap _stringMap{} ;
     
   }; // class
 } // namespace IMPL

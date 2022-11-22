@@ -19,10 +19,10 @@ namespace IMPL {
 
   public: 
 
-    LCRunHeaderImpl() ;
+    LCRunHeaderImpl() = default ;
 
     /// Destructor.
-    virtual ~LCRunHeaderImpl() ; 
+    virtual ~LCRunHeaderImpl() = default; 
 
     virtual int id() const { return simpleUID() ; }
 
@@ -77,12 +77,12 @@ namespace IMPL {
 
   protected:
     
-    int _runNumber ;
-    std::string _detectorName ;
-    std::string _description ;
-    std::vector<std::string> _activeSubdetectors ;
+    int _runNumber{0} ;
+    std::string _detectorName{""} ;
+    std::string _description{""} ;
+    std::vector<std::string> _activeSubdetectors{} ;
 
-    LCParametersImpl _params ;
+    LCParametersImpl _params{} ;
 
   }; // class
 } // namespace IMPL

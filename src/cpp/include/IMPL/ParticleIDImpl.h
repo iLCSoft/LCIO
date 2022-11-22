@@ -11,8 +11,7 @@ namespace IMPL {
 
   /** Helper class to sort ParticleIDs wrt. their likelihood.
    */
-  class PIDSort : public std::binary_function<EVENT::ParticleID*,EVENT::ParticleID*,bool>{
-  public:
+  struct PIDSort {
     bool operator()(const EVENT::ParticleID* p1, const EVENT::ParticleID* p2){
       return p1->getLikelihood() > p2->getLikelihood() ;
     }
@@ -32,10 +31,10 @@ namespace IMPL {
     
     /** Default constructor, initializes values to 0.
      */
-    ParticleIDImpl() ;
+    ParticleIDImpl() = default;
     
     /// Destructor.
-    virtual ~ParticleIDImpl() ; 
+    virtual ~ParticleIDImpl() = default; 
 
     virtual int id() const { return simpleUID() ; }
 
@@ -74,11 +73,11 @@ namespace IMPL {
     void addParameter( float p ) ;
     
   protected:
-    int _type ;
-    int _pdg ;
-    float _likelihood ;
-    int _algorithmType ;
-    EVENT::FloatVec _parameters ;
+    int _type{0} ;
+    int _pdg{0} ;
+    float _likelihood{0} ;
+    int _algorithmType{0} ;
+    EVENT::FloatVec _parameters{} ;
 
 }; // class
 

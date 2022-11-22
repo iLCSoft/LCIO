@@ -21,7 +21,7 @@ public:
 
   /** Variable size c'tor.
    */
-  LCGenericObjectImpl() ;
+  LCGenericObjectImpl() = default;
 
   /** Fixed size c'tor.
    */
@@ -89,10 +89,10 @@ public:
 
 protected:
   
-  std::vector<int> _intVec ;
-  std::vector<float> _floatVec ;
-  std::vector<double> _doubleVec ;
-  bool _isFixedSize ;
+  std::vector<int> _intVec{} ;
+  std::vector<float> _floatVec{} ;
+  std::vector<double> _doubleVec{} ;
+  bool _isFixedSize{false} ;
 
   static std::string _typeName ;
   static std::string _dataDescription ;
