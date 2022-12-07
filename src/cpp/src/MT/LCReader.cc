@@ -210,6 +210,61 @@ namespace MT {
   }
 
   //----------------------------------------------------------------------------
+  std::unique_ptr<EVENT::LCEvent> LCReader::readNextEventHeader()  {
+    IOIMPL::LCEventLazyImpl* lazyEvent = nullptr ;
+    std::unique_ptr<IOIMPL::LCEventIOImpl> event = nullptr ;
+    auto validator = [&]( const sio::record_info &recinfo ) {
+      return ( recinfo._name == SIO::LCSIO::HeaderRecordName );
+    } ;
+    auto processor = [&]( const sio::record_info &recinfo, const sio::buffer_span& recdata ) {
+      const bool compressed = sio::api::is_compressed( recinfo._options ) ;
+
+      const bool uncomp = compressed ;
+      if( uncomp ) {
+        _compBuffer->resize( recinfo._uncompressed_length ) ;
+        sio::zlib_compression compressor ;
+        compressor.uncompress( recdata, *_compBuffer ) ;
+      }
+      auto data = uncomp ? _compBuffer->span() : recdata ;
+      if( _lazyUnpack ) {
+	lazyEvent = new IOIMPL::LCEventLazyImpl() ;
+	event.reset( lazyEvent ) ;
+      }
+      else {
+	event = std::make_unique<IOIMPL::LCEventIOImpl>() ;
+      }
+      SIO::SIOEventHeaderRecord::readBlocks( data, event.get(), _readCollectionNames ) ;
+
+      return false ;
+    } ;
+
+    try {
+      sio::api::read_records( _stream, *_rawBuffer, validator, processor ) ;
+    }
+    catch( sio::exception &e ) {
+      // reached end of file. Need to close the current and open the next if available
+      if( e.code() == sio::error_code::eof ) {
+        if( !_myFilenames.empty()  && _currentFileIndex+1 < _myFilenames.size()  ) {
+          close() ;
+          open( _myFilenames[ ++_currentFileIndex  ] ) ;
+          try {
+            return readNextEventHeader() ;
+          }
+          catch( sio::exception &e2 ) {
+            if( e2.code() == sio::error_code::eof ) {
+              return nullptr ;
+            }
+            SIO_RETHROW( e2, e2.code(), "Couldn't read next event!" ) ;
+          }
+        }
+        return nullptr ;
+      }
+      SIO_RETHROW( e, e.code(), "Couldn't read next event!" ) ;
+    }
+    return event ;
+  }
+
+  //----------------------------------------------------------------------------
 
   int LCReader::getNumberOfEvents()  {
     // create the event map if needed (i.e. not opened in direct access mode)
