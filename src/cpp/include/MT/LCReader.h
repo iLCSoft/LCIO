@@ -165,6 +165,13 @@ public:
    */
   void readNextRecord( LCReaderListener *listener ) ;
 
+
+  /** Utility method for reading event headers only. For expert use, e.g. for patching files with
+   *  inconsistent sets of collections in events (missing empty collections). Reads only event headers
+   *  and returns event with empty collections.
+   */
+  std::unique_ptr<EVENT::LCEvent> readNextEventHeader() ;
+
 private:
   // void readRecord( const sio::record_map &records , sio::record_read_result &readResult ) ;
   void postProcessEvent( EVENT::LCEvent *evt ) ;
