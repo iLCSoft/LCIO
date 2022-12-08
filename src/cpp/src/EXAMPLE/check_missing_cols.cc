@@ -4,8 +4,6 @@
 #include "EVENT/LCCollection.h"
 #include "UTIL/CheckCollections.h"
 
-#include <unordered_map>
-
 static std::vector<std::string> FILEN ; 
 
 /** Utility to check files for inconsistent sets of collections, i.e 
