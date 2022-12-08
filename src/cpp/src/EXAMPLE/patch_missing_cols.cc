@@ -51,7 +51,7 @@ int main(int argc, char** argv ){
   
   while( (evt = lcReader->readNextEvent()) != nullptr ){
 
-    colCheck.addMissingCollections( evt ) ;
+    colCheck.patchCollections( evt ) ;
 
     lcWrt->writeEvent( evt ) ;
   } 

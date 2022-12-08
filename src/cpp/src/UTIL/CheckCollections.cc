@@ -71,7 +71,7 @@ namespace UTIL{
     return s ;
   }  
 
-  void CheckCollections::addMissingCollections(EVENT::LCEvent* evt ) {
+  void CheckCollections::patchCollections(EVENT::LCEvent* evt ) {
 
     for(auto c : _patchCols ){
 
