@@ -29,7 +29,11 @@ namespace UTIL {
     /** d'tor */
     virtual ~CheckCollections() = default ;
 
-    /** Checks all files given in c'tor for missing collections.
+    /** Checks the file for missing collections - can be called repeadedly on different files.
+     */
+    void checkFile( const std::string fileName ) ;
+
+    /** Checks all files for missing collections.
      */
     void checkFiles( const std::vector<std::string> fileNames ) ;
 

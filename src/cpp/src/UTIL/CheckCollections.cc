@@ -10,11 +10,15 @@ namespace UTIL{
 
   void CheckCollections::checkFiles( const std::vector<std::string> fileNames ){
 
+    for( auto n : fileNames )
+      checkFile( n ) ;
+  }
+
+  void CheckCollections::checkFile( const std::string fileName ) {
 
     MT::LCReader lcReader(0) ; 
 
-    // open list of files
-    lcReader.open( fileNames ) ;
+    lcReader.open( fileName ) ;
 
     std::unique_ptr<EVENT::LCEvent> evt ;
 
