@@ -64,7 +64,7 @@ namespace UTIL {
 
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
      */
-    void addMissingCollections(EVENT::LCEvent* evt ) ;
+    void patchCollections(EVENT::LCEvent* evt ) ;
     
   private:
     unsigned _nEvents =0 ;
