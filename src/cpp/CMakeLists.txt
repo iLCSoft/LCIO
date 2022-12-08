@@ -122,7 +122,8 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/ProcessFlag.cc
   ./src/UTIL/LCCollectionTools.cc
   ./src/UTIL/ReconstructedParticleTools.cc
-)
+  ./src/UTIL/CheckCollections.cc
+  )
 
 SET( LCIO_MT_SRCS
   ./src/MT/LCReader.cc
