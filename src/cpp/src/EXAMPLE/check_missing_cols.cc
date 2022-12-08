@@ -1,15 +1,11 @@
 #include "lcio.h"
 
 #include "MT/LCReader.h"
-#include "IMPL/LCTOOLS.h"
 #include "EVENT/LCCollection.h"
 
-#include <cstdlib>
-#include <sstream>
-#include <set>
+#include <map>
 
 static std::vector<std::string> FILEN ; 
-
 
 /** Utility to check files for inconsistent sets of collections, i.e 
  *  collections that are not present in every event.
@@ -37,7 +33,7 @@ int main(int argc, char** argv ){
     lcReader.open( FILEN[i] ) ;
     
     std::cout  << std::endl <<  "     "  << FILEN[i] 
-	  <<       ", number of events: "  <<  lcReader.getNumberOfEvents() << " ] "   
+	  <<       " [ nEvt = "  <<  lcReader.getNumberOfEvents() << " ] "
 	  << std::endl ; 
     
     lcReader.close() ;
@@ -51,63 +47,66 @@ int main(int argc, char** argv ){
 
   unsigned nEvents = 0 ;
   
-  bool firstEvent = true ;
   
-  std::set<std::pair<std::string,std::string>> minSet ;
-  std::set<std::pair<std::string,std::string>> maxSet ;
+  std::map<std::string,unsigned> cntMap ;
+  std::map<std::string,std::string> typeMap ;
 
   //----------- the event loop -----------
   while( (evt = lcReader.readNextEventHeader()) != 0 ) {
     
-//    std::cout << " ========================== event: " << nEvents << std::endl ;
-
-    std::set<std::pair<std::string,std::string>> thisSet ;
-
-    // ----
     auto colNames = evt->getCollectionNames() ;
 
     for(unsigned i=0,n= colNames->size() ; i<n ; ++i){
       
       auto name = colNames->at(i) ;
-      auto col = evt->getCollection( name ) ;
-
-      thisSet.emplace( std::make_pair( name,  col->getTypeName() ) ) ;
-    }
-
-    if( firstEvent ){ // start minSet w/ first event
-
-      firstEvent = false;
-      minSet.insert( thisSet.begin() , thisSet.end() )  ;
-
-    } else {
-
-      // remove all elements from minSet that are not in this event
       
-      for (auto it = minSet.begin(); it != minSet.end(); ) {
-	if( thisSet.find( *it ) == thisSet.end() ) {
-	  it = minSet.erase( it ) ;
-	} else {
-	  ++it ;
-	}
+      unsigned cnt = cntMap[ name ] ++ ;
+
+      if( cnt == 0 ){ // enter type only for first occurence
+	auto col = evt->getCollection( name ) ;
+	typeMap.insert( std::make_pair( name,  col->getTypeName() ) ) ;
       }
     }
-    
-    // ---- merge everything (new) into maxSet
-    maxSet.merge( thisSet ) ;
-    
 
     nEvents ++ ;
   } 
+
   // -------- end of event loop -----------
   
+  std::cout << " ================================================================ " << std::endl ;
   std::cout << std::endl <<  "  " <<  nEvents << " events read " << std::endl  ;
-
   std::cout << "     collections that are not in all events : " << std::endl ;
   std::cout << " ================================================================ " << std::endl ;
 
-  for(auto p : maxSet ) {
-    if( minSet.find( p ) == minSet.end() )  
-      std::cout << "     " <<  p.first << " : " << p.second << std::endl ;
+
+  unsigned cntSize = cntMap.size() ;
+  unsigned typeSize = typeMap.size() ;
+
+  if( cntSize  != typeSize ) {
+    std::cout << " ERROR : different sizes in maps : count: " << cntSize << " types: "
+	      << typeSize << std::endl ;
+    exit(1) ;
+  }
+
+  auto it_c = cntMap.begin();
+  auto it_t = typeMap.begin();
+  for( ; it_c != cntMap.end() ; it_c++, it_t++ ){
+
+    if( it_c->second != nEvents )
+      std::cout << "     " <<  it_c->first << " : " << it_t->second << "  - " << it_c->second << std::endl ;
+  }
+
+  std::cout << " ================================================================ " << std::endl ;
+  std::cout << "     collections that are in all events : " << std::endl ;
+  std::cout << " ================================================================ " << std::endl ;
+
+
+  it_c = cntMap.begin();
+  it_t = typeMap.begin();
+  for( ; it_c != cntMap.end() ; it_c++, it_t++ ){
+
+    if( it_c->second == nEvents )
+      std::cout << "     " <<  it_c->first << " : " << it_t->second << "  - " << it_c->second << std::endl ;
   }
   std::cout << " ================================================================ " << std::endl ;
 
