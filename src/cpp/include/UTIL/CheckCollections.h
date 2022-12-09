@@ -31,24 +31,24 @@ namespace UTIL {
 
     /** Checks the file for missing collections - can be called repeadedly on different files.
      */
-    void checkFile( const std::string fileName ) ;
+    void checkFile( const std::string& fileName ) ;
 
     /** Checks all files for missing collections.
      */
-    void checkFiles( const std::vector<std::string> fileNames ) ;
+    void checkFiles( const std::vector<std::string>& fileNames ) ;
 
     
     /** dump result of check to stream */
-    void print(  std::ostream& os ) ;
+    void print(  std::ostream& os ) const ;
     
 
     /** Returns the collections that are not present in all events checked with checkFiles() with their names and types.
      */
-    Set getMissingCollections() ;
+    Set getMissingCollections() const ;
 
     /** Returns the collections that are present in all events checked with checkFiles() with their names and types.
      */
-    Set getConsistentCollections() ;
+    Set getConsistentCollections() const ;
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      */
@@ -64,11 +64,10 @@ namespace UTIL {
 
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
      */
-    void patchCollections(EVENT::LCEvent* evt ) ;
+    void patchCollections(EVENT::LCEvent* evt ) const ;
     
   private:
     unsigned _nEvents =0 ;
-    std::vector<std::string> _fileNames {} ;
     std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
     Set _patchCols {} ;
 

@@ -9,28 +9,24 @@
 
 namespace UTIL{
 
-  void CheckCollections::checkFiles( const std::vector<std::string> fileNames ){
+  void CheckCollections::checkFiles( const std::vector<std::string>& fileNames ){
 
     for( auto n : fileNames )
       checkFile( n ) ;
   }
 
-  void CheckCollections::checkFile( const std::string fileName ) {
+  void CheckCollections::checkFile( const std::string& fileName ){
 
     MT::LCReader lcReader(0) ; 
 
     lcReader.open( fileName ) ;
 
-    std::unique_ptr<EVENT::LCEvent> evt ;
-
     //----------- the event loop -----------
-    while( (evt = lcReader.readNextEventHeader()) != 0 ) {
+    while( const auto evt = lcReader.readNextEventHeader() ) {
       
-      auto colNames = evt->getCollectionNames() ;
+      const auto* colNames = evt->getCollectionNames() ;
       
-      for(unsigned i=0,n= colNames->size() ; i<n ; ++i){
-	
-	auto name = (*colNames)[i] ;
+      for(const auto& name : *colNames){
 	
 	auto it = _map.find( name ) ;
 
@@ -53,9 +49,9 @@ namespace UTIL{
   }
 
 
-  CheckCollections::Set CheckCollections::getMissingCollections(){
+  CheckCollections::Set CheckCollections::getMissingCollections() const {
     Set  s ;
-    for(auto e : _map ){
+    for(const auto& e : _map ){
       if( e.second.second != _nEvents )
 	s.emplace( std::make_pair(e.first, e.second.first ) ) ; 
     }
@@ -63,7 +59,7 @@ namespace UTIL{
   }
   
 
-  CheckCollections::Set CheckCollections::getConsistentCollections(){
+  CheckCollections::Set CheckCollections::getConsistentCollections() const {
     Set  s ;
     for(auto e : _map ){
       if( e.second.second == _nEvents )
@@ -72,7 +68,7 @@ namespace UTIL{
     return s ;
   }  
 
-  void CheckCollections::patchCollections(EVENT::LCEvent* evt ) {
+  void CheckCollections::patchCollections(EVENT::LCEvent* evt ) const {
 
     for(auto c : _patchCols ){
 
@@ -88,7 +84,7 @@ namespace UTIL{
   }
 
   
-  void CheckCollections::print(  std::ostream& os ){
+  void CheckCollections::print(  std::ostream& os ) const {
 
     unsigned width = 50 ;
 
