@@ -18,7 +18,7 @@ namespace UTIL {
  */
   class CheckCollections {
     
-    typedef std::set<std::pair<std::string,std::string>> Set ;
+    typedef std::vector<std::pair<std::string,std::string>> Vector ;
     
   public: 
     
@@ -44,22 +44,23 @@ namespace UTIL {
 
     /** Returns the collections that are not present in all events checked with checkFiles() with their names and types.
      */
-    Set getMissingCollections() const ;
+    Vector getMissingCollections() const ;
 
     /** Returns the collections that are present in all events checked with checkFiles() with their names and types.
      */
-    Set getConsistentCollections() const ;
+    Vector getConsistentCollections() const ;
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      */
     void addPatchCollection(const std::string name, std::string type){
-      _patchCols.emplace( name, type ) ;
+      _patchCols.push_back( {name, type} ) ;
     }
 
-    /** Add a all collections as Set(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
+    /** Add a all collections as Vector(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
      */
-    void addPatchCollections(Set cols){
-      _patchCols.merge( cols ) ;
+    void addPatchCollections(Vector cols){
+      for(const auto& p : cols)
+	_patchCols.push_back( p ) ;
     }
 
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
@@ -69,7 +70,7 @@ namespace UTIL {
   private:
     unsigned _nEvents =0 ;
     std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
-    Set _patchCols {} ;
+    Vector _patchCols {} ;
 
   }; // class
 
