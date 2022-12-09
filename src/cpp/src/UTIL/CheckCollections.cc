@@ -89,15 +89,17 @@ namespace UTIL{
   
   void CheckCollections::print(  std::ostream& os ){
 
+    unsigned width = 50 ;
+
     os << " ================================================================ " << std::endl ;
     os << std::endl <<  "  " <<  _nEvents << " events read " << std::endl  ;
-    os << "     collections that are not in all events : " << std::endl ;
+    os << "     collections that are not in all events :  [# events where col is present]" << std::endl ;
     os << " ================================================================ " << std::endl ;
     
     for(auto e : _map ){
       
       if( e.second.second != _nEvents )
-	os << "     " <<  e.first << " : " << e.second.first << "  - " <<  e.second.second << std::endl ;
+	os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << " [" <<  e.second.second << "]"<< std::endl ;
     }
     
     os << " ================================================================ " << std::endl ;
@@ -108,7 +110,7 @@ namespace UTIL{
     for(auto e : _map ){
       
       if( e.second.second == _nEvents )
-	os << "     " <<  e.first << " : " << e.second.first << "  - " <<  e.second.second << std::endl ;
+	os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << "  [" <<  e.second.second << "]"<< std::endl ;
     }
     os << " ================================================================ " << std::endl ;
 
