@@ -49,21 +49,21 @@ namespace UTIL{
   }
 
 
-  CheckCollections::Set CheckCollections::getMissingCollections() const {
-    Set  s ;
+  CheckCollections::Vector CheckCollections::getMissingCollections() const {
+    Vector  s ;
     for(const auto& e : _map ){
       if( e.second.second != _nEvents )
-	s.emplace( std::make_pair(e.first, e.second.first ) ) ; 
+	s.push_back( {e.first, e.second.first } ) ;
     }
     return s ;
   }
   
 
-  CheckCollections::Set CheckCollections::getConsistentCollections() const {
-    Set  s ;
+  CheckCollections::Vector CheckCollections::getConsistentCollections() const {
+    Vector  s ;
     for(auto e : _map ){
       if( e.second.second == _nEvents )
-	s.emplace( std::make_pair(e.first, e.second.first ) ) ; 
+	s.push_back( {e.first, e.second.first }) ;
     }
     return s ;
   }  
