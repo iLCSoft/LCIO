@@ -1,3 +1,13 @@
+# v02-19
+
+* 2022-12-11 Frank Gaede ([PR#158](https://github.com/iLCSoft/LCIO/pull/158))
+  - add utility class `CheckCollections` that allows to parse lcio files for collections that are not present in every event and to patch such events with empty collections of the given (Name,Type) for further processing
+  - add example tool `check_missing_cols` that checks for collections that are not in every event in a set of files and prints a summary to stdout:
+       - `usage:  check_missing_cols <input-file1> [[input-file2],...]`
+  - add example tool `patch_missing_cols` that creates a copy of the input file with the same set of collections in all events:
+      -  ` usage:  patch_missing_cols <input-file> <output-file> ` 
+  - these tools are needed in cases where code expects consistent sets of collections in every event, as for example in a conversion to `EDM4hep`
+
 # v02-18
 
 * 2022-11-08 Thomas Madlener ([PR#155](https://github.com/iLCSoft/LCIO/pull/155))
