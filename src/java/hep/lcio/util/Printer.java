@@ -859,7 +859,7 @@ public class Printer {
 
 			boolean havehits = ((flag & (1 << LCIO.TRBIT_HITS)) != 0);
 
-			ps.println(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   ");
+			ps.println(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   nholes  |   chi2   ");
 
 			for (int i = 0; i < nprint; i++) {
 				Track trk = (Track) coll.getElementAt(i);
@@ -878,6 +878,7 @@ public class Printer {
 						Double.valueOf(trk.getReferencePoint()[2]),
 						Double.valueOf(trk.getdEdx()),
 						Double.valueOf(trk.getdEdxError()),
+						Integer.valueOf(trk.getNholes()),
 						Double.valueOf(trk.getChi2()));
 
 				// Print errors.

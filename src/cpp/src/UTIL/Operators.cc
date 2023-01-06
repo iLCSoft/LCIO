@@ -2420,12 +2420,12 @@ namespace UTIL{
     //============================================================================
 
     const std::string& header(const EVENT::Track *){ //hauke
-        static const std::string _h(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr |   chi2   |  ndf   \n");
+        static const std::string _h(" [   id   ] |   type   |    d0    |  phi     | omega    |    z0     | tan lambda|   reference point(x,y,z)        |    dEdx  |  dEdxErr | nholes |  chi2   |  ndf   \n");
         return _h;
     }
 
     const std::string& tail(const EVENT::Track *){ //hauke
-        static const std::string _t("------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|-------- \n");
+        static const std::string _t("------------|----------|----------|----------|----------|-----------|-----------|---------------------------------|----------|----------|----------|-------- \n");
         return _t;
     }
 
@@ -2449,6 +2449,7 @@ namespace UTIL{
         out << " |(" << setprecision(2) << trk->getReferencePoint()[0] << ", " << trk->getReferencePoint()[1] << ", " <<trk->getReferencePoint()[2];
         out << ")|" << trk->getdEdx();
         out << " |" << trk->getdEdxError();
+        out << " |" << trk->getNholes();
         out << " |" << trk->getChi2();
         out << " |" << noshowpos << setw(5) << trk->getNdf() ; 
         out << endl;
@@ -2542,6 +2543,7 @@ namespace UTIL{
         // out << setw(30) << setfill(' ') << left << "ReferencePoint" << right << setw(40) << tmp.str() << endl;
         out << setw(30) << setfill(' ') << left << "dEdx" << right << setw(40) << part->getdEdx() << endl;
         out << setw(30) << setfill(' ') << left << "dEdx Error" << right << setw(40) << part->getdEdxError() << endl;
+        out << setw(30) << setfill(' ') << left << "N holes" << right << setw(40) << part->getNholes() << endl;
         out << setw(30) << setfill(' ') << left << "Chi2" << right << setw(40) << part->getChi2() << endl;
         out << setw(30) << setfill(' ') << left << "Ndf" << right << setw(40) << noshowpos << part->getNdf() << endl;
 

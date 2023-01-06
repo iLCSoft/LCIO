@@ -95,6 +95,9 @@ public interface Track extends LCObject {
      */
     public float getdEdxError() const ;	
 
+    /** Number of holes.
+     */
+    public int getNholes() const ;	
 
     /** The radius of the innermost hit that has been used in the track fit.
      *  Helps to detect V0 tracks with small impact paramters or heavy mesons.

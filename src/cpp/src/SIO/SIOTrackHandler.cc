@@ -50,12 +50,19 @@ namespace SIO {
     SIO_DATA( device ,  &(trk->_ndf)  , 1 ) ;
     SIO_DATA( device ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( device ,  &(trk->_dEdxError) , 1  ) ;
+    SIO_DATA( device ,  &(trk->_nholes) , 1  ) ;
     SIO_DATA( device ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
     int nHitNumbers ;
     SIO_DATA( device, &nHitNumbers , 1  ) ;
     trk->subdetectorHitNumbers().resize( nHitNumbers ) ;
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_DATA( device , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
+    }
+    int nHoleNumbers ;
+    SIO_DATA( device, &nHoleNumbers , 1  ) ;
+    trk->subdetectorHoleNumbers().resize( nHoleNumbers ) ;
+    for( int i=0 ; i<nHoleNumbers ; i++ ) {
+      SIO_DATA( device , &(trk->_subdetectorHoleNumbers[i] ), 1 ) ;
     }
     int nTracks ;
     SIO_DATA( device, &nTracks , 1  ) ;
@@ -100,12 +107,19 @@ namespace SIO {
     SIO_SDATA( device, trk->getNdf()  ) ;
     SIO_SDATA( device, trk->getdEdx()  ) ;
     SIO_SDATA( device, trk->getdEdxError()  ) ;
+    SIO_SDATA( device, trk->getNholes()  ) ;
     SIO_SDATA( device , trk->getRadiusOfInnermostHit()  ) ;
     auto hitNums = trk->getSubdetectorHitNumbers() ;
     int nHitNumbers = hitNums.size() ;
     SIO_DATA( device, &nHitNumbers , 1  ) ;
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_SDATA( device , hitNums[i]  ) ;
+    }
+    auto holeNums = trk->getSubdetectorHoleNumbers() ;
+    int nHoleNumbers = holeNums.size() ;
+    SIO_DATA( device, &nHoleNumbers , 1  ) ;
+    for( int i=0 ; i<nHoleNumbers ; i++ ) {
+      SIO_SDATA( device , holeNums[i]  ) ;
     }
     auto tracks = trk->getTracks() ;
     int nTracks = tracks.size() ;

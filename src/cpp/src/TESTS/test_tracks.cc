@@ -79,6 +79,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 trk->setRadiusOfInnermostHit( 3.14159265 ) ;
                 trk->setdEdx( 3.14159265 ) ;
                 trk->setdEdxError( 42. ) ;
+                trk->setNholes( 2. ) ;
 
                 float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
                 trk->setCovMatrix( cov ) ;
@@ -113,6 +114,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 trk->setRadiusOfInnermostHit( 3.14159265 ) ;
                 trk->setdEdx( 3.14159265 ) ;
                 trk->setdEdxError( 42. ) ;
+                trk->setNholes( 2. ) ;
 
                 float cov[15] = { 1.,2.,3.,4.,5.,6.,7.,8.,9.,10.,11.,12.,13.,14.,15. } ;
                 trk->setCovMatrix( cov ) ;
@@ -203,6 +205,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 MYTEST( trk->getNdf(), 42 , "getNdf" ) ;
                 MYTEST( trk->getdEdx(), float(3.14159265) , "getdEdx" ) ;
                 MYTEST( trk->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trk->getNholes(), int(2.) , "getNholes" ) ;
                 MYTEST( trk->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
 
                 const FloatVec& cov = trk->getCovMatrix() ;
@@ -256,6 +259,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 MYTEST( trk->getNdf(), 42 , "getNdf" ) ;
                 MYTEST( trk->getdEdx(), float(3.14159265) , "getdEdx" ) ;
                 MYTEST( trk->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trk->getNholes(), int(2.) , "getNholes" ) ;
                 MYTEST( trk->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
 
                 const FloatVec& cov = trk->getCovMatrix() ;
@@ -304,6 +308,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 MYTEST( trk->getNdf(), 42 , "getNdf" ) ;
                 MYTEST( trk->getdEdx(), float(3.14159265) , "getdEdx" ) ;
                 MYTEST( trk->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trk->getNholes(), int(2.) , "getNholes" ) ;
                 MYTEST( trk->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
 
                 const FloatVec& cov = trk->getCovMatrix() ;
@@ -367,6 +372,7 @@ int main(int /*argc*/, char** /*argv*/ ){
                 MYTEST( trkc->getNdf(), 42 , "getNdf" ) ;
                 MYTEST( trkc->getdEdx(), float(3.14159265) , "getdEdx" ) ;
                 MYTEST( trkc->getdEdxError(), float(42.) , "getdEdxError" ) ;
+                MYTEST( trkc->getNholes(), int(2.) , "getNholes" ) ;
                 MYTEST( trkc->getRadiusOfInnermostHit(), float(3.14159265) , "getRadiusOfInnermostHit" ) ;
 
                 const FloatVec& covc = trkc->getCovMatrix() ;
