@@ -1,6 +1,5 @@
 #include "UTIL/LCRelationNavigator.h"
 
-#include <algorithm>
 #include <cassert>
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"
@@ -66,56 +65,6 @@ namespace UTIL{
   const  EVENT::FloatVec & LCRelationNavigator::getRelatedFromWeights(EVENT::LCObject * to) const {
 
     return _rMap[ to ].second ;
-  }
-
-  auto getMaxWeightIt(const EVENT::FloatVec& weights, const std::string& weightType) {
-    if (weightType == "track") {
-      std::max_element(weights.begin(), weights.end(), [](float a, float b) {
-        return (int(a) % 10000) / 1000. < (int(b) % 10000) / 1000.;
-      });
-    } else if (weightType == "cluster") {
-      std::max_element(weights.begin(), weights.end(), [](float a, float b) {
-        return (int(a) / 10000) / 1000. < (int(b) / 10000) /1000.;
-      });
-    }
-    return std::max_element(weights.begin(), weights.end());
-  }
-
-  const EVENT::LCObject* LCRelationNavigator::getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const {
-      const auto& objects = getRelatedToObjects(from);
-      if ( objects.empty() ) return nullptr;
-
-      const auto& weights = getRelatedToWeights(from);
-      const auto maxWeightIt = getMaxWeightIt(weights, weightType);
-      int i = std::distance(weights.begin(), maxWeightIt);
-      return objects[i];
-  }
-
-  const EVENT::LCObject* LCRelationNavigator::getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const {
-      const auto& objects = getRelatedToObjects(to);
-      if ( objects.empty() ) return nullptr;
-
-      const auto& weights = getRelatedToWeights(to);
-      const auto maxWeightIt = getMaxWeightIt(weights, weightType);
-
-      int i = std::distance(weights.begin(), maxWeightIt);
-      return objects[i];
-  }
-
-  float LCRelationNavigator::getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const {
-      const auto& objects = getRelatedToObjects(from);
-      if ( objects.empty() ) return 0.;
-
-      const auto& weights = getRelatedToWeights(from);
-      return *getMaxWeightIt(weights, weightType);
-  }
-
-  float LCRelationNavigator::getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const {
-      const auto& objects = getRelatedToObjects(to);
-      if ( objects.empty() ) return 0.;
-
-      const auto& weights = getRelatedToWeights(to);
-      return *getMaxWeightIt(weights, weightType);
   }
 
   void LCRelationNavigator::addRelation(EVENT::LCObject * from, 

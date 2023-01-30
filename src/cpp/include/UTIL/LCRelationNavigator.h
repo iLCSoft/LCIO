@@ -2,11 +2,12 @@
 #ifndef EVENT_LCRELATIONNAVIGATORIMPL_H
 #define EVENT_LCRELATIONNAVIGATORIMPL_H 1
 
-#include <vector>
-#include <map>
 #include "EVENT/LCObject.h"
 #include "EVENT/LCCollection.h"
 #include "LCIOSTLTypes.h"
+#include <vector>
+#include <map>
+#include <algorithm>
 
 
 namespace UTIL {
@@ -69,24 +70,61 @@ namespace UTIL {
     const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
     /** Object with a highest weight that the given from-object is related to.
-     *  LCObject is of type getToType().
+     *  LCObject is of type getToType(). Different comparator function can be specified
+     *  in a second argument analogous to e.g. std::min() overload.
      */
-    const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, const std::string& weightType) const ;
+    template <typename CompareF = std::less<float> >
+    const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const{
+        const auto& objects = getRelatedToObjects(from);
+        if ( objects.empty() ) return nullptr;
+
+        const auto& weights = getRelatedToWeights(from);
+        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
+        int i = std::distance(weights.begin(), maxWeightIt);
+        return objects[i];
+    }
 
     /** From-object related to the given object with a highest weight (the inverse relationship).
-     *  LCObject is of type getFromType().
+     *  LCObject is of type getFromType(). Different comparator function can be specified
+     *  in a second argument analogous to e.g. std::min() overload.
      */
-    const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, const std::string& weightType) const ;
+    template <typename CompareF = std::less<float> >
+    const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const{
+        const auto& objects = getRelatedToObjects(to);
+        if ( objects.empty() ) return nullptr;
+
+        const auto& weights = getRelatedToWeights(to);
+        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
+
+        int i = std::distance(weights.begin(), maxWeightIt);
+        return objects[i];
+    }
 
     /** The highest weight of the relations returned by a call to getRelatedToObjects(from).
-     * @see getRelatedToObjects
+     * @see getRelatedToObjects. Different comparator function can be specified
+     *  in a second argument analogous to e.g. std::min() overload.
      */
-    float getRelatedToMaxWeight(EVENT::LCObject* from, const std::string& weightType) const ;
+    template <typename CompareF = std::less<float> >
+    float getRelatedToMaxWeight(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const {
+        const auto& objects = getRelatedToObjects(from);
+        if ( objects.empty() ) return 0.;
+
+        const auto& weights = getRelatedToWeights(from);
+        return *std::max_element(weights.begin(), weights.end(), compare);
+    }
 
     /** The highest weight of the relations returned by a call to getRelatedFromObjects(to). 
-     * @see getRelatedFromObjects
+     * @see getRelatedFromObjects. Different comparator function can be specified
+     *  in a second argument analogous to e.g. std::min() overload.
      */
-    float getRelatedFromMaxWeight(EVENT::LCObject* to, const std::string& weightType) const ;
+    template <typename CompareF = std::less<float> >
+    float getRelatedFromMaxWeight(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const {
+        const auto& objects = getRelatedToObjects(to);
+        if ( objects.empty() ) return 0.;
+
+        const auto& weights = getRelatedToWeights(to);
+        return *std::max_element(weights.begin(), weights.end(), compare);
+    }
 
     /** Adds a relation. If there is already an existing relation between the two given objects
      * the weight (or default weight 1.0) is added to that relationship's weight.
