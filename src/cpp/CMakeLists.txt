@@ -6,29 +6,6 @@
 
 SET( LCIO_CPPFORT_SRCS
   ./src/CPPFORT/HEPEVT.cc
-  ./src/CPPFORT/lccah.cc
-  ./src/CPPFORT/lcclu.cc
-  ./src/CPPFORT/lccol.cc
-  ./src/CPPFORT/lcevt.cc
-  ./src/CPPFORT/lcgob.cc
-  ./src/CPPFORT/lciof77apiext.cc
-  ./src/CPPFORT/lcmcp.cc
-  ./src/CPPFORT/lcobv.cc
-  ./src/CPPFORT/lcpid.cc
-  ./src/CPPFORT/lcrcp.cc
-  ./src/CPPFORT/lcrdr.cc
-  ./src/CPPFORT/lcrdrrep.cc
-  ./src/CPPFORT/lcrel.cc
-  ./src/CPPFORT/lcrhd.cc
-  ./src/CPPFORT/lcrnv.cc
-  ./src/CPPFORT/lcsch.cc
-  ./src/CPPFORT/lcsth.cc
-  ./src/CPPFORT/lctph.cc
-  ./src/CPPFORT/lctrh.cc
-  ./src/CPPFORT/lctrk.cc
-  ./src/CPPFORT/lcvec.cc
-  ./src/CPPFORT/lcvtx.cc
-  ./src/CPPFORT/lcwrt.cc
 )
 
 SET( LCIO_IMPL_SRCS
