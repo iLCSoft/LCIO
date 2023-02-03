@@ -70,8 +70,8 @@ namespace UTIL {
     const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
     /** Object with a highest weight that the given from-object is related to.
-     *  LCObject is of type getToType(). Different comparator function can be specified
-     *  in a second argument analogous to e.g. std::min() overload.
+     *  LCObject is of type getToType(). CompareF is a comparison function object
+     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
      */
 
     template<typename CompareF>
@@ -91,8 +91,8 @@ namespace UTIL {
     }
 
     /** From-object related to the given object with a highest weight (the inverse relationship).
-     *  LCObject is of type getFromType(). Different comparator function can be specified
-     *  in a second argument analogous to e.g. std::min() overload.
+     *  LCObject is of type getFromType(). CompareF is a comparison function object
+     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
      */
     template <typename CompareF = std::less<float> >
     const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const{
@@ -105,8 +105,8 @@ namespace UTIL {
     }
 
     /** The highest weight of the relations returned by a call to getRelatedToObjects(from).
-     * @see getRelatedToObjects. Different comparator function can be specified
-     *  in a second argument analogous to e.g. std::min() overload.
+     * @see getRelatedToObjects. CompareF is a comparison function object
+     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
      */
     template <typename CompareF = std::less<float> >
     float getRelatedToMaxWeight(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const {
@@ -118,8 +118,8 @@ namespace UTIL {
     }
 
     /** The highest weight of the relations returned by a call to getRelatedFromObjects(to). 
-     * @see getRelatedFromObjects. Different comparator function can be specified
-     *  in a second argument analogous to e.g. std::min() overload.
+     * @see getRelatedFromObjects. CompareF is a comparison function object
+     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
      */
     template <typename CompareF = std::less<float> >
     float getRelatedFromMaxWeight(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const {
