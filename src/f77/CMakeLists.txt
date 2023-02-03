@@ -34,10 +34,6 @@ ENDIF()
 
 # fortran testjobs
 SET( f77_bins
-    anajob
-    recjob
-    simjob
-    simjob_chain
 )
 
 # create symbolic bin target for calling targets bin_XXX
