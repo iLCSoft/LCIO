@@ -9,7 +9,6 @@
 #include <map>
 #include <algorithm>
 
-
 namespace UTIL {
 
   /** The LCRelationNavigator makes repeated lookup of relations more conveneient and efficient.
@@ -21,13 +20,27 @@ namespace UTIL {
    * @version $Id: LCRelationNavigator.h,v 1.2 2004-09-06 14:35:51 gaede Exp $
    */
 
+   inline constexpr float identity(float x) {
+       return x;
+   }
+
+   /** Helper function to get maximum element from std::vector
+    * based on specific function object of signature float(float) which indicates how valuable elemets are.
+    */
+   template<typename DecodeF>
+   size_t getMaxWeightIdx(const std::vector<float>& weights, DecodeF&& decode = identity) {
+       const auto maxWeightIt = std::max_element(weights.begin(), weights.end(),
+           [&decode](auto a, auto b){ return decode(a) < decode(b); } );
+       return std::distance(weights.begin(), maxWeightIt);
+   }
+
+
   class LCRelationNavigator {
     
     typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::FloatVec > > RelMap ; 
 
   public: 
 
-                                          
     /** Default constructor
      */
     LCRelationNavigator(const std::string &fromType, const std::string &toType) :
@@ -69,65 +82,78 @@ namespace UTIL {
      */
     const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
-    /** Object with a highest weight that the given from-object is related to.
-     *  LCObject is of type getToType(). CompareF is a comparison function object
-     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
+    /** Return the object related to the given from-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight.
+     *  LCObject is of type getToType(). DecodeF is a function object (anything 
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in relation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
      */
-
-    template<typename CompareF>
-    size_t getMaxWeightIdx(const std::vector<float>& weights, CompareF&& compare) {
-        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
-        return std::distance(weights.begin(), maxWeightIt);
-    }
-
-    template <typename CompareF = std::less<float> >
-    const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const{
+    template <typename DecodeF = decltype(identity) >
+    const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
         const auto& objects = getRelatedToObjects(from);
         if ( objects.empty() ) return nullptr;
 
         const auto& weights = getRelatedToWeights(from);
-        size_t i = getMaxWeightIdx(weights, compare);
+        size_t i = getMaxWeightIdx(weights, decode);
         return objects[i];
     }
 
-    /** From-object related to the given object with a highest weight (the inverse relationship).
-     *  LCObject is of type getFromType(). CompareF is a comparison function object
-     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
+
+    /** Return the object related to the given to-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight.
+     *  LCObject is of type getFromType(). DecodeF is a function object (anything 
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in LCRelation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
      */
-    template <typename CompareF = std::less<float> >
-    const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const{
+    template <typename DecodeF = decltype(identity) >
+    const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
         const auto& objects = getRelatedFromObjects(to);
         if ( objects.empty() ) return nullptr;
 
         const auto& weights = getRelatedFromWeights(to);
-        size_t i = getMaxWeightIdx(weights, compare);
+        size_t i = getMaxWeightIdx(weights, decode);
         return objects[i];
     }
 
-    /** The highest weight of the relations returned by a call to getRelatedToObjects(from).
-     * @see getRelatedToObjects. CompareF is a comparison function object
-     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
+
+    /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given from-object is related to.
+     *  DecodeF is a function object (anything 
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in LCRelation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
      */
-    template <typename CompareF = std::less<float> >
-    float getRelatedToMaxWeight(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const {
+    template <typename DecodeF = decltype(identity) >
+    float getRelatedToMaxWeight(EVENT::LCObject* from, DecodeF&& decode = identity ) const {
         const auto& objects = getRelatedToObjects(from);
         if ( objects.empty() ) return 0.;
 
         const auto& weights = getRelatedToWeights(from);
-        return *std::max_element(weights.begin(), weights.end(), compare);
+        size_t i = getMaxWeightIdx(weights, decode);
+        return decode(weights[i]);
     }
 
-    /** The highest weight of the relations returned by a call to getRelatedFromObjects(to). 
-     * @see getRelatedFromObjects. CompareF is a comparison function object
-     *  with the signature bool(float a, float b) which returns ​true if a is less than b.
+    /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given to-object is related to.
+     *  DecodeF is a function object (anything 
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in LCRelation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
      */
-    template <typename CompareF = std::less<float> >
-    float getRelatedFromMaxWeight(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const {
+    template <typename DecodeF = decltype(identity) >
+    float getRelatedFromMaxWeight(EVENT::LCObject* to, DecodeF&& decode = identity ) const {
         const auto& objects = getRelatedFromObjects(to);
         if ( objects.empty() ) return 0.;
 
         const auto& weights = getRelatedFromWeights(to);
-        return *std::max_element(weights.begin(), weights.end(), compare);
+        size_t i = getMaxWeightIdx(weights, decode);
+        return decode(weights[i]);
     }
 
     /** Adds a relation. If there is already an existing relation between the two given objects
