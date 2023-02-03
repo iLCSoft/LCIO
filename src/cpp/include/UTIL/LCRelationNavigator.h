@@ -73,14 +73,20 @@ namespace UTIL {
      *  LCObject is of type getToType(). Different comparator function can be specified
      *  in a second argument analogous to e.g. std::min() overload.
      */
+
+    template<typename CompareF>
+    size_t getMaxWeightIdx(const std::vector<float>& weights, CompareF&& compare) {
+        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
+        return std::distance(weights.begin(), maxWeightIt);
+    }
+
     template <typename CompareF = std::less<float> >
     const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, CompareF&& compare = CompareF() ) const{
         const auto& objects = getRelatedToObjects(from);
         if ( objects.empty() ) return nullptr;
 
         const auto& weights = getRelatedToWeights(from);
-        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
-        int i = std::distance(weights.begin(), maxWeightIt);
+        size_t i = getMaxWeightIdx(weights, compare);
         return objects[i];
     }
 
@@ -90,13 +96,11 @@ namespace UTIL {
      */
     template <typename CompareF = std::less<float> >
     const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const{
-        const auto& objects = getRelatedToObjects(to);
+        const auto& objects = getRelatedFromObjects(to);
         if ( objects.empty() ) return nullptr;
 
-        const auto& weights = getRelatedToWeights(to);
-        const auto maxWeightIt = std::max_element(weights.begin(), weights.end(), compare);
-
-        int i = std::distance(weights.begin(), maxWeightIt);
+        const auto& weights = getRelatedFromWeights(to);
+        size_t i = getMaxWeightIdx(weights, compare);
         return objects[i];
     }
 
@@ -119,10 +123,10 @@ namespace UTIL {
      */
     template <typename CompareF = std::less<float> >
     float getRelatedFromMaxWeight(EVENT::LCObject* to, CompareF&& compare = CompareF() ) const {
-        const auto& objects = getRelatedToObjects(to);
+        const auto& objects = getRelatedFromObjects(to);
         if ( objects.empty() ) return 0.;
 
-        const auto& weights = getRelatedToWeights(to);
+        const auto& weights = getRelatedFromWeights(to);
         return *std::max_element(weights.begin(), weights.end(), compare);
     }
 
