@@ -3,18 +3,6 @@ This directory contains additional examples for the Fortran interface to LCIO
 
 Pythia is required to build and run these examples.
 
-pysimjob.F:
-a program to handle input written by lcwrite which writes the content
-of the HEPEVT common to an output file.
-The file is read into the HEPEVT common and its content is written
-to a LCIO output file 'pysimjob.slcio' .
-The file is closed an read again using the utility 'levtdumpevent'
-(in $LCIO/src/cpp/src/IMPL/LCTOOLS.cc) to dump the LCIO content.
-
-pyanajob.F
-a program which analyzes the LCIO output file of pysimjob.F
-assuming that the LCIO file 'pysimjob.slcio' exists.
-
 There are also 2 scripts to support the programs
 of this directory.
 
@@ -28,8 +16,5 @@ MC particles but the output structure is still consistent with
 the "standard" lcwrite routine.
 pythiahepevt.sh requires the cernlib 2002 or newer given by the environment
 variable CERN_ROOT (default: /cern/pro)
-
-runPysimjob.sh:
-a script to run the pysimjob_F executable
 
 ==========================================================================
