@@ -4,10 +4,6 @@
 # @author Jan Engels, DESY
 #################################
 
-SET( LCIO_CPPFORT_SRCS
-  ./src/CPPFORT/HEPEVT.cc
-)
-
 SET( LCIO_IMPL_SRCS
   ./src/IMPL/AccessChecked.cc
   ./src/IMPL/CalorimeterHitImpl.cc
@@ -207,7 +203,6 @@ if( LCIO_GENERATE_HEADERS )
   SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
 
   # make source files depend on generated header files + aid files
-  SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
   # ----------------------------------------------------------------------------
@@ -229,15 +224,6 @@ endif()
 # -------- compiler definitions ----------------------------------------------
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
-
-#---- special flags for cfortran code : --------
-SET_SOURCE_FILES_PROPERTIES(
-  ${LCIO_CPPFORT_SRCS} PROPERTIES
-  COMPILE_FLAGS "-Df2cFortran -Wno-unused"
-)
-# ----------------------------------------------------------------------------
-
-
 
 
 # -------- include directories -----------------------------------------------
@@ -262,9 +248,7 @@ INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
 
 
 
-# ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+# ------- libraries lcio -------------------------------------------
 
 ADD_SHARED_LIBRARY( lcio
   ${LCIO_IMPL_SRCS}
@@ -277,9 +261,8 @@ INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
-TARGET_LINK_LIBRARIES( lcioF77 lcio )
 
-ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
+ADD_CUSTOM_TARGET( lib DEPENDS lcio )
 # ----------------------------------------------------------------------------
 
 
