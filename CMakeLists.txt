@@ -283,14 +283,6 @@ OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
-
-# fortran examples
-OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-IF( BUILD_F77_TESTJOBS )
-    ADD_SUBDIRECTORY( ./src/f77 f77 )
-ENDIF()
-
-
 # directory containing lcio tests
 ADD_SUBDIRECTORY( ./tests )
 
