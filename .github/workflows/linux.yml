@@ -26,7 +26,6 @@ jobs:
             -DBUILD_ROOTDICT=ON \
             -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
             -DCMAKE_INSTALL_PREFIX=../install \
-            -DBUILD_F77_TESTJOBS=ON \
             ..
           make -k
           make install
