@@ -1,3 +1,12 @@
+# v02-19-01
+
+* 2023-02-06 Bohdan Dudar ([PR#163](https://github.com/iLCSoft/LCIO/pull/163))
+  - `getRelatedTo(From)MaxWeightObject()` and `getRelatedTo(From)MaxWeight()` now accept generic decode function of `float(float)` signature as a second argument, which specifies how to decode the weight. Default option is identity function (just compares weights as they are).
+  - Helper functions to decode and encode "track"/"cluster" specific weights from PFO-MCParticle LCRelation collection are added to MarlinUtil in [MarlinUtil#36](https://github.com/iLCSoft/MarlinUtil/pull/36).
+
+* 2023-02-03 jmcarcell ([PR#160](https://github.com/iLCSoft/LCIO/pull/160))
+  - Fix a compiler warning about `strncpy` usage
+
 # v02-19
 
 * 2022-12-11 Frank Gaede ([PR#158](https://github.com/iLCSoft/LCIO/pull/158))
