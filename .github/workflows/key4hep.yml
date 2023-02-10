@@ -1,0 +1,30 @@
+name: key4hep
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        release: ["sw.hsf.org/key4hep",
+                  "sw-nightlies.hsf.org/key4hep"]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cvmfs-contrib/github-action-cvmfs@v3
+    - uses: aidasoft/run-lcg-view@v4
+      with:
+        container: centos7
+        view-path: /cvmfs/${{ matrix.release }}
+        run: |
+          mkdir build install
+          cd build
+          cmake -DCMAKE_CXX_STANDARD=17 \
+            -DBUILD_ROOTDICT=ON \
+            -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
+            -DCMAKE_INSTALL_PREFIX=../install \
+            ..
+          make -k
+          make install
+          ctest --output-on-failure
