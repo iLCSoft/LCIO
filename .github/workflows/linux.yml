@@ -24,7 +24,7 @@ jobs:
           cd build
           cmake -DCMAKE_CXX_STANDARD=17 \
             -DBUILD_ROOTDICT=ON \
-            -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
+            -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -Werror" \
             -DCMAKE_INSTALL_PREFIX=../install \
             ..
           make -k
