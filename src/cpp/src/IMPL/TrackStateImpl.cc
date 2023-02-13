@@ -82,10 +82,6 @@ namespace IMPL {
     }
 
 
-
-
-    TrackStateImpl::~TrackStateImpl() { /* no-op */ } 
-
     int TrackStateImpl::getLocation() const { return _location ;}
     float TrackStateImpl::getD0() const { return _d0 ;}
     float TrackStateImpl::getPhi() const { return _phi ; }

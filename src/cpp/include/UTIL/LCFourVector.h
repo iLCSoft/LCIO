@@ -28,7 +28,7 @@ namespace UTIL {
     const TT* _lcObj = nullptr ;
     
   public: 
-    virtual ~LCFourVector() { /*no_op*/; } 
+    virtual ~LCFourVector() = default;
     
     LCFourVector(const LCFourVector& ) = default ;
     LCFourVector& operator=(const LCFourVector& ) = default ;
