@@ -3,23 +3,20 @@
 #include "Exceptions.h"
 
 
-using namespace EVENT;
-using namespace IMPL;
-
 namespace UTIL{
   
 
-  typedef LCFourVector<MCParticle> MCParticle4V ;
-  typedef LCFourVector<MCParticleImpl> MCParticleI4V ;
+  typedef LCFourVector<EVENT::MCParticle> MCParticle4V ;
+  typedef LCFourVector<IMPL::MCParticleImpl> MCParticleI4V ;
   
-  typedef LCFourVector<ReconstructedParticle> ReconstructedParticle4V ;
-  typedef LCFourVector<ReconstructedParticleImpl> ReconstructedParticleI4V ;
+  typedef LCFourVector<EVENT::ReconstructedParticle> ReconstructedParticle4V ;
+  typedef LCFourVector<IMPL::ReconstructedParticleImpl> ReconstructedParticleI4V ;
 
 
   // specializations for the different LCObjects that have 4 vector information
 
   template<>
-  inline LCFourVector<MCParticle>::LCFourVector( const MCParticle* mcPart ) : 
+  inline LCFourVector<EVENT::MCParticle>::LCFourVector( const EVENT::MCParticle* mcPart ) :
      HepLorentzVector(mcPart->getMomentum()[0],
 		     mcPart->getMomentum()[1],
 		     mcPart->getMomentum()[2],
@@ -28,12 +25,12 @@ namespace UTIL{
   {
   }
   template<>
-  inline LCFourVector<MCParticle>::LCFourVector(const LCObject* lcObj){
+  inline LCFourVector<EVENT::MCParticle>::LCFourVector(const EVENT::LCObject* lcObj){
     
-    _lcObj = dynamic_cast<const MCParticle* >( lcObj ) ;
+    _lcObj = dynamic_cast<const EVENT::MCParticle* >( lcObj ) ;
 
     if( _lcObj == 0 )
-      throw Exception("Dynamic cast failed for LCFourVector() !") ;
+      throw EVENT::Exception("Dynamic cast failed for LCFourVector() !") ;
 
     const double* p =  _lcObj->getMomentum() ;
     setPx( p[0] ) ;
@@ -45,7 +42,7 @@ namespace UTIL{
   }
 
   template<>
-  inline LCFourVector<ReconstructedParticle>::LCFourVector(const ReconstructedParticle* part ): 
+  inline LCFourVector<EVENT::ReconstructedParticle>::LCFourVector(const EVENT::ReconstructedParticle* part ):
     HepLorentzVector(part->getMomentum()[0],
 		     part->getMomentum()[1],
 		     part->getMomentum()[2],
@@ -54,12 +51,12 @@ namespace UTIL{
   {
   }
   template<>
-  inline LCFourVector<ReconstructedParticle>::LCFourVector(const LCObject* lcObj){
+  inline LCFourVector<EVENT::ReconstructedParticle>::LCFourVector(const EVENT::LCObject* lcObj){
     
-    _lcObj = dynamic_cast<const ReconstructedParticle* >( lcObj ) ;
+    _lcObj = dynamic_cast<const EVENT::ReconstructedParticle* >( lcObj ) ;
 
     if( _lcObj == 0 )
-      throw Exception("Dynamic cast failed for LCFourVector() !") ;
+      throw EVENT::Exception("Dynamic cast failed for LCFourVector() !") ;
 
     const double* p =  _lcObj->getMomentum() ;
     setPx( p[0] ) ;
