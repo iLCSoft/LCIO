@@ -4,8 +4,11 @@
  * @version Nov 3, 2003
  */
 
+
 #include "cfortran.h"
 #include "cpointer.h"
+
+#include "deprecation.h"
 
 #include <string>
 #include <vector>
@@ -16,27 +19,27 @@ typedef std::vector<PTRTYPE> PointerVec ;
 
 
 // define an interface to a LC string/int/float vector
-int   lcsvcgetlength(PTRTYPE strvec) ;
-char* lcsvcgetstringat(PTRTYPE strvec, int index) ;
+LCIO_DEPRECATED_CAPI int   lcsvcgetlength(PTRTYPE strvec) ;
+LCIO_DEPRECATED_CAPI char* lcsvcgetstringat(PTRTYPE strvec, int index) ;
 
-int   lcivcgetlength(PTRTYPE intvec) ;
-int   lcivcgetintat(PTRTYPE intvec, int index) ;
+LCIO_DEPRECATED_CAPI int   lcivcgetlength(PTRTYPE intvec) ;
+LCIO_DEPRECATED_CAPI int   lcivcgetintat(PTRTYPE intvec, int index) ;
 
-int   lcfvcgetlength(PTRTYPE floatvec) ;
-float lcfvcgetfloatat(PTRTYPE floatvec, int index) ;
+LCIO_DEPRECATED_CAPI int   lcfvcgetlength(PTRTYPE floatvec) ;
+LCIO_DEPRECATED_CAPI float lcfvcgetfloatat(PTRTYPE floatvec, int index) ;
 
 // define an interface to read a standard string/int/pointer/float vector
-int   stringvectorgetlength(PTRTYPE strvec) ;
-char* stringvectorgetelement(PTRTYPE strvec, int index) ;
+LCIO_DEPRECATED_CAPI int   stringvectorgetlength(PTRTYPE strvec) ;
+LCIO_DEPRECATED_CAPI char* stringvectorgetelement(PTRTYPE strvec, int index) ;
 
-int   intvectorgetlength(PTRTYPE intvec) ;
-int   intvectorgetelement(PTRTYPE intvec, int index) ;
+LCIO_DEPRECATED_CAPI int   intvectorgetlength(PTRTYPE intvec) ;
+LCIO_DEPRECATED_CAPI int   intvectorgetelement(PTRTYPE intvec, int index) ;
 
-int     pointervectorgetlength(PTRTYPE intvec) ;
-PTRTYPE pointervectorgetelement(PTRTYPE intvec, int index) ;
+LCIO_DEPRECATED_CAPI int     pointervectorgetlength(PTRTYPE intvec) ;
+LCIO_DEPRECATED_CAPI PTRTYPE pointervectorgetelement(PTRTYPE intvec, int index) ;
 
-int   floatvectorgetlength(PTRTYPE floatvec) ;
-float floatvectorgetelement(PTRTYPE floatvec, int index) ;
+LCIO_DEPRECATED_CAPI int   floatvectorgetlength(PTRTYPE floatvec) ;
+LCIO_DEPRECATED_CAPI float floatvectorgetelement(PTRTYPE floatvec, int index) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

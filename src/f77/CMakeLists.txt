@@ -12,14 +12,19 @@ PROJECT( LCIOF77 Fortran )
 #    SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -m32" )
 #ENDIF()
 
-IF( CMAKE_COMPILER_IS_GNUCC )
-    # bug gfortran -dumpversion gives more output that just the version
-    #EXECUTE_PROCESS( COMMAND ${CMAKE_Fortran_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_FORTRAN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE )
-    EXECUTE_PROCESS( COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE )
-    IF( ${GCC_VERSION} VERSION_GREATER 4.3 )
+IF( CMAKE_Fortran_COMPILER_ID STREQUAL "GNU" )
+    EXECUTE_PROCESS( COMMAND ${CMAKE_Fortran_COMPILER} -dumpversion OUTPUT_VARIABLE GFORTRAN_VERSION OUTPUT_STRIP_TRAILING_WHITESPACE )
+
+    IF( ${GFORTRAN_VERSION} VERSION_GREATER 4.3 )
         # fix for gcc 4.4 compiler (Error: Arithmetic overflow)
         MESSAGE( STATUS "adding -fno-range-check fortran compiler flag" )
         SET( CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fno-range-check" )
+    ENDIF()
+    IF ( ${GFORTRAN_VERSION} VERSION_GREATER 10 )
+      # fix the BOZ literal constant errors that are treated more stringent
+      # starting from gcc10 (turns the errors into warnings)
+      MESSAGE(STATUS "adding -fallow-invalid-boz fortran compiler flag")
+      SET(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} -fallow-invalid-boz")
     ENDIF()
 ENDIF()
 

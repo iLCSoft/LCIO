@@ -6,42 +6,44 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcmcpcreate() ;
-int lcmcpdelete( PTRTYPE mcparticle ) ;
-int lcmcpgetnumberofparents( PTRTYPE mcparticle )  ;
-PTRTYPE lcmcpgetparent( PTRTYPE mcparticle , int i ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcmcpcreate() ;
+LCIO_DEPRECATED_CAPI int lcmcpdelete( PTRTYPE mcparticle ) ;
+LCIO_DEPRECATED_CAPI int lcmcpgetnumberofparents( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcmcpgetparent( PTRTYPE mcparticle , int i ) ;
 // PTRTYPE lcmcpgetsecondparent( PTRTYPE mcparticle ) ;
-PTRTYPE lcmcpgetdaughter( PTRTYPE mcparticle, int i ) ;
-int lcmcpgetendpoint(  PTRTYPE mcparticle, double* ep) ;
-int lcmcpgetnumberofdaughters( PTRTYPE mcparticle )  ;
-int lcmcpgetpdg( PTRTYPE mcparticle )  ;
-int lcmcpgetgeneratorstatus( PTRTYPE mcparticle )  ;
-int lcmcpgetsimulatorstatus( PTRTYPE mcparticle )  ;
-int lcmcpgetvertex( PTRTYPE mcparticle, double* vtx )  ;
-float lcmcpgettime( PTRTYPE mcparticle )  ;
-int lcmcpgetmomentum( PTRTYPE mcparticle, double* p)  ;
-double lcmcpgetmass( PTRTYPE mcparticle )  ;
-float lcmcpgetcharge( PTRTYPE mcparticle )  ;
-double lcmcpgetenergy( PTRTYPE mcparticle )  ;
-int lcmcpgetspin( PTRTYPE mcparticle, float* spin ) ;
-int lcmcpgetcolorflow( PTRTYPE mcparticle, int* cflow ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcmcpgetdaughter( PTRTYPE mcparticle, int i ) ;
+LCIO_DEPRECATED_CAPI int lcmcpgetendpoint(  PTRTYPE mcparticle, double* ep) ;
+LCIO_DEPRECATED_CAPI int lcmcpgetnumberofdaughters( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetpdg( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetgeneratorstatus( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetsimulatorstatus( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetvertex( PTRTYPE mcparticle, double* vtx )  ;
+LCIO_DEPRECATED_CAPI float lcmcpgettime( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetmomentum( PTRTYPE mcparticle, double* p)  ;
+LCIO_DEPRECATED_CAPI double lcmcpgetmass( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI float lcmcpgetcharge( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI double lcmcpgetenergy( PTRTYPE mcparticle )  ;
+LCIO_DEPRECATED_CAPI int lcmcpgetspin( PTRTYPE mcparticle, float* spin ) ;
+LCIO_DEPRECATED_CAPI int lcmcpgetcolorflow( PTRTYPE mcparticle, int* cflow ) ;
 
-int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
+LCIO_DEPRECATED_CAPI int lcmcpaddparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
 // int lcmcpsetsecondparent(  PTRTYPE mcparticle, PTRTYPE parent ) ;
 // int lcmcpadddaughter(  PTRTYPE mcparticle, PTRTYPE daughter ) ;
-int lcmcpsetpdg( PTRTYPE mcparticle, int pdg ) ;
-int lcmcpsetgeneratorstatus( PTRTYPE mcparticle, int status ) ;
-int lcmcpsetsimulatorstatus( PTRTYPE mcparticle, int status ) ;
-int lcmcpsetvertex( PTRTYPE mcparticle, double vtx[3] ) ;
-int lcmcpsetendpoint( PTRTYPE mcparticle, double pnt[3] ) ;
-int lcmcpsetmomentum( PTRTYPE mcparticle,  float p[3] );
-int lcmcpsetmass( PTRTYPE mcparticle, float m) ;
-int lcmcpsetcharge( PTRTYPE mcparticle, float c ) ;
-int lcmcpsetspin( PTRTYPE mcparticle, float spin[3] ) ;
-int lcmcpsetcolorflow( PTRTYPE mcparticle, int cflow[2] ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetpdg( PTRTYPE mcparticle, int pdg ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetgeneratorstatus( PTRTYPE mcparticle, int status ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetsimulatorstatus( PTRTYPE mcparticle, int status ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetvertex( PTRTYPE mcparticle, double vtx[3] ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetendpoint( PTRTYPE mcparticle, double pnt[3] ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetmomentum( PTRTYPE mcparticle,  float p[3] );
+LCIO_DEPRECATED_CAPI int lcmcpsetmass( PTRTYPE mcparticle, float m) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetcharge( PTRTYPE mcparticle, float c ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetspin( PTRTYPE mcparticle, float spin[3] ) ;
+LCIO_DEPRECATED_CAPI int lcmcpsetcolorflow( PTRTYPE mcparticle, int cflow[2] ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

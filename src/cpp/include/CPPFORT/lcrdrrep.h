@@ -21,11 +21,12 @@
 #include "IMPL/LCRunHeaderImpl.h"
 #include "IMPL/LCEventImpl.h"
 
+#include "deprecation.h"
 
 //--------------- convenient method to open a file and process it by the RunEventProcessor class
 /**Opens a file for reading, register run and event listener, and process the input stream
  */
-int lcrdreventprocessor( PTRTYPE filenamevec ) ;
+LCIO_DEPRECATED_CAPI int lcrdreventprocessor( PTRTYPE filenamevec ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

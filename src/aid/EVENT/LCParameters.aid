@@ -30,6 +30,11 @@ public interface LCParameters
     public float getFloatVal( const String& key )const ;
 
 
+    /** Returns the first double value for the given key.
+     */
+    public double getDoubleVal( const String& key )const ;
+
+
     /** Returns the first string value for the given key.
      */
     public const String& getStringVal( const String& key ) const ;
@@ -46,8 +51,13 @@ public interface LCParameters
      */
     public FloatVec& getFloatVals( const String& key ,  FloatVec& values ) const ;
 
+    /** Adds all double values for the given key to values.
+     *  Returns a reference to values for convenience.
+     */
+    public DoubleVec& getDoubleVals( const String& key ,  DoubleVec& values ) const ;
 
-    /** Adds all float values for the given key to values.
+
+    /** Adds all string values for the given key to values.
      *  Returns a reference to values for convenience.
      */
     public StringVec& getStringVals( const String& key  , StringVec & values ) const ;
@@ -59,6 +69,10 @@ public interface LCParameters
     /** Returns a list of all keys of float parameters.
      */
     public const StringVec& getFloatKeys( StringVec &keys ) const ;
+
+    /** Returns a list of all keys of double parameters.
+     */
+    public const StringVec& getDoubleKeys( StringVec &keys ) const ;
 
     /** Returns a list of all keys of string parameters.
      */
@@ -76,6 +90,11 @@ public interface LCParameters
 
     /** Returns values for the given key.
      */
+    public DoubleVec& getDoubleVals( const String& key ) const;
+
+
+    /** Returns values for the given key.
+     */
     public StringVec& getStringVals( const String& key  ) const;
 
     /** Returns a list of all keys of integer parameters.
@@ -89,6 +108,10 @@ public interface LCParameters
     /** Returns a list of all keys of string parameters.
      */
     public const StringVec& getStringKeys() const ;
+
+   /** Returns a list of all keys of string parameters.
+    */
+    public const StringVec& getDoubleKeys() const ;
 @endif
 
 
@@ -99,6 +122,10 @@ public interface LCParameters
     /** The number of float values stored for this key.
      */ 
     public int getNFloat( const String& key ) const ;
+
+    /** The number of double values stored for this key.
+     */ 
+    public int getNDouble( const String& key ) const ;
 
     /** The number of string values stored for this key.
      */ 
@@ -112,6 +139,10 @@ public interface LCParameters
      */
     public void setValue(const String & key, float  value);
 
+    /** Set double value for the given key.
+     */
+    public void setValue(const String & key, double  value);
+
     /** Set string value for the given key.
      */
     public void setValue(const String & key, const String & value);
@@ -123,6 +154,10 @@ public interface LCParameters
     /** Set float values for the given key.
      */
     public void setValues(const String & key, const FloatVec & values);
+
+    /** Set double values for the given key.
+     */
+    public void setValues(const String & key, const DoubleVec & values);
 
     /** Set string values for the given key.
      */

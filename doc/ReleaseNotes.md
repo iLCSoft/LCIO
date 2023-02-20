@@ -1,3 +1,79 @@
+# v02-19-01
+
+* 2023-02-06 Bohdan Dudar ([PR#163](https://github.com/iLCSoft/LCIO/pull/163))
+  - `getRelatedTo(From)MaxWeightObject()` and `getRelatedTo(From)MaxWeight()` now accept generic decode function of `float(float)` signature as a second argument, which specifies how to decode the weight. Default option is identity function (just compares weights as they are).
+  - Helper functions to decode and encode "track"/"cluster" specific weights from PFO-MCParticle LCRelation collection are added to MarlinUtil in [MarlinUtil#36](https://github.com/iLCSoft/MarlinUtil/pull/36).
+
+* 2023-02-03 jmcarcell ([PR#160](https://github.com/iLCSoft/LCIO/pull/160))
+  - Fix a compiler warning about `strncpy` usage
+
+# v02-19
+
+* 2022-12-11 Frank Gaede ([PR#158](https://github.com/iLCSoft/LCIO/pull/158))
+  - add utility class `CheckCollections` that allows to parse lcio files for collections that are not present in every event and to patch such events with empty collections of the given (Name,Type) for further processing
+  - add example tool `check_missing_cols` that checks for collections that are not in every event in a set of files and prints a summary to stdout:
+       - `usage:  check_missing_cols <input-file1> [[input-file2],...]`
+  - add example tool `patch_missing_cols` that creates a copy of the input file with the same set of collections in all events:
+      -  ` usage:  patch_missing_cols <input-file> <output-file> ` 
+  - these tools are needed in cases where code expects consistent sets of collections in every event, as for example in a conversion to `EDM4hep`
+
+# v02-18
+
+* 2022-11-08 Thomas Madlener ([PR#155](https://github.com/iLCSoft/LCIO/pull/155))
+  - Add a previously missed function declaration to the .aid file to fix the java bindings. Fixes #154
+
+* 2022-10-19 Thomas Madlener ([PR#153](https://github.com/iLCSoft/LCIO/pull/153))
+  - Make c++17 the default and minimum c++ version for building LCIO. All "major builds" of LCIO have been using c++17 for at least a few years now, so this should not be a big issue.
+
+* 2022-10-19 Thomas Madlener ([PR#152](https://github.com/iLCSoft/LCIO/pull/152))
+  - Remove macOS workflow since github hosted runners no longer support all necessary features. See also: https://github.com/AIDASoft/run-lcg-view/pull/3
+  - Update used github actions to latest available version for better caching behavior and cleaner log outputs
+  - Switch to newer LCG releases for the build environments to target more recent compilers and python versions.
+    - Keep one build environment that is close to the one used for the iLCSoft v02-02 to avoid accidental breaks.
+
+* 2022-10-19 Bohdan Dudar ([PR#150](https://github.com/iLCSoft/LCIO/pull/150))
+  - Added a utility function to calculate Track momentum based on its track parameters and magnetic field
+  - Added methods to the LCRelationNavigator that extract the highest weight with an option to indicate weight encoding type ("track"/"cluster").
+  - Added a utility function to get an index of a provided object inside a given LCCollection
+  - Added a utility function to return a leading track from ReconstructedParticle in case it has multiple tracks attached.
+
+# v02-17-01
+
+* 2022-05-09 Thomas Madlener ([PR#146](https://github.com/iLCSoft/LCIO/pull/146))
+  - Install all the necessary headers to make the python bindings work, even if the sources are removed after installation. Fixes #106
+
+# v02-17
+
+* 2021-11-05 Frank Gaede ([PR#143](https://github.com/iLCSoft/LCIO/pull/143))
+  - add support for storing double values in LCParameters
+      - used in run, event and collection parameters
+      - example 
+  
+  ```cpp
+  	DoubleVec dv ;
+  	dv.push_back( 1.111111111111111111111111111111111111111111111111 ) ;
+  	dv.push_back( 2.222222222222222222222222222222222222222222222222 ) ;
+  	dv.push_back( 3.333333333333333333333333333333333333333333333333 ) ;
+  	evt->parameters().setValues( "SomeDoubleNumbers" , dv ) ;
+  
+  ```
+  - should resolve #138
+
+* 2021-11-05 Bohdan Dudar ([PR#141](https://github.com/iLCSoft/LCIO/pull/141))
+  - LCTrackerConf constructor now protected
+
+* 2021-10-12 Thomas Madlener ([PR#137](https://github.com/iLCSoft/LCIO/pull/137))
+  - Deprecate the C-API which is used by the fortran interface. However, since no one seems to be actively using that interface we introduce a deprecation warning for the C-API to see if that has any users outside of the internal fortran interface. **If you are seeing deprecation messages in your build outputs please let us know.**
+  - Fix F77 tests and run them in the CI.
+    - Degrade some compiler errors back to warnings for gcc10 as it has become more strict than previous versions.
+
+* 2021-05-05 Thomas Madlener ([PR#136](https://github.com/iLCSoft/LCIO/pull/136))
+  - Update the CI to use the cvmfs and lcg-view github actions for a more streamlined configuration. Fixes #135.
+  - Make the python dictionary loading look on `LD_LIBRARY_PATH` first, before falling back to rely on the `LCIO` environment variable which has more assumptions built into it. Fixes #134
+
+* 2021-05-05 Andrii Verbytskyi ([PR#132](https://github.com/iLCSoft/LCIO/pull/132))
+  - Replace hardcoded lib with CMAKE_INSTALL_LIBDIR when appropriate
+
 # v02-16-01
 
 * 2021-01-06 Remi Ete ([PR#129](https://github.com/iLCSoft/LCIO/pull/129))

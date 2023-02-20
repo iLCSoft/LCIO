@@ -17,6 +17,7 @@ namespace IMPL {
 
   typedef std::map< std::string, EVENT::IntVec >    IntMap ;
   typedef std::map< std::string, EVENT::FloatVec >  FloatMap ;
+  typedef std::map< std::string, EVENT::DoubleVec > DoubleMap ;
   typedef std::map< std::string, EVENT::StringVec > StringMap ;
   
 
@@ -53,6 +54,10 @@ namespace IMPL {
      */
     virtual float getFloatVal(const std::string & key) const ;
     
+    /** Returns the first double value for the given key.
+     */
+    virtual double getDoubleVal(const std::string & key) const ;
+
     /** Returns the first string value for the given key.
      */
     virtual const std::string & getStringVal(const std::string & key) const ;
@@ -67,10 +72,15 @@ namespace IMPL {
      */
     virtual EVENT::FloatVec & getFloatVals(const std::string & key, EVENT::FloatVec & values) const ;
     
-    /** Adds all float values for the given key to values.
+    /** Adds all double values for the given key to values.
      *  Returns a reference to values for convenience.
      */
-    virtual  EVENT::StringVec & getStringVals(const std::string & key, EVENT::StringVec & values) const ;
+    virtual EVENT::DoubleVec & getDoubleVals(const std::string & key, EVENT::DoubleVec & values) const ;
+
+    /** Adds all string values for the given key to values.
+     *  Returns a reference to values for convenience.
+     */
+    virtual EVENT::StringVec & getStringVals(const std::string & key, EVENT::StringVec & values) const ;
     
     /** Returns a list of all keys of integer parameters.
      */
@@ -79,6 +89,10 @@ namespace IMPL {
     /** Returns a list of all keys of float parameters.
      */
     virtual const EVENT::StringVec & getFloatKeys(EVENT::StringVec & keys)  const ;
+
+    /** Returns a list of all keys of double parameters.
+     */
+    virtual const EVENT::StringVec & getDoubleKeys(EVENT::StringVec & keys) const ;
 
     /** Returns a list of all keys of string parameters.
      */
@@ -92,6 +106,10 @@ namespace IMPL {
      */ 
     virtual int getNFloat(const std::string & key) const ;
     
+    /** The number of double values stored for this key.
+     */ 
+    virtual int getNDouble(const std::string & key) const ;
+
     /** The number of string values stored for this key.
      */ 
     virtual int getNString(const std::string & key) const ;
@@ -103,6 +121,10 @@ namespace IMPL {
     /** Set float value for the given key.
      */
     virtual void setValue(const std::string & key, float value) ;
+
+    /** Set double value for the given key.
+     */
+    virtual void setValue(const std::string & key, double value) ;
 
     /** Set string value for the given key.
      */
@@ -116,6 +138,10 @@ namespace IMPL {
      */
     virtual void setValues(const std::string & key, const EVENT::FloatVec & values);
 
+    /** Set double values for the given key.
+     */
+    virtual void setValues(const std::string & key, const EVENT::DoubleVec & values) ;
+
     /** Set string values for the given key.
      */
     virtual void setValues(const std::string & key, const EVENT::StringVec & values);
@@ -125,6 +151,7 @@ namespace IMPL {
 
     mutable IntMap _intMap{} ;
     mutable FloatMap _floatMap{} ;
+    mutable DoubleMap _doubleMap{} ;
     mutable StringMap _stringMap{} ;
     
   }; // class

@@ -30,10 +30,17 @@ FILE( GLOB_RECURSE SIO_SRCS src/*.cc )
 
 ADD_DEFINITIONS( "-DSIO_LOGLVL=0" )
 ADD_SHARED_LIBRARY( sio ${SIO_SRCS} )
-TARGET_INCLUDE_DIRECTORIES( sio PUBLIC include )
+TARGET_INCLUDE_DIRECTORIES( sio PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 TARGET_INCLUDE_DIRECTORIES( sio SYSTEM PUBLIC ${ZLIB_INCLUDE_DIR} )
 TARGET_LINK_LIBRARIES( sio ${ZLIB_LIBRARIES} )
-INSTALL_SHARED_LIBRARY( sio DESTINATION lib )
+INSTALL_SHARED_LIBRARY( sio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+
+# Install the sio headers as well. Necessary for the python bindings and also
+# for cases where others want to link against LCIO / this version of SIO
+INSTALL(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/include/sio DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 # mimic the SIOConfig.cmake variables for the LCIO project
 SET( SIO_VERSION                  "${SIO_VERSION}"                       CACHE STRING "The SIO version" )

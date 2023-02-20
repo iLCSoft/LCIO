@@ -8,20 +8,20 @@ namespace UTIL {
 
 
   /** Singleton helper class defining the cellID encoding used
-   *  in the LC tracking packages. It is assumed that the cellID  
+   *  in the LC tracking packages. It is assumed that the cellID
    *  contains the elements subdet, side, layer, module and sensor
    *  in that order. The actual encoding string can be set once,
    *  but only before it is accessed for the first time.
    *  The default encoding string is:
    *  "subdet:5,side:-2,layer:9,module:8,sensor:8"
-   *   
+   *
    *  [should replace UTIL::ILDCellID0 and DDKalTest::CellIDEncoding ]
    *
    *  @author F.Gaede, DESY
    *  @date Mar, 2017
    */
   class LCTrackerCellID{
-    
+
 
     enum {
       subdetID = 0 ,
@@ -34,10 +34,10 @@ namespace UTIL {
 
   public:
 
-    static LCTrackerCellID& instance() { 
+    static LCTrackerCellID& instance() {
       static LCTrackerCellID _me ;
       return _me ;
-    } 
+    }
 
     /// index of subdet in cellID
     static unsigned subdet() { return subdetID ; }
@@ -54,17 +54,12 @@ namespace UTIL {
     /// index of sensor in cellID
     static unsigned sensor() { return sensorID ; }
 
-
-    /// c'tor initialize the encoding string with the 'canonical' encoding 
-    LCTrackerCellID() : _encoding("subdet:5,side:-2,layer:9,module:8,sensor:8" ),
-		       _accessed(false) {}
-    
     // get the current encoding string
     static const std::string& encoding_string() {
       instance()._accessed = true;
       return instance()._encoding ;
     }
-    
+
     /// return a string with the details of the given id:
     static std::string valueString( unsigned val ){
       instance().setAccessed();
@@ -72,7 +67,7 @@ namespace UTIL {
       encoder.setValue( val ) ;
       return encoder.valueString() ;
     }
-    
+
     /// set the encoding string. Throws exception if it was already accessed to prevent inconsistencies
     void set_encoding_string( const std::string& encodingString ) {
       if( _accessed ) throw std::logic_error( "The encoding string was already accessed! Changing it now will lead to inconsistencies! Fix your code!" );
@@ -104,7 +99,7 @@ namespace UTIL {
 
       _encoding = encodingString;
     }
-    
+
     /// set accessed to true
     void setAccessed() {
       _accessed = true;
@@ -112,6 +107,10 @@ namespace UTIL {
 
 
   protected:
+    /// c'tor initialize the encoding string with the 'canonical' encoding
+    LCTrackerCellID() : _encoding("subdet:5,side:-2,layer:9,module:8,sensor:8" ),
+    	       _accessed(false) {}
+
     std::string _encoding ;
     bool _accessed;
   } ;

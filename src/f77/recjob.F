@@ -207,9 +207,9 @@ ccc      status     = lccolsetflag ( tpchitcol, tpcflag )
         status  = lctrhsetdedx ( trhitp, lctphgcharge ( tpchit ) )
         status  = lctrhsettime ( trhitp, lctphgettime ( tpchit ) )
         cellid  = lctphgetcellid ( tpchit )
-        dpos(1) = iand ( cellid, 'ff'x )
-        dpos(2) = ishft ( iand ( cellid, 'ff00'x ) , -8 )
-        dpos(3) = ishft ( iand ( cellid, 'ff0000'x ) , -16 )
+        dpos(1) = iand ( cellid, z'ff' )
+        dpos(2) = ishft ( iand ( cellid, z'ff00' ) , -8 )
+        dpos(3) = ishft ( iand ( cellid, z'ff0000' ) , -16 )
         status  = lctrhsetposition ( trhitp, dpos )
 
         status  = lctrhaddrawhit ( trhitp, tpchit )  ! store the original raw data hit

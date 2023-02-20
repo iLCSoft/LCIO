@@ -6,26 +6,28 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcpidcreate() ;
-int     lcpiddelete( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcpidcreate() ;
+LCIO_DEPRECATED_CAPI int     lcpiddelete( PTRTYPE pid ) ;
 
-int     lcpidid( PTRTYPE pid ) ;
-int     lcpidgettype( PTRTYPE pid ) ;
-int     lcpidgetpdg( PTRTYPE pid ) ;
-float   lcpidgetlikelihood( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI int     lcpidid( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI int     lcpidgettype( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI int     lcpidgetpdg( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI float   lcpidgetlikelihood( PTRTYPE pid ) ;
 
-int     lcpidgetalgorithmtype( PTRTYPE pid ) ;
-int     lcpidgetparameters( PTRTYPE pid, float* vec, int* nvec ) ;
+LCIO_DEPRECATED_CAPI int     lcpidgetalgorithmtype( PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI int     lcpidgetparameters( PTRTYPE pid, float* vec, int* nvec ) ;
 
-int     lcpidsettype( PTRTYPE pid, int type ) ;
-int     lcpidsetpdg( PTRTYPE pid, int pdg ) ;
-int     lcpidsetlikelihood( PTRTYPE pid, float logl ) ;
+LCIO_DEPRECATED_CAPI int     lcpidsettype( PTRTYPE pid, int type ) ;
+LCIO_DEPRECATED_CAPI int     lcpidsetpdg( PTRTYPE pid, int pdg ) ;
+LCIO_DEPRECATED_CAPI int     lcpidsetlikelihood( PTRTYPE pid, float logl ) ;
 
-int     lcpidsetalgorithmtype( PTRTYPE pid, int algo ) ;
-int     lcpidaddparameter( PTRTYPE pid, float param ) ;
+LCIO_DEPRECATED_CAPI int     lcpidsetalgorithmtype( PTRTYPE pid, int algo ) ;
+LCIO_DEPRECATED_CAPI int     lcpidaddparameter( PTRTYPE pid, float param ) ;
 
 
 // now the fortran wrappers from cfortran.h              

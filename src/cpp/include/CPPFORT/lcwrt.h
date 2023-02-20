@@ -7,18 +7,20 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcwrtcreate() ;
-int     lcwrtdelete( PTRTYPE writer ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcwrtcreate() ;
+LCIO_DEPRECATED_CAPI int     lcwrtdelete( PTRTYPE writer ) ;
 
 // the writer interface
-int   lcwrtopen( PTRTYPE writer, const char* filename , int writeMode ) ;
-int   lcwrtclose( PTRTYPE writer ) ;
+LCIO_DEPRECATED_CAPI int   lcwrtopen( PTRTYPE writer, const char* filename , int writeMode ) ;
+LCIO_DEPRECATED_CAPI int   lcwrtclose( PTRTYPE writer ) ;
 
-int   lcwrtwriterunheader( PTRTYPE writer, PTRTYPE header) ;
-int   lcwrtwriteevent( PTRTYPE writer, PTRTYPE event) ;
+LCIO_DEPRECATED_CAPI int   lcwrtwriterunheader( PTRTYPE writer, PTRTYPE header) ;
+LCIO_DEPRECATED_CAPI int   lcwrtwriteevent( PTRTYPE writer, PTRTYPE event) ;
 
 
 // now the fortran wrappers from cfortran.h
