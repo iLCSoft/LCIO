@@ -13,6 +13,7 @@ public class ILCParameters extends ILCObject implements LCParameters
 {
    protected Map _intMap = new HashMap() ;
    protected Map _floatMap = new HashMap() ;
+   protected Map _doubleMap = new HashMap() ;
    protected Map _stringMap = new HashMap() ;
    
    public int getIntVal(String key)
@@ -28,6 +29,16 @@ public class ILCParameters extends ILCObject implements LCParameters
    {
       
       float[] vals = (float[]) _floatMap.get( key ) ;
+      if(vals==null||vals.length==0)
+         return 0 ;
+      
+      return vals[0] ;
+   }
+   
+   public double getDoubleVal(String key)
+   {
+      
+      double[] vals = (double[]) _doubleMap.get( key ) ;
       if(vals==null||vals.length==0)
          return 0 ;
       
@@ -54,6 +65,11 @@ public class ILCParameters extends ILCObject implements LCParameters
       return (float[]) _floatMap.get(key) ;
    }
    
+   public double[] getDoubleVals(String key)
+   {
+      return (double[]) _doubleMap.get(key) ;
+   }
+   
    public String[] getStringVals(String key)
    {
       return (String[]) _stringMap.get(key) ;
@@ -73,6 +89,17 @@ public class ILCParameters extends ILCObject implements LCParameters
    public String[] getFloatKeys()
    {
       Object[] ob = _floatMap.keySet().toArray() ;
+      String[] keys = new String[ ob.length ] ;
+      for (int i = 0; i < keys.length; i++)
+      {
+         keys[i] = (String) ob[i] ;
+      }
+      return keys  ;
+   }
+   
+   public String[] getDoubleKeys()
+   {
+      Object[] ob = _doubleMap.keySet().toArray() ;
       String[] keys = new String[ ob.length ] ;
       for (int i = 0; i < keys.length; i++)
       {
@@ -106,6 +133,13 @@ public class ILCParameters extends ILCObject implements LCParameters
       return a.length ;
    }
    
+   public int getNDouble(String key)
+   {
+      double[] a = (double[]) _doubleMap.get(key) ;
+      if( a ==null ) return 0 ;
+      return a.length ;
+   }
+   
    public int getNString(String key)
    {
       String[] a = (String[]) _stringMap.get(key) ;
@@ -129,6 +163,14 @@ public class ILCParameters extends ILCObject implements LCParameters
       _floatMap.put(key,values) ;
    }
    
+   public void setValue(String key, double value)
+   {
+      checkAccess() ;
+      double[] values =
+      { value } ;
+      _doubleMap.put(key,values) ;
+   }
+   
    public void setValue(String key, String value)
    {
       checkAccess() ;
@@ -147,6 +189,12 @@ public class ILCParameters extends ILCObject implements LCParameters
    {
       checkAccess() ;
       _floatMap.put(key,values) ;
+   }
+   
+   public void setValues(String key, double[] values)
+   {
+      checkAccess() ;
+      _doubleMap.put(key,values) ;
    }
    
    public void setValues(String key, String[] values)

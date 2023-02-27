@@ -14,65 +14,66 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
 
 //--------------- convenient method to open a list of files for reading (read-only)
 
 /**Opens a list of files for reading (read-only).
  */
-int lcrdropenchain( PTRTYPE reader, void* filenamesv, const int nfiles, const int nchfilename );
+LCIO_DEPRECATED_CAPI int lcrdropenchain( PTRTYPE reader, void* filenamesv, const int nfiles, const int nchfilename );
 
 //--------------- convenient methods to read/write the run header
 
 /**Write a run header to the specified writer with the given data.
  */
-int lcwriterunheader( PTRTYPE writer, const int irun, const char* detname, const char* descr,
+LCIO_DEPRECATED_CAPI int lcwriterunheader( PTRTYPE writer, const int irun, const char* detname, const char* descr,
                          void* sdnamevec, const int nsubd, const int nchsubd) ;
 
 /**Read the next run header and fills the return arguments with the data.
  */
-PTRTYPE lcreadnextrunheader( PTRTYPE reader, int* irun, void* detname, void* descr,
+LCIO_DEPRECATED_CAPI PTRTYPE lcreadnextrunheader( PTRTYPE reader, int* irun, void* detname, void* descr,
                             void* sdnamevec, int* nsubd, const int nchsubd) ;
 
 //---------------  convenient methods for the event interface
 
 /**Set the complete event header data in the event.
  */
-int lcseteventheader( PTRTYPE event, const int irun, const int ievent, 
+LCIO_DEPRECATED_CAPI int lcseteventheader( PTRTYPE event, const int irun, const int ievent,
 		      const int timestamp, const char* detname );
 
 /**Read the complete event header data from the event.
  */
-int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, void* detname );
+LCIO_DEPRECATED_CAPI int lcgeteventheader( PTRTYPE event, int* irun, int* ievent, int* timestamp, void* detname );
 
 /**Dump the run header to the stdout 
  */
-int lcdumprunheader( PTRTYPE runheader ) ;
+LCIO_DEPRECATED_CAPI int lcdumprunheader( PTRTYPE runheader ) ;
 
 /**Dump the event to the stdout - one line per collection.
  */
-int lcdumpevent( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI int lcdumpevent( PTRTYPE event ) ;
 
 /**Detailed dump of all the data in the event to stdout.
  */
-int lcdumpeventdetailed( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI int lcdumpeventdetailed( PTRTYPE event ) ;
 
 //---------------  convenient methods for the mcparticle interface
 
 
 /**Return all the data of the specified MCParticle in the arguments.
  */
-int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* simstatus
+LCIO_DEPRECATED_CAPI int lcgetmcparticledata( PTRTYPE mcparticle, int* pdg, int* genstatus, int* simstatus
 			 , double* prodvtx, float* momentum, float* mass, float* charge, 
 			 int* ndaughters ) ;
 
 
 /**Fill the hepevt common block with the MCParicle data in the LCIO event.
  */
-int lcio2hepevt( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI int lcio2hepevt( PTRTYPE event ) ;
 
 /**Create an MCParticle collection from the hepevt common block and add it to the event.
  */
-int hepevt2lcio( PTRTYPE event ) ;
+LCIO_DEPRECATED_CAPI int hepevt2lcio( PTRTYPE event ) ;
 
 
 
@@ -80,12 +81,12 @@ int hepevt2lcio( PTRTYPE event ) ;
 
 /**Add a new SimTrackerHit with the given data to the collection.
  */
-int lcaddsimtrackerhit( PTRTYPE col, int cellID, double* pos, float dEdx,
+LCIO_DEPRECATED_CAPI int lcaddsimtrackerhit( PTRTYPE col, int cellID, double* pos, float dEdx,
 			    float time, PTRTYPE mcp ) ;
 
 /**Return all the data from the specified SimTrackerHit in the arguments.
  */
-int lcgetsimtrackerhit( PTRTYPE col, int i, int* cellID, double* pos, float* dEdx, 
+LCIO_DEPRECATED_CAPI int lcgetsimtrackerhit( PTRTYPE col, int i, int* cellID, double* pos, float* dEdx,
 			    float* time, PTRTYPE* mcp ) ;
 
 
@@ -94,84 +95,84 @@ int lcgetsimtrackerhit( PTRTYPE col, int i, int* cellID, double* pos, float* dEd
 /**Add a new SimCalorimeterHit with the given data to the collection.
  * Returns a pointer the new hit.
  */
-PTRTYPE lcaddsimcalohit( PTRTYPE col, int cellID0, int cellID1, float energy, float* pos ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcaddsimcalohit( PTRTYPE col, int cellID0, int cellID1, float energy, float* pos ) ;
 
 /**Return the data of the specified SimCalorimeterHit in the arguments.
  */
-PTRTYPE lcgetsimcalohit( PTRTYPE col, int i, int* cellID0, int* cellID1, float* energy,
+LCIO_DEPRECATED_CAPI PTRTYPE lcgetsimcalohit( PTRTYPE col, int i, int* cellID0, int* cellID1, float* energy,
 			 float* pos ) ;
 
 /**Return the specified contribution of a MCParticle to the hit in the arguments.
  */
-int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, float* time, 
+LCIO_DEPRECATED_CAPI int lcgetsimcalohitmccont( PTRTYPE hit, int i, PTRTYPE* mcp, float* energy, float* time,
 			     int* pdg ) ;
 
 
 /**Create an object vector
 */
-PTRTYPE lcobjectvectorcreate( PTRTYPE* ocjectv, const int nobjv ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcobjectvectorcreate( PTRTYPE* ocjectv, const int nobjv ) ;
 
 /**Create an LC int vector
 */
-PTRTYPE lcintvectorcreate( int* intv, const int nintv ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcintvectorcreate( int* intv, const int nintv ) ;
 
 /**Create a LC float vector
 */
-PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcfloatvectorcreate( float* floatv, const int nfloatv ) ;
 
 /**Create a LC string vector
 */
-PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcstringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
 
 /**Return the content of a LC int vector
 */
-int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
+LCIO_DEPRECATED_CAPI int lcgetintvector( PTRTYPE vector, int* intv, int* nintv ) ;
 
 /**Return the content of a LC float vector
 */
-int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
+LCIO_DEPRECATED_CAPI int lcgetfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 
 /**Return the content of a LC string vector
 */
-int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+LCIO_DEPRECATED_CAPI int lcgetstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
 
                   
 /**Create/Delete an int vector
 */
-PTRTYPE intvectorcreate( int* intv, const int nintv ) ;
-int intvectordelete( PTRTYPE vector ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE intvectorcreate( int* intv, const int nintv ) ;
+LCIO_DEPRECATED_CAPI int intvectordelete( PTRTYPE vector ) ;
 
 /**Create/Delete a float vector
 */
-PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ) ;
-int floatvectordelete( PTRTYPE vector ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE floatvectorcreate( float* floatv, const int nfloatv ) ;
+LCIO_DEPRECATED_CAPI int floatvectordelete( PTRTYPE vector ) ;
 
 /**Create/Delete a string vector
 */
-PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
-int stringvectordelete( PTRTYPE vector ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE stringvectorcreate( void* stringv, const int nstringv, const int nchstringv) ;
+LCIO_DEPRECATED_CAPI int stringvectordelete( PTRTYPE vector ) ;
                   
 /**Create/Delete a pointer vector
 */
-PTRTYPE pointervectorcreate( PTRTYPE* pointerv, const int npointerv ) ;
-int pointervectordelete( PTRTYPE vector ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE pointervectorcreate( PTRTYPE* pointerv, const int npointerv ) ;
+LCIO_DEPRECATED_CAPI int pointervectordelete( PTRTYPE vector ) ;
 
 
 /**Return the content of an int vector
 */
-int getintvector( PTRTYPE vector, int* intv, int* nintv ) ;
+LCIO_DEPRECATED_CAPI int getintvector( PTRTYPE vector, int* intv, int* nintv ) ;
 
 /**Return the content of a float vector
 */
-int getfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
+LCIO_DEPRECATED_CAPI int getfloatvector( PTRTYPE vector, float* floatv, int* nfloatv ) ;
 
 /**Return the content of a string vector
 */
-int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
+LCIO_DEPRECATED_CAPI int getstringvector( PTRTYPE vector, void* stringv, int* nstringv, const int nchstringv) ;
 
 /**Return the content of a pointer vector
 */
-int getpointervector( PTRTYPE vector, PTRTYPE* pointerv, int* npointerv ) ;
+LCIO_DEPRECATED_CAPI int getpointervector( PTRTYPE vector, PTRTYPE* pointerv, int* npointerv ) ;
 
 
 
@@ -180,13 +181,13 @@ int getpointervector( PTRTYPE vector, PTRTYPE* pointerv, int* npointerv ) ;
 
 /**For the set methods:
 */
-int lcsetparameters( const char* classname, PTRTYPE classp, const char* method,
+LCIO_DEPRECATED_CAPI int lcsetparameters( const char* classname, PTRTYPE classp, const char* method,
 			    const char* key, PTRTYPE vecp) ;
 
 
 /**For the get methods:
 */
-int lcgetparameters( const char* classname, PTRTYPE classp, const char* method,
+LCIO_DEPRECATED_CAPI int lcgetparameters( const char* classname, PTRTYPE classp, const char* method,
 			    const char* key, PTRTYPE vecp) ;
 
 

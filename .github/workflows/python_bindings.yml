@@ -1,0 +1,32 @@
+name: python_bindings
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cvmfs-contrib/github-action-cvmfs@v3
+      - uses: aidasoft/run-lcg-view@v4
+        with:
+          release-platform: "LCG_101/x86_64-centos7-gcc10-opt"
+          run: |
+            mkdir build install
+            cd build
+            cmake -DCMAKE_CXX_STANDARD=17 \
+              -DBUILD_ROOTDICT=ON \
+              -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always" \
+              -DCMAKE_INSTALL_PREFIX=../install \
+              -G Ninja \
+              ..
+            ninja -k0 install
+            cd ../install
+            source ../setup.sh
+            cd ../
+            rm -r $(ls | grep -v install)
+            python $LCIO/python/examples/EventBuilder.py test.slcio 1
+            python $LCIO/python/examples/readMCParticles.py test.slcio

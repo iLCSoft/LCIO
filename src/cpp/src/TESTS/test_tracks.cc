@@ -15,6 +15,7 @@
 
 #include "UTIL/Operators.h"
 #include "UTIL/LCIterator.h"
+#include "UTIL/TrackTools.h"
 
 #include <sstream>
 #include <assert.h>
@@ -218,6 +219,19 @@ int main(int /*argc*/, char** /*argv*/ ){
                     ss << " ref[" << k << "] " ;
                     MYTEST( ref[k] , float(k+1) , ss.str() ) ;
                 }
+                
+                //Test of the getTrackMomentum
+                std::array<double, 3> trkRecoMomentum = UTIL::getTrackMomentum(trk, 3.5);
+                std::array<double, 3> trkTrueMomentum = {0., 0., 0.};
+                if (trk->getOmega() != 0.){
+                    double trkPx = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::cos((i+j) * .3);
+                    double trkPy = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*std::sin((i+j) * .3);
+                    double trkPz = (1e-6 * 299.792458 * 3.5) / std::abs((i+j) * .1)*(i+j) * .2;
+                    trkTrueMomentum = {trkPx, trkPy, trkPz};
+                }
+                std::stringstream failMsg;
+                failMsg << "  getTrackMomentum : [" << trkRecoMomentum << "] != [" << trkTrueMomentum << "]";
+                MYTEST(approxEqArray(trkRecoMomentum, trkTrueMomentum), failMsg.str());
 
                 ++j ;
             }
@@ -438,9 +452,8 @@ int main(int /*argc*/, char** /*argv*/ ){
         } catch( Exception &e ){
             MYTEST.FAILED( e.what() );
         }
-
         return 0;
+
     }
 
     //=============================================================================
-

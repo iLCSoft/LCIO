@@ -136,6 +136,13 @@ int main(int argc, char** argv ){
  	fv.push_back( 3.3 ) ;
 	evt->parameters().setValues( "SomeNumbers" , fv ) ; 
 	
+	DoubleVec dv ;
+	dv.push_back( 1.111111111111111111111111111111111111111111111111 ) ;
+	dv.push_back( 2.222222222222222222222222222222222222222222222222 ) ;
+	dv.push_back( 3.333333333333333333333333333333333333333333333333 ) ;
+	evt->parameters().setValues( "SomeDoubleNumbers" , dv ) ;
+
+
 	// create and add some mc particles 
 	LCCollectionVec* mcVec = new LCCollectionVec( LCIO::MCPARTICLE )  ;
 	

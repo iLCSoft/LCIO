@@ -7,14 +7,16 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
 // the RelationNavigator interface
-int lcobvgetlength( PTRTYPE vector ) ;
-PTRTYPE lcobvgetobject( PTRTYPE vector, int index ) ;
-int lcobvgetobjectid( PTRTYPE vector, int index ) ;
-float lcobvgetweight( PTRTYPE vector, int index ) ;
+LCIO_DEPRECATED_CAPI int lcobvgetlength( PTRTYPE vector ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcobvgetobject( PTRTYPE vector, int index ) ;
+LCIO_DEPRECATED_CAPI int lcobvgetobjectid( PTRTYPE vector, int index ) ;
+LCIO_DEPRECATED_CAPI float lcobvgetweight( PTRTYPE vector, int index ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

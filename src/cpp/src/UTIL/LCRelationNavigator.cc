@@ -1,6 +1,5 @@
 #include "UTIL/LCRelationNavigator.h"
 
-#include <algorithm>
 #include <cassert>
 #include "IMPL/LCCollectionVec.h"
 #include "IMPL/LCFlagImpl.h"

@@ -120,7 +120,10 @@ SET( LCIO_UTIL_SRCS
   ./src/UTIL/PIDHandler.cc
   ./src/UTIL/ILDConf.cc
   ./src/UTIL/ProcessFlag.cc
-)
+  ./src/UTIL/LCCollectionTools.cc
+  ./src/UTIL/ReconstructedParticleTools.cc
+  ./src/UTIL/CheckCollections.cc
+  )
 
 SET( LCIO_MT_SRCS
   ./src/MT/LCReader.cc
@@ -284,7 +287,7 @@ INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
 
 # ------- libraries lcio + lcioF77 -------------------------------------------
 ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION lib )
+INSTALL( TARGETS lcioF77 DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 ADD_SHARED_LIBRARY( lcio
   ${LCIO_IMPL_SRCS}
@@ -293,7 +296,7 @@ ADD_SHARED_LIBRARY( lcio
   ${LCIO_SIO_SRCS}
   ${LCIO_MT_SRCS}
 )
-INSTALL_SHARED_LIBRARY( lcio DESTINATION lib )
+INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
@@ -416,8 +419,8 @@ IF( BUILD_ROOTDICT )
       ADD_CUSTOM_TARGET(dylib2so
 	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcio.dylib liblcio.so
 	COMMAND ${CMAKE_COMMAND} -E create_symlink liblcioDict.dylib liblcioDict.so
-	WORKING_DIRECTORY  ${CMAKE_INSTALL_PREFIX}/lib
-	DEPENDS ${CMAKE_INSTALL_PREFIX}/lib/liblcio.dylib )
+	WORKING_DIRECTORY  ${CMAKE_INSTALL_LIBDIR}
+	DEPENDS ${CMAKE_INSTALL_LIBDIR}/liblcio.dylib )
 
       INSTALL( CODE "EXECUTE_PROCESS( COMMAND ${CMAKE_BUILD_TOOL} dylib2so)" )
 
@@ -426,7 +429,7 @@ IF( BUILD_ROOTDICT )
 
     ADD_CUSTOM_TARGET( dict DEPENDS lcioDict )
 
-    INSTALL_SHARED_LIBRARY( lcioDict DESTINATION lib )
+    INSTALL_SHARED_LIBRARY( lcioDict DESTINATION ${CMAKE_INSTALL_LIBDIR} )
 
     #fg: for root6 we also need to install the pcm files ...
     SET( ROOT_DICT_PCM_FILES
@@ -440,7 +443,26 @@ IF( BUILD_ROOTDICT )
 
     message( STATUS "{ROOT_DICT_OUTPUT_DIR} : ${ROOT_DICT_OUTPUT_DIR}  - {ROOT_DICT_PCM_FILES}: ${ROOT_DICT_PCM_FILES} " )
 
-    INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION lib)
+    INSTALL(FILES  ${ROOT_DICT_PCM_FILES} DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+    # We need to install some headers which are necessary for the python
+    # bindings, even though these are essentially internal implementation
+    # headers only and should not be publicly reachable. However, if we do not
+    # install these then, the ROOT generated python bindings will not work if
+    # the LCIO sources are removed after the installation. See #106
+    INSTALL(FILES
+      ${CMAKE_CURRENT_LIST_DIR}/include/IOIMPL/LCEventLazyImpl.h
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/IOIMPL
+    )
+    INSTALL(FILES
+      ${CMAKE_CURRENT_LIST_DIR}/include/SIO/SIOHandlerMgr.h
+      ${CMAKE_CURRENT_LIST_DIR}/include/SIO/SIOObjectHandler.h
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SIO
+    )
+
+    INSTALL(DIRECTORY
+      ${CMAKE_CURRENT_LIST_DIR}/include/pre-generated
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 ENDIF()
 # ----------------------------------------------------------------------------
@@ -467,6 +489,8 @@ ADD_LCIO_EXAMPLE( copyfix )
 ADD_LCIO_EXAMPLE( stdhepjob )
 ADD_LCIO_EXAMPLE( stdhepjob_new )
 ADD_LCIO_EXAMPLE( addRandomAccess )
+ADD_LCIO_EXAMPLE( check_missing_cols )
+ADD_LCIO_EXAMPLE( patch_missing_cols )
 ADD_LCIO_EXAMPLE( lcio_event_counter )
 ADD_LCIO_EXAMPLE( lcio_check_col_elements )
 ADD_LCIO_EXAMPLE( lcio_split_file ) 

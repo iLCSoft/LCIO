@@ -39,6 +39,10 @@ public:
      */
     virtual float getFloatVal(const std::string & key) const = 0;
 
+    /** Returns the first double value for the given key.
+     */
+    virtual double getDoubleVal(const std::string & key) const = 0;
+
     /** Returns the first string value for the given key.
      */
     virtual const std::string & getStringVal(const std::string & key) const = 0;
@@ -53,7 +57,12 @@ public:
      */
     virtual FloatVec & getFloatVals(const std::string & key, FloatVec & values) const = 0;
 
-    /** Adds all float values for the given key to values.
+    /** Adds all double values for the given key to values.
+     *  Returns a reference to values for convenience.
+     */
+    virtual DoubleVec & getDoubleVals(const std::string & key, DoubleVec & values) const = 0;
+
+    /** Adds all string values for the given key to values.
      *  Returns a reference to values for convenience.
      */
     virtual StringVec & getStringVals(const std::string & key, StringVec & values) const = 0;
@@ -65,6 +74,10 @@ public:
     /** Returns a list of all keys of float parameters.
      */
     virtual const StringVec & getFloatKeys(StringVec & keys) const = 0;
+
+    /** Returns a list of all keys of double parameters.
+     */
+    virtual const StringVec & getDoubleKeys(StringVec & keys) const = 0;
 
     /** Returns a list of all keys of string parameters.
      */
@@ -78,6 +91,10 @@ public:
      */ 
     virtual int getNFloat(const std::string & key) const = 0;
 
+    /** The number of double values stored for this key.
+     */ 
+    virtual int getNDouble(const std::string & key) const = 0;
+
     /** The number of string values stored for this key.
      */ 
     virtual int getNString(const std::string & key) const = 0;
@@ -90,6 +107,10 @@ public:
      */
     virtual void setValue(const std::string & key, float value) = 0;
 
+    /** Set double value for the given key.
+     */
+    virtual void setValue(const std::string & key, double value) = 0;
+
     /** Set string value for the given key.
      */
     virtual void setValue(const std::string & key, const std::string & value) = 0;
@@ -101,6 +122,10 @@ public:
     /** Set float values for the given key.
      */
     virtual void setValues(const std::string & key, const FloatVec & values) = 0;
+
+    /** Set double values for the given key.
+     */
+    virtual void setValues(const std::string & key, const DoubleVec & values) = 0;
 
     /** Set string values for the given key.
      */

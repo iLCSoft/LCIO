@@ -6,31 +6,32 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcvtxcreate() ;
-int     lcvtxdelete( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcvtxcreate() ;
+LCIO_DEPRECATED_CAPI int     lcvtxdelete( PTRTYPE vtx ) ;
 
-int     lcvtxid( PTRTYPE vtx ) ;
-bool    lcvtxisprimary( PTRTYPE vtx ) ;
-char*   lcvtxgetalgorithmtype( PTRTYPE vtx ) ;
-float   lcvtxgetchi2( PTRTYPE vtx ) ;
-float   lcvtxgetprobability( PTRTYPE vtx ) ;
-int     lcvtxgetposition( PTRTYPE vtx, float* pos ) ;
-int     lcvtxgetcovmatrix( PTRTYPE vtx, float* cvmtx ) ;
-int     lcvtxgetparameters( PTRTYPE vtx, float* vec, int* nvec ) ;
-PTRTYPE lcvtxgetassociatedparticle( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxid( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI bool    lcvtxisprimary( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI char*   lcvtxgetalgorithmtype( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI float   lcvtxgetchi2( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI float   lcvtxgetprobability( PTRTYPE vtx ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxgetposition( PTRTYPE vtx, float* pos ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxgetcovmatrix( PTRTYPE vtx, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxgetparameters( PTRTYPE vtx, float* vec, int* nvec ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcvtxgetassociatedparticle( PTRTYPE vtx ) ;
 
-int     lcvtxsetprimary( PTRTYPE vtx, bool pri ) ;
-int     lcvtxsetalgorithmtype( PTRTYPE vtx, char* type ) ;
-int     lcvtxsetchi2( PTRTYPE vtx, float chi2 ) ;
-int     lcvtxsetprobability( PTRTYPE vtx, float prob ) ;
-int     lcvtxsetposition( PTRTYPE vtx, float* pos ) ;
-int     lcvtxsetcovmatrix( PTRTYPE vtx, float* cvmtx ) ;
-int     lcvtxaddparameter( PTRTYPE vtx, float param ) ;
-int     lcvtxsetassociatedparticle( PTRTYPE vtx, PTRTYPE rcp ) ;
-
+LCIO_DEPRECATED_CAPI int     lcvtxsetprimary( PTRTYPE vtx, bool pri ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetalgorithmtype( PTRTYPE vtx, char* type ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetchi2( PTRTYPE vtx, float chi2 ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetprobability( PTRTYPE vtx, float prob ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetposition( PTRTYPE vtx, float* pos ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetcovmatrix( PTRTYPE vtx, float* cvmtx ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxaddparameter( PTRTYPE vtx, float param ) ;
+LCIO_DEPRECATED_CAPI int     lcvtxsetassociatedparticle( PTRTYPE vtx, PTRTYPE rcp ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

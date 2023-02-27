@@ -7,22 +7,24 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
 // the relation interface
-PTRTYPE lcrelcreate0() ;
-PTRTYPE lcrelcreate( PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
-int lcreldelete( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrelcreate0() ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrelcreate( PTRTYPE objectfrom, PTRTYPE objectto, float weight ) ;
+LCIO_DEPRECATED_CAPI int lcreldelete( PTRTYPE relation ) ;
 
-int lcrelid(PTRTYPE relation) ;
-PTRTYPE lcrelgetfrom( PTRTYPE relation ) ;
-PTRTYPE lcrelgetto( PTRTYPE relation ) ;
-float lcrelgetweight( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI int lcrelid(PTRTYPE relation) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrelgetfrom( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcrelgetto( PTRTYPE relation ) ;
+LCIO_DEPRECATED_CAPI float lcrelgetweight( PTRTYPE relation ) ;
                
-int lcrelsetfrom(PTRTYPE relation, PTRTYPE object ) ;
-int lcrelsetto(PTRTYPE relation, PTRTYPE object ) ;
-int lcrelsetweight(PTRTYPE relation,float weight ) ;
+LCIO_DEPRECATED_CAPI int lcrelsetfrom(PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI int lcrelsetto(PTRTYPE relation, PTRTYPE object ) ;
+LCIO_DEPRECATED_CAPI int lcrelsetweight(PTRTYPE relation,float weight ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{

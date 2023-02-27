@@ -6,51 +6,53 @@
 #include "cfortran.h"
 #include "cpointer.h"
 
+#include "deprecation.h"
+
 // Warning: dont use "_" in function names as this causes two many
 // trailing underscores on Linux
 
-PTRTYPE lcclucreate() ;
-int     lccludelete( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclucreate() ;
+LCIO_DEPRECATED_CAPI int     lccludelete( PTRTYPE clu ) ;
 
-int     lccluid( PTRTYPE clu ) ;
-int     lcclugettype( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI int     lccluid( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI int     lcclugettype( PTRTYPE clu ) ;
 // int     lcclutesttype( PTRTYPE clu , int bit ) ;
 
-float   lcclugetenergy( PTRTYPE clu ) ;
-float   lcclugetenergyerr( PTRTYPE clu ) ;
-int     lcclugetposition( PTRTYPE clu, float* pos ) ;
-int     lcclugetpositionerror( PTRTYPE clu, float* poserr ) ;
-float   lcclugetitheta( PTRTYPE clu ) ;
-float   lcclugetiphi( PTRTYPE clu ) ;
-int     lcclugetdirectionerror( PTRTYPE clu, float* direrr ) ;
+LCIO_DEPRECATED_CAPI float   lcclugetenergy( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI float   lcclugetenergyerr( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI int     lcclugetposition( PTRTYPE clu, float* pos ) ;
+LCIO_DEPRECATED_CAPI int     lcclugetpositionerror( PTRTYPE clu, float* poserr ) ;
+LCIO_DEPRECATED_CAPI float   lcclugetitheta( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI float   lcclugetiphi( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI int     lcclugetdirectionerror( PTRTYPE clu, float* direrr ) ;
 
 // int     lcclugetshape( PTRTYPE clu, float* shape ) ;
 // int     lcclugetparticletype( PTRTYPE clu, float* weights) ;
 
-PTRTYPE lcclugetshape( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclugetshape( PTRTYPE clu ) ;
 
-PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
-PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
-PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
-PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclugetparticleids( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclugetclusters( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclugetcalorimeterhits( PTRTYPE clu ) ;
+LCIO_DEPRECATED_CAPI PTRTYPE lcclugetsubdetectorenergies( PTRTYPE clu ) ;
 
-int     lcclusettypebit( PTRTYPE clu, int index, int val ) ;
-int     lcclusetenergy( PTRTYPE clu, float energy ) ;
-int     lcclusetenergyerr( PTRTYPE clu, float enerr ) ;
-int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
-int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
-int     lcclusetitheta( PTRTYPE clu, float theta ) ;
-int     lcclusetiphi( PTRTYPE clu, float phi ) ;
-int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
-int     lcclusetshape( PTRTYPE clu, PTRTYPE pshapevec ) ;
-int     lccluaddparticleid( PTRTYPE clu, PTRTYPE pid ) ;
-int     lccluaddcluster( PTRTYPE clu, PTRTYPE clus ) ;
-int     lccluaddhit( PTRTYPE clu, PTRTYPE calohit, float weigth ) ;
+LCIO_DEPRECATED_CAPI int     lcclusettypebit( PTRTYPE clu, int index, int val ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetenergy( PTRTYPE clu, float energy ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetenergyerr( PTRTYPE clu, float enerr ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetposition( PTRTYPE clu, float* refpoint ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetpositionerror( PTRTYPE clu, float* poserr ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetitheta( PTRTYPE clu, float theta ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetiphi( PTRTYPE clu, float phi ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetdirectionerror( PTRTYPE clu, float* direrr ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetshape( PTRTYPE clu, PTRTYPE pshapevec ) ;
+LCIO_DEPRECATED_CAPI int     lccluaddparticleid( PTRTYPE clu, PTRTYPE pid ) ;
+LCIO_DEPRECATED_CAPI int     lccluaddcluster( PTRTYPE clu, PTRTYPE clus ) ;
+LCIO_DEPRECATED_CAPI int     lccluaddhit( PTRTYPE clu, PTRTYPE calohit, float weigth ) ;
 
 // fg: these methods have no direct correspondence in the C++ API as there the vector is manipulated
 // directly through the interface
-int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
-int     lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) ;
+LCIO_DEPRECATED_CAPI int     lcclugethitcontributions( PTRTYPE clu, float* ener, int* nener ) ;
+LCIO_DEPRECATED_CAPI int     lcclusetsubdetectorenergies( PTRTYPE cluster, float* floatv, const int nfloatv ) ;
 
 // now the fortran wrappers from cfortran.h
 extern "C"{
