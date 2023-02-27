@@ -191,6 +191,7 @@ public:
       trk->setZ0( (i+1)*10. ) ;
       trk->setChi2( 1.01 ) ;
       trk->setNdf( 42 ) ;
+      trk->setNholes( 2 ) ;
 
       trk->setRadiusOfInnermostHit( 3.141592 ) ;
 
@@ -211,6 +212,11 @@ public:
       trk->subdetectorHitNumbers()[ VTXINDEX ] = 12 ;
       trk->subdetectorHitNumbers()[ SITINDEX ] = 24 ;
       trk->subdetectorHitNumbers()[ TPCINDEX ] = 36 ;
+
+      trk->subdetectorHoleNumbers().resize( NTRACKER ) ;
+      trk->subdetectorHoleNumbers()[ VTXINDEX ] = 0 ;
+      trk->subdetectorHoleNumbers()[ SITINDEX ] = 0 ;
+      trk->subdetectorHoleNumbers()[ TPCINDEX ] = 0 ;
 
       trk->setdEdx( 3.14159 ) ;
       trk->setdEdxError( 42. ) ;

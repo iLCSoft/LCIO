@@ -31,6 +31,7 @@ public class ITrack extends ILCObject implements Track
    protected float chi2;
    protected float dEdx;
    protected float dEdxError;
+   protected int nholes;
    protected int ndf;
    protected List tracks = new ArrayList();
    protected List trackStates = new ArrayList();
@@ -39,6 +40,7 @@ public class ITrack extends ILCObject implements Track
    
    //public final static int BITISREFERENCEPOINTPCA = 31;
    protected int[] subdetectorHitNumbers = null0;
+   protected int[] subdetectorHoleNumbers = null0;
    
    public float getD0()
    {
@@ -239,6 +241,11 @@ public class ITrack extends ILCObject implements Track
    {
       return dEdxError;
    }
+      
+   public int getNholes()
+   {
+      return nholes;
+   }
 
    public void setChi2(float chi2)
    {
@@ -256,6 +263,12 @@ public class ITrack extends ILCObject implements Track
    {
       checkAccess();
       this.dEdxError = dEdxError;
+   } 
+
+   public void setNholes(int nholes)
+   {
+      checkAccess();
+      this.nholes = nholes;
    }
   
    protected void setType(int type)
@@ -309,21 +322,32 @@ public class ITrack extends ILCObject implements Track
    {
       return radiusOfInnermostHit;
    }
-   
+
    public void setRadiusOfInnermostHit(float f)
    {
       checkAccess();
       radiusOfInnermostHit = f;
    }
-   
+
    public int[] getSubdetectorHitNumbers()
    {
       return subdetectorHitNumbers ;
    }
-   
+
    public void setSubdetectorHitNumbers(int[] is)
    {
       checkAccess();
       subdetectorHitNumbers = is;
+   }
+
+   public int[] getSubdetectorHoleNumbers()
+   {
+      return subdetectorHoleNumbers ;
+   }
+
+   public void setSubdetectorHoleNumbers(int[] is)
+   {
+      checkAccess();
+      subdetectorHoleNumbers = is;
    }
 }

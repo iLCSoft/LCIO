@@ -105,6 +105,10 @@ public:
      */
     virtual float getdEdxError() const = 0;
 
+    /** Number of holes.
+     */
+    virtual int getNholes() const = 0;
+
     /** The radius of the innermost hit that has been used in the track fit.
      *  Helps to detect V0 tracks with small impact paramters or heavy mesons.
      *  To be used as convenient information or if hits are not stored in 
@@ -119,6 +123,14 @@ public:
      *  Check/set collection variable TrackSubdetectorNames for decoding the indices.
      */
     virtual const IntVec & getSubdetectorHitNumbers() const = 0;
+
+    /** A vector that holds the number of holes in particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if holes are not stored in
+     *  the data set, e.g. DST or FastMC.
+     *  Check/set collection variable TrackSubdetectorNames for decoding the indices.
+     */
+    virtual const IntVec & getSubdetectorHoleNumbers() const = 0;
 
     /** The tracks that have been combined to this track.
      */

@@ -594,10 +594,15 @@
 	<data type="int" name="ndf">ndf of fit</data>
 	<data type="float" name="dEdx">dEdx</data>
 	<data type="float" name="dEdxError">Error of dEdx</data>
+	<data type="int" name="Nholes">number of holes in track</data>
 	<data type="float" name="radiusOfInnermostHit">radius of innermost hit used in track fit</data>
 	<data type="int" name="nHitNumbers"></data>
 	<repeat count="nHitNumbers">
 	  <data type="int" name="subdetectorHitNumbers">number of hits in particular subdetectors. TODO need way to define mapping in run/event header</data>
+	</repeat>
+	<data type="int" name="nHoleNumbers"></data>
+	<repeat count="nHoleNumbers">
+	  <data type="int" name="subdetectorHoleNumbers">number of holes in particular subdetectors. TODO need way to define mapping in run/event header</data>
 	</repeat>
 	<data type="int" name="nTracks"></data>
 	<repeat count="nTracks">
