@@ -84,9 +84,21 @@ IF( INSTALL_JAR )
 ENDIF()
 
 
+# ROOT
+OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" ON )
+IF( BUILD_ROOTDICT )
+    FIND_PACKAGE( ROOT 6.04 REQUIRED ) # look for ROOT versions >= 5.27.06
+    INCLUDE(${ROOT_USE_FILE})
+ENDIF()
+
+
 # install python stuff (for out-of-source-build)
 INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/src/python/" DESTINATION python )
 INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/examples/python/" DESTINATION python/examples )
+# install executable python utilities
+IF( BUILD_ROOTDICT )
+  INSTALL( PROGRAMS "${PROJECT_SOURCE_DIR}/examples/python/anajob.py" TYPE BIN RENAME anajob)
+ENDIF()
 
 
 # JAVA (needed to generate c++ headers)
@@ -97,14 +109,6 @@ if( INSTALL_JAR OR LCIO_GENERATE_HEADERS)
       "set INSTALL_JAR AND LCIO_GENERATE_HEADERS to OFF for C++ only build" )
   ENDIF()
 endif()
-
-
-# ROOT
-OPTION( BUILD_ROOTDICT "Set to ON to build ROOT dictionary" OFF )
-IF( BUILD_ROOTDICT )
-    FIND_PACKAGE( ROOT 6.04 REQUIRED ) # look for ROOT versions >= 5.27.06
-    INCLUDE(${ROOT_USE_FILE})
-ENDIF()
 
 
 # DCAP
