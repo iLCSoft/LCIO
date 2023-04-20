@@ -17,10 +17,9 @@ namespace UTIL{
 
   void CheckCollections::checkFile( const std::string& fileName ){
 
-    MT::LCReader lcReader(0) ; 
-
+    MT::LCReader lcReader(MT::LCReader::directAccess) ; 
     lcReader.open( fileName ) ;
-
+  
     //----------- the event loop -----------
     while( const auto evt = lcReader.readNextEventHeader() ) {
       
@@ -33,8 +32,23 @@ namespace UTIL{
 	if( it == _map.end() ){
 
 	  auto col = evt->getCollection( name ) ;
-
-	  const auto[ itx, inserted] = _map.emplace( name,  std::make_pair( col->getTypeName() , 0 )  )   ;
+    std::string typeString;
+    if (col->getTypeName() == "LCRelation"){     
+      lcReader.setReadCollectionNames({name});
+      
+      auto fullEvt = lcReader.readEvent(evt->getRunNumber(), evt->getEventNumber());
+      lcReader.setReadCollectionNames({});
+      auto fullcol = fullEvt->getCollection( name ) ;
+      const auto& params = fullcol->getParameters();
+      const auto& fromType = params.getStringVal("FromType");
+      const auto& toType = params.getStringVal("ToType");
+      
+      typeString = "LCRelation["+fromType+","+toType+"]";
+    }
+    else {
+      typeString = col->getTypeName();
+    }
+	  const auto[ itx, inserted] = _map.emplace( name,  std::make_pair( std::move(typeString) , 0 )  ) ;
 
 	  it = itx ;
 	}
@@ -77,8 +91,22 @@ namespace UTIL{
 	evt->getCollection( c.first ) ;
 
       } catch( EVENT::DataNotAvailableException& e) {
+      size_t relation = c.second.find('[');
+      if (relation == std::string::npos){
+	      evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
+        }
+      else{
+        size_t delim = c.second.find(',');
+        std::string from = c.second.substr(relation+1, delim-relation-1);
+        std::string to = c.second.substr(delim+1, c.second.size()-delim-2);
+        std::string typeName = c.second.substr(0, relation);
+        auto relationColl = new IMPL::LCCollectionVec(typeName);
+        auto& params = relationColl->parameters();
 
-	evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
+        params.setValue("FromType",from);
+        params.setValue("ToType",to);
+        evt->addCollection( relationColl, c.first ) ;
+      }
       }
     }
   }
