@@ -9,13 +9,13 @@
 
 namespace UTIL{
 
-  void CheckCollections::checkFiles( const std::vector<std::string>& fileNames ){
+  void CheckCollections::checkFiles( const std::vector<std::string>& fileNames ,bool minimal ){
 
     for( auto n : fileNames )
-      checkFile( n ) ;
+      checkFile( n ,minimal) ;
   }
 
-  void CheckCollections::checkFile( const std::string& fileName ){
+  void CheckCollections::checkFile( const std::string& fileName ,bool minimal){
 
     MT::LCReader lcReader(MT::LCReader::directAccess) ; 
     lcReader.open( fileName ) ;
@@ -45,8 +45,10 @@ namespace UTIL{
       const auto& params = fullcol->getParameters();
       const auto& fromType = params.getStringVal("FromType");
       const auto& toType = params.getStringVal("ToType");
-      if (fromType == ""|| toType == ""){
-        std::cout<< "WARNING! : Realtion " << name <<" does not have the 'fromType' and 'toType' set."<<std::endl;
+      if (minimal == false){
+        if (fromType == ""|| toType == ""){
+          std::cout<< "WARNING! : Realtion " << name <<" does not have the 'fromType' and 'toType' set."<<std::endl;
+        }
       }
       typeString = "LCRelation["+fromType+","+toType+"]";
     }
@@ -118,33 +120,34 @@ namespace UTIL{
   }
 
   
-  void CheckCollections::print(  std::ostream& os ) const {
+  void CheckCollections::print(  std::ostream& os ,bool minimal) const {
 
     unsigned width = 50 ;
-
+    if (minimal == false){
     os << " ================================================================ " << std::endl ;
     os << std::endl <<  "  " <<  _nEvents << " events read " << std::endl  ;
     os << "     collections that are not in all events :  [# events where col is present]" << std::endl ;
     os << " ================================================================ " << std::endl ;
-    
+    }
     for(auto e : _map ){
       
       if( e.second.second != _nEvents )
 	os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << " [" <<  e.second.second << "]"<< std::endl ;
     }
-    
+    if (minimal == false){
     os << " ================================================================ " << std::endl ;
     os << "     collections that are in all events : " << std::endl ;
     os << " ================================================================ " << std::endl ;
-    
+    }
     
     for(auto e : _map ){
       
       if( e.second.second == _nEvents )
 	os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << "  [" <<  e.second.second << "]"<< std::endl ;
     }
+    if (minimal == false){
     os << " ================================================================ " << std::endl ;
-
+    }
   }
 
 }

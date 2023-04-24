@@ -31,15 +31,15 @@ namespace UTIL {
 
     /** Checks the file for missing collections - can be called repeadedly on different files.
      */
-    void checkFile( const std::string& fileName ) ;
+    void checkFile( const std::string& fileName ,bool minimal= false) ;
 
     /** Checks all files for missing collections.
      */
-    void checkFiles( const std::vector<std::string>& fileNames ) ;
+    void checkFiles( const std::vector<std::string>& fileNames ,bool minimal= false) ;
 
     
     /** dump result of check to stream */
-    void print(  std::ostream& os ) const ;
+    void print(  std::ostream& os ,bool minimal= false) const ;
     
 
     /** Returns the collections that are not present in all events checked with checkFiles() with their names and types.
