@@ -31,9 +31,9 @@ namespace UTIL{
 	if( it == _map.end() ){
 
 	  auto col = evt->getCollection( name ) ;
-    /* If the type of a collection is LCRelation we use want to read the entire collections instead of just the header to get the 'toType' and 'fromType'.  
-    * setReadCollectionNames({name}) allows reading of onlz certain colloctions by name instead of an entire event.
-    * This flag has to be unset after reading in order for the reading of the headers to function.
+    /* If the type of a collection is LCRelation we want to read the entire collections instead of just the header to get the 'ToType' and 'FromType'.  
+    * setReadCollectionNames({name}) allows reading of only certain collections by name instead of an entire event.
+    * This flag has to be unset after reading in order for the reading of the headers to function properly.
     */
     std::string typeString;
     if (col->getTypeName() == "LCRelation"){     
