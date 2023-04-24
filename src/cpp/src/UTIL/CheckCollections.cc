@@ -19,7 +19,6 @@ namespace UTIL{
 
     MT::LCReader lcReader(MT::LCReader::directAccess) ; 
     lcReader.open( fileName ) ;
-  
     //----------- the event loop -----------
     while( const auto evt = lcReader.readNextEventHeader() ) {
       
@@ -32,6 +31,10 @@ namespace UTIL{
 	if( it == _map.end() ){
 
 	  auto col = evt->getCollection( name ) ;
+    /* If the type of a collection is LCRelation we use want to read the entire collections instead of just the header to get the 'toType' and 'fromType'.  
+    * setReadCollectionNames({name}) allows reading of onlz certain colloctions by name instead of an entire event.
+    * This flag has to be unset after reading in order for the reading of the headers to function.
+    */
     std::string typeString;
     if (col->getTypeName() == "LCRelation"){     
       lcReader.setReadCollectionNames({name});
@@ -42,7 +45,9 @@ namespace UTIL{
       const auto& params = fullcol->getParameters();
       const auto& fromType = params.getStringVal("FromType");
       const auto& toType = params.getStringVal("ToType");
-      
+      if (fromType == ""|| toType == ""){
+        std::cout<< "WARNING! : Realtion " << name <<" does not have the 'fromType' and 'toType' set."<<std::endl;
+      }
       typeString = "LCRelation["+fromType+","+toType+"]";
     }
     else {
@@ -91,21 +96,22 @@ namespace UTIL{
 	evt->getCollection( c.first ) ;
 
       } catch( EVENT::DataNotAvailableException& e) {
-      size_t relation = c.second.find('[');
-      if (relation == std::string::npos){
+      
+      if (c.second.size()> 11){
+      if (c.second[10] != '['){
 	      evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
         }
       else{
         size_t delim = c.second.find(',');
-        std::string from = c.second.substr(relation+1, delim-relation-1);
+        std::string from = c.second.substr(11, delim-11);
         std::string to = c.second.substr(delim+1, c.second.size()-delim-2);
-        std::string typeName = c.second.substr(0, relation);
-        auto relationColl = new IMPL::LCCollectionVec(typeName);
+        auto relationColl = new IMPL::LCCollectionVec("LCRelation");
         auto& params = relationColl->parameters();
 
         params.setValue("FromType",from);
         params.setValue("ToType",to);
         evt->addCollection( relationColl, c.first ) ;
+      }
       }
       }
     }
