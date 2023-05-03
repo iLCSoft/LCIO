@@ -14,35 +14,45 @@ static std::vector<std::string> FILEN ;
 int main(int argc, char** argv ){
 
   // read file names from command line (only argument) 
+  bool minimal = false ;
   if( argc < 2) {
-    std::cout << " usage:  check_missing_cols <input-file1> [[input-file2],...]" << std::endl << std::endl ;
+    std::cout << " usage:  check_missing_cols [--minimal] <input-file1> [[input-file2],...]" << std::endl << std::endl ;
     exit(1) ;
   }
   for(int i=1 ; i < argc ; i++){
+      if (argv[i] == std::string("--minimal")){
+        minimal = true ;
+        continue ;
+      }
+
       FILEN.push_back( argv[i] )  ;
   }
   int nFiles = argc-1 ;
+  if (minimal == true){
+    nFiles --;
+  }
   
-  MT::LCReader lcReader(0) ; 
-  
-  std::cout << "patch_events:  will open and read from files: " << std::endl ;  
-
-  for(int i=0 ; i < nFiles ; i++){
-
-    lcReader.open( FILEN[i] ) ;
+  if (minimal == false){
+    MT::LCReader lcReader(0) ; 
     
-    std::cout  << std::endl <<  "     "  << FILEN[i] 
-	  <<       " [ nEvt = "  <<  lcReader.getNumberOfEvents() << " ] "
-	  << std::endl ; 
-    
-    lcReader.close() ;
-  }  
+    std::cout << "patch_events:  will open and read from files: " << std::endl ;  
 
+    for(int i=0 ; i < nFiles ; i++){
+
+      lcReader.open( FILEN[i] ) ;
+      
+      std::cout  << std::endl <<  "     "  << FILEN[i] 
+      <<       " [ nEvt = "  <<  lcReader.getNumberOfEvents() << " ] "
+      << std::endl ; 
+      
+      lcReader.close() ;
+    }  
+  }
   UTIL::CheckCollections colCheck ;
   
-  colCheck.checkFiles( FILEN ) ;
+  colCheck.checkFiles( FILEN ,minimal) ;
 
-  colCheck.print( std::cout ) ;
+  colCheck.print( std::cout ,minimal) ;
   
 
   return 0 ;
