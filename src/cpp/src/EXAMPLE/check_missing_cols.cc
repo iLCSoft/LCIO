@@ -16,7 +16,7 @@ int main(int argc, char** argv ){
   // read file names from command line (only argument) 
   bool minimal = false ;
   if( argc < 2) {
-    std::cout << " usage:  check_missing_cols <input-file1> [[input-file2],...]" << std::endl << std::endl ;
+    std::cout << " usage:  check_missing_cols [--minimal] <input-file1> [[input-file2],...]" << std::endl << std::endl ;
     exit(1) ;
   }
   for(int i=1 ; i < argc ; i++){

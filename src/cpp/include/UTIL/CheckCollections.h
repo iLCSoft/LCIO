@@ -30,12 +30,12 @@ namespace UTIL {
     virtual ~CheckCollections() = default ;
 
     /** Checks the file for missing collections - can be called repeadedly on different files.
-    The quit flag makes this function not produce any output.
+    The quiet flag makes this function not produce any output.
      */
     void checkFile( const std::string& fileName ,bool quiet= false) ;
 
     /** Checks all files for missing collections.
-    The quit flag makes this function not produce any output.
+    The quiet flag makes this function not produce any output.
      */
     void checkFiles( const std::vector<std::string>& fileNames ,bool quiet= false) ;
 
