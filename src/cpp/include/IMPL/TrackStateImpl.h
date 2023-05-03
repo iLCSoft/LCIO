@@ -35,7 +35,7 @@ namespace IMPL {
 
     
     /// Destructor.
-    virtual ~TrackStateImpl() ; 
+    virtual ~TrackStateImpl() = default;
     
 
     virtual int id() const { return simpleUID() ; }

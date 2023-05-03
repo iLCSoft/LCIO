@@ -27,7 +27,7 @@ class TrackState : public LCObject {
 
 public: 
     /// Destructor.
-    virtual ~TrackState() { /* nop */; }
+    virtual ~TrackState() = default;
 
 
     /** Useful typedef for template programming with LCIO */

@@ -169,7 +169,11 @@ IF( BUILD_ROOTDICT )
     SET_TESTS_PROPERTIES( t_root_anajob PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
     SET_TESTS_PROPERTIES( t_root_writeTree PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
     SET_TESTS_PROPERTIES( t_root_writeEventTree PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
-    SET_TESTS_PROPERTIES( t_root_readEventTree PROPERTIES PASS_REGULAR_EXPRESSION "50 events read from file" )
+    SET_TESTS_PROPERTIES( t_root_readEventTree
+      PROPERTIES
+      PASS_REGULAR_EXPRESSION "50 events read from file"
+      DEPENDS t_root_writeEventTree
+      )
 
 ENDIF()
 

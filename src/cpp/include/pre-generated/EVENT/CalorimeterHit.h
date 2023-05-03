@@ -35,7 +35,7 @@ class CalorimeterHit : public LCObject {
 
 public: 
     /// Destructor.
-    virtual ~CalorimeterHit() { /* nop */; }
+    virtual ~CalorimeterHit() = default;
 
 
     /** Useful typedef for template programming with LCIO */
