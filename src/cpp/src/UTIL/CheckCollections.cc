@@ -9,13 +9,13 @@
 
 namespace UTIL{
 
-  void CheckCollections::checkFiles( const std::vector<std::string>& fileNames ,bool quiet ){
+  void CheckCollections::checkFiles( const std::vector<std::string>& fileNames, bool quiet){
 
     for( auto n : fileNames )
       checkFile( n ,quiet) ;
   }
 
-  void CheckCollections::checkFile( const std::string& fileName ,bool quiet){
+  void CheckCollections::checkFile( const std::string& fileName, bool quiet){
 
     MT::LCReader lcReader(MT::LCReader::directAccess) ; 
     lcReader.open( fileName ) ;
@@ -31,16 +31,18 @@ namespace UTIL{
 	if( it == _map.end() ){
 
 	  auto col = evt->getCollection( name ) ;
-    /* If the type of a collection is LCRelation we want to read the entire collections instead of just the header to get the 'ToType' and 'FromType'.  
-    * setReadCollectionNames({name}) allows reading of only certain collections by name instead of an entire event.
-    * This flag has to be unset after reading in order for the reading of the headers to function properly.
-    */
+    // If the type of a collection is LCRelation we want to read the entire
+    //  collections instead of just the header to get the 'ToType' and
+    //  'FromType'. setReadCollectionNames({name}) allows reading of only
+    //  certain collections by name instead of an entire event. This flag has to
+    //  be unset after reading in order for the reading of the headers to
+    //  function properly.
     std::string typeString;
     if (col->getTypeName() == "LCRelation"){     
       lcReader.setReadCollectionNames({name});
-      
       auto fullEvt = lcReader.readEvent(evt->getRunNumber(), evt->getEventNumber());
       lcReader.setReadCollectionNames({});
+
       auto fullcol = fullEvt->getCollection( name ) ;
       const auto& params = fullcol->getParameters();
       const auto& fromType = params.getStringVal("FromType");
