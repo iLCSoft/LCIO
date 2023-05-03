@@ -89,32 +89,46 @@ namespace UTIL{
     return s ;
   }  
 
+  // Obtain the from and to type from the encoded "LCRelation[From,To]"
+  std::tuple<std::string_view, std::string_view> getToFromType(const std::string_view fullType) {
+    auto delim = fullType.find(',');
+    constexpr auto prefixLen = 11u; // length of "LCRelation["
+
+    return {fullType.substr(prefixLen, delim - prefixLen),
+            fullType.substr(delim + 1, fullType.size() - delim - 2)}; // need to strip final "]" as well
+  }
+
   void CheckCollections::patchCollections(EVENT::LCEvent* evt ) const {
 
     for(auto c : _patchCols ){
 
       try{
-
-	evt->getCollection( c.first ) ;
-
+        auto* coll = evt->getCollection( c.first ) ;
+        // For LCRelations we still have to check whether the FromType and
+        // ToType are set and correct in case they are not
+        if (coll->getTypeName() == "LCRelation") {
+          auto& params = coll->parameters();
+          if (params.getStringVal("FromType").empty() || params.getStringVal("ToType").empty()) {
+            const auto [from, to] = getToFromType(c.second);
+            params.setValue("FromType", std::string(from));
+            params.setValue("ToType", std::string(to));
+          }
+        }
       } catch( EVENT::DataNotAvailableException& e) {
       //10 is the length of the String LCRelation after which the bracket is and the "ToType" and "FromType" start.
-      if (c.second.size()> 10){
-      if (c.second[10] != '['){
-	      evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
-        }
-      else{
-        size_t delim = c.second.find(',');
-        std::string from = c.second.substr(11, delim-11);
-        std::string to = c.second.substr(delim+1, c.second.size()-delim-2);
-        auto relationColl = new IMPL::LCCollectionVec("LCRelation");
-        auto& params = relationColl->parameters();
+        if (c.second.size() > 10) {
+          if (c.second[10] != '[') {
+            evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
+          } else{
+            auto relationColl = new IMPL::LCCollectionVec("LCRelation");
+            auto& params = relationColl->parameters();
 
-        params.setValue("FromType",from);
-        params.setValue("ToType",to);
-        evt->addCollection( relationColl, c.first ) ;
-      }
-      }
+            const auto [from, to] = getToFromType(c.second);
+            params.setValue("FromType", std::string(from));
+            params.setValue("ToType", std::string(to));
+            evt->addCollection( relationColl, c.first ) ;
+          }
+        }
       }
     }
   }
