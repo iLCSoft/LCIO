@@ -100,7 +100,7 @@ namespace UTIL{
 
   void CheckCollections::patchCollections(EVENT::LCEvent* evt ) const {
 
-    for(auto c : _patchCols ){
+    for(const auto& c : _patchCols ){
 
       try{
         auto* coll = evt->getCollection( c.first ) ;
