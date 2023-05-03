@@ -47,7 +47,7 @@ namespace UTIL{
       const auto& toType = params.getStringVal("ToType");
       if (quiet == false){
         if (fromType == ""|| toType == ""){
-          std::cout<< "WARNING! : Realtion " << name <<" does not have the 'fromType' and 'toType' set."<<std::endl;
+          std::cout<< "WARNING! : Relation " << name <<" does not have the 'fromType' and 'toType' set."<<std::endl;
         }
       }
       typeString = "LCRelation["+fromType+","+toType+"]";
