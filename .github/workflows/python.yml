@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   python-lint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         LCG: ["LCG_98/x86_64-centos7-gcc10-opt"]
