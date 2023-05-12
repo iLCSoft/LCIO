@@ -117,19 +117,17 @@ namespace UTIL{
           }
         }
       } catch( EVENT::DataNotAvailableException& e) {
-      //10 is the length of the String LCRelation after which the bracket is and the "ToType" and "FromType" start.
-        if (c.second.size() > 10) {
-          if (c.second[10] != '[') {
-            evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
-          } else{
-            auto relationColl = new IMPL::LCCollectionVec("LCRelation");
-            auto& params = relationColl->parameters();
+        //10 is the length of the String LCRelation after which the bracket is and the "ToType" and "FromType" start.
+        if (c.second.size() > 10 && c.second[10] == '[') {
+          auto relationColl = new IMPL::LCCollectionVec("LCRelation");
+          auto& params = relationColl->parameters();
 
-            const auto [from, to] = getToFromType(c.second);
-            params.setValue("FromType", std::string(from));
-            params.setValue("ToType", std::string(to));
-            evt->addCollection( relationColl, c.first ) ;
-          }
+          const auto [from, to] = getToFromType(c.second);
+          params.setValue("FromType", std::string(from));
+          params.setValue("ToType", std::string(to));
+          evt->addCollection( relationColl, c.first ) ;
+        } else {
+          evt->addCollection( new IMPL::LCCollectionVec(c.second), c.first ) ;
         }
       }
     }
