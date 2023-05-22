@@ -26,9 +26,6 @@ typedef std::vector<TrackState*> TrackStateVec ;
 class TrackState : public LCObject {
 
 public: 
-    /// Destructor.
-    virtual ~TrackState() = default;
-
 
     /** Useful typedef for template programming with LCIO */
     typedef TrackState lcobject_type ;
