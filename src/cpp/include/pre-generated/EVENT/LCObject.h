@@ -33,6 +33,10 @@ public:
     /// Destructor.
     virtual ~LCObject() = default;
 
+    LCObject() = default ;
+    LCObject(LCObject const&) = default ;
+    LCObject& operator=(LCObject const&) = default ;
+
     /** Returns an object id for internal (debugging) use in LCIO.
      */
     virtual int id() const = 0;
