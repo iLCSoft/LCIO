@@ -255,7 +255,7 @@ endif()
 
 FIND_PACKAGE( CLHEP QUIET )
 IF( CLHEP_FOUND )
-    INCLUDE_DIRECTORIES( ${CLHEP_INCLUDE_DIRS} ) 
+    INCLUDE_DIRECTORIES( SYSTEM ${CLHEP_INCLUDE_DIRS} )
     ADD_LCIO_TEST( test_fourvector) 
 ELSE()
     MESSAGE( STATUS "cannot build test_fourvector: clhep not found" )
