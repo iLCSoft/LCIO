@@ -16,6 +16,7 @@ namespace SIO {
 
     RunEvent() = default ;
     RunEvent(RunEvent const&) = default ;
+    RunEvent(RunEvent&&) = default ;
     RunEvent& operator=(RunEvent const&) = default ;
     ~RunEvent() = default ;
     RunEvent(int run, int evt): RunNum( run ), EvtNum( evt ) {}
