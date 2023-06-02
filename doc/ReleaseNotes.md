@@ -1,3 +1,34 @@
+# v02-20
+
+* 2023-05-30 Andre Sailer ([PR#168](https://github.com/iLCSoft/LCIO/pull/168))
+  - Pregenerated Headers: remove self-include from some headers (breaks include-what-you-use)
+  - LCIterator, LCRTRelations: remove template syntax causing errors in gcc13/c++20
+  - RunEvent, LCObject, TrackStateImpl: added default copy and move constructor and assignment operator to avoid error about "'definition of implicit copy constructor for 'LCObject' is deprecated because it has a user-declared destructor'"
+
+* 2023-05-12 tmadlener ([PR#167](https://github.com/iLCSoft/LCIO/pull/167))
+  - Fix checking of collection types to make sure patching works correctly
+
+* 2023-05-03 Thomas Madlener ([PR#166](https://github.com/iLCSoft/LCIO/pull/166))
+  - Upgrade `python-lint` workflow to run on `ubuntu-lates` since `ubuntu-18.04` runners have been removed.
+
+* 2023-05-03 Finn Johannsen ([PR#165](https://github.com/iLCSoft/LCIO/pull/165))
+  - Fixes to the on the fly collection patching that are necessary for the LCIO to EDM4hep standalone conversion.
+    - Make `CheckCollections` check the `FromType` and `ToType` collection parameters to figure out the involved types for `LCRelations`. Add them to the output of `CheckCollections::print`
+    - Make the `CheckCollectoins::patchCollections` parse these strings back for `LCRelation` collections and set them as collection parameters for collections it creates on the fly.
+    - Add a `--minimal` flag to `check_missing_cols` in order to make it possible to produce outputs that can be more easily consumbed by other programs.
+
+* 2023-05-03 Thomas Madlener ([PR#164](https://github.com/iLCSoft/LCIO/pull/164))
+  - Add Key4hep release based CI workflow
+  - Fix remaining warnings to enable `-Werror`
+  - Update *checkout* action to v3, since v2 is deprecated. 
+  - **CLHEP >= 2.0** is now required for building the examples that use CLHEP functionality (`test_fourvector`).
+
+* 2023-02-10 jmcarcell ([PR#162](https://github.com/iLCSoft/LCIO/pull/162))
+  - Add test dependencies so that tests can run in parallel
+
+* 2023-02-10 jmcarcell ([PR#161](https://github.com/iLCSoft/LCIO/pull/161))
+  - Remove the deprecated C API and fortran bindings (c.f. [#137](https://github.com/iLCSoft/LCIO/pull/137) and [#151](https://github.com/iLCSoft/LCIO/issues/151))
+
 # v02-19-01
 
 * 2023-02-06 Bohdan Dudar ([PR#163](https://github.com/iLCSoft/LCIO/pull/163))
