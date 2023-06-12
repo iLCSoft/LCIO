@@ -1,0 +1,7 @@
+#!/bin/bash
+
+dumpmctree-dot ${@}
+
+rm -f dumpmctree.svg
+dot -Tsvg dumpmctree_tmp.dot > dumpmctree.svg 
+xdg-open dumpmctree.svg
