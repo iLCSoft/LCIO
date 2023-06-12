@@ -91,13 +91,13 @@ namespace UTIL {
      *  The required signature is float(float weight) which returns recalculated weight.
      */
     template <typename DecodeF = decltype(identity) >
-    std::tuple<const EVENT::LCObject*, float> getRelatedToMaxWeightAndObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
+    std::tuple<float, const EVENT::LCObject*> getRelatedToMaxWeightAndObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
         const auto& objects = getRelatedToObjects(from);
-        if ( objects.empty() ) return std::make_tuple(nullptr, 0.);
+        if ( objects.empty() ) return std::make_tuple(0., nullptr);
 
         const auto& weights = getRelatedToWeights(from);
         size_t i = getMaxWeightIdx(weights, decode);
-        return std::make_tuple(objects[i], decode(weights[i]));
+        return std::make_tuple(decode(weights[i]), objects[i]);
     }
 
 
@@ -110,13 +110,13 @@ namespace UTIL {
      *  The required signature is float(float weight) which returns recalculated weight.
      */
     template <typename DecodeF = decltype(identity) >
-    std::tuple<EVENT::LCObject*, float> getRelatedFromMaxWeightAndObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
+    std::tuple<float, EVENT::LCObject*> getRelatedFromMaxWeightAndObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
         const auto& objects = getRelatedFromObjects(to);
-        if ( objects.empty() ) return std::make_tuple(nullptr, 0.);
+        if ( objects.empty() ) return std::make_tuple(0., nullptr);
 
         const auto& weights = getRelatedFromWeights(to);
         size_t i = getMaxWeightIdx(weights, decode);
-        return std::make_tuple(objects[i], decode(weights[i]));
+        return std::make_tuple(decode(weights[i]), objects[i]);
     }
 
 
@@ -130,7 +130,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
-      return std::get<0>(getRelatedToMaxWeightAndObject(from, decode));
+      return std::get<1>(getRelatedToMaxWeightAndObject(from, decode));
     }
 
 
@@ -144,7 +144,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
-      return std::get<0>(getRelatedFromMaxWeightAndObject(to, decode));
+      return std::get<1>(getRelatedFromMaxWeightAndObject(to, decode));
     }
 
 
@@ -158,7 +158,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     float getRelatedToMaxWeight(EVENT::LCObject* from, DecodeF&& decode = identity ) const {
-      return std::get<1>(getRelatedToMaxWeightAndObject(from, decode));
+      return std::get<0>(getRelatedToMaxWeightAndObject(from, decode));
     }
 
     /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given to-object is related to.
@@ -171,7 +171,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     float getRelatedFromMaxWeight(EVENT::LCObject* to, DecodeF&& decode = identity ) const {
-      return std::get<1>(getRelatedFromMaxWeightAndObject(to, decode));
+      return std::get<0>(getRelatedFromMaxWeightAndObject(to, decode));
     }
 
     /** Adds a relation. If there is already an existing relation between the two given objects
