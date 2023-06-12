@@ -1,26 +1,19 @@
-#include "lcio.h"
-#include "IO/LCReader.h"
-#include "IMPL/LCTOOLS.h"
 #include "EVENT/LCCollection.h"
 #include "EVENT/MCParticle.h"
+#include "EVENT/LCEvent.h"
 
-// #include "EVENT/LCRunHeader.h" 
-
-// #include "EVENT/SimCalorimeterHit.h" 
-// #include "EVENT/CalorimeterHit.h" 
-// #include "EVENT/RawCalorimeterHit.h" 
-
-// #include "UTIL/CellIDDecoder.h"
-
-// #include <cstdlib>
+#include "IO/LCReader.h"
+#include "IOIMPL/LCFactory.h"
 
 #include <cmath>
 #include <getopt.h>
-#include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <algorithm>
-using namespace lcio ;
+
+using namespace EVENT;
+using namespace IO;
+using IOIMPL::LCFactory;
 
 const static std::map<int, std::string> pdg2strMap ={
     {91, "Cluster"},
@@ -629,7 +622,7 @@ bool isBeforeHadronisation(MCParticle* mc){
     return false;
 }
 
-bool isAfterHadronization(EVENT::MCParticle* mc){
+bool isAfterHadronization(MCParticle* mc){
     if ( mc->getPDG() == 92 || mc->getPDG() == 91 || mc->getPDG() == 94 ) return true;
     const std::vector<MCParticle*> parents = mc->getParents();
     for(auto parent : parents){
@@ -656,7 +649,7 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
         std::cout<<"No MCParticles collection found"<<std::endl;
         return;
     }
-    LCCollection* mcCol = event->getCollection(mcColName);
+    EVENT::LCCollection* mcCol = event->getCollection(mcColName);
 
     //get interaction point
     MCParticle* mc0 = static_cast<MCParticle*> (mcCol->getElementAt(0));
