@@ -130,12 +130,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     const EVENT::LCObject* getRelatedToMaxWeightObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
-        const auto& objects = getRelatedToObjects(from);
-        if ( objects.empty() ) return nullptr;
-
-        const auto& weights = getRelatedToWeights(from);
-        size_t i = getMaxWeightIdx(weights, decode);
-        return objects[i];
+      return std::get<0>(getRelatedToMaxWeightAndObject(from, decode));
     }
 
 
@@ -149,12 +144,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     const EVENT::LCObject* getRelatedFromMaxWeightObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
-        const auto& objects = getRelatedFromObjects(to);
-        if ( objects.empty() ) return nullptr;
-
-        const auto& weights = getRelatedFromWeights(to);
-        size_t i = getMaxWeightIdx(weights, decode);
-        return objects[i];
+      return std::get<0>(getRelatedFromMaxWeightAndObject(to, decode));
     }
 
 
@@ -168,12 +158,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     float getRelatedToMaxWeight(EVENT::LCObject* from, DecodeF&& decode = identity ) const {
-        const auto& objects = getRelatedToObjects(from);
-        if ( objects.empty() ) return 0.;
-
-        const auto& weights = getRelatedToWeights(from);
-        size_t i = getMaxWeightIdx(weights, decode);
-        return decode(weights[i]);
+      return std::get<1>(getRelatedToMaxWeightAndObject(from, decode));
     }
 
     /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given to-object is related to.
@@ -186,12 +171,7 @@ namespace UTIL {
      */
     template <typename DecodeF = decltype(identity) >
     float getRelatedFromMaxWeight(EVENT::LCObject* to, DecodeF&& decode = identity ) const {
-        const auto& objects = getRelatedFromObjects(to);
-        if ( objects.empty() ) return 0.;
-
-        const auto& weights = getRelatedFromWeights(to);
-        size_t i = getMaxWeightIdx(weights, decode);
-        return decode(weights[i]);
+      return std::get<1>(getRelatedFromMaxWeightAndObject(to, decode));
     }
 
     /** Adds a relation. If there is already an existing relation between the two given objects
