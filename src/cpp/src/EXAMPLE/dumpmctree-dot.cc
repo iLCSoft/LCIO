@@ -634,7 +634,6 @@ bool isAfterHadronization(MCParticle* mc){
 void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOverlay){
     // initialize maps to store variables attached to the MC particles
     std::map<MCParticle*, int> p2idx;
-    std::map<MCParticle*, bool> p2parton;
 
     const std::vector<std::string>* colNames = event->getCollectionNames();
     std::string mcColName;
@@ -658,7 +657,6 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
     for(int i=0; i< mcCol->getNumberOfElements(); ++i){
         MCParticle* mc = static_cast<MCParticle*> (mcCol->getElementAt(i));
         p2idx[mc] = i;
-        p2parton[mc] = isBeforeHadronisation(mc);
     }
 
     //fill the stringstream content for the dot file
@@ -667,21 +665,22 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 
     auto isRejected = [&](MCParticle* mc) ->  bool {
         bool rejected = false;
+        bool isParton = isBeforeHadronisation(mc);
         if ( !drawSimulated && !drawOverlay && !drawParton ){
             //Ignore simulated and overlay particles or particles above hadronisation (excluding hadronisation string/cluster itself)
-            rejected = mc->isCreatedInSimulation() || mc->isOverlay() || (p2parton[mc] && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
+            rejected = mc->isCreatedInSimulation() || mc->isOverlay() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
         }
         else if( drawSimulated && !drawOverlay && !drawParton ){
-            rejected = mc->isOverlay() || (p2parton[mc] && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
+            rejected = mc->isOverlay() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
         }
         else if( !drawSimulated && drawOverlay && !drawParton ){
-            rejected = mc->isCreatedInSimulation() || (p2parton[mc] && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
+            rejected = mc->isCreatedInSimulation() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
         }
         else if ( !drawSimulated && !drawOverlay && drawParton ){
             rejected = mc->isCreatedInSimulation() || mc->isOverlay();
         }
         else if ( drawSimulated && drawOverlay && !drawParton ){
-            rejected = p2parton[mc] && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) ;
+            rejected = isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) ;
         }
         else if ( drawSimulated && !drawOverlay && drawParton ){
             rejected = mc->isOverlay();
@@ -719,7 +718,7 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
         double pt = std::hypot( mc->getMomentum()[0], mc->getMomentum()[1] );
         double pz = mc->getMomentum()[2];
         labels<<p2idx[mc]<<"[label=<"<<label<<"<BR/>"<<std::fixed<<std::setprecision(2)<<dToIP<<" mm<BR/>"<<pt<<" | "<<pz<<" GeV"<<">";
-        if ( p2parton[mc] ) labels<<" style=\"filled\" fillcolor=\"burlywood4\"";
+        if ( isBeforeHadronisation(mc) ) labels<<" style=\"filled\" fillcolor=\"burlywood4\"";
         else if ( mc->isOverlay() && mc->isCreatedInSimulation() ) labels<<" style=\"filled\" fillcolor=\"darkorange4\"";
         else if ( mc->isOverlay() ) labels<<" style=\"filled\" fillcolor=\"dimgray\"";
         else if ( mc->isCreatedInSimulation() ) labels<<" style=\"filled\" fillcolor=\"darkorange\"";
