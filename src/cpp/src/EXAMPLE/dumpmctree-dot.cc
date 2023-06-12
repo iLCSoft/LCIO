@@ -624,8 +624,7 @@ bool isBeforeHadronisation(MCParticle* mc){
 
 bool isAfterHadronization(MCParticle* mc){
     if ( mc->getPDG() == 92 || mc->getPDG() == 91 || mc->getPDG() == 94 ) return true;
-    const std::vector<MCParticle*> parents = mc->getParents();
-    for(auto parent : parents){
+    for(auto parent : mc->getParents()){
         if ( isAfterHadronization(parent) ) return true;
     }
     return false;
