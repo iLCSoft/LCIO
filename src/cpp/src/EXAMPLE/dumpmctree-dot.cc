@@ -624,7 +624,7 @@ bool isBeforeHadronisation(MCParticle* mc){
 
 bool isAfterHadronization(MCParticle* mc){
     if ( mc->getPDG() == 92 || mc->getPDG() == 91 || mc->getPDG() == 94 ) return true;
-    for(auto parent : mc->getParents()){
+    for( auto parent : mc->getParents() ){
         if ( isAfterHadronization(parent) ) return true;
     }
     return false;
