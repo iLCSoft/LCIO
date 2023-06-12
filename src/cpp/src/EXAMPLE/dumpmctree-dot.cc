@@ -742,16 +742,11 @@ constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] filename 
 constexpr static auto help = R"HELP(
 OPTIONS:
     -s:             Draw particles created in simulation highlighted in orange
-
     -p:             Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
                     E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood
-
     -o:             Draw overlay particles. Highlighted in gray
-
-
 INPUT:
     filename:       input slcio file with an event to draw
-
     eventNumber:    event number to draw
 )HELP";
 

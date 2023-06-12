@@ -1,7 +1,10 @@
 #!/bin/bash
 
+
 if $(dirname "$0")/dumpmctree-dot ${@}; then
-    rm -f dumpmctree.svg
+    if [ -f dumpmctree.svg ]; then
+        mv -f dumpmctree.svg dumpmctree.svg.bkp
+    fi
     dot -Tsvg dumpmctree_tmp.dot > dumpmctree.svg 
     xdg-open dumpmctree.svg
 fi
