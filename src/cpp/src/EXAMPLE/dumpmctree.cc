@@ -642,11 +642,7 @@ bool isAfterHadronization(EVENT::MCParticle* mc){
 void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOverlay){
     // initialize maps to store variables attached to the MC particles
     std::map<MCParticle*, int> p2idx;
-    std::map<MCParticle*, bool> p2hadronization;
     std::map<MCParticle*, bool> p2parton;
-    std::map<MCParticle*, double> p2distance;
-    std::map<MCParticle*, double> p2pt;
-    std::map<MCParticle*, double> p2pz;
 
     const std::vector<std::string>* colNames = event->getCollectionNames();
     std::string mcColName;
@@ -670,11 +666,7 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
     for(int i=0; i< mcCol->getNumberOfElements(); ++i){
         MCParticle* mc = static_cast<MCParticle*> (mcCol->getElementAt(i));
         p2idx[mc] = i;
-        p2distance[mc] = std::hypot( mc->getVertex()[0]-ip[0], mc->getVertex()[1]-ip[1], mc->getVertex()[2]-ip[2] );
-        p2pt[mc] = std::hypot( mc->getMomentum()[0], mc->getMomentum()[1] );
-        p2pz[mc] = mc->getMomentum()[2];
         p2parton[mc] = isBeforeHadronisation(mc);
-        p2hadronization[mc] = isAfterHadronization(mc);
     }
 
     //fill the stringstream content for the dot file
@@ -725,13 +717,16 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 
         int pdg = mc->getPDG();
         std::string label;
-        if ( auto it = pdg2strMap.find(pdg) ; it != pdg2strMap.end() ){
+        if ( auto it = pdg2strMap.find(pdg); it != pdg2strMap.end() ){
             label = it->second;
         }
         else{
             label = std::to_string(pdg);
         }
-        labels<<p2idx[mc]<<"[label=<"<<label<<"<BR/>"<<std::fixed<<std::setprecision(2)<<p2distance[mc]<<" mm<BR/>"<<p2pt[mc]<<" | "<<p2pz[mc]<<" GeV"<<">";
+        double dToIP = std::hypot( mc->getVertex()[0]-ip[0], mc->getVertex()[1]-ip[1], mc->getVertex()[2]-ip[2] );
+        double pt = std::hypot( mc->getMomentum()[0], mc->getMomentum()[1] );
+        double pz = mc->getMomentum()[2];
+        labels<<p2idx[mc]<<"[label=<"<<label<<"<BR/>"<<std::fixed<<std::setprecision(2)<<dToIP<<" mm<BR/>"<<pt<<" | "<<pz<<" GeV"<<">";
         if ( p2parton[mc] ) labels<<" style=\"filled\" fillcolor=\"burlywood4\"";
         else if ( mc->isOverlay() && mc->isCreatedInSimulation() ) labels<<" style=\"filled\" fillcolor=\"darkorange4\"";
         else if ( mc->isOverlay() ) labels<<" style=\"filled\" fillcolor=\"dimgray\"";
