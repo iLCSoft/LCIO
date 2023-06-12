@@ -740,7 +740,6 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 
 constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] filename eventNumber)USAGE";
 constexpr static auto help = R"HELP(
-
 OPTIONS:
     -s:             Draw particles created in simulation highlighted in orange
 
@@ -754,7 +753,6 @@ INPUT:
     filename:       input slcio file with an event to draw
 
     eventNumber:    event number to draw
-
 )HELP";
 
 
@@ -774,7 +772,6 @@ int main(int argc, char** argv ){
          (argv[argc-1] == NULL) || (argv[argc-2] == NULL) ||
          (argv[argc-1][0] == '-') || (argv[argc-2][0] == '-') ) {
         // there is NO input
-        std::cerr << "Input error" << std::endl;
         std::cerr << usage << std::endl;
         std::cerr << help << std::endl;
         return 1;
@@ -798,13 +795,13 @@ int main(int argc, char** argv ){
                 drawOverlay = true;
                 continue;
             case '?':
-                    std::cout << " Unknown option, please check your flags" << std::endl ;
-                    [[fallthrough]];
-            case 'h':
-            default:
                 std::cerr << usage << std::endl;
                 std::cerr << help << std::endl;
-                break;
+                return 1;
+            case 'h':
+                std::cerr << usage << std::endl;
+                std::cerr << help << std::endl;
+                return 1;
             case -1:
                 break;
         }
@@ -826,24 +823,17 @@ int main(int argc, char** argv ){
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
     lcReader->setReadCollectionNames({"MCParticle", "MCParticlesSkimmed"});
 
-    LCEvent* event = nullptr;
-    try{
-        lcReader->open(filename);
-        lcReader->skipNEvents(eventNumber - 1);
-        event = lcReader->readNextEvent(); 
-        if(!event){
-            std::cerr << " File has less events than required " << eventNumber << std::endl;
-            return 1;
-        }
-
-        // Do actuall drawing here
-        drawMcTree(event, drawSimulated, drawParton, drawOverlay);
-        lcReader->close();
-    }
-    catch( IOException& e) {
-        std::cerr << e.what() << std::endl;
+    lcReader->open(filename);
+    lcReader->skipNEvents(eventNumber - 1);
+    LCEvent* event = lcReader->readNextEvent(); 
+    if(!event){
+        std::cerr << " File has less events than required " << eventNumber << std::endl;
         return 1;
     }
+
+    // Do actuall drawing here
+    drawMcTree(event, drawSimulated, drawParton, drawOverlay);
+    lcReader->close();
     return 0;
 }
 

@@ -466,7 +466,8 @@ ADD_LCIO_EXAMPLE( readmcparticles )
 ADD_LCIO_EXAMPLE( lcio_performance )
 ADD_LCIO_EXAMPLE( lcio_parallel_read ) 
 ADD_LCIO_EXAMPLE( lcio_parallel_processing ) 
-configure_file( ./src/EXAMPLE/dumpmctree ./bin/dumpmctree COPYONLY )
+
+INSTALL( FILES ./src/EXAMPLE/dumpmctree DESTINATION bin PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 IF( BUILD_ROOTDICT )
   ADD_LCIO_EXAMPLE( lcio_io_benchmark )
