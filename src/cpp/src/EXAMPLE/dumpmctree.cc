@@ -775,7 +775,7 @@ int main(int argc, char** argv ){
          (argv[argc-1] == NULL) || (argv[argc-2] == NULL) ||
          (argv[argc-1][0] == '-') || (argv[argc-2][0] == '-') ) {
         // there is NO input
-        std::cout << " usage: dumpmctree -[s] -[p] -[o] filename eventNumber " << std::endl << std::endl ;
+        std::cout << " usage: dumpmctree [-s] [-p] [-o] filename eventNumber " << std::endl << std::endl ;
         std::cout << " OPTIONS: "<< std::endl;
         std::cout << std::left << std::setw(20) << " -s" << std::setw(20) << "Draw particles created in simulation (material interaction with the detector). Highlighted in orange"<< std::endl;
         std::cout << std::left << std::setw(20) << " -p" << std::setw(20) << "Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91). E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood "<< std::endl;
