@@ -622,7 +622,7 @@ const static std::map<int, std::string> pdg2strMap ={
 };
 
 bool isBeforeHadronisation(MCParticle* mc){
-    if ( mc->getPDG() == 92 || mc->getPDG() == 91 ) return true;
+    if ( mc->getPDG() == 92 || mc->getPDG() == 91 || || mc->getPDG() == 94 ) return true;
     for(auto daughter : mc->getDaughters() ){
         if ( isBeforeHadronisation(daughter) ) return true;
     }
@@ -630,7 +630,7 @@ bool isBeforeHadronisation(MCParticle* mc){
 }
 
 bool isAfterHadronization(EVENT::MCParticle* mc){
-    if ( mc->getPDG() == 92 || mc->getPDG() == 91 ) return true;
+    if ( mc->getPDG() == 92 || mc->getPDG() == 91 || || mc->getPDG() == 94 ) return true;
     const std::vector<MCParticle*> parents = mc->getParents();
     for(auto parent : parents){
         if ( isAfterHadronization(parent) ) return true;
