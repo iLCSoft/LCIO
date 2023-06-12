@@ -664,35 +664,9 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
     std::stringstream labels;
 
     auto isRejected = [&](MCParticle* mc) ->  bool {
-        bool rejected = false;
-        bool isParton = isBeforeHadronisation(mc);
-        if ( !drawSimulated && !drawOverlay && !drawParton ){
-            //Ignore simulated and overlay particles or particles above hadronisation (excluding hadronisation string/cluster itself)
-            rejected = mc->isCreatedInSimulation() || mc->isOverlay() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
-        }
-        else if( drawSimulated && !drawOverlay && !drawParton ){
-            rejected = mc->isOverlay() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
-        }
-        else if( !drawSimulated && drawOverlay && !drawParton ){
-            rejected = mc->isCreatedInSimulation() || (isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) );
-        }
-        else if ( !drawSimulated && !drawOverlay && drawParton ){
-            rejected = mc->isCreatedInSimulation() || mc->isOverlay();
-        }
-        else if ( drawSimulated && drawOverlay && !drawParton ){
-            rejected = isParton && (!(mc->getPDG() == 91 || mc->getPDG() == 92)) ;
-        }
-        else if ( drawSimulated && !drawOverlay && drawParton ){
-            rejected = mc->isOverlay();
-        }
-        else if ( !drawSimulated && drawOverlay && drawParton ){
-            rejected = mc->isCreatedInSimulation();
-        }
-        else{
-            // identical to: if else ( drawSimulated && drawOverlay && drawParton ){
-            rejected = false;
-        }
-        return rejected;
+        return (!drawSimulated && mc->isCreatedInSimulation()) ||
+               (!drawOverlay && mc->isOverlay()) ||
+               (!drawParton && (isBeforeHadronisation(mc) && (!(mc->getPDG() == 91 || mc->getPDG() == 92))) );
     };
 
 
