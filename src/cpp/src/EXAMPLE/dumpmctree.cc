@@ -647,7 +647,6 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
     std::map<MCParticle*, double> p2distance;
     std::map<MCParticle*, double> p2pt;
     std::map<MCParticle*, double> p2pz;
-    std::map<int, std::string> pdg2str = getPdgNamesMap();
 
     const std::vector<std::string>* colNames = event->getCollectionNames();
     std::string mcColName;
@@ -725,11 +724,13 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
         }
 
         int pdg = mc->getPDG();
-        bool hasName = pdg2str.find(pdg) != pdg2str.end();
         std::string label;
-        if (hasName) label = pdg2str[pdg];
-        else label = std::to_string(pdg);
-
+        if ( auto it = pdg2strMap.find(pdg) ; it != pdg2strMap.end() ){
+            label = it->second;
+        }
+        else{
+            label = std::to_string(pdg);
+        }
         labels<<p2idx[mc]<<"[label=<"<<label<<"<BR/>"<<std::fixed<<std::setprecision(2)<<p2distance[mc]<<" mm<BR/>"<<p2pt[mc]<<" | "<<p2pz[mc]<<" GeV"<<">";
         if ( p2parton[mc] ) labels<<" style=\"filled\" fillcolor=\"burlywood4\"";
         else if ( mc->isOverlay() && mc->isCreatedInSimulation() ) labels<<" style=\"filled\" fillcolor=\"darkorange4\"";
@@ -752,10 +753,28 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 }
 
 
+constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] filename eventNumber)USAGE";
+constexpr static auto help = R"HELP(
+
+OPTIONS:
+    -s:             Draw particles created in simulation highlighted in orange
+
+    -p:             Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
+                    E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood
+
+    -o:             Draw overlay particles. Highlighted in gray
+
+
+INPUT:
+    filename:       input slcio file with an event to draw
+
+    eventNumber:    event number to draw
+
+)HELP";
+
 
 /** dump MC table of the event from the slcio file in the neat graphviz tree representation.
 */
-
 int main(int argc, char** argv ){
     //options (optional)
     bool drawSimulated = false;
@@ -770,15 +789,10 @@ int main(int argc, char** argv ){
          (argv[argc-1] == NULL) || (argv[argc-2] == NULL) ||
          (argv[argc-1][0] == '-') || (argv[argc-2][0] == '-') ) {
         // there is NO input
-        std::cout << " usage: dumpmctree [-s] [-p] [-o] filename eventNumber " << std::endl << std::endl ;
-        std::cout << " OPTIONS: "<< std::endl;
-        std::cout << std::left << std::setw(20) << " -s" << std::setw(20) << "Draw particles created in simulation (material interaction with the detector). Highlighted in orange"<< std::endl;
-        std::cout << std::left << std::setw(20) << " -p" << std::setw(20) << "Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91). E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood "<< std::endl;
-        std::cout << std::left << std::setw(20) << " -o" << std::setw(20) << "Draw overlay particles. Highlighted in gray" <<std::endl<<std::endl;
-        std::cout << " INPUT: "<< std::endl;
-        std::cout << std::left << std::setw(20) << " filename" << std::setw(20) << "slcio file to draw the event from." <<std::endl;
-        std::cout << std::left << std::setw(20) << " eventNumber" << std::setw(20) << "event number to draw." <<std::endl;
-        exit(1);
+        std::cerr << "Input error" << std::endl;
+        std::cerr << usage << std::endl;
+        std::cerr << help << std::endl;
+        return 1;
     }
     else {
         // there is an input
@@ -803,14 +817,8 @@ int main(int argc, char** argv ){
                     [[fallthrough]];
             case 'h':
             default:
-                    std::cout << " usage: dumpmctree -[s] -[p] -[o] filename eventNumber " << std::endl << std::endl ;
-                    std::cout << " OPTIONS: "<< std::endl;
-                    std::cout << std::left << std::setw(20) << " -s" << std::setw(20) << "Draw particles created in simulation (material interaction with the detector)"<< std::endl;
-                    std::cout << std::left << std::setw(20) << " -p" << std::setw(20) << "Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91). E.g. (Z/W/H/quarks/gluons/etc) "<< std::endl;
-                    std::cout << std::left << std::setw(20) << " -o" << std::setw(20) << "Draw overlay particles." <<std::endl<<std::endl;
-                    std::cout << " INPUT: "<< std::endl;
-                    std::cout << std::left << std::setw(20) << " filename" << std::setw(20) << "slcio file to draw the event from." <<std::endl;
-                    std::cout << std::left << std::setw(20) << " eventNumber" << std::setw(20) << "event number to draw." <<std::endl;
+                std::cerr << usage << std::endl;
+                std::cerr << help << std::endl;
                 break;
             case -1:
                 break;
@@ -826,8 +834,8 @@ int main(int argc, char** argv ){
 
 
     if( eventNumber < 1 ){
-        std::cout << " usage: event number must be a positive integer!" << std::endl ;        
-        exit(1) ;
+        std::cerr << " usage: event number must be a positive integer!" << std::endl ;        
+        return 1;
     }
 
     LCReader* lcReader = LCFactory::getInstance()->createLCReader() ;
@@ -839,8 +847,8 @@ int main(int argc, char** argv ){
         lcReader->skipNEvents(eventNumber - 1);
         event = lcReader->readNextEvent(); 
         if(!event){
-            std::cout << " File has less events than required" << eventNumber << std::endl;
-            exit(1);
+            std::cerr << " File has less events than required " << eventNumber << std::endl;
+            return 1;
         }
 
         // Do actuall drawing here
@@ -848,8 +856,8 @@ int main(int argc, char** argv ){
         lcReader->close();
     }
     catch( IOException& e) {
-        std::cout << e.what() << std::endl;
-        exit(1);
+        std::cerr << e.what() << std::endl;
+        return 1;
     }
     return 0;
 }
