@@ -82,6 +82,44 @@ namespace UTIL {
      */
     const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
+    /** Return the object related to the given from-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight and the (decoded) weight.
+     *  LCObject is of type getToType(). DecodeF is a function object (anything
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in relation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
+     */
+    template <typename DecodeF = decltype(identity) >
+    std::tuple<const EVENT::LCObject*, float> getRelatedToMaxWeightAndObject(EVENT::LCObject* from, DecodeF&& decode = identity ) const{
+        const auto& objects = getRelatedToObjects(from);
+        if ( objects.empty() ) return std::make_tuple(nullptr, 0.);
+
+        const auto& weights = getRelatedToWeights(from);
+        size_t i = getMaxWeightIdx(weights, decode);
+        return std::make_tuple(objects[i], decode(weights[i]));
+    }
+
+
+    /** Return the object related to the given to-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight and the (decoded) weight.
+     *  LCObject is of type getFromType(). DecodeF is a function object (anything
+     *  callable with the right signature works) that returns recalculated weight
+     *  based on the weight stored in LCRelation collection. It is meant be used to decode
+     *  physicaly meaningful weight in case it is stored in any way encoded.
+     *  By default DecodeF simply returns identical number stored inside LCRelation collection without any modifications.
+     *  The required signature is float(float weight) which returns recalculated weight.
+     */
+    template <typename DecodeF = decltype(identity) >
+    std::tuple<EVENT::LCObject*, float> getRelatedFromMaxWeightAndObject(EVENT::LCObject* to, DecodeF&& decode = identity ) const{
+        const auto& objects = getRelatedFromObjects(to);
+        if ( objects.empty() ) return std::make_tuple(nullptr, 0.);
+
+        const auto& weights = getRelatedFromWeights(to);
+        size_t i = getMaxWeightIdx(weights, decode);
+        return std::make_tuple(objects[i], decode(weights[i]));
+    }
+
+
     /** Return the object related to the given from-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight.
      *  LCObject is of type getToType(). DecodeF is a function object (anything
      *  callable with the right signature works) that returns recalculated weight
