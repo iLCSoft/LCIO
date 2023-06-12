@@ -12,11 +12,11 @@
 namespace UTIL {
 
   /** The LCRelationNavigator makes repeated lookup of relations more conveneient and efficient.
-   * The relations are treated symmetrical, i.e. lookup of relations is equally efficient and 
+   * The relations are treated symmetrical, i.e. lookup of relations is equally efficient and
    * fast for either direction (from-to and to-from)
    *  at the price of a slower (by a factor of ~2) modification speed.
-   * 
-   * @author gaede 
+   *
+   * @author gaede
    * @version $Id: LCRelationNavigator.h,v 1.2 2004-09-06 14:35:51 gaede Exp $
    */
 
@@ -36,32 +36,32 @@ namespace UTIL {
 
 
   class LCRelationNavigator {
-    
-    typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::FloatVec > > RelMap ; 
 
-  public: 
+    typedef std::map< EVENT::LCObject* , std::pair< EVENT::LCObjectVec , EVENT::FloatVec > > RelMap ;
+
+  public:
 
     /** Default constructor
      */
     LCRelationNavigator(const std::string &fromType, const std::string &toType) :
       _from( fromType ),
       _to( toType )  { /* nop */; }
-    
+
     /**Create the navigator object from an existing collection of relations
      */
     LCRelationNavigator( const EVENT::LCCollection* col ) ;
-    
+
     /// Destructor.
     ~LCRelationNavigator() { /* nop */; }
-    
+
     /**The type of the 'from' objects in this relation.
      */
     const std::string & getFromType() const ;
-    
+
     /**The type of the 'to' objects in this relation.
      */
     const std::string & getToType() const ;
-    
+
     /** All objects that the given from-object is related to.
      *  LCObjects are of type getToType().
      */
@@ -72,18 +72,18 @@ namespace UTIL {
      */
     const EVENT::LCObjectVec & getRelatedFromObjects(EVENT::LCObject * to) const ;
 
-    /** The weights of the relations returned by  a call to getRelatedToObjects(from). 
+    /** The weights of the relations returned by  a call to getRelatedToObjects(from).
      * @see getRelatedToObjects
      */
     const EVENT::FloatVec & getRelatedToWeights(EVENT::LCObject * from) const ;
 
-    /** The weights of the relations returned by  a call to getRelatedFromObjects(to). 
+    /** The weights of the relations returned by  a call to getRelatedFromObjects(to).
      * @see getRelatedFromObjects
      */
     const EVENT::FloatVec & getRelatedFromWeights(EVENT::LCObject * to) const ;
 
     /** Return the object related to the given from-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight.
-     *  LCObject is of type getToType(). DecodeF is a function object (anything 
+     *  LCObject is of type getToType(). DecodeF is a function object (anything
      *  callable with the right signature works) that returns recalculated weight
      *  based on the weight stored in relation collection. It is meant be used to decode
      *  physicaly meaningful weight in case it is stored in any way encoded.
@@ -102,7 +102,7 @@ namespace UTIL {
 
 
     /** Return the object related to the given to-object with the highest (recalculated/decoded in case a decode function object argument is specified) weight.
-     *  LCObject is of type getFromType(). DecodeF is a function object (anything 
+     *  LCObject is of type getFromType(). DecodeF is a function object (anything
      *  callable with the right signature works) that returns recalculated weight
      *  based on the weight stored in LCRelation collection. It is meant be used to decode
      *  physicaly meaningful weight in case it is stored in any way encoded.
@@ -121,7 +121,7 @@ namespace UTIL {
 
 
     /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given from-object is related to.
-     *  DecodeF is a function object (anything 
+     *  DecodeF is a function object (anything
      *  callable with the right signature works) that returns recalculated weight
      *  based on the weight stored in LCRelation collection. It is meant be used to decode
      *  physicaly meaningful weight in case it is stored in any way encoded.
@@ -139,7 +139,7 @@ namespace UTIL {
     }
 
     /** Return the highest (recalculated/decoded in case a decode function object argument is specified) weight among all objects the given to-object is related to.
-     *  DecodeF is a function object (anything 
+     *  DecodeF is a function object (anything
      *  callable with the right signature works) that returns recalculated weight
      *  based on the weight stored in LCRelation collection. It is meant be used to decode
      *  physicaly meaningful weight in case it is stored in any way encoded.
@@ -160,12 +160,12 @@ namespace UTIL {
      * the weight (or default weight 1.0) is added to that relationship's weight.
      */
     void addRelation(EVENT::LCObject * from, EVENT::LCObject * to, float weight = 1.0) ;
-    
+
     /** Remove a given relation.
      */
     void removeRelation(EVENT::LCObject * from, EVENT::LCObject * to) ;
 
-    /** Remove a given relation. To reduce the weight of the relationship, call 
+    /** Remove a given relation. To reduce the weight of the relationship, call
      *  addRelation( from, to, weight  ) with  weight<0.
      */
     EVENT::LCCollection * createLCCollection() ;
@@ -183,7 +183,7 @@ namespace UTIL {
     mutable RelMap _rMap{} ;
     std::string _from ;
     std::string _to ;
-    
+
 
 }; // class
 } // namespace EVENT
