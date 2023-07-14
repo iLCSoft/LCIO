@@ -7,7 +7,9 @@ IF( EXISTS "${_current_dir}/cmake_uninstall.cmake.in" )
                     "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" @ONLY )
 
     # add uninstall target
-    ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
+    if (NOT TARGET uninstall)
+        ADD_CUSTOM_TARGET( uninstall "${CMAKE_COMMAND}" -P "${PROJECT_BINARY_DIR}/cmake_uninstall.cmake" )
+    endif()
 
 ENDIF( EXISTS "${_current_dir}/cmake_uninstall.cmake.in" )
 
