@@ -51,6 +51,10 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/pom.xml"
   )
 
+# Build to lib instead of lib64:
+if (CMAKE_INSTALL_LIBDIR STREQUAL lib64)
+  set(CMAKE_INSTALL_LIBDIR lib)
+endif()
 
 
 ### DEPENDENCIES ############################################################
