@@ -2,13 +2,13 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.0 FATAL_ERROR )
 ########################################################
 
 
 
 # project name
-PROJECT( LCIO )
+PROJECT( LCIO VERSION 2.20.0 )
 include(GNUInstallDirs)
 
 # project version
