@@ -263,6 +263,7 @@ TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
 TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
 
 ADD_CUSTOM_TARGET( lib DEPENDS lcio )
+ADD_LIBRARY( LCIO::lcio ALIAS lcio )
 # ----------------------------------------------------------------------------
 
 

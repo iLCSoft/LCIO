@@ -38,6 +38,7 @@ TARGET_INCLUDE_DIRECTORIES( sio PUBLIC
 TARGET_INCLUDE_DIRECTORIES( sio SYSTEM PUBLIC ${ZLIB_INCLUDE_DIR} )
 TARGET_LINK_LIBRARIES( sio ${ZLIB_LIBRARIES} )
 INSTALL_SHARED_LIBRARY( sio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+ADD_LIBRARY( SIO::sio ALIAS sio )
 
 # Install the sio headers as well. Necessary for the python bindings and also
 # for cases where others want to link against LCIO / this version of SIO
