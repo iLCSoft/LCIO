@@ -68,7 +68,11 @@ CHECK_PACKAGE_LIBS( LCIO lcio @CHECK_PACKAGE_SIO_LIBRARY@ )
 
 
 include(CMakeFindDependencyMacro)
-find_dependency(SIO)
+if("@CHECK_PACKAGE_SIO_LIBRARY@" STREQUAL "") 
+  find_dependency(SIO REQUIRED)
+else()
+  find_dependency(ZLIB REQUIRED)
+endif()
 
 # Include the targets file to create the imported targets that a client can link
 # to or execute
