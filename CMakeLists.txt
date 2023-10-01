@@ -319,3 +319,11 @@ install(EXPORT ${PROJECT_NAME}Targets
   FILE "${PROJECT_NAME}Targets.cmake"
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
   )
+
+IF( NOT SIO_FOUND )
+install(EXPORT SIOTargets
+  NAMESPACE SIO::
+  FILE "SIOTargets.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SIO/"
+  )
+ENDIF()
