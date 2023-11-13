@@ -72,6 +72,7 @@ if("@CHECK_PACKAGE_SIO_LIBRARY@" STREQUAL "")
   find_dependency(SIO REQUIRED)
 else()
   find_dependency(ZLIB REQUIRED)
+  include("${CMAKE_CURRENT_LIST_DIR}/SIOTargets.cmake")
 endif()
 
 # Include the targets file to create the imported targets that a client can link
