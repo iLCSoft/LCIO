@@ -1,3 +1,23 @@
+# v02-20-01
+
+* 2023-11-14 jmcarcell ([PR#177](https://github.com/iLCSoft/LCIO/pull/177))
+  - Export targets and make sure they can be used by other CMake projects
+
+* 2023-09-07 jmcarcell ([PR#176](https://github.com/iLCSoft/LCIO/pull/176))
+  - Make an alias to `SIO::sio` when building SIO within LCIO so that it has the same target as the standalone SIO, that has the target `SIO::sio`
+
+* 2023-08-15 jmcarcell ([PR#174](https://github.com/iLCSoft/LCIO/pull/174))
+  - Make cmake respect CMAKE_INSTALL_<dir>
+
+* 2023-07-17 jmcarcell ([PR#173](https://github.com/iLCSoft/LCIO/pull/173))
+  - Drop FindCLHEP.cmake
+
+* 2023-07-17 jmcarcell ([PR#172](https://github.com/iLCSoft/LCIO/pull/172))
+  - Don't make the uninstall target if it already exists
+
+* 2023-06-13 Leonhard Reichenbach ([PR#171](https://github.com/iLCSoft/LCIO/pull/171))
+  - LCRelationNavigator: add methods `getRelatedToMaxWeightAndObject` and `getRelatedFromMaxWeightAndObject` returning both the object and the weight in a tuple
+
 # v02-20
 
 * 2023-05-30 Andre Sailer ([PR#168](https://github.com/iLCSoft/LCIO/pull/168))
