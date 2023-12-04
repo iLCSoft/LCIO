@@ -375,7 +375,7 @@ IF( BUILD_ROOTDICT )
     INCLUDE_DIRECTORIES( SYSTEM "${ROOT_INCLUDE_DIRS}" )
 
     ADD_SHARED_LIBRARY( lcioDict ${lcio_rootdict_sources} )
-    TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} lcio )
+    TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} LCIO::lcio SIO::sio)
 
     IF( APPLE )
 
