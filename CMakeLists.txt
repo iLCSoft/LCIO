@@ -176,6 +176,9 @@ IF( NOT SIO_FOUND )
 )
 
   FetchContent_MakeAvailable(sio_extern)
+
+  get_target_property(SIO_VERSION SIO::sio VERSION)
+  get_target_property(SIO_INCLUDE_DIRS SIO::sio INCLUDE_DIRECTORIES)
 ENDIF()
 
 MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
