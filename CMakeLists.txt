@@ -167,7 +167,18 @@ FIND_PACKAGE( SIO QUIET )
 
 IF( NOT SIO_FOUND )
   MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
-  ADD_SUBDIRECTORY( sio )
+  include(FetchContent)
+  FetchContent_Declare(sio_extern
+  GIT_REPOSITORY https://github.com/iLCSoft/SIO.git
+  GIT_TAG v00-01
+  GIT_SHALLOW 1
+#  FIND_PACKAGE_ARGS
+)
+
+  FetchContent_MakeAvailable(sio_extern)
+
+  get_target_property(SIO_VERSION SIO::sio VERSION)
+  get_target_property(SIO_INCLUDE_DIRS SIO::sio INCLUDE_DIRECTORIES)
 ENDIF()
 
 MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
@@ -320,10 +331,3 @@ install(EXPORT ${PROJECT_NAME}Targets
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
   )
 
-IF( NOT SIO_FOUND )
-install(EXPORT SIOTargets
-  NAMESPACE SIO::
-  FILE "SIOTargets.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SIO/"
-  )
-ENDIF()
