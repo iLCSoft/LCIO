@@ -1,3 +1,11 @@
+# v02-20-02
+
+* 2023-12-06 tmadlener ([PR#182](https://github.com/iLCSoft/LCIO/pull/182))
+  - Also put pre-generated headers into include directories of LCIO target to make in-source builds (e.g. via. CMake's FetchContent) possible.
+
+* 2023-12-01 tmadlener ([PR#180](https://github.com/iLCSoft/LCIO/pull/180))
+  - Populate the `target_include_directories` of the `LCIO::lcio` target to make it properly usable downstream.
+
 # v02-20-01
 
 * 2023-11-14 jmcarcell ([PR#177](https://github.com/iLCSoft/LCIO/pull/177))
