@@ -260,7 +260,7 @@ ADD_SHARED_LIBRARY( lcio
 INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT LCIOTargets )
 target_include_directories(lcio PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp/include>
-  $<BUILD_INTERFACE:${PROJECt_SOURCE_DIR}/src/cpp/include/pre-generated>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp/include/pre-generated>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
