@@ -170,7 +170,7 @@ IF( NOT SIO_FOUND )
   include(FetchContent)
   FetchContent_Declare(sio_extern
   GIT_REPOSITORY https://github.com/iLCSoft/SIO.git
-  GIT_TAG v00-01
+  GIT_TAG v00-02
   GIT_SHALLOW 1
 #  FIND_PACKAGE_ARGS
 )
