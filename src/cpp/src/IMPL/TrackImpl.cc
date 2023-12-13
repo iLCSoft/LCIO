@@ -20,7 +20,7 @@ namespace IMPL {
         }
 
   // copy constructor
-  TrackImpl::TrackImpl(const TrackImpl& o)
+  TrackImpl::TrackImpl(const TrackImpl& o) : AccessChecked(o)
   { 
 
       *this = o ; // call operator =

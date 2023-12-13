@@ -22,6 +22,7 @@ namespace IMPL {
     
   public:
     AccessChecked() ;
+    AccessChecked(const AccessChecked&) = default;
     virtual ~AccessChecked() = default;
     virtual int simpleUID() const { return _id ; }
 
