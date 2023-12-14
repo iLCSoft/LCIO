@@ -7,7 +7,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 
 
 # project name
-PROJECT( LCIO VERSION 2.20.0 )
+PROJECT( LCIO )
 include(GNUInstallDirs)
 
 # project version
