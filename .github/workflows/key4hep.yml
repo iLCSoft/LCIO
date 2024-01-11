@@ -28,3 +28,10 @@ jobs:
           make -k
           make install
           ctest --output-on-failure
+          echo "::group::Test downstream build"
+          cd -
+          export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
+          cd tests/downstream-project-cmake-test
+          mkdir build && cd build
+          cmake .. -DCMAKE_CXX_STANDARD=17
+          make -k
