@@ -62,7 +62,7 @@ public:
     virtual EVENT::LCRunHeader * readNextRunHeader()  = 0;
 
     /** Same as readNextRunHeader() but allows to set the access mode 
-     *  LCIO::READ_ONLY (default) or LCIO::Update. 
+     *  EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
@@ -76,7 +76,7 @@ public:
     virtual EVENT::LCEvent * readNextEvent()  = 0;
 
     /** Same as readNextEvent() but allows to set the access mode 
-     *  LCIO::READ_ONLY (default) or LCIO::Update. 
+     *  EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
@@ -127,7 +127,7 @@ public:
     virtual EVENT::LCRunHeader * readRunHeader(int runNumber)  = 0;
 
     /** Same as LCEvent* readRunHeader(int runNumber) 
-     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *  allowing to set the access mode EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
@@ -141,7 +141,7 @@ public:
     virtual EVENT::LCEvent * readEvent(int runNumber, int evtNumber)  = 0;
 
     /** Same as LCEvent* readEvent(int runNumber, int evtNumber) 
-     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *  allowing to set the access mode EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
