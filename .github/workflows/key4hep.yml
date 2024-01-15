@@ -8,8 +8,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        release: ["sw.hsf.org/key4hep",
-                  "sw-nightlies.hsf.org/key4hep"]
+        include:
+          - release: "sw.hsf.org/key4hep"
+            CXX_STANDARD: 17
+          - release: "sw-nightlies.hsf.org/key4hep"
+            CXX_STANDARD: 20
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
@@ -20,7 +23,7 @@ jobs:
         run: |
           mkdir build install
           cd build
-          cmake -DCMAKE_CXX_STANDARD=17 \
+          cmake -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }} \
             -DBUILD_ROOTDICT=ON \
             -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -Werror " \
             -DCMAKE_INSTALL_PREFIX=../install \
@@ -33,5 +36,5 @@ jobs:
           export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
           cd tests/downstream-project-cmake-test
           mkdir build && cd build
-          cmake .. -DCMAKE_CXX_STANDARD=17
+          cmake .. -DCMAKE_CXX_STANDARD=${{ matrix.CXX_STANDARD }}
           make -k
