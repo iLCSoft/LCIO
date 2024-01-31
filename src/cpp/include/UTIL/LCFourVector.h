@@ -6,11 +6,6 @@
 #include "CLHEP/Vector/LorentzVector.h"
 
 
-// CLHEP 1.9 and higher introduce a namespace:
-namespace CLHEP{}  
-using namespace CLHEP ;
-
-
 namespace UTIL {
   
   
@@ -27,13 +22,13 @@ namespace UTIL {
    * @version Mar 12, 2004
    */
   template<class TT> 
-  class LCFourVector :  public HepLorentzVector {
+  class LCFourVector :  public CLHEP::HepLorentzVector {
 
   protected: 
     const TT* _lcObj = nullptr ;
     
   public: 
-    virtual ~LCFourVector() { /*no_op*/; } 
+    virtual ~LCFourVector() = default;
     
     LCFourVector(const LCFourVector& ) = default ;
     LCFourVector& operator=(const LCFourVector& ) = default ;

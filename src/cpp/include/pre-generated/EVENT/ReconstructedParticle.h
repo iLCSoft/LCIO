@@ -10,7 +10,6 @@
 #include "EVENT/Cluster.h"
 #include "EVENT/LCObject.h"
 #include "EVENT/ParticleID.h"
-#include "EVENT/ReconstructedParticle.h"
 #include "EVENT/Track.h"
 #include "LCIOSTLTypes.h"
 #include "empty_ignore.h"

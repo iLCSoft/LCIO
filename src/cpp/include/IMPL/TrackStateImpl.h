@@ -27,6 +27,9 @@ namespace IMPL {
     /** Default constructor, initializes values to 0.
      */
     TrackStateImpl() ;
+    TrackStateImpl(TrackStateImpl&&) = default ;
+    TrackStateImpl(TrackStateImpl const&) = default ;
+    TrackStateImpl& operator=(TrackStateImpl const&) = default ;
     TrackStateImpl(int location, float d0, float phi, float omega, float z0, float tanLambda, const float* covMatrix, const float* reference) ;
     TrackStateImpl(int location, float d0, float phi, float omega, float z0, float tanLambda, const EVENT::FloatVec& covMatrix, const float* reference) ;
     /** Copy constructor which takes as an argument an EVENT::TrackState reference */
@@ -35,7 +38,7 @@ namespace IMPL {
 
     
     /// Destructor.
-    virtual ~TrackStateImpl() ; 
+    virtual ~TrackStateImpl() = default;
     
 
     virtual int id() const { return simpleUID() ; }

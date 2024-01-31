@@ -13,8 +13,8 @@ include(GNUInstallDirs)
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 17 )
-SET( LCIO_VERSION_PATCH 0 )
+SET( LCIO_VERSION_MINOR 20 )
+SET( LCIO_VERSION_PATCH 2 )
 
 ### set correct LCIO version in relevant files  ############################
 
@@ -287,14 +287,6 @@ OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
-
-# fortran examples
-OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-IF( BUILD_F77_TESTJOBS )
-    ADD_SUBDIRECTORY( ./src/f77 f77 )
-ENDIF()
-
-
 # directory containing lcio tests
 ADD_SUBDIRECTORY( ./tests )
 
@@ -325,3 +317,17 @@ MESSAGE( STATUS "" )
 GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake )
 
 INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  FILE "${PROJECT_NAME}Targets.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
+  )
+
+IF( NOT SIO_FOUND )
+install(EXPORT SIOTargets
+  NAMESPACE SIO::
+  FILE "SIOTargets.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SIO/"
+  )
+ENDIF()

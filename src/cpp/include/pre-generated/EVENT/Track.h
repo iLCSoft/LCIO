@@ -8,7 +8,6 @@
 #define EVENT_TRACK_H 1
 
 #include "EVENT/LCObject.h"
-#include "EVENT/Track.h"
 #include "EVENT/TrackState.h"
 #include "EVENT/TrackerHit.h"
 #include "LCIOSTLTypes.h"

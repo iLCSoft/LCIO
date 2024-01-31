@@ -38,7 +38,7 @@ namespace UTIL {
   template <class T>
   class LCIterator{
   
-    LCIterator<T>() {} 
+    LCIterator() {} 
   
   public:
 
@@ -47,7 +47,7 @@ namespace UTIL {
      *  this will behave the same as an empty collection - use operator() to
      *  test, if the collection exists.
      */
-    LCIterator<T>( EVENT::LCEvent* evt, const std::string& name ) : _i(0), _col(0) {
+    LCIterator( EVENT::LCEvent* evt, const std::string& name ) : _i(0), _col(0) {
     
     
       try{
@@ -74,7 +74,7 @@ namespace UTIL {
   
     /** Constructor for the given collection.
      */
-    LCIterator<T>( const EVENT::LCCollection* col) : _i(0) , _col( col ) {
+    LCIterator( const EVENT::LCCollection* col) : _i(0) , _col( col ) {
     
       _n = (_col ? _col->getNumberOfElements() : 0 ) ;
     

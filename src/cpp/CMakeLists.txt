@@ -4,33 +4,6 @@
 # @author Jan Engels, DESY
 #################################
 
-SET( LCIO_CPPFORT_SRCS
-  ./src/CPPFORT/HEPEVT.cc
-  ./src/CPPFORT/lccah.cc
-  ./src/CPPFORT/lcclu.cc
-  ./src/CPPFORT/lccol.cc
-  ./src/CPPFORT/lcevt.cc
-  ./src/CPPFORT/lcgob.cc
-  ./src/CPPFORT/lciof77apiext.cc
-  ./src/CPPFORT/lcmcp.cc
-  ./src/CPPFORT/lcobv.cc
-  ./src/CPPFORT/lcpid.cc
-  ./src/CPPFORT/lcrcp.cc
-  ./src/CPPFORT/lcrdr.cc
-  ./src/CPPFORT/lcrdrrep.cc
-  ./src/CPPFORT/lcrel.cc
-  ./src/CPPFORT/lcrhd.cc
-  ./src/CPPFORT/lcrnv.cc
-  ./src/CPPFORT/lcsch.cc
-  ./src/CPPFORT/lcsth.cc
-  ./src/CPPFORT/lctph.cc
-  ./src/CPPFORT/lctrh.cc
-  ./src/CPPFORT/lctrk.cc
-  ./src/CPPFORT/lcvec.cc
-  ./src/CPPFORT/lcvtx.cc
-  ./src/CPPFORT/lcwrt.cc
-)
-
 SET( LCIO_IMPL_SRCS
   ./src/IMPL/AccessChecked.cc
   ./src/IMPL/CalorimeterHitImpl.cc
@@ -230,7 +203,6 @@ if( LCIO_GENERATE_HEADERS )
   SET( IO_AID_HEADERS_DEP_LIST ${AID_HEADERS_LIST};${CXX_HEADERS_LIST} )
 
   # make source files depend on generated header files + aid files
-  SET_SOURCE_FILES_PROPERTIES( ${LCIO_CPPFORT_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST};${IO_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${EVENT_AID_HEADERS_DEP_LIST}" )
   SET_SOURCE_FILES_PROPERTIES( ${LCIO_IOIMPL_SRCS} PROPERTIES OBJECT_DEPENDS "${IO_AID_HEADERS_DEP_LIST}" )
   # ----------------------------------------------------------------------------
@@ -253,22 +225,13 @@ endif()
 #ADD_DEFINITIONS( "-Wall -ansi -pedantic" )
 #ADD_DEFINITIONS( "-Wno-long-long -fno-strict-aliasing" )
 
-#---- special flags for cfortran code : --------
-SET_SOURCE_FILES_PROPERTIES(
-  ${LCIO_CPPFORT_SRCS} PROPERTIES
-  COMPILE_FLAGS "-Df2cFortran -Wno-unused"
-)
-# ----------------------------------------------------------------------------
-
-
-
 
 # -------- include directories -----------------------------------------------
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_AID_HEADERS_OUTPUT_DIR}" )
 INCLUDE_DIRECTORIES( BEFORE "${LCIO_CXX_HEADERS_DIR}" )
 
 # install public headers
-INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
+INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
     PATTERN "*.txt" EXCLUDE
     #PATTERN "*empty_ignore.h" EXCLUDE
     PATTERN "*/SIO/*" EXCLUDE
@@ -280,14 +243,12 @@ INSTALL_DIRECTORY( ${LCIO_CXX_HEADERS_DIR}/ DESTINATION include
 )
 
 # install aid generated c++ headers
-INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION include )
+INSTALL_DIRECTORY( ${LCIO_AID_HEADERS_OUTPUT_DIR}/ DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" )
 # ----------------------------------------------------------------------------
 
 
 
-# ------- libraries lcio + lcioF77 -------------------------------------------
-ADD_LIBRARY( lcioF77 STATIC ${LCIO_CPPFORT_SRCS} )
-INSTALL( TARGETS lcioF77 DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+# ------- libraries lcio -------------------------------------------
 
 ADD_SHARED_LIBRARY( lcio
   ${LCIO_IMPL_SRCS}
@@ -296,13 +257,18 @@ ADD_SHARED_LIBRARY( lcio
   ${LCIO_SIO_SRCS}
   ${LCIO_MT_SRCS}
 )
-INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} )
+INSTALL_SHARED_LIBRARY( lcio DESTINATION ${CMAKE_INSTALL_LIBDIR} EXPORT LCIOTargets )
+target_include_directories(lcio PUBLIC
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp/include>
+  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/cpp/include/pre-generated>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 TARGET_LINK_LIBRARIES( lcio ${CMAKE_THREAD_LIBS_INIT} )
-TARGET_LINK_LIBRARIES( lcio ${SIO_LIBRARIES} )
-TARGET_LINK_LIBRARIES( lcioF77 lcio )
+TARGET_LINK_LIBRARIES( lcio PRIVATE SIO::sio )
 
-ADD_CUSTOM_TARGET( lib DEPENDS lcio lcioF77 )
+ADD_CUSTOM_TARGET( lib DEPENDS lcio )
+ADD_LIBRARY( LCIO::lcio ALIAS lcio )
 # ----------------------------------------------------------------------------
 
 
@@ -478,7 +444,7 @@ MACRO( ADD_LCIO_EXAMPLE file )
   #MESSAGE( STATUS "ADD_LCIO_EXAMPLE: ${file} ./src/EXAMPLE/${file}.cc" )
   SET_TARGET_PROPERTIES( bin_${file} PROPERTIES OUTPUT_NAME ${file} )
   TARGET_LINK_LIBRARIES( bin_${file} lcio )
-  INSTALL( TARGETS bin_${file} DESTINATION bin )
+  INSTALL( TARGETS bin_${file} DESTINATION "${CMAKE_INSTALL_BINDIR}" )
 ENDMACRO()
 
 ADD_LCIO_EXAMPLE( simjob )
