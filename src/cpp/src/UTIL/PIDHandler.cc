@@ -155,9 +155,9 @@ namespace UTIL{
     return id ;
   }
   
-  int PIDHandler::getAlgorithmID( const std::string& algoName ) {
+  int PIDHandler::getAlgorithmID( const std::string& algoName ) const {
 
-    CPM::map_type::iterator it = _cpm.map().find( algoName ) ; 
+    const auto it = _cpm.map().find( algoName ) ;
     
     if( it == _cpm.map().end() ){
 
@@ -167,9 +167,9 @@ namespace UTIL{
     return it->second ;
   }
   
-  const std::string& PIDHandler::getAlgorithmName(  int algoID ) {
+  const std::string& PIDHandler::getAlgorithmName(  int algoID ) const {
     
-    CPMINV::iterator it = _cpmInv.find( algoID ) ; 
+    const auto it = _cpmInv.find( algoID ) ;
 
     if( it == _cpmInv.end() ){
       
@@ -182,10 +182,10 @@ namespace UTIL{
   
 
 
-  int PIDHandler::getParameterIndex( int algorithmID, const std::string& name ) {
+  int PIDHandler::getParameterIndex( int algorithmID, const std::string& name ) const {
     
     
-    PNM::iterator nit = _pNames.find( algorithmID ) ;
+    const auto nit = _pNames.find( algorithmID ) ;
     
     if( nit == _pNames.end() ){
 
@@ -209,9 +209,9 @@ namespace UTIL{
   }
   
   
-  const StringVec&  PIDHandler::getParameterNames( int id  ) {
+  const StringVec&  PIDHandler::getParameterNames( int id  ) const {
 
-    PNM::iterator nit = _pNames.find( id ) ;
+    const auto nit = _pNames.find( id ) ;
     
     if( nit == _pNames.end() ){
 
@@ -222,7 +222,7 @@ namespace UTIL{
     return nit->second ;
   }
     
-  const IntVec& PIDHandler::getAlgorithmIDs() {
+  const IntVec& PIDHandler::getAlgorithmIDs() const {
 
     return _ids ;
   }
@@ -231,7 +231,7 @@ namespace UTIL{
 
   void PIDHandler::setParticleIDUsed(  ReconstructedParticleImpl* p , int id  ) {
 
-    PNM::iterator nit = _pNames.find( id ) ;
+    const auto nit = _pNames.find( id ) ;
     
     if( nit == _pNames.end() ){
 
@@ -277,9 +277,9 @@ namespace UTIL{
   }
 
 
-  ParticleIDVec PIDHandler::getParticleIDs( LCObject* p , int id ) {
+  ParticleIDVec PIDHandler::getParticleIDs( LCObject* p , int id ) const {
 
-    PNM::iterator nit = _pNames.find( id ) ;
+    const auto nit = _pNames.find( id ) ;
     
     if( nit == _pNames.end() ){
       
@@ -320,9 +320,9 @@ namespace UTIL{
     return pidVID ;
   }
 
-  const ParticleID& PIDHandler::getParticleID( LCObject* p , int id ) {
+  const ParticleID& PIDHandler::getParticleID( LCObject* p , int id ) const {
 
-    PNM::iterator nit = _pNames.find( id ) ;
+    const auto nit = _pNames.find( id ) ;
     
     if( nit == _pNames.end() ){
 

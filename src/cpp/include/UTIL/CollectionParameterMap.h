@@ -47,6 +47,7 @@ namespace UTIL{
      */
     map_type& map() { return _map ; }
 
+    const map_type& map() const { return _map; }
 
   protected:
 

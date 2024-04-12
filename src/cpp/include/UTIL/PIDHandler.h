@@ -66,27 +66,27 @@ namespace UTIL{
     
     /** Return the typeID of algorithm algoName  - throws UnknownAlgorithm.
      */
-    int getAlgorithmID( const std::string& algoName ) ;
+    int getAlgorithmID( const std::string& algoName ) const ;
     
     /** Return the name of the algorithm with id  - throws UnknownAlgorithm.
      */
-    const std::string& getAlgorithmName(  int algoID ) ;
+    const std::string& getAlgorithmName(  int algoID ) const ;
 
     /** The index of parameter pName for the algorithm with algorithmID - throws UnknownAlgoritm.
      */
-    int getParameterIndex( int algorithmID, const std::string& pName ) ;
+    int getParameterIndex( int algorithmID, const std::string& pName ) const;
       
     /** Return the (first) ParticleID object for the given algorithm and particle (or cluster) - throws UnknownAlgorithm.
      *  If no object is found for the given algorithmID a default initialized dummy object is returned.
      *  Only use if you know there is only one PID object for the algorithms or if you simply want the most likely
      *  PID for this algorithm.
      */
-    const EVENT::ParticleID& getParticleID( EVENT::LCObject* particle , int algorithmID ) ;
+    const EVENT::ParticleID& getParticleID( EVENT::LCObject* particle , int algorithmID ) const ;
     
 
     /** Return all PID objects for a given algorithm - ordered with decreasing likelihood - throws UnknownAlgorithm.
      */
-    EVENT::ParticleIDVec getParticleIDs( EVENT::LCObject* p , int id ) ;
+    EVENT::ParticleIDVec getParticleIDs( EVENT::LCObject* p , int id ) const ;
 
 
     /** Set the particleID algorithm that is used for this particle's  kinematic variables 
@@ -97,11 +97,11 @@ namespace UTIL{
 
     /** The names of parameters for the algorithm with algorithmID - throws UnknownAlgoritm.
      */
-    const EVENT::StringVec&  getParameterNames( int algorithmID  ) ;
+    const EVENT::StringVec&  getParameterNames( int algorithmID  ) const;
     
     /** Return the IDs of all known Algorithms.
      */
-    const EVENT::IntVec& getAlgorithmIDs() ;
+    const EVENT::IntVec& getAlgorithmIDs() const;
 
 
     /** Set the particleID information for this particle (or cluster) - throws UnknownAlgorithm.
