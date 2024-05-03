@@ -768,7 +768,7 @@ int main(int argc, char** argv ){
             case 'h':
                 std::cerr << usage << std::endl;
                 std::cerr << help << std::endl;
-                return 1;
+                return 0;
             case -1:
                 break;
         }
@@ -803,7 +803,3 @@ int main(int argc, char** argv ){
     lcReader->close();
     return 0;
 }
-
-
-
-
