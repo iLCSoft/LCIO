@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ "${*}" = "-h" ] || [ "${*}" = "--help" ]; then
+    dumpmctree-dot -h
+    exit 0
+fi
 
 if dumpmctree-dot ${@}; then
     if [ -f dumpmctree.svg ]; then
