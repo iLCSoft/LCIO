@@ -10,9 +10,7 @@
 #include <fstream>
 #include <iomanip>
 #include <algorithm>
-#include <filesystem>
 #include <string>
-#include <stdexcept>
 
 using namespace EVENT;
 using namespace IO;
@@ -775,7 +773,7 @@ int main(int argc, char** argv ){
         return 1;
     }
 
-    std::filesystem::path filename{argv[optind++]};
+    std::string filename{argv[optind++]};
     int eventNumber{};
     try {
         eventNumber = std::stoi(argv[optind]);
