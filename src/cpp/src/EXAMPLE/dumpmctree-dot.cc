@@ -713,16 +713,17 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 }
 
 
-constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] filename eventNumber)USAGE";
+constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] [-h] filename eventNumber)USAGE";
 constexpr static auto help = R"HELP(
 OPTIONS:
-    -s/--simulation:             Draw particles created in simulation highlighted in orange
-    -p/--partons:                Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
-                    E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood
-    -o/--overlay:                Draw overlay particles. Highlighted in gray
+    -s/--simulation: Draw particles created in simulation highlighted in orange
+    -p/--partons:    Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
+                     E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood
+    -o/--overlay:    Draw overlay particles. Highlighted in gray
+    -h/--help:       Show this help and exit
 INPUT:
-    filename:       input slcio file with an event to draw
-    eventNumber:    event number to draw
+    filename:        input slcio file with an event to draw
+    eventNumber:     event number to draw
 )HELP";
 
 
