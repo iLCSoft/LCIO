@@ -5,11 +5,14 @@
 #include "IO/LCReader.h"
 #include "IOIMPL/LCFactory.h"
 
-#include <cmath>
 #include <getopt.h>
+#include <cmath>
 #include <fstream>
 #include <iomanip>
 #include <algorithm>
+#include <filesystem>
+#include <string>
+#include <stdexcept>
 
 using namespace EVENT;
 using namespace IO;
@@ -713,10 +716,10 @@ void drawMcTree(LCEvent* event, bool drawSimulated, bool drawParton, bool drawOv
 constexpr static auto usage = R"USAGE(usage: dumpmctree [-s] [-p] [-o] filename eventNumber)USAGE";
 constexpr static auto help = R"HELP(
 OPTIONS:
-    -s:             Draw particles created in simulation highlighted in orange
-    -p:             Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
+    -s/--simulation:             Draw particles created in simulation highlighted in orange
+    -p/--partons:                Draw parton shower particles above pythia hadronisation string/cluster (pdg = 92/91).
                     E.g. (Z/W/H/quarks/gluons/etc). Highlighted in burlywood
-    -o:             Draw overlay particles. Highlighted in gray
+    -o/--overlay:                Draw overlay particles. Highlighted in gray
 INPUT:
     filename:       input slcio file with an event to draw
     eventNumber:    event number to draw
@@ -731,27 +734,18 @@ int main(int argc, char** argv ){
     bool drawParton = false;
     bool drawOverlay = false;
 
-    //inputs (required)
-    char* filename ;
-    int eventNumber{};
-
-    if ( (argc < 3) ||
-         (argv[argc-1] == NULL) || (argv[argc-2] == NULL) ||
-         (argv[argc-1][0] == '-') || (argv[argc-2][0] == '-') ) {
-        // there is NO input
-        std::cerr << usage << std::endl;
-        std::cerr << help << std::endl;
-        return 1;
-    }
-    else {
-        // there is an input
-        filename = argv[argc-2];
-        eventNumber = atoi( argv[argc-1] );
-    }
+    const char* const short_opts = "spoh";
+    const option long_opts[] = {{"simulated", no_argument, nullptr, 's'},
+                                {"partons", no_argument, nullptr, 'p'},
+                                {"overlay", no_argument, nullptr, 'o'},
+                                {"help", no_argument, nullptr, 'h'},
+                                {nullptr, no_argument, nullptr, 0}};
 
     // Retrieve the options:
-    while ( true ){
-        switch ( getopt(argc, argv, "spoh") ) {
+    while ( true ) {
+        const auto opt = getopt_long(argc, argv, short_opts, long_opts, 0);
+
+        switch (opt) {
             case 's':
                 drawSimulated = true;
                 continue;
@@ -775,6 +769,20 @@ int main(int argc, char** argv ){
         break;
     }
 
+    if (argc - optind < 2) {
+        std::cerr << usage << std::endl;
+        return 1;
+    }
+
+    std::filesystem::path filename{argv[optind++]};
+    int eventNumber{};
+    try {
+        eventNumber = std::stoi(argv[optind]);
+    } catch (...) {
+        std::cerr << "ERROR: Cannot convert " << argv[optind] << " to a valid event number" << std::endl;
+        return 1;
+    }
+
     //print debug info
     std::cout << "Reading event " << eventNumber<< " from file " << std::endl << filename << std::endl;
     std::cout << "draw simulated: " << drawSimulated<<std::endl;
@@ -783,7 +791,7 @@ int main(int argc, char** argv ){
 
 
     if( eventNumber < 1 ){
-        std::cerr << " usage: event number must be a positive integer!" << std::endl ;        
+        std::cerr << " usage: event number must be a positive integer!" << std::endl ;
         return 1;
     }
 
@@ -792,7 +800,7 @@ int main(int argc, char** argv ){
 
     lcReader->open(filename);
     lcReader->skipNEvents(eventNumber - 1);
-    LCEvent* event = lcReader->readNextEvent(); 
+    LCEvent* event = lcReader->readNextEvent();
     if(!event){
         std::cerr << " File has less events than required " << eventNumber << std::endl;
         return 1;

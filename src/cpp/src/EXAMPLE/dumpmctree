@@ -1,5 +1,7 @@
 #!/bin/bash
 
+dumpmctree-dot -h > /dev/null 2>&1 || echo "dumpmctree-dot executable not found. Make sure it's on PATH"; exit 1
+
 if [ "${*}" = "-h" ] || [ "${*}" = "--help" ]; then
     dumpmctree-dot -h
     exit 0
