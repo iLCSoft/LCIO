@@ -11,8 +11,7 @@ LCIO ( **L**inear **C**ollider **I/O** ) is a persistency framework and event da
 ## Introduction
 
 LCIO is intended to be used in both simulation studies and analysis frameworks. Its light weight and portability makes it also suitable for use in detector R&D
-testbeam applications. It provides a C++ and optionally a Java implementation with a common interface (API) - a Fortran interface to the C++ implementation also exists,
-if built with ROOT, Python bindings are available .
+testbeam applications. It provides a C++ and optionally a Java implementation with a common interface (API) - if built with ROOT, Python bindings are available .
 
 Using a common persistency format and event data model allows to easily share results and compare reconstruction algorithms.
 LCIO is used by almost all groups involved in linear collider detector studies and thus has become a de facto standard.
