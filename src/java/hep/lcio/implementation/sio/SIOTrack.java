@@ -78,7 +78,9 @@ class SIOTrack extends ITrack
       ndf = in.readInt() ;
       dEdx = in.readFloat();
       dEdxError = in.readFloat();
-      nholes = in.readInt() ;
+      if (SIOVersion.encode(major,minor) > SIOVersion.encode(2,21) {
+        nholes = in.readInt() ;
+      }
       radiusOfInnermostHit = in.readFloat() ;
       int nHitNumbers = in.readInt() ;
       int[] hitNumbers = new int[nHitNumbers] ;
