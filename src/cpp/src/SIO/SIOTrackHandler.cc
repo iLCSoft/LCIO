@@ -50,7 +50,9 @@ namespace SIO {
     SIO_DATA( device ,  &(trk->_ndf)  , 1 ) ;
     SIO_DATA( device ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( device ,  &(trk->_dEdxError) , 1  ) ;
-    SIO_DATA( device ,  &(trk->_nholes) , 1  ) ;
+    if (vers >= SIO_VERSION_ENCODE(2, 21) {
+      SIO_DATA( device ,  &(trk->_nholes) , 1  ) ;
+    }
     SIO_DATA( device ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
     int nHitNumbers ;
     SIO_DATA( device, &nHitNumbers , 1  ) ;
