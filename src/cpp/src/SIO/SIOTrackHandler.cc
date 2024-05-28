@@ -50,7 +50,7 @@ namespace SIO {
     SIO_DATA( device ,  &(trk->_ndf)  , 1 ) ;
     SIO_DATA( device ,  &(trk->_dEdx) , 1  ) ;
     SIO_DATA( device ,  &(trk->_dEdxError) , 1  ) ;
-    if (vers >= SIO_VERSION_ENCODE(2, 21)) {
+    if (vers > SIO_VERSION_ENCODE(2, 21)) {
       SIO_DATA( device ,  &(trk->_nholes) , 1  ) ;
     }
     SIO_DATA( device ,  &( trk->_radiusOfInnermostHit ) , 1  ) ;
@@ -60,7 +60,7 @@ namespace SIO {
     for( int i=0 ; i<nHitNumbers ; i++ ) {
       SIO_DATA( device , &(trk->_subdetectorHitNumbers[i] ), 1 ) ;
     }
-    if (vers >= SIO_VERSION_ENCODE(2, 21)) {
+    if (vers > SIO_VERSION_ENCODE(2, 21)) {
       int nHoleNumbers ;
       SIO_DATA( device, &nHoleNumbers , 1  ) ;
       trk->subdetectorHoleNumbers().resize( nHoleNumbers ) ;
