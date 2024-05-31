@@ -2,9 +2,8 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 ########################################################
-
 
 
 # project name
@@ -13,8 +12,8 @@ include(GNUInstallDirs)
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 20 )
-SET( LCIO_VERSION_PATCH 2 )
+SET( LCIO_VERSION_MINOR 22 )
+SET( LCIO_VERSION_PATCH 99 )
 
 ### set correct LCIO version in relevant files  ############################
 
@@ -166,12 +165,23 @@ eval $*
 
 ENDIF()
 
-# Deal with SIO
-FIND_PACKAGE( SIO QUIET )
+# Deal with SIO (we need at least 0.1 since there are no targets before)
+FIND_PACKAGE( SIO 0.1 QUIET )
 
 IF( NOT SIO_FOUND )
   MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
-  ADD_SUBDIRECTORY( sio )
+  include(FetchContent)
+  FetchContent_Declare(sio_extern
+  GIT_REPOSITORY https://github.com/iLCSoft/SIO.git
+  GIT_TAG v00-02
+  GIT_SHALLOW 1
+#  FIND_PACKAGE_ARGS
+)
+
+  FetchContent_MakeAvailable(sio_extern)
+
+  get_target_property(SIO_VERSION SIO::sio VERSION)
+  get_target_property(SIO_INCLUDE_DIRS SIO::sio INCLUDE_DIRECTORIES)
 ENDIF()
 
 MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
@@ -324,10 +334,3 @@ install(EXPORT ${PROJECT_NAME}Targets
   DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
   )
 
-IF( NOT SIO_FOUND )
-install(EXPORT SIOTargets
-  NAMESPACE SIO::
-  FILE "SIOTargets.cmake"
-  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/SIO/"
-  )
-ENDIF()

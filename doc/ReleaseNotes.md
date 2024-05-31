@@ -1,3 +1,23 @@
+# v02-21
+
+* 2024-01-15 Thomas Madlener ([PR#187](https://github.com/iLCSoft/LCIO/pull/187))
+  - Switch to c++20 for the key4hep nightlies based CI
+
+* 2024-01-11 tmadlener ([PR#184](https://github.com/iLCSoft/LCIO/pull/184))
+  - Make sure that LCIO installations can be used in downstream projects if they are built with builtin SIO. Fixes https://github.com/iLCSoft/LCIO/issues/183
+    - Add a test to make sure that this works as intended
+  - Bump the minimum required version for SIO to v00-01 in order to have CMake targets available.
+
+* 2023-12-15 jmcarcell ([PR#175](https://github.com/iLCSoft/LCIO/pull/175))
+  - Bump the minimum CMake version to 3.14
+
+* 2023-12-13 jmcarcell ([PR#178](https://github.com/iLCSoft/LCIO/pull/178))
+  - Bump the SIO version to v00-02
+  - Fix two compiler warnings with clang
+
+* 2023-12-06 Andre Rummler ([PR#181](https://github.com/iLCSoft/LCIO/pull/181))
+  - Replace the copy of SIO that is used for builtin SIO support with the necessary cmake configuration to fetch it on the fly via CMake's `FetchContent` as this simplifies the maintenance of the vendored version of SIO greatly. **This is a transparent change for users, as long as internet connection to fetch the SIO sources during building is available**
+
 # v02-20-02
 
 * 2023-12-06 tmadlener ([PR#182](https://github.com/iLCSoft/LCIO/pull/182))
