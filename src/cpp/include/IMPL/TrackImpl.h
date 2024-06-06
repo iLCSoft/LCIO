@@ -113,6 +113,10 @@ namespace IMPL {
      */
     virtual float getdEdxError() const;
 
+    /** Number of holes of the track.
+     */
+    virtual int getNholes() const;
+
     /** The radius of the innermost hit that has been used in the track fit.
      *  Helps to detect V0 tracks with small impact paramters or haevy mesons.
      *  To be used as convenient information or if hits are not stored in 
@@ -128,6 +132,13 @@ namespace IMPL {
      */
     virtual const EVENT::IntVec & getSubdetectorHitNumbers() const ;
 
+      /** A vector that holds the number of holes in particular subdetectors.
+     *  The mapping of indices to subdetectors is implementation dependent.
+     *  To be used as convenient information or if holes are not stored in
+     *  the data set, e.g. DST or FastMC.
+     *  TODO:  Provide way to store mapping in event/run header.
+     */
+    virtual const EVENT::IntVec & getSubdetectorHoleNumbers() const ;
 
     /** The tracks (as Track objects) that have been combined to this track.
      */
@@ -174,6 +185,7 @@ namespace IMPL {
     virtual void  setNdf( int ndf ) ;
     virtual void  setdEdx( float dEdx ) ;
     virtual void  setdEdxError( float dEdxError ) ;
+    virtual void  setNholes( int nholes ) ;
 
     virtual void  addTrack( EVENT::Track* trk ) ;
     virtual void  addTrackState( EVENT::TrackState* trkstate ) ;
@@ -186,10 +198,16 @@ namespace IMPL {
     virtual void  setRadiusOfInnermostHit( float r )  ;
 
     /** Allows modification of the subdetectorHitNumbers, e.g. <br>
-     *  track->subdetectorHitNumbers().resize(5) ; <br> 
+     *  track->subdetectorHitNumbers().resize(5) ; <br>
      *  track->subdetectorHitNumbers()[4] = 42 ;
      */
     virtual EVENT::IntVec & subdetectorHitNumbers() ;
+
+      /** Allows modification of the subdetectorHoleNumbers, e.g. <br>
+     *  track->subdetectorHoleNumbers().resize(5) ; <br>
+     *  track->subdetectorHoleNumbers()[4] = 42 ;
+     */
+    virtual EVENT::IntVec & subdetectorHoleNumbers() ;
 
   protected:
 
@@ -202,8 +220,10 @@ namespace IMPL {
     int   _ndf{0} ; 
     float _dEdx{0} ;
     float _dEdxError{0} ;
+    int   _nholes{0} ;
     float _radiusOfInnermostHit{0} ;
     EVENT::IntVec _subdetectorHitNumbers{} ;
+    EVENT::IntVec _subdetectorHoleNumbers{} ;
 
     EVENT::TrackVec _tracks{} ;
     EVENT::TrackerHitVec _hits{} ;
