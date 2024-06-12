@@ -1,3 +1,22 @@
+# v02-22
+
+* 2024-06-07 tmadlener ([PR#189](https://github.com/iLCSoft/LCIO/pull/189))
+  - Remove mentions of the removed F77 API (see [#161](https://github.com/iLCSoft/LCIO/pull/161)) from the documentation
+
+* 2024-06-06 tmadlener ([PR#190](https://github.com/iLCSoft/LCIO/pull/190))
+  - Remove the no longer used settings for the 32bit compatibility mode
+
+* 2024-06-06 Nazar Bartosik ([PR#147](https://github.com/iLCSoft/LCIO/pull/147))
+  - Add `Nholes` and and `subdetectorHoleNumbers` to the `Track` for keeping track of missing hits in a Track.
+
+* 2024-05-08 Bohdan Dudar ([PR#170](https://github.com/iLCSoft/LCIO/pull/170))
+  - Added new utility `dumpmctree` to draw the MC table of the event stored in the slcio file as the graphviz tree diagram, which represents parent-daughter relations visually in a easier way.
+    - `dumpmctree` is a small wrapper script around the actual `dumpmctree-dot` executable. The latter produces a `.dot` file which is then transformed into an `.svg` file via the wrapper script and the `dot` executable.
+    - The script relies on `dot` & `xdg-open` to be available on your system.
+
+* 2024-04-15 tmadlener ([PR#188](https://github.com/iLCSoft/LCIO/pull/188))
+  - Make the `PIDHandler` usable as `const` object by marking getters that do not mutate internal state as `const`
+
 # v02-21
 
 * 2024-01-15 Thomas Madlener ([PR#187](https://github.com/iLCSoft/LCIO/pull/187))
