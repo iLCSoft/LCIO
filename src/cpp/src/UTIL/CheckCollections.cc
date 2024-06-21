@@ -60,10 +60,8 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
         } else {
           typeString = col->getTypeName();
         }
-        const auto [itx, _] =
+        std::tie(it, std::ignore) =
             _map.emplace(name, std::make_pair(std::move(typeString), 0));
-
-        it = itx;
       }
 
       it->second.second++;
