@@ -17,15 +17,15 @@ namespace UTIL{
 
   void CheckCollections::checkFile( const std::string& fileName, bool quiet){
 
-    MT::LCReader lcReader(MT::LCReader::directAccess) ; 
+    MT::LCReader lcReader(MT::LCReader::directAccess) ;
     lcReader.open( fileName ) ;
     //----------- the event loop -----------
     while( const auto evt = lcReader.readNextEventHeader() ) {
-      
+
       const auto* colNames = evt->getCollectionNames() ;
-      
+
       for(const auto& name : *colNames){
-	
+
 	auto it = _map.find( name ) ;
 
 	if( it == _map.end() ){
@@ -38,7 +38,7 @@ namespace UTIL{
     //  be unset after reading in order for the reading of the headers to
     //  function properly.
     std::string typeString;
-    if (col->getTypeName() == "LCRelation"){     
+    if (col->getTypeName() == "LCRelation"){
       lcReader.setReadCollectionNames({name});
       auto fullEvt = lcReader.readEvent(evt->getRunNumber(), evt->getEventNumber());
       lcReader.setReadCollectionNames({});
@@ -89,7 +89,7 @@ namespace UTIL{
 	s.push_back( {e.first, e.second.first }) ;
     }
     return s ;
-  }  
+  }
 
   // Obtain the from and to type from the encoded "LCRelation[From,To]"
   std::tuple<std::string_view, std::string_view> getToFromType(const std::string_view fullType) {
@@ -145,7 +145,7 @@ namespace UTIL{
     }
     if (minimal == false){
       for(auto e : _map ){
-        
+
         if( e.second.second != _nEvents )
     os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << " [" <<  e.second.second << "]"<< std::endl ;
       }
@@ -158,14 +158,14 @@ namespace UTIL{
     }
     if (minimal == false){
       for(auto e : _map ){
-        
+
         if( e.second.second == _nEvents )
     os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << "  [" <<  e.second.second << "]"<< std::endl ;
       }
     }
     else{
       for(auto e : _map ){
-      
+
 	os << "     " <<  std::setw(width) << std::left << e.first << " " <<std::setw(width) << e.second.first << std::endl ;
     }
     }
