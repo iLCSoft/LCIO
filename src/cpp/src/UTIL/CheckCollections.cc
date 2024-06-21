@@ -57,7 +57,7 @@ namespace UTIL{
     else {
       typeString = col->getTypeName();
     }
-	  const auto[ itx, inserted] = _map.emplace( name,  std::make_pair( std::move(typeString) , 0 )  ) ;
+	  const auto[ itx, _ ] = _map.emplace( name,  std::make_pair( std::move(typeString) , 0 )  ) ;
 
 	  it = itx ;
 	}
