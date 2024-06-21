@@ -60,7 +60,7 @@ namespace UTIL {
       _patchCols.emplace_back( std::move(name), std::move(type) ) ;
     }
 
-    /** Add a all collections as Vector(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
+    /** Add all collections as Vector(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
      */
     void addPatchCollections(Vector cols){
       for(auto&& p : cols)
