@@ -5,6 +5,7 @@
 #include "IMPL/LCCollectionVec.h"
 #include "MT/LCReader.h"
 
+#include <algorithm>
 #include <iomanip>
 
 namespace UTIL {
@@ -128,6 +129,27 @@ CheckCollections::Vector CheckCollections::getConsistentCollections() const {
   return s;
 }
 
+void CheckCollections::addPatchCollection(std::string name, std::string type) {
+  _patchCols.emplace_back(std::move(name), std::move(type));
+  sortPatchCollections();
+}
+
+void CheckCollections::addPatchCollections(Vector cols) {
+  for (auto &&p : cols) {
+    _patchCols.emplace_back(std::move(p));
+  }
+  sortPatchCollections();
+}
+
+void CheckCollections::sortPatchCollections() {
+  std::sort(_patchCols.begin(), _patchCols.end(),
+            [](const auto &lhs, const auto &rhs) {
+              const int pidL = lhs.second.find('|') != std::string::npos;
+              const int pidR = rhs.second.find('|') != std::string::npos;
+              return pidL < pidR;
+            });
+}
+
 // Obtain the from and to type from the encoded "LCRelation[From,To]"
 std::tuple<std::string_view, std::string_view>
 getToFromType(const std::string_view fullType) {
@@ -139,21 +161,51 @@ getToFromType(const std::string_view fullType) {
                                          2)}; // need to strip final "]" as well
 }
 
+// Obtain the name of the recontructed particle collection as well as the
+// parameter names from an encoded "RecoColl|[name1[,names...]]"
+std::tuple<std::string, std::vector<std::string>>
+getRecoCollAndParamNames(const std::string_view fullType) {
+  auto delim = fullType.find('|');
+  auto recoName = std::string(fullType.substr(0, delim));
+
+  std::vector<std::string> paramNames{};
+  while (delim != std::string_view::npos) {
+    auto oldDelim = delim + 1;
+    delim = fullType.find(',', oldDelim);
+    paramNames.emplace_back(fullType.substr(oldDelim, delim));
+  }
+
+  return {recoName, paramNames};
+}
+
 void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
 
   for (const auto &[name, typeName] : _patchCols) {
 
     try {
       auto *coll = evt->getCollection(name);
-      // For LCRelations we still have to check whether the FromType and
-      // ToType are set and correct in case they are not
-      if (coll->getTypeName() == "LCRelation") {
+      const auto collType = coll->getTypeName();
+      if (collType == "LCRelation") {
+        // For LCRelations we still have to check whether the FromType and
+        // ToType are set and correct in case they are not
         auto &params = coll->parameters();
         if (params.getStringVal("FromType").empty() ||
             params.getStringVal("ToType").empty()) {
           const auto [from, to] = getToFromType(typeName);
           params.setValue("FromType", std::string(from));
           params.setValue("ToType", std::string(to));
+        }
+      }
+      if (collType == "Particle") {
+        // For ParticleID we need to make sure that this is attached to the
+        // required ReconstructedParticle collection
+        const auto &[recoName, paramNames] = getRecoCollAndParamNames(typeName);
+        auto pidHandler = UTIL::PIDHandler(evt->getCollection(recoName));
+        // No real way of doing this without trying and catching the exception
+        try {
+          pidHandler.getAlgorithmID(name);
+        } catch (UnknownAlgorithm &) {
+          pidHandler.addAlgorithm(name, paramNames);
         }
       }
     } catch (EVENT::DataNotAvailableException &e) {

@@ -58,16 +58,11 @@ namespace UTIL {
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      */
-    void addPatchCollection(std::string name, std::string type){
-      _patchCols.emplace_back( std::move(name), std::move(type) ) ;
-    }
+    void addPatchCollection(std::string name, std::string type);
 
     /** Add all collections as Vector(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
      */
-    void addPatchCollections(Vector cols){
-      for(auto&& p : cols)
-	_patchCols.emplace_back( std::move(p) ) ;
-    }
+    void addPatchCollections(Vector cols);
 
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
      */
@@ -86,6 +81,11 @@ namespace UTIL {
   private:
 
     void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
+
+    /// Sort the patch collections, such that all ParticleID patches are done at
+    /// the end **after** the ReconstructedParticle collections have been
+    /// patched in
+    void sortPatchCollections();
 
     unsigned _nEvents =0 ;
     std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
