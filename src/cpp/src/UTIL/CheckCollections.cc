@@ -22,18 +22,22 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
   lcReader.open(fileName);
   //----------- the event loop -----------
   while (const auto evt = lcReader.readNextEventHeader()) {
-
     const auto *colNames = evt->getCollectionNames();
+    std::vector<std::string> recoCollections{};
 
     for (const auto &name : *colNames) {
+      const auto col = evt->getCollection(name);
+      auto typeString = col->getTypeName();
+
+      // For ReconstructedParticle we also have to check the ParticleIDs for
+      // consistency. We have to do this regardless of whether the
+      // ReconstructedParticle collection is already in the map or not
+      if (typeString == "ReconstructedParticle") {
+        recoCollections.emplace_back(name);
+      }
 
       auto it = _map.find(name);
-
       if (it == _map.end()) {
-
-        auto col = evt->getCollection(name);
-        auto typeString = col->getTypeName();
-
         // If the type of a collection is LCRelation we want to read the entire
         // collections instead of just the header to get the 'ToType' and
         // 'FromType'. setReadCollectionNames({name}) allows reading of only
@@ -66,10 +70,44 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
       it->second.second++;
     }
 
+    lcReader.setReadCollectionNames(recoCollections);
+    auto fullEvt =
+        lcReader.readEvent(evt->getRunNumber(), evt->getEventNumber());
+    lcReader.setReadCollectionNames({});
+
+    for (const auto &name : recoCollections) {
+      auto handler = PIDHandler(fullEvt->getCollection(name));
+      insertParticleIDMetas(handler, name);
+    }
+
     _nEvents++;
   }
 
   lcReader.close();
+}
+
+void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
+                                             const std::string &recoName) {
+  const auto &algoIds = pidHandler.getAlgorithmIDs();
+  auto mapIt = _particleIDMetas.find(recoName);
+  if (mapIt == _particleIDMetas.end()) {
+    std::tie(mapIt, std::ignore) =
+        _particleIDMetas.emplace(recoName, std::vector<PIDMeta>{});
+  }
+
+  auto &pidMetas = mapIt->second;
+  for (const auto id : algoIds) {
+    const auto &name = pidHandler.getAlgorithmName(id);
+
+    if (auto it = std::find_if(
+            pidMetas.begin(), pidMetas.end(),
+            [&name](const auto &pidMeta) { return pidMeta.name == name; });
+        it == pidMetas.end()) {
+      pidMetas.emplace_back(name, pidHandler.getParameterNames(id), 1);
+    } else {
+      it->count++;
+    }
+  }
 }
 
 CheckCollections::Vector CheckCollections::getMissingCollections() const {
@@ -185,6 +223,39 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
     os << " ================================================================ "
        << std::endl;
   }
+
+  if (!minimal) {
+    os << " ================================================================\n"
+       << "Known ParticleID algorithms for ReconstructedParticle collections\n";
+    for (const auto &[name, pidMetas] : _particleIDMetas) {
+      if (pidMetas.empty()) {
+        continue;
+      }
+      os << name << ":\n";
+      for (const auto &meta : pidMetas) {
+        os << "     " << std::setw(width) << std::left << meta.name << "   ["
+           << meta.count << "]\n";
+      }
+      os << " -----------------------------------------------------------------"
+            " \n";
+    }
+    os << " ================================================================ "
+       << std::endl;
+  } else {
+    for (const auto &[name, pidMetas] : _particleIDMetas) {
+      for (const auto &meta : pidMetas) {
+        os << meta.name << std::setw(width) << " " << name << "|";
+        if (!meta.paramNames.empty()) {
+          os << meta.paramNames[0];
+          for (size_t i = 1; i < meta.paramNames.size(); ++i) {
+            os << "," << meta.paramNames[i];
+          }
+        }
+        os << '\n';
+      }
+    }
+  }
+  os << std::flush;
 }
 
 } // namespace UTIL
