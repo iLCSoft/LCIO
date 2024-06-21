@@ -56,15 +56,15 @@ namespace UTIL {
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      */
-    void addPatchCollection(const std::string name, std::string type){
-      _patchCols.push_back( {name, type} ) ;
+    void addPatchCollection(std::string name, std::string type){
+      _patchCols.emplace_back( std::move(name), std::move(type) ) ;
     }
 
     /** Add a all collections as Vector(name,type), e.g. retrieved from getMissingCollections()  that should be added to events in patchEvent().
      */
     void addPatchCollections(Vector cols){
-      for(const auto& p : cols)
-	_patchCols.push_back( p ) ;
+      for(auto&& p : cols)
+	_patchCols.emplace_back( std::move(p) ) ;
     }
 
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
