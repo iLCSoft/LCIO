@@ -32,13 +32,14 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
       if (it == _map.end()) {
 
         auto col = evt->getCollection(name);
+        auto typeString = col->getTypeName();
+
         // If the type of a collection is LCRelation we want to read the entire
         // collections instead of just the header to get the 'ToType' and
         // 'FromType'. setReadCollectionNames({name}) allows reading of only
         // certain collections by name instead of an entire event. This flag has
         // to be unset after reading in order for the reading of the headers to
         // function properly.
-        std::string typeString;
         if (col->getTypeName() == "LCRelation") {
           lcReader.setReadCollectionNames({name});
           auto fullEvt =
@@ -57,8 +58,6 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
             }
           }
           typeString = "LCRelation[" + fromType + "," + toType + "]";
-        } else {
-          typeString = col->getTypeName();
         }
         std::tie(it, std::ignore) =
             _map.emplace(name, std::make_pair(std::move(typeString), 0));
