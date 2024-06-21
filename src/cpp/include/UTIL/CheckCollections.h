@@ -3,6 +3,8 @@
 
 #include "lcio.h"
 
+#include "UTIL/PIDHandler.h"
+
 #include <string>
 #include <unordered_map>
 #include <set>
@@ -72,9 +74,25 @@ namespace UTIL {
     void patchCollections(EVENT::LCEvent* evt ) const ;
     
   private:
+
+    /// Metadata for ParticleIDs that are handled via the PIDHandler. Necessary
+    /// for consistency with EDM4hep, where ParticleID no longer lives in
+    /// ReconstructedParticle and where the direction of the relation has been
+    /// reversed.
+    struct PIDMeta {
+      std::string name{}; ///< algorithm name
+      std::vector<std::string> paramNames{}; ///< parameter names
+      uint32_t count{}; ///< How often this was found
+    };
+
+    void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
+
     unsigned _nEvents =0 ;
     std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
-    Vector _patchCols {} ;
+    /// Map from ReconstructedParticle collection names to attached ParticleID
+    /// meta information
+    std::unordered_map<std::string, std::vector<PIDMeta>> _particleIDMetas{};
+    Vector _patchCols{};
 
   }; // class
 
