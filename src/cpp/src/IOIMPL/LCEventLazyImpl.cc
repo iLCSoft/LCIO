@@ -1,6 +1,5 @@
 
 #include "IOIMPL/LCEventLazyImpl.h"
-#include "SIO/LCIORecords.h"
 #include "SIO/SIOParticleHandler.h"
 #include "SIO/SIOCollectionHandler.h"
 
