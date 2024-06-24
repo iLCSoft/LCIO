@@ -72,8 +72,6 @@ namespace UTIL {
     /** Add and empty collection to the event for any collection that is in patchCollections and not in the Event  
      */
     void patchCollections(EVENT::LCEvent* evt ) const ;
-    
-  private:
 
     /// Metadata for ParticleIDs that are handled via the PIDHandler. Necessary
     /// for consistency with EDM4hep, where ParticleID no longer lives in
@@ -84,6 +82,8 @@ namespace UTIL {
       std::vector<std::string> paramNames{}; ///< parameter names
       uint32_t count{}; ///< How often this was found
     };
+
+  private:
 
     void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
 
