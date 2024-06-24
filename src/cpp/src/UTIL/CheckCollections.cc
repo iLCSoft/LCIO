@@ -1,5 +1,6 @@
 #include "UTIL/CheckCollections.h"
 
+#include "Exceptions.h"
 #include "lcio.h"
 
 #include "IMPL/LCCollectionVec.h"
@@ -129,38 +130,6 @@ CheckCollections::Vector CheckCollections::getConsistentCollections() const {
   return s;
 }
 
-void CheckCollections::addPatchCollection(std::string name, std::string type) {
-  _patchCols.emplace_back(std::move(name), std::move(type));
-  sortPatchCollections();
-}
-
-void CheckCollections::addPatchCollections(Vector cols) {
-  for (auto &&p : cols) {
-    _patchCols.emplace_back(std::move(p));
-  }
-  sortPatchCollections();
-}
-
-void CheckCollections::sortPatchCollections() {
-  std::sort(_patchCols.begin(), _patchCols.end(),
-            [](const auto &lhs, const auto &rhs) {
-              const int pidL = lhs.second.find('|') != std::string::npos;
-              const int pidR = rhs.second.find('|') != std::string::npos;
-              return pidL < pidR;
-            });
-}
-
-// Obtain the from and to type from the encoded "LCRelation[From,To]"
-std::tuple<std::string_view, std::string_view>
-getToFromType(const std::string_view fullType) {
-  auto delim = fullType.find(',');
-  constexpr auto prefixLen = 11u; // length of "LCRelation["
-
-  return {fullType.substr(prefixLen, delim - prefixLen),
-          fullType.substr(delim + 1, fullType.size() - delim -
-                                         2)}; // need to strip final "]" as well
-}
-
 // Obtain the name of the recontructed particle collection as well as the
 // parameter names from an encoded "RecoColl|[name1[,names...]]"
 std::tuple<std::string, std::vector<std::string>>
@@ -178,10 +147,53 @@ getRecoCollAndParamNames(const std::string_view fullType) {
   return {recoName, paramNames};
 }
 
+void CheckCollections::addPatchCollection(std::string name, std::string type) {
+  if (type.find('|') != std::string::npos) {
+    auto [recoName, paramNames] = getRecoCollAndParamNames(name);
+    _particleIDMetas[recoName].emplace_back(name, std::move(paramNames));
+  } else {
+    _patchCols.emplace_back(std::move(name), std::move(type));
+  }
+}
+
+void CheckCollections::addPatchCollections(Vector cols) {
+  for (auto &&[name, type] : cols) {
+    if (type.find('|') != std::string::npos) {
+      auto [recoName, paramNames] = getRecoCollAndParamNames(type);
+      _particleIDMetas[recoName].emplace_back(name, std::move(paramNames));
+    } else {
+      _patchCols.emplace_back(std::move(name), std::move(type));
+    }
+  }
+}
+
+// Obtain the from and to type from the encoded "LCRelation[From,To]"
+std::tuple<std::string_view, std::string_view>
+getToFromType(const std::string_view fullType) {
+  auto delim = fullType.find(',');
+  constexpr auto prefixLen = 11u; // length of "LCRelation["
+
+  return {fullType.substr(prefixLen, delim - prefixLen),
+          fullType.substr(delim + 1, fullType.size() - delim -
+                                         2)}; // need to strip final "]" as well
+}
+
+// Add all algorithms that are specified in the pidMetas to the PIDHandler, such
+// that the necessary metadata is present
+void patchParticleIDs(UTIL::PIDHandler &pidHandler,
+                      const std::vector<CheckCollections::PIDMeta> &pidMetas) {
+  for (const auto &[name, paramNames, _] : pidMetas) {
+    try {
+      // simply assume that param names are OK if we find the algorithm
+      pidHandler.getAlgorithmID(name);
+    } catch (UnknownAlgorithm &) {
+      pidHandler.addAlgorithm(name, paramNames);
+    }
+  }
+}
+
 void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
-
   for (const auto &[name, typeName] : _patchCols) {
-
     try {
       auto *coll = evt->getCollection(name);
       const auto collType = coll->getTypeName();
@@ -194,18 +206,6 @@ void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
           const auto [from, to] = getToFromType(typeName);
           params.setValue("FromType", std::string(from));
           params.setValue("ToType", std::string(to));
-        }
-      }
-      if (collType == "Particle") {
-        // For ParticleID we need to make sure that this is attached to the
-        // required ReconstructedParticle collection
-        const auto &[recoName, paramNames] = getRecoCollAndParamNames(typeName);
-        auto pidHandler = UTIL::PIDHandler(evt->getCollection(recoName));
-        // No real way of doing this without trying and catching the exception
-        try {
-          pidHandler.getAlgorithmID(name);
-        } catch (UnknownAlgorithm &) {
-          pidHandler.addAlgorithm(name, paramNames);
         }
       }
     } catch (EVENT::DataNotAvailableException &e) {
@@ -223,6 +223,13 @@ void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
         evt->addCollection(new IMPL::LCCollectionVec(typeName), name);
       }
     }
+  }
+
+  for (const auto &[recoName, pidMeta] : _particleIDMetas) {
+    // Let the exception propagate. This is not something that we can easily
+    // handle in any meaningful way, so make users aware as early as possible
+    auto pidHandler = UTIL::PIDHandler(evt->getCollection(recoName));
+    patchParticleIDs(pidHandler, pidMeta);
   }
 }
 
