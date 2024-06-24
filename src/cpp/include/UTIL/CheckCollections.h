@@ -82,11 +82,6 @@ namespace UTIL {
 
     void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
 
-    /// Sort the patch collections, such that all ParticleID patches are done at
-    /// the end **after** the ReconstructedParticle collections have been
-    /// patched in
-    void sortPatchCollections();
-
     unsigned _nEvents =0 ;
     std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
     /// Map from ReconstructedParticle collection names to attached ParticleID
