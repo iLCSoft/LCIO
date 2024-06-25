@@ -73,9 +73,24 @@ namespace UTIL {
     /// ReconstructedParticle and where the direction of the relation has been
     /// reversed.
     struct PIDMeta {
-      std::string name{}; ///< algorithm name
+      // c++17 doesn't yet have aggregate initialization in vectors, so we
+      // need this constructor
+      PIDMeta(const std::string &n, const std::vector<std::string> &parN,
+              uint32_t c = 0)
+          : name(n), paramNames(parN), count(c) {}
+
+      // Since we have one non-default constructor we need to default the rest
+      // explicitly
+      constexpr PIDMeta() = default;
+      PIDMeta(const PIDMeta &) = default;
+      PIDMeta &operator=(const PIDMeta &) = default;
+      PIDMeta(PIDMeta &&) = default;
+      PIDMeta &operator=(PIDMeta &&) = default;
+      ~PIDMeta() = default;
+
+      std::string name{};                    ///< algorithm name
       std::vector<std::string> paramNames{}; ///< parameter names
-      uint32_t count{}; ///< How often this was found
+      uint32_t count{};                      ///< How often this was found
     };
 
   private:
