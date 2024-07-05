@@ -39,7 +39,6 @@ private:
     ~LCWarning(); //{}
     LCWarning( const LCWarning& ) ;
     LCWarning & operator=(const LCWarning &);
-    static LCWarning& instance ;
 
 
     struct _warning_cfg_struct{

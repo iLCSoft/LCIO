@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if ! dumpmctree-dot -h > /dev/null 2>&1; then
+    echo "dumpmctree-dot executable not found. Make sure it's on PATH"
+    exit 1
+fi
+
+# Store the full argument list to pass it on after we have sorted out the help
+ARGS=("$@")
+
+while [ $# != 0 ]; do
+    case "$1" in
+        -h|--help)
+            dumpmctree-dot -h
+            exit 0
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+if dumpmctree-dot "${ARGS[@]}"; then
+    if [ -f dumpmctree.svg ]; then
+        mv -f dumpmctree.svg dumpmctree.svg.bkp
+    fi
+    dot -Tsvg dumpmctree_tmp.dot > dumpmctree.svg 
+    xdg-open dumpmctree.svg
+else
+    exit 1
+fi

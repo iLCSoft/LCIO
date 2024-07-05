@@ -69,17 +69,17 @@ namespace lcrtrel_helper{
     typedef U tag ;    // this ensures that a new class instance is created for every user extension
     static const int allowed_to_call_ext = b ;
     
-    LCBaseTraits<U, T, I, D, b>(const LCBaseTraits&) = delete ;
-    LCBaseTraits<U, T, I, D, b>& operator=(const LCBaseTraits&) = delete ;
+    LCBaseTraits(const LCBaseTraits&) = delete ;
+    LCBaseTraits& operator=(const LCBaseTraits&) = delete ;
     
   public:
     /** Constructor */
-    inline LCBaseTraits<U, T, I, D, b>() {
+    inline LCBaseTraits() {
       _pointer = (ptr) I::init();
     }
     
     /** Destructor */
-    inline ~LCBaseTraits<U, T, I, D, b>() {
+    inline ~LCBaseTraits() {
       D::clean( _pointer );
     }
     
@@ -268,11 +268,11 @@ namespace lcrtrel{
     
     /** Constructor 
      */
-    LCIntExtension<U>() = default ;
+    LCIntExtension() = default ;
     
     /** Destructor 
      */
-    ~LCIntExtension<U>() = default ;
+    ~LCIntExtension() = default ;
     
     /** Extension data access */
     inline ptr& pointer() {
@@ -301,11 +301,11 @@ namespace lcrtrel{
 
     /** Constructor 
      */
-    LCFloatExtension<U>() = default ;
+    LCFloatExtension() = default ;
     
     /** Destructor 
      */
-    ~LCFloatExtension<U>() = default ;
+    ~LCFloatExtension() = default ;
     
     /** Extension data access */
     inline ptr& pointer() {
@@ -327,11 +327,11 @@ namespace lcrtrel{
     
     /** Constructor 
      */
-    LCBoolExtension<U>() = default ;
+    LCBoolExtension() = default ;
     
     /** Destructor 
      */
-    ~LCBoolExtension<U>() = default ;
+    ~LCBoolExtension() = default ;
     
     /** Extension data access */
     inline ptr& pointer() {

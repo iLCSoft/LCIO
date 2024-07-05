@@ -22,7 +22,8 @@ namespace IMPL {
     
   public:
     AccessChecked() ;
-    virtual ~AccessChecked() { /* nop */; }
+    AccessChecked(const AccessChecked&) = default;
+    virtual ~AccessChecked() = default;
     virtual int simpleUID() const { return _id ; }
 
   protected:

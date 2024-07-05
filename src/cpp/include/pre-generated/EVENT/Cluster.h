@@ -8,7 +8,6 @@
 #define EVENT_CLUSTER_H 1
 
 #include "EVENT/CalorimeterHit.h"
-#include "EVENT/Cluster.h"
 #include "EVENT/LCObject.h"
 #include "EVENT/ParticleID.h"
 #include "LCIOSTLTypes.h"

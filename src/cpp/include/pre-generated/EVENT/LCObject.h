@@ -31,7 +31,12 @@ class LCObject : public LCRTRelations {
 
 public: 
     /// Destructor.
-    virtual ~LCObject() { /* nop */; }
+    virtual ~LCObject() = default;
+
+    LCObject() = default ;
+    LCObject(LCObject const&) = default ;
+    LCObject(LCObject&&) = default ;
+    LCObject& operator=(LCObject const&) = default ;
 
     /** Returns an object id for internal (debugging) use in LCIO.
      */

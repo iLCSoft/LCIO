@@ -15,6 +15,9 @@ namespace SIO {
     typedef long long long64 ;
 
     RunEvent() = default ;
+    RunEvent(RunEvent const&) = default ;
+    RunEvent(RunEvent&&) = default ;
+    RunEvent& operator=(RunEvent const&) = default ;
     ~RunEvent() = default ;
     RunEvent(int run, int evt): RunNum( run ), EvtNum( evt ) {}
     RunEvent(long64 runEvt): RunNum( (runEvt >> 32 ) & 0xffffffff  ), EvtNum( runEvt &  0xffffffff ) {}

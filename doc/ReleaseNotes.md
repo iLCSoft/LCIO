@@ -1,3 +1,101 @@
+# v02-22
+
+* 2024-06-07 tmadlener ([PR#189](https://github.com/iLCSoft/LCIO/pull/189))
+  - Remove mentions of the removed F77 API (see [#161](https://github.com/iLCSoft/LCIO/pull/161)) from the documentation
+
+* 2024-06-06 tmadlener ([PR#190](https://github.com/iLCSoft/LCIO/pull/190))
+  - Remove the no longer used settings for the 32bit compatibility mode
+
+* 2024-06-06 Nazar Bartosik ([PR#147](https://github.com/iLCSoft/LCIO/pull/147))
+  - Add `Nholes` and and `subdetectorHoleNumbers` to the `Track` for keeping track of missing hits in a Track.
+
+* 2024-05-08 Bohdan Dudar ([PR#170](https://github.com/iLCSoft/LCIO/pull/170))
+  - Added new utility `dumpmctree` to draw the MC table of the event stored in the slcio file as the graphviz tree diagram, which represents parent-daughter relations visually in a easier way.
+    - `dumpmctree` is a small wrapper script around the actual `dumpmctree-dot` executable. The latter produces a `.dot` file which is then transformed into an `.svg` file via the wrapper script and the `dot` executable.
+    - The script relies on `dot` & `xdg-open` to be available on your system.
+
+* 2024-04-15 tmadlener ([PR#188](https://github.com/iLCSoft/LCIO/pull/188))
+  - Make the `PIDHandler` usable as `const` object by marking getters that do not mutate internal state as `const`
+
+# v02-21
+
+* 2024-01-15 Thomas Madlener ([PR#187](https://github.com/iLCSoft/LCIO/pull/187))
+  - Switch to c++20 for the key4hep nightlies based CI
+
+* 2024-01-11 tmadlener ([PR#184](https://github.com/iLCSoft/LCIO/pull/184))
+  - Make sure that LCIO installations can be used in downstream projects if they are built with builtin SIO. Fixes https://github.com/iLCSoft/LCIO/issues/183
+    - Add a test to make sure that this works as intended
+  - Bump the minimum required version for SIO to v00-01 in order to have CMake targets available.
+
+* 2023-12-15 jmcarcell ([PR#175](https://github.com/iLCSoft/LCIO/pull/175))
+  - Bump the minimum CMake version to 3.14
+
+* 2023-12-13 jmcarcell ([PR#178](https://github.com/iLCSoft/LCIO/pull/178))
+  - Bump the SIO version to v00-02
+  - Fix two compiler warnings with clang
+
+* 2023-12-06 Andre Rummler ([PR#181](https://github.com/iLCSoft/LCIO/pull/181))
+  - Replace the copy of SIO that is used for builtin SIO support with the necessary cmake configuration to fetch it on the fly via CMake's `FetchContent` as this simplifies the maintenance of the vendored version of SIO greatly. **This is a transparent change for users, as long as internet connection to fetch the SIO sources during building is available**
+
+# v02-20-02
+
+* 2023-12-06 tmadlener ([PR#182](https://github.com/iLCSoft/LCIO/pull/182))
+  - Also put pre-generated headers into include directories of LCIO target to make in-source builds (e.g. via. CMake's FetchContent) possible.
+
+* 2023-12-01 tmadlener ([PR#180](https://github.com/iLCSoft/LCIO/pull/180))
+  - Populate the `target_include_directories` of the `LCIO::lcio` target to make it properly usable downstream.
+
+# v02-20-01
+
+* 2023-11-14 jmcarcell ([PR#177](https://github.com/iLCSoft/LCIO/pull/177))
+  - Export targets and make sure they can be used by other CMake projects
+
+* 2023-09-07 jmcarcell ([PR#176](https://github.com/iLCSoft/LCIO/pull/176))
+  - Make an alias to `SIO::sio` when building SIO within LCIO so that it has the same target as the standalone SIO, that has the target `SIO::sio`
+
+* 2023-08-15 jmcarcell ([PR#174](https://github.com/iLCSoft/LCIO/pull/174))
+  - Make cmake respect CMAKE_INSTALL_<dir>
+
+* 2023-07-17 jmcarcell ([PR#173](https://github.com/iLCSoft/LCIO/pull/173))
+  - Drop FindCLHEP.cmake
+
+* 2023-07-17 jmcarcell ([PR#172](https://github.com/iLCSoft/LCIO/pull/172))
+  - Don't make the uninstall target if it already exists
+
+* 2023-06-13 Leonhard Reichenbach ([PR#171](https://github.com/iLCSoft/LCIO/pull/171))
+  - LCRelationNavigator: add methods `getRelatedToMaxWeightAndObject` and `getRelatedFromMaxWeightAndObject` returning both the object and the weight in a tuple
+
+# v02-20
+
+* 2023-05-30 Andre Sailer ([PR#168](https://github.com/iLCSoft/LCIO/pull/168))
+  - Pregenerated Headers: remove self-include from some headers (breaks include-what-you-use)
+  - LCIterator, LCRTRelations: remove template syntax causing errors in gcc13/c++20
+  - RunEvent, LCObject, TrackStateImpl: added default copy and move constructor and assignment operator to avoid error about "'definition of implicit copy constructor for 'LCObject' is deprecated because it has a user-declared destructor'"
+
+* 2023-05-12 tmadlener ([PR#167](https://github.com/iLCSoft/LCIO/pull/167))
+  - Fix checking of collection types to make sure patching works correctly
+
+* 2023-05-03 Thomas Madlener ([PR#166](https://github.com/iLCSoft/LCIO/pull/166))
+  - Upgrade `python-lint` workflow to run on `ubuntu-lates` since `ubuntu-18.04` runners have been removed.
+
+* 2023-05-03 Finn Johannsen ([PR#165](https://github.com/iLCSoft/LCIO/pull/165))
+  - Fixes to the on the fly collection patching that are necessary for the LCIO to EDM4hep standalone conversion.
+    - Make `CheckCollections` check the `FromType` and `ToType` collection parameters to figure out the involved types for `LCRelations`. Add them to the output of `CheckCollections::print`
+    - Make the `CheckCollectoins::patchCollections` parse these strings back for `LCRelation` collections and set them as collection parameters for collections it creates on the fly.
+    - Add a `--minimal` flag to `check_missing_cols` in order to make it possible to produce outputs that can be more easily consumbed by other programs.
+
+* 2023-05-03 Thomas Madlener ([PR#164](https://github.com/iLCSoft/LCIO/pull/164))
+  - Add Key4hep release based CI workflow
+  - Fix remaining warnings to enable `-Werror`
+  - Update *checkout* action to v3, since v2 is deprecated. 
+  - **CLHEP >= 2.0** is now required for building the examples that use CLHEP functionality (`test_fourvector`).
+
+* 2023-02-10 jmcarcell ([PR#162](https://github.com/iLCSoft/LCIO/pull/162))
+  - Add test dependencies so that tests can run in parallel
+
+* 2023-02-10 jmcarcell ([PR#161](https://github.com/iLCSoft/LCIO/pull/161))
+  - Remove the deprecated C API and fortran bindings (c.f. [#137](https://github.com/iLCSoft/LCIO/pull/137) and [#151](https://github.com/iLCSoft/LCIO/issues/151))
+
 # v02-19-01
 
 * 2023-02-06 Bohdan Dudar ([PR#163](https://github.com/iLCSoft/LCIO/pull/163))

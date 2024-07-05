@@ -62,7 +62,7 @@ namespace SIO {
     EVENT::LCRunHeader * readNextRunHeader() override ;
 
     /** Same as readNextRunHeader() but allows to set the access mode
-     *  LCIO::READ_ONLY (default) or LCIO::Update.
+     *  EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
@@ -77,7 +77,7 @@ namespace SIO {
 
 
     /** Same as readNextRunHeader() but allows to set the access mode
-     *  LCIO::READ_ONLY (default) or LCIO::Update
+     *  EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE
      *
      * @throws IOException
      */
@@ -135,7 +135,7 @@ namespace SIO {
     EVENT::LCRunHeader * readRunHeader(int runNumber ) override ;
 
     /** Same as LCEvent* readRunHeader(int runNumber)
-     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *  allowing to set the access mode EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */
@@ -150,7 +150,7 @@ namespace SIO {
 
 
     /** Same as LCEvent* readEvent(int runNumber, int evtNumber
-     *  allowing to set the access mode LCIO::READ_ONLY (default) or LCIO::Update.
+     *  allowing to set the access mode EVENT::LCIO::READ_ONLY (default) or EVENT::LCIO::UPDATE.
      *
      * @throws IOException
      */

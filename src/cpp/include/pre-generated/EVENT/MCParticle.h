@@ -8,7 +8,6 @@
 #define EVENT_MCPARTICLE_H 1
 
 #include "EVENT/LCObject.h"
-#include "EVENT/MCParticle.h"
 #include "empty_ignore.h"
 
 #include <vector>

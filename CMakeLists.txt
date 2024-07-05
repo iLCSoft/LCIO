@@ -2,9 +2,8 @@
 # cmake file for building LCIO
 # @author Frank Gaede, DESY
 # @author Jan Engels, DESY
-CMAKE_MINIMUM_REQUIRED( VERSION 2.8 FATAL_ERROR )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.14 FATAL_ERROR )
 ########################################################
-
 
 
 # project name
@@ -13,7 +12,7 @@ include(GNUInstallDirs)
 
 # project version
 SET( LCIO_VERSION_MAJOR 2 )
-SET( LCIO_VERSION_MINOR 17 )
+SET( LCIO_VERSION_MINOR 22 )
 SET( LCIO_VERSION_PATCH 0 )
 
 ### set correct LCIO version in relevant files  ############################
@@ -166,12 +165,23 @@ eval $*
 
 ENDIF()
 
-# Deal with SIO
-FIND_PACKAGE( SIO QUIET )
+# Deal with SIO (we need at least 0.1 since there are no targets before)
+FIND_PACKAGE( SIO 0.1 QUIET )
 
 IF( NOT SIO_FOUND )
   MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
-  ADD_SUBDIRECTORY( sio )
+  include(FetchContent)
+  FetchContent_Declare(sio_extern
+  GIT_REPOSITORY https://github.com/iLCSoft/SIO.git
+  GIT_TAG v00-02
+  GIT_SHALLOW 1
+#  FIND_PACKAGE_ARGS
+)
+
+  FetchContent_MakeAvailable(sio_extern)
+
+  get_target_property(SIO_VERSION SIO::sio VERSION)
+  get_target_property(SIO_INCLUDE_DIRS SIO::sio INCLUDE_DIRECTORIES)
 ENDIF()
 
 MESSAGE( STATUS "Using SIO (${SIO_VERSION})" )
@@ -287,14 +297,6 @@ OPTION( BUILD_LCIO_EXAMPLES "Set to ON to build LCIO examples" ON )
 ADD_SUBDIRECTORY( ./src/cpp lcio )
 
 
-
-# fortran examples
-OPTION( BUILD_F77_TESTJOBS "Set to ON to build LCIO F77 testjobs" OFF )
-IF( BUILD_F77_TESTJOBS )
-    ADD_SUBDIRECTORY( ./src/f77 f77 )
-ENDIF()
-
-
 # directory containing lcio tests
 ADD_SUBDIRECTORY( ./tests )
 
@@ -325,3 +327,10 @@ MESSAGE( STATUS "" )
 GENERATE_PACKAGE_CONFIGURATION_FILES( LCIOConfig.cmake LCIOConfigVersion.cmake )
 
 INSTALL( FILES cmake/MacroCheckPackageLibs.cmake cmake/MacroCheckPackageVersion.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+
+install(EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
+  FILE "${PROJECT_NAME}Targets.cmake"
+  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}/"
+  )
+

@@ -67,6 +67,12 @@ CHECK_PACKAGE_LIBS( LCIO lcio @CHECK_PACKAGE_SIO_LIBRARY@ )
 ## ---------------------------------------------------------------
 
 
+include(CMakeFindDependencyMacro)
+find_dependency(SIO @SIO_VERSION@)
+
+# Include the targets file to create the imported targets that a client can link
+# to or execute
+include("${CMAKE_CURRENT_LIST_DIR}/LCIOTargets.cmake")
 
 
 # ---------- final checking ---------------------------------------------------
