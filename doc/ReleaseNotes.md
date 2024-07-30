@@ -1,3 +1,11 @@
+# v02-22-01
+
+* 2024-06-24 jmcarcell ([PR#192](https://github.com/iLCSoft/LCIO/pull/192))
+  - Fix possibly wrong behavior with `std::remove_if` with a `erase - remove` idiom
+
+* 2024-06-24 Wouter Deconinck ([PR#191](https://github.com/iLCSoft/LCIO/pull/191))
+  - fix: parentheses in SIOTrack.java
+
 # v02-22
 
 * 2024-06-07 tmadlener ([PR#189](https://github.com/iLCSoft/LCIO/pull/189))
