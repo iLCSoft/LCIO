@@ -162,7 +162,7 @@ eval $*
 ENDIF()
 
 # Deal with SIO (we need at least 0.1 since there are no targets before)
-FIND_PACKAGE( SIO 0.1 QUIET )
+FIND_PACKAGE( SIO 0.2 QUIET )
 
 IF( NOT SIO_FOUND )
   MESSAGE( STATUS "SIO not found on your system. Using builtin sio" )
