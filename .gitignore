@@ -1,0 +1,19 @@
+# Typical build / install folder names
+build*/
+install/
+
+# Generated /configured files
+/src/cpp/include/lcio.h
+/src/cpp/include/pre-generated/EVENT/LCIO.h
+/src/aid/EVENT/LCIO.aid
+/src/latex/manual/manual.tex
+/pom.xml
+/doc/lcio.xml
+/doc/index.html
+/config/lcio.properties
+
+# python caches
+__pycache__/
+
+# emacs / auctex
+.auctex-auto/
