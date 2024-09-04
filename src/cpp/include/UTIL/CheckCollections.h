@@ -57,6 +57,23 @@ namespace UTIL {
     Vector getConsistentCollections() const ;
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
+     *
+     * Depending on the contents of name and type one of the following things
+     * will happen:
+     *
+     * - if type is an LCIO type an empty collection of the given type will be
+         put into the event using the passed name
+     * - if type is `LCRelation[<from-type>,<to-type>]` an LCRelation collection
+     *   will be created setting the <from-type> and <to-type> as FromType and
+     *   ToType collection parameters.
+     * - if type contains a '|' the whole (name, type) pair will be considered
+     *   to be ParticleID meta information and the name will be used as a PID
+     *   algorithm name and the type information will be parsed as
+     *   <reco-coll-name>|[<param-name>,<param-names...>], I.e. a ParticleID
+     *   algorithm of name will be attached to the ReconstructedParticle
+     *   collection with name <reco-coll-name>. Additionally any parameter names
+     *   that are in the comma-separated list after the '|' will be set via the
+     *   PIDHandler for this ParticleID algorithm
      */
     void addPatchCollection(std::string name, std::string type);
 
