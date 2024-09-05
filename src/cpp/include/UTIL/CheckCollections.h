@@ -3,15 +3,14 @@
 
 #include "lcio.h"
 
-#include "UTIL/PIDHandler.h"
-
 #include <string>
 #include <unordered_map>
 #include <set>
 
 namespace UTIL {
 
-  
+class PIDHandler;
+
 /** Utility class for checking and patching events with respect to collections that are not present 
  *  in every event of a set of files. 
  *  

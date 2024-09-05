@@ -5,6 +5,7 @@
 
 #include "IMPL/LCCollectionVec.h"
 #include "MT/LCReader.h"
+#include "UTIL/PIDHandler.h"
 
 #include <algorithm>
 #include <iomanip>
