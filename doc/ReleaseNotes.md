@@ -1,3 +1,18 @@
+# v02-22-02
+
+* 2024-09-05 tmadlener ([PR#193](https://github.com/iLCSoft/LCIO/pull/193))
+  - Add functionality to `CheckCollections` that makes it possible to add missing ParticleID algorithms to ReconstructedParticle collections
+    - This makes it possible to make very consistent event contents that are necessary for conversion to EDM4hep
+
+* 2024-08-01 tmadlener ([PR#196](https://github.com/iLCSoft/LCIO/pull/196))
+  - Run Key4hep CI workflows on OSs that are still supported
+
+* 2024-08-01 tmadlener ([PR#195](https://github.com/iLCSoft/LCIO/pull/195))
+  - Add a basic `.gitignore` file to avoid accidentally comitting configured / generated files
+
+* 2024-08-01 Thomas Madlener ([PR#194](https://github.com/iLCSoft/LCIO/pull/194))
+  - Make sure to require a version of SIO that is consistent with what we would use to build an internal version.
+
 # v02-22-01
 
 * 2024-06-24 jmcarcell ([PR#192](https://github.com/iLCSoft/LCIO/pull/192))
