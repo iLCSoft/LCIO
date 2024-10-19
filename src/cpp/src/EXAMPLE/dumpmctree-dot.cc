@@ -6,10 +6,12 @@
 #include "IOIMPL/LCFactory.h"
 
 #include <getopt.h>
+
+#include <algorithm>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
-#include <algorithm>
+#include <sstream>
 #include <string>
 
 using namespace EVENT;
