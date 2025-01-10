@@ -1,3 +1,8 @@
+# v02-22-03
+
+* 2024-10-20 Valentin Volkl ([PR#197](https://github.com/iLCSoft/LCIO/pull/197))
+  - Fix compilation on MacOS by adding missing include in dumpmctree-dot.cc
+
 # v02-22-02
 
 * 2024-09-05 tmadlener ([PR#193](https://github.com/iLCSoft/LCIO/pull/193))
