@@ -24,7 +24,7 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
   MT::LCReader lcReader(MT::LCReader::directAccess);
   lcReader.open(fileName);
   //----------- the event loop -----------
-  while (const auto evt = lcReader.readNextEventHeader()) {
+  while (const auto evt = lcReader.readNextEvent()) {
     const auto *colNames = evt->getCollectionNames();
     std::vector<std::string> recoCollections{};
 
@@ -67,10 +67,11 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
           typeString = "LCRelation[" + fromType + "," + toType + "]";
         }
         std::tie(it, std::ignore) =
-            _map.emplace(name, std::make_pair(std::move(typeString), 0));
+            _map.emplace(std::piecewise_construct, std::forward_as_tuple(name),
+                         std::forward_as_tuple(typeString, 0, col->isSubset()));
       }
 
-      it->second.second++;
+      it->second.count++;
     }
 
     lcReader.setReadCollectionNames(recoCollections);
@@ -115,18 +116,18 @@ void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
 
 CheckCollections::Vector CheckCollections::getMissingCollections() const {
   Vector s;
-  for (const auto &e : _map) {
-    if (e.second.second != _nEvents)
-      s.push_back({e.first, e.second.first});
+  for (const auto &[name, coll] : _map) {
+    if (coll.count != _nEvents)
+      s.push_back({name, coll.type});
   }
   return s;
 }
 
 CheckCollections::Vector CheckCollections::getConsistentCollections() const {
   Vector s;
-  for (auto e : _map) {
-    if (e.second.second == _nEvents)
-      s.push_back({e.first, e.second.first});
+  for (const auto &[name, coll] : _map) {
+    if (coll.count == _nEvents)
+      s.push_back({name, coll.type});
   }
   return s;
 }
@@ -179,6 +180,11 @@ getToFromType(const std::string_view fullType) {
                                          2)}; // need to strip final "]" as well
 }
 
+// Check whether this collection should be patched as subset collection or not
+bool isSubsetCollection(const std::string_view fullType) {
+  return fullType.back() == '*';
+}
+
 // Add all algorithms that are specified in the pidMetas to the PIDHandler, such
 // that the necessary metadata is present
 void patchParticleIDs(UTIL::PIDHandler &pidHandler,
@@ -219,9 +225,12 @@ void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
         const auto [from, to] = getToFromType(typeName);
         params.setValue("FromType", std::string(from));
         params.setValue("ToType", std::string(to));
+        relationColl->setSubset(isSubsetCollection(typeName));
         evt->addCollection(relationColl, name);
       } else {
-        evt->addCollection(new IMPL::LCCollectionVec(typeName), name);
+        auto newColl = new IMPL::LCCollectionVec(typeName);
+        newColl->setSubset(isSubsetCollection(typeName));
+        evt->addCollection(newColl, name);
       }
     }
   }
@@ -244,16 +253,18 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
     os << "     collections that are not in all events :  [# events where col "
           "is present]"
        << std::endl;
+    os << "     subset collections are marked with a '*'\n";
     os << " ================================================================ "
        << std::endl;
   }
   if (minimal == false) {
-    for (auto e : _map) {
+    for (const auto &[name, coll] : _map) {
+      const auto subsetMarker = coll.subset ? "*" : "";
 
-      if (e.second.second != _nEvents)
-        os << "     " << std::setw(width) << std::left << e.first << " "
-           << std::setw(width) << e.second.first << " [" << e.second.second
-           << "]" << std::endl;
+      if (coll.count != _nEvents)
+        os << "     " << std::setw(width) << std::left << name << " "
+           << std::setw(width) << coll.type << subsetMarker << " ["
+           << coll.count << "]" << std::endl;
     }
   }
 
@@ -265,18 +276,18 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
        << std::endl;
   }
   if (minimal == false) {
-    for (auto e : _map) {
-
-      if (e.second.second == _nEvents)
-        os << "     " << std::setw(width) << std::left << e.first << " "
-           << std::setw(width) << e.second.first << "  [" << e.second.second
-           << "]" << std::endl;
+    for (const auto &[name, coll] : _map) {
+      const auto subsetMarker = coll.subset ? "*" : "";
+      if (coll.count == _nEvents)
+        os << "     " << std::setw(width) << std::left << name << " "
+           << std::setw(width) << coll.type << subsetMarker << "  ["
+           << coll.count << "]" << std::endl;
     }
   } else {
-    for (auto e : _map) {
-
-      os << "     " << std::setw(width) << std::left << e.first << " "
-         << std::setw(width) << e.second.first << std::endl;
+    for (const auto &[name, coll] : _map) {
+      const auto subsetMarker = coll.subset ? "*" : "";
+      os << "     " << std::setw(width) << std::left << name << " "
+         << std::setw(width) << coll.type + subsetMarker << std::endl;
     }
   }
   if (minimal == false) {
