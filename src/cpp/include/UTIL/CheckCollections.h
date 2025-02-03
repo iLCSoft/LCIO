@@ -111,6 +111,15 @@ class PIDHandler;
 
     /// Information about one collection
     struct Collection {
+      Collection(std::string t, unsigned c, bool s)
+        : type(std::move(t)), count(c), subset(s) {}
+      Collection() = default;
+      Collection(const Collection&) = default;
+      Collection& operator=(const Collection&) = default;
+      Collection(Collection&&) = default;
+      Collection& operator=(Collection&&) = default;
+      ~Collection() = default;
+
       std::string type{};
       unsigned count{0};
       bool subset{false};
