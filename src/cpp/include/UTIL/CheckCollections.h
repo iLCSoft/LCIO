@@ -109,9 +109,11 @@ class PIDHandler;
       uint32_t count{};                      ///< How often this was found
     };
 
+    /// Information about one collection
     struct Collection {
       std::string type{};
       unsigned count{0};
+      bool subset{false};
     };
 
   private:

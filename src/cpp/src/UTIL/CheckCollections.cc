@@ -24,7 +24,7 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
   MT::LCReader lcReader(MT::LCReader::directAccess);
   lcReader.open(fileName);
   //----------- the event loop -----------
-  while (const auto evt = lcReader.readNextEventHeader()) {
+  while (const auto evt = lcReader.readNextEvent()) {
     const auto *colNames = evt->getCollectionNames();
     std::vector<std::string> recoCollections{};
 
@@ -68,7 +68,7 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
         }
         std::tie(it, std::ignore) =
             _map.emplace(std::piecewise_construct, std::forward_as_tuple(name),
-                         std::forward_as_tuple(typeString, 0));
+                         std::forward_as_tuple(typeString, 0, col->isSubset()));
       }
 
       it->second.count++;
@@ -245,16 +245,18 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
     os << "     collections that are not in all events :  [# events where col "
           "is present]"
        << std::endl;
+    os << "     subset collections are marked with a '*'\n";
     os << " ================================================================ "
        << std::endl;
   }
   if (minimal == false) {
     for (const auto &[name, coll] : _map) {
+      const auto subsetMarker = coll.subset ? "*" : "";
 
       if (coll.count != _nEvents)
         os << "     " << std::setw(width) << std::left << name << " "
-           << std::setw(width) << coll.type << " [" << coll.count << "]"
-           << std::endl;
+           << std::setw(width) << coll.type << subsetMarker << " ["
+           << coll.count << "]" << std::endl;
     }
   }
 
@@ -267,17 +269,17 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
   }
   if (minimal == false) {
     for (const auto &[name, coll] : _map) {
-
+      const auto subsetMarker = coll.subset ? "*" : "";
       if (coll.count == _nEvents)
         os << "     " << std::setw(width) << std::left << name << " "
-           << std::setw(width) << coll.type << "  [" << coll.count << "]"
-           << std::endl;
+           << std::setw(width) << coll.type << subsetMarker << "  ["
+           << coll.count << "]" << std::endl;
     }
   } else {
     for (const auto &[name, coll] : _map) {
-
+      const auto subsetMarker = coll.subset ? "*" : "";
       os << "     " << std::setw(width) << std::left << name << " "
-         << std::setw(width) << coll.type << std::endl;
+         << std::setw(width) << coll.type + subsetMarker << std::endl;
     }
   }
   if (minimal == false) {
