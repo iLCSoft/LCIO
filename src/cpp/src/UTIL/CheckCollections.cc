@@ -180,6 +180,11 @@ getToFromType(const std::string_view fullType) {
                                          2)}; // need to strip final "]" as well
 }
 
+// Check whether this collection should be patched as subset collection or not
+bool isSubsetCollection(const std::string_view fullType) {
+  return fullType.back() == '*';
+}
+
 // Add all algorithms that are specified in the pidMetas to the PIDHandler, such
 // that the necessary metadata is present
 void patchParticleIDs(UTIL::PIDHandler &pidHandler,
@@ -220,9 +225,12 @@ void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
         const auto [from, to] = getToFromType(typeName);
         params.setValue("FromType", std::string(from));
         params.setValue("ToType", std::string(to));
+        relationColl->setSubset(isSubsetCollection(typeName));
         evt->addCollection(relationColl, name);
       } else {
-        evt->addCollection(new IMPL::LCCollectionVec(typeName), name);
+        auto newColl = new IMPL::LCCollectionVec(typeName);
+        newColl->setSubset(isSubsetCollection(typeName));
+        evt->addCollection(newColl, name);
       }
     }
   }
