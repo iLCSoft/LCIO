@@ -109,12 +109,17 @@ class PIDHandler;
       uint32_t count{};                      ///< How often this was found
     };
 
+    struct Collection {
+      std::string type{};
+      unsigned count{0};
+    };
+
   private:
 
     void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
 
     unsigned _nEvents =0 ;
-    std::unordered_map< std::string, std::pair< std::string, unsigned > > _map{} ;
+    std::unordered_map< std::string, Collection > _map{} ;
     /// Map from ReconstructedParticle collection names to attached ParticleID
     /// meta information
     std::unordered_map<std::string, std::vector<PIDMeta>> _particleIDMetas{};

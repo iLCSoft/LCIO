@@ -67,10 +67,11 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
           typeString = "LCRelation[" + fromType + "," + toType + "]";
         }
         std::tie(it, std::ignore) =
-            _map.emplace(name, std::make_pair(std::move(typeString), 0));
+            _map.emplace(std::piecewise_construct, std::forward_as_tuple(name),
+                         std::forward_as_tuple(typeString, 0));
       }
 
-      it->second.second++;
+      it->second.count++;
     }
 
     lcReader.setReadCollectionNames(recoCollections);
@@ -115,18 +116,18 @@ void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
 
 CheckCollections::Vector CheckCollections::getMissingCollections() const {
   Vector s;
-  for (const auto &e : _map) {
-    if (e.second.second != _nEvents)
-      s.push_back({e.first, e.second.first});
+  for (const auto &[name, coll] : _map) {
+    if (coll.count != _nEvents)
+      s.push_back({name, coll.type});
   }
   return s;
 }
 
 CheckCollections::Vector CheckCollections::getConsistentCollections() const {
   Vector s;
-  for (auto e : _map) {
-    if (e.second.second == _nEvents)
-      s.push_back({e.first, e.second.first});
+  for (const auto &[name, coll] : _map) {
+    if (coll.count == _nEvents)
+      s.push_back({name, coll.type});
   }
   return s;
 }
@@ -248,12 +249,12 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
        << std::endl;
   }
   if (minimal == false) {
-    for (auto e : _map) {
+    for (const auto &[name, coll] : _map) {
 
-      if (e.second.second != _nEvents)
-        os << "     " << std::setw(width) << std::left << e.first << " "
-           << std::setw(width) << e.second.first << " [" << e.second.second
-           << "]" << std::endl;
+      if (coll.count != _nEvents)
+        os << "     " << std::setw(width) << std::left << name << " "
+           << std::setw(width) << coll.type << " [" << coll.count << "]"
+           << std::endl;
     }
   }
 
@@ -265,18 +266,18 @@ void CheckCollections::print(std::ostream &os, bool minimal) const {
        << std::endl;
   }
   if (minimal == false) {
-    for (auto e : _map) {
+    for (const auto &[name, coll] : _map) {
 
-      if (e.second.second == _nEvents)
-        os << "     " << std::setw(width) << std::left << e.first << " "
-           << std::setw(width) << e.second.first << "  [" << e.second.second
-           << "]" << std::endl;
+      if (coll.count == _nEvents)
+        os << "     " << std::setw(width) << std::left << name << " "
+           << std::setw(width) << coll.type << "  [" << coll.count << "]"
+           << std::endl;
     }
   } else {
-    for (auto e : _map) {
+    for (const auto &[name, coll] : _map) {
 
-      os << "     " << std::setw(width) << std::left << e.first << " "
-         << std::setw(width) << e.second.first << std::endl;
+      os << "     " << std::setw(width) << std::left << name << " "
+         << std::setw(width) << coll.type << std::endl;
     }
   }
   if (minimal == false) {
