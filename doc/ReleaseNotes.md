@@ -1,3 +1,10 @@
+# v02-22-04
+
+* 2025-02-03 Thomas Madlener ([PR#201](https://github.com/iLCSoft/LCIO/pull/201))
+  - Make it possible to create empty subset collections during patching
+    - Appending a **`*`** (star) to the collection type name (no spaces) will make this collection an empty subset collection if it is not already present.
+    - Fixes [#199 ](https://github.com/iLCSoft/LCIO/issues/199)
+
 # v02-22-03
 
 * 2024-10-20 Valentin Volkl ([PR#197](https://github.com/iLCSoft/LCIO/pull/197))
