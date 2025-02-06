@@ -1,3 +1,38 @@
+# v02-22-04
+
+* 2025-02-03 Thomas Madlener ([PR#201](https://github.com/iLCSoft/LCIO/pull/201))
+  - Make it possible to create empty subset collections during patching
+    - Appending a **`*`** (star) to the collection type name (no spaces) will make this collection an empty subset collection if it is not already present.
+    - Fixes [#199 ](https://github.com/iLCSoft/LCIO/issues/199)
+
+# v02-22-03
+
+* 2024-10-20 Valentin Volkl ([PR#197](https://github.com/iLCSoft/LCIO/pull/197))
+  - Fix compilation on MacOS by adding missing include in dumpmctree-dot.cc
+
+# v02-22-02
+
+* 2024-09-05 tmadlener ([PR#193](https://github.com/iLCSoft/LCIO/pull/193))
+  - Add functionality to `CheckCollections` that makes it possible to add missing ParticleID algorithms to ReconstructedParticle collections
+    - This makes it possible to make very consistent event contents that are necessary for conversion to EDM4hep
+
+* 2024-08-01 tmadlener ([PR#196](https://github.com/iLCSoft/LCIO/pull/196))
+  - Run Key4hep CI workflows on OSs that are still supported
+
+* 2024-08-01 tmadlener ([PR#195](https://github.com/iLCSoft/LCIO/pull/195))
+  - Add a basic `.gitignore` file to avoid accidentally comitting configured / generated files
+
+* 2024-08-01 Thomas Madlener ([PR#194](https://github.com/iLCSoft/LCIO/pull/194))
+  - Make sure to require a version of SIO that is consistent with what we would use to build an internal version.
+
+# v02-22-01
+
+* 2024-06-24 jmcarcell ([PR#192](https://github.com/iLCSoft/LCIO/pull/192))
+  - Fix possibly wrong behavior with `std::remove_if` with a `erase - remove` idiom
+
+* 2024-06-24 Wouter Deconinck ([PR#191](https://github.com/iLCSoft/LCIO/pull/191))
+  - fix: parentheses in SIOTrack.java
+
 # v02-22
 
 * 2024-06-07 tmadlener ([PR#189](https://github.com/iLCSoft/LCIO/pull/189))

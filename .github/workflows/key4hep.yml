@@ -10,12 +10,13 @@ jobs:
       matrix:
         release: ["sw.hsf.org/key4hep",
                   "sw-nightlies.hsf.org/key4hep"]
+        container_os: [el9, ubuntu2204]
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
     - uses: aidasoft/run-lcg-view@v4
       with:
-        container: centos7
+        container: ${{ matrix.container_os }}
         view-path: /cvmfs/${{ matrix.release }}
         run: |
           mkdir build install

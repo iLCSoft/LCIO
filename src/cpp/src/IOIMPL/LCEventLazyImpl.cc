@@ -1,6 +1,5 @@
 
 #include "IOIMPL/LCEventLazyImpl.h"
-#include "SIO/LCIORecords.h"
 #include "SIO/SIOParticleHandler.h"
 #include "SIO/SIOCollectionHandler.h"
 
@@ -29,7 +28,7 @@ namespace IOIMPL {
   //----------------------------------------------------------------------------
   
   void LCEventLazyImpl::removeCollection(const std::string & name) {
-    std::remove_if( _blocks.begin(), _blocks.end(), [&]( const sio::block_ptr &blk ){ return (blk->name() == name) ; } ) ;
+    _blocks.erase( std::remove_if( _blocks.begin(), _blocks.end(), [&]( const sio::block_ptr &blk ){ return (blk->name() == name) ; } ), _blocks.end() ) ;
     LCEventImpl::removeCollection( name ) ;
   }
   
