@@ -175,6 +175,11 @@ IF( BUILD_ROOTDICT )
       DEPENDS t_root_writeEventTree
       )
 
+    ADD_TEST( t_anajob_py ${SH} "${LCIO_ENV_INIT}" "python3 ${PROJECT_SOURCE_DIR}/examples/python/anajob.py c_rec.slcio")
+    set_tests_properties( t_anajob_py
+      PROPERTIES DEPENDS t_c_rec_c_sim
+    )
+
 ENDIF()
 
 
