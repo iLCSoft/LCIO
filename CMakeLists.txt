@@ -96,7 +96,7 @@ INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/src/python/" DESTINATION python )
 INSTALL( DIRECTORY "${PROJECT_SOURCE_DIR}/examples/python/" DESTINATION python/examples )
 # install executable python utilities
 IF( BUILD_ROOTDICT )
-  INSTALL( PROGRAMS "${PROJECT_SOURCE_DIR}/examples/python/anajob.py" TYPE BIN RENAME anajob)
+  INSTALL( PROGRAMS "${PROJECT_SOURCE_DIR}/examples/python/anajob.py" TYPE BIN RENAME anajob.py )
 ENDIF()
 
 
