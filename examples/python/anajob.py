@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Concise printout of the LCIO file contents
 Re-implemented using python3 functions
