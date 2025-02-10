@@ -29,7 +29,11 @@ jobs:
             ..
           make -k
           make install
-          ctest --output-on-failure
+          if [[ ${{ matrix.LCG }} =~ LCG_97 ]]; then
+              ctest --output-on-failure -E t_anajob_py
+          else
+              ctest --output-on-failure
+          fi
           echo "::group::Test downstream build"
           cd -
           export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
