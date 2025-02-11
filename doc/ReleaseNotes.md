@@ -1,3 +1,9 @@
+# v02-22-05
+
+* 2025-02-10 Nazar Bartosik ([PR#202](https://github.com/iLCSoft/LCIO/pull/202))
+  - Merge the remaining changes that were made to the muon collider fork
+    - Make the `anajob.py` example python3 compatible (and remove python2 support) and install it as `anajob.py` executable if `BUILD_ROOTDICT` is enabled.
+
 # v02-22-04
 
 * 2025-02-03 Thomas Madlener ([PR#201](https://github.com/iLCSoft/LCIO/pull/201))
