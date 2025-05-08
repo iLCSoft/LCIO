@@ -1,3 +1,11 @@
+# v02-22-06
+
+* 2025-03-28 jmcarcell ([PR#205](https://github.com/ilCSoft/LCIO/pull/205))
+  - Add LANGUAGES CXX in the top level CMakeLists.txt to prevent checking for a C compiler.
+
+* 2025-03-24 Bohdan Dudar ([PR#204](https://github.com/ilCSoft/LCIO/pull/204))
+  - Make `getRelatedToMaxWeightAndObject()`, `getRelatedToMaxWeightObject()`, `getRelatedFromMaxWeightObject()` return non-const `LCObject` pointer.
+
 # v02-22-05
 
 * 2025-02-10 Nazar Bartosik ([PR#202](https://github.com/iLCSoft/LCIO/pull/202))
