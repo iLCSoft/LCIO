@@ -68,7 +68,7 @@ make -j 4 install
 
 ```sh
 . /cvmfs/ilc.desy.de/sw/x86_64_gcc131_el9/root/6.32.12/bin/thisroot.sh
-cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=ON ..
+cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=../install ..
 make -j 4 install
 cd ..
 ```
