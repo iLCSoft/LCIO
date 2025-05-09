@@ -59,7 +59,7 @@ git checkout v02-15-01    ##  use a specific version
 ```sh
 mkdir build
 cd build
-cmake ..
+cmake .. -DCMAKE_INSTALL_PREFIX=../install
 make -j 4 install
 ```
 
@@ -67,8 +67,8 @@ make -j 4 install
   version of ROOT installed and initialized (*make sure you use a compatible compiler and  C++ standard*), e.g.
 
 ```sh
-. /cvmfs/ilc.desy.de/sw/x86_64_gcc82_sl6/root/6.18.04/bin/thisroot.sh
-cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 ..
+. /cvmfs/ilc.desy.de/sw/x86_64_gcc131_el9/root/6.32.12/bin/thisroot.sh
+cmake -DBUILD_ROOTDICT=ON -D CMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=../install ..
 make -j 4 install
 cd ..
 ```
