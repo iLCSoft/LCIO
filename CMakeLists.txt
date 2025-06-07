@@ -66,7 +66,7 @@ INCLUDE( ilcsoft_default_settings )
 # ``-DCMAKE_CXX_STANDARD=<standard>`` when invoking CMake
 SET(CMAKE_CXX_STANDARD 17 CACHE STRING "")
 
-if(NOT CMAKE_CXX_STANDARD MATCHES "17|20")
+if(NOT CMAKE_CXX_STANDARD MATCHES "17|20|23")
   MESSAGE(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD} (need >= 17)")
 endif()
 SET( CMAKE_CXX_STANDARD_REQUIRED ON )
