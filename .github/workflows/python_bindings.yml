@@ -9,11 +9,12 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: cvmfs-contrib/github-action-cvmfs@v3
-      - uses: aidasoft/run-lcg-view@v4
+      - uses: actions/checkout@v5
+      - uses: cvmfs-contrib/github-action-cvmfs@v5
+      - uses: aidasoft/run-lcg-view@v5
         with:
           release-platform: "LCG_101/x86_64-centos7-gcc10-opt"
+          ccache-key: ccache-python_bindings
           run: |
             mkdir build install
             cd build
