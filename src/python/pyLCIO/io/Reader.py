@@ -6,7 +6,6 @@ Created on Dec 4, 2012
 
 from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT
-from sixlcio.moves import range
 from io import open
 import sixlcio as six
 

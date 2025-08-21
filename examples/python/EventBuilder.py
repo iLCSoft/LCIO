@@ -13,7 +13,6 @@ from ROOT import TVector3, TLorentzVector, TRandom3, TMath
 from time import time
 
 import sys, math
-from sixlcio.moves import range
 
 def generateEvents( outputFileName, nEvents ):
     
