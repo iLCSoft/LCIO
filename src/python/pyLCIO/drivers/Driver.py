@@ -35,7 +35,7 @@ class Driver():
         ''' Method that is executed for each run header '''
         for driver in self.drivers:
             startTime = time()
-            driver.processRunHeader( run )
+            driver.processRunHeader( runHeader )
             driver.processedTime += time() - startTime
 
     def processEvent( self, event ):

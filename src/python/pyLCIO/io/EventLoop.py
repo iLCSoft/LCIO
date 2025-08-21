@@ -34,7 +34,7 @@ class EventLoop:
             self.addFile( fileName )
     
     def addFileList( self, fileListName ):
-        fileListFile = open( fileList, 'r' )
+        fileListFile = open( fileListName, 'r' )
         for line in fileListFile:
             self.addFile( line.strip() )
         fileListFile.close()
