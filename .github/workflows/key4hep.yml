@@ -1,6 +1,11 @@
 name: key4hep
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: 16 4 * * 1
 
 jobs:
   linux:
@@ -10,7 +15,7 @@ jobs:
       matrix:
         release: ["sw.hsf.org/key4hep",
                   "sw-nightlies.hsf.org/key4hep"]
-        container_os: [el9, ubuntu2204]
+        container_os: [el9, ubuntu2404]
     steps:
     - uses: actions/checkout@v3
     - uses: cvmfs-contrib/github-action-cvmfs@v3
@@ -27,8 +32,8 @@ jobs:
             -DCMAKE_INSTALL_PREFIX=../install \
             ..
           make -k
-          make install
           ctest --output-on-failure
+          make install
           echo "::group::Test downstream build"
           cd -
           export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
