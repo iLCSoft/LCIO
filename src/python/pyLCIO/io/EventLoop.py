@@ -3,14 +3,11 @@ Created on Dec 4, 2012
 
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
-from __future__ import absolute_import, unicode_literals
-from __future__ import print_function
 import os
 
 from pyLCIO.drivers.Driver import Driver
 from pyLCIO.io.LcioReader import LcioReader
 from pyLCIO.io.StdHepReader import StdHepReader
-from io import open
 
 class EventLoop:
     ''' Class that manages a loop of LCIO events '''

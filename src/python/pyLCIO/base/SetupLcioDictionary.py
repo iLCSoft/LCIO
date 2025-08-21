@@ -4,10 +4,10 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import, unicode_literals
-from __future__ import print_function
+import os
+import sys
+
 from ROOT import gSystem
-import os, sys
 
 class RootDictLoadError(Exception):
     """Raised if gSystem.Load cannot successfully load a shared lib/dict"""
