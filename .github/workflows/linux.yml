@@ -14,11 +14,12 @@ jobs:
               "LCG_102/x86_64-centos7-clang12-opt",
               "LCG_102/x86_64-ubuntu2004-gcc9-opt"]
     steps:
-    - uses: actions/checkout@v3
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
-    - uses: aidasoft/run-lcg-view@v4
+    - uses: actions/checkout@v5
+    - uses: cvmfs-contrib/github-action-cvmfs@v5
+    - uses: aidasoft/run-lcg-view@v5
       with:
         release-platform: ${{ matrix.LCG }}
+        ccache-key: ccache-${{ matrix.LCG }}
         run: |
           mkdir build install
           cd build
@@ -26,6 +27,7 @@ jobs:
             -DBUILD_ROOTDICT=ON \
             -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -Werror" \
             -DCMAKE_INSTALL_PREFIX=../install \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             ..
           make -k
           make install
@@ -39,5 +41,6 @@ jobs:
           export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
           cd tests/downstream-project-cmake-test
           mkdir build && cd build
-          cmake .. -DCMAKE_CXX_STANDARD=17
+          cmake .. -DCMAKE_CXX_STANDARD=17 \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
           make -k

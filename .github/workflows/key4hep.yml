@@ -20,14 +20,15 @@ jobs:
           - release: "sw-nightlies.hsf.org/key4hep"
             container_os: ubuntu2404
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v5
       with:
         path: lcio
-    - uses: cvmfs-contrib/github-action-cvmfs@v3
-    - uses: aidasoft/run-lcg-view@v4
+    - uses: cvmfs-contrib/github-action-cvmfs@v5
+    - uses: aidasoft/run-lcg-view@v5
       with:
         container: ${{ matrix.container_os }}
         view-path: /cvmfs/${{ matrix.release }}
+        ccache-key: ccache-key4hep-${{ matrix.container_os }}-${{ matrix.release }}
         run: |
           STARTDIR=$(pwd)
           cd $STARTDIR/lcio
@@ -37,6 +38,7 @@ jobs:
             -DBUILD_ROOTDICT=ON \
             -DCMAKE_CXX_FLAGS="-fdiagnostics-color=always -Werror " \
             -DCMAKE_INSTALL_PREFIX=../install \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
             ..
           make -k
           ctest --output-on-failure
@@ -46,7 +48,8 @@ jobs:
           export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
           cd tests/downstream-project-cmake-test
           mkdir build && cd build
-          cmake .. -DCMAKE_CXX_STANDARD=20
+          cmake .. -DCMAKE_CXX_STANDARD=20 \
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
           make -k
           echo "::group::Test python bindings"
           cd $STARTDIR/lcio
