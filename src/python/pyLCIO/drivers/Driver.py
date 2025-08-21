@@ -3,8 +3,6 @@ Created on Dec 4, 2012
 
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
-from __future__ import absolute_import, unicode_literals
-from __future__ import print_function, division
 from pyLCIO import IO 
 from time import time
 
@@ -37,7 +35,7 @@ class Driver():
         ''' Method that is executed for each run header '''
         for driver in self.drivers:
             startTime = time()
-            driver.processRunHeader( run )
+            driver.processRunHeader( runHeader )
             driver.processedTime += time() - startTime
 
     def processEvent( self, event ):

@@ -4,12 +4,10 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import, unicode_literals
 import os
 
 from pyLCIO import IOIMPL, IO
 from pyLCIO.io.Reader import Reader
-#from ROOT import vector
 from ROOT import std
 
 class LcioReader( Reader ):

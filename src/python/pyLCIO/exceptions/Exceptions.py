@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 class LcioException(Exception):
     def __init__( self, message ):
         super(LcioException, self).__init__(message)

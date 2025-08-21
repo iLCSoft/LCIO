@@ -7,9 +7,9 @@ If an LCIO exception is encountered, the corresponding python exception is raise
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import, unicode_literals
-from sixlcio import reraise
-import inspect, sys, ROOT, pyLCIO
+import inspect
+import ROOT
+import pyLCIO
 import pyLCIO.exceptions.Exceptions
 
 # Cope with API change with ROOT version >= 6.21
@@ -27,22 +27,22 @@ def handleLcioExceptions(method):
             message = str(e)
             if 'lcio::Exception' in message:
                 message = message.split('lcio::Exception: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.LcioException(message), None, sys.exc_info()[2])
+                raise pyLCIO.LcioException(message) from e
             elif 'lcio::EventException' in message:
                 message = message.split('lcio::EventException: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.EventException(message), None, sys.exc_info()[2])
+                raise pyLCIO.EventException(message) from e
             elif 'lcio::DataNotAvailableException' in message:
                 message = message.split('lcio::DataNotAvailableException: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.DataNotAvailableException(message), None, sys.exc_info()[2])
+                raise pyLCIO.DataNotAvailableException(message) from e
             elif 'lcio::ReadOnlyException' in message:
                 message = message.split('lcio::ReadOnlyException: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.ReadOnlyException(message), None, sys.exc_info()[2])
+                raise pyLCIO.ReadOnlyException(message) from e
             elif 'lcio::IOException' in message:
                 message = message.split('lcio::IOException: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.IOException(message), None, sys.exc_info()[2])
+                raise pyLCIO.IOException(message) from e
             elif 'lcio::EndOfDataException' in message:
                 message = message.split('lcio::EndOfDataException: ')[1].split(' (C++ exception)')[0]
-                reraise(pyLCIO.EndOfDataException(message), None, sys.exc_info()[2])
+                raise pyLCIO.EndOfDataException(message) from e
             raise
     return wrappedMethod
 

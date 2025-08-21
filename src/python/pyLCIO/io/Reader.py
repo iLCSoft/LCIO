@@ -4,11 +4,7 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import, unicode_literals
 from pyLCIO import EVENT
-from sixlcio.moves import range
-from io import open
-import sixlcio as six
 
 class Reader( object ):
     ''' Generic reader class '''
@@ -20,7 +16,7 @@ class Reader( object ):
         self.fileIter = iter( self.fileList )
         self.isOpen = False
         
-        if fileName and isinstance(fileName, six.string_types):
+        if fileName and isinstance(fileName, str):
             self.addFile( fileName )
         elif isinstance( fileName, list ):
             self.addFileList( fileName )
@@ -62,7 +58,6 @@ class Reader( object ):
             self.__close__()
             return next(self)
 
-    next = __next__  # for Python 2
 
     def skip( self, nEntries ):
         ''' Skip entries from the stream '''

@@ -4,10 +4,10 @@ Created on Dec 4, 2012
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
-from __future__ import absolute_import, unicode_literals
-from __future__ import print_function
+import os
+import sys
+
 from ROOT import gSystem
-import os, sys
 
 class RootDictLoadError(Exception):
     """Raised if gSystem.Load cannot successfully load a shared lib/dict"""
@@ -26,8 +26,8 @@ def setupLcioDictionary():
     print('Loading LCIO ROOT dictionaries ...')
     try:
         # First try via ROOT and automatic lookup on LD_LIBRARY_PATH
-        try_load_lib('liblcio.so')
-        try_load_lib('liblcioDict.so')
+        try_load_lib('liblcio')
+        try_load_lib('liblcioDict')
         return
     except RootDictLoadError:
         pass
@@ -43,8 +43,8 @@ def setupLcioDictionary():
 
     for lib_dir in ['lib', 'lib64']:
         try:
-            try_load_lib(os.path.join(lcioPath, lib_dir, 'liblcio.so'))
-            try_load_lib(os.path.join(lcioPath, lib_dir, 'liblcioDict.so'))
+            try_load_lib(os.path.join(lcioPath, lib_dir, 'liblcio'))
+            try_load_lib(os.path.join(lcioPath, lib_dir, 'liblcioDict'))
             return
         except RootDictLoadError:
             pass
