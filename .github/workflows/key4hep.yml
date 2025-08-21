@@ -15,7 +15,10 @@ jobs:
       matrix:
         release: ["sw.hsf.org/key4hep",
                   "sw-nightlies.hsf.org/key4hep"]
-        container_os: [el9, ubuntu2404]
+        container_os: [el9]
+        include:
+          - release: "sw-nightlies.hsf.org/key4hep"
+            container_os: ubuntu2404
     steps:
     - uses: actions/checkout@v3
       with:
