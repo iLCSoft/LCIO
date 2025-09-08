@@ -151,7 +151,7 @@ getRecoCollAndParamNames(const std::string_view fullType) {
 
 void CheckCollections::addPatchCollection(std::string name, std::string type) {
   if (type.find('|') != std::string::npos) {
-    auto [recoName, paramNames] = getRecoCollAndParamNames(name);
+    auto [recoName, paramNames] = getRecoCollAndParamNames(type);
     _particleIDMetas[recoName].emplace_back(name, std::move(paramNames));
   } else {
     _patchCols.emplace_back(std::move(name), std::move(type));
