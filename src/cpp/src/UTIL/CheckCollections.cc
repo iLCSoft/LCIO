@@ -149,23 +149,29 @@ getRecoCollAndParamNames(const std::string_view fullType) {
   return {recoName, paramNames};
 }
 
+// Check whether this collection should be patched as subset collection or not
+bool isSubsetCollection(const std::string_view fullType) {
+  return fullType.back() == '*';
+}
+
 void CheckCollections::addPatchCollection(std::string name, std::string type) {
   if (type.find('|') != std::string::npos) {
     auto [recoName, paramNames] = getRecoCollAndParamNames(type);
     _particleIDMetas[recoName].emplace_back(name, std::move(paramNames));
   } else {
-    _patchCols.emplace_back(std::move(name), std::move(type));
+    const auto isSubset = isSubsetCollection(type);
+    if (isSubset) {
+      type = type.substr(0, type.size() - 1);
+    }
+    _patchCols.emplace_back(std::piecewise_construct,
+                            std::forward_as_tuple(std::move(name)),
+                            std::forward_as_tuple(type, 0, isSubset));
   }
 }
 
 void CheckCollections::addPatchCollections(Vector cols) {
   for (auto &&[name, type] : cols) {
-    if (type.find('|') != std::string::npos) {
-      auto [recoName, paramNames] = getRecoCollAndParamNames(type);
-      _particleIDMetas[recoName].emplace_back(name, std::move(paramNames));
-    } else {
-      _patchCols.emplace_back(std::move(name), std::move(type));
-    }
+    addPatchCollection(std::move(name), std::move(type));
   }
 }
 
@@ -178,11 +184,6 @@ getToFromType(const std::string_view fullType) {
   return {fullType.substr(prefixLen, delim - prefixLen),
           fullType.substr(delim + 1, fullType.size() - delim -
                                          2)}; // need to strip final "]" as well
-}
-
-// Check whether this collection should be patched as subset collection or not
-bool isSubsetCollection(const std::string_view fullType) {
-  return fullType.back() == '*';
 }
 
 // Add all algorithms that are specified in the pidMetas to the PIDHandler, such
@@ -200,7 +201,8 @@ void patchParticleIDs(UTIL::PIDHandler &pidHandler,
 }
 
 void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
-  for (const auto &[name, typeName] : _patchCols) {
+  for (const auto &[name, collInfo] : _patchCols) {
+    const auto &typeName = collInfo.type;
     try {
       auto *coll = evt->getCollection(name);
       const auto collType = coll->getTypeName();
@@ -225,11 +227,11 @@ void CheckCollections::patchCollections(EVENT::LCEvent *evt) const {
         const auto [from, to] = getToFromType(typeName);
         params.setValue("FromType", std::string(from));
         params.setValue("ToType", std::string(to));
-        relationColl->setSubset(isSubsetCollection(typeName));
+        relationColl->setSubset(collInfo.subset);
         evt->addCollection(relationColl, name);
       } else {
         auto newColl = new IMPL::LCCollectionVec(typeName);
-        newColl->setSubset(isSubsetCollection(typeName));
+        newColl->setSubset(collInfo.subset);
         evt->addCollection(newColl, name);
       }
     }
