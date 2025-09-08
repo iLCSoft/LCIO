@@ -143,7 +143,7 @@ getRecoCollAndParamNames(const std::string_view fullType) {
   while (delim != std::string_view::npos) {
     auto oldDelim = delim + 1;
     delim = fullType.find(',', oldDelim);
-    paramNames.emplace_back(fullType.substr(oldDelim, delim));
+    paramNames.emplace_back(fullType.substr(oldDelim, delim - oldDelim));
   }
 
   return {recoName, paramNames};

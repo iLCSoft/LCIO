@@ -96,7 +96,8 @@ TEST_CASE("CheckCollections patching ParticleID algorithms",
   UTIL::CheckCollections checker;
   checker.addPatchCollections(
       {{"LikelihoodPID", "ReconstructedParticles|dEdx,momentum"},
-       {"BDT_PID", "ReconstructedParticles|score,confidence"}});
+       {"BDT_PID", "ReconstructedParticles|score"},
+       {"FancyPID", "ReconstructedParticles|param1,param2,param3"}});
   checker.patchCollections(event.get());
 
   auto pidHandler =
@@ -104,14 +105,19 @@ TEST_CASE("CheckCollections patching ParticleID algorithms",
 
   int likelihoodID = -1;
   int bdtID = -1;
+  int fancyID = -1;
   REQUIRE_NOTHROW(likelihoodID = pidHandler.getAlgorithmID("LikelihoodPID"));
   REQUIRE_NOTHROW(bdtID = pidHandler.getAlgorithmID("BDT_PID"));
+  REQUIRE_NOTHROW(fancyID = pidHandler.getAlgorithmID("FancyPID"));
 
-  auto likelihoodParams = pidHandler.getParameterNames(likelihoodID);
-  REQUIRE_THAT(likelihoodParams, Catch::Matchers::UnorderedEquals<std::string>(
-                                     {"dEdx", "momentum"}));
+  const auto likelihoodParams = pidHandler.getParameterNames(likelihoodID);
+  REQUIRE_THAT(likelihoodParams,
+               Catch::Matchers::Equals<std::string>({"dEdx", "momentum"}));
 
-  auto bdtParams = pidHandler.getParameterNames(bdtID);
-  REQUIRE_THAT(bdtParams, Catch::Matchers::UnorderedEquals<std::string>(
-                              {"score", "confidence"}));
+  const auto bdtParams = pidHandler.getParameterNames(bdtID);
+  REQUIRE_THAT(bdtParams, Catch::Matchers::Equals<std::string>({"score"}));
+
+  const auto fancyParams = pidHandler.getParameterNames(fancyID);
+  REQUIRE_THAT(fancyParams, Catch::Matchers::Equals<std::string>(
+                                {"param1", "param2", "param3"}));
 }
