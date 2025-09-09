@@ -12,8 +12,6 @@ TEST_CASE("CheckCollections patching basic collections", "[CheckCollections]") {
   // Create an event that already contains a collection that we want to appear
   // in the patched event
   auto event = std::make_unique<IMPL::LCEventImpl>();
-  event->setRunNumber(1);
-  event->setEventNumber(1);
   auto mcParticles =
       std::make_unique<IMPL::LCCollectionVec>(EVENT::LCIO::MCPARTICLE);
   auto mcp = new IMPL::MCParticleImpl();
@@ -85,8 +83,6 @@ TEST_CASE("CheckCollections patching existing LCRelation without parameters",
 TEST_CASE("CheckCollections patching ParticleID algorithms",
           "[CheckCollections]") {
   auto event = std::make_unique<IMPL::LCEventImpl>();
-  event->setRunNumber(1);
-  event->setEventNumber(1);
 
   auto recoCol = new IMPL::LCCollectionVec("ReconstructedParticle");
   auto recoPart = new IMPL::ReconstructedParticleImpl();
