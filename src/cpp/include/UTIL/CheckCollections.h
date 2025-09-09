@@ -18,10 +18,31 @@ class PIDHandler;
  *  \date Dec 2022
  */
   class CheckCollections {
-    
-    typedef std::vector<std::pair<std::string,std::string>> Vector ;
-    
-  public: 
+
+  public:
+    /// Information about one collection
+    struct Collection {
+      Collection(std::string t, unsigned c, bool s)
+          : type(std::move(t)), count(c), subset(s) {}
+      Collection() = default;
+      Collection(const Collection &) = default;
+      Collection &operator=(const Collection &) = default;
+      Collection(Collection &&) = default;
+      Collection &operator=(Collection &&) = default;
+      ~Collection() = default;
+
+      std::string type{};
+      unsigned count{0};
+      bool subset{false};
+    };
+
+  private:
+
+    using CollectionVector = std::vector<std::pair<std::string, Collection>>;
+
+    using Vector = std::vector<std::pair<std::string, std::string>>;
+
+  public:
     
     /** Convenient c'tor.
      */
@@ -109,22 +130,6 @@ class PIDHandler;
       uint32_t count{};                      ///< How often this was found
     };
 
-    /// Information about one collection
-    struct Collection {
-      Collection(std::string t, unsigned c, bool s)
-        : type(std::move(t)), count(c), subset(s) {}
-      Collection() = default;
-      Collection(const Collection&) = default;
-      Collection& operator=(const Collection&) = default;
-      Collection(Collection&&) = default;
-      Collection& operator=(Collection&&) = default;
-      ~Collection() = default;
-
-      std::string type{};
-      unsigned count{0};
-      bool subset{false};
-    };
-
   private:
 
     void insertParticleIDMetas(const UTIL::PIDHandler& pidHandler, const std::string& recoName);
@@ -134,7 +139,7 @@ class PIDHandler;
     /// Map from ReconstructedParticle collection names to attached ParticleID
     /// meta information
     std::unordered_map<std::string, std::vector<PIDMeta>> _particleIDMetas{};
-    Vector _patchCols{};
+    CollectionVector _patchCols{};
 
   }; // class
 

@@ -358,3 +358,4 @@ SET_TESTS_PROPERTIES( t_check_col_elements_maxevents2 PROPERTIES PASS_REGULAR_EX
 
 # ============================================================================
 
+add_subdirectory(unittests)
