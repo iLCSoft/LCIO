@@ -1,3 +1,28 @@
+# v02-23
+
+* 2025-09-09 Thomas Madlener ([PR#213](https://github.com/iLCSoft/LCIO/pull/213))
+  - Make sure to remove the trailing `*` from subset collections that need to be patched in to avoid confusing downstream code that uses the type name to dispatch to type specific code. Fixes [k4EDM4hep2LcioConv#123](https://github.com/key4hep/k4EDM4hep2LcioConv/issues/123)
+  - Fix bug in parsing of parameter names from ParticleID meta data
+  - Add unittests for patching part of `CheckCollections` utility
+
+* 2025-08-21 Thomas Madlener ([PR#212](https://github.com/iLCSoft/LCIO/pull/212))
+  - **Drop support for python2**
+    - Remove the vendored version of `six` as it is no longer necessary and it doesn't work with python >= 3.12
+    - Remove the compatibility CI checks
+  - Fix python dictionary loading for macOS (see [#209](https://github.com/iLCSoft/LCIO/issues/209)
+
+* 2025-08-21 Thomas Madlener ([PR#211](https://github.com/iLCSoft/LCIO/pull/211))
+  - Switch to existing Key4hep nightly builds for CI
+  - Add a simple test for the python bindings for Key4hep based workflows
+  - Switch to the latest versions for various actions
+  - Enable `ccache` for caching intermediate compilation results to speed up CI workflows
+
+* 2025-08-21 Thomas Madlener ([PR#206](https://github.com/iLCSoft/LCIO/pull/206))
+  - Update the README to explicitly set a `CMAKE_INSTALL_PREFIX` to avoid seemingly failing installs
+
+* 2025-06-08 jmcarcell ([PR#207](https://github.com/iLCSoft/LCIO/pull/207))
+  - Allow building with C++23
+
 # v02-22-06
 
 * 2025-03-28 jmcarcell ([PR#205](https://github.com/ilCSoft/LCIO/pull/205))
