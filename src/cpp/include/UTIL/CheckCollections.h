@@ -3,6 +3,7 @@
 
 #include "lcio.h"
 
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 #include <set>
