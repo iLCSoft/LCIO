@@ -1,3 +1,8 @@
+# v02-23-01
+
+* 2025-10-30 Wouter Deconinck ([PR#214](https://github.com/iLCSoft/LCIO/pull/214))
+  - Add cstdint include to CheckCollections.h for uint32_t
+
 # v02-23
 
 * 2025-09-09 Thomas Madlener ([PR#213](https://github.com/iLCSoft/LCIO/pull/213))
