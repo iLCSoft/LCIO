@@ -12,8 +12,12 @@ import ROOT
 import pyLCIO
 import pyLCIO.exceptions.Exceptions
 
+# Cope with API change with ROOT version >= 6.32
+if ROOT.gROOT.GetVersionCode() >= (6<<16) + (32<<8) :
+  from cppyy.types import Function as CPPOverload
 # Cope with API change with ROOT version >= 6.21
-if ROOT.gROOT.GetVersionCode() >= (6<<16) + (21<<8) :
+elif ROOT.gROOT.GetVersionCode() >= (6<<16) + (21<<8) :
+  # libcppyy has been moved in ROOT 6.38 and can no longer be imported
   from libcppyy import CPPOverload
 else:
   CPPOverload = ROOT.MethodProxy 
