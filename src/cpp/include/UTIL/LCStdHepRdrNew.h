@@ -1,5 +1,5 @@
-#ifndef UTIL_LCStdHepRdr_H
-#define UTIL_LCStdHepRdr_H 1
+#ifndef UTIL_LCStdHepRdrNew_H
+#define UTIL_LCStdHepRdrNew_H 1
 
 #include "IMPL/LCCollectionVec.h"
 #include "UTIL/lStdHep.hh"
@@ -89,4 +89,4 @@ namespace UTIL{
 
 } // namespace UTIL
 
-#endif /* ifndef UTIL_LCStdHepRdr_H */
+#endif /* ifndef UTIL_LCStdHepRdrNew_H */

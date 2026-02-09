@@ -375,6 +375,9 @@ IF( BUILD_ROOTDICT )
     INCLUDE_DIRECTORIES( SYSTEM "${ROOT_INCLUDE_DIRS}" )
 
     ADD_SHARED_LIBRARY( lcioDict ${lcio_rootdict_sources} )
+    # ROOT dictionaries generate multiple translation units with many identical
+    # helper symbol names
+    set_property(TARGET lcioDict PROPERTY UNITY_BUILD OFF)
     TARGET_LINK_LIBRARIES( lcioDict ${ROOT_LIBRARIES} LCIO::lcio SIO::sio)
 
     IF( APPLE )
