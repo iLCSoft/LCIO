@@ -183,11 +183,9 @@ IF( NOT SIO_FOUND )
   # Unity builds break the bundled zlib used by SIO because several of zlib's
   # internal headers are intentionally unguarded and assume a single translation
   # unit per source file.
-  foreach(_lcio_no_unity_tgt IN ITEMS ZLIB zlib zlibstatic zlibshared)
-    if(TARGET ${_lcio_no_unity_tgt})
-      set_property(TARGET ${_lcio_no_unity_tgt} PROPERTY UNITY_BUILD OFF)
-    endif()
-  endforeach()
+  if(TARGET ZLIB)
+    set_property(TARGET ZLIB PROPERTY UNITY_BUILD OFF)
+  endif()
 
   get_target_property(SIO_VERSION SIO::sio VERSION)
   get_target_property(SIO_INCLUDE_DIRS SIO::sio INCLUDE_DIRECTORIES)
