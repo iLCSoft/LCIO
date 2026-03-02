@@ -90,9 +90,9 @@ namespace SIO {
     gobj->_intVec.resize( _nInt )  ;
     gobj->_floatVec.resize( _nFloat ) ;
     gobj->_doubleVec.resize( _nDouble ) ;
-    SIO_DATA( device , &(gobj->_intVec[0]), _nInt  ) ;
-    SIO_DATA( device , &(gobj->_floatVec[0]), _nFloat  ) ;
-    SIO_DATA( device , &(gobj->_doubleVec[0]), _nDouble  ) ;
+    if( _nInt > 0 )    { SIO_DATA( device , &(gobj->_intVec[0]),    _nInt    ) ; }
+    if( _nFloat > 0 )  { SIO_DATA( device , &(gobj->_floatVec[0]),  _nFloat  ) ; }
+    if( _nDouble > 0 ) { SIO_DATA( device , &(gobj->_doubleVec[0]), _nDouble ) ; }
     SIO_PTAG( device , gobj  ) ;
   }
 

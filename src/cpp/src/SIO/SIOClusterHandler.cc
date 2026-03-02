@@ -46,7 +46,9 @@ namespace SIO {
       nShape = NSHAPE_OLD ;
     }
     cluster->_shape.resize( nShape )   ;
-    SIO_DATA( device , &(cluster->_shape[0])  ,nShape ) ;
+    if( nShape > 0 ) {
+      SIO_DATA( device , &(cluster->_shape[0])  ,nShape ) ;
+    }
     if( vers > SIO_VERSION_ENCODE(1,2) ) {      
       // read PIDs
       int nPid ;
