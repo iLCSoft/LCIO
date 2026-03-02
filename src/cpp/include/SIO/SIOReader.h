@@ -2,6 +2,7 @@
 #define SIO_SIOREADER_H 1
 
 // -- std headers
+#include <memory>
 #include <set>
 
 // -- lcio headers
@@ -40,7 +41,7 @@ namespace SIO {
     SIOReader& operator=(const SIOReader&) = delete ;
 
     /// Destructor
-    virtual ~SIOReader() ;
+    virtual ~SIOReader() = default ;
 
     /** Opens a list of files for reading (read-only). All subsequent
      * read operations will operate on the list, i.e. if an EOF is encountered
@@ -210,9 +211,9 @@ namespace SIO {
     /// The event listeners
     std::set<IO::LCEventListener*>       _evtListeners {} ;
     /// pointer to current Event
-    EVENT::LCEvent* _currentEvent = nullptr ;
+    std::unique_ptr<EVENT::LCEvent>      _currentEvent {} ;
     /// pointer to current RunHeader
-    EVENT::LCRunHeader* _currentRun = nullptr ;
+    std::unique_ptr<EVENT::LCRunHeader>  _currentRun {} ;
 
   }; // class
 } // namespace

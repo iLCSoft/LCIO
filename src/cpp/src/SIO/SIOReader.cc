@@ -26,13 +26,6 @@ namespace SIO {
 
   //----------------------------------------------------------------------------
 
-  SIOReader::~SIOReader() {
-    delete _currentEvent ;
-    delete _currentRun ;
-  }
-
-  //----------------------------------------------------------------------------
-
   void SIOReader::setReadCollectionNames(const std::vector<std::string>& colnames){
     _reader.setReadCollectionNames( colnames ) ;
   }
@@ -82,13 +75,8 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCRunHeader* SIOReader::readNextRunHeader(int accessMode) {
-
-    if( _currentRun != nullptr ){
-      delete _currentRun ;
-    }
-    _currentRun = _reader.readNextRunHeader( accessMode ).release() ;
-
-    return _currentRun ;
+    _currentRun = _reader.readNextRunHeader( accessMode ) ;
+    return _currentRun.get() ;
   }
   
   //----------------------------------------------------------------------------
@@ -100,13 +88,8 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCEvent* SIOReader::readNextEvent(int accessMode)  {
-
-    if( _currentEvent != nullptr ){
-      delete _currentEvent ;
-    }
-    _currentEvent = _reader.readNextEvent( accessMode ).release() ;
-
-    return _currentEvent ;
+    _currentEvent = _reader.readNextEvent( accessMode ) ;
+    return _currentEvent.get() ;
   }
 
   //----------------------------------------------------------------------------
@@ -124,13 +107,8 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCRunHeader * SIOReader::readRunHeader(int runNumber, int accessMode) {
-
-    if( _currentRun != nullptr ){
-      delete _currentRun ;
-    }
-    _currentRun = _reader.readRunHeader( runNumber, accessMode ).release() ;
-
-    return _currentRun ;
+    _currentRun = _reader.readRunHeader( runNumber, accessMode ) ;
+    return _currentRun.get() ;
   }
 
   //----------------------------------------------------------------------------
@@ -142,13 +120,8 @@ namespace SIO {
   //----------------------------------------------------------------------------
 
   EVENT::LCEvent * SIOReader::readEvent(int runNumber, int evtNumber, int accessMode) {
-
-    if( _currentEvent != nullptr ){
-      delete _currentEvent ;
-    }
-    _currentEvent = _reader.readEvent( runNumber, evtNumber, accessMode ).release() ;
-
-    return _currentEvent ;
+    _currentEvent = _reader.readEvent( runNumber, evtNumber, accessMode ) ;
+    return _currentEvent.get() ;
   }
 
   //----------------------------------------------------------------------------
