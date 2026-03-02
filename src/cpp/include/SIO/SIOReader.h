@@ -37,8 +37,12 @@ namespace SIO {
 
     /// no copy constructor
     SIOReader(const SIOReader&) = delete ;
-    /// no assignment operator
+    /// no copy assignment operator
     SIOReader& operator=(const SIOReader&) = delete ;
+    /// no move constructor
+    SIOReader(SIOReader&&) = delete ;
+    /// no move assignment operator
+    SIOReader& operator=(SIOReader&&) = delete ;
 
     /// Destructor
     virtual ~SIOReader() = default ;
