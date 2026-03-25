@@ -1,3 +1,24 @@
+# v02-23-02
+
+* 2026-03-02 Juan Miguel Carceller ([PR#222](https://github.com/iLCSoft/LCIO/pull/222))
+  - Add guards against accesing an empty vector with `[]`. This seems to be harmless since it is reading 0 bytes, but in Debug builds the `std::vector` assertions (if enabled) make these fail.
+
+* 2026-03-02 Juan Miguel Carceller ([PR#221](https://github.com/iLCSoft/LCIO/pull/221))
+  - Make `_currentEvent` and `_currentRun` be `std::unique_ptr` so that they are deleted in the destructor of `SIOReader` since currently the previous ones are deleted when reading the next event or run header, which doesn't happen for the last event or run header.
+  - Define the destructor as `default`. Delete the move constructor and the move assignment operator. This is already the case, it's not explicitly written.
+
+* 2026-02-11 Juan Miguel Carceller ([PR#220](https://github.com/iLCSoft/LCIO/pull/220))
+  - Simplify exclusion for Unity builds, only the ZLIB target needs to be excluded
+
+* 2026-02-11 Juan Miguel Carceller ([PR#219](https://github.com/iLCSoft/LCIO/pull/219))
+  - Add support for CMAKE_UNITY_BUILD by fixing a header guard and disabling Unity builds for the external zlib
+
+* 2026-01-14 Andre Rummler ([PR#216](https://github.com/iLCSoft/LCIO/pull/216))
+  - Fix missing `getSubdetectorHoleNumbers` in aid file in order to make compilation work again with generated headers (instead of pre-generated ones)
+
+* 2025-12-16 Andre Sailer ([PR#215](https://github.com/iLCSoft/LCIO/pull/215))
+  - pyLCIO: make things compatible with ROOT 6.38
+
 # v02-23-01
 
 * 2025-10-30 Wouter Deconinck ([PR#214](https://github.com/iLCSoft/LCIO/pull/214))
