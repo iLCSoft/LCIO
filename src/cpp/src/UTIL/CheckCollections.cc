@@ -10,6 +10,39 @@
 #include <algorithm>
 #include <iomanip>
 
+namespace {
+bool captureParam(const EVENT::LCParameters& params,
+                  const std::string& key,
+                  UTIL::CheckCollections::CollectionParamValues& dest) {
+  bool found = false;
+  if (params.getNInt(key) > 0) {
+    EVENT::IntVec vals;
+    params.getIntVals(key, vals);
+    dest.intParams.emplace_back(key, std::move(vals));
+    found = true;
+  }
+  if (params.getNFloat(key) > 0) {
+    EVENT::FloatVec vals;
+    params.getFloatVals(key, vals);
+    dest.floatParams.emplace_back(key, std::move(vals));
+    found = true;
+  }
+  if (params.getNDouble(key) > 0) {
+    EVENT::DoubleVec vals;
+    params.getDoubleVals(key, vals);
+    dest.doubleParams.emplace_back(key, std::move(vals));
+    found = true;
+  }
+  if (params.getNString(key) > 0) {
+    EVENT::StringVec vals;
+    params.getStringVals(key, vals);
+    dest.stringParams.emplace_back(key, std::move(vals));
+    found = true;
+  }
+  return found;
+}
+} // namespace
+
 namespace UTIL {
 
 void CheckCollections::checkFiles(const std::vector<std::string> &fileNames,
@@ -72,6 +105,26 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
       }
 
       it->second.count++;
+
+      if (!_paramsToCollect.empty()) {
+        auto& captured = _capturedKeys[name];
+        auto& dest = _collectedParams[name];
+        // Subset collections cannot be read individually (pointer resolution
+        // fails without the parent collection), so skip the full read for them.
+        if (!col->isSubset() && captured.size() < _paramsToCollect.size()) {
+          lcReader.setReadCollectionNames({name});
+          auto fullEvt = lcReader.readEvent(evt->getRunNumber(),
+                                            evt->getEventNumber());
+          lcReader.setReadCollectionNames({});
+          const auto& params = fullEvt->getCollection(name)->getParameters();
+          for (const auto& pname : _paramsToCollect) {
+            if (captured.count(pname)) continue;
+            if (captureParam(params, pname, dest)) {
+              captured.insert(pname);
+            }
+          }
+        }
+      }
     }
 
     lcReader.setReadCollectionNames(recoCollections);
@@ -112,6 +165,15 @@ void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
       it->count++;
     }
   }
+}
+
+void CheckCollections::setParametersToCollect(std::vector<std::string> paramNames) {
+  _paramsToCollect = std::move(paramNames);
+}
+
+CheckCollections::CollectedParameters
+CheckCollections::getCollectedParameters() const {
+  return _collectedParams;
 }
 
 CheckCollections::Vector CheckCollections::getMissingCollections() const {
