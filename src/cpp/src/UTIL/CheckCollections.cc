@@ -12,27 +12,26 @@
 #include <unordered_set>
 
 namespace {
-bool captureParam(const EVENT::LCParameters& src,
-                  const std::string& key,
-                  IMPL::LCParametersImpl& dest) {
-  bool found = false;
-  if (src.getNInt(key) > 0) {
-    EVENT::IntVec vals; src.getIntVals(key, vals);
-    dest.setValues(key, vals); found = true;
-  }
-  if (src.getNFloat(key) > 0) {
-    EVENT::FloatVec vals; src.getFloatVals(key, vals);
-    dest.setValues(key, vals); found = true;
-  }
-  if (src.getNDouble(key) > 0) {
-    EVENT::DoubleVec vals; src.getDoubleVals(key, vals);
-    dest.setValues(key, vals); found = true;
-  }
-  if (src.getNString(key) > 0) {
-    EVENT::StringVec vals; src.getStringVals(key, vals);
-    dest.setValues(key, vals); found = true;
-  }
-  return found;
+bool captureParam(const EVENT::LCParameters &src, const std::string &key,
+                  IMPL::LCParametersImpl &dest) {
+    bool found = false;
+    if (const auto vals = src.getVals<int>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<float>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<double>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<std::string>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    return found;
 }
 } // namespace
 
