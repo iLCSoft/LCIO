@@ -14,7 +14,6 @@
 
 namespace {
 
-
 void jsonEscape(std::ostream &os, const std::string &s) {
     os << '"';
     for (char c : s) {
@@ -110,7 +109,8 @@ int main(int argc, char **argv) {
             outputPath = argv[++i];
         } else if ((a == "--params" || a == "-p") && i + 1 < argc) {
             const std::string ps = argv[++i];
-            std::for_each(ps.begin(), ps.end(), UTIL::LCTokenizer(paramNames, ','));
+            std::for_each(ps.begin(), ps.end(),
+                          UTIL::LCTokenizer(paramNames, ','));
         } else if (a == "-h" || a == "--help") {
             usage();
             return 0;
@@ -136,18 +136,29 @@ int main(int argc, char **argv) {
 
     out << "{";
     bool firstColl = true;
-    for (const auto &[name, vals] : collected) {
-        if (!firstColl) {
-            out << ",";
-        }
-        firstColl = false;
-        out << "\n  " << name << ": {";
-
+    for (const auto &entry : collected) {
+#if defined(__clang__) && __clang_major__ < 13
+        const auto &name = entry.first;
+        const auto &vals = entry.second;
+#else
+        const auto &[name, vals] = entry;
+#endif
         EVENT::StringVec intKeys, floatKeys, doubleKeys, stringKeys;
         vals.getIntKeys(intKeys);
         vals.getFloatKeys(floatKeys);
         vals.getDoubleKeys(doubleKeys);
         vals.getStringKeys(stringKeys);
+
+        if (intKeys.empty() && floatKeys.empty() && doubleKeys.empty() &&
+            stringKeys.empty()) {
+            continue;
+        }
+
+        if (!firstColl) {
+            out << ",";
+        }
+        firstColl = false;
+        out << "\n  " << name << ": {";
 
         bool needsComma = false;
         needsComma = emitGroup(out, "int-params", intKeys, needsComma,
