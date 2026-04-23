@@ -137,13 +137,7 @@ int main(int argc, char **argv) {
 
     out << "{";
     bool firstColl = true;
-    for (const auto &entry : collected) {
-#if defined(__clang__) && __clang_major__ < 13
-        const auto &name = entry.first;
-        const auto &vals = entry.second;
-#else
-        const auto &[name, vals] = entry;
-#endif
+    for (const auto &[name, vals] : collected) {
         EVENT::StringVec intKeys, floatKeys, doubleKeys, stringKeys;
         vals.getIntKeys(intKeys);
         vals.getFloatKeys(floatKeys);
