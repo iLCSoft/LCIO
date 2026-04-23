@@ -91,7 +91,7 @@ class PIDHandler;
 
     /// Captured parameter values for every collection seen. Collections with
     /// no captured values still appear with an empty LCParametersImpl.
-    CollectedParameters getCollectedParameters() const;
+    const CollectedParameters& getCollectedParameters() const;
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      *

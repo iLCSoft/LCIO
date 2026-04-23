@@ -159,10 +159,9 @@ void CheckCollections::checkParameters(
                 }
                 const auto &params = evt->getCollection(name)->getParameters();
                 for (const auto &pname : paramNames) {
-                  if (done.count(pname)) {
+                    if (done.count(pname)) {
                         continue;
-                    
-                  }
+                    }
                     if (captureParam(params, pname, dest)) {
                         done.insert(pname);
                     }
@@ -173,7 +172,7 @@ void CheckCollections::checkParameters(
     }
 }
 
-CheckCollections::CollectedParameters
+const CheckCollections::CollectedParameters&
 CheckCollections::getCollectedParameters() const {
   return _collectedParams;
 }
