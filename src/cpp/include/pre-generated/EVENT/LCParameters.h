@@ -29,7 +29,7 @@ class LCParameters {
 
 public: 
     /// Destructor.
-    virtual ~LCParameters() { /* nop */; }
+    virtual ~LCParameters() = default;
 
     /** Returns the first integer value for the given key.
      */
