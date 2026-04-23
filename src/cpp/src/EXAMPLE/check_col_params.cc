@@ -1,10 +1,10 @@
+#include "EVENT/LCParameters.h"
 #include "UTIL/BitField64.h"
 #include "UTIL/CheckCollections.h"
 
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
-#include <functional>
 #include <iomanip>
 #include <iostream>
 #include <limits>
@@ -70,9 +70,27 @@ void emitArray(std::ostream &os, const std::vector<T> &v) {
     os << ']';
 }
 
-bool emitGroup(std::ostream &os, const char *label,
-               const EVENT::StringVec &keys, bool needsComma,
-               const std::function<void(const std::string &)> &emitVal) {
+template <typename T>
+std::vector<T> getValues(const EVENT::LCParameters &params,
+                         const std::string &key) {
+    std::vector<T> values;
+    if constexpr (std::is_same_v<int, T>) {
+        params.getIntVals(key, values);
+    } else if constexpr (std::is_same_v<float, T>) {
+        params.getFloatVals(key, values);
+    } else if constexpr (std::is_same_v<double, T>) {
+        params.getDoubleVals(key, values);
+    } else {
+        params.getStringVals(key, values);
+    }
+
+    return values;
+}
+
+template <typename T>
+bool emitGroup(std::ostream &os, const std::string &label,
+               const EVENT::LCParameters &params, const EVENT::StringVec &keys,
+               bool needsComma) {
     if (keys.empty()) {
         return needsComma;
     }
@@ -84,7 +102,7 @@ bool emitGroup(std::ostream &os, const char *label,
         os << (i ? ",\n      " : "\n      ");
         jsonEscape(os, keys[i]);
         os << ": ";
-        emitVal(keys[i]);
+        emitArray(os, getValues<T>(params, keys[i]));
     }
     os << "\n    }";
     return true;
@@ -161,30 +179,15 @@ int main(int argc, char **argv) {
         out << "\n  " << name << ": {";
 
         bool needsComma = false;
-        needsComma = emitGroup(out, "int-params", intKeys, needsComma,
-                               [&](const std::string &k) {
-                                   EVENT::IntVec v;
-                                   vals.getIntVals(k, v);
-                                   emitArray(out, v);
-                               });
-        needsComma = emitGroup(out, "float-params", floatKeys, needsComma,
-                               [&](const std::string &k) {
-                                   EVENT::FloatVec v;
-                                   vals.getFloatVals(k, v);
-                                   emitArray(out, v);
-                               });
-        needsComma = emitGroup(out, "double-params", doubleKeys, needsComma,
-                               [&](const std::string &k) {
-                                   EVENT::DoubleVec v;
-                                   vals.getDoubleVals(k, v);
-                                   emitArray(out, v);
-                               });
-        needsComma = emitGroup(out, "string-params", stringKeys, needsComma,
-                               [&](const std::string &k) {
-                                   EVENT::StringVec v;
-                                   vals.getStringVals(k, v);
-                                   emitArray(out, v);
-                               });
+
+        needsComma =
+            emitGroup<int>(out, "int-params", vals, intKeys, needsComma);
+        needsComma =
+            emitGroup<float>(out, "float-params", vals, floatKeys, needsComma);
+        needsComma = emitGroup<double>(out, "double-params", vals, doubleKeys,
+                                       needsComma);
+        needsComma = emitGroup<std::string>(out, "string-params", vals,
+                                            stringKeys, needsComma);
 
         if (needsComma) {
             out << "\n  ";
