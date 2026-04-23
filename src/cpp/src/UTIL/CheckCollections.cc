@@ -9,35 +9,28 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <unordered_set>
 
 namespace {
-bool captureParam(const EVENT::LCParameters& params,
+bool captureParam(const EVENT::LCParameters& src,
                   const std::string& key,
-                  UTIL::CheckCollections::CollectionParamValues& dest) {
+                  IMPL::LCParametersImpl& dest) {
   bool found = false;
-  if (params.getNInt(key) > 0) {
-    EVENT::IntVec vals;
-    params.getIntVals(key, vals);
-    dest.intParams.emplace_back(key, std::move(vals));
-    found = true;
+  if (src.getNInt(key) > 0) {
+    EVENT::IntVec vals; src.getIntVals(key, vals);
+    dest.setValues(key, vals); found = true;
   }
-  if (params.getNFloat(key) > 0) {
-    EVENT::FloatVec vals;
-    params.getFloatVals(key, vals);
-    dest.floatParams.emplace_back(key, std::move(vals));
-    found = true;
+  if (src.getNFloat(key) > 0) {
+    EVENT::FloatVec vals; src.getFloatVals(key, vals);
+    dest.setValues(key, vals); found = true;
   }
-  if (params.getNDouble(key) > 0) {
-    EVENT::DoubleVec vals;
-    params.getDoubleVals(key, vals);
-    dest.doubleParams.emplace_back(key, std::move(vals));
-    found = true;
+  if (src.getNDouble(key) > 0) {
+    EVENT::DoubleVec vals; src.getDoubleVals(key, vals);
+    dest.setValues(key, vals); found = true;
   }
-  if (params.getNString(key) > 0) {
-    EVENT::StringVec vals;
-    params.getStringVals(key, vals);
-    dest.stringParams.emplace_back(key, std::move(vals));
-    found = true;
+  if (src.getNString(key) > 0) {
+    EVENT::StringVec vals; src.getStringVals(key, vals);
+    dest.setValues(key, vals); found = true;
   }
   return found;
 }
@@ -105,26 +98,6 @@ void CheckCollections::checkFile(const std::string &fileName, bool quiet) {
       }
 
       it->second.count++;
-
-      if (!_paramsToCollect.empty()) {
-        auto& captured = _capturedKeys[name];
-        auto& dest = _collectedParams[name];
-        // Subset collections cannot be read individually (pointer resolution
-        // fails without the parent collection), so skip the full read for them.
-        if (!col->isSubset() && captured.size() < _paramsToCollect.size()) {
-          lcReader.setReadCollectionNames({name});
-          auto fullEvt = lcReader.readEvent(evt->getRunNumber(),
-                                            evt->getEventNumber());
-          lcReader.setReadCollectionNames({});
-          const auto& params = fullEvt->getCollection(name)->getParameters();
-          for (const auto& pname : _paramsToCollect) {
-            if (captured.count(pname)) continue;
-            if (captureParam(params, pname, dest)) {
-              captured.insert(pname);
-            }
-          }
-        }
-      }
     }
 
     lcReader.setReadCollectionNames(recoCollections);
@@ -167,8 +140,37 @@ void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
   }
 }
 
-void CheckCollections::setParametersToCollect(std::vector<std::string> paramNames) {
-  _paramsToCollect = std::move(paramNames);
+void CheckCollections::checkParameters(
+    const std::vector<std::string> &fileNames,
+    const std::vector<std::string> &paramNames) {
+    // keep track of the parameters for each collection that we have already
+    // recorded. Only record the first value (and simply assume they are always
+    // the same)
+    std::unordered_map<std::string, std::unordered_set<std::string>> recorded;
+    for (const auto &fileName : fileNames) {
+        MT::LCReader lcReader(0);
+        lcReader.open(fileName);
+        while (const auto evt = lcReader.readNextEvent()) {
+            for (const auto &name : *evt->getCollectionNames()) {
+                auto &dest = _collectedParams[name];
+                auto &done = recorded[name];
+                if (done.size() == paramNames.size()) {
+                    continue;
+                }
+                const auto &params = evt->getCollection(name)->getParameters();
+                for (const auto &pname : paramNames) {
+                  if (done.count(pname)) {
+                        continue;
+                    
+                  }
+                    if (captureParam(params, pname, dest)) {
+                        done.insert(pname);
+                    }
+                }
+            }
+        }
+        lcReader.close();
+    }
 }
 
 CheckCollections::CollectedParameters

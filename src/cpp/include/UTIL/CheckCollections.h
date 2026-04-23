@@ -2,11 +2,11 @@
 #define CheckCollections_h 1
 
 #include "lcio.h"
+#include "IMPL/LCParametersImpl.h"
 
 #include <cstdint>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 #include <set>
 
 namespace UTIL {
@@ -78,27 +78,19 @@ class PIDHandler;
      */
     Vector getConsistentCollections() const ;
 
-    /// Captured parameter values for one collection, split by the four
-    /// LCParameters types. Every value is a vector because LCParameters stores
-    /// them as vectors internally.
-    struct CollectionParamValues {
-      std::vector<std::pair<std::string, std::vector<int>>>         intParams{};
-      std::vector<std::pair<std::string, std::vector<float>>>       floatParams{};
-      std::vector<std::pair<std::string, std::vector<double>>>      doubleParams{};
-      std::vector<std::pair<std::string, std::vector<std::string>>> stringParams{};
-    };
-
     using CollectedParameters =
-        std::unordered_map<std::string, CollectionParamValues>;
+        std::unordered_map<std::string, IMPL::LCParametersImpl>;
 
-    /// Register parameter keys to capture from every collection.
-    /// Must be called before checkFile/checkFiles. The first value observed
-    /// for (collection, key) is retained; callers are responsible for knowing
-    /// that their chosen keys are stable across events.
-    void setParametersToCollect(std::vector<std::string> paramNames);
+    /// Walk all events in fileNames and capture the first observed value of
+    /// each key in paramNames for every collection. The first value observed
+    /// per (collection, key) pair is retained. Collections where none of the
+    /// requested keys are present still appear in the result with an empty
+    /// LCParametersImpl.
+    void checkParameters(const std::vector<std::string>& fileNames,
+                         const std::vector<std::string>& paramNames);
 
     /// Captured parameter values for every collection seen. Collections with
-    /// no captured values still appear with an empty CollectionParamValues.
+    /// no captured values still appear with an empty LCParametersImpl.
     CollectedParameters getCollectedParameters() const;
 
     /** Add a collection with (name,type) that should be added to events in patchEvent().
@@ -165,10 +157,7 @@ class PIDHandler;
     /// meta information
     std::unordered_map<std::string, std::vector<PIDMeta>> _particleIDMetas{};
     CollectionVector _patchCols{};
-    std::vector<std::string>  _paramsToCollect{};
-    CollectedParameters       _collectedParams{};
-    std::unordered_map<std::string, std::unordered_set<std::string>>
-        _capturedKeys{};
+    CollectedParameters _collectedParams{};
 
   }; // class
 
