@@ -44,7 +44,7 @@ namespace IMPL {
     LCParametersImpl() ; 
     
     /// Destructor.
-    virtual ~LCParametersImpl() { /* nop */; }
+    virtual ~LCParametersImpl() = default;
     
     /** Returns the first integer value for the given key.
      */

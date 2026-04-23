@@ -2,6 +2,7 @@
 #define CheckCollections_h 1
 
 #include "lcio.h"
+#include "IMPL/LCParametersImpl.h"
 
 #include <cstdint>
 #include <string>
@@ -77,6 +78,21 @@ class PIDHandler;
      */
     Vector getConsistentCollections() const ;
 
+    using CollectedParameters =
+        std::unordered_map<std::string, IMPL::LCParametersImpl>;
+
+    /// Walk all events in fileNames and capture the first observed value of
+    /// each key in paramNames for every collection. The first value observed
+    /// per (collection, key) pair is retained. Collections where none of the
+    /// requested keys are present still appear in the result with an empty
+    /// LCParametersImpl.
+    void checkParameters(const std::vector<std::string>& fileNames,
+                         const std::vector<std::string>& paramNames);
+
+    /// Captured parameter values for every collection seen. Collections with
+    /// no captured values still appear with an empty LCParametersImpl.
+    const CollectedParameters& getCollectedParameters() const;
+
     /** Add a collection with (name,type) that should be added to events in patchEvent().
      *
      * Depending on the contents of name and type one of the following things
@@ -141,6 +157,7 @@ class PIDHandler;
     /// meta information
     std::unordered_map<std::string, std::vector<PIDMeta>> _particleIDMetas{};
     CollectionVector _patchCols{};
+    CollectedParameters _collectedParams{};
 
   }; // class
 
