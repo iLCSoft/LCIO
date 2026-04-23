@@ -1,6 +1,7 @@
+#include "UTIL/BitField64.h"
 #include "UTIL/CheckCollections.h"
-#include "lcio.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <functional>
@@ -13,22 +14,6 @@
 
 namespace {
 
-std::vector<std::string> splitComma(const std::string &s) {
-    std::vector<std::string> out;
-    std::string cur;
-    for (char c : s) {
-        if (c == ',') {
-            if (!cur.empty())
-                out.push_back(std::move(cur));
-            cur.clear();
-        } else {
-            cur.push_back(c);
-        }
-    }
-    if (!cur.empty())
-        out.push_back(std::move(cur));
-    return out;
-}
 
 void jsonEscape(std::ostream &os, const std::string &s) {
     os << '"';
@@ -124,7 +109,8 @@ int main(int argc, char **argv) {
         if ((a == "--output" || a == "-o") && i + 1 < argc) {
             outputPath = argv[++i];
         } else if ((a == "--params" || a == "-p") && i + 1 < argc) {
-            paramNames = splitComma(argv[++i]);
+            const std::string ps = argv[++i];
+            std::for_each(ps.begin(), ps.end(), UTIL::LCTokenizer(paramNames, ','));
         } else if (a == "-h" || a == "--help") {
             usage();
             return 0;
