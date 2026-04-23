@@ -71,23 +71,6 @@ void emitArray(std::ostream &os, const std::vector<T> &v) {
 }
 
 template <typename T>
-std::vector<T> getValues(const EVENT::LCParameters &params,
-                         const std::string &key) {
-    std::vector<T> values;
-    if constexpr (std::is_same_v<int, T>) {
-        params.getIntVals(key, values);
-    } else if constexpr (std::is_same_v<float, T>) {
-        params.getFloatVals(key, values);
-    } else if constexpr (std::is_same_v<double, T>) {
-        params.getDoubleVals(key, values);
-    } else {
-        params.getStringVals(key, values);
-    }
-
-    return values;
-}
-
-template <typename T>
 bool emitGroup(std::ostream &os, const std::string &label,
                const EVENT::LCParameters &params, const EVENT::StringVec &keys,
                bool needsComma) {
@@ -102,7 +85,7 @@ bool emitGroup(std::ostream &os, const std::string &label,
         os << (i ? ",\n      " : "\n      ");
         jsonEscape(os, keys[i]);
         os << ": ";
-        emitArray(os, getValues<T>(params, keys[i]));
+        emitArray(os, params.getVals<T>(keys[i]));
     }
     os << "\n    }";
     return true;
