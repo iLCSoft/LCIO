@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
             out << ",";
         }
         firstColl = false;
-        out << "\n  " << name << ": {";
+        out << "\n  \"" << name << "\": {";
 
         bool needsComma = false;
 
