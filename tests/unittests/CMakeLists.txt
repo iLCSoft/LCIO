@@ -45,6 +45,7 @@ target_link_libraries(unittests_lcio PRIVATE Catch2::Catch2WithMain LCIO::lcio)
 include(Catch)
 catch_discover_tests(unittests_lcio
   TEST_PREFIX "ut_"
+  DL_PATHS $<TARGET_FILE_DIR:SIO::sio>
   PROPERTIES
-    ENVIRONMENT LD_LIBRARY_PATH=$<TARGET_FILE_DIR:LCIO::lcio>:$ENV{LD_LIBRARY_PATH}
+    ENVIRONMENT LD_LIBRARY_PATH=$<TARGET_FILE_DIR:LCIO::lcio>:$<TARGET_FILE_DIR:SIO::sio>:$ENV{LD_LIBRARY_PATH}
 )
