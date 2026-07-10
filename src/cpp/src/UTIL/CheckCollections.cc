@@ -9,6 +9,31 @@
 
 #include <algorithm>
 #include <iomanip>
+#include <unordered_set>
+
+namespace {
+bool captureParam(const EVENT::LCParameters &src, const std::string &key,
+                  IMPL::LCParametersImpl &dest) {
+    bool found = false;
+    if (const auto vals = src.getVals<int>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<float>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<double>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    if (const auto vals = src.getVals<std::string>(key); !vals.empty()) {
+        dest.setValues(key, vals);
+        found = true;
+    }
+    return found;
+}
+} // namespace
 
 namespace UTIL {
 
@@ -112,6 +137,43 @@ void CheckCollections::insertParticleIDMetas(const UTIL::PIDHandler &pidHandler,
       it->count++;
     }
   }
+}
+
+void CheckCollections::checkParameters(
+    const std::vector<std::string> &fileNames,
+    const std::vector<std::string> &paramNames) {
+    // keep track of the parameters for each collection that we have already
+    // recorded. Only record the first value (and simply assume they are always
+    // the same)
+    std::unordered_map<std::string, std::unordered_set<std::string>> recorded;
+    for (const auto &fileName : fileNames) {
+        MT::LCReader lcReader(0);
+        lcReader.open(fileName);
+        while (const auto evt = lcReader.readNextEvent()) {
+            for (const auto &name : *evt->getCollectionNames()) {
+                auto &dest = _collectedParams[name];
+                auto &done = recorded[name];
+                if (done.size() == paramNames.size()) {
+                    continue;
+                }
+                const auto &params = evt->getCollection(name)->getParameters();
+                for (const auto &pname : paramNames) {
+                    if (done.count(pname)) {
+                        continue;
+                    }
+                    if (captureParam(params, pname, dest)) {
+                        done.insert(pname);
+                    }
+                }
+            }
+        }
+        lcReader.close();
+    }
+}
+
+const CheckCollections::CollectedParameters&
+CheckCollections::getCollectedParameters() const {
+  return _collectedParams;
 }
 
 CheckCollections::Vector CheckCollections::getMissingCollections() const {
