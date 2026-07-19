@@ -1,3 +1,11 @@
+# v02-23-03
+
+* 2026-07-10 Juan Miguel Carceller ([PR#225](https://github.com/iLCSoft/LCIO/pull/225))
+  - Add LD_LIBRARY_PATH to DL_PATHS for unittests_lcio to prevent failures when building in LCG stacks
+
+* 2026-07-09 Juan Miguel Carceller ([PR#224](https://github.com/iLCSoft/LCIO/pull/224))
+  - Discover SIO when finding and running tests explicitly. This is necessary if SIO is not in `LD_LIBRARY_PATH`, for example, when it is built in.
+
 # v02-23-02
 
 * 2026-03-02 Juan Miguel Carceller ([PR#222](https://github.com/iLCSoft/LCIO/pull/222))
