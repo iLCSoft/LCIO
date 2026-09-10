@@ -43,9 +43,19 @@ endif()
 add_executable(unittests_lcio check_collections.cpp)
 target_link_libraries(unittests_lcio PRIVATE Catch2::Catch2WithMain LCIO::lcio)
 include(Catch)
+
+# DL_PATHS is only understood by cmake >= 3.22 (and Catch2 itself errors out
+# hard if it is passed with an older cmake), so only use it where supported.
+# Without it, test discovery can fail to find the (possibly build-local) SIO
+# library on some setups, but this is preferable to a hard configure error.
+set(CATCH_DISCOVER_TESTS_EXTRA_ARGS "")
+if(NOT CMAKE_VERSION VERSION_LESS 3.22)
+  list(APPEND CATCH_DISCOVER_TESTS_EXTRA_ARGS DL_PATHS $<TARGET_FILE_DIR:SIO::sio>:$ENV{LD_LIBRARY_PATH})
+endif()
+
 catch_discover_tests(unittests_lcio
   TEST_PREFIX "ut_"
-  DL_PATHS $<TARGET_FILE_DIR:SIO::sio>:$ENV{LD_LIBRARY_PATH}
+  ${CATCH_DISCOVER_TESTS_EXTRA_ARGS}
   PROPERTIES
     ENVIRONMENT LD_LIBRARY_PATH=$<TARGET_FILE_DIR:LCIO::lcio>:$<TARGET_FILE_DIR:SIO::sio>:$ENV{LD_LIBRARY_PATH}
 )
