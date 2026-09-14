@@ -29,7 +29,7 @@ class LCParameters {
 
 public: 
     /// Destructor.
-    virtual ~LCParameters() { /* nop */; }
+    virtual ~LCParameters() = default;
 
     /** Returns the first integer value for the given key.
      */
@@ -66,6 +66,25 @@ public:
      *  Returns a reference to values for convenience.
      */
     virtual StringVec & getStringVals(const std::string & key, StringVec & values) const = 0;
+
+    /**
+     * Get all values for the given key and type
+     */
+    template <typename T>
+    std::vector<T> getVals(const std::string &key) const {
+      std::vector<T> values;
+      if constexpr (std::is_same_v<int, T>) {
+        getIntVals(key, values);
+      } else if constexpr (std::is_same_v<float, T>) {
+        getFloatVals(key, values);
+      } else if constexpr (std::is_same_v<double, T>) {
+        getDoubleVals(key, values);
+      } else {
+        getStringVals(key, values);
+      }
+
+      return values;
+    }
 
     /** Returns a list of all keys of integer parameters.
      */
