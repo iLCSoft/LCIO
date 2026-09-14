@@ -6,6 +6,7 @@ Module to handle dynamic decoration of LCIO classes
 @author: <a href="mailto:christian.grefe@cern.ch">Christian Grefe</a>
 '''
 
+import ROOT
 from ROOT import TVector3, TLorentzVector
 from pyLCIO import EVENT, IMPL, IO, UTIL
 from array import array
@@ -113,6 +114,28 @@ def getTracks( self ):
     return self.getCollection( EVENT.LCIO.TRACK )
 
 
+def decorateOwnership():
+    '''Transfer Python-owned objects to the LCIO containers that own them.'''
+    if '_pyLCIO_addElement' not in dir( IMPL.LCCollectionVec ):
+        IMPL.LCCollectionVec._pyLCIO_addElement = IMPL.LCCollectionVec.addElement
+
+        def addElement( self, obj ):
+            IMPL.LCCollectionVec._pyLCIO_addElement( self, obj )
+            if not self.isSubset():
+                ROOT.SetOwnership( obj, False )
+
+        IMPL.LCCollectionVec.addElement = addElement
+
+    if '_pyLCIO_addCollection' not in dir( IMPL.LCEventImpl ):
+        IMPL.LCEventImpl._pyLCIO_addCollection = IMPL.LCEventImpl.addCollection
+
+        def addCollection( self, collection, name ):
+            IMPL.LCEventImpl._pyLCIO_addCollection( self, collection, name )
+            ROOT.SetOwnership( collection, False )
+
+        IMPL.LCEventImpl.addCollection = addCollection
+
+
 # List of LCIO classes to decorate
 lcioClasses = [ EVENT.LCEvent,
                 EVENT.CalorimeterHit,
@@ -194,5 +217,6 @@ def decorateClass( o ):
 
 def decorateLcioClasses():
     ''' Standard method to decorate all LCIO classes '''
+    decorateOwnership()
     for lcioClass in lcioClasses:
         decorateClass( lcioClass )
