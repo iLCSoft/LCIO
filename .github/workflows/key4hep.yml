@@ -20,11 +20,11 @@ jobs:
           - release: "sw-nightlies.hsf.org/key4hep"
             container_os: ubuntu2404
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         path: lcio
-    - uses: cvmfs-contrib/github-action-cvmfs@v5
-    - uses: aidasoft/run-lcg-view@v5
+    - uses: cvmfs-contrib/github-action-cvmfs@72f2a8d366043978d6aebee154bc9ed321c2f2a8 # v5.6
+    - uses: aidasoft/run-lcg-view@b4da52e1c5ccb70a60ad4e7216de0a90664d5849 # v6.0.2
       with:
         container: ${{ matrix.container_os }}
         view-path: /cvmfs/${{ matrix.release }}

@@ -16,9 +16,9 @@ jobs:
               "LCG_102/x86_64-centos7-clang12-opt",
               "LCG_102/x86_64-ubuntu2004-gcc9-opt"]
     steps:
-    - uses: actions/checkout@v5
-    - uses: cvmfs-contrib/github-action-cvmfs@v5
-    - uses: aidasoft/run-lcg-view@v5
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+    - uses: cvmfs-contrib/github-action-cvmfs@72f2a8d366043978d6aebee154bc9ed321c2f2a8 # v5.6
+    - uses: aidasoft/run-lcg-view@b4da52e1c5ccb70a60ad4e7216de0a90664d5849 # v6.0.2
       with:
         release-platform: ${{ matrix.LCG }}
         ccache-key: ccache-${{ matrix.LCG }}
