@@ -45,6 +45,23 @@ ENDMACRO( PREPARE_ROOT_DICT_HEADERS )
 
 
 
+# Convert an absolute dictionary input header to the path used to include it.
+MACRO( ROOT_DICT_HEADER_INCLUDE_PATH _header _output )
+
+    SET( ${_output} "${_header}" )
+
+    FOREACH( _include_dir ${ROOT_DICT_INCLUDE_DIRS} )
+        FILE( RELATIVE_PATH _relative_header "${_include_dir}" "${_header}" )
+        IF( NOT _relative_header MATCHES "^\\.\\." )
+            SET( ${_output} "${_relative_header}" )
+            BREAK()
+        ENDIF()
+    ENDFOREACH()
+
+ENDMACRO( ROOT_DICT_HEADER_INCLUDE_PATH )
+
+
+
 # ============================================================================
 # helper macro to generate Linkdef.h files for rootcint
 #
@@ -63,7 +80,8 @@ MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
     SET( _linkdef_header "${ROOT_DICT_OUTPUT_DIR}/${_namespace}_Linkdef.h" )
 
     FOREACH( _header ${_input_headers} )
-        SET( ${_namespace}_file_contents "${${_namespace}_file_contents}\\#pragma link C++ defined_in \\\"${_header}\\\"\\;\\\\n" )
+        ROOT_DICT_HEADER_INCLUDE_PATH( "${_header}" _dict_header )
+        SET( ${_namespace}_file_contents "${${_namespace}_file_contents}\\#pragma link C++ defined_in \\\"${_dict_header}\\\"\\;\\\\n" )
     ENDFOREACH()
 
     ADD_CUSTOM_COMMAND(
@@ -108,13 +126,22 @@ MACRO( GEN_ROOT_DICT_SOURCE _dict_src_filename )
         #SET( _dict_includes ${_dict_includes} -I${_inc} )
     ENDFOREACH()
 
+    # Use relative paths when invoking rootcint. Keep
+    # ROOT_DICT_INPUT_HEADERS unchanged below because CMake dependencies must
+    # refer to the original files.
+    SET( _dict_headers )
+    FOREACH( _header ${ROOT_DICT_INPUT_HEADERS} )
+        ROOT_DICT_HEADER_INCLUDE_PATH( "${_header}" _dict_header )
+        LIST( APPEND _dict_headers "${_dict_header}" )
+    ENDFOREACH()
+
     STRING( REPLACE "/" "_" _dict_src_filename_nosc ${_dict_src_filename} )
     SET( _dict_src_file ${ROOT_DICT_OUTPUT_DIR}/${_dict_src_filename_nosc} )
     STRING( REGEX REPLACE "^(.*)\\.(.*)$" "\\1.h" _dict_hdr_file "${_dict_src_file}" )
     ADD_CUSTOM_COMMAND(
         OUTPUT  ${_dict_src_file} ${_dict_hdr_file}
         COMMAND mkdir -p ${ROOT_DICT_OUTPUT_DIR}
-        COMMAND ${ROOT_rootcint_CMD} -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${ROOT_DICT_INPUT_HEADERS}
+        COMMAND ${ROOT_rootcint_CMD} -f "${_dict_src_file}" -c ${ROOT_DICT_CINT_DEFINITIONS} ${_dict_includes} ${_dict_headers}
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         DEPENDS ${ROOT_DICT_INPUT_HEADERS}
         COMMENT "generating: ${_dict_src_file} ${_dict_hdr_file}"
@@ -123,4 +150,3 @@ MACRO( GEN_ROOT_DICT_SOURCE _dict_src_filename )
 
 ENDMACRO()
 # ============================================================================
-
