@@ -84,8 +84,7 @@ MACRO( GEN_ROOT_DICT_LINKDEF_HEADER _namespace )
     SET( _linkdef_header "${ROOT_DICT_OUTPUT_DIR}/${_namespace}_Linkdef.h" )
 
     FOREACH( _header ${_input_headers} )
-        ROOT_DICT_HEADER_INCLUDE_PATH( "${_header}" _dict_header )
-        SET( ${_namespace}_file_contents "${${_namespace}_file_contents}\\#pragma link C++ defined_in \\\"${_dict_header}\\\"\\;\\\\n" )
+        SET( ${_namespace}_file_contents "${${_namespace}_file_contents}\\#pragma link C++ defined_in \\\"${_header}\\\"\\;\\\\n" )
     ENDFOREACH()
 
     ADD_CUSTOM_COMMAND(
