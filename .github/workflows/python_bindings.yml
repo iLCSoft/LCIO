@@ -27,8 +27,6 @@ jobs:
             ninja -k0 install
             cd ../install
             source ../setup.sh
-            # The installed view exposes include/, not its parent, to ROOT.
-            export CPATH="${CPATH#"$LCIO:"}"
             cd ../
             rm -r $(ls | grep -v install)
             python $LCIO/python/examples/EventBuilder.py test.slcio 1
