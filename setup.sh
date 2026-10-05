@@ -13,5 +13,4 @@ for d in lib lib64; do
 done
 export PYTHONPATH=$LCIO/python:$PYTHONPATH
 alias pylcio='python $LCIO/python/pylcio.py'
-# Necessary for python bindings to work properly
-export CPATH=$LCIO:$LCIO/include:$CPATH
+export ROOT_INCLUDE_PATH="$LCIO/include${ROOT_INCLUDE_PATH:+:$ROOT_INCLUDE_PATH}"
