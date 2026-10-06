@@ -1,3 +1,16 @@
+# v02-23-04
+
+* 2026-10-05 Juan Miguel Carceller ([PR#228](https://github.com/ilcsoft/LCIO/pull/228))
+  - Fix LCIO ROOT dictionary header paths so pyLCIO can autoload installed classes.
+   - Use `ROOT_INCLUDE_PATH` instead of `CPATH` for the local tests
+
+* 2026-09-14 Thomas Madlener ([PR#227](https://github.com/ilcsoft/LCIO/pull/227))
+  - Make sure that builds can still be done with stacks that ship CMake below 3.22
+  - Update and pin github actions versions
+
+* 2026-09-14 Juan Miguel Carceller ([PR#226](https://github.com/ilcsoft/LCIO/pull/226))
+  - Make Python-to-LCIO container ownership transfer automatic, fixing a crash when using the python bindings in LCG stacks
+
 # v02-23-03
 
 * 2026-07-10 Juan Miguel Carceller ([PR#225](https://github.com/iLCSoft/LCIO/pull/225))
